@@ -2,12 +2,12 @@
   "app": "IF00076",
   "ver": 3,
   "device": "web",
-  "exportedAt": "2026-10-14T15:22:55.898Z",
-  "updatedAt": "2026-10-14T15:22:55.898Z",
+  "exportedAt": "2026-10-14T15:22:58.069Z",
+  "updatedAt": "2026-10-14T15:22:58.069Z",
   "data": {
     "IF76::stats": "{\"outline.html\":{\"opens\":2,\"ms\":177091,\"last\":1791991367335,\"scroll\":3714},\"bank.html\":{\"opens\":3,\"ms\":370096,\"last\":1791991366270,\"scroll\":0}}",
     "if00076_pos_v1": "{\"tab\":\"map\",\"y\":3714.857177734375}",
-    "IF76::tab": "0",
+    "IF76::tab": "1",
     "if00076_exam_wrongMigrated": "true"
   }
 }
