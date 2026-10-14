@@ -1,7 +1,11 @@
 {
   "app": "IF00076",
-  "ver": 2,
-  "device": "init",
-  "updatedAt": "2026-10-14T13:25:00.000Z",
-  "data": {}
+  "ver": 3,
+  "device": "web",
+  "exportedAt": "2026-10-14T15:03:53.348Z",
+  "updatedAt": "2026-10-14T15:03:53.348Z",
+  "data": {
+    "IF76::stats": "{\"outline.html\":{\"opens\":1,\"ms\":141173,\"last\":1791990070748,\"scroll\":0}}",
+    "if00076_exam_wrongMigrated": "true"
+  }
 }
