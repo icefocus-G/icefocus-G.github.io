@@ -2,10 +2,11 @@
   "app": "IF00076",
   "ver": 3,
   "device": "web",
-  "exportedAt": "2026-10-14T15:03:53.348Z",
-  "updatedAt": "2026-10-14T15:03:53.348Z",
+  "exportedAt": "2026-10-14T15:04:06.891Z",
+  "updatedAt": "2026-10-14T15:04:06.891Z",
   "data": {
     "IF76::stats": "{\"outline.html\":{\"opens\":1,\"ms\":141173,\"last\":1791990070748,\"scroll\":0}}",
+    "if00076_pos_v1": "{\"y\":97.14286041259766,\"tab\":\"map\"}",
     "if00076_exam_wrongMigrated": "true"
   }
 }
