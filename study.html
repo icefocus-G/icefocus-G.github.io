@@ -88,6 +88,22 @@ textarea{width:100%; min-height:58px; border:1px solid var(--line); border-radiu
 a.lnk{color:var(--main); cursor:pointer; text-decoration:underline}
 .toast{position:fixed; left:50%; transform:translateX(-50%); bottom:44px; background:rgba(15,23,42,.9); color:#fff; padding:8px 18px; border-radius:18px; font-size:13px; opacity:0; transition:opacity .25s; z-index:99; pointer-events:none; max-width:90vw; text-align:center}
 .toast.on{opacity:1}
+/* 自动同步提示条 */
+.autoBar{
+  display:none; align-items:center; gap:8px; flex-wrap:wrap;
+  padding:6px 12px; font-size:12.5px; line-height:1.5;
+  background:linear-gradient(90deg,#dbeafe,#e0e7ff); color:#1e3a8a;
+  border-top:1px solid rgba(37,99,235,.18);
+}
+.autoBar.on{display:flex}
+.autoBar .sp{flex:1}
+.autoBar b{font-weight:600}
+.autoBar button{border:0; border-radius:6px; padding:3px 10px; font-size:12px; cursor:pointer; font-family:inherit; white-space:nowrap}
+.autoBar .go{background:#2563eb; color:#fff}
+.autoBar .no{background:transparent; color:#1e3a8a; text-decoration:underline; padding:3px 4px}
+.syncLog{max-height:150px; overflow:auto; background:#f8fafc; border:1px solid var(--line); border-radius:7px; padding:6px 9px; margin-top:4px}
+.syncLog .kv{font-size:12px; margin:1px 0; color:var(--ink2)}
+.tip{background:#ecfdf5; border:1px solid #a7f3d0; color:#065f46; border-radius:7px; padding:7px 10px; font-size:12.5px; line-height:1.7; margin-bottom:8px}
 </style>
 </head>
 <body>
@@ -105,6 +121,12 @@ a.lnk{color:var(--main); cursor:pointer; text-decoration:underline}
   <div class="tabRow">
     <button class="tab on" data-i="0">大纲精讲</button>
     <button class="tab" data-i="1">历年真题库</button>
+  </div>
+  <div class="autoBar" id="autoBar">
+    <span>想让记录自动同步到 GitHub？只需<b>粘贴一次 Token</b>，之后你做的任何操作都会自动上传，不用再点任何按钮。</span>
+    <span class="sp"></span>
+    <button class="go" id="autoBarGo">立即开启</button>
+    <button class="no" id="autoBarNo">以后再说</button>
   </div>
 </header>
 
@@ -174,16 +196,23 @@ a.lnk{color:var(--main); cursor:pointer; text-decoration:underline}
       </div>
 
       <div class="card">
-        <h3>② Token（用于自动回传）</h3>
-        <div class="field">
-          <label>Personal Access Token（只存在本机浏览器，不会上传）</label>
-          <input type="password" id="ghToken" placeholder="留空 = 只读，你自己手动上传数据文件" autocomplete="off" spellcheck="false">
+        <h3>② 只需要做这一次：粘贴 Token</h3>
+        <div class="tip">
+          Token 只存在你这台设备的浏览器里，<b>不会上传、不会出现在网页里</b>。<br>
+          填好之后，你在任何设备上的任何操作都会自动同步，永远不用再点「同步」。
         </div>
-        <div class="hint">不填：只读取云端，写操作需要你导出文件后自己传到 GitHub。<br>填了：本机一有改动就自动提交到仓库（需勾选 <b>repo</b> 权限），所有设备全自动。</div>
-        <button class="pbtn s" id="btnWhoami">验证 Token</button>
+        <div class="field">
+          <label>Personal Access Token（勾选 repo 权限即可）</label>
+          <input type="password" id="ghToken" placeholder="ghp_xxxxxxxxxxxxxxxx" autocomplete="off" spellcheck="false">
+        </div>
+        <button class="pbtn g" id="btnTokenNew">① 打开 GitHub 生成 Token 页面</button>
+        <button class="pbtn s" id="btnWhoami">② 验证 Token</button>
         <span id="whoami" style="font-size:13px;color:var(--ink2)"></span>
+        <div class="hint">
+          生成页面已自动勾好 <b>repo</b> 权限、填好名称，你只要点最下面的绿色按钮，复制那串字符贴到上面即可。
+        </div>
         <div class="field" style="margin-top:10px">
-          <label>提交目标（仓库 / 分支 / 文件路径）</label>
+          <label>提交目标（仓库 / 分支 / 文件路径，默认已填好，一般不用改）</label>
           <input type="text" id="ghRepo" spellcheck="false" placeholder="icefocus-G/icefocus-G.github.io">
         </div>
         <div style="display:flex;gap:8px">
@@ -194,14 +223,19 @@ a.lnk{color:var(--main); cursor:pointer; text-decoration:underline}
 
       <div class="card">
         <h3>③ 自动同步</h3>
-        <label class="chk"><input type="checkbox" id="ghAutoPull" checked> 打开时自动从云端拉取</label>
-        <label class="chk"><input type="checkbox" id="ghAutoPush" checked> 有改动时自动上传（约 20 秒，需 Token）</label>
-        <label class="chk"><input type="checkbox" id="ghHeart" checked> 每 5 分钟检查云端变化</label>
-        <button class="pbtn" id="btnSaveCfg">保存配置</button>
+        <label class="chk"><input type="checkbox" id="ghAuto" checked> <b>全自动同步</b>（推荐，总开关）</label>
+        <label class="chk"><input type="checkbox" id="ghAutoPush" checked> 有改动时自动上传（延迟约 1 秒，防抖合并）</label>
+        <label class="chk"><input type="checkbox" id="ghAutoPull" checked> 自动拉取云端更新（切回页面、聚焦窗口时立即拉）</label>
+        <div class="field" style="margin-top:8px">
+          <label>定时拉取间隔（秒，默认 20）</label>
+          <input type="text" id="ghPullEvery" spellcheck="false" value="20" style="max-width:120px;border:1px solid var(--line);border-radius:7px;padding:7px 10px;font-size:13px;background:#f8fafc">
+        </div>
+        <div class="hint">自动同步的触发点：答题 / 勾选 / 折叠 / 滚动 / 记笔记 / 切页签 —— 任何写数据的动作都会被立刻捕捉。</div>
+        <button class="pbtn" id="btnSaveCfg">保存并立即同步一次</button>
       </div>
 
       <div class="card">
-        <h3>④ 操作</h3>
+        <h3>④ 手动操作（平时用不到）</h3>
         <button class="pbtn" id="btnPush">↑ 立即上传</button>
         <button class="pbtn g" id="btnPull2">↓ 立即下载</button>
         <button class="pbtn s" id="btnSyncNow">↻ 双向合并同步</button>
@@ -209,10 +243,17 @@ a.lnk{color:var(--main); cursor:pointer; text-decoration:underline}
       </div>
 
       <div class="card">
+        <h3>⑤ 同步记录 <button class="pbtn s" id="btnLogClear" style="float:right;margin:0;padding:2px 9px;font-size:12px">清空</button></h3>
+        <div class="syncLog" id="syncLog"></div>
+      </div>
+
+      <div class="card">
         <h3>说明</h3>
         <div class="kv">· 数据以 GitHub 上的 <b>IF00076-sync.json</b> 为准，手机 / 平板 / 电脑浏览器共用同一份。</div>
         <div class="kv">· 同步用「合并」策略：本机改过的键优先，其余以云端为准，不会整体覆盖。</div>
-        <div class="kv">· 没填 Token 时也可以同步 — 用「导出数据文件」下载 JSON，再在 GitHub 网页上替换该文件即可。</div>
+        <div class="kv">· 第一次在新设备的浏览器打开时，以云端数据为准（避免空状态覆盖云端）。</div>
+        <div class="kv">· 每个浏览器只需粘贴一次 Token；Token 只存本机，绝不上传。</div>
+        <div class="kv">· 没填 Token 也能只读：点「记录 → 导出数据文件」下载 JSON，再手工传到 GitHub 覆盖。</div>
       </div>
     </div>
   </div>
@@ -462,11 +503,15 @@ document.getElementById('btnImport').addEventListener('click', doImport);
 document.getElementById('btnImport2').addEventListener('click', doImport);
 
 document.getElementById('btnClear').addEventListener('click', function () {
-  if (!confirm('确定清空本机缓存？下一步打开会从 GitHub 重新拉取云端数据。')) return;
-  localStorage.clear();
-  renderRecords();
-  frames.forEach(function (f) { try { f.contentWindow.location.reload(); } catch (e) {} });
-  toast('本地缓存已清空');
+  if (!confirm('确定清空本机缓存？会立刻从 GitHub 重新拉取云端数据（Token 会保留）。')) return;
+  if (window.IF76Cloud && IF76Cloud.reset) {
+    IF76Cloud.reset();
+  } else {
+    localStorage.clear();
+    renderRecords();
+    frames.forEach(function (f) { try { f.contentWindow.location.reload(); } catch (e) {} });
+  }
+  toast('本机缓存已清空，正在从云端恢复');
 });
 
 /* ============ 提示 ============ */

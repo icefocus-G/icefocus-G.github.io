@@ -1,68 +1,170 @@
 /* =========================================================================
- * GitHub 云同步（纯网页版）—— 权威数据在 GitHub，本机只是缓存
- *   · 读取：同目录的 IF00076-sync.json（GitHub Pages 上，无需 Token）
- *   · 写入：GitHub Contents API（需 Token，浏览器直连，GitHub 支持 CORS）
- *   · 打开页面自动拉取；本地一有改动约 20 秒后自动回传
- *   · 合并策略：本机改过的键优先，其余以云端为准，不会整体覆盖
- * 依赖 index.html 中的全局：frames / FILES / toast / setStatus / renderRecords / applyPayload / buildPayload / doExport
+ * IF00076 云同步引擎 v3 —— 全自动双向同步
+ *
+ *  权威存储：GitHub 仓库里的 IF00076-sync.json
+ *  本机：只是缓存，不需要点任何按钮
+ *
+ *  · 读：fetch 同目录 IF00076-sync.json（GitHub Pages，无需 Token，零配置）
+ *  · 写：GitHub Contents API（Token 只在本机浏览器，一次性粘贴后永久免操作）
+ *  · 你任何一个操作（答题、折叠、滚动、笔记、切页签）
+ *      → 立刻被捕捉 → 约 1 秒后自动上传
+ *  · 每 20 秒自动拉取云端；切回标签页、窗口获得焦点时立即拉取
+ *  · 关闭 / 切走页面时用 keepalive 请求补交一次，不会丢改动
+ *  · 合并策略：本机改过的键优先，其余以云端为准（首次同步以云端为准）
+ *
+ *  依赖宿主页面提供的全局：frames / FILES / toast / setStatus /
+ *                          renderRecords / applyPayload
  * ========================================================================= */
 (function () {
   'use strict';
 
-  var K_CFG = 'IF76::ghcfg';       // 配置（含 Token，只存本机，绝不上传）
-  var K_SNAP = 'IF76::cloudsnap';  // 上次同步快照
-  var SKIP = [K_CFG, K_SNAP, 'IF76::synchash'];
+  /* ======================= 常量 ======================= */
 
-  var cfg = {
+  var K_CFG  = 'IF76::ghcfg';
+  var K_SNAP = 'IF76::cloudsnap';
+  var K_LOG  = 'IF76::synclog';
+  var SKIP   = [K_CFG, K_SNAP, K_LOG, 'IF76::synchash'];
+
+  var DEF = {
     url: 'IF00076-sync.json',
-    owner: 'icefocus-G', repo: 'icefocus-G.github.io',
-    branch: 'main', path: 'IF00076-sync.json',
-    token: '', autoPull: true, autoPush: true, heart: true,
-    updatedAt: '', lastPullAt: '', lastPushAt: ''
+    owner: 'icefocus-G',
+    repo: 'icefocus-G.github.io',
+    branch: 'main',
+    path: 'IF00076-sync.json',
+    token: '',
+    autoSync: true,      // 总开关
+    autoPull: true,      // 自动拉取
+    autoPush: true,      // 自动上传
+    pullEvery: 20,       // 秒
+    pushDelay: 1000,     // 毫秒（改动后延迟合并上传）
+    syncedOnce: false,   // 本机是否已经成功同步过一次
+    dismissHint: false,  // 用户关掉了顶部提示条
+    authFail: false,     // Token 无效 / 权限不足（停止无谓重试）
+    lastSha: '',
+    updatedAt: '',
+    lastPullAt: '',
+    lastPushAt: '',
+    lastError: ''
   };
 
-  var syncing = false, lastReload = 0, pushTimer = null, ghUser = '';
+  var cfg = {};
+  Object.keys(DEF).forEach(function (k) { cfg[k] = DEF[k]; });
+
+  var syncing = false, queued = false;
+  var pushTimer = null, lastReload = 0, lastSig = '', ghUser = '';
+  var logBuf = [];
+  var mute = 0;          // >0 时忽略由同步引擎自身写入引发的变更通知
+  var backedUp = false;  // 首次同步只做一次本地备份
+  var lastLogMsg = '', lastLogAt = 0;
 
   function el(id) { return document.getElementById(id); }
-  function isSkip(k) { return SKIP.indexOf(k) >= 0; }
+  function sleep(ms) { return new Promise(function (r) { setTimeout(r, ms); }); }
+  function quiet(fn) { mute++; try { return fn(); } finally { mute--; } }
+  function isSkip(k) {
+    return SKIP.indexOf(k) >= 0 || String(k).indexOf('IF76::bak::') === 0;
+  }
+  function esc(s) {
+    return String(s).replace(/[&<>"]/g, function (c) {
+      return { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c];
+    });
+  }
+  function hhmmss(d) {
+    var p = function (n) { return n < 10 ? '0' + n : '' + n; };
+    return p(d.getHours()) + ':' + p(d.getMinutes()) + ':' + p(d.getSeconds());
+  }
 
-  /* ---------------- 配置 ---------------- */
+  /* ======================= 配置 ======================= */
 
   function loadCfg() {
     try {
       var o = JSON.parse(localStorage.getItem(K_CFG) || '{}');
-      cfg = Object.assign(cfg, o || {});
+      if (o && typeof o === 'object') Object.keys(o).forEach(function (k) { cfg[k] = o[k]; });
     } catch (e) { /* 用默认值 */ }
   }
   function saveCfg() {
-    try { localStorage.setItem(K_CFG, JSON.stringify(cfg)); } catch (e) { /* ignore */ }
+    quiet(function () {
+      try { localStorage.setItem(K_CFG, JSON.stringify(cfg)); } catch (e) { /* ignore */ }
+    });
   }
 
-  /* ---------------- 快照 ---------------- */
+  /* ======================= 快照 ======================= */
 
+  function frameWins() {
+    var out = [], fs = window.frames;
+    try {
+      for (var i = 0; i < fs.length; i++) {
+        var f = fs[i];
+        var w = (f && f.contentWindow) ? f.contentWindow : (f && f.document ? f : null);
+        if (w) out.push(w);
+      }
+    } catch (e) { /* ignore */ }
+    return out;
+  }
+  function frameEls() {
+    var out = [], fs = window.frames;
+    try {
+      for (var i = 0; i < fs.length; i++) {
+        var f = fs[i];
+        var e = (f && f.contentWindow) ? f : (f && f.frameElement ? f.frameElement : null);
+        if (e) out.push(e);
+      }
+    } catch (e2) { /* ignore */ }
+    return out;
+  }
+
+  function take(ls, into) {
+    if (!ls) return;
+    try {
+      for (var i = 0; i < ls.length; i++) {
+        var k = ls.key(i);
+        if (!k || isSkip(k)) continue;
+        into[k] = ls.getItem(k);
+      }
+    } catch (e) { /* ignore */ }
+  }
+
+  /* 采集：宿主页 + 所有同源 iframe（同源，实际共用同一个 localStorage 区） */
   function snapshot() {
     var s = {};
-    function take(ls) {
-      if (!ls) return;
-      try {
-        for (var i = 0; i < ls.length; i++) {
-          var k = ls.key(i);
-          if (isSkip(k)) continue;
-          s[k] = ls.getItem(k);
-        }
-      } catch (e) { /* ignore */ }
-    }
-    take(window.localStorage);
-    for (var f = 0; f < frames.length; f++) {
-      try { take(frames[f].contentWindow.localStorage); } catch (e) { /* ignore */ }
+    take(window.localStorage, s);
+    var ws = frameWins();
+    for (var i = 0; i < ws.length; i++) {
+      try { take(ws[i].localStorage, s); } catch (e) { /* ignore */ }
     }
     return s;
   }
+
+  /* 廉价指纹：只比键名 + 值长度，每 2 秒可跑，不产生大数据拷贝 */
+  function sigOf(ls) {
+    var n = 0, h = 5381;
+    try {
+      for (var i = 0; i < ls.length; i++) {
+        var k = ls.key(i);
+        if (!k || isSkip(k)) continue;
+        var v = ls.getItem(k) || '';
+        var t = k + ':' + v.length + ';';
+        for (var j = 0; j < t.length; j++) h = ((h << 5) + h + t.charCodeAt(j)) | 0;
+        n++;
+      }
+    } catch (e) { /* ignore */ }
+    return n + '-' + (h >>> 0).toString(16);
+  }
+  function curSig() {
+    var out = [sigOf(window.localStorage)];
+    var ws = frameWins();
+    for (var i = 0; i < ws.length; i++) {
+      try { out.push(sigOf(ws[i].localStorage)); } catch (e) { out.push('x'); }
+    }
+    return out.join('|');
+  }
+
   function loadSnap() {
     try { return JSON.parse(localStorage.getItem(K_SNAP) || '{}'); } catch (e) { return {}; }
   }
   function saveSnap(s) {
-    try { localStorage.setItem(K_SNAP, JSON.stringify(s)); } catch (e) { /* ignore */ }
+    quiet(function () {
+      try { localStorage.setItem(K_SNAP, JSON.stringify(s)); } catch (e) { /* ignore */ }
+    });
   }
   function changedKeys() {
     var s = snapshot(), base = loadSnap(), out = [];
@@ -72,109 +174,53 @@
     return out;
   }
 
-  /* 数据包：用完整快照（与 index.html 的 buildPayload 一致，但排除配置/快照键） */
+  /* 数据包（与宿主页导出格式一致；配置 / 快照 / 备份键都不会上传） */
   window.buildPayload = function () {
     return JSON.stringify({
-      app: 'IF00076', ver: 2,
+      app: 'IF00076',
+      ver: 3,
       device: 'web',
+      exportedAt: new Date().toISOString(),
       updatedAt: new Date().toISOString(),
       data: snapshot()
     }, null, 2);
   };
 
-  /* ---------------- 网络：读 ---------------- */
+  /* ======================= 日志 ======================= */
 
-  async function pull() {
-    var u = cfg.url || 'IF00076-sync.json';
-    var sep = u.indexOf('?') >= 0 ? '&' : '?';
-    var r;
-    try {
-      r = await fetch(u + sep + '_t=' + Date.now(), { cache: 'no-store' });
-    } catch (e) {
-      throw new Error('无法访问 ' + u + '（' + e.message + '）');
+  function log(msg, cls) {
+    var now = Date.now();
+    // 同类消息 45 秒内不重复，避免定时同步刷屏
+    if (msg === lastLogMsg && now - lastLogAt < 45000) return;
+    lastLogMsg = msg; lastLogAt = now;
+    logBuf.push({ t: new Date(), m: msg, c: cls || '' });
+    if (logBuf.length > 15) logBuf.shift();
+    renderLog();
+    try { console.log('[IF76 云同步] ' + msg); } catch (e) { /* ignore */ }
+  }
+  function renderLog() {
+    var box = el('syncLog');
+    if (!box) return;
+    if (!logBuf.length) { box.innerHTML = '<div class="empty">暂无同步记录</div>'; return; }
+    var h = '';
+    for (var i = logBuf.length - 1; i >= 0; i--) {
+      h += '<div class="kv">' + hhmmss(logBuf[i].t) + '　' + esc(logBuf[i].m) + '</div>';
     }
-    if (!r.ok) throw new Error('HTTP ' + r.status + ' · ' + u + '（文件可能还没上传）');
-    var txt = await r.text();
-    if (!txt || txt.trim().charAt(0) !== '{') throw new Error('云端文件不是有效的 JSON');
-    return { ok: true, content: txt, url: u, updatedAt: new Date().toISOString() };
+    box.innerHTML = h;
   }
 
-  /* ---------------- 网络：写 ---------------- */
-
-  function b64(str) {
-    return btoa(unescape(encodeURIComponent(str)));
-  }
-
-  async function push(content) {
-    if (!cfg.token) {
-      throw new Error('未填写 Token，无法自动上传。可点「生成初始数据文件」导出后手动传到 GitHub。');
-    }
-    var api = 'https://api.github.com/repos/' + cfg.owner + '/' + cfg.repo +
-      '/contents/' + String(cfg.path).split('/').map(encodeURIComponent).join('/');
-    var h = {
-      'Authorization': 'Bearer ' + cfg.token,
-      'Accept': 'application/vnd.github+json',
-      'X-GitHub-Api-Version': '2022-11-28'
-    };
-
-    var sha = null;
-    var g = await fetch(api + '?ref=' + encodeURIComponent(cfg.branch || 'main'), { headers: h, cache: 'no-store' });
-    if (g.ok) {
-      var gj = await g.json();
-      sha = gj.sha;
-    } else if (g.status !== 404) {
-      var gj2 = await g.json().catch(function () { return {}; });
-      throw new Error('GitHub ' + g.status + '：' + (gj2.message || '读取失败'));
-    }
-
-    var body = {
-      message: 'IF00076 学习数据同步 ' + new Date().toISOString(),
-      content: b64(content),
-      branch: cfg.branch || 'main'
-    };
-    if (sha) body.sha = sha;
-
-    var p = await fetch(api, {
-      method: 'PUT',
-      headers: Object.assign({ 'Content-Type': 'application/json' }, h),
-      body: JSON.stringify(body)
-    });
-    if (!p.ok) {
-      var pj = await p.json().catch(function () { return {}; });
-      throw new Error('GitHub ' + p.status + '：' + (pj.message || '提交失败'));
-    }
-    return { ok: true, updatedAt: new Date().toISOString() };
-  }
-
-  /* ---------------- 应用 ---------------- */
-
-  function applySnapshot(merged) {
-    try {
-      Object.keys(merged).forEach(function (k) {
-        if (localStorage.getItem(k) !== merged[k]) localStorage.setItem(k, merged[k]);
-      });
-    } catch (e) { /* ignore */ }
-    saveSnap(merged);
-  }
-
-  function reloadFrames() {
-    for (var i = 0; i < frames.length; i++) {
-      (function (f, n) {
-        f.dataset.loaded = '';
-        try { f.contentWindow.location.reload(); }
-        catch (e) { f.src = FILES[n] + '?t=' + Date.now(); }
-      })(frames[i], i);
-    }
-  }
-
-  /* ---------------- 状态 ---------------- */
+  /* ======================= 状态显示 ======================= */
 
   function setBadge(kind, text) {
     var b = el('btnCloud');
     if (!b) return;
-    var map = { ok: '#0d9488', sync: '#2563eb', warn: '#d97706', err: '#dc2626', off: 'rgba(255,255,255,.28)' };
+    var map = {
+      ok: '#0d9488', sync: '#2563eb', warn: '#d97706',
+      err: '#dc2626', off: 'rgba(255,255,255,.28)'
+    };
     b.style.background = map[kind] || map.off;
     b.textContent = '☁ ' + (text || '云同步');
+    b.title = '云同步：' + (text || '');
   }
   function fmtIso(s) {
     if (!s) return '—';
@@ -184,216 +230,465 @@
     return d.getFullYear() + '-' + p(d.getMonth() + 1) + '-' + p(d.getDate()) +
       ' ' + p(d.getHours()) + ':' + p(d.getMinutes()) + ':' + p(d.getSeconds());
   }
+
+  function autoStateText() {
+    if (!cfg.autoSync) return '已关闭（手动模式）';
+    if (cfg.authFail) return 'Token 无效，请重新填写';
+    if (!cfg.token) return '只读（缺 Token，改动会保留、暂不上传）';
+    if (!cfg.autoPush || !cfg.autoPull) return '部分自动';
+    return '全自动：改动后约 1 秒上传 · 每 ' + (cfg.pullEvery || 20) + ' 秒拉取';
+  }
+
   function refreshState() {
-    var s = el('syncState');
-    if (!s) return;
     var dirty = changedKeys();
-    s.innerHTML =
-      '<div><span class="dot ' + (cfg.url ? 'ok' : 'off') + '"></span>数据文件：<b>' + (cfg.url || '未配置') + '</b></div>' +
-      '<div>提交目标：<b>' + cfg.owner + '/' + cfg.repo + '</b> · ' + (cfg.branch || 'main') + ' · ' + (cfg.path || '') + '</div>' +
-      '<div>Token：<b>' + (cfg.token ? ('已填写' + (ghUser ? ' · ' + ghUser : '')) : '未填写（只读模式）') + '</b></div>' +
-      '<div>本机最后拉取：<b>' + fmtIso(cfg.lastPullAt) + '</b>　最后上传：<b>' + fmtIso(cfg.lastPushAt) + '</b></div>' +
-      '<div>本机状态：<b>' + (dirty.length ? ('有 ' + dirty.length + ' 项改动未上传') : '与云端一致') + '</b></div>';
-  }
-
-  /* ---------------- 双向合并同步 ---------------- */
-
-  async function syncRound(opts) {
-    opts = opts || {};
-    if (syncing) return null;
-    syncing = true;
-    setBadge('sync', '同步中…');
-    try {
-      var r;
-      try {
-        r = await pull();
-      } catch (e) {
-        var notFound = /404|不是有效/.test(e.message);
-        setBadge(notFound ? 'warn' : 'err', notFound ? '云端无文件' : '读取失败');
-        if (notFound) setStatus('云端还没有数据文件，点「云同步 → 生成初始数据文件」导出后上传到仓库');
-        if (!opts.silent) toast(notFound ? '云端还没有数据文件，请先生成并上传' : ('云端读取失败：' + e.message));
-        return null;
-      }
-
-      var remote = {};
-      try {
-        var o = JSON.parse(r.content);
-        remote = (o && o.data) ? o.data : o;
-      } catch (e) {
-        setBadge('err', '格式错误');
-        if (!opts.silent) toast('云端文件不是有效的 JSON');
-        return null;
-      }
-
-      var local = snapshot(), base = loadSnap();
-      var merged = {}, fromCloud = [];
-      Object.keys(remote).forEach(function (k) { merged[k] = remote[k]; });
-      Object.keys(local).forEach(function (k) {
-        var mine = (base[k] === undefined) || (base[k] !== local[k]);
-        if (mine) merged[k] = local[k];
-        else if (!(k in remote)) merged[k] = local[k];
-        else merged[k] = remote[k];
-      });
-      Object.keys(merged).forEach(function (k) {
-        if (remote[k] !== undefined && remote[k] !== local[k]) fromCloud.push(k);
-      });
-
-      applySnapshot(merged);
-      cfg.updatedAt = r.updatedAt;
-      cfg.lastPullAt = new Date().toISOString();
-
-      var mine2 = Object.keys(local).some(function (k) {
-        return (base[k] === undefined) || (base[k] !== local[k]);
-      });
-
-      if (cfg.token && cfg.autoPush && (mine2 || fromCloud.length)) {
-        try {
-          await push(window.buildPayload());
-          cfg.lastPushAt = new Date().toISOString();
-          saveCfg();
-          setBadge('ok', '已同步');
-          if (!opts.silent) toast('已同步到 GitHub');
-        } catch (e) {
-          setBadge('warn', '上传失败');
-          if (!opts.silent) toast('上传失败：' + e.message);
-        }
-      } else if (!cfg.token && mine2) {
-        setBadge('warn', '改动未上传');
-        if (!opts.silent) toast('本机有 ' + changedKeys().length + ' 项改动，未填 Token 无法自动回传');
-      } else {
-        setBadge('ok', '已同步');
-        if (!opts.silent) toast('已是最新');
-      }
-      saveCfg();
-
-      if (fromCloud.length && Date.now() - lastReload > 60000) {
-        lastReload = Date.now();
-        renderRecords();
-        reloadFrames();
-        setStatus('已从云端合并 ' + fromCloud.length + ' 项更新');
-      }
-      renderRecords();
-      return { merged: merged, fromCloud: fromCloud };
-    } finally {
-      syncing = false;
-      refreshState();
+    var s = el('syncState');
+    if (s) {
+      s.innerHTML =
+        '<div><span class="dot ' + (cfg.token ? 'ok' : 'off') + '"></span>自动同步：<b>' + autoStateText() + '</b></div>' +
+        '<div>数据文件：<b>' + (cfg.url || '未配置') + '</b>　提交目标：<b>' +
+          cfg.owner + '/' + cfg.repo + '</b> · ' + (cfg.branch || 'main') + '</div>' +
+        '<div>Token：<b>' + (cfg.token ? ('已填写' + (ghUser ? ' · ' + ghUser : '')) : '未填写') + '</b>　' +
+          '本机上次同步：<b>' + fmtIso(cfg.lastPushAt || cfg.lastPullAt) + '</b></div>' +
+        '<div>本机待上传：<b>' + (dirty.length ? dirty.length + ' 项' : '无（与云端一致）') + '</b></div>' +
+        (cfg.lastError ? '<div style="color:#dc2626">最近错误：' + esc(cfg.lastError) + '</div>' : '');
     }
+    renderLog();
+    updateHint();
   }
 
-  /* ---------------- 强制上传 / 下载 ---------------- */
+  /* 顶部「开启自动同步」提示条 */
+  function updateHint() {
+    var bar = el('autoBar');
+    if (!bar) return;
+    var need = !!(cfg.autoSync && !cfg.token && !cfg.dismissHint);
+    bar.classList.toggle('on', need);
+  }
 
-  async function forcePush() {
-    setBadge('sync', '上传中…');
+  /* ======================= 网络：读 ======================= */
+
+  async function pull() {
+    var u = cfg.url || 'IF00076-sync.json';
+    var sep = u.indexOf('?') >= 0 ? '&' : '?';
+    var r;
     try {
-      await push(window.buildPayload());
-      cfg.lastPushAt = new Date().toISOString();
-      saveSnap(snapshot());
-      saveCfg();
-      setBadge('ok', '已上传');
-      toast('已上传到 GitHub');
-      setStatus('已上传 · ' + fmtIso(cfg.lastPushAt));
+      r = await fetch(u + sep + '_t=' + Date.now(), { cache: 'no-store' });
     } catch (e) {
-      setBadge('err', '上传失败');
-      toast('上传失败：' + e.message);
+      var err = new Error('无法访问 ' + u + '（' + e.message + '）');
+      err.net = true;
+      throw err;
     }
-    refreshState();
+    if (r.status === 404) { var e404 = new Error('HTTP 404 · ' + u + '（云端还没有数据文件）'); e404.nf = true; throw e404; }
+    if (!r.ok) throw new Error('HTTP ' + r.status + ' · ' + u);
+    var txt = await r.text();
+    if (!txt || txt.trim().charAt(0) !== '{') throw new Error('云端文件不是有效的 JSON');
+    return { ok: true, content: txt, url: u, updatedAt: new Date().toISOString() };
   }
 
-  async function forcePull() {
-    setBadge('sync', '下载中…');
-    try {
-      var r = await pull();
-      var o = JSON.parse(r.content);
-      var d = (o && o.data) ? o.data : o;
-      if (!d || typeof d !== 'object') throw new Error('文件格式不正确');
-      applyPayload(d, '已从 GitHub 恢复 · ' + fmtIso(r.updatedAt));
-      cfg.updatedAt = r.updatedAt;
-      cfg.lastPullAt = new Date().toISOString();
-      saveCfg();
-      setBadge('ok', '已下载');
-      toast('已从云端恢复');
-      closeCloud();
-    } catch (e) {
-      setBadge('err', '下载失败');
-      toast('下载失败：' + e.message);
-    }
-    refreshState();
+  /* ======================= 网络：写 ======================= */
+
+  function b64(str) {
+    return btoa(unescape(encodeURIComponent(str)));
   }
-
-  /* ---------------- 自动调度 ---------------- */
-
-  function scheduleSync() {
-    if (syncing) return;
-    if (!cfg.token) { setBadge('warn', '改动未上传'); return; }
-    clearTimeout(pushTimer);
-    setBadge('sync', '待同步…');
-    pushTimer = setTimeout(function () { syncRound({ silent: true }); }, 20000);
+  function apiUrl() {
+    return 'https://api.github.com/repos/' + cfg.owner + '/' + cfg.repo +
+      '/contents/' + String(cfg.path || 'IF00076-sync.json')
+        .split('/').map(encodeURIComponent).join('/');
   }
-
-  function startEngine() {
-    setInterval(function () {
-      if (syncing || document.hidden) return;
-      if (changedKeys().length) scheduleSync();
-    }, 8000);
-
-    setInterval(function () {
-      if (cfg.heart && !syncing && !document.hidden) syncRound({ silent: true });
-    }, 300000);
-
-    // 页面隐藏/关闭前尽力提交一次
-    window.addEventListener('visibilitychange', function () {
-      if (document.hidden && cfg.token && changedKeys().length) {
-        try { push(window.buildPayload()); } catch (e) { /* ignore */ }
-      }
-    });
-  }
-
-  /* ---------------- 面板 ---------------- */
-
-  function openCloud() { el('ghMask').classList.add('on'); refreshState(); }
-  function closeCloud() { el('ghMask').classList.remove('on'); }
-
-  function fillForm() {
-    el('ghUrl').value = cfg.url || '';
-    el('ghToken').value = cfg.token || '';
-    el('ghRepo').value = (cfg.owner || '') && (cfg.repo || '') ? (cfg.owner + '/' + cfg.repo) : '';
-    el('ghBranch').value = cfg.branch || 'main';
-    el('ghPath').value = cfg.path || 'IF00076-sync.json';
-    el('ghAutoPull').checked = cfg.autoPull !== false;
-    el('ghAutoPush').checked = cfg.autoPush !== false;
-    el('ghHeart').checked = cfg.heart !== false;
-    if (ghUser) el('whoami').textContent = '已登录：' + ghUser;
-  }
-
-  function readForm() {
-    var rp = (el('ghRepo').value || '').trim().split('/');
+  function ghHeaders() {
     return {
-      url: el('ghUrl').value.trim() || 'IF00076-sync.json',
-      token: el('ghToken').value.trim(),
-      owner: (rp[0] || '').trim(),
-      repo: (rp[1] || '').trim(),
-      branch: el('ghBranch').value.trim() || 'main',
-      path: el('ghPath').value.trim() || 'IF00076-sync.json',
-      autoPull: el('ghAutoPull').checked,
-      autoPush: el('ghAutoPush').checked,
-      heart: el('ghHeart').checked
+      'Authorization': 'Bearer ' + cfg.token,
+      'Accept': 'application/vnd.github+json',
+      'X-GitHub-Api-Version': '2022-11-28'
     };
   }
 
-  async function doSaveCfg() {
-    var f = readForm();
-    cfg = Object.assign(cfg, f);
+  async function shaOf() {
+    var g = await fetch(apiUrl() + '?ref=' + encodeURIComponent(cfg.branch || 'main') +
+      '&_=' + Date.now(), { headers: ghHeaders(), cache: 'no-store' });
+    if (g.ok) {
+      var gj = await g.json();
+      cfg.lastSha = gj.sha || '';
+      return cfg.lastSha;
+    }
+    if (g.status === 404) return null;                 // 文件还不存在 → 新建
+    var e = await g.json().catch(function () { return {}; });
+    throw new Error('GitHub ' + g.status + '：' + (e.message || '读取失败'));
+  }
+
+  async function push(content) {
+    if (!cfg.token) throw new Error('未填写 Token，无法自动上传');
+    if (!cfg.owner || !cfg.repo) throw new Error('未配置仓库（owner/repo）');
+
+    var sha = await shaOf();
+    var body = {
+      message: 'IF00076 自动同步 ' + new Date().toISOString(),
+      content: b64(content),
+      branch: cfg.branch || 'main'
+    };
+    if (sha) body.sha = sha;
+
+    var p = await fetch(apiUrl(), {
+      method: 'PUT',
+      headers: Object.assign({ 'Content-Type': 'application/json' }, ghHeaders()),
+      body: JSON.stringify(body)
+    });
+    if (!p.ok) {
+      var pj = await p.json().catch(function () { return {}; });
+      throw new Error('GitHub ' + p.status + '：' + (pj.message || '提交失败'));
+    }
+    var ok = await p.json().catch(function () { return {}; });
+    if (ok && ok.content && ok.content.sha) cfg.lastSha = ok.content.sha;
+    return { ok: true, updatedAt: new Date().toISOString() };
+  }
+
+  async function pushRetry() {
+    var lastErr = null;
+    for (var i = 0; i < 3; i++) {
+      try { return await push(window.buildPayload()); }
+      catch (e) {
+        lastErr = e;
+        // 权限 / 认证类错误重试没意义
+        if (/GitHub (401|403|404|422)/.test(e.message)) break;
+        await sleep(700 * (i + 1));
+      }
+    }
+    throw lastErr;
+  }
+
+  /* 关页面时补交一次（keepalive：请求不会被页面卸载中断） */
+  function flushBeacon() {
+    if (!cfg.autoSync || !cfg.autoPush || !cfg.token) return;
+    if (!changedKeys().length) return;
+    var content = window.buildPayload();
+    if (content.length > 40000) return;      // keepalive 有 64KB 上限，超了留给下次打开
+    var body = {
+      message: 'IF00076 离开页面前同步 ' + new Date().toISOString(),
+      content: b64(content),
+      branch: cfg.branch || 'main'
+    };
+    if (cfg.lastSha) body.sha = cfg.lastSha;   // 用缓存的 sha，省掉一次往返
+    try {
+      fetch(apiUrl(), {
+        method: 'PUT',
+        keepalive: true,
+        headers: Object.assign({ 'Content-Type': 'application/json' }, ghHeaders()),
+        body: JSON.stringify(body)
+      });
+    } catch (e) { /* ignore */ }
+  }
+
+  /* ======================= 应用合并结果 ======================= */
+
+  /* 把合并结果写进 localStorage（只写值，不动基线） */
+  function applyValues(merged) {
+    quiet(function () {
+      try {
+        Object.keys(merged).forEach(function (k) {
+          if (isSkip(k)) return;
+          if (localStorage.getItem(k) !== merged[k]) localStorage.setItem(k, merged[k]);
+        });
+      } catch (e) { /* ignore */ }
+    });
+    lastSig = curSig();
+  }
+
+  function reloadFrames() {
+    var els = frameEls();
+    for (var i = 0; i < els.length; i++) {
+      (function (f, n) {
+        try {
+          f.dataset.loaded = '';
+          f.contentWindow.location.reload();
+        } catch (e) {
+          try { f.src = (window.FILES ? FILES[n] : f.src) + '?t=' + Date.now(); } catch (e2) { }
+        }
+      })(els[i], i);
+    }
+  }
+
+  /* ======================= 一轮完整同步 ======================= */
+
+  async function doRound(opts) {
+    var remote = null, pullAt = null, notFound = false;
+
+    try {
+      var r = await pull();
+      var o = JSON.parse(r.content);
+      remote = (o && o.data) ? o.data : o;
+      if (!remote || typeof remote !== 'object') throw new Error('云端数据格式不正确');
+      pullAt = r.updatedAt;
+    } catch (e) {
+      if (e.nf) {
+        notFound = true;
+        log(cfg.token ? '云端暂无数据文件，将自动创建' : '云端暂无数据文件（填 Token 后可自动创建）');
+      } else {
+        cfg.lastError = e.message;
+        saveCfg();
+        setBadge('err', '读取失败');
+        log('拉取失败：' + e.message);
+        if (!opts.silent) toast('云端读取失败：' + e.message);
+        return null;
+      }
+    }
+
+    var local = snapshot(), base = loadSnap();
+
+    /* 本机从未同步过 + 云端有数据 → 以云端为准，避免新设备空状态覆盖云端 */
+    var remoteWins = !cfg.syncedOnce && !!(remote && Object.keys(remote).length);
+    if (remoteWins && !backedUp && Object.keys(local).length > 0) {
+      backedUp = true;
+      quiet(function () {
+        try {
+          localStorage.setItem('IF76::bak::' + Date.now(), JSON.stringify(local));
+          log('首次同步：以云端为准，本机原数据已留一份本地备份');
+        } catch (e) { /* ignore */ }
+      });
+    }
+
+    var merged = {}, fromCloud = [];
+    if (remote) Object.keys(remote).forEach(function (k) { merged[k] = remote[k]; });
+    Object.keys(local).forEach(function (k) {
+      if (!remote) { merged[k] = local[k]; return; }
+      if (remoteWins) { merged[k] = (k in remote) ? remote[k] : local[k]; return; }
+      var mine = (base[k] === undefined) || (base[k] !== local[k]);
+      if (mine) merged[k] = local[k];
+      else if (!(k in remote)) merged[k] = local[k];
+      else merged[k] = remote[k];
+    });
+    if (remote) {
+      Object.keys(merged).forEach(function (k) {
+        if (remote[k] !== undefined && remote[k] !== local[k]) fromCloud.push(k);
+      });
+    }
+
+    applyValues(merged);
+    if (pullAt) cfg.updatedAt = pullAt;
+    cfg.lastPullAt = new Date().toISOString();
+
+    var mine2 = Object.keys(local).some(function (k) {
+      return (base[k] === undefined) || (base[k] !== local[k]);
+    });
+    var needPush = mine2 || fromCloud.length > 0 || notFound;
+    var pendingCount = changedKeys().length;
+
+    /* 基线（快照）只在「改动确实已经到达云端」或「本来就没改动」时才推进。
+       上传失败 / 没填 Token 时保留旧基线，改动继续算作待上传，下次自动补传。 */
+    if (!needPush) {
+      saveSnap(merged);
+      cfg.syncedOnce = true;
+      setBadge('ok', '已同步');
+      if (!opts.silent) toast('已是最新');
+    } else if (!cfg.token) {
+      if (remoteWins) {
+        saveSnap(merged);              // 已采用云端数据，不必再回传
+        cfg.syncedOnce = true;
+        setBadge('warn', '只读模式');
+      } else {
+        setBadge('warn', '未登录');
+        log('本机有 ' + pendingCount + ' 项改动待上传 · 粘贴一次 Token 即可全自动');
+      }
+    } else if (cfg.authFail) {
+      setBadge('err', 'Token 无效');
+    } else if (!cfg.autoPush) {
+      setBadge('warn', '自动上传已关');
+    } else {
+      try {
+        await pushRetry();
+        saveSnap(merged);              // 上传成功，基线跟上
+        cfg.lastPushAt = new Date().toISOString();
+        cfg.lastError = '';
+        cfg.authFail = false;
+        cfg.syncedOnce = true;
+        setBadge('ok', '已同步');
+        log(notFound ? '已创建云端数据文件' : '已自动上传 ' + pendingCount + ' 项改动');
+        if (!opts.silent) toast('已同步到 GitHub');
+      } catch (e) {
+        cfg.lastError = e.message;
+        if (/GitHub (401|403)/.test(e.message)) {
+          cfg.authFail = true;
+          setBadge('err', 'Token 无效');
+          log('Token 无效或权限不足 —— 改动已保留，换成有效 Token 后会自动补传');
+        } else {
+          setBadge('warn', '上传失败');
+          log('上传失败：' + e.message + ' —— 改动已保留，稍后自动重试');
+        }
+        if (!opts.silent) toast('上传失败：' + e.message);
+      }
+    }
     saveCfg();
-    refreshState();
+
+    if (fromCloud.length && Date.now() - lastReload > 60000) {
+      lastReload = Date.now();
+      if (typeof window.renderRecords === 'function') window.renderRecords();
+      reloadFrames();
+      if (typeof setStatus === 'function') setStatus('已从云端合并 ' + fromCloud.length + ' 项更新');
+      log('从云端合并 ' + fromCloud.length + ' 项');
+    }
+    if (typeof window.renderRecords === 'function') window.renderRecords();
+    return { merged: merged, fromCloud: fromCloud, notFound: notFound };
+  }
+
+  async function syncRound(opts) {
+    opts = opts || {};
+    if (syncing) { queued = true; return null; }
+    syncing = true;
+    setBadge('sync', '同步中…');
+    var out = null;
+    try {
+      out = await doRound(opts);
+    } catch (e) {
+      cfg.lastError = e.message || String(e);
+      setBadge('err', '同步失败');
+      log('同步异常：' + cfg.lastError);
+      if (!opts.silent) toast('同步失败：' + cfg.lastError);
+    } finally {
+      syncing = false;
+      refreshState();
+      if (queued) {
+        queued = false;
+        setTimeout(function () { syncRound({ silent: true }); }, 500);
+      }
+    }
+    return out;
+  }
+
+  /* ======================= 自动调度 ======================= */
+
+  /* 有任何改动 → 短延迟合并后自动上传 */
+  function markDirty() {
+    if (mute) return;
+    if (!cfg.autoSync) { setBadge('off', '自动同步已关'); updateHint(); return; }
+    if (!cfg.autoPush) { setBadge('warn', '改动未上传'); return; }
+    if (!cfg.token) { setBadge('warn', '未登录'); updateHint(); return; }
+
+    clearTimeout(pushTimer);
+    setBadge('sync', '待同步…');
+    pushTimer = setTimeout(function () {
+      pushTimer = null;
+      syncRound({ silent: true });
+    }, Math.max(300, cfg.pushDelay | 0 || 1000));
+  }
+
+  /* 把某个 window 的 localStorage 写操作接上钩子（同源） */
+  function hookStorage(store, cb) {
+    try {
+      var proto = Object.getPrototypeOf(store);
+      if (!proto || proto.__if76) return;
+      proto.__if76 = true;
+      ['setItem', 'removeItem', 'clear'].forEach(function (m) {
+        var orig = proto[m];
+        if (typeof orig !== 'function') return;
+        proto[m] = function () {
+          var r = orig.apply(this, arguments);
+          if (!mute) { try { cb(); } catch (e) { /* ignore */ } }
+          return r;
+        };
+      });
+    } catch (e) { /* 跨域或不可写 → 交给 storage 事件 / 轮询兜底 */ }
+  }
+
+  function startEngine() {
+    /* 1) 本页面的写操作 —— 直接挂钩，零延迟 */
+    hookStorage(window.localStorage, markDirty);
+
+    /* 2) iframe 的写操作 —— storage 事件（同源互相可见），零延迟 */
+    window.addEventListener('storage', function () { markDirty(); });
+
+    /* 3) 兜底轮询：2 秒比对指纹，捕捉任何漏网的改动 */
+    setInterval(function () {
+      if (!cfg.autoSync || !cfg.autoPush) return;
+      var s = curSig();
+      if (s === lastSig) return;
+      lastSig = s;
+      if (changedKeys().length) markDirty();
+    }, 2000);
+
+    /* 4) 定时拉取云端（只在页面可见时） */
+    setInterval(function () {
+      if (document.hidden || syncing || pushTimer) return;
+      if (!cfg.autoSync || !cfg.autoPull) return;
+      syncRound({ silent: true });
+    }, Math.max(5, cfg.pullEvery | 0 || 20) * 1000);
+
+    /* 5) 切回页面 / 窗口聚焦 → 立刻同步一次 */
+    window.addEventListener('focus', function () {
+      if (cfg.autoSync && cfg.autoPull && !syncing && !pushTimer) syncRound({ silent: true });
+    });
+    document.addEventListener('visibilitychange', function () {
+      if (document.hidden) { flushBeacon(); return; }
+      if (cfg.autoSync && cfg.autoPull && !syncing && !pushTimer) syncRound({ silent: true });
+    });
+    window.addEventListener('pagehide', flushBeacon);
+    window.addEventListener('beforeunload', flushBeacon);
+
+    /* 6) 首次拿到 iframe 时也给它们挂钩（同源才有效） */
+    var els = frameEls();
+    for (var i = 0; i < els.length; i++) {
+      (function (f) {
+        f.addEventListener('load', function () {
+          try { hookStorage(f.contentWindow.localStorage, markDirty); } catch (e) { /* ignore */ }
+        });
+      })(els[i]);
+    }
+  }
+
+  /* ======================= 面板 ======================= */
+
+  function openCloud() { var m = el('ghMask'); if (m) m.classList.add('on'); refreshState(); }
+  function closeCloud() { var m = el('ghMask'); if (m) m.classList.remove('on'); }
+
+  function fillForm() {
+    if (el('ghUrl')) el('ghUrl').value = cfg.url || '';
+    if (el('ghToken')) el('ghToken').value = cfg.token || '';
+    if (el('ghRepo')) el('ghRepo').value = (cfg.owner || '') && (cfg.repo || '') ? (cfg.owner + '/' + cfg.repo) : '';
+    if (el('ghBranch')) el('ghBranch').value = cfg.branch || 'main';
+    if (el('ghPath')) el('ghPath').value = cfg.path || 'IF00076-sync.json';
+    if (el('ghAuto')) el('ghAuto').checked = cfg.autoSync !== false;
+    if (el('ghAutoPull')) el('ghAutoPull').checked = cfg.autoPull !== false;
+    if (el('ghAutoPush')) el('ghAutoPush').checked = cfg.autoPush !== false;
+    if (el('ghPullEvery')) el('ghPullEvery').value = String(cfg.pullEvery || 20);
+    if (ghUser && el('whoami')) el('whoami').textContent = '已登录：' + ghUser;
+  }
+
+  function readForm() {
+    var rp = ((el('ghRepo') && el('ghRepo').value) || '').trim().split('/');
+    return {
+      url: (el('ghUrl') && el('ghUrl').value.trim()) || 'IF00076-sync.json',
+      token: ((el('ghToken') && el('ghToken').value) || '').trim(),
+      owner: (rp[0] || '').trim(),
+      repo: (rp[1] || '').trim(),
+      branch: ((el('ghBranch') && el('ghBranch').value) || '').trim() || 'main',
+      path: ((el('ghPath') && el('ghPath').value) || '').trim() || 'IF00076-sync.json',
+      autoSync: el('ghAuto') ? el('ghAuto').checked : true,
+      autoPull: el('ghAutoPull') ? el('ghAutoPull').checked : true,
+      autoPush: el('ghAutoPush') ? el('ghAutoPush').checked : true,
+      pullEvery: Math.max(5, parseInt((el('ghPullEvery') && el('ghPullEvery').value) || '20', 10) || 20)
+    };
   }
 
   function bind() {
-    el('btnCloud').addEventListener('click', openCloud);
-    el('ghClose').addEventListener('click', closeCloud);
-    el('ghMask').addEventListener('click', function (e) { if (e.target === el('ghMask')) closeCloud(); });
+    if (el('btnCloud')) el('btnCloud').addEventListener('click', openCloud);
+    if (el('ghClose')) el('ghClose').addEventListener('click', closeCloud);
+    if (el('ghMask')) el('ghMask').addEventListener('click', function (e) {
+      if (e.target === el('ghMask')) closeCloud();
+    });
 
-    el('btnWhoami').addEventListener('click', async function () {
-      var t = el('ghToken').value.trim();
+    if (el('autoBarGo')) el('autoBarGo').addEventListener('click', function () {
+      openCloud();
+      setTimeout(function () { if (el('ghToken')) el('ghToken').focus(); }, 120);
+    });
+    if (el('autoBarNo')) el('autoBarNo').addEventListener('click', function () {
+      cfg.dismissHint = true; saveCfg(); updateHint();
+    });
+
+    if (el('btnTokenNew')) el('btnTokenNew').addEventListener('click', function () {
+      window.open('https://github.com/settings/tokens/new?scopes=repo' +
+        '&description=' + encodeURIComponent('IF00076 学习数据自动同步') +
+        '&default_expires_at=none', '_blank');
+    });
+
+    if (el('btnWhoami')) el('btnWhoami').addEventListener('click', async function () {
+      var t = (el('ghToken').value || '').trim();
       if (!t) { toast('请先粘贴 Token'); return; }
       el('whoami').textContent = '验证中…';
       try {
@@ -413,46 +708,144 @@
       refreshState();
     });
 
-    el('btnSaveCfg').addEventListener('click', async function () {
-      await doSaveCfg();
-      toast('配置已保存');
-      syncRound({ silent: true });
+    if (el('btnSaveCfg')) el('btnSaveCfg').addEventListener('click', async function () {
+      var before = cfg.token;
+      cfg = Object.assign(cfg, readForm());
+      if (cfg.token !== before) cfg.authFail = false;   // 换了 Token 就重新试
+      saveCfg();
+      refreshState();
+      toast(cfg.token ? '已保存，自动同步已开启' : '已保存（未填 Token：只读模式）');
+      if (cfg.token && !before) log('已填写 Token，自动同步开启');
+      syncRound({ silent: false });
     });
 
-    el('btnInitFile').addEventListener('click', function () {
-      doExport();
-      toast('已生成 IF00076-sync.json，请上传到 GitHub 仓库根目录');
+    if (el('btnInitFile')) el('btnInitFile').addEventListener('click', function () {
+      if (typeof doExport === 'function') doExport();
+      toast('已生成数据文件，可上传到 GitHub 仓库根目录');
     });
 
-    el('btnPull').addEventListener('click', forcePull);
-    el('btnPull2').addEventListener('click', forcePull);
-    el('btnPush').addEventListener('click', forcePush);
-    el('btnSyncNow').addEventListener('click', function () { syncRound({ silent: false }); });
-    el('btnGhOpen').addEventListener('click', function () {
+    if (el('btnPull')) el('btnPull').addEventListener('click', function () { forcePull(); });
+    if (el('btnPull2')) el('btnPull2').addEventListener('click', function () { forcePull(); });
+    if (el('btnPush')) el('btnPush').addEventListener('click', function () { forcePush(); });
+    if (el('btnSyncNow')) el('btnSyncNow').addEventListener('click', function () { syncRound({ silent: false }); });
+    if (el('btnGhOpen')) el('btnGhOpen').addEventListener('click', function () {
       window.open('https://github.com/' + cfg.owner + '/' + cfg.repo, '_blank');
+    });
+    if (el('btnLogClear')) el('btnLogClear').addEventListener('click', function () {
+      logBuf = []; renderLog();
     });
   }
 
-  /* ---------------- 启动 ---------------- */
+  async function forcePush() {
+    setBadge('sync', '上传中…');
+    try {
+      await pushRetry();
+      cfg.lastPushAt = new Date().toISOString();
+      cfg.syncedOnce = true;
+      cfg.lastError = '';
+      saveCfg();
+      saveSnap(snapshot());
+      setBadge('ok', '已同步');
+      toast('已上传到 GitHub');
+      log('手动上传完成');
+    } catch (e) {
+      cfg.lastError = e.message; saveCfg();
+      setBadge('err', '上传失败');
+      toast('上传失败：' + e.message);
+      log('上传失败：' + e.message);
+    }
+    refreshState();
+  }
+
+  async function forcePull() {
+    setBadge('sync', '下载中…');
+    try {
+      var r = await pull();
+      var o = JSON.parse(r.content);
+      var d = (o && o.data) ? o.data : o;
+      if (!d || typeof d !== 'object') throw new Error('文件格式不正确');
+      quiet(function () {
+        if (typeof applyPayload === 'function') {
+          applyPayload(d, '已从 GitHub 恢复 · ' + fmtIso(r.updatedAt));
+        } else {
+          localStorage.clear();
+          Object.keys(d).forEach(function (k) { if (!isSkip(k)) localStorage.setItem(k, d[k]); });
+        }
+      });
+      saveSnap(d);
+      cfg.updatedAt = r.updatedAt;
+      cfg.lastPullAt = new Date().toISOString();
+      cfg.syncedOnce = true;
+      cfg.lastError = '';
+      saveCfg();                      // 上面 clear 会带走本机配置，这里立刻写回
+      lastSig = curSig();
+      setBadge('ok', '已同步');
+      toast('已从云端恢复');
+      log('手动下载完成');
+      closeCloud();
+    } catch (e) {
+      cfg.lastError = e.message; saveCfg();
+      setBadge('err', '下载失败');
+      toast('下载失败：' + e.message);
+      log('下载失败：' + e.message);
+    }
+    refreshState();
+  }
+
+  /* 清空本机缓存但保留 Token，然后从云端重新拉一份 */
+  async function resetLocal() {
+    quiet(function () {
+      var keep = localStorage.getItem(K_CFG);
+      try { localStorage.clear(); } catch (e) { /* ignore */ }
+      if (keep) { try { localStorage.setItem(K_CFG, keep); } catch (e2) { /* ignore */ } }
+    });
+    saveSnap({});
+    lastSig = curSig();
+    log('已清空本机缓存，正在从云端恢复…');
+    await forcePull();
+  }
+
+  /* ======================= 启动 ======================= */
 
   function boot() {
     loadCfg();
     fillForm();
     bind();
+    lastSig = curSig();
     refreshState();
     startEngine();
-    if (cfg.autoPull !== false) {
+
+    if (cfg.autoSync && cfg.autoPull) {
       setBadge('sync', '拉取中…');
       syncRound({ silent: true }).then(function (r) {
-        if (r) { setBadge('ok', '已同步'); setStatus('已与 GitHub 同步 · ' + fmtIso(cfg.updatedAt)); }
+        if (!r) return;
+        // 徽标交给 doRound 决定（可能是「未登录」「Token 无效」），这里只更新状态栏
+        if (typeof setStatus === 'function') {
+          setStatus('已与 GitHub 同步 · ' + fmtIso(cfg.updatedAt));
+        }
       });
     } else {
-      setBadge('off', '云同步');
+      setBadge('off', '自动同步已关');
     }
   }
 
-  window.IF76Cloud = { sync: syncRound, push: forcePush, pull: forcePull, cfg: function () { return cfg; } };
+  window.IF76Cloud = {
+    sync: function (o) { return syncRound(o || { silent: false }); },
+    push: forcePush,
+    pull: forcePull,
+    reset: resetLocal,
+    flush: flushBeacon,
+    cfg: function () { return cfg; },
+    state: function () {
+      return {
+        token: !!cfg.token, autoSync: cfg.autoSync,
+        lastPushAt: cfg.lastPushAt, lastPullAt: cfg.lastPullAt,
+        pending: changedKeys().length, error: cfg.lastError, log: logBuf.slice()
+      };
+    }
+  };
   window.openCloud = openCloud;
   window.closeCloud = closeCloud;
+
   boot();
 })();
