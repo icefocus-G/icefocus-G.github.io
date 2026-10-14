@@ -2,8 +2,8 @@
   "app": "IF00076",
   "ver": 3,
   "device": "web",
-  "exportedAt": "2026-10-14T15:05:23.055Z",
-  "updatedAt": "2026-10-14T15:05:23.055Z",
+  "exportedAt": "2026-10-14T15:05:27.729Z",
+  "updatedAt": "2026-10-14T15:05:27.729Z",
   "data": {
     "IF76::stats": "{\"outline.html\":{\"opens\":1,\"ms\":141173,\"last\":1791990070748,\"scroll\":0},\"bank.html\":{\"opens\":0,\"ms\":65967,\"last\":0,\"scroll\":0}}",
     "if00076_pos_v1": "{\"y\":97.14286041259766,\"tab\":\"map\"}",
