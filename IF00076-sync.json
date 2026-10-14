@@ -2,12 +2,12 @@
   "app": "IF00076",
   "ver": 3,
   "device": "web",
-  "exportedAt": "2026-10-14T15:23:24.114Z",
-  "updatedAt": "2026-10-14T15:23:24.115Z",
+  "exportedAt": "2026-10-14T15:23:27.819Z",
+  "updatedAt": "2026-10-14T15:23:27.819Z",
   "data": {
-    "IF76::stats": "{\"outline.html\":{\"opens\":1,\"ms\":177091,\"last\":1791990070748,\"scroll\":0},\"bank.html\":{\"opens\":1,\"ms\":366096,\"last\":1791990247841,\"scroll\":0}}",
-    "if00076_pos_v1": "{\"tab\":\"map\",\"y\":3470.857177734375}",
-    "IF76::tab": "1",
+    "IF76::stats": "{\"outline.html\":{\"opens\":2,\"ms\":216442,\"last\":1791991407724,\"scroll\":0},\"bank.html\":{\"opens\":2,\"ms\":367134,\"last\":1791991406687,\"scroll\":0}}",
+    "if00076_pos_v1": "{\"tab\":\"map\",\"y\":1011.7142944335938}",
+    "IF76::tab": "0",
     "if00076_exam_wrongMigrated": "true"
   }
 }
