@@ -67,15 +67,20 @@ find . -type f \
     mkdir -p "$BUILD/assets/www/$(dirname "${f#./}")"
     cp -p "$f" "$BUILD/assets/www/${f#./}"
   done
+# 拷贝到外置盘（exFAT）时，macOS 会给每个文件再生成一个 ._xxx 的 AppleDouble 副本，
+# 打包前必须清掉，否则这些垃圾会一起进 APK。
+find "$BUILD/assets/www" \( -name '._*' -o -name '.DS_Store' \) -delete 2>/dev/null || true
 echo "   资源文件数：$(find "$BUILD/assets/www" -type f | wc -l | tr -d ' ')"
 
 # ---------- 3. 编译 ----------
 echo "== javac =="
 "$JAVA_HOME/bin/javac" -encoding UTF-8 -source 17 -target 17 -nowarn \
-  -classpath "$AJ" -d "$BUILD/obj" $(find "$HERE/java" -name '*.java')
+  -classpath "$AJ" -d "$BUILD/obj" $(find "$HERE/java" -name '*.java' ! -name '._*')
 
 echo "== d8 =="
-"$BT/d8" --lib "$AJ" --min-api $MIN_SDK --output "$BUILD" $(find "$BUILD/obj" -name '*.class')
+# 注意：外置盘上会立刻生成 ._xxx.class 这类 AppleDouble 副本，
+#       不加 ! -name '._*' 的话 d8 会报 "Invalid classfile header"。
+"$BT/d8" --lib "$AJ" --min-api $MIN_SDK --output "$BUILD" $(find "$BUILD/obj" -name '*.class' ! -name '._*')
 
 echo "== aapt2 =="
 "$BT/aapt2" compile --dir "$HERE/res" -o "$BUILD/flats.zip"
