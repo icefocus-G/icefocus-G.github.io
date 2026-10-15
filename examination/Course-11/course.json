@@ -15,5 +15,5 @@
     "6. 可选：填 sync.id / sync.data 接入 GitHub 云同步，例：{\"id\":\"XX12345\",\"data\":\"XX12345-sync.json\"}",
     "7. 推送到 GitHub，刷新课程中心"
   ],
-  "entry": "/_shell/study.html?course=Course-11"
+  "entry": "/shell/study.html?course=Course-11"
 }

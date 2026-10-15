@@ -6,7 +6,7 @@
 examination/
   index.html            课程中心（自动扫描 + 自动读课程名）
   courses.json          课程中心配置（课程位总数 / 兜底清单 / 自动发现开关）
-  _shell/study.html     通用「学习助手」壳 —— 所有课程共用，读 course.json 自动装配
+  shell/study.html     通用「学习助手」壳 —— 所有课程共用，读 course.json 自动装配
   _template/            新课程模板（复制走就行）
   _tools/scan.py        本地扫描器（基本用不上，见文末）
   International Finance/    已上线
@@ -76,10 +76,10 @@ examination/
 
 ## 学习助手不用自己写
 
-`_shell/study.html` 是一个壳，服务所有课程：
+`shell/study.html` 是一个壳，服务所有课程：
 
 ```
-_shell/study.html?course=<目录名>
+shell/study.html?course=<目录名>
 ```
 
 它会读 `../<目录名>/course.json`，然后自动装配：标题、页签（大纲精讲 / 历年真题库）、
@@ -96,15 +96,31 @@ _shell/study.html?course=<目录名>
 
 ---
 
-## 关于 `_shell` / `_template` / `_tools`
+## 保留目录：`shell` / `_template` / `_tools`
 
-以下划线开头的目录会被自动发现**跳过**，不会出现在课程中心：
+这些目录**不会**出现在课程中心（自动发现会跳过）：
 
-| 目录 | 作用 |
-|---|---|
-| `_shell/` | 通用学习助手壳 |
-| `_template/` | 新课程模板 |
-| `_tools/` | 工具脚本 |
+| 目录 | 作用 | 靠什么被跳过 |
+|---|---|---|
+| `shell/` | 通用学习助手壳 | 在 `courses.json` 的 `reserved` 名单里 |
+| `_template/` | 新课程模板 | 下划线开头 |
+| `_tools/` | 工具脚本 | 下划线开头 |
+
+> **注意**：通用壳的目录名是 `shell`（**没有下划线**），不是 `_shell`。
+> 原因是 GitHub Pages 默认跑 Jekyll，**它会忽略所有下划线开头的文件/目录** ——
+> 之前叫 `_shell` 时线上直接 404。`shell/` 这个不带下划线的名字就不受影响了。
+> 老的 `_shell/study.html` 仍保留，会自动跳到 `shell/study.html`，旧书签不会失效。
+
+自己命名课程目录时，避开 `shell` / `template` / `tools` / `assets` / `data` / `script` 这几个名字即可。
+
+### `.nojekyll`（重要，别删）
+
+仓库根目录有一个空的 `.nojekyll` 文件，它的作用是**关掉 GitHub Pages 的 Jekyll**。
+没有它的话，任何以下划线开头的路径（`_template/`、`_tools/` …）在线上都会 404。
+页面上传或压缩包解压时**请确认它一起传上去了**（这是个隐藏文件，容易漏）。
+
+漏了也不致命 —— 运行时真正要用到的 `shell/` 已经没有下划线了，只是 `_template/`、`_tools/`
+在线上打不开而已。
 
 ### `_tools/scan.py`（可选）
 
@@ -120,14 +136,36 @@ python _tools/scan.py           # 顺手回写 courses.json 的 fallback
 
 ---
 
-## 云同步
+## 云同步（已内置凭据，**不用手动填**）
+
+凭据已经内置在全站通用的 `script/gh-token.js` 里，**所有课程共用这一份**：
+
+- 打开任意课程 → 右上角「☁ 云同步」→ 会直接显示 **「已内置凭据（无需填写）」**，
+  「这台设备还缺同步凭据」那张卡片不会出现
+- 首次打开页面就会自动拉取云端数据、并把本机改动推上去，页面/手机/App 三端互通
+- 手动在面板里填过的 Token 优先级最高，会覆盖内置的那份
+- APK 端额外自带一份（`assets/token.txt`），即使站点脚本没加载到也能同步
 
 每个课程用 `sync.id` 区分，数据存在 `data/<sync.data>`。
 
-- 打开课程 → 右上角「☁ 云同步」→ 粘贴一次 GitHub Token（Fine-grained，
-  只授权这一个仓库，权限只勾 `Contents: Read and write`）
-- 之后答题、判分、笔记全部自动上传，网页 / 手机 / App 三端互通
-- Token 只存在浏览器 localStorage，**永远不要写进仓库**
+### 凭据为什么是「乱码」
+
+`script/gh-token.js` 里的令牌是 **XOR + Base64 混淆**过的（前缀 `IF1:`），源码里搜不到 `ghp_`
+明文。这样做是因为：明文令牌一旦进公开仓库，GitHub 的密钥扫描会识别出来并**自动吊销**，
+同步会毫无征兆地全线失效。
+
+换令牌（在仓库根目录执行）：
+
+```bash
+python examination/_tools/set-token.py ghp_你的新令牌
+python examination/_tools/set-token.py --show     # 看当前内置的是哪个账号
+python examination/_tools/set-token.py --clear    # 清空，退回只读模式
+```
+
+改完网页端推送即生效；APK 需要重新打包：`cd apk && ./build.sh`。
+
+> ⚠️ 提醒：混淆只是躲开自动扫描，**不是加密**。任何拿到页面源码的人都能还原出这个令牌。
+> 如果哪天不放心了，去 GitHub 把这个 Token 吊销、重新生成一个，再跑一次 `set-token.py` 即可。
 
 新课程记得在 `data/` 下建一个空的 `<sync.data>`，例如：
 

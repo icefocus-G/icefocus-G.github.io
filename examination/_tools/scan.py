@@ -24,6 +24,8 @@ EXAM = os.path.dirname(HERE)          # examination/
 CFG = os.path.join(EXAM, 'courses.json')
 
 SKIP_PREFIX = ('_', '.')
+# 保留目录：通用壳 / 模板 / 工具等，不是课程。与 courses.json 的 reserved 保持一致。
+SKIP_NAMES = {'shell', 'template', 'tools', 'assets', 'data', 'script'}
 
 
 def scan():
@@ -32,7 +34,7 @@ def scan():
         p = os.path.join(EXAM, name)
         if not os.path.isdir(p):
             continue
-        if name.startswith(SKIP_PREFIX):
+        if name.startswith(SKIP_PREFIX) or name in SKIP_NAMES:
             continue
         cj = os.path.join(p, 'course.json')
         meta = None

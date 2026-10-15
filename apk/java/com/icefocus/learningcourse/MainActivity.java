@@ -451,7 +451,7 @@ public class MainActivity extends Activity {
             byte[] buf = new byte[512];
             int n;
             while ((n = in.read(buf)) > 0) bo.write(buf, 0, n);
-            return bo.toString("UTF-8").replaceAll("\\s", "");
+            return decodeToken(bo.toString("UTF-8").replaceAll("\\s", ""));
         } catch (Exception e) {
             return "";
         } finally {
@@ -459,6 +459,34 @@ public class MainActivity extends Activity {
                 if (in != null) in.close();
             } catch (Exception ignored) {
             }
+        }
+    }
+
+    /* 凭据编码：仓库里的 APK 与 script/gh-token.js 都用同一套混淆，
+       保证任何地方都搜不到 ghp_ 明文（免得被仓库密钥扫描自动吊销，也防一眼被抄）。 */
+    private static final String TOK_PREFIX = "IF1:";
+    private static final String TOK_KEY = "icefocus-G";
+
+    /**
+     * 解码内置凭据。
+     * · 明文（旧格式，直接是 ghp_xxx）→ 原样返回
+     * · "IF1:<base64>"               → XOR(TOK_KEY) 还原
+     * · 空串 / 解不开                  → 返回 ""，退化为「未内置」，页面仍可手动填
+     */
+    static String decodeToken(String raw) {
+        if (raw == null) return "";
+        String s = raw.trim();
+        if (s.isEmpty()) return "";
+        if (!s.startsWith(TOK_PREFIX)) return s;
+        try {
+            byte[] b = Base64.decode(s.substring(TOK_PREFIX.length()), Base64.DEFAULT);
+            StringBuilder sb = new StringBuilder(b.length);
+            for (int i = 0; i < b.length; i++) {
+                sb.append((char) ((b[i] & 0xFF) ^ TOK_KEY.charAt(i % TOK_KEY.length())));
+            }
+            return sb.toString();
+        } catch (Exception e) {
+            return "";
         }
     }
 

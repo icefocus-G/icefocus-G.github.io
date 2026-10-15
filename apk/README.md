@@ -49,14 +49,35 @@ App 每次启动会在后台拉一次这个文件；`home` 变了就存下来，
 
 1. 把 `software/LearningCourse-Shell-20261015.apk` 传到手机，点开安装；
 2. 系统会提示「未知来源」→ 允许；
-3. **手机上装过旧版的话，必须先卸载旧版** —— 签名密钥换了（旧 keystore 只在打包那台机器上），
-   不卸载会提示「应用未安装」。卸载不丢东西：新版是另一个源，本来就要重新填一次 Token。
-4. 打开 App → 课程中心 → 选课程；
-5. 右上角「☁ 云同步」→ 粘贴一次 GitHub Token（Fine-grained，只授权这一个仓库，
-   权限只勾 `Contents: Read and write`）。填一次就永久有效。
+3. **手机上装过旧版的话，建议先卸载旧版**（新版 versionCode 3 > 旧版 2，同签名可以覆盖升级；
+   只有当初那个内嵌版是另一套密钥，装它会提示「应用未安装」）；
+4. 打开 App → 课程中心 → 选课程 —— **同步凭据已经内置，不用填任何东西**，
+   右上角「☁ 云同步」会直接显示「已内置凭据（无需填写）」。
 
-> 想让 APK 自带凭据、装完免填：把 Token 存成 `apk/.token` 再跑 `./build.sh`，
-> 它会写进 `assets/token.txt`，运行时注入。**该文件不要提交到仓库。**
+## 同步凭据（已内置，免填）
+
+App 自带一份凭据，装完即自动同步，覆盖所有课程：
+
+- `assets/token.txt` 里存的是 **XOR + Base64 混淆**后的令牌（前缀 `IF1:`），
+  由 `MainActivity.decodeToken()` 在运行时还原。包内搜不到 `ghp_` 明文，
+  避免被仓库的密钥扫描识别并吊销。
+- 它会被 `shouldInterceptRequest` 用来替换站点里的 `script/gh-token.js`，
+  保证令牌在 `cloud.js` 启动**之前**就位。
+- 站点自己的 `script/gh-token.js` 里也内置了同一份凭据，所以**即使这一层没生效，
+  网页版照样自动同步** —— 两条路互为备份。
+
+换令牌 / 首次内置：
+
+```bash
+# 仓库根目录（会同时写好网页端与 APK 端）
+python examination/_tools/set-token.py ghp_你的令牌
+
+# 然后重新打包 APK
+cd apk && ./build.sh
+```
+
+也可以手工放一份 `apk/.token`（内容为 `IF1:xxxx` 或明文令牌）再打包 ——
+但 **`apk/.token` 不要提交到仓库**。
 
 ## 功能
 

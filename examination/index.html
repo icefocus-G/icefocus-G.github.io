@@ -239,7 +239,8 @@ footer a:hover{color:var(--a1)}
   }
 
   var CFG = { slots: 12, autoDiscover: true, fallback: [], owner: 'icefocus-G',
-              repo: 'icefocus-G.github.io', branch: 'main', showReserved: true };
+              repo: 'icefocus-G.github.io', branch: 'main', showReserved: true,
+              reserved: ['shell', 'template', 'tools', 'assets', 'data', 'script'] };
   var COURSES = [];
   var filter = 'all', kw = '';
 
@@ -271,7 +272,8 @@ footer a:hover{color:var(--a1)}
       .then(function (arr) {
         if (!Array.isArray(arr)) return [];
         var dirs = arr.filter(function (e) {
-          return e && e.type === 'dir' && e.name && e.name.charAt(0) !== '_' && e.name.charAt(0) !== '.';
+          return e && e.type === 'dir' && e.name && e.name.charAt(0) !== '_' && e.name.charAt(0) !== '.'
+                 && CFG.reserved.indexOf(e.name) < 0;
         }).map(function (e) { return e.name; });
         try { localStorage.setItem(K_DISC, JSON.stringify({ at: Date.now(), dirs: dirs })); } catch (e) {}
         return dirs;
@@ -297,7 +299,7 @@ footer a:hover{color:var(--a1)}
           dir: dir, cn: dir, en: '', code: '',
           ico: isBlank ? '➕' : '📚',
           status: isBlank ? 'reserved' : 'live',
-          entry: '/_shell/study.html?course=' + encodeURIComponent(dir),
+          entry: '/shell/study.html?course=' + encodeURIComponent(dir),
           desc: isBlank ? '预留课程位。' : '未提供 course.json，按目录名显示。'
         };
       });
@@ -336,7 +338,7 @@ footer a:hover{color:var(--a1)}
        以 "/" 开头        → 相对 examination/（去掉开头的斜杠）
        以 "./" "../" 开头 → 相对当前页，原样使用
        其它               → 相对课程目录
-     没有 entry 时自动落到通用壳 _shell/study.html?course=<目录>（壳自己会兜底） */
+     没有 entry 时自动落到通用壳 shell/study.html?course=<目录>（壳自己会兜底） */
   function hrefOf(c) {
     var e = c.entry;
     if (e) {
@@ -345,7 +347,7 @@ footer a:hover{color:var(--a1)}
       var dir = isEmbedded() ? String(c.dir).replace(/\s+/g, '') : c.dir;
       return encodeURIComponent(dir) + '/' + e;
     }
-    return '_shell/study.html?course=' + encodeURIComponent(c.dir);
+    return 'shell/study.html?course=' + encodeURIComponent(c.dir);
   }
 
   function cardHTML(c) {
@@ -431,7 +433,7 @@ footer a:hover{color:var(--a1)}
       var cn = '空白课程位 ' + no;
       list.push({
         dir: dir, cn: cn, en: 'Reserved Slot ' + no, ico: '➕', code: '', status: 'reserved',
-        entry: '/_shell/study.html?stub=1&name=' + encodeURIComponent(cn),
+        entry: '/shell/study.html?stub=1&name=' + encodeURIComponent(cn),
         desc: '预留课程位。把内容放进 examination/' + dir + '/ 就会自动变成一门正式课程。'
       });
     }
@@ -448,7 +450,12 @@ footer a:hover{color:var(--a1)}
 
   function load(dirs) {
     var seen = {};
-    dirs = dirs.filter(function (d) { if (!d || seen[d]) return false; seen[d] = 1; return true; });
+    dirs = dirs.filter(function (d) {
+      if (!d || seen[d]) return false;
+      if (String(d).charAt(0) === '_' || String(d).charAt(0) === '.') return false;   // 系统目录
+      if ((CFG.reserved || []).indexOf(d) >= 0) return false;                        // 保留名
+      seen[d] = 1; return true;
+    });
     return Promise.all(dirs.map(fetchCourse)).then(function (list) {
       COURSES = padSlots(sortCourses(list));
       renderStats(); render();
