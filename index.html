@@ -1,0 +1,218 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="theme-color" content="#070b18">
+<title>ICEFOCUS</title>
+<link rel="icon" href="assets/icon.svg">
+<link rel="apple-touch-icon" href="assets/icon.svg">
+<link rel="manifest" href="manifest.webmanifest">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="mobile-web-app-capable" content="yes">
+<style>
+  :root{ --bg:#070b18; --ink:#e8eefb; --dim:#8b9ec2; --a1:#38bdf8; --a2:#a78bfa; }
+  *{box-sizing:border-box}
+  html,body{height:100%}
+  body{
+    margin:0; height:100%; overflow:hidden; background:var(--bg); color:var(--ink);
+    font-family:-apple-system,BlinkMacSystemFont,"PingFang SC","Microsoft YaHei","Segoe UI",Inter,Roboto,sans-serif;
+    -webkit-font-smoothing:antialiased;
+  }
+  #stage{position:fixed; inset:0; width:100%; height:100%; border:0; display:block;
+    opacity:0; transition:opacity .45s ease; background:var(--bg)}
+  #stage.in{opacity:1}
+  /* 载入过渡 */
+  #boot{position:fixed; inset:0; display:grid; place-items:center; z-index:5;
+    background:var(--bg); transition:opacity .4s ease}
+  #boot.off{opacity:0; pointer-events:none}
+  #boot .b{text-align:center}
+  #boot .lg{font-size:26px; font-weight:800; letter-spacing:.32em; margin-bottom:10px}
+  #boot .tx{font-size:12px; color:var(--dim); letter-spacing:.2em}
+  #boot .bar{margin:14px auto 0; width:120px; height:2px; border-radius:2px;
+    background:linear-gradient(90deg,var(--a1),var(--a2)); animation:pulse 1.1s ease-in-out infinite}
+  @keyframes pulse{0%{transform:scaleX(.25);opacity:.4}50%{transform:scaleX(1);opacity:1}100%{transform:scaleX(.25);opacity:.4}}
+  /* 皮肤切换胶囊 */
+  #chip{
+    position:fixed; right:12px; bottom:calc(12px + env(safe-area-inset-bottom));
+    z-index:20; display:flex; align-items:center; gap:6px;
+    padding:6px 10px; border-radius:999px; cursor:pointer; user-select:none;
+    background:rgba(10,16,32,.62); border:1px solid rgba(140,170,220,.22);
+    color:rgba(232,238,251,.72); font-size:11.5px; letter-spacing:.04em;
+    backdrop-filter:blur(10px); -webkit-backdrop-filter:blur(10px);
+    box-shadow:0 6px 22px -10px rgba(0,0,0,.8); transition:.2s; white-space:nowrap;
+  }
+  #chip:hover{color:#fff; border-color:rgba(140,170,220,.45)}
+  #chip .dot{width:6px;height:6px;border-radius:50%;background:var(--a1);box-shadow:0 0 8px var(--a1)}
+  #chip .sep{width:1px;height:12px;background:rgba(140,170,220,.25)}
+  #chip .act{padding:0 2px; opacity:.85}
+  #chip .act:hover{opacity:1}
+  #chip.lock .act.lockBtn{color:var(--a2)}
+  @media (max-width:480px){ #chip{right:8px; bottom:calc(8px + env(safe-area-inset-bottom)); font-size:11px; padding:5px 9px} }
+  #err{position:fixed; inset:0; display:none; place-items:center; text-align:center; padding:24px; z-index:30}
+  #err.on{display:grid}
+  #err .c{max-width:460px; font-size:13px; line-height:2; color:var(--dim)}
+  #err code{background:rgba(140,170,220,.12); padding:2px 6px; border-radius:5px; color:#cfe0ff}
+</style>
+</head>
+<body>
+
+<iframe id="stage" title="ICEFOCUS"></iframe>
+
+<div id="boot">
+  <div class="b">
+    <div class="lg">IF</div>
+    <div class="tx">LOADING SKIN</div>
+    <div class="bar"></div>
+  </div>
+</div>
+
+<div id="chip" style="display:none" title="切换首页皮肤">
+  <span class="dot"></span>
+  <span id="chipName">Default</span>
+  <span class="sep"></span>
+  <span class="act" id="chipNext">换一个</span>
+  <span class="sep"></span>
+  <span class="act lockBtn" id="chipLock">锁定</span>
+</div>
+
+<div id="err">
+  <div class="c">
+    <div style="font-size:15px;color:#e8eefb;margin-bottom:10px">没有找到可用的首页皮肤</div>
+    请把做好的首页 HTML 放进 <code>ThemedSkin/</code> 文件夹（文件名任意），<br>
+    然后双击 <code>script/rebuild-skins.command</code> 刷新清单即可。<br>
+    至少保留一个 <code>ThemedSkin/default.html</code> 作为默认皮肤。
+  </div>
+</div>
+
+<script src="script/skins.js"></script>
+<script>
+(function () {
+  'use strict';
+
+  var DIR   = 'ThemedSkin/';
+  var K_PIN = 'IF::skinPin';
+  var K_LOCK= 'IF::skinLock';
+
+  var stage = document.getElementById('stage');
+  var boot  = document.getElementById('boot');
+  var chip  = document.getElementById('chip');
+  var cName = document.getElementById('chipName');
+  var cNext = document.getElementById('chipNext');
+  var cLock = document.getElementById('chipLock');
+
+  function qs(k) { var m = new RegExp('[?&]' + k + '=([^&#]*)').exec(location.search); return m ? decodeURIComponent(m[1]) : ''; }
+  function LSget(k, d) { try { var v = localStorage.getItem(k); return v === null ? d : v; } catch (e) { return d; } }
+  function LSset(k, v) { try { localStorage.setItem(k, v); } catch (e) {} }
+  function has(o, k) { return Object.prototype.hasOwnProperty.call(o, k); }
+
+  /* 清单条目归一：file 必填，其余可选 */
+  function normalize(raw) {
+    var out = [], seen = {};
+    (raw || []).forEach(function (s) {
+      if (!s) return;
+      if (typeof s === 'string') s = { file: s };
+      var f = String(s.file || '').trim();
+      if (!f) return;
+      if (f.indexOf('/') < 0) f = DIR + f;
+      var key = f.replace(/^\.\//, '').toLowerCase();
+      if (has(seen, key)) return;
+      seen[key] = 1;
+      out.push({ file: f, name: String(s.name || s.title || f.replace(/^.*\//, '').replace(/\.html?$/i, '')) });
+    });
+    return out;
+  }
+
+  var baseList = normalize(window.THEME_SKINS || []);
+
+  /* 运行时再试一次 manifest.json —— 新增皮肤没跑重建脚本也能被读到（http/https 下有效） */
+  function fetchManifest() {
+    try {
+      return fetch(DIR + 'manifest.json?_t=' + Date.now(), { cache: 'no-store' })
+        .then(function (r) { return r.ok ? r.json() : null; })
+        .then(function (j) { return j ? normalize(Array.isArray(j) ? j : j.skins) : []; })
+        .catch(function () { return []; });
+    } catch (e) { return Promise.resolve([]); }
+  }
+
+  function union(extra) {
+    var map = {}, order = [];
+    baseList.concat(extra || []).forEach(function (s) {
+      var k = s.file.toLowerCase();          // 比较一律小写，避免同名不同大小写重复
+      if (!has(map, k)) order.push(k);
+      map[k] = s;
+    });
+    return order.map(function (k) { return map[k]; });
+  }
+
+  var list = [], cur = -1;
+
+  function apply(i, cb) {
+    if (i < 0 || !list[i]) return;
+    cur = i;
+    var s = list[i];
+    stage.classList.remove('in');
+    cName.textContent = s.name;
+    LSset(K_PIN, s.file);
+    try {
+      stage.onload = function () {
+        stage.classList.add('in');
+        boot.classList.add('off');
+        try { document.title = (stage.contentDocument && stage.contentDocument.title) || 'ICEFOCUS'; } catch (e) {}
+      };
+      stage.src = s.file;
+    } catch (e) { /* ignore */ }
+    if (cb) cb();
+  }
+
+  function roll(fixed) {
+    var idx = -1;
+    if (fixed) {
+      for (var i = 0; i < list.length; i++) {
+        if (list[i].file === fixed || list[i].file === DIR + fixed) { idx = i; break; }
+      }
+    }
+    if (idx < 0) idx = Math.floor(Math.random() * list.length);
+    apply(idx);
+  }
+
+  /* ---------- 交互 ---------- */
+  cNext.addEventListener('click', function () { apply((cur + 1) % list.length); });
+  cLock.addEventListener('click', function () {
+    var locked = LSget(K_LOCK, '0') === '1';
+    LSset(K_LOCK, locked ? '0' : '1');
+    paintLock();
+  });
+  function paintLock() {
+    var locked = LSget(K_LOCK, '0') === '1';
+    chip.classList.toggle('lock', locked);
+    cLock.textContent = locked ? '已锁定' : '锁定';
+  }
+
+  document.getElementById('chipName').addEventListener('click', function () { apply(cur); });
+
+  /* ---------- 启动 ---------- */
+  fetchManifest().then(function (extra) {
+    list = union(extra);
+    if (!list.length) {
+      document.getElementById('err').classList.add('on');
+      boot.classList.add('off');
+      return;
+    }
+    chip.style.display = 'flex';
+    paintLock();
+
+    var byUrl = qs('skin');
+    var pinned = LSget(K_PIN, '');
+    var locked = LSget(K_LOCK, '0') === '1';
+    var pick = byUrl || (locked ? pinned : '');
+    roll(pick);
+
+    // QR：URL 上带 skin 参数时自动写入（方便分享 / 测试某套皮肤）
+    if (byUrl) LSset(K_LOCK, '1');
+  });
+})();
+</script>
+</body>
+</html>

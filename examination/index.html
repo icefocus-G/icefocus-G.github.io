@@ -1,0 +1,299 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="theme-color" content="#0b1020">
+<meta name="description" content="ICEFOCUS · Learning Course 课程中心">
+<title>Learning Course · ICEFOCUS</title>
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'><rect width='32' height='32' rx='8' fill='%230b1020'/><text x='16' y='22' font-size='16' font-family='sans-serif' font-weight='700' fill='%2338bdf8' text-anchor='middle'>IF</text></svg>">
+<link rel="manifest" href="../manifest.webmanifest">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="mobile-web-app-capable" content="yes">
+<style>
+:root{
+  --bg:#0b1020; --ink:#e8eefb; --dim:#8b9ec2; --dim2:#5c6d8f;
+  --a1:#38bdf8; --a2:#a78bfa; --a3:#34d399;
+  --line:rgba(140,170,220,.16); --card:rgba(19,26,46,.66);
+}
+*{box-sizing:border-box}
+html,body{margin:0;height:100%}
+body{
+  background:var(--bg); color:var(--ink); min-height:100%;
+  font-family:-apple-system,BlinkMacSystemFont,"PingFang SC","Microsoft YaHei","Segoe UI",Inter,Roboto,sans-serif;
+  -webkit-font-smoothing:antialiased; -webkit-text-size-adjust:100%;
+  display:flex; flex-direction:column;
+}
+.glow{
+  position:fixed; inset:-20% -10%; z-index:0; pointer-events:none;
+  background:
+    radial-gradient(38% 42% at 18% 22%, rgba(56,189,248,.18), transparent 62%),
+    radial-gradient(34% 38% at 82% 26%, rgba(167,139,250,.18), transparent 62%),
+    radial-gradient(46% 44% at 50% 96%, rgba(52,211,153,.10), transparent 66%);
+  filter:blur(20px);
+}
+.wrap{position:relative; z-index:1; width:100%; max-width:1080px; margin:0 auto; padding:0 18px 60px}
+
+/* ---------- 顶栏 ---------- */
+header{
+  position:sticky; top:0; z-index:10;
+  padding:10px 18px calc(10px); display:flex; align-items:center; gap:10px;
+  background:rgba(11,16,32,.72); backdrop-filter:blur(12px); -webkit-backdrop-filter:blur(12px);
+  border-bottom:1px solid var(--line); padding-top:calc(10px + env(safe-area-inset-top));
+}
+.logo{font-size:15px; font-weight:800; letter-spacing:.16em; color:var(--ink)}
+.logo span{color:var(--a1)}
+header .sp{flex:1}
+.home{
+  display:inline-flex; align-items:center; gap:5px; text-decoration:none;
+  color:var(--dim); font-size:12.5px; border:1px solid var(--line);
+  padding:5px 11px; border-radius:999px; transition:.18s; white-space:nowrap;
+}
+.home:hover{color:var(--ink); border-color:rgba(140,170,220,.4)}
+
+/* ---------- Hero ---------- */
+.hero{padding:44px 4px 26px; text-align:center}
+.eyebrow{
+  display:inline-flex; align-items:center; gap:8px; font-size:11px; letter-spacing:.22em;
+  color:var(--dim); border:1px solid var(--line); border-radius:999px; padding:5px 13px;
+}
+.eyebrow i{width:5px;height:5px;border-radius:50%;background:var(--a1);box-shadow:0 0 8px var(--a1)}
+.hero h1{
+  margin:16px 0 8px; font-size:clamp(30px,7vw,46px); letter-spacing:.04em; font-weight:800;
+  background:linear-gradient(100deg,#e8eefb 10%,var(--a1) 50%,var(--a2) 90%);
+  -webkit-background-clip:text; background-clip:text; color:transparent;
+}
+.hero p{margin:0; color:var(--dim); font-size:13.5px; letter-spacing:.06em}
+
+/* ---------- 同步状态条 ---------- */
+.syncbar{
+  display:flex; align-items:center; gap:9px; flex-wrap:wrap;
+  margin:22px auto 0; padding:9px 14px; font-size:12.5px; color:var(--dim);
+  background:var(--card); border:1px solid var(--line); border-radius:12px;
+  max-width:720px; line-height:1.7;
+}
+.syncbar .dot{width:7px;height:7px;border-radius:50%;background:#64748b;flex:0 0 auto}
+.syncbar .dot.on{background:var(--a3); box-shadow:0 0 8px var(--a3)}
+.syncbar .dot.warn{background:#f59e0b; box-shadow:0 0 8px #f59e0b}
+.syncbar b{color:var(--ink); font-weight:600}
+.syncbar .sp{flex:1}
+.syncbar a{color:var(--a1); text-decoration:none; border-bottom:1px dashed rgba(56,189,248,.4)}
+.syncbar a:hover{border-bottom-style:solid}
+
+/* ---------- 课程卡 ---------- */
+.secTitle{
+  margin:40px 2px 16px; display:flex; align-items:baseline; gap:10px;
+  font-size:12px; letter-spacing:.2em; color:var(--dim2);
+}
+.secTitle::after{content:""; flex:1; height:1px; background:var(--line)}
+.grid{display:grid; grid-template-columns:repeat(auto-fill,minmax(300px,1fr)); gap:16px}
+@media (max-width:520px){ .grid{grid-template-columns:1fr} }
+
+.course{
+  position:relative; display:flex; flex-direction:column; gap:12px;
+  padding:20px; border-radius:18px; text-decoration:none; color:inherit;
+  background:var(--card); border:1px solid var(--line); overflow:hidden;
+  transition:transform .22s ease, border-color .22s ease, box-shadow .22s ease;
+}
+.course::before{
+  content:""; position:absolute; inset:0; opacity:.5; pointer-events:none;
+  background:var(--cg,radial-gradient(120% 90% at 12% 6%, rgba(56,189,248,.16), transparent 62%));
+  transition:opacity .25s;
+}
+.course:hover{transform:translateY(-4px); border-color:rgba(140,170,220,.36);
+  box-shadow:0 18px 44px -20px rgba(0,0,0,.85)}
+.course:hover::before{opacity:.85}
+.course.todo{cursor:default; opacity:.62}
+.course.todo:hover{transform:none; box-shadow:none; border-color:var(--line)}
+.course > *{position:relative}
+
+.chead{display:flex; align-items:flex-start; gap:12px}
+.cico{
+  width:44px; height:44px; flex:0 0 44px; border-radius:13px; display:grid; place-items:center;
+  background:rgba(140,170,220,.10); border:1px solid var(--line); font-size:20px;
+}
+.ctitle{min-width:0; flex:1}
+.ctitle h3{margin:0; font-size:17px; font-weight:700; letter-spacing:.02em}
+.ctitle .en{display:block; margin-top:3px; font-size:11.5px; color:var(--dim); letter-spacing:.14em; text-transform:uppercase}
+.badge{
+  flex:0 0 auto; font-size:10.5px; letter-spacing:.08em; padding:3px 9px; border-radius:999px;
+  border:1px solid var(--line); color:var(--dim);
+}
+.badge.live{color:#6ee7b7; border-color:rgba(52,211,153,.42); background:rgba(52,211,153,.10)}
+.badge.soon{color:#fcd34d; border-color:rgba(245,158,11,.38); background:rgba(245,158,11,.10)}
+
+.code{
+  display:inline-block; font-size:10.5px; letter-spacing:.14em; color:var(--dim2);
+  border:1px solid var(--line); border-radius:6px; padding:2px 7px;
+}
+.desc{margin:0; font-size:13px; line-height:1.85; color:var(--dim)}
+
+.mods{display:flex; flex-wrap:wrap; gap:7px}
+.mod{
+  font-size:11.5px; color:var(--dim); border:1px solid var(--line); border-radius:999px;
+  padding:3px 10px; background:rgba(140,170,220,.06);
+}
+.meter{height:3px; border-radius:3px; background:rgba(140,170,220,.14); overflow:hidden}
+.meter i{display:block; height:100%; border-radius:3px; background:linear-gradient(90deg,var(--a1),var(--a2)); transition:width .6s ease}
+.foot2{display:flex; align-items:center; gap:8px; font-size:12px; color:var(--dim2)}
+.foot2 .sp{flex:1}
+.enter{font-size:12.5px; color:var(--a1); letter-spacing:.06em}
+.course.todo .enter{color:var(--dim2)}
+
+/* ---------- 页脚 ---------- */
+footer{position:relative; z-index:1; text-align:center; padding:26px 16px 34px;
+  color:var(--dim2); font-size:11.5px; letter-spacing:.1em; border-top:1px solid var(--line);
+  padding-bottom:calc(34px + env(safe-area-inset-bottom))}
+footer a{color:var(--dim); text-decoration:none; border-bottom:1px dashed rgba(140,170,220,.3)}
+footer a:hover{color:var(--a1)}
+@media (prefers-reduced-motion:reduce){
+  *{animation-duration:.01ms !important; transition-duration:.01ms !important}
+}
+</style>
+</head>
+<body>
+<div class="glow"></div>
+
+<header>
+  <span class="logo">IF<span>.</span></span>
+  <span class="sp"></span>
+  <a class="home" href="../index.html">&larr; 首页</a>
+</header>
+
+<div class="wrap">
+  <section class="hero">
+    <div class="eyebrow"><i></i>LEARNING COURSE</div>
+    <h1>课程中心</h1>
+    <p>网页 · 手机 · APK 三端通用，学习进度自动同步到 GitHub</p>
+  </section>
+
+  <div class="syncbar" id="syncbar">
+    <span class="dot" id="syncDot"></span>
+    <span id="syncTxt">正在读取同步状态…</span>
+    <span class="sp"></span>
+    <span id="syncTime"></span>
+  </div>
+
+  <div class="secTitle">COURSES · 已上线</div>
+  <div class="grid" id="gridLive"></div>
+
+  <div class="secTitle">UPCOMING · 建设中</div>
+  <div class="grid" id="gridTodo"></div>
+</div>
+
+<footer>© 2026 ICEFOCUS · Learning Course · <a href="../index.html">返回首页</a></footer>
+
+<script>
+/* =========================================================================
+ * 课程中心 · 框架
+ *   新增一门课：在 COURSES 里加一条即可（dir 对应 examination/ 下的文件夹名）。
+ *   status: 'live' 已上线可点；'todo' 建设中（占位、不可点）
+ * ======================================================================= */
+var COURSES = [
+  {
+    dir: 'International Finance',
+    cn : '国际金融',
+    en : 'International Finance',
+    code: '00076',
+    ico: '💱',
+    status: 'live',
+    desc: '2024 版教材。13 套历年真题 + 大纲精讲 + 名词解释 / 概述题 / 计算题 / 考前预测，客观题即时判分，错题本自动归集。',
+    mods: ['大纲精讲', '历年真题', '错题本', '考前预测'],
+    entry: 'study.html',
+    storage: 'if00076_exam_',           // 该课程在 localStorage 里的前缀，用于统计
+    total: 448                          // 题库总题数，用于换算完成百分比
+  },
+  {
+    dir: 'Western Economics',
+    cn : '西方经济学',
+    en : 'Western Economics',
+    code: '',
+    ico: '📈',
+    status: 'todo',
+    desc: '占位，尚未开始建设。课程结构、题库与同步机制已就位，把内容放进文件夹即可启用。',
+    mods: ['待规划'],
+    entry: '',
+    storage: '',
+    progress: 0
+  }
+];
+
+var $ = function (s) { return document.querySelector(s); };
+function esc(s) {
+  return String(s == null ? '' : s).replace(/[&<>"]/g, function (c) {
+    return { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c];
+  });
+}
+
+/* ---------- 学习进度（按 localStorage 前缀统计已判分题数） ---------- */
+function judgedOf(c) {
+  if (!c.storage) return { done: 0, pct: 0 };
+  var done = 0;
+  try {
+    for (var i = 0; i < localStorage.length; i++) {
+      var k = localStorage.key(i);
+      if (k.indexOf(c.storage) !== 0) continue;
+      if (k.indexOf('hist_') > 0) done++;      // hist_<simID>_<qid> = 已判分
+    }
+  } catch (e) { return { done: 0, pct: 0 }; }
+  var pct = c.total ? Math.min(100, Math.round(done / c.total * 100)) : 0;
+  return { done: done, pct: pct };
+}
+
+/* ---------- 卡片渲染 ---------- */
+function cardHTML(c) {
+  var live = c.status === 'live';
+  var href = live ? encodeURIComponent(c.dir) + '/' + (c.entry || '') : '';
+  var pg = judgedOf(c);
+  return '<' + (live ? 'a' : 'div') + ' class="course' + (live ? '' : ' todo') + '"' +
+    (live ? ' href="' + href + '"' : '') + ' aria-label="' + esc(c.cn) + '">' +
+      '<div class="chead">' +
+        '<div class="cico">' + c.ico + '</div>' +
+        '<div class="ctitle">' +
+          '<h3>' + esc(c.cn) + (c.code ? ' <span class="code">' + esc(c.code) + '</span>' : '') + '</h3>' +
+          '<span class="en">' + esc(c.en) + '</span>' +
+        '</div>' +
+        '<span class="badge ' + (live ? 'live">已上线' : 'soon">建设中') + '</span>' +
+      '</div>' +
+      '<p class="desc">' + esc(c.desc) + '</p>' +
+      '<div class="mods">' + (c.mods || []).map(function (m) { return '<span class="mod">' + esc(m) + '</span>'; }).join('') + '</div>' +
+      '<div class="meter"><i style="width:' + pg.pct + '%"></i></div>' +
+      '<div class="foot2">' +
+        '<span>' + (live ? '已判分 ' + pg.done + ' 题 · ' + pg.pct + '%' : '内容筹备中') + '</span>' +
+        '<span class="sp"></span>' +
+        '<span class="enter">' + (live ? '进入学习 →' : '敬请期待') + '</span>' +
+      '</div>' +
+    '</' + (live ? 'a' : 'div') + '>';
+}
+
+$('#gridLive').innerHTML = COURSES.filter(function (c) { return c.status === 'live'; }).map(cardHTML).join('');
+$('#gridTodo').innerHTML = COURSES.filter(function (c) { return c.status !== 'live'; }).map(cardHTML).join('');
+
+/* ---------- 云同步状态条 ---------- */
+(function () {
+  var cfg = null;
+  // 兼容旧 key：IF76::ghcfg → 新课程 key：IF::ghcfg::<courseId>
+  var keys = ['IF::ghcfg::IF00076', 'IF76::ghcfg'];
+  for (var i = 0; i < keys.length; i++) {
+    try {
+      var raw = localStorage.getItem(keys[i]);
+      if (raw) { cfg = JSON.parse(raw); break; }
+    } catch (e) { /* ignore */ }
+  }
+  var dot = $('#syncDot'), txt = $('#syncTxt'), tm = $('#syncTime');
+  var t = cfg && (cfg.lastPushAt || cfg.lastPullAt);
+  if (t) {
+    var d = new Date(t), p = function (n) { return n < 10 ? '0' + n : '' + n; };
+    tm.textContent = '最近同步 ' + (d.getFullYear() + '-' + p(d.getMonth() + 1) + '-' + p(d.getDate()) + ' ' + p(d.getHours()) + ':' + p(d.getMinutes()));
+  }
+  if (cfg && cfg.token) {
+    dot.className = 'dot on';
+    txt.innerHTML = '云同步<b>已开启</b> · 答题与判分结果会自动同步到 GitHub（' + esc(cfg.owner || 'icefocus-G') + '/' + esc(cfg.repo || 'icefocus-G.github.io') + '）';
+  } else {
+    dot.className = 'dot warn';
+    txt.innerHTML = '本机还没有填写 GitHub Token，学习记录<b>暂时只在本地</b>。进入任一课程 → 右上角「☁ 云同步」粘贴一次即可全自动。';
+  }
+})();
+</script>
+</body>
+</html>

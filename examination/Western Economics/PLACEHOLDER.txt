@@ -1,0 +1,13 @@
+占位：西方经济学（Western Economics）课程尚未开始建设。
+
+课程中心里的卡片标记为「建设中」，暂不可点。
+把课程内容按下面的结构放进来，再到 examination/index.html 的 COURSES 里把 status 改成 'live' 即可上线：
+
+  Western Economics/
+    index.html        ← 课程首页（可选）
+    study.html        ← 学习助手壳层（参考 ../International Finance/study.html）
+    outline.html      ← 大纲精讲
+    bank.html         ← 题库 / 真题
+
+同步：在 study.html 里加载 ../../script/cloud.js，并在加载前设置一次 window.IF_SYNC_CFG
+（课程 id、云端数据文件路径），即可复用同一套 GitHub 自动同步引擎。

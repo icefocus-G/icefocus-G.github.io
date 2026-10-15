@@ -1,0 +1,20 @@
+{
+  "name": "ICEFOCUS · Learning Course",
+  "short_name": "IF",
+  "description": "ICEFOCUS 个人站 · 自考课程中心（网页 / 手机 / APK 三端同步）",
+  "start_url": "./index.html",
+  "scope": "./",
+  "display": "standalone",
+  "orientation": "any",
+  "background_color": "#0b1020",
+  "theme_color": "#0b1020",
+  "lang": "zh-CN",
+  "icons": [
+    {
+      "src": "assets/icon.svg",
+      "sizes": "any",
+      "type": "image/svg+xml",
+      "purpose": "any"
+    }
+  ]
+}
