@@ -88,9 +88,7 @@
   function el(id) { return document.getElementById(id); }
   function sleep(ms) { return new Promise(function (r) { setTimeout(r, ms); }); }
   function quiet(fn) { mute++; try { return fn(); } finally { mute--; } }
-  function isSkip(k) {
-    return SKIP.indexOf(k) >= 0 || String(k).indexOf('IF76::bak::') === 0;
-  }
+  /* isSkip / isMeta 定义在文件顶部（v4 多课程版），这里不要重复定义 */
   function esc(s) {
     return String(s).replace(/[&<>"]/g, function (c) {
       return { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c];
@@ -544,6 +542,19 @@
     var needPush = mine2 || fromCloud.length > 0 || notFound;
     var pendingCount = changedKeys().length;
 
+    /* ====== 安全闸：本机一个数据键都没有 → 绝不上传 ======
+       这是最致命的一种数据丢失：新设备 / 刚清过缓存的浏览器第一次打开时，
+       本机 localStorage 是空的，「云端文件不存在」又会被当成「需要创建」，
+       于是空的 data 被推上去，把别人攒了几百道题的记录一次性清空。
+       空数据上传没有任何收益，直接拦掉。 */
+    if (needPush && !Object.keys(snapshot()).length) {
+      needPush = false;
+      saveSnap(merged);
+      cfg.syncedOnce = true;
+      setBadge('warn', '本机无数据');
+      log('本机暂无学习数据，已跳过上传（不会动云端那份）');
+    }
+
     /* 基线（快照）只在「改动确实已经到达云端」或「本来就没改动」时才推进。
        上传失败 / 没填 Token 时保留旧基线，改动继续算作待上传，下次自动补传。 */
     if (!needPush) {
@@ -823,6 +834,13 @@
   }
 
   async function forcePush() {
+    if (!Object.keys(snapshot()).length) {          // 同上：空数据不允许覆盖云端
+      setBadge('warn', '本机无数据');
+      toast('本机没有任何学习数据，已取消上传（避免清空云端）');
+      log('手动上传已取消：本机无数据');
+      refreshState();
+      return;
+    }
     setBadge('sync', '上传中…');
     try {
       await pushRetry();

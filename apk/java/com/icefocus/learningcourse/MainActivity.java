@@ -78,8 +78,8 @@ public class MainActivity extends Activity {
             }
             @Override
             public void onPageFinished(WebView v, String url) {
-                // 告诉前端当前跑在 APK 里
-                v.evaluateJavascript("window.__IF_NATIVE__=true;", null);
+                // 告诉前端当前跑在 APK 里（页面据此隐藏「返回首页」等网页端入口）
+                v.evaluateJavascript("window.__IF_NATIVE__=true;window.__IF_APK__=true;", null);
             }
             @Override
             public void onReceivedError(WebView v, int code, String desc, String url) {
@@ -104,7 +104,8 @@ public class MainActivity extends Activity {
         });
 
         if (server != null) {
-            web.loadUrl(server.getBaseUrl() + "index.html");
+            // 直接进课程中心：APK 里不打首页皮肤，只装课程与子页面
+            web.loadUrl(server.getBaseUrl() + "examination/index.html");
         } else {
             Toast.makeText(this, "本地资源服务启动失败", Toast.LENGTH_LONG).show();
         }

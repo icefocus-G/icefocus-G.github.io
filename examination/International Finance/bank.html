@@ -1064,6 +1064,8 @@ function resetPaper(){
   store.set('redo_' + simID, true);   // 标记进入重做：隐藏旧成绩卡，避免误解分数未清
   refreshWrongBadge();
   openPaper(simID);
+  /* 清空了本卷的答案与判分记录 → 同步，避免另一台设备还显示旧作答 */
+  syncCommit('重做本卷 · 已清空作答');
 }
 function showWrong(simID){
   const p = DB.papers.find(x => x.simID === simID);
@@ -1184,6 +1186,7 @@ function expandWrong(open){ $$('#wrongList .witem').forEach(e => e.classList.tog
 function markMastered(simID, qid){
   setWrong(simID, qid, false);
   renderWrong();
+  syncCommit('错题本 · 标记已掌握');
 }
 function clearWrong(){
   const n = wrongList().length;
@@ -1191,6 +1194,7 @@ function clearWrong(){
   if (!confirm('确定清空错题本吗？这 ' + n + ' 道题将从错题本移除（试卷的做题记录不受影响）。')) return;
   wrongList().forEach(x => setWrong(x.simID, x.q.id, false));
   renderWrong();
+  syncCommit('错题本 · 清空 ' + n + ' 道');
 }
 function goPaperQ(simID, qid){
   go('exam');

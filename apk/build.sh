@@ -58,10 +58,11 @@ BUILD="$HERE/.build"
 rm -rf "$BUILD"; mkdir -p "$BUILD/obj" "$BUILD/assets/www"
 
 # ---------- 2. 站点资源 → assets/www ----------
-echo "== 打包站点资源 =="
+echo "== 打包站点资源（只装课程与子页面，首页皮肤不进包） =="
 cd "$ROOT"
 find . -type f \
   ! -name '.DS_Store' ! -name '._*' ! -path './.git/*' ! -path './apk/*' \
+  ! -path './ThemedSkin/*' ! -path './index.html' \
   -print0 | while IFS= read -r -d '' f; do
     mkdir -p "$BUILD/assets/www/$(dirname "${f#./}")"
     cp -p "$f" "$BUILD/assets/www/${f#./}"

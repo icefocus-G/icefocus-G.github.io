@@ -269,6 +269,16 @@ function cardHTML(c) {
 $('#gridLive').innerHTML = COURSES.filter(function (c) { return c.status === 'live'; }).map(cardHTML).join('');
 $('#gridTodo').innerHTML = COURSES.filter(function (c) { return c.status !== 'live'; }).map(cardHTML).join('');
 
+/* APK 里没有首页皮肤，隐藏「返回首页」入口，只保留课程 */
+if (window.__IF_APK__) {
+  var hm = document.querySelector('header a.home');
+  if (hm) hm.style.display = 'none';
+  var ft = document.querySelector('footer a');
+  if (ft) { ft.textContent = 'Learning Course'; ft.removeAttribute('href'); }
+  document.querySelector('.hero p').textContent =
+    '离线可用 · 答题与判分结果联网后自动同步到 GitHub';
+}
+
 /* ---------- 云同步状态条 ---------- */
 (function () {
   var cfg = null;

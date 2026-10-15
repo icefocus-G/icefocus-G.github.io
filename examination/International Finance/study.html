@@ -546,6 +546,11 @@ document.addEventListener('keydown', function (e) {
 /* ============ 启动 ============ */
 (function init() {
   var t = 0;
+  /* APK 里根目录没有首页，隐藏「返回首页」；「课程」按钮仍可回课程中心 */
+  if (window.__IF_APK__) {
+    var hm = document.querySelector('.home');
+    if (hm) hm.style.display = 'none';
+  }
   try { t = parseInt(localStorage.getItem(K_TAB) || '0', 10); } catch (e) {}
   var m = /[?&]t=([01])/.exec(location.search);   // 主页入口可直接指定页签
   if (m) t = parseInt(m[1], 10);

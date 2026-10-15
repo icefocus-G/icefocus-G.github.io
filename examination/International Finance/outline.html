@@ -3236,6 +3236,22 @@ c8:[
 };
 var totalQ=Object.keys(QUIZ).reduce(function(s,k){return s+QUIZ[k].length},0);
 function doneKey(q,i){return "if00076_r_"+q+"_"+i}
+/* 章节自测：选了答案并判出对错 → 立即同步到 GitHub */
+function syncCommit(why){
+  try{
+    var w=window;
+    if(window.parent&&window.parent!==window) w=window.parent;
+    var api=w.IF_COURSE_SYNC||w.IF76Cloud;
+    if(api&&typeof api.commit==="function") api.commit(why);
+  }catch(e){}
+}
+/* 独立打开（不在课程页的 iframe 里）时，自己把同步引擎拉起来 */
+(function(){
+  if(window.top===window.self){
+    window.IF_SYNC_CFG=window.IF_SYNC_CFG||{id:"IF00076",url:"../../data/IF00076-sync.json",path:"data/IF00076-sync.json",owner:"icefocus-G",repo:"icefocus-G.github.io",branch:"main"};
+    var s=document.createElement("script");s.src="../../script/cloud.js";s.async=true;document.head.appendChild(s);
+  }
+})();
 function answeredCount(){
  var arr=load("if00076_done")||[];
  return arr.length;
@@ -3277,6 +3293,7 @@ function renderQuiz(qk){
   var item=inp.closest(".qz-item"),i=+item.getAttribute("data-q"),v=+inp.value,right=(v===qs[i].a);
   markQ(item,i,right);
   if(right){saveDone(qk,i);remWrong(qk,i);}else{saveWrong(qk,i);}
+  syncCommit("章节自测 "+(right?"答对":"答错"));
  });
 }
 function markQ(item,i,right){
@@ -3289,6 +3306,7 @@ window.resetQuiz=function(qk){
  var arr=load("if00076_done")||[],removed=arr.filter(function(k){return k.indexOf(qk+"_")!==0});
  store("if00076_done",removed);
  refreshPbar();renderQuiz(qk);
+ syncCommit("章节自测 · 重做本章");
 };
 
 /* ---------- 全局函数挂载（供 onclick） ---------- */
