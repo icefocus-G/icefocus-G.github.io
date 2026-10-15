@@ -55,7 +55,8 @@
     return false;
   }
   function isSkip(k) {
-    return K_OLD.indexOf(k) >= 0 || isMeta(k) || String(k) === 'IF76::synchash' || String(k) === 'IF::skinPin';
+    return K_OLD.indexOf(k) >= 0 || isMeta(k) || String(k) === 'IF76::synchash'
+      || String(k) === 'WE13135::synchash' || String(k) === 'IF::skinPin';
   }
 
   /* 浏览状态键：滚动位置 / 阅读时长 / 当前页签 / 备份。
@@ -65,6 +66,8 @@
   function isQuiet(k) {
     var s = String(k);
     if (s === 'IF76::stats' || s === 'IF76::tab') return true;
+    /* 西方经济学（中级）13135 的浏览状态键 */
+    if (s === 'WE13135::stats' || s === 'WE13135::tab') return true;
     if (s.indexOf('if00076_pos') === 0) return true;
     if (s.indexOf('IF76::bak::') === 0) return true;
     if (s.indexOf('IF76::g::') === 0) return true;   /* 首页小游戏（贪吃蛇等）的进度 */
@@ -78,6 +81,9 @@
     var s = String(k);
     if (s.indexOf('if00076_exam_') === 0) return true;
     if (s.indexOf('if00076_') === 0) return true;
+    /* 西方经济学（中级）13135 */
+    if (s.indexOf('we13135_exam_') === 0) return true;
+    if (s.indexOf('we13135_') === 0) return true;
     return false;
   }
 
