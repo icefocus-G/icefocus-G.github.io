@@ -547,11 +547,24 @@
     lastSig = curSig();
   }
 
+  /* 帧是否正被用户看着。display:none 的元素 offsetWidth/Height 为 0。 */
+  function isFrameVisible(f) {
+    try {
+      if (!f) return false;
+      return (f.offsetWidth > 0 && f.offsetHeight > 0);
+    } catch (e) { return true; }   /* 判断不了就当可见 —— 宁可不刷新，也不打扰 */
+  }
+
+  /* ★ 只刷新「当前看不见」的帧 ★
+     正在看的那个一律不动：重载会闪白、滚动回跳，用户的感觉就是「跳页」。
+     被隐藏的帧在后台悄悄重载，等用户切过去时已经是最新数据，全程无感。
+     （壳页 study.html 用 .on 控制显示，隐藏帧的 offsetWidth 恒为 0。） */
   function reloadFrames() {
     var els = frameEls();
     for (var i = 0; i < els.length; i++) {
       (function (f, n) {
         try {
+          if (isFrameVisible(f)) return;
           f.dataset.loaded = '';
           f.contentWindow.location.reload();
         } catch (e) {
@@ -1116,7 +1129,10 @@
     /* 抹掉地址栏里的凭据 */
     try {
       var clean = location.href
-        .replace(/([#?&])t=[^&#\s]*/g, '$1')
+        .replace(/([#?&])t=([^&#\s]+)/g, function (all, sep, val) {
+          /* 只抹掉「长得像 token」的那个 —— 练习页壳子用 ?t=1 记页签，别误伤 */
+          return (val && val.length >= 20) ? sep : all;
+        })
         .replace(/[#?&]+$/, '');
       history.replaceState(null, '', clean);
     } catch (e) { /* ignore */ }
