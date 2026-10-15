@@ -1089,10 +1089,46 @@
 
   /* ======================= 启动 ======================= */
 
+  /* ★ 换浏览器 / 换设备免手填 Token ★
+     访问带 #t=<token>（或 ?t=<token>）的链接时，引擎自动收下这份凭据写进本机，
+     随后立刻把地址栏里的 token 抹掉。
+       · 用 #t= 时 fragment 根本不会发给服务器（Cloudflare / GitHub 都看不到）；
+       · 抹除用 history.replaceState，不往浏览历史里压新记录。
+     用法：把这样一条「登录链接」存成书签 —— 任何浏览器打开书签即自动登录，
+     永远不用再粘贴 Token。Token 本身仍只存在本机 localStorage，绝不进公开仓库。 */
+  function absorbUrlToken() {
+    var s = String(location.hash || '') + '&' + String(location.search || '');
+    var m = /[#?&]t=([^&#\s]+)/.exec(s);
+    if (!m) return false;
+    var tk = '';
+    try { tk = decodeURIComponent(m[1]); } catch (e) { tk = m[1]; }
+    tk = String(tk).trim();
+    if (tk.length < 20) return false;
+    try {
+      var raw = localStorage.getItem(K_CFG);
+      if (raw == null) raw = localStorage.getItem('IF76::ghcfg');
+      var o = JSON.parse(raw || '{}');
+      if (!o || typeof o !== 'object') o = {};
+      o.token = tk;
+      delete o.tokenBuiltIn;          /* 手动链接里的凭据算本机凭据 */
+      localStorage.setItem(K_CFG, JSON.stringify(o));
+    } catch (e) { return false; }
+    /* 抹掉地址栏里的凭据 */
+    try {
+      var clean = location.href
+        .replace(/([#?&])t=[^&#\s]*/g, '$1')
+        .replace(/[#?&]+$/, '');
+      history.replaceState(null, '', clean);
+    } catch (e) { /* ignore */ }
+    return true;
+  }
+
   function boot() {
     if (window.__IF_SYNC_BOOTED__ === CID) return;   // 同一页面重复引入时只跑一次
     window.__IF_SYNC_BOOTED__ = CID;
+    var urlToken = absorbUrlToken();                 /* ★ 登录链接自动收下凭据 */
     loadCfg();
+    if (urlToken) { log('已通过登录链接自动填入凭据，本机无需再手填 Token'); }
     fillForm();
     bind();
     lastSig = curSig();
