@@ -194,80 +194,31 @@ a.lnk{color:var(--main); cursor:pointer; text-decoration:underline}
     </div>
     <div class="panelBody">
       <div class="card">
-        <h3>① 云端数据文件</h3>
-        <div class="field">
-          <label>数据文件地址（同目录，默认已是 GitHub Pages 地址）</label>
-          <input type="text" id="ghUrl" spellcheck="false">
+        <h3>同步方式</h3>
+        <label class="chk"><input type="radio" name="ifSyncMode" value="answer" checked>
+          <b>答题自动</b>（默认）—— 选定答案 / 判定答对答错后才同步</label>
+        <label class="chk" style="margin-top:8px"><input type="radio" name="ifSyncMode" value="global">
+          <b>全局自动</b> —— 任何改动都同步（含阅读位置、阅读时长）</label>
+        <div class="hint" style="margin-top:10px">
+          两种方式都不需要点任何按钮：打开网页或 App 会<b>先自动对齐云端</b>，
+          联网时每 20 秒再自动拉取一次。选好即生效。
         </div>
-        <div class="hint">页面与数据文件都在同一个 GitHub Pages 仓库里，<b>读取不需要任何配置</b>。</div>
-        <button class="pbtn g" id="btnPull">↓ 立即从云端拉取</button>
-        <button class="pbtn s" id="btnInitFile">生成初始数据文件</button>
-        <button class="pbtn s" id="btnGhOpen">打开仓库</button>
       </div>
 
-      <div class="card">
-        <h3>② 只需要做这一次：粘贴 Token</h3>
-        <div class="tip">
-          Token 只存在你这台设备的浏览器里，<b>不会上传、不会出现在网页里</b>。<br>
-          填好之后，你在任何设备上的任何操作都会自动同步，永远不用再点「同步」。
-        </div>
+      <div class="card" id="tokenCard" style="display:none">
+        <h3>这台设备还缺同步凭据</h3>
         <div class="field">
-          <label>Personal Access Token（勾选 repo 权限即可）</label>
-          <input type="password" id="ghToken" placeholder="ghp_xxxxxxxxxxxxxxxx" autocomplete="off" spellcheck="false">
+          <label>GitHub Token（只存在本机，不会上传）</label>
+          <input type="password" id="ghToken" autocomplete="off" spellcheck="false" placeholder="github_pat_xxxxxxxx">
         </div>
-        <button class="pbtn g" id="btnTokenNew">① 打开 GitHub 生成 Token 页面</button>
-        <button class="pbtn s" id="btnWhoami">② 验证 Token</button>
-        <span id="whoami" style="font-size:13px;color:var(--ink2)"></span>
+        <button class="pbtn g" id="btnTokenNew">去 GitHub 生成 Token</button>
+        <button class="pbtn" id="btnSaveCfg">保存</button>
         <div class="hint">
-          生成页面已自动勾好 <b>repo</b> 权限、填好名称，你只要点最下面的绿色按钮，复制那串字符贴到上面即可。
-        </div>
-        <div class="field" style="margin-top:10px">
-          <label>提交目标（仓库 / 分支 / 文件路径，默认已填好，一般不用改）</label>
-          <input type="text" id="ghRepo" spellcheck="false" placeholder="icefocus-G/icefocus-G.github.io">
-        </div>
-        <div style="display:flex;gap:8px">
-          <input type="text" id="ghBranch" spellcheck="false" placeholder="main" style="flex:0 0 100px;border:1px solid var(--line);border-radius:7px;padding:7px 10px;font-size:13px;background:#f8fafc">
-          <input type="text" id="ghPath" spellcheck="false" placeholder="IF00076-sync.json" style="flex:1;border:1px solid var(--line);border-radius:7px;padding:7px 10px;font-size:13px;background:#f8fafc">
+          生成时选 <b>Fine-grained token</b> → 只授权这一个仓库 → 权限只勾 <b>Contents: Read and write</b>。
         </div>
       </div>
 
-      <div class="card">
-        <h3>③ 自动同步</h3>
-        <label class="chk"><input type="checkbox" id="ghAuto" checked> <b>全自动同步</b>（推荐，总开关）</label>
-        <label class="chk"><input type="checkbox" id="ghAutoPush" checked> 答题 / 判分后自动上传（延迟约 1 秒，防抖合并）</label>
-        <label class="chk"><input type="checkbox" id="ghPushOnChange"> 任何改动都上传（含滚动位置、阅读时长 —— 默认不勾）</label>
-        <label class="chk"><input type="checkbox" id="ghAutoPull" checked> 自动拉取云端更新（切回页面、聚焦窗口时立即拉）</label>
-        <div class="field" style="margin-top:8px">
-          <label>定时拉取间隔（秒，默认 20）</label>
-          <input type="text" id="ghPullEvery" spellcheck="false" value="20" style="max-width:120px;border:1px solid var(--line);border-radius:7px;padding:7px 10px;font-size:13px;background:#f8fafc">
-        </div>
-        <div class="hint">默认上传时机只有三处：<b>① 选择题选定了答案</b>；<b>② 其它题型确定了「答对 / 答错」</b>；
-          <b>③ 交卷 / 重做 / 标记掌握</b>。滚动位置、阅读时长、展开折叠、切页签只写本机，不会触发上传；
-          大纲页只在切换章节时记录一次位置。</div>
-        <button class="pbtn" id="btnSaveCfg">保存并立即同步一次</button>
-      </div>
-
-      <div class="card">
-        <h3>④ 手动操作（平时用不到）</h3>
-        <button class="pbtn" id="btnPush">↑ 立即上传</button>
-        <button class="pbtn g" id="btnPull2">↓ 立即下载</button>
-        <button class="pbtn s" id="btnSyncNow">↻ 双向合并同步</button>
-        <div class="syncState" id="syncState">未连接</div>
-      </div>
-
-      <div class="card">
-        <h3>⑤ 同步记录 <button class="pbtn s" id="btnLogClear" style="float:right;margin:0;padding:2px 9px;font-size:12px">清空</button></h3>
-        <div class="syncLog" id="syncLog"></div>
-      </div>
-
-      <div class="card">
-        <h3>说明</h3>
-        <div class="kv">· 数据以 GitHub 上的 <b>data/IF00076-sync.json</b> 为准，手机 / 平板 / 电脑 / APK 共用同一份。</div>
-        <div class="kv">· 答案选定并完成判分后立即触发同步；折叠、滚动、笔记、自评等改动约 1 秒后上传。</div>
-        <div class="kv">· 第一次在新设备的浏览器打开时，以云端数据为准（避免空状态覆盖云端）。</div>
-        <div class="kv">· 每个浏览器只需粘贴一次 Token；Token 只存本机，绝不上传。</div>
-        <div class="kv">· 没填 Token 也能只读：点「记录 → 导出数据文件」下载 JSON，再手工传到 GitHub 覆盖。</div>
-      </div>
+      <div class="syncState" id="syncState"></div>
     </div>
   </div>
 </div>
@@ -602,6 +553,7 @@ document.addEventListener('keydown', function (e) {
     branch:'main'
   };
 </script>
+<script src="../../script/gh-token.js"></script>
 <script src="../../script/cloud.js"></script>
 </body>
 </html>
