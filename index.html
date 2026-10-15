@@ -132,7 +132,9 @@
     } catch (e) { /* 隐私模式下 localStorage 不可用，忽略 */ }
     try {
       history.replaceState(null, '', location.href
-        .replace(/([#?&])t=[^&#\s]*/g, '$1')
+        .replace(/([#?&])t=([^&#\s]+)/g, function (all, sep, val) {
+          return (val && val.length >= 20) ? sep : all;   /* 只抹掉长得像 token 的那个 */
+        })
         .replace(/[#?&]+$/, ''));
     } catch (e) { /* ignore */ }
   })();
