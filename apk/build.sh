@@ -60,8 +60,10 @@ rm -rf "$BUILD"; mkdir -p "$BUILD/obj" "$BUILD/assets/www"
 # ---------- 2. 站点资源 → assets/www ----------
 echo "== 打包站点资源（只装课程与子页面，首页皮肤不进包） =="
 cd "$ROOT"
+# 注意排除 *.apk：站点 software/ 目录里放的是供网页下载的安装包，
+# 那不是 App 自身需要的资源，进包会让体积一次次翻倍。
 find . -type f \
-  ! -name '.DS_Store' ! -name '._*' ! -path './.git/*' ! -path './apk/*' \
+  ! -name '.DS_Store' ! -name '._*' ! -name '*.apk' ! -path './.git/*' ! -path './apk/*' \
   ! -path './ThemedSkin/*' ! -path './index.html' \
   -print0 | while IFS= read -r -d '' f; do
     mkdir -p "$BUILD/assets/www/$(dirname "${f#./}")"
@@ -90,7 +92,28 @@ cat > "$W/index.html" <<'HTML'
 </body></html>
 HTML
 
+# ---------- 2.5 内置同步凭据（只进 APK，绝不进仓库） ----------
+#   Token 文件放在仓库之外（默认 ~/.cache/if-apk-tools/gh.token），
+#   这里把 www/script/gh-token.js 覆盖成真实 Token —— App 装完即可自动同步。
+TOKEN_FILE="${IF_GH_TOKEN_FILE:-$TOOLS/gh.token}"
+if [ -f "$TOKEN_FILE" ]; then
+  TOKEN="$(tr -d ' \t\r\n' < "$TOKEN_FILE")"
+  if [ -n "$TOKEN" ]; then
+    printf 'window.IF_GH_TOKEN = "%s";\n' "$TOKEN" > "$W/script/gh-token.js"
+    echo "   已内置同步凭据（${#TOKEN} 字符）→ assets/www/script/gh-token.js"
+  else
+    echo "   ⚠ $TOKEN_FILE 是空的，APK 将需要手动填 Token"
+  fi
+else
+  echo "   ⚠ 未找到 $TOKEN_FILE —— 这次打出来的 APK 需要手动填 Token"
+fi
+
+# 上面刚生成的 index.html / gh-token.js 在 exFAT 上会立刻带出 ._* 伴随文件，
+# 必须在 aapt2 之前再清一遍，否则这些垃圾会一起进 APK。
+find "$W" \( -name '._*' -o -name '.DS_Store' \) -delete 2>/dev/null || true
+
 echo "   资源文件数：$(find "$BUILD/assets/www" -type f | wc -l | tr -d ' ')"
+echo "   资源大小  ：$(du -sh "$BUILD/assets/www" | awk '{print $1}')"
 
 # ---------- 3. 编译 ----------
 echo "== javac =="
