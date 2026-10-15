@@ -78,8 +78,11 @@ public class MainActivity extends Activity {
             }
             @Override
             public void onPageFinished(WebView v, String url) {
-                // 告诉前端当前跑在 APK 里（页面据此隐藏「返回首页」等网页端入口）
-                v.evaluateJavascript("window.__IF_NATIVE__=true;window.__IF_APK__=true;", null);
+                // 告诉前端当前跑在 APK 里（页面据此隐藏「返回首页」等网页端入口）。
+                // 写一份到 localStorage：iframe（大纲 / 题库）同源共享，也能认出自己在 APK 里。
+                v.evaluateJavascript(
+                    "(function(){try{window.__IF_NATIVE__=true;window.__IF_APK__=true;" +
+                    "localStorage.setItem('IF::apk','1');}catch(e){}})", null);
             }
             @Override
             public void onReceivedError(WebView v, int code, String desc, String url) {
@@ -104,8 +107,11 @@ public class MainActivity extends Activity {
         });
 
         if (server != null) {
-            // 直接进课程中心：APK 里不打首页皮肤，只装课程与子页面
-            web.loadUrl(server.getBaseUrl() + "examination/index.html");
+            /* 直接进「国际金融 00076」学习页 —— APK 里不打首页皮肤，
+               课程中心仍在包里（「课程」按钮可回），但打开就落在课程内页。
+               ?apk=1 是给首屏自己用的：onPageFinished 的注入发生在页面脚本之后，
+               首屏的内联脚本要靠 URL 参数才能在第一时间知道自己在 APK 里。 */
+            web.loadUrl(server.getBaseUrl() + "examination/InternationalFinance/study.html?apk=1");
         } else {
             Toast.makeText(this, "本地资源服务启动失败", Toast.LENGTH_LONG).show();
         }

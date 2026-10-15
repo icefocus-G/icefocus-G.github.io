@@ -240,10 +240,24 @@ function judgedOf(c) {
   return { done: done, pct: pct };
 }
 
+/* ---------- 是否跑在 APK 里 ----------
+   APK 的壳层注入发生在 onPageFinished（晚于本页内联脚本），所以首屏靠 URL 上的 ?apk=1；
+   之后再打开的各个页面（以及同源 iframe）靠壳层写进 localStorage 的 IF::apk。 */
+function isAPK() {
+  try {
+    if (window.__IF_APK__ === true || window.__IF_NATIVE__ === true) return true;
+    if (/[?&]apk=1/.test(location.search)) return true;
+    return localStorage.getItem('IF::apk') === '1';
+  } catch (e) { return false; }
+}
+
 /* ---------- 卡片渲染 ---------- */
 function cardHTML(c) {
   var live = c.status === 'live';
-  var href = live ? encodeURIComponent(c.dir) + '/' + (c.entry || '') : '';
+  /* APK 打包时把目录名的空格去掉了（International Finance → InternationalFinance），
+     这里要跟着走，否则点卡片会 404。网页端仍然是带空格的原目录。 */
+  var dir = isAPK() ? String(c.dir).replace(/\s+/g, '') : c.dir;
+  var href = live ? encodeURIComponent(dir) + '/' + (c.entry || '') : '';
   var pg = judgedOf(c);
   return '<' + (live ? 'a' : 'div') + ' class="course' + (live ? '' : ' todo') + '"' +
     (live ? ' href="' + href + '"' : '') + ' aria-label="' + esc(c.cn) + '">' +
@@ -270,7 +284,7 @@ $('#gridLive').innerHTML = COURSES.filter(function (c) { return c.status === 'li
 $('#gridTodo').innerHTML = COURSES.filter(function (c) { return c.status !== 'live'; }).map(cardHTML).join('');
 
 /* APK 里没有首页皮肤，隐藏「返回首页」入口，只保留课程 */
-if (window.__IF_APK__) {
+if (isAPK()) {
   var hm = document.querySelector('header a.home');
   if (hm) hm.style.display = 'none';
   var ft = document.querySelector('footer a');

@@ -100,6 +100,11 @@ public class LocalServer implements Runnable {
 
         String assetPath = ROOT + "/" + path;
         byte[] body = readAsset(assetPath);
+        // 兜底：打包时把带空格的目录名压成了无空格形式（如 InternationalFinance），
+        //       万一还有页面按带空格的路径来取，这里再试一次。
+        if (body == null && path.indexOf(' ') >= 0) {
+            body = readAsset(ROOT + "/" + path.replace(" ", ""));
+        }
 
         if (body == null) {
             byte[] nf = "<h1>404 Not Found</h1><p>Learning Course local assets.</p>".getBytes("UTF-8");

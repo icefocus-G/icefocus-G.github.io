@@ -70,6 +70,26 @@ find . -type f \
 # 拷贝到外置盘（exFAT）时，macOS 会给每个文件再生成一个 ._xxx 的 AppleDouble 副本，
 # 打包前必须清掉，否则这些垃圾会一起进 APK。
 find "$BUILD/assets/www" \( -name '._*' -o -name '.DS_Store' \) -delete 2>/dev/null || true
+
+# 目录名里的空格在 assets / URL 里一路都是麻烦（%20、AssetManager 列举都可能踩坑），
+# 打包时统一压成无空格形式：International Finance → InternationalFinance。
+# 层级深度不变，页面里的 ../../data、../../script 等相对路径照旧成立。
+W="$BUILD/assets/www"
+[ -d "$W/examination/International Finance" ] && mv "$W/examination/International Finance" "$W/examination/InternationalFinance"
+[ -d "$W/examination/Western Economics" ]     && mv "$W/examination/Western Economics"     "$W/examination/WesternEconomics"
+
+# 包里也放一个根 index.html：兜住页面上的「返回首页」，直接送进课程内页，
+# 避免出现 404 白屏（APK 里不打首页皮肤）。
+cat > "$W/index.html" <<'HTML'
+<!DOCTYPE html><html lang="zh-CN"><head><meta charset="utf-8">
+<title>Learning Course</title>
+<meta http-equiv="refresh" content="0; url=examination/InternationalFinance/study.html">
+</head><body style="font:14px -apple-system,sans-serif;padding:24px">
+<script>location.replace('examination/InternationalFinance/study.html');</script>
+正在打开「国际金融 00076」…
+</body></html>
+HTML
+
 echo "   资源文件数：$(find "$BUILD/assets/www" -type f | wc -l | tr -d ' ')"
 
 # ---------- 3. 编译 ----------

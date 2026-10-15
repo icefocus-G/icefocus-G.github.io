@@ -561,10 +561,21 @@ document.addEventListener('keydown', function (e) {
 /* ============ 启动 ============ */
 (function init() {
   var t = 0;
-  /* APK 里根目录没有首页，隐藏「返回首页」；「课程」按钮仍可回课程中心 */
-  if (window.__IF_APK__) {
+  /* 是否跑在 APK 里：首屏看 URL 上的 ?apk=1，之后的页面看壳层写进 localStorage 的标记。
+     （壳层的 evaluateJavascript 注入发生在 onPageFinished，晚于本页内联脚本，
+      所以只认 window.__IF_APK__ 是拿不到的。） */
+  function isAPK() {
+    try {
+      if (window.__IF_APK__ === true || window.__IF_NATIVE__ === true) return true;
+      if (/[?&]apk=1/.test(location.search)) return true;
+      return localStorage.getItem('IF::apk') === '1';
+    } catch (e) { return false; }
+  }
+  /* APK 里隐藏「返回首页」；「课程」按钮仍可回课程中心 */
+  if (isAPK()) {
     var hm = document.querySelector('.home');
     if (hm) hm.style.display = 'none';
+    try { localStorage.setItem('IF::apk', '1'); } catch (e) {}
   }
   try { t = parseInt(localStorage.getItem(K_TAB) || '0', 10); } catch (e) {}
   var m = /[?&]t=([01])/.exec(location.search);   // 主页入口可直接指定页签
