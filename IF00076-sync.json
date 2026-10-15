@@ -2,10 +2,10 @@
   "app": "IF00076",
   "ver": 3,
   "device": "web",
-  "exportedAt": "2026-10-15T00:11:30.459Z",
-  "updatedAt": "2026-10-15T00:11:30.459Z",
+  "exportedAt": "2026-10-15T00:12:04.778Z",
+  "updatedAt": "2026-10-15T00:12:04.778Z",
   "data": {
-    "IF76::stats": "{\"outline.html\":{\"opens\":1,\"ms\":177091,\"last\":1791990070748,\"scroll\":123},\"bank.html\":{\"opens\":2,\"ms\":366096,\"last\":1792023032481,\"scroll\":0}}",
+    "IF76::stats": "{\"outline.html\":{\"opens\":1,\"ms\":177091,\"last\":1791990070748,\"scroll\":123},\"bank.html\":{\"opens\":2,\"ms\":0,\"last\":1792023084021,\"scroll\":0}}",
     "IF76::tab": "1",
     "if00076_exam_wrongMigrated": "true",
     "IF76::g::memory": "14",
