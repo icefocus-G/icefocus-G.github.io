@@ -1,0 +1,36 @@
+{
+  "cn": "西方经济学（中级）",
+  "en": "Western Economics",
+  "code": "13135",
+  "ico": "📈",
+  "order": 2,
+  "status": "live",
+  "theme": "#2d5fe0",
+  "desc": "2020.8—2026.4 共 13 套历年真题 + 交互式大纲精讲 + 名词解释 / 概述题 / 计算题 / 考前预测 / 大纲背诵库，客观题即时判分，错题本自动归集。",
+  "mods": [
+    "大纲精讲",
+    "历年真题",
+    "错题本",
+    "考前预测"
+  ],
+  "entry": "study.html",
+  "pages": {
+    "outline": {
+      "file": "outline.html",
+      "label": "大纲精讲"
+    },
+    "bank": {
+      "file": "bank.html",
+      "label": "历年真题库"
+    }
+  },
+  "storage": "we13135_exam_",
+  "total": 449,
+  "sync": {
+    "id": "WE13135",
+    "data": "WE13135-sync.json",
+    "owner": "icefocus-G",
+    "repo": "icefocus-G.github.io",
+    "branch": "main"
+  }
+}

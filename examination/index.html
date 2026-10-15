@@ -4,7 +4,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <meta name="theme-color" content="#0b1020">
-<meta name="description" content="ICEFOCUS · Learning Course 课程中心">
+<meta name="description" content="ICEFOCUS · Learning Course 课程中心（自动发现课程）">
 <title>Learning Course · ICEFOCUS</title>
 <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'><rect width='32' height='32' rx='8' fill='%230b1020'/><text x='16' y='22' font-size='16' font-family='sans-serif' font-weight='700' fill='%2338bdf8' text-anchor='middle'>IF</text></svg>">
 <link rel="manifest" href="../manifest.webmanifest">
@@ -32,7 +32,7 @@ body{
     radial-gradient(46% 44% at 50% 96%, rgba(52,211,153,.10), transparent 66%);
   filter:blur(20px);
 }
-.wrap{position:relative; z-index:1; width:100%; max-width:1080px; margin:0 auto; padding:0 18px 60px}
+.wrap{position:relative; z-index:1; width:100%; max-width:1180px; margin:0 auto; padding:0 18px 60px}
 
 /* ---------- 顶栏 ---------- */
 header{
@@ -52,7 +52,7 @@ header .sp{flex:1}
 .home:hover{color:var(--ink); border-color:rgba(140,170,220,.4)}
 
 /* ---------- Hero ---------- */
-.hero{padding:44px 4px 26px; text-align:center}
+.hero{padding:40px 4px 22px; text-align:center}
 .eyebrow{
   display:inline-flex; align-items:center; gap:8px; font-size:11px; letter-spacing:.22em;
   color:var(--dim); border:1px solid var(--line); border-radius:999px; padding:5px 13px;
@@ -64,13 +64,15 @@ header .sp{flex:1}
   -webkit-background-clip:text; background-clip:text; color:transparent;
 }
 .hero p{margin:0; color:var(--dim); font-size:13.5px; letter-spacing:.06em}
+.hero .statline{margin-top:14px; color:var(--dim2); font-size:12.5px; letter-spacing:.08em}
+.hero .statline b{color:var(--a1); font-weight:700}
 
 /* ---------- 同步状态条 ---------- */
 .syncbar{
   display:flex; align-items:center; gap:9px; flex-wrap:wrap;
-  margin:22px auto 0; padding:9px 14px; font-size:12.5px; color:var(--dim);
+  margin:20px auto 0; padding:9px 14px; font-size:12.5px; color:var(--dim);
   background:var(--card); border:1px solid var(--line); border-radius:12px;
-  max-width:720px; line-height:1.7;
+  max-width:780px; line-height:1.7;
 }
 .syncbar .dot{width:7px;height:7px;border-radius:50%;background:#64748b;flex:0 0 auto}
 .syncbar .dot.on{background:var(--a3); box-shadow:0 0 8px var(--a3)}
@@ -80,12 +82,31 @@ header .sp{flex:1}
 .syncbar a{color:var(--a1); text-decoration:none; border-bottom:1px dashed rgba(56,189,248,.4)}
 .syncbar a:hover{border-bottom-style:solid}
 
+/* ---------- 工具行 ---------- */
+.toolbar{display:flex; gap:10px; align-items:center; flex-wrap:wrap; margin:26px 2px 0}
+.search{flex:1 1 260px; position:relative}
+.search input{
+  width:100%; background:var(--card); border:1px solid var(--line); border-radius:11px;
+  color:var(--ink); font:inherit; font-size:13.5px; padding:10px 14px 10px 36px; outline:none;
+  transition:border-color .18s;
+}
+.search input::placeholder{color:var(--dim2)}
+.search input:focus{border-color:rgba(56,189,248,.5)}
+.search::before{content:"⌕"; position:absolute; left:13px; top:50%; transform:translateY(-52%); color:var(--dim2); font-size:17px}
+.fbtn{
+  background:var(--card); border:1px solid var(--line); color:var(--dim); cursor:pointer;
+  font:inherit; font-size:12.5px; padding:9px 14px; border-radius:11px; transition:.18s;
+}
+.fbtn:hover{color:var(--ink); border-color:rgba(140,170,220,.4)}
+.fbtn.on{color:#6ee7b7; border-color:rgba(52,211,153,.45); background:rgba(52,211,153,.10)}
+
 /* ---------- 课程卡 ---------- */
 .secTitle{
-  margin:40px 2px 16px; display:flex; align-items:baseline; gap:10px;
+  margin:34px 2px 14px; display:flex; align-items:baseline; gap:10px;
   font-size:12px; letter-spacing:.2em; color:var(--dim2);
 }
 .secTitle::after{content:""; flex:1; height:1px; background:var(--line)}
+.secTitle .cnt{letter-spacing:0; color:var(--dim); font-size:12.5px; white-space:nowrap}
 .grid{display:grid; grid-template-columns:repeat(auto-fill,minmax(300px,1fr)); gap:16px}
 @media (max-width:520px){ .grid{grid-template-columns:1fr} }
 
@@ -103,8 +124,9 @@ header .sp{flex:1}
 .course:hover{transform:translateY(-4px); border-color:rgba(140,170,220,.36);
   box-shadow:0 18px 44px -20px rgba(0,0,0,.85)}
 .course:hover::before{opacity:.85}
-.course.todo{cursor:default; opacity:.62}
+.course.todo{cursor:pointer; opacity:.66}
 .course.todo:hover{transform:none; box-shadow:none; border-color:var(--line)}
+.course.blank{border-style:dashed; opacity:.5}
 .course > *{position:relative}
 
 .chead{display:flex; align-items:flex-start; gap:12px}
@@ -113,21 +135,21 @@ header .sp{flex:1}
   background:rgba(140,170,220,.10); border:1px solid var(--line); font-size:20px;
 }
 .ctitle{min-width:0; flex:1}
-.ctitle h3{margin:0; font-size:17px; font-weight:700; letter-spacing:.02em}
-.ctitle .en{display:block; margin-top:3px; font-size:11.5px; color:var(--dim); letter-spacing:.14em; text-transform:uppercase}
+.ctitle h3{margin:0; font-size:17px; font-weight:700; letter-spacing:.02em; word-break:break-word}
+.ctitle .en{display:block; margin-top:3px; font-size:11.5px; color:var(--dim); letter-spacing:.14em; text-transform:uppercase; word-break:break-word}
 .badge{
   flex:0 0 auto; font-size:10.5px; letter-spacing:.08em; padding:3px 9px; border-radius:999px;
   border:1px solid var(--line); color:var(--dim);
 }
 .badge.live{color:#6ee7b7; border-color:rgba(52,211,153,.42); background:rgba(52,211,153,.10)}
 .badge.soon{color:#fcd34d; border-color:rgba(245,158,11,.38); background:rgba(245,158,11,.10)}
+.badge.blank{color:var(--dim2); border-color:var(--line); background:rgba(140,170,220,.06)}
 
 .code{
   display:inline-block; font-size:10.5px; letter-spacing:.14em; color:var(--dim2);
   border:1px solid var(--line); border-radius:6px; padding:2px 7px;
 }
 .desc{margin:0; font-size:13px; line-height:1.85; color:var(--dim)}
-
 .mods{display:flex; flex-wrap:wrap; gap:7px}
 .mod{
   font-size:11.5px; color:var(--dim); border:1px solid var(--line); border-radius:999px;
@@ -137,8 +159,11 @@ header .sp{flex:1}
 .meter i{display:block; height:100%; border-radius:3px; background:linear-gradient(90deg,var(--a1),var(--a2)); transition:width .6s ease}
 .foot2{display:flex; align-items:center; gap:8px; font-size:12px; color:var(--dim2)}
 .foot2 .sp{flex:1}
-.enter{font-size:12.5px; color:var(--a1); letter-spacing:.06em}
+.enter{font-size:12.5px; color:var(--a1); letter-spacing:.06em; white-space:nowrap}
 .course.todo .enter{color:var(--dim2)}
+.dirtag{font-size:10.5px; color:var(--dim2); font-family:ui-monospace,Consolas,monospace; word-break:break-all}
+
+.empty{color:var(--dim2); font-size:13.5px; padding:30px 4px; text-align:center; grid-column:1/-1}
 
 /* ---------- 页脚 ---------- */
 footer{position:relative; z-index:1; text-align:center; padding:26px 16px 34px;
@@ -165,6 +190,7 @@ footer a:hover{color:var(--a1)}
     <div class="eyebrow"><i></i>LEARNING COURSE</div>
     <h1>课程中心</h1>
     <p>网页 · 手机 · APK 三端通用，学习进度自动同步到 GitHub</p>
+    <div class="statline" id="statline">正在扫描课程…</div>
   </section>
 
   <div class="syncbar" id="syncbar">
@@ -174,10 +200,18 @@ footer a:hover{color:var(--a1)}
     <span id="syncTime"></span>
   </div>
 
-  <div class="secTitle">COURSES · 已上线</div>
+  <div class="toolbar">
+    <div class="search"><input id="kw" type="search" placeholder="搜索课程名 / 课程代码 / 目录名，例如：西方经济学、13135、00076"></div>
+    <button class="fbtn on" id="fAll">全部</button>
+    <button class="fbtn" id="fLive">已上线</button>
+    <button class="fbtn" id="fBlank">课程位</button>
+    <button class="fbtn" id="fScan" title="重新扫描 examination/ 下的课程目录">↻ 重新扫描</button>
+  </div>
+
+  <div class="secTitle">COURSES · 已上线 <span class="cnt" id="cntLive"></span></div>
   <div class="grid" id="gridLive"></div>
 
-  <div class="secTitle">UPCOMING · 建设中</div>
+  <div class="secTitle">UPCOMING · 课程位 <span class="cnt" id="cntTodo"></span></div>
   <div class="grid" id="gridTodo"></div>
 </div>
 
@@ -185,138 +219,323 @@ footer a:hover{color:var(--a1)}
 
 <script>
 /* =========================================================================
- * 课程中心 · 框架
- *   新增一门课：在 COURSES 里加一条即可（dir 对应 examination/ 下的文件夹名）。
- *   status: 'live' 已上线可点；'todo' 建设中（占位、不可点）
+ *  课程中心 · 自动发现版
+ *  ─────────────────────────────────────────────────────────────────────
+ *  加一门课 = 在 examination/ 下建一个目录，放一个 course.json（写名字等元数据），
+ *  再把 outline.html / bank.html 丢进去。**不需要改这个文件。**
+ *
+ *  名称识别顺序：<dir>/course.json 的 cn → 目录名
+ *  目录发现顺序：courses.json 的 fallback（秒出、离线可用）
+ *              → GitHub API 扫 examination/（自动补发现新目录，结果缓存 1 小时）
  * ======================================================================= */
-var COURSES = [
-  {
-    dir: 'International Finance',
-    cn : '国际金融',
-    en : 'International Finance',
-    code: '00076',
-    ico: '💱',
-    status: 'live',
-    desc: '2024 版教材。13 套历年真题 + 大纲精讲 + 名词解释 / 概述题 / 计算题 / 考前预测，客观题即时判分，错题本自动归集。',
-    mods: ['大纲精讲', '历年真题', '错题本', '考前预测'],
-    entry: 'study.html',
-    storage: 'if00076_exam_',           // 该课程在 localStorage 里的前缀，用于统计
-    total: 448                          // 题库总题数，用于换算完成百分比
-  },
-  {
-    dir: 'Western Economics',
-    cn : '西方经济学（中级）',
-    en : 'Western Economics',
-    code: '13135',
-    ico: '📈',
-    status: 'live',
-    desc: '2020.8—2026.4 共 13 套历年真题 + 交互式大纲精讲 + 名词解释 / 概述题 / 计算题 / 考前预测 / 大纲背诵库，客观题即时判分，错题本自动归集。',
-    mods: ['大纲精讲', '历年真题', '错题本', '考前预测'],
-    entry: 'study.html',
-    storage: 'we13135_exam_',            // 该课程在 localStorage 里的前缀，用于统计
-    total: 449                           // 题库总题数，用于换算完成百分比
-  }
-];
-
-var $ = function (s) { return document.querySelector(s); };
-function esc(s) {
-  return String(s == null ? '' : s).replace(/[&<>"]/g, function (c) {
-    return { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c];
-  });
-}
-
-/* ---------- 学习进度（按 localStorage 前缀统计已判分题数） ---------- */
-function judgedOf(c) {
-  if (!c.storage) return { done: 0, pct: 0 };
-  var done = 0;
-  try {
-    for (var i = 0; i < localStorage.length; i++) {
-      var k = localStorage.key(i);
-      if (k.indexOf(c.storage) !== 0) continue;
-      if (k.indexOf('hist_') > 0) done++;      // hist_<simID>_<qid> = 已判分
-    }
-  } catch (e) { return { done: 0, pct: 0 }; }
-  var pct = c.total ? Math.min(100, Math.round(done / c.total * 100)) : 0;
-  return { done: done, pct: pct };
-}
-
-/* ---------- 是否跑在 APK 里 ----------
-   APK 的壳层注入发生在 onPageFinished（晚于本页内联脚本），所以首屏靠 URL 上的 ?apk=1；
-   之后再打开的各个页面（以及同源 iframe）靠壳层写进 localStorage 的 IF::apk。 */
-function isAPK() {
-  try {
-    if (window.__IF_APK__ === true || window.__IF_NATIVE__ === true) return true;
-    if (/[?&]apk=1/.test(location.search)) return true;
-    return localStorage.getItem('IF::apk') === '1';
-  } catch (e) { return false; }
-}
-
-/* ---------- 卡片渲染 ---------- */
-function cardHTML(c) {
-  var live = c.status === 'live';
-  /* APK 打包时把目录名的空格去掉了（International Finance → InternationalFinance），
-     这里要跟着走，否则点卡片会 404。网页端仍然是带空格的原目录。 */
-  var dir = isAPK() ? String(c.dir).replace(/\s+/g, '') : c.dir;
-  var href = live ? encodeURIComponent(dir) + '/' + (c.entry || '') : '';
-  var pg = judgedOf(c);
-  return '<' + (live ? 'a' : 'div') + ' class="course' + (live ? '' : ' todo') + '"' +
-    (live ? ' href="' + href + '"' : '') + ' aria-label="' + esc(c.cn) + '">' +
-      '<div class="chead">' +
-        '<div class="cico">' + c.ico + '</div>' +
-        '<div class="ctitle">' +
-          '<h3>' + esc(c.cn) + (c.code ? ' <span class="code">' + esc(c.code) + '</span>' : '') + '</h3>' +
-          '<span class="en">' + esc(c.en) + '</span>' +
-        '</div>' +
-        '<span class="badge ' + (live ? 'live">已上线' : 'soon">建设中') + '</span>' +
-      '</div>' +
-      '<p class="desc">' + esc(c.desc) + '</p>' +
-      '<div class="mods">' + (c.mods || []).map(function (m) { return '<span class="mod">' + esc(m) + '</span>'; }).join('') + '</div>' +
-      '<div class="meter"><i style="width:' + pg.pct + '%"></i></div>' +
-      '<div class="foot2">' +
-        '<span>' + (live ? '已判分 ' + pg.done + ' 题 · ' + pg.pct + '%' : '内容筹备中') + '</span>' +
-        '<span class="sp"></span>' +
-        '<span class="enter">' + (live ? '进入学习 →' : '敬请期待') + '</span>' +
-      '</div>' +
-    '</' + (live ? 'a' : 'div') + '>';
-}
-
-$('#gridLive').innerHTML = COURSES.filter(function (c) { return c.status === 'live'; }).map(cardHTML).join('');
-$('#gridTodo').innerHTML = COURSES.filter(function (c) { return c.status !== 'live'; }).map(cardHTML).join('');
-
-/* APK 里没有首页皮肤，隐藏「返回首页」入口，只保留课程 */
-if (isAPK()) {
-  var hm = document.querySelector('header a.home');
-  if (hm) hm.style.display = 'none';
-  var ft = document.querySelector('footer a');
-  if (ft) { ft.textContent = 'Learning Course'; ft.removeAttribute('href'); }
-  document.querySelector('.hero p').textContent =
-    '离线可用 · 答题与判分结果联网后自动同步到 GitHub';
-}
-
-/* ---------- 云同步状态条 ---------- */
 (function () {
-  var cfg = null;
-  // 兼容旧 key：IF76::ghcfg → 新课程 key：IF::ghcfg::<courseId>
-  var keys = ['IF::ghcfg::IF00076', 'IF76::ghcfg'];
-  for (var i = 0; i < keys.length; i++) {
+  'use strict';
+
+  var $ = function (s) { return document.querySelector(s); };
+  function esc(s) {
+    return String(s == null ? '' : s).replace(/[&<>"]/g, function (c) {
+      return { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c];
+    });
+  }
+
+  var CFG = { slots: 12, autoDiscover: true, fallback: [], owner: 'icefocus-G',
+              repo: 'icefocus-G.github.io', branch: 'main', showReserved: true };
+  var COURSES = [];
+  var filter = 'all', kw = '';
+
+  /* ---------------- 1) 读配置 ---------------- */
+  function loadConfig() {
+    return fetch('courses.json?t=' + Date.now(), { cache: 'no-cache' })
+      .then(function (r) { return r.ok ? r.json() : {}; })
+      .then(function (o) {
+        Object.keys(CFG).forEach(function (k) {
+          if (o[k] !== undefined && String(k).charAt(0) !== '_') CFG[k] = o[k];
+        });
+        return CFG;
+      })
+      .catch(function () { return CFG; });
+  }
+
+  /* ---------------- 2) 目录发现（GitHub API，缓存 1 小时） ---------------- */
+  var K_DISC = 'IF::courseDirs';
+  function apiDiscover() {
+    if (!CFG.autoDiscover) return Promise.resolve([]);
     try {
-      var raw = localStorage.getItem(keys[i]);
-      if (raw) { cfg = JSON.parse(raw); break; }
-    } catch (e) { /* ignore */ }
+      var o = JSON.parse(localStorage.getItem(K_DISC) || 'null');
+      if (o && o.at && Date.now() - o.at < 3600000 && Array.isArray(o.dirs)) return Promise.resolve(o.dirs);
+    } catch (e) {}
+    var url = 'https://api.github.com/repos/' + CFG.owner + '/' + CFG.repo +
+              '/contents/examination?ref=' + encodeURIComponent(CFG.branch);
+    return fetch(url, { headers: { 'Accept': 'application/vnd.github+json' } })
+      .then(function (r) { if (!r.ok) throw new Error('HTTP ' + r.status); return r.json(); })
+      .then(function (arr) {
+        if (!Array.isArray(arr)) return [];
+        var dirs = arr.filter(function (e) {
+          return e && e.type === 'dir' && e.name && e.name.charAt(0) !== '_' && e.name.charAt(0) !== '.';
+        }).map(function (e) { return e.name; });
+        try { localStorage.setItem(K_DISC, JSON.stringify({ at: Date.now(), dirs: dirs })); } catch (e) {}
+        return dirs;
+      })
+      .catch(function () { return []; });
   }
-  var dot = $('#syncDot'), txt = $('#syncTxt'), tm = $('#syncTime');
-  var t = cfg && (cfg.lastPushAt || cfg.lastPullAt);
-  if (t) {
-    var d = new Date(t), p = function (n) { return n < 10 ? '0' + n : '' + n; };
-    tm.textContent = '最近同步 ' + (d.getFullYear() + '-' + p(d.getMonth() + 1) + '-' + p(d.getDate()) + ' ' + p(d.getHours()) + ':' + p(d.getMinutes()));
+
+  /* ---------------- 3) 读每个课程的 course.json ---------------- */
+  function fetchCourse(dir) {
+    var isBlank = /^course[-_ ]?\d+$/i.test(dir);
+    return fetch(encodeURI(dir) + '/course.json?t=' + Date.now(), { cache: 'no-cache' })
+      .then(function (r) { if (!r.ok) throw new Error('HTTP ' + r.status); return r.json(); })
+      .then(function (c) {
+        c.dir = dir;
+        if (!c.cn) c.cn = dir;                        // 名字兜底＝目录名
+        if (!c.entry) c.entry = 'study.html';
+        if (!c.status) c.status = 'live';
+        return c;
+      })
+      .catch(function () {
+        /* 没有 course.json：目录名直接当课程名，交给通用壳自己兜底 */
+        return {
+          dir: dir, cn: dir, en: '', code: '',
+          ico: isBlank ? '➕' : '📚',
+          status: isBlank ? 'reserved' : 'live',
+          entry: '/_shell/study.html?course=' + encodeURIComponent(dir),
+          desc: isBlank ? '预留课程位。' : '未提供 course.json，按目录名显示。'
+        };
+      });
   }
-  if (cfg && cfg.token) {
-    dot.className = 'dot on';
-    txt.innerHTML = '云同步<b>已开启</b> · 答题与判分结果会自动同步到 GitHub（' + esc(cfg.owner || 'icefocus-G') + '/' + esc(cfg.repo || 'icefocus-G.github.io') + '）';
-  } else {
-    dot.className = 'dot warn';
-    txt.innerHTML = '本机还没有填写 GitHub Token，学习记录<b>暂时只在本地</b>。进入任一课程 → 右上角「☁ 云同步」粘贴一次即可全自动。';
+
+  /* ---------------- 4) 学习进度（按 localStorage 前缀统计） ---------------- */
+  function judgedOf(c) {
+    if (!c.storage) return { done: 0, pct: 0 };
+    var done = 0;
+    try {
+      for (var i = 0; i < localStorage.length; i++) {
+        var k = localStorage.key(i);
+        if (k.indexOf(c.storage) !== 0) continue;
+        if (k.indexOf('hist_') > 0) done++;
+      }
+    } catch (e) { return { done: 0, pct: 0 }; }
+    var pct = c.total ? Math.min(100, Math.round(done / c.total * 100)) : 0;
+    return { done: done, pct: pct };
   }
+
+  /* ---------------- 5) 运行环境 ---------------- */
+  function isAPK() {
+    try {
+      if (window.__IF_APK__ === true || window.__IF_NATIVE__ === true) return true;
+      if (/[?&]apk=1/.test(location.search)) return true;
+      return localStorage.getItem('IF::apk') === '1';
+    } catch (e) { return false; }
+  }
+  /* 旧内嵌版把目录名去掉了空格，只有它才需要改写链接；套壳版用原名目录 */
+  function isEmbedded() {
+    try { return isAPK() && localStorage.getItem('IF::shell') !== '1'; } catch (e) { return false; }
+  }
+
+  /* ---------------- 6) 渲染 ----------------
+     entry 约定：
+       以 "/" 开头        → 相对 examination/（去掉开头的斜杠）
+       以 "./" "../" 开头 → 相对当前页，原样使用
+       其它               → 相对课程目录
+     没有 entry 时自动落到通用壳 _shell/study.html?course=<目录>（壳自己会兜底） */
+  function hrefOf(c) {
+    var e = c.entry;
+    if (e) {
+      if (e.charAt(0) === '/') return e.slice(1);
+      if (/^\.\.?\//.test(e)) return e;
+      var dir = isEmbedded() ? String(c.dir).replace(/\s+/g, '') : c.dir;
+      return encodeURIComponent(dir) + '/' + e;
+    }
+    return '_shell/study.html?course=' + encodeURIComponent(c.dir);
+  }
+
+  function cardHTML(c) {
+    var live = c.status === 'live';
+    var reserved = c.status === 'reserved';
+    var pg = judgedOf(c);
+    var badge = live ? '<span class="badge live">已上线</span>'
+                     : (reserved ? '<span class="badge blank">空位</span>'
+                                 : '<span class="badge soon">建设中</span>');
+    var cg = c.theme ? 'style="--cg:radial-gradient(120% 90% at 12% 6%,' + esc(c.theme) + '33,transparent 62%)"' : '';
+    return '<a class="course' + (live ? '' : ' todo') + (reserved ? ' blank' : '') + '"' +
+      ' href="' + esc(hrefOf(c)) + '" ' + cg +
+      ' aria-label="' + esc(c.cn) + '" data-dir="' + esc(c.dir) + '">' +
+        '<div class="chead">' +
+          '<div class="cico">' + esc(c.ico || (reserved ? '➕' : '📚')) + '</div>' +
+          '<div class="ctitle">' +
+            '<h3>' + esc(c.cn) + (c.code ? ' <span class="code">' + esc(c.code) + '</span>' : '') + '</h3>' +
+            '<span class="en">' + esc(c.en || c.dir) + '</span>' +
+          '</div>' + badge +
+        '</div>' +
+        (c.desc ? '<p class="desc">' + esc(c.desc) + '</p>' : '') +
+        (c.mods && c.mods.length
+          ? '<div class="mods">' + c.mods.map(function (m) { return '<span class="mod">' + esc(m) + '</span>'; }).join('') + '</div>'
+          : '') +
+        (live ? '<div class="meter"><i style="width:' + pg.pct + '%"></i></div>' : '') +
+        '<div class="foot2">' +
+          '<span>' + (live ? '已判分 ' + pg.done + ' 题 · ' + pg.pct + '%'
+                           : (reserved ? '待启用' : '内容筹备中')) + '</span>' +
+          '<span class="sp"></span>' +
+          '<span class="enter">' + (live ? '进入学习 →' : '查看占位页 →') + '</span>' +
+        '</div>' +
+        '<div class="dirtag">' + esc(c.dir) + '</div>' +
+      '</a>';
+  }
+
+  function match(c) {
+    if (filter === 'live' && c.status !== 'live') return false;
+    if (filter === 'blank' && c.status === 'live') return false;
+    if (kw) {
+      var hay = (c.cn + ' ' + (c.en || '') + ' ' + (c.code || '') + ' ' + (c.dir || '') + ' ' + (c.desc || '')).toLowerCase();
+      if (hay.indexOf(kw) < 0) return false;
+    }
+    return true;
+  }
+
+  function render() {
+    var list = COURSES.filter(match);
+    var live = list.filter(function (c) { return c.status === 'live'; });
+    var todo = list.filter(function (c) { return c.status !== 'live'; });
+
+    $('#gridLive').innerHTML = live.length ? live.map(cardHTML).join('')
+      : '<div class="empty">' + ((kw || filter !== 'all') ? '没有匹配的已上线课程' : '还没有已上线的课程') + '</div>';
+    $('#gridTodo').innerHTML = todo.length ? todo.map(cardHTML).join('')
+      : '<div class="empty">暂无课程位 —— 在 examination/ 下建目录、放 course.json 就会自动出现</div>';
+
+    $('#cntLive').textContent = '共 ' + live.length + ' 门';
+    $('#cntTodo').textContent = '共 ' + todo.length + ' 个';
+  }
+
+  function renderStats() {
+    var live = COURSES.filter(function (c) { return c.status === 'live'; }).length;
+    var all = COURSES.length;
+    $('#statline').innerHTML =
+      '共 <b>' + all + '</b> 个课程位 · 已上线 <b>' + live + '</b> · 建设中 <b>' + (all - live) + '</b>' +
+      (CFG.slots > all ? ' · 还可再放 <b>' + (CFG.slots - all) + '</b> 门' : '');
+  }
+
+  /* 发现的课程少于 slots 时，补出「空白课程位」卡片，保证页面始终有足够坑位 */
+  function padSlots(list) {
+    if (!CFG.showReserved || !(CFG.slots > 0) || list.length >= CFG.slots) return list;
+    var used = {}, maxNo = 0;
+    list.forEach(function (c) {
+      used[c.dir] = 1;
+      var m = /^course[-_ ]?(\d+)$/i.exec(c.dir);
+      if (m) maxNo = Math.max(maxNo, parseInt(m[1], 10));
+    });
+    var need = Math.min(CFG.slots - list.length, 20);
+    for (var i = 1; i <= need; i++) {
+      var no = String(maxNo + i); if (no.length < 2) no = '0' + no;
+      var dir = 'Course-' + no, k = 0;
+      while (used[dir]) { k++; dir = 'Course-' + no + '-' + k; }
+      used[dir] = 1;
+      var cn = '空白课程位 ' + no;
+      list.push({
+        dir: dir, cn: cn, en: 'Reserved Slot ' + no, ico: '➕', code: '', status: 'reserved',
+        entry: '/_shell/study.html?stub=1&name=' + encodeURIComponent(cn),
+        desc: '预留课程位。把内容放进 examination/' + dir + '/ 就会自动变成一门正式课程。'
+      });
+    }
+    return list;
+  }
+
+  function sortCourses(list) {
+    return list.sort(function (a, b) {
+      var oa = a.order == null ? 900 : a.order, ob = b.order == null ? 900 : b.order;
+      if (oa !== ob) return oa - ob;
+      return String(a.dir).localeCompare(String(b.dir));
+    });
+  }
+
+  function load(dirs) {
+    var seen = {};
+    dirs = dirs.filter(function (d) { if (!d || seen[d]) return false; seen[d] = 1; return true; });
+    return Promise.all(dirs.map(fetchCourse)).then(function (list) {
+      COURSES = padSlots(sortCourses(list));
+      renderStats(); render();
+    });
+  }
+
+  function boot() {
+    $('#statline').textContent = '正在扫描课程…';
+    loadConfig().then(function () {
+      var base = (CFG.fallback || []).slice();
+      if (base.length) load(base);                      // 秒出，离线也能用
+      apiDiscover().then(function (found) {
+        var all = base.concat(found || []);
+        if (all.length) load(all);                      // 再补上自动发现的新目录
+      });
+    });
+  }
+
+  /* 筛选与搜索 */
+  function setFilter(f) {
+    filter = f;
+    [['fAll', 'all'], ['fLive', 'live'], ['fBlank', 'blank']].forEach(function (p) {
+      $('#' + p[0]).classList.toggle('on', p[1] === f);
+    });
+    render();
+  }
+  $('#fAll').addEventListener('click', function () { setFilter('all'); });
+  $('#fLive').addEventListener('click', function () { setFilter('live'); });
+  $('#fBlank').addEventListener('click', function () { setFilter('blank'); });
+  var tk = null;
+  $('#kw').addEventListener('input', function (e) {
+    clearTimeout(tk);
+    tk = setTimeout(function () { kw = e.target.value.trim().toLowerCase(); render(); }, 160);
+  });
+  $('#fScan').addEventListener('click', function () {
+    var b = this;
+    try { localStorage.removeItem(K_DISC); } catch (e) {}
+    b.textContent = '扫描中…';
+    boot();
+    setTimeout(function () { b.textContent = '↻ 重新扫描'; }, 2800);
+  });
+
+  /* APK 里没有首页皮肤，隐藏「返回首页」入口 */
+  if (isAPK()) {
+    var hm = document.querySelector('header a.home');
+    if (hm) hm.style.display = 'none';
+    var ft = document.querySelector('footer a');
+    if (ft) { ft.textContent = 'Learning Course'; ft.removeAttribute('href'); }
+    document.querySelector('.hero p').textContent =
+      '离线可用 · 答题与判分结果联网后自动同步到 GitHub';
+  }
+
+  /* ---------------- 云同步状态条 ---------------- */
+  (function () {
+    var cfg = null, keys = [];
+    try {
+      for (var i = 0; i < localStorage.length; i++) {
+        var k = localStorage.key(i);
+        if (k.indexOf('IF::ghcfg::') === 0) keys.push(k);
+      }
+    } catch (e) {}
+    ['IF::ghcfg::IF00076', 'IF76::ghcfg'].forEach(function (k) { if (keys.indexOf(k) < 0) keys.push(k); });
+    for (var j = 0; j < keys.length; j++) {
+      try {
+        var raw = localStorage.getItem(keys[j]);
+        if (raw) { var o = JSON.parse(raw); if (o && o.token) { cfg = o; break; } }
+      } catch (e) {}
+    }
+    var dot = $('#syncDot'), txt = $('#syncTxt'), tm = $('#syncTime');
+    var tt = cfg && (cfg.lastPushAt || cfg.lastPullAt);
+    if (tt) {
+      var d = new Date(tt), p = function (n) { return n < 10 ? '0' + n : '' + n; };
+      tm.textContent = '最近同步 ' + (d.getFullYear() + '-' + p(d.getMonth() + 1) + '-' + p(d.getDate()) +
+                       ' ' + p(d.getHours()) + ':' + p(d.getMinutes()));
+    }
+    if (cfg && cfg.token) {
+      dot.className = 'dot on';
+      txt.innerHTML = '云同步<b>已开启</b> · 答题与判分结果会自动同步到 GitHub（' +
+        esc(cfg.owner || CFG.owner) + '/' + esc(cfg.repo || CFG.repo) + '）';
+    } else {
+      dot.className = 'dot warn';
+      txt.innerHTML = '本机还没有填写 GitHub Token，学习记录<b>暂时只在本地</b>。' +
+        '进入任一课程 → 右上角「☁ 云同步」粘贴一次即可全自动。';
+    }
+  })();
+
+  boot();
 })();
 </script>
 </body>

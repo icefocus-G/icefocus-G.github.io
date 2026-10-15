@@ -1,0 +1,35 @@
+{
+  "cn": "课程中文名",
+  "en": "Course English Name",
+  "code": "00000",
+  "ico": "📚",
+  "order": 50,
+  "status": "live",
+  "theme": "#2d5fe0",
+  "desc": "一句话介绍这门课：几套真题、有哪些模块。",
+  "mods": [
+    "大纲精讲",
+    "历年真题",
+    "错题本"
+  ],
+  "entry": "study.html",
+  "pages": {
+    "outline": {
+      "file": "outline.html",
+      "label": "大纲精讲"
+    },
+    "bank": {
+      "file": "bank.html",
+      "label": "历年真题库"
+    }
+  },
+  "storage": "xx00000_exam_",
+  "total": 0,
+  "sync": {
+    "id": "XX00000",
+    "data": "XX00000-sync.json",
+    "owner": "icefocus-G",
+    "repo": "icefocus-G.github.io",
+    "branch": "main"
+  }
+}

@@ -1,0 +1,19 @@
+{
+  "cn": "空白课程位 09",
+  "en": "Reserved Slot 09",
+  "code": "",
+  "ico": "➕",
+  "order": 109,
+  "status": "reserved",
+  "desc": "预留课程位。放一个 course.json + 两个页面进去就上线。",
+  "_怎么启用": [
+    "1. cn 改成课程中文名（卡片标题就是这个）",
+    "2. code 填课程代码，en 填英文名，ico 换图标 emoji",
+    "3. status 改成 live",
+    "4. 把大纲页命名为 outline.html、题库页命名为 bank.html 放进本目录",
+    "5. 可选：填 storage（localStorage 前缀，用于卡片进度条）和 total（题库总题数）",
+    "6. 可选：填 sync.id / sync.data 接入 GitHub 云同步，例：{\"id\":\"XX12345\",\"data\":\"XX12345-sync.json\"}",
+    "7. 推送到 GitHub，刷新课程中心"
+  ],
+  "entry": "/_shell/study.html?course=Course-09"
+}

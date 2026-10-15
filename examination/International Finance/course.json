@@ -1,0 +1,36 @@
+{
+  "cn": "国际金融",
+  "en": "International Finance",
+  "code": "00076",
+  "ico": "💱",
+  "order": 1,
+  "status": "live",
+  "theme": "#1d4ed8",
+  "desc": "2024 版教材。13 套历年真题 + 大纲精讲 + 名词解释 / 概述题 / 计算题 / 考前预测，客观题即时判分，错题本自动归集。",
+  "mods": [
+    "大纲精讲",
+    "历年真题",
+    "错题本",
+    "考前预测"
+  ],
+  "entry": "study.html",
+  "pages": {
+    "outline": {
+      "file": "outline.html",
+      "label": "大纲精讲"
+    },
+    "bank": {
+      "file": "bank.html",
+      "label": "历年真题库"
+    }
+  },
+  "storage": "if00076_exam_",
+  "total": 448,
+  "sync": {
+    "id": "IF00076",
+    "data": "IF00076-sync.json",
+    "owner": "icefocus-G",
+    "repo": "icefocus-G.github.io",
+    "branch": "main"
+  }
+}

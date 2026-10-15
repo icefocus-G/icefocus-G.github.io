@@ -1,0 +1,27 @@
+{
+  "_readme": "课程中心配置。加课程时正常不用改这里 —— 丢一个带 course.json 的文件夹进 examination/ 就会自动出现；这里只放兜底清单和布局参数。",
+
+  "slots": 12,
+  "_slots": "课程位总数（含已上线）。发现到的课程不足这个数时，自动补「空白预留位」。想多留/少留改这个数字即可。",
+
+  "autoDiscover": true,
+  "_autoDiscover": "true = 后台调 GitHub API 扫 examination/ 下有哪些课程目录（结果在 localStorage 缓存 1 小时，不占配额）。发现新目录会自动补进列表，不用手动登记。",
+
+  "owner": "icefocus-G",
+  "repo": "icefocus-G.github.io",
+  "branch": "main",
+
+  "fallback": [
+    "International Finance",
+    "Western Economics",
+    "Course-03", "Course-04", "Course-05", "Course-06", "Course-07",
+    "Course-08", "Course-09", "Course-10", "Course-11", "Course-12"
+  ],
+  "_fallback": "离线 / 拉不到 API 时的课程目录清单。由 _tools/scan.py 自动生成，也可以手工维护。",
+
+  "sort": "order",
+  "_sort": "order（按 course.json 的 order 字段，缺失按目录名）/ updated（最近修改优先，需 API 数据）",
+
+  "showReserved": true,
+  "_showReserved": "是否把未启用的课程位也显示成卡片（显示为「建设中」，可点进去看占位页）。"
+}

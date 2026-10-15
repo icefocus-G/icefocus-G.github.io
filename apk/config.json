@@ -1,0 +1,10 @@
+{
+  "_说明": "Learning Course 套壳版 APK 的入口配置。改这个文件就能换 App 打开时的落地页，不用重新打包 APK。",
+  "_生效方式": "App 每次启动会在后台拉一次本文件；home 变化时存下来，下次启动生效。拉不到就用内置兜底地址。",
+  "home": "https://icefocus-G.github.io/examination/",
+  "_可选值示例": [
+    "https://icefocus-G.github.io/examination/",
+    "https://icefocus-G.github.io/examination/Western Economics/study.html",
+    "https://icefocus-G.github.io/examination/International Finance/study.html"
+  ]
+}
