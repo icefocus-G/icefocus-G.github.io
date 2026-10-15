@@ -4,17 +4,22 @@
  *  权威存储：GitHub 仓库里的 data/<COURSE>-sync.json
  *  本机：只是缓存，不需要点任何按钮
  *
- *  · 读：fetch 仓库里的 data 文件；本地取不到时自动退回滚到 raw.githubusercontent
+ *  · 读：先取 raw.githubusercontent 上的仓库原文（永远是最新的），
+ *        取不到才退回滚到同域静态文件。顺序不能反 —— 在 APK 里同域文件
+ *        就是打包那一刻冻住的旧快照，排在前面会把手机上的新记录冲掉。
+ *        同域静态文件降级为「只补本机没有的键」，永不允许覆盖本机。
  *  · 写：GitHub Contents API（Token 只在本机浏览器，一次性粘贴后永久免操作）
  *  · ★ 上传时机（v5）★
  *      只有在「学习数据真正被确定」时才上传，即页面主动调用
  *          IF_COURSE_SYNC.commit('理由')
  *      也就是：选择题选定了答案 / 其它题型确定了「答对·答错」/ 交卷 / 重做 / 标记掌握。
  *      滚动位置、阅读时长、页签、展开折叠这类浏览状态只写本机，不再触发上传。
- *      （想恢复成「任何改动都上传」，把 cfg.pushOnChange 设成 true 即可）
+ *      （想恢复成「任何改动都上传」，把 cfg.mode 设成 'global' 即可）
  *  · 每 20 秒自动拉取云端；切回标签页、窗口获得焦点时立即拉取（只读，不上传）
  *  · 关闭 / 切走页面时用 keepalive 请求补交一次，不会丢改动
  *  · 合并策略：本机改过的键优先，其余以云端为准（首次同步以云端为准）
+ *  · 安全网：若本机存在 IF76::bak::<时间戳> 备份，把备份里本机当前缺失的
+ *            学习记录补回来（只补不删），用于兜住「曾被旧快照覆盖」的情况
  *
  *  课程接入：加载本文件之前，在宿主页面里设置
  *      window.IF_SYNC_CFG = {
@@ -62,6 +67,17 @@
     if (s === 'IF76::stats' || s === 'IF76::tab') return true;
     if (s.indexOf('if00076_pos') === 0) return true;
     if (s.indexOf('IF76::bak::') === 0) return true;
+    if (s.indexOf('IF76::g::') === 0) return true;   /* 首页小游戏（贪吃蛇等）的进度 */
+    if (s === 'IF::apk') return true;                /* 只是在标记「本机跑的是 App」 */
+    return false;
+  }
+
+  /* 学习记录类键：这些是真正要跨设备同步的东西。
+     从本机备份里找回数据时，只认这一类，避免把界面状态也一起翻出来。 */
+  function isRecord(k) {
+    var s = String(k);
+    if (s.indexOf('if00076_exam_') === 0) return true;
+    if (s.indexOf('if00076_') === 0) return true;
     return false;
   }
 
@@ -368,17 +384,22 @@
 
   /* 候选读取地址：① 本机 / GitHub Pages 上的相对路径 ② GitHub 原始文件（公开读）
      ② 让 APK / 本地打开 file:// 的情况也能拿到云端数据 */
+  /* 本机候选读取地址：GitHub 原文优先，同域静态文件只作兜底。
+   *
+   *   ⚠ 顺序不能反。同域文件在网页端确实是仓库最新内容，但在 APK 里它就是
+   *     打包那一刻冻住的快照 —— 一旦排在前面，每次开 App 都会拿旧快照当
+   *     「云端」，把手机上更新的做题记录冲掉（曾经真的把 77 条错题冲回 61 条）。 */
   function pullUrls() {
     var out = [];
     function add(u) { if (u && out.indexOf(u) < 0) out.push(u); }
-    add(cfg.url);
     add('https://raw.githubusercontent.com/' + cfg.owner + '/' + cfg.repo + '/' +
         (cfg.branch || 'main') + '/' + String(cfg.path || DEF_PATH).replace(/^\/+/, ''));
+    add(cfg.url);
     return out;
   }
 
   async function pull() {
-    var urls = pullUrls(), lastErr = null;
+    var urls = pullUrls(), lastErr = null, staticUrl = cfg.url;
     for (var i = 0; i < urls.length; i++) {
       var u = urls[i];
       try {
@@ -388,7 +409,11 @@
         if (!r.ok) { lastErr = new Error('HTTP ' + r.status + ' · ' + u); continue; }
         var txt = await r.text();
         if (!txt || txt.trim().charAt(0) !== '{') { lastErr = new Error('云端文件不是有效的 JSON'); continue; }
-        return { ok: true, content: txt, url: u, updatedAt: new Date().toISOString() };
+        return {
+          ok: true, content: txt, url: u,
+          fromStatic: (u === staticUrl),   /* 静态快照：只允许填补空缺，不允许覆盖 */
+          updatedAt: new Date().toISOString()
+        };
       } catch (e) {
         lastErr = e;
         lastErr.net = true;
@@ -546,9 +571,17 @@
     }
 
     var local = snapshot(), base = loadSnap();
+    var fromStatic = !!(r && r.fromStatic);   /* 来源是包内 / 同域静态快照 */
 
-    /* 本机从未同步过 + 云端有数据 → 以云端为准，避免新设备空状态覆盖云端 */
-    var remoteWins = !cfg.syncedOnce && !!(remote && Object.keys(remote).length);
+    /* 本机从未同步过 + 本机**一条学习记录都没有** + 云端有数据 → 以云端为准。
+       （新装的手机 / 清过缓存的浏览器，本机是空的，此时云端才是唯一有内容的一方。）
+       ⚠ 两个前置条件缺一不可：
+          · 来源必须是真云端，不能是同域静态快照（APK 里那份是旧快照）；
+          · 本机必须确实没有学习记录。只要本机做过题（哪怕还没同步成功），
+            也必须以本机为准 —— 否则用户在手机上做的题会被旧云端一次性冲掉。 */
+    var localRecordCount = Object.keys(local).filter(isRecord).length;
+    var remoteWins = !fromStatic && !cfg.syncedOnce && localRecordCount === 0 &&
+                     !!(remote && Object.keys(remote).length);
     if (remoteWins && !backedUp && Object.keys(local).length > 0) {
       backedUp = true;
       quiet(function () {
@@ -569,6 +602,10 @@
       else if (!(k in remote)) merged[k] = local[k];
       else merged[k] = remote[k];
     });
+    /* 静态快照只能用来「补齐本机没有的键」：本机已有的，一律以本机为准 */
+    if (fromStatic) {
+      Object.keys(local).forEach(function (k) { merged[k] = local[k]; });
+    }
     if (remote) {
       Object.keys(merged).forEach(function (k) {
         if (remote[k] !== undefined && remote[k] !== local[k]) fromCloud.push(k);
@@ -576,6 +613,40 @@
     }
 
     applyValues(merged);
+
+    /* ====== 从本机备份里找回被覆盖的记录 ======
+       「以云端为准」那一步会先把本机数据备份到 IF76::bak::<时间戳>。
+       此处把备份里、本机当前完全没有的学习记录补回来。只补不删，可反复跑。 */
+    var restored = [];
+    try {
+      var baks = [];
+      for (var bi = 0; bi < localStorage.length; bi++) {
+        var bk = localStorage.key(bi);
+        if (bk && bk.indexOf('IF76::bak::') === 0) baks.push(bk);
+      }
+      baks.sort();
+      for (var bj = 0; bj < baks.length; bj++) {
+        var bo = null;
+        try { bo = JSON.parse(localStorage.getItem(baks[bj]) || '{}'); } catch (e) { bo = null; }
+        if (!bo) continue;
+        var bks = Object.keys(bo);
+        for (var bm = 0; bm < bks.length; bm++) {
+          var bk2 = bks[bm];
+          if (!isRecord(bk2) || isSkip(bk2)) continue;
+          if (bk2 in merged) continue;
+          merged[bk2] = bo[bk2];
+          restored.push(bk2);
+        }
+      }
+      if (restored.length) applyValues(merged);
+    } catch (e) { /* ignore */ }
+
+    if (restored.length) {
+      commitPending = true;
+      log('已从本机备份找回 ' + restored.length + ' 项学习记录');
+      setBadge('warn', '找回 ' + restored.length + ' 项');
+    }
+
     if (pullAt) cfg.updatedAt = pullAt;
     cfg.lastPullAt = new Date().toISOString();
 
@@ -589,7 +660,7 @@
        另外两种放行：① pushOnChange 打开（旧行为）；
                      ② 首次同步 + 云端还没有数据文件 + 本机确有数据（把文件建出来）。 */
     var firstCreate = !cfg.syncedOnce && notFound && !!(local && Object.keys(local).length);
-    var wantPush = mine2 || fromCloud.length > 0 || notFound;
+    var wantPush = mine2 || fromCloud.length > 0 || notFound || restored.length > 0;
     var needPush = (commitPending || cfg.pushOnChange || firstCreate) ? wantPush : false;
     var pendingCount = changedKeys().length;
 
