@@ -159,6 +159,19 @@
     }
     cfg.pushOnChange = (cfg.mode === 'global');
 
+    /* ★ 自动同步的三个开关一律强制打开。
+       面板里早就没有这几个开关了（只剩「答题自动 / 全局自动」二选一），
+       但老配置里可能残留 autoSync:false —— 一旦是 false，推送、离开补交、
+       轮询补交会全部直接 return，表现为「怎么都不上传」，而且完全看不出原因。
+       站点本身就是靠同步工作的，这里统一纠正回来。 */
+    if (cfg.autoSync !== true || cfg.autoPull !== true || cfg.autoPush !== true) {
+      var wasOff = (cfg.autoSync === false);
+      cfg.autoSync = true;
+      cfg.autoPull = true;
+      cfg.autoPush = true;
+      if (wasOff) cfg._autoSyncWasOff = true;
+    }
+
     /* APK 里由打包脚本写入 script/gh-token.js，实现「装完就能同步」，无需手填 Token。
        网页端那个文件是空的（绝不能把 Token 放进公开仓库），走的仍是本机 localStorage。 */
     if (!cfg.token && typeof window.IF_GH_TOKEN === 'string' && window.IF_GH_TOKEN) {
@@ -496,7 +509,10 @@
   /* 关页面时补交一次（keepalive：请求不会被页面卸载中断） */
   function flushBeacon() {
     if (!cfg.autoSync || !cfg.autoPush || !cfg.token) return;
-    if (!commitPending && !cfg.pushOnChange) return;   // 没答题就不必在离开时补交
+    /* 只要本机还有「没同步出去的学习记录」就补交一次 —— 哪怕答题入口没调到
+       commit()、或者你做完题直接关掉页面。quiet 键（滚动位置 / 阅读时长 /
+       页签 / 小游戏）不计入 changedKeys()，所以不会「看一眼就上传」。 */
+    if (!commitPending && !cfg.pushOnChange && !changedKeys().length) return;
     if (!changedKeys(true).length) return;
     var content = window.buildPayload();
     if (content.length > 40000) return;      // keepalive 有 64KB 上限，超了留给下次打开
@@ -821,19 +837,35 @@
     /* 2) iframe 的写操作 —— storage 事件（同源互相可见），零延迟 */
     window.addEventListener('storage', function () { markDirty(); });
 
-    /* 3) 兜底轮询：2 秒比对指纹。默认只用来刷新状态显示，
-          只有在 pushOnChange 打开时才会据此上传。 */
+    /* 3) 兜底轮询：2 秒比对指纹。
+          · 只要本机还有「没同步出去的学习记录」，就自动补推一次 ——
+            这样即使某个入口忘了调 commit()、或者答题后你没再动页面，
+            记录也不会一直留在本机传不上去。
+          · 滚动位置、阅读时长、页签、小游戏进度这些都是 quiet 键，
+            changedKeys() 压根不会把它们算作改动，所以不会「一动就同步」。 */
     setInterval(function () {
       if (!cfg.autoSync) return;
       var s = curSig();
       if (s === lastSig) return;
       lastSig = s;
-      if (cfg.pushOnChange && cfg.autoPush) {
-        if (changedKeys().length) markDirty();
-      } else {
-        refreshState();
-      }
+      refreshState();
+      if (!changedKeys().length) return;
+      if (cfg.pushOnChange && cfg.autoPush) { markDirty(); return; }
+      if (!cfg.autoPush || !cfg.token) return;
+      commitPending = true;
+      schedulePush(2500, '自动补交');
     }, 2000);
+
+    /* 3.5) 每 60 秒做一次全量核对：页面开着但一直没操作、
+           或者指纹没捕捉到的写入，靠这一道兜住，保证「所有记录都传得上去」。 */
+    setInterval(function () {
+      if (document.hidden) return;
+      if (!cfg.autoSync || !cfg.autoPull || !cfg.autoPush || !cfg.token) return;
+      if (syncing || pushTimer) return;
+      if (!changedKeys().length) return;
+      commitPending = true;
+      schedulePush(500, '自动补交');
+    }, 60000);
 
     /* 4) 定时拉取云端（只在页面可见时） */
     setInterval(function () {
@@ -1096,8 +1128,12 @@
     state: function () {
       return {
         token: !!cfg.token, autoSync: cfg.autoSync,
+        autoPull: cfg.autoPull, autoPush: cfg.autoPush, mode: cfg.mode,
+        syncedOnce: cfg.syncedOnce,
         lastPushAt: cfg.lastPushAt, lastPullAt: cfg.lastPullAt,
-        pending: changedKeys().length, error: cfg.lastError, log: logBuf.slice()
+        pending: changedKeys().length, allPending: changedKeys(true).length,
+        syncing: syncing, hasPushTimer: !!pushTimer,
+        error: cfg.lastError, log: logBuf.slice()
       };
     }
   };
