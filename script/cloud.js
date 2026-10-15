@@ -6,10 +6,13 @@
  *
  *  · 读：fetch 仓库里的 data 文件；本地取不到时自动退回滚到 raw.githubusercontent
  *  · 写：GitHub Contents API（Token 只在本机浏览器，一次性粘贴后永久免操作）
- *  · 你任何一个操作（答题 / 判分 / 折叠 / 滚动 / 笔记 / 切页签）
- *      → 立刻被捕捉 → 约 1 秒后自动上传
- *  · 答题答案与判分结果：由学习页主动调用 IF_COURSE_SYNC.commit() 立即上传
- *  · 每 20 秒自动拉取云端；切回标签页、窗口获得焦点时立即拉取
+ *  · ★ 上传时机（v5）★
+ *      只有在「学习数据真正被确定」时才上传，即页面主动调用
+ *          IF_COURSE_SYNC.commit('理由')
+ *      也就是：选择题选定了答案 / 其它题型确定了「答对·答错」/ 交卷 / 重做 / 标记掌握。
+ *      滚动位置、阅读时长、页签、展开折叠这类浏览状态只写本机，不再触发上传。
+ *      （想恢复成「任何改动都上传」，把 cfg.pushOnChange 设成 true 即可）
+ *  · 每 20 秒自动拉取云端；切回标签页、窗口获得焦点时立即拉取（只读，不上传）
  *  · 关闭 / 切走页面时用 keepalive 请求补交一次，不会丢改动
  *  · 合并策略：本机改过的键优先，其余以云端为准（首次同步以云端为准）
  *
@@ -50,6 +53,18 @@
     return K_OLD.indexOf(k) >= 0 || isMeta(k) || String(k) === 'IF76::synchash' || String(k) === 'IF::skinPin';
   }
 
+  /* 浏览状态键：滚动位置 / 阅读时长 / 当前页签 / 备份。
+     它们照常写本机、照常随下一次上传一起带走，但：
+       · 不会自己触发一次上传
+       · 不计入状态栏里的「待同步 N 项」（免得滚动一下就显示几十项） */
+  function isQuiet(k) {
+    var s = String(k);
+    if (s === 'IF76::stats' || s === 'IF76::tab') return true;
+    if (s.indexOf('if00076_pos') === 0) return true;
+    if (s.indexOf('IF76::bak::') === 0) return true;
+    return false;
+  }
+
   /* 本机候选读取地址：本地路径优先，失败再退回滚到 GitHub 原始文件 */
   var DEF_URL  = OPT.url  || ('../../data/' + CID + '-sync.json');
   var DEF_PATH = OPT.path || ('data/' + CID + '-sync.json');
@@ -62,7 +77,8 @@
     token: '',
     autoSync: true,      // 总开关
     autoPull: true,      // 自动拉取
-    autoPush: true,      // 自动上传
+    autoPush: true,      // 允许「答题 / 判分后自动上传」
+    pushOnChange: false, // 任何本机改动都上传（默认关；开了就会滚动一下也同步）
     pullEvery: 20,       // 秒
     pushDelay: 1000,     // 毫秒（改动后延迟合并上传）
     syncedOnce: false,   // 本机是否已经成功同步过一次
@@ -80,6 +96,7 @@
 
   var syncing = false, queued = false;
   var pushTimer = null, lastReload = 0, lastSig = '', ghUser = '';
+  var commitPending = false;   // 页面调用过 commit() → 这一轮允许上传
   var logBuf = [];
   var mute = 0;          // >0 时忽略由同步引擎自身写入引发的变更通知
   var backedUp = false;  // 首次同步只做一次本地备份
@@ -216,9 +233,11 @@
       try { localStorage.setItem(K_SNAP, JSON.stringify(s)); } catch (e) { /* ignore */ }
     });
   }
-  function changedKeys() {
+  /* 与基线的差异键。all=true 时连浏览状态键也算进去（内部判定用） */
+  function changedKeys(all) {
     var s = snapshot(), base = loadSnap(), out = [];
     Object.keys(s).forEach(function (k) {
+      if (!all && isQuiet(k)) return;
       if (base[k] === undefined || base[k] !== s[k]) out.push(k);
     });
     return out;
@@ -294,7 +313,8 @@
     if (cfg.authFail) return 'Token 无效，请重新填写';
     if (!cfg.token) return '只读（缺 Token，改动会保留、暂不上传）';
     if (!cfg.autoPush || !cfg.autoPull) return '部分自动';
-    return '全自动：改动后约 1 秒上传 · 每 ' + (cfg.pullEvery || 20) + ' 秒拉取';
+    if (cfg.pushOnChange) return '任何改动后约 1 秒上传 · 每 ' + (cfg.pullEvery || 20) + ' 秒拉取';
+    return '仅答题 / 判分后上传 · 每 ' + (cfg.pullEvery || 20) + ' 秒拉取';
   }
 
   function refreshState() {
@@ -307,7 +327,8 @@
           cfg.owner + '/' + cfg.repo + '</b> · ' + (cfg.branch || 'main') + '</div>' +
         '<div>Token：<b>' + (cfg.token ? ('已填写' + (ghUser ? ' · ' + ghUser : '')) : '未填写') + '</b>　' +
           '本机上次同步：<b>' + fmtIso(cfg.lastPushAt || cfg.lastPullAt) + '</b></div>' +
-        '<div>本机待上传：<b>' + (dirty.length ? dirty.length + ' 项' : '无（与云端一致）') + '</b></div>' +
+        '<div>本机待上传：<b>' + (dirty.length ? dirty.length + ' 项' : '无（与云端一致）') +
+          '</b>　<span style="opacity:.65">（滚动 / 页签等浏览状态不计入）</span></div>' +
         (cfg.lastError ? '<div style="color:#dc2626">最近错误：' + esc(cfg.lastError) + '</div>' : '');
     }
     renderLog();
@@ -429,7 +450,8 @@
   /* 关页面时补交一次（keepalive：请求不会被页面卸载中断） */
   function flushBeacon() {
     if (!cfg.autoSync || !cfg.autoPush || !cfg.token) return;
-    if (!changedKeys().length) return;
+    if (!commitPending && !cfg.pushOnChange) return;   // 没答题就不必在离开时补交
+    if (!changedKeys(true).length) return;
     var content = window.buildPayload();
     if (content.length > 40000) return;      // keepalive 有 64KB 上限，超了留给下次打开
     var body = {
@@ -539,7 +561,15 @@
     var mine2 = Object.keys(local).some(function (k) {
       return (base[k] === undefined) || (base[k] !== local[k]);
     });
-    var needPush = mine2 || fromCloud.length > 0 || notFound;
+
+    /* ====== 上传门控 ======
+       默认只有页面主动调用过 commit()（选择题选定答案 / 其它题判定对错 / 交卷）
+       才允许把数据推上云端。滚动位置、阅读时长这类浏览状态永远不单独触发上传。
+       另外两种放行：① pushOnChange 打开（旧行为）；
+                     ② 首次同步 + 云端还没有数据文件 + 本机确有数据（把文件建出来）。 */
+    var firstCreate = !cfg.syncedOnce && notFound && !!(local && Object.keys(local).length);
+    var wantPush = mine2 || fromCloud.length > 0 || notFound;
+    var needPush = (commitPending || cfg.pushOnChange || firstCreate) ? wantPush : false;
     var pendingCount = changedKeys().length;
 
     /* ====== 安全闸：本机一个数据键都没有 → 绝不上传 ======
@@ -560,12 +590,14 @@
     if (!needPush) {
       saveSnap(merged);
       cfg.syncedOnce = true;
+      commitPending = false;
       setBadge('ok', '已同步');
       if (!opts.silent) toast('已是最新');
     } else if (!cfg.token) {
       if (remoteWins) {
         saveSnap(merged);              // 已采用云端数据，不必再回传
         cfg.syncedOnce = true;
+        commitPending = false;
         setBadge('warn', '只读模式');
       } else {
         setBadge('warn', '未登录');
@@ -583,6 +615,7 @@
         cfg.lastError = '';
         cfg.authFail = false;
         cfg.syncedOnce = true;
+        commitPending = false;         // 本次「答题 / 判分」已经落地云端
         setBadge('ok', '已同步');
         log(notFound ? '已创建云端数据文件' : '已自动上传 ' + pendingCount + ' 项改动');
         if (!opts.silent) toast('已同步到 GitHub');
@@ -638,21 +671,26 @@
 
   /* ======================= 自动调度 ======================= */
 
-  /* 有任何改动 → 短延迟合并后自动上传 */
+  /* 本机发生了改动 —— 默认只刷新显示，不上传。
+     上传的开关在 commit()：只有「答案选定 / 判分确定」才真正推到云端。 */
   function markDirty() {
     if (mute) return;
     if (!cfg.autoSync) { setBadge('off', '自动同步已关'); updateHint(); return; }
-    if (!cfg.autoPush) { setBadge('warn', '改动未上传'); return; }
-    if (!cfg.token) { setBadge('warn', '未登录'); updateHint(); return; }
-
-    schedulePush(Math.max(300, cfg.pushDelay | 0 || 1000), '');
+    if (cfg.pushOnChange && cfg.autoPush) {
+      if (!cfg.token) { setBadge('warn', '未登录'); updateHint(); return; }
+      schedulePush(Math.max(300, cfg.pushDelay | 0 || 1000), '');
+      return;
+    }
+    refreshState();
   }
 
-  /* 答题 / 判分专用：答案与对错已经确定，立刻上传（防抖 600ms 合并连续作答） */
+  /* 答题 / 判分专用：答案与对错已经确定，立刻上传（防抖 600ms 合并连续作答）
+     —— 这是默认模式下唯一会触发上传的入口。 */
   function commit(why) {
     if (mute) return;
     if (!cfg.autoSync || !cfg.autoPush) { markDirty(); return; }
     if (!cfg.token) { setBadge('warn', '未登录'); updateHint(); return; }
+    commitPending = true;
     schedulePush(600, why || '判分');
   }
 
@@ -691,13 +729,18 @@
     /* 2) iframe 的写操作 —— storage 事件（同源互相可见），零延迟 */
     window.addEventListener('storage', function () { markDirty(); });
 
-    /* 3) 兜底轮询：2 秒比对指纹，捕捉任何漏网的改动 */
+    /* 3) 兜底轮询：2 秒比对指纹。默认只用来刷新状态显示，
+          只有在 pushOnChange 打开时才会据此上传。 */
     setInterval(function () {
-      if (!cfg.autoSync || !cfg.autoPush) return;
+      if (!cfg.autoSync) return;
       var s = curSig();
       if (s === lastSig) return;
       lastSig = s;
-      if (changedKeys().length) markDirty();
+      if (cfg.pushOnChange && cfg.autoPush) {
+        if (changedKeys().length) markDirty();
+      } else {
+        refreshState();
+      }
     }, 2000);
 
     /* 4) 定时拉取云端（只在页面可见时） */
@@ -743,6 +786,7 @@
     if (el('ghAuto')) el('ghAuto').checked = cfg.autoSync !== false;
     if (el('ghAutoPull')) el('ghAutoPull').checked = cfg.autoPull !== false;
     if (el('ghAutoPush')) el('ghAutoPush').checked = cfg.autoPush !== false;
+    if (el('ghPushOnChange')) el('ghPushOnChange').checked = cfg.pushOnChange === true;
     if (el('ghPullEvery')) el('ghPullEvery').value = String(cfg.pullEvery || 20);
     if (ghUser && el('whoami')) el('whoami').textContent = '已登录：' + ghUser;
   }
@@ -759,6 +803,7 @@
       autoSync: el('ghAuto') ? el('ghAuto').checked : true,
       autoPull: el('ghAutoPull') ? el('ghAutoPull').checked : true,
       autoPush: el('ghAutoPush') ? el('ghAutoPush').checked : true,
+      pushOnChange: el('ghPushOnChange') ? el('ghPushOnChange').checked : false,
       pullEvery: Math.max(5, parseInt((el('ghPullEvery') && el('ghPullEvery').value) || '20', 10) || 20)
     };
   }
@@ -847,6 +892,7 @@
       cfg.lastPushAt = new Date().toISOString();
       cfg.syncedOnce = true;
       cfg.lastError = '';
+      commitPending = false;
       saveCfg();
       saveSnap(snapshot());
       setBadge('ok', '已同步');

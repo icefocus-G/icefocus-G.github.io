@@ -234,13 +234,16 @@ a.lnk{color:var(--main); cursor:pointer; text-decoration:underline}
       <div class="card">
         <h3>③ 自动同步</h3>
         <label class="chk"><input type="checkbox" id="ghAuto" checked> <b>全自动同步</b>（推荐，总开关）</label>
-        <label class="chk"><input type="checkbox" id="ghAutoPush" checked> 有改动时自动上传（延迟约 1 秒，防抖合并）</label>
+        <label class="chk"><input type="checkbox" id="ghAutoPush" checked> 答题 / 判分后自动上传（延迟约 1 秒，防抖合并）</label>
+        <label class="chk"><input type="checkbox" id="ghPushOnChange"> 任何改动都上传（含滚动位置、阅读时长 —— 默认不勾）</label>
         <label class="chk"><input type="checkbox" id="ghAutoPull" checked> 自动拉取云端更新（切回页面、聚焦窗口时立即拉）</label>
         <div class="field" style="margin-top:8px">
           <label>定时拉取间隔（秒，默认 20）</label>
           <input type="text" id="ghPullEvery" spellcheck="false" value="20" style="max-width:120px;border:1px solid var(--line);border-radius:7px;padding:7px 10px;font-size:13px;background:#f8fafc">
         </div>
-        <div class="hint">自动同步的触发点：答题 / 勾选 / 折叠 / 滚动 / 记笔记 / 切页签 —— 任何写数据的动作都会被立刻捕捉。</div>
+        <div class="hint">默认上传时机只有三处：<b>① 选择题选定了答案</b>；<b>② 其它题型确定了「答对 / 答错」</b>；
+          <b>③ 交卷 / 重做 / 标记掌握</b>。滚动位置、阅读时长、展开折叠、切页签只写本机，不会触发上传；
+          大纲页只在切换章节时记录一次位置。</div>
         <button class="pbtn" id="btnSaveCfg">保存并立即同步一次</button>
       </div>
 
@@ -319,19 +322,31 @@ function setScroll(i, y) {
 function notes() { try { return JSON.parse(localStorage.getItem(K_NOTES) || '[]'); } catch (e) { return []; } }
 function saveNotes(a) { try { localStorage.setItem(K_NOTES, JSON.stringify(a)); } catch (e) {} }
 
-/* ============ 页签切换 ============ */
-function show(i) {
-  if (i === cur && frames[i].dataset.loaded === '1') return;
-  addMs(cur, Date.now() - enter);
+/* ============ 页签切换 ============
+   之前「点了没反应」的原因：页面初始化时只写了 cur = 上次记住的页签，
+   却没有同步 DOM 上的 .on（HTML 里写死的是第 0 个），于是
+   cur 与界面不一致 —— 再点同一个页签会被下面这行直接 return 掉，
+   点另一个也只是把样式切回去，看起来两个都失灵。
+   修法：① 初始化时真正走一次 show(..., true) 强制对齐；
+        ② 入参做兜底，undefined / NaN 一律按 0 处理；
+        ③ 整个切换过程包 try/finally，任何一步出错也不会把按钮点死。 */
+function show(i, force) {
+  i = (i === 1) ? 1 : 0;                     // 兜底：非 1 一律当 0，杜绝 NaN
+  if (!force && i === cur && frames[i].dataset.loaded === '1') return;
+  try {
+    addMs(cur, Date.now() - enter);
+  } catch (e) { /* 统计失败不影响切页 */ }
   enter = Date.now();
   cur = i;
   frames.forEach(function (f, n) { f.classList.toggle('on', n === i); });
   tabs.forEach(function (t, n) { t.classList.toggle('on', n === i); });
-  bumpOpen(i);
+  try { bumpOpen(i); } catch (e) {}
   try { localStorage.setItem(K_TAB, String(i)); } catch (e) {}
-  var st = stat(i);
-  if (st.scroll > 0) { try { frames[i].contentWindow.scrollTo(0, st.scroll); } catch (e) {} }
-  setStatus('已切换到「' + LABELS[i] + '」');
+  try {
+    var st = stat(i);
+    if (st && st.scroll > 0) frames[i].contentWindow.scrollTo(0, st.scroll);
+  } catch (e) { /* 跨域 / 未加载完 */ }
+  try { setStatus('已切换到「' + LABELS[i] + '」'); } catch (e) {}
 }
 tabs.forEach(function (t) {
   t.addEventListener('click', function () { show(parseInt(t.dataset.i, 10)); });
@@ -555,8 +570,11 @@ document.addEventListener('keydown', function (e) {
   var m = /[?&]t=([01])/.exec(location.search);   // 主页入口可直接指定页签
   if (m) t = parseInt(m[1], 10);
   document.getElementById('env').textContent = location.hostname || '本地文件';
-  cur = (t === 1 ? 1 : 0);
-  bumpOpen(cur);
+  /* 关键：把 cur 先归位到 0（与 HTML 里写死的 .on 一致），再强制走一次 show()，
+     这样上次记住的页签才会真正被切过去 —— 以前只改 cur 不动 DOM，
+     导致 cur 和界面错位，两个页签点起来都像失灵。 */
+  cur = 0;
+  show((t === 1 ? 1 : 0), true);
   enter = Date.now();
   setInterval(function () { addMs(cur, Date.now() - enter); enter = Date.now(); }, 60000);
 })();

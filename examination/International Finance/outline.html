@@ -2800,6 +2800,9 @@ function goTab(id){
  window.scrollTo({top:0,behavior:"smooth"});
  lastY=0;
  store(POSK,{tab:id,y:0});
+ /* 大纲只在「切换章节 / 切换页签」这一刻记录一次阅读位置并同步，
+    不做滚动实时监控 —— 滚动本身不会触发任何上传。 */
+ syncCommit("切换章节 · "+id);
 }
 tabs.forEach(function(t){t.addEventListener("click",function(){goTab(t.getAttribute("data-p"))})});
 
@@ -2974,8 +2977,10 @@ function snap(){
  lastY=st.y;
  store(POSK,st);
 }
-var sTimer=null;
-window.addEventListener("scroll",function(){if(sTimer)return;sTimer=setTimeout(function(){sTimer=null;snap()},200)},{passive:true});
+/* ⚠ 这里原本挂了 scroll 监听（200ms 节流写 localStorage），
+   等于「一滚动就改数据」，是页面被误判成「一直在同步」的根源之一。
+   按需求：大纲不做实时位置监控，只在切换章节（goTab）时记录一次，
+   另外离开页面时补记一次，方便下次回来接着看。 */
 window.addEventListener("pagehide",snap);
 function restorePos(){
  var st=load(POSK);if(!st)return;

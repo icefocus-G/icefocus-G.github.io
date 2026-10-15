@@ -8,9 +8,9 @@
 <meta name="skin-name" content="ThemedSkin01 · 游戏视觉" />
 <link rel="icon" href="../assets/icon.svg" />
 <style>
-  /* 站内跳转链接（课程中心 / 教程）—— 与皮肤自身配色保持一致 */
-  .if-links a, a.if-jump{color:inherit;text-decoration:none;opacity:.8;border-bottom:1px solid currentColor}
-  .if-links a:hover, a.if-jump:hover{opacity:1}
+  /* 站内链接（页脚 Learning Course）：跟随皮肤自身的观感，不做额外描边 / 圆角 / 投影 */
+  .if-links a{color:inherit;text-decoration:none;opacity:.8}
+  .if-links a:hover{opacity:1;color:var(--acid)}
 </style>
 <link rel="stylesheet" href="assets/skin01/style.css" />
 </head>
@@ -43,8 +43,7 @@
     <a href="#gallery" class="nav-item"><i>01</i>美术作品画廊</a>
     <a href="#dev" class="nav-item"><i>02</i>游戏开发</a>
     <a href="#contact" class="nav-item"><i>03</i>联系方式</a>
-    <a href="../examination/" class="nav-item if-jump"><i>04</i>Learning Course</a>
-    <a href="../examination/International%20Finance/outline.html" class="nav-item if-jump"><i>05</i>教程</a>
+    <a href="../examination/" class="nav-item"><i>04</i>Learning Course</a>
     <span class="nav-ink" id="navInk"></span>
   </nav>
   <button class="burger" id="burger" aria-label="菜单"><span></span><span></span><span></span></button>
@@ -186,13 +185,13 @@
     <div class="contact-right" data-reveal>
       <ul class="soc-list">
         <li>
-          <a class="soc" href="mailto:hello@icefocus.studio" data-magnetic>
+          <a class="soc" href="mailto:icefocus@qq.com" data-magnetic>
             <span class="soc-ic">
               <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round">
                 <rect x="2.5" y="4.5" width="19" height="15" rx="2.5"/><path d="M2.8 6.2 12 13l9.2-6.8"/>
               </svg>
             </span>
-            <span class="soc-tx"><b>EMAIL</b><i>hello@icefocus.studio</i></span>
+            <span class="soc-tx"><b>EMAIL</b><i>icefocus@qq.com</i></span>
             <span class="soc-go">↗</span>
           </a>
         </li>
@@ -253,7 +252,7 @@
 
 <footer>
   <div class="f-left">© <span id="year"></span> ICEFOCUS — GAME GRAPHIC DESIGNER
-    <span class="if-links"> · <a href="../examination/">Learning Course</a> · <a href="../examination/International%20Finance/outline.html">教程</a></span>
+    <span class="if-links"> · <a href="../examination/">Learning Course</a></span>
   </div>
   <div class="f-right">BUILT WITH CANVAS &amp; NOISE</div>
 </footer>

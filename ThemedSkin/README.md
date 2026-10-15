@@ -63,11 +63,14 @@ ThemedSkin/assets/skin01/app.js
 
 ## 皮肤里的站内入口
 
-两套新皮肤都加了这两个入口（导航 + 页脚），新皮肤照抄即可：
+两套新皮肤都只保留**一个**站内入口（导航栏 + 页脚各一份），新皮肤照抄即可：
 
 ```html
 <a href="../examination/">Learning Course</a>
-<a href="../examination/International%20Finance/outline.html">教程</a>
 ```
 
-> 路径里的空格要写成 `%20`；`../` 不能省，皮肤是在 `ThemedSkin/` 下运行的。
+> 路径里的 `../` 不能省，皮肤是在 `ThemedSkin/` 下运行的。
+> 课程中心下面已经有大纲精讲 / 历年真题库 / 教程，皮肤上不需要再单独挂「教程」入口。
+>
+> ⚠ 别给这个链接加自定义的圆角 / 描边 / 投影 —— 直接沿用皮肤自己的 `.nav-item`
+> 之类样式，默认态和旁边的导航项长得一样，只在 hover 时才变色。
