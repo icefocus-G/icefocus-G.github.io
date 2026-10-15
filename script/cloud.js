@@ -77,8 +77,12 @@
     token: '',
     autoSync: true,      // 总开关
     autoPull: true,      // 自动拉取
-    autoPush: true,      // 允许「答题 / 判分后自动上传」
-    pushOnChange: false, // 任何本机改动都上传（默认关；开了就会滚动一下也同步）
+    autoPush: true,      // 允许自动上传
+    /* 同步方式（用户在 ☁ 面板里二选一）：
+         'answer' —— 只有选定答案 / 判定对错才上传（默认）
+         'global' —— 任何改动都上传（含滚动位置、阅读时长） */
+    mode: 'answer',
+    pushOnChange: false, // 由 mode 推导，别手工设
     pullEvery: 20,       // 秒
     pushDelay: 1000,     // 毫秒（改动后延迟合并上传）
     syncedOnce: false,   // 本机是否已经成功同步过一次
@@ -132,6 +136,19 @@
     }
     if (!cfg.url) cfg.url = DEF_URL;
     if (!cfg.path) cfg.path = DEF_PATH;
+
+    /* 同步方式：老配置里只有 pushOnChange，这里迁移成 mode */
+    if (cfg.mode !== 'global' && cfg.mode !== 'answer') {
+      cfg.mode = cfg.pushOnChange ? 'global' : 'answer';
+    }
+    cfg.pushOnChange = (cfg.mode === 'global');
+
+    /* APK 里由打包脚本写入 script/gh-token.js，实现「装完就能同步」，无需手填 Token。
+       网页端那个文件是空的（绝不能把 Token 放进公开仓库），走的仍是本机 localStorage。 */
+    if (!cfg.token && typeof window.IF_GH_TOKEN === 'string' && window.IF_GH_TOKEN) {
+      cfg.token = window.IF_GH_TOKEN;
+      cfg.tokenBuiltIn = true;
+    }
   }
   function saveCfg() {
     quiet(function () {
@@ -318,19 +335,23 @@
   }
 
   function refreshState() {
-    var dirty = changedKeys();
+    var pending = changedKeys().length;
+    var modeTxt = (cfg.mode === 'global') ? '全局自动' : '答题自动';
     var s = el('syncState');
     if (s) {
-      s.innerHTML =
-        '<div><span class="dot ' + (cfg.token ? 'ok' : 'off') + '"></span>自动同步：<b>' + autoStateText() + '</b></div>' +
-        '<div>数据文件：<b>' + (cfg.url || '未配置') + '</b>　提交目标：<b>' +
-          cfg.owner + '/' + cfg.repo + '</b> · ' + (cfg.branch || 'main') + '</div>' +
-        '<div>Token：<b>' + (cfg.token ? ('已填写' + (ghUser ? ' · ' + ghUser : '')) : '未填写') + '</b>　' +
-          '本机上次同步：<b>' + fmtIso(cfg.lastPushAt || cfg.lastPullAt) + '</b></div>' +
-        '<div>本机待上传：<b>' + (dirty.length ? dirty.length + ' 项' : '无（与云端一致）') +
-          '</b>　<span style="opacity:.65">（滚动 / 页签等浏览状态不计入）</span></div>' +
-        (cfg.lastError ? '<div style="color:#dc2626">最近错误：' + esc(cfg.lastError) + '</div>' : '');
+      var txt;
+      if (!cfg.autoSync)      txt = '自动同步已关闭';
+      else if (cfg.authFail)  txt = '同步凭据无效，请在下面重新填一次';
+      else if (!cfg.token)    txt = '只读模式：云端数据照常读取，本机改动暂不上传（下面填一次 Token 即可全自动）';
+      else if (cfg.lastError) txt = '上次同步失败：' + cfg.lastError;
+      else if (pending)       txt = '待同步 ' + pending + ' 项 · ' + modeTxt;
+      else                    txt = '已与云端一致 · ' + modeTxt + ' · ' + fmtIso(cfg.lastPushAt || cfg.lastPullAt);
+      s.textContent = txt;
     }
+    /* 只在「没有凭据 / 凭据失效」时才把 Token 输入框露出来 —— 平时完全看不见 */
+    var tc = el('tokenCard');
+    if (tc) tc.style.display = (cfg.token && !cfg.authFail) ? 'none' : 'block';
+    var who = el('whoami'); if (who) who.textContent = '';
     renderLog();
     updateHint();
   }
@@ -777,35 +798,36 @@
   function openCloud() { var m = el('ghMask'); if (m) m.classList.add('on'); refreshState(); }
   function closeCloud() { var m = el('ghMask'); if (m) m.classList.remove('on'); }
 
+  /* 面板只剩「同步方式 + Token」，表单里没出现的字段一律保持原值，绝不清空配置 */
   function fillForm() {
-    if (el('ghUrl')) el('ghUrl').value = cfg.url || '';
-    if (el('ghToken')) el('ghToken').value = cfg.token || '';
-    if (el('ghRepo')) el('ghRepo').value = (cfg.owner || '') && (cfg.repo || '') ? (cfg.owner + '/' + cfg.repo) : '';
-    if (el('ghBranch')) el('ghBranch').value = cfg.branch || 'main';
-    if (el('ghPath')) el('ghPath').value = cfg.path || 'IF00076-sync.json';
-    if (el('ghAuto')) el('ghAuto').checked = cfg.autoSync !== false;
-    if (el('ghAutoPull')) el('ghAutoPull').checked = cfg.autoPull !== false;
-    if (el('ghAutoPush')) el('ghAutoPush').checked = cfg.autoPush !== false;
-    if (el('ghPushOnChange')) el('ghPushOnChange').checked = cfg.pushOnChange === true;
-    if (el('ghPullEvery')) el('ghPullEvery').value = String(cfg.pullEvery || 20);
-    if (ghUser && el('whoami')) el('whoami').textContent = '已登录：' + ghUser;
+    var r = document.querySelector('input[name="ifSyncMode"][value="' + cfg.mode + '"]');
+    if (r) r.checked = true;
+    if (el('ghToken')) el('ghToken').value = cfg.tokenBuiltIn ? '' : (cfg.token || '');
+    if (el('ghToken')) el('ghToken').placeholder = cfg.tokenBuiltIn ? '已内置凭据（无需填写）' : 'github_pat_xxxxxxxx';
+    var tc = el('tokenCard');
+    if (tc) tc.style.display = (cfg.token && !cfg.authFail) ? 'none' : 'block';
+    var who = el('whoami'); if (who) who.textContent = ghUser ? ('已登录：' + ghUser) : '';
   }
 
   function readForm() {
-    var rp = ((el('ghRepo') && el('ghRepo').value) || '').trim().split('/');
-    return {
-      url: (el('ghUrl') && el('ghUrl').value.trim()) || 'IF00076-sync.json',
-      token: ((el('ghToken') && el('ghToken').value) || '').trim(),
-      owner: (rp[0] || '').trim(),
-      repo: (rp[1] || '').trim(),
-      branch: ((el('ghBranch') && el('ghBranch').value) || '').trim() || 'main',
-      path: ((el('ghPath') && el('ghPath').value) || '').trim() || 'IF00076-sync.json',
-      autoSync: el('ghAuto') ? el('ghAuto').checked : true,
-      autoPull: el('ghAutoPull') ? el('ghAutoPull').checked : true,
-      autoPush: el('ghAutoPush') ? el('ghAutoPush').checked : true,
-      pushOnChange: el('ghPushOnChange') ? el('ghPushOnChange').checked : false,
-      pullEvery: Math.max(5, parseInt((el('ghPullEvery') && el('ghPullEvery').value) || '20', 10) || 20)
-    };
+    var out = {};
+    var t = el('ghToken');
+    if (t && t.value.trim()) out.token = t.value.trim();
+    var m = document.querySelector('input[name="ifSyncMode"]:checked');
+    if (m) out.mode = (m.value === 'global') ? 'global' : 'answer';
+    if (el('ghAuto')) out.autoSync = el('ghAuto').checked;
+    if (el('ghAutoPull')) out.autoPull = el('ghAutoPull').checked;
+    if (el('ghAutoPush')) out.autoPush = el('ghAutoPush').checked;
+    return out;
+  }
+
+  function setMode(m) {
+    cfg.mode = (m === 'global') ? 'global' : 'answer';
+    cfg.pushOnChange = (cfg.mode === 'global');
+    saveCfg();
+    refreshState();
+    log('同步方式：' + (cfg.mode === 'global' ? '全局自动（任何改动都上传）' : '答题自动（选定答案 / 判定对错后上传）'));
+    if (cfg.pushOnChange) syncRound({ silent: true });
   }
 
   function bind() {
@@ -850,11 +872,18 @@
       refreshState();
     });
 
+    /* 同步方式单选框：选完即生效，不用再点保存 */
+    document.querySelectorAll('input[name="ifSyncMode"]').forEach(function (r) {
+      r.addEventListener('change', function () { if (r.checked) setMode(r.value); });
+    });
+
     if (el('btnSaveCfg')) el('btnSaveCfg').addEventListener('click', async function () {
       var before = cfg.token;
       cfg = Object.assign(cfg, readForm());
+      cfg.pushOnChange = (cfg.mode === 'global');
       if (cfg.token !== before) cfg.authFail = false;   // 换了 Token 就重新试
       saveCfg();
+      fillForm();
       refreshState();
       toast(cfg.token ? '已保存，自动同步已开启' : '已保存（未填 Token：只读模式）');
       if (cfg.token && !before) log('已填写 Token，自动同步开启');
@@ -964,6 +993,11 @@
     fillForm();
     bind();
     lastSig = curSig();
+
+    /* 「打开就是已同步」：本机若还有没传上去的答题记录，这次打开的同步就顺手带上去，
+       不用等用户再答一道题。 */
+    if (changedKeys().length) commitPending = true;
+
     refreshState();
     startEngine();
 
