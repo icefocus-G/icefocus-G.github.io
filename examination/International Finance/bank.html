@@ -486,10 +486,18 @@ function syncCommit(why){
       id:'IF00076', url:'../../data/IF00076-sync.json', path:'data/IF00076-sync.json',
       owner:'icefocus-G', repo:'icefocus-G.github.io', branch:'main'
     };
-    const s = document.createElement('script');
-    s.src = '../../script/cloud.js';
-    s.async = true;
-    document.head.appendChild(s);
+    /* 先加载凭据文件（APK 里由构建脚本写入内置 Token），再挂同步引擎 ——
+       顺序不能反：cloud.js 启动时就要读 window.IF_GH_TOKEN。 */
+    const t = document.createElement('script');
+    t.src = '../../script/gh-token.js';
+    const next = function () {
+      const s = document.createElement('script');
+      s.src = '../../script/cloud.js';
+      s.async = true;
+      document.head.appendChild(s);
+    };
+    t.onload = next; t.onerror = next;
+    document.head.appendChild(t);
   }
 })();
 
