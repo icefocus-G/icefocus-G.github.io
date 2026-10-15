@@ -3256,7 +3256,7 @@ function syncCommit(why){
     window.IF_SYNC_CFG=window.IF_SYNC_CFG||{id:"IF00076",url:"../../data/IF00076-sync.json",path:"data/IF00076-sync.json",owner:"icefocus-G",repo:"icefocus-G.github.io",branch:"main"};
     /* 先凭据、后引擎 —— cloud.js 启动时就要读 window.IF_GH_TOKEN */
     var t=document.createElement("script");t.src="../../script/gh-token.js";
-    var next=function(){var s=document.createElement("script");s.src="../../script/cloud.js?v=5";s.async=true;document.head.appendChild(s);};
+    var next=function(){var s=document.createElement("script");s.src="../../script/cloud.js?v=6";s.async=true;document.head.appendChild(s);};
     t.onload=next;t.onerror=next;document.head.appendChild(t);
   }
 })();
