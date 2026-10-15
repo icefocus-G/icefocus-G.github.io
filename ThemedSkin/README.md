@@ -35,7 +35,39 @@
 
 没有这行就依次取 `<title>`、文件名。
 
+## 皮肤自带的外部资源
+
+单文件皮肤（CSS/JS 全部内联）直接丢进来就行。
+如果皮肤还带着自己的 css / js / 图片，请把它们放进**专属子目录**，别直接放 `assets/`：
+
+```
+ThemedSkin/ThemedSkin01.html
+ThemedSkin/assets/skin01/style.css     ← 专属子目录，避免和其它皮肤撞名
+ThemedSkin/assets/skin01/app.js
+```
+
+页面里的引用也要跟着改，例如：
+
+```html
+<link rel="stylesheet" href="assets/skin01/style.css" />
+<script src="assets/skin01/app.js"></script>
+```
+
 ## 目录里的其它文件
 
 - `manifest.json` —— 重建脚本自动生成的清单，别手改；
-- `default.html` —— 默认皮肤（原首页，暗色粒子 + ICEFOCUS 逐字）。
+- `default.html` —— 默认皮肤（原首页，暗色粒子 + ICEFOCUS 逐字）；
+- `ThemedSkin01.html` —— 游戏视觉（暗色宇宙 + 作品集画廊，依赖 `assets/skin01/`）；
+- `ThemedSkin02.html` —— 设计印刷（明亮编辑风，单文件零依赖）；
+- `assets/skin01/` —— ThemedSkin01 的 style.css / cosmos.js / app.js。
+
+## 皮肤里的站内入口
+
+两套新皮肤都加了这两个入口（导航 + 页脚），新皮肤照抄即可：
+
+```html
+<a href="../examination/">Learning Course</a>
+<a href="../examination/International%20Finance/outline.html">教程</a>
+```
+
+> 路径里的空格要写成 `%20`；`../` 不能省，皮肤是在 `ThemedSkin/` 下运行的。

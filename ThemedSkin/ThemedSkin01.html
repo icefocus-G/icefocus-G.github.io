@@ -1,0 +1,280 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>ICEFOCUS — Game Graphic Designer</title>
+<meta name="description" content="ICEFOCUS · 游戏平面设计师 / 概念美术 / 游戏 UI · 作品集" />
+<meta name="skin-name" content="ThemedSkin01 · 游戏视觉" />
+<link rel="icon" href="../assets/icon.svg" />
+<style>
+  /* 站内跳转链接（课程中心 / 教程）—— 与皮肤自身配色保持一致 */
+  .if-links a, a.if-jump{color:inherit;text-decoration:none;opacity:.8;border-bottom:1px solid currentColor}
+  .if-links a:hover, a.if-jump:hover{opacity:1}
+</style>
+<link rel="stylesheet" href="assets/skin01/style.css" />
+</head>
+<body>
+
+<!-- ============ 载入 ============ -->
+<div id="preloader">
+  <div class="pre-inner">
+    <div class="pre-logo">Ice<b>focus</b></div>
+    <div class="pre-bar"><span></span></div>
+    <div class="pre-text">LOADING UNIVERSE <b id="preNum">0</b>%</div>
+  </div>
+</div>
+
+<!-- ============ 背景层 ============ -->
+<canvas id="bgCanvas"></canvas>
+<div class="grain"></div>
+
+<div class="cursor" id="cursor"></div>
+<div class="cursor-dot" id="cursorDot"></div>
+<div class="scroll-progress"><span id="scrollBar"></span></div>
+
+<!-- ============ 导航 ============ -->
+<header id="nav">
+  <a href="#home" class="brand" data-magnetic>
+    <span class="brand-mark"></span>
+    <span class="brand-text">Ice<b>focus</b></span>
+  </a>
+  <nav class="nav-links" id="navLinks">
+    <a href="#gallery" class="nav-item"><i>01</i>美术作品画廊</a>
+    <a href="#dev" class="nav-item"><i>02</i>游戏开发</a>
+    <a href="#contact" class="nav-item"><i>03</i>联系方式</a>
+    <a href="../examination/" class="nav-item if-jump"><i>04</i>Learning Course</a>
+    <a href="../examination/International%20Finance/outline.html" class="nav-item if-jump"><i>05</i>教程</a>
+    <span class="nav-ink" id="navInk"></span>
+  </nav>
+  <button class="burger" id="burger" aria-label="菜单"><span></span><span></span><span></span></button>
+</header>
+
+<!-- ============ 第一屏：战场开场 ============ -->
+<section id="home" class="hero">
+  <canvas id="cosmos"></canvas>
+  <div class="hero-veil"></div>
+
+  <div class="hero-content" id="heroContent">
+    <div class="hero-tag"><span class="dot"></span> GAME GRAPHIC DESIGNER — 游戏平面设计</div>
+
+    <h1 class="big-title" id="bigTitle" aria-label="Icefocus">
+      <span class="title-layer base">Icefocus</span>
+      <span class="title-layer glitch g1">Icefocus</span>
+      <span class="title-layer glitch g2">Icefocus</span>
+      <span class="title-layer outline">Icefocus</span>
+    </h1>
+
+    <div class="hero-sub"><span id="typewriter"></span><span class="caret">_</span></div>
+
+    <div class="hero-actions">
+      <a href="#gallery" class="btn btn-primary" data-magnetic><span>查看作品</span></a>
+      <a href="#contact" class="btn btn-ghost" data-magnetic><span>联系我</span></a>
+    </div>
+
+    <div class="hero-stats">
+      <div class="stat"><b data-count="128">0</b><span>美术作品</span></div>
+      <div class="stat"><b data-count="17">0</b><span>参与项目</span></div>
+      <div class="stat"><b data-count="6">0</b><span>从业年数</span></div>
+      <div class="stat"><b data-count="42">0</b><span>合作客户</span></div>
+    </div>
+  </div>
+
+  <!-- 旋转徽章 -->
+  <div class="sticker" id="sticker">
+    <svg viewBox="0 0 120 120">
+      <defs><path id="circ" d="M60,60 m-44,0 a44,44 0 1,1 88,0 a44,44 0 1,1 -88,0"/></defs>
+      <text><textPath href="#circ" startOffset="0">AVAILABLE FOR WORK ✦ 2026 ✦ OPEN TO COLLAB ✦ </textPath></text>
+    </svg>
+    <span>↓</span>
+  </div>
+
+  <button class="intro-ctl" id="introCtl">SKIP ⏭</button>
+
+  <a href="#gallery" class="scroll-hint" data-magnetic>
+    <span class="mouse"><i></i></span><span class="sh-text">SCROLL</span>
+  </a>
+
+  <div class="marquee m1"><div class="marquee-track">
+    <span>CONCEPT ART ✦ GAME UI ✦ CHARACTER ✦ PIXEL ART ✦ ILLUSTRATION ✦ VFX ✦ </span>
+    <span>CONCEPT ART ✦ GAME UI ✦ CHARACTER ✦ PIXEL ART ✦ ILLUSTRATION ✦ VFX ✦ </span>
+  </div></div>
+  <div class="marquee m2"><div class="marquee-track">
+    <span>ICEFOCUS ✦ 游戏平面设计 ✦ 视觉开发 ✦ 点击任意作品放大 ✦ </span>
+    <span>ICEFOCUS ✦ 游戏平面设计 ✦ 视觉开发 ✦ 点击任意作品放大 ✦ </span>
+  </div></div>
+</section>
+
+<!-- ============ 美术作品画廊 ============ -->
+<section id="gallery" class="section">
+  <div class="sec-head">
+    <div class="sec-index">01</div>
+    <h2 class="sec-title" data-reveal>美术作品<span class="accent">画廊</span></h2>
+    <p class="sec-desc" data-reveal>概念设定、场景气氛、角色立绘、UI 界面与像素美术 —— 点击任意作品放大查看。</p>
+  </div>
+
+  <div class="filters" data-reveal id="filters">
+    <button class="filter active" data-f="all">全部</button>
+    <button class="filter" data-f="concept">概念设定</button>
+    <button class="filter" data-f="character">角色设计</button>
+    <button class="filter" data-f="scene">场景气氛</button>
+    <button class="filter" data-f="ui">游戏 UI</button>
+    <button class="filter" data-f="pixel">像素美术</button>
+  </div>
+
+  <div class="gallery-grid" id="galleryGrid"></div>
+</section>
+
+<!-- ============ 游戏开发 ============ -->
+<section id="dev" class="section">
+  <div class="sec-head">
+    <div class="sec-index">02</div>
+    <h2 class="sec-title" data-reveal>游戏<span class="accent">开发</span></h2>
+    <p class="sec-desc" data-reveal>从美术资产到可玩原型，参与过的项目与技术栈。</p>
+  </div>
+
+  <div class="dev-top">
+    <div class="dev-about" data-reveal>
+      <h3>关于我</h3>
+      <p>我是 <b>ICEFOCUS</b>，一名游戏平面设计师。日常穿梭在 <b>Photoshop</b>、<b>Blender</b>、<b>Aseprite</b> 与 <b>Figma</b> 之间，负责概念设定、角色与场景绘制、UI 界面与图标、像素资产，以及引擎内的资源落地。</p>
+      <p>比起"好看"，我更在意画面能不能<b>讲故事</b>：一个剪影是否一眼可辨，一个技能图标是否在 0.3 秒内被读懂，一帧像素是否还留得住手感。</p>
+      <div class="tools">
+        <span>Photoshop</span><span>Illustrator</span><span>Aseprite</span>
+        <span>Blender</span><span>Figma</span><span>Procreate</span>
+        <span>Unity</span><span>Unreal</span><span>After Effects</span>
+      </div>
+    </div>
+
+    <div class="skills" data-reveal>
+      <h3>能力值</h3>
+      <div class="skill" data-val="95"><span>概念设定 / Concept Art</span><b>95</b><i></i></div>
+      <div class="skill" data-val="90"><span>角色与立绘 / Character</span><b>90</b><i></i></div>
+      <div class="skill" data-val="86"><span>游戏 UI / Interface</span><b>86</b><i></i></div>
+      <div class="skill" data-val="82"><span>像素美术 / Pixel Art</span><b>82</b><i></i></div>
+      <div class="skill" data-val="74"><span>3D 辅助 / Blender</span><b>74</b><i></i></div>
+      <div class="skill" data-val="88"><span>特效与动效 / VFX</span><b>88</b><i></i></div>
+    </div>
+  </div>
+
+  <h3 class="sub-head" data-reveal>参与项目</h3>
+  <div class="projects" id="projects"></div>
+
+  <h3 class="sub-head" data-reveal>经历时间线</h3>
+  <div class="timeline">
+    <div class="tl-item" data-reveal><span class="tl-year">2026</span><div><b>《Project: Neon》主美术</b><p>赛博都市题材 Roguelike，主导视觉风格与全部 UI 组件规范。</p></div></div>
+    <div class="tl-item" data-reveal><span class="tl-year">2024</span><div><b>某二次元卡牌 · 角色概念组</b><p>产出 40+ 角色设定与立绘精修，建立配色与剪影规范文档。</p></div></div>
+    <div class="tl-item" data-reveal><span class="tl-year">2023</span><div><b>独立游戏《拾光者》</b><p>负责像素场景与道具，完成 300+ 帧动画资产。</p></div></div>
+    <div class="tl-item" data-reveal><span class="tl-year">2021</span><div><b>入行 · 平面与 UI 设计</b><p>从 banner、icon 到活动主视觉，打下构图与配色的底子。</p></div></div>
+  </div>
+</section>
+
+<!-- ============ 联系方式 ============ -->
+<section id="contact" class="section">
+  <div class="sec-head">
+    <div class="sec-index">03</div>
+    <h2 class="sec-title" data-reveal>联系<span class="accent">方式</span></h2>
+    <p class="sec-desc" data-reveal>有项目想聊？发封邮件，或者在下面任意平台找我。</p>
+  </div>
+
+  <div class="contact-wrap">
+    <div class="contact-info" data-reveal>
+      <div class="ci-big">LET'S<br>MAKE<br><em>SOMETHING<br>EPIC</em></div>
+      <p class="ci-note">当前接受 <b>概念设定</b>、<b>游戏 UI</b>、<b>角色立绘</b> 与 <b>像素资产</b> 类委托。通常 24 小时内回复。</p>
+      <div class="ci-meta"><span>📍 成都 · 中国</span><span>🕐 GMT+8</span></div>
+    </div>
+
+    <div class="contact-right" data-reveal>
+      <ul class="soc-list">
+        <li>
+          <a class="soc" href="mailto:hello@icefocus.studio" data-magnetic>
+            <span class="soc-ic">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round">
+                <rect x="2.5" y="4.5" width="19" height="15" rx="2.5"/><path d="M2.8 6.2 12 13l9.2-6.8"/>
+              </svg>
+            </span>
+            <span class="soc-tx"><b>EMAIL</b><i>hello@icefocus.studio</i></span>
+            <span class="soc-go">↗</span>
+          </a>
+        </li>
+        <li>
+          <a class="soc" href="#" target="_blank" rel="noopener" data-magnetic>
+            <span class="soc-ic">
+              <svg viewBox="0 0 24 24" fill="currentColor"><text x="12" y="17.5" text-anchor="middle" font-family="Arial Black,sans-serif" font-size="17" font-weight="900">Z</text></svg>
+            </span>
+            <span class="soc-tx"><b>站酷 ZCOOL</b><i>@icefocus</i></span>
+            <span class="soc-go">↗</span>
+          </a>
+        </li>
+        <li>
+          <a class="soc" href="#" target="_blank" rel="noopener" data-magnetic>
+            <span class="soc-ic">
+              <svg viewBox="0 0 24 24" fill="currentColor"><path d="M18.9 2H22l-7.1 8.1L23.2 22h-6.6l-5.2-6.8L5.4 22H2.3l7.6-8.7L1.6 2h6.8l4.7 6.2L18.9 2zm-1.2 18h1.8L7.4 3.9H5.5L17.7 20z"/></svg>
+            </span>
+            <span class="soc-tx"><b>X / TWITTER</b><i>@icefocus</i></span>
+            <span class="soc-go">↗</span>
+          </a>
+        </li>
+        <li>
+          <a class="soc" href="#" target="_blank" rel="noopener" data-magnetic>
+            <span class="soc-ic">
+              <svg viewBox="0 0 24 24" fill="currentColor"><text x="12" y="17.5" text-anchor="middle" font-family="Arial Black,sans-serif" font-size="15" font-weight="900">Bē</text></svg>
+            </span>
+            <span class="soc-tx"><b>BEHANCE</b><i>behance.net/icefocus</i></span>
+            <span class="soc-go">↗</span>
+          </a>
+        </li>
+        <li>
+          <a class="soc" href="#" target="_blank" rel="noopener" data-magnetic>
+            <span class="soc-ic">
+              <svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 .5C5.37.5 0 5.87 0 12.5c0 5.3 3.44 9.8 8.21 11.39.6.11.82-.26.82-.58l-.01-2.05c-3.34.73-4.04-1.61-4.04-1.61-.55-1.39-1.34-1.76-1.34-1.76-1.09-.75.08-.73.08-.73 1.2.08 1.84 1.24 1.84 1.24 1.07 1.83 2.81 1.3 3.5.99.11-.78.42-1.3.76-1.6-2.67-.3-5.47-1.34-5.47-5.96 0-1.32.47-2.39 1.24-3.23-.13-.3-.54-1.52.12-3.17 0 0 1.01-.32 3.3 1.23a11.5 11.5 0 0 1 6 0c2.29-1.55 3.3-1.23 3.3-1.23.66 1.65.25 2.87.12 3.17.77.84 1.24 1.91 1.24 3.23 0 4.63-2.81 5.65-5.49 5.95.43.37.81 1.1.81 2.22l-.01 3.29c0 .32.21.7.82.58A12.01 12.01 0 0 0 24 12.5C24 5.87 18.63.5 12 .5z"/></svg>
+            </span>
+            <span class="soc-tx"><b>GITHUB</b><i>github.com/icefocus</i></span>
+            <span class="soc-go">↗</span>
+          </a>
+        </li>
+      </ul>
+
+      <form class="contact-form" id="contactForm" novalidate>
+        <div class="field">
+          <input type="text" id="fName" placeholder=" " required /><label for="fName">你的名字</label><i class="line"></i>
+        </div>
+        <div class="field">
+          <input type="email" id="fMail" placeholder=" " required /><label for="fMail">邮箱地址</label><i class="line"></i>
+        </div>
+        <div class="field">
+          <textarea id="fMsg" rows="3" placeholder=" " required></textarea><label for="fMsg">说点什么…</label><i class="line"></i>
+        </div>
+        <button type="submit" class="btn btn-primary full" data-magnetic><span>发送信息 →</span></button>
+        <div class="form-note" id="formNote"></div>
+      </form>
+    </div>
+  </div>
+</section>
+
+<footer>
+  <div class="f-left">© <span id="year"></span> ICEFOCUS — GAME GRAPHIC DESIGNER
+    <span class="if-links"> · <a href="../examination/">Learning Course</a> · <a href="../examination/International%20Finance/outline.html">教程</a></span>
+  </div>
+  <div class="f-right">BUILT WITH CANVAS &amp; NOISE</div>
+</footer>
+
+<!-- ============ 灯箱 ============ -->
+<div class="lightbox" id="lightbox">
+  <button class="lb-close" id="lbClose">✕</button>
+  <button class="lb-nav lb-prev" id="lbPrev">‹</button>
+  <button class="lb-nav lb-next" id="lbNext">›</button>
+  <div class="lb-inner">
+    <div class="lb-art" id="lbArt"></div>
+    <div class="lb-meta">
+      <h4 id="lbTitle"></h4>
+      <p id="lbDesc"></p>
+      <div class="lb-tags" id="lbTags"></div>
+      <div class="lb-count"><b id="lbIdx">1</b> / <span id="lbTotal">12</span></div>
+    </div>
+  </div>
+</div>
+
+<script src="assets/skin01/cosmos.js"></script>
+<script src="assets/skin01/app.js"></script>
+</body>
+</html>

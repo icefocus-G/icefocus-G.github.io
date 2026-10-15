@@ -1,9 +1,17 @@
 {
-  "generatedAt": "2026-10-15T02:40:17.283Z",
+  "generatedAt": "2026-10-15T03:49:07.247Z",
   "skins": [
     {
       "file": "default.html",
       "name": "ICEFOCUS"
+    },
+    {
+      "file": "ThemedSkin01.html",
+      "name": "ThemedSkin01 · 游戏视觉"
+    },
+    {
+      "file": "ThemedSkin02.html",
+      "name": "ThemedSkin02 · 设计印刷"
     }
   ]
 }
