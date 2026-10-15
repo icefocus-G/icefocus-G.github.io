@@ -320,17 +320,19 @@ footer a:hover{color:var(--a1)}
     return { done: done, pct: pct };
   }
 
-  /* ---------------- 5) 运行环境 ---------------- */
+  /* ---------------- 5) 运行环境 ----------------
+     只用于「显示判断」（APK 里隐藏返回首页入口），
+     ★ 绝不再用来改写链接路径。 */
   function isAPK() {
     try {
       if (window.__IF_APK__ === true || window.__IF_NATIVE__ === true) return true;
       if (/[?&]apk=1/.test(location.search)) return true;
-      return localStorage.getItem('IF::apk') === '1';
+      /* 只认壳层写入的新标记 IF::inApp。
+         旧键 IF::apk 是历史遗留 —— 以前的 study.html 一进课程就会写它，
+         结果回到课程中心时被当成「内嵌 APK」，把目录名里的空格删掉导致 404。
+         这里不再读旧键，从根上掐断。 */
+      return localStorage.getItem('IF::inApp') === '1';
     } catch (e) { return false; }
-  }
-  /* 旧内嵌版把目录名去掉了空格，只有它才需要改写链接；套壳版用原名目录 */
-  function isEmbedded() {
-    try { return isAPK() && localStorage.getItem('IF::shell') !== '1'; } catch (e) { return false; }
   }
 
   /* ---------------- 6) 渲染 ----------------
@@ -338,14 +340,17 @@ footer a:hover{color:var(--a1)}
        以 "/" 开头        → 相对 examination/（去掉开头的斜杠）
        以 "./" "../" 开头 → 相对当前页，原样使用
        其它               → 相对课程目录
-     没有 entry 时自动落到通用壳 shell/study.html?course=<目录>（壳自己会兜底） */
+     没有 entry 时自动落到通用壳 shell/study.html?course=<目录>（壳自己会兜底）
+
+     ★ 目录名一律按 course.json / 目录列表里的**原名**用，包括空格。
+       老版本内嵌 APK 曾把 "Western Economics" 去空格成 "WesternEconomics"，
+       套壳版访问的是 GitHub 上的原名目录，所以这里不能再去空格 —— 一去就 404。 */
   function hrefOf(c) {
     var e = c.entry;
     if (e) {
       if (e.charAt(0) === '/') return e.slice(1);
       if (/^\.\.?\//.test(e)) return e;
-      var dir = isEmbedded() ? String(c.dir).replace(/\s+/g, '') : c.dir;
-      return encodeURIComponent(dir) + '/' + e;
+      return encodeURIComponent(c.dir) + '/' + e;
     }
     return 'shell/study.html?course=' + encodeURIComponent(c.dir);
   }

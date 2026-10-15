@@ -71,7 +71,10 @@
     if (s.indexOf('if00076_pos') === 0) return true;
     if (s.indexOf('IF76::bak::') === 0) return true;
     if (s.indexOf('IF76::g::') === 0) return true;   /* 首页小游戏（贪吃蛇等）的进度 */
-    if (s === 'IF::apk') return true;                /* 只是在标记「本机跑的是 App」 */
+    if (s === 'IF::apk') return true;                /* 旧标记，保留兼容 */
+    if (s === 'IF::inApp') return true;              /* 在 App 里跑（壳层写入） */
+    if (s === 'IF::skinPin' || s === 'IF::skinLock') return true;
+    if (s === 'IF::courseDirs') return true;          /* 课程目录扫描缓存 */
     return false;
   }
 

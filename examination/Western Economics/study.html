@@ -519,14 +519,18 @@ document.addEventListener('keydown', function (e) {
     try {
       if (window.__IF_APK__ === true || window.__IF_NATIVE__ === true) return true;
       if (/[?&]apk=1/.test(location.search)) return true;
-      return localStorage.getItem('IF::apk') === '1';
+      return localStorage.getItem('IF::inApp') === '1';
     } catch (e) { return false; }
   }
-  /* APK 里隐藏「返回首页」；「课程」按钮仍可回课程中心 */
+  /* APK 里隐藏「返回首页」；「课程」按钮仍可回课程中心。
+     ★ 这里**只读**标记，绝不写入。
+       以前这里会 setItem('IF::apk','1')，可是 localStorage 是全站共享的 ——
+       只要进过一次课程，回到课程中心就被当成「旧内嵌 APK」，
+       目录名被去掉空格（WesternEconomics），点课程直接 404。
+       标记改由壳层自己写 IF::inApp，网页端永远不写。 */
   if (isAPK()) {
     var hm = document.querySelector('.home');
     if (hm) hm.style.display = 'none';
-    try { localStorage.setItem('IF::apk', '1'); } catch (e) {}
   }
   try { t = parseInt(localStorage.getItem(K_TAB) || '0', 10); } catch (e) {}
   var m = /[?&]t=([01])/.exec(location.search);   // 主页入口可直接指定页签

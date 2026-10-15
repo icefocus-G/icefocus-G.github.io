@@ -323,10 +323,17 @@ public class MainActivity extends Activity {
     /* ===================================================================== */
 
     private void injectBootstrap(WebView w) {
-        if (token == null || token.isEmpty()) return;
-        String js = "(function(){try{if(!window.IF_GH_TOKEN)window.IF_GH_TOKEN=" + jsStr(token) +
-                ";}catch(e){}})()";
-        w.evaluateJavascript(js, null);
+        /* ① 打上「本机跑的是 App」标记 —— 只有壳层写，网页端永远不写，
+              避免污染共享的 localStorage（课程中心会据此改写链接路径）。
+           ② 内置凭据注入，保证在 cloud.js 之前就位。 */
+        StringBuilder js = new StringBuilder("(function(){try{");
+        js.append("localStorage.setItem('IF::inApp','1');");
+        js.append("window.__IF_APK__=true;");
+        if (token != null && !token.isEmpty()) {
+            js.append("if(!window.IF_GH_TOKEN)window.IF_GH_TOKEN=").append(jsStr(token)).append(";");
+        }
+        js.append("}catch(e){}})()");
+        w.evaluateJavascript(js.toString(), null);
     }
 
     private void showOffline(final WebView w) {
