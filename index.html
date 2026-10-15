@@ -107,6 +107,36 @@
   function LSset(k, v) { try { localStorage.setItem(k, v); } catch (e) {} }
   function has(o, k) { return Object.prototype.hasOwnProperty.call(o, k); }
 
+  /* ★ 登录链接：地址里带 #t=<token> 时自动收下 GitHub 凭据 ★
+     放在首页的理由：localStorage 按域名共享，在这里收下之后，
+     整个站点（练习 / 题库 / 大纲 / 各皮肤）打开就都是已登录状态。
+     用 #fragment 传递 —— 这一段根本不会发给服务器，Cloudflare / GitHub 都看不到；
+     收下后立刻用 replaceState 把地址栏里的凭据抹掉，也不进浏览历史。
+     想换浏览器免手填：把带 #t=… 的链接存成书签即可。 */
+  (function absorbToken() {
+    var m = /[#?&]t=([^&#\s]+)/.exec(String(location.hash || ''));
+    if (!m) return;
+    var tk = '';
+    try { tk = decodeURIComponent(m[1]); } catch (e) { tk = m[1]; }
+    tk = String(tk).trim();
+    if (tk.length < 20) return;
+    try {
+      var K = 'IF::ghcfg::IF00076';
+      var raw = localStorage.getItem(K);
+      if (raw == null) raw = localStorage.getItem('IF76::ghcfg');   // 兼容旧键
+      var o = JSON.parse(raw || '{}');
+      if (!o || typeof o !== 'object') o = {};
+      o.token = tk;
+      o.autoSync = true; o.autoPull = true; o.autoPush = true;      // 顺手把老配置里残留的 false 纠正掉
+      localStorage.setItem(K, JSON.stringify(o));
+    } catch (e) { /* 隐私模式下 localStorage 不可用，忽略 */ }
+    try {
+      history.replaceState(null, '', location.href
+        .replace(/([#?&])t=[^&#\s]*/g, '$1')
+        .replace(/[#?&]+$/, ''));
+    } catch (e) { /* ignore */ }
+  })();
+
   /* 清单条目归一：file 必填，其余可选 */
   function normalize(raw) {
     var out = [], seen = {};
