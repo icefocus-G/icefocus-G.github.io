@@ -75,6 +75,11 @@
     if (s === 'IF::inApp') return true;              /* 在 App 里跑（壳层写入） */
     if (s === 'IF::skinPin' || s === 'IF::skinLock') return true;
     if (s === 'IF::courseDirs') return true;          /* 课程目录扫描缓存 */
+    /* 计算题专项（移植进 bank.html 的「计算题」标签）的浏览状态：
+       子标签页签 / 右下角悬浮计算器的位置与页签 / 数字键盘是否展开。
+       照常随上传带走，但不计「待同步」 */
+    if (s === 'if00076_calc_tab' || s === 'if00076_calc_dock' ||
+        s === 'if00076_calc_ctab' || s === 'if00076_keys_open') return true;
     return false;
   }
 

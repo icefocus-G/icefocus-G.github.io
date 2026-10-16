@@ -316,6 +316,396 @@ body{
   .card{padding:15px 14px}
   .pt .stat{margin-left:0;width:100%}
 }
+
+.ifc{--bg:#f7f9fc;--card:#fff;--line:#e6eaf2;
+      --ink:#1f2937;--ink2:#5b6478;--ink3:#8b95a8;
+      --accent:#3b6ef0;--accent2:#eef3ff;
+      --ok:#16a34a;--okbg:#eafaf0;
+      --bad:#e5484d;--badbg:#fdeeee;
+      --warn:#b47813;--warnbg:#fdf6e8;
+      --core:#e5484d;--corebg:#fdeeee;
+      --prep:#3b6ef0;--prepbg:#eef3ff}
+.ifc .wrap{max-width:1000px;margin:0 auto;padding:0 20px 80px}
+.ifc .hd{padding:20px 0 4px}
+.ifc .hdrow{display:flex;align-items:flex-end;gap:16px;flex-wrap:wrap}
+.ifc .hd h1{margin:0;font-size:21px;letter-spacing:-.3px}
+.ifc .hd h1 em{font-style:normal;font-size:12.5px;color:var(--ink3);margin-left:9px;font-weight:400}
+.ifc .tools{margin-left:auto;display:flex;gap:7px;flex-wrap:wrap}
+.ifc .tools button{border:1px solid var(--line);background:#fff;color:var(--ink2);border-radius:8px;
+              padding:6px 12px;font-family:inherit;font-size:12.5px;cursor:pointer;transition:.14s}
+.ifc .tools button:hover{border-color:#b9cbe8;color:var(--accent)}
+.ifc .tabs{position:sticky;top:0;z-index:50;display:flex;gap:7px;overflow-x:auto;
+      padding:11px 0;margin:14px 0 18px;background:rgba(246,247,249,.95);
+      -webkit-backdrop-filter:saturate(1.5) blur(10px);backdrop-filter:saturate(1.5) blur(10px);
+      border-bottom:1px solid var(--line);scrollbar-width:none;-webkit-overflow-scrolling:touch}
+.ifc .tabs::-webkit-scrollbar{display:none}
+.ifc .tab{flex:0 0 auto;border:1px solid var(--line);background:#fff;color:var(--ink2);border-radius:20px;
+     padding:8px 16px;font-family:inherit;font-size:13.5px;cursor:pointer;white-space:nowrap;transition:.14s}
+.ifc .tab:hover{border-color:#b9cbe8;color:var(--accent)}
+.ifc .tab.on{background:var(--accent);border-color:var(--accent);color:#fff;font-weight:600;
+        box-shadow:0 2px 8px rgba(47,107,216,.26)}
+.ifc .tab i{font-style:normal;font-size:11px;opacity:.75;margin-left:5px}
+.ifc .tab i.bad{color:#e5484d;opacity:1;font-weight:700}
+.ifc .tab.on i.bad{color:#fff}
+.ifc .arch{margin-top:12px;padding:9px 13px;background:var(--warnbg);border-left:3px solid var(--warn);border-radius:0 8px 8px 0;color:#7a4a06;font-size:12.8px;line-height:1.75}
+.ifc .panel.hide{display:none}
+.ifc .hero{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:19px 22px;margin-bottom:20px}
+.ifc .hero h2{margin:0 0 8px;font-size:17px}
+.ifc .hero p{margin:0;color:var(--ink2);font-size:14px}
+.ifc .kpis{display:grid;grid-template-columns:repeat(auto-fit,minmax(110px,1fr));gap:10px;margin-top:15px}
+.ifc .kpi{background:var(--bg);border:1px solid var(--line);border-radius:11px;padding:11px 13px}
+.ifc .kpi b{display:block;font-size:23px;color:var(--accent);line-height:1.2}
+.ifc .kpi span{font-size:11.5px;color:var(--ink3)}
+.ifc .card{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:19px 22px;margin-bottom:16px}
+.ifc .card.core{border-left:3px solid var(--core)}
+.ifc .chd{display:flex;align-items:center;gap:9px;flex-wrap:wrap}
+.ifc .cno{width:25px;height:25px;flex:0 0 auto;border-radius:8px;background:var(--accent2);color:var(--accent);
+     display:inline-flex;align-items:center;justify-content:center;font-size:12.5px;font-weight:700}
+.ifc .card.core .cno{background:var(--corebg);color:var(--core)}
+.ifc .chd b{font-size:16px}
+.ifc .bg{font-size:11px;padding:2px 8px;border-radius:6px;font-weight:600}
+.ifc .bg.core{background:var(--corebg);color:var(--core)}
+.ifc .bg.prep{background:var(--prepbg);color:var(--prep)}
+.ifc .cfreq{margin-left:auto;font-size:11.5px;color:var(--ink3)}
+.ifc .cyr{display:flex;gap:5px;flex-wrap:wrap;margin:9px 0 0}
+.ifc .yr{display:inline-block;font-size:11px;padding:1.5px 7px;border-radius:5px;background:var(--bg);
+    border:1px solid var(--line);color:var(--ink3);font-variant-numeric:tabular-nums}
+.ifc .crule{margin:11px 0 0;padding:9px 13px;background:var(--warnbg);border-left:3px solid #e0a54a;
+       border-radius:0 8px 8px 0;font-size:13.5px;color:#7a4a06}
+.ifc .cdesc{margin:11px 0 13px;color:var(--ink2);font-size:14px}
+.ifc .fmlbox{border:1px solid var(--line);border-radius:11px;overflow:hidden}
+.ifc .fi{display:flex;gap:12px;padding:10px 14px;border-bottom:1px solid var(--line);align-items:baseline}
+.ifc .fi:last-child{border-bottom:0}
+.ifc .fi .fl{flex:0 0 158px;font-size:12.5px;color:var(--ink3);font-weight:600}
+.ifc .fi .fv{flex:1;font-size:14.5px;line-height:1.95}
+.ifc .frac{display:inline-flex;flex-direction:column;vertical-align:-.55em;text-align:center;margin:0 3px}
+.ifc .frac i{font-style:normal;font-size:12.5px;padding:0 4px;border-bottom:1.4px solid currentColor;white-space:nowrap}
+.ifc .frac em{font-style:normal;font-size:12.5px;padding:0 4px;white-space:nowrap}
+.ifc .two{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-top:14px}
+.ifc .two>div{border:1px solid var(--line);border-radius:11px;padding:11px 14px}
+.ifc .two b{font-size:12.5px;color:var(--ink3);display:block;margin-bottom:5px}.ifc .two li b{display:inline;font-size:inherit;color:var(--ink);margin-bottom:0;font-weight:700}
+.ifc .two ul{margin:0;padding-left:17px}
+.ifc .two li{font-size:13.5px;color:var(--ink2);margin-bottom:4px}
+.ifc .pt{background:var(--okbg);border-color:#bfe3d5!important}
+.ifc .pt b{color:var(--ok)!important}
+.ifc .wn{background:var(--warnbg);border-color:#f0dcb8!important}
+.ifc .wn b{color:var(--warn)!important}
+.ifc .foldwrap{margin-top:12px}
+.ifc .fold{width:100%;text-align:left;border:1px dashed #c8d3e4;background:#fbfcfe;color:var(--accent);
+      border-radius:10px;padding:10px 14px;font-family:inherit;font-size:13.5px;font-weight:600;cursor:pointer;transition:.14s}
+.ifc .fold:hover{background:var(--accent2)}
+.ifc .fold.on{background:var(--accent2);border-style:solid}
+.ifc .fbox{display:none;margin-top:10px}
+.ifc .fbox.open{display:block}
+.ifc .exq{background:var(--bg);border:1px solid var(--line);border-radius:10px;padding:12px 15px;font-size:14px}
+.ifc .exsrc{display:inline-block;font-size:11px;background:var(--accent2);color:var(--accent);
+       padding:1px 7px;border-radius:5px;margin-right:8px;font-weight:600}
+.ifc .exa{margin-top:11px;border-left:3px solid var(--ok);padding:2px 0 2px 14px}
+.ifc .exa>b{display:block;font-size:12.5px;color:var(--ok);margin-bottom:5px}
+.ifc .exa ol{margin:0;padding-left:18px}
+.ifc .exa li{font-size:14px;margin-bottom:5px;color:var(--ink2)}
+.ifc .calcbox{margin-top:2px;background:#fbfcfe;border:1px solid var(--line);border-radius:12px;padding:15px 17px}
+.ifc .cbh{margin:0 0 3px;font-size:14px;font-weight:700}
+.ifc .cbn{margin:0 0 12px;font-size:12.5px;color:var(--ink3)}
+.ifc .cgrid{display:grid;grid-template-columns:repeat(auto-fit,minmax(196px,1fr));gap:10px}
+.ifc .cf label{display:block;font-size:12px;color:var(--ink3);margin-bottom:3px}
+.ifc .cf input,.ifc .cf select{width:100%;border:1px solid var(--line);border-radius:8px;padding:8px 10px;
+     font-family:inherit;font-size:14px;color:var(--ink);background:#fff;font-variant-numeric:tabular-nums}
+.ifc .cf input:focus,.ifc .cf select:focus{outline:none;border-color:var(--accent);box-shadow:0 0 0 3px rgba(47,107,216,.12)}
+.ifc .cbtn{margin-top:13px;border:0;background:var(--accent);color:#fff;border-radius:9px;padding:10px 24px;
+      font-family:inherit;font-size:14px;font-weight:600;cursor:pointer;transition:.14s}
+.ifc .cbtn:hover{background:#2559b8}
+.ifc .cbtn.ghost{background:#fff;color:var(--ink2);border:1px solid var(--line);font-weight:500;margin-left:7px}
+.ifc .cres{margin-top:13px;border-radius:10px;padding:12px 15px;font-size:14px;display:none}
+.ifc .cres.show{display:block}
+.ifc .cres.hit{background:var(--okbg);border:1px solid #bfe3d5}
+.ifc .cres.miss{background:var(--badbg);border:1px solid #f3cfc9}
+.ifc .cres.plain{background:var(--bg);border:1px solid var(--line)}
+.ifc .cres .big{font-size:17px;font-weight:700;display:block;margin-bottom:6px}
+.ifc .cres.hit .big{color:var(--ok)}
+.ifc .cres.miss .big{color:var(--bad)}
+.ifc .cres ol{margin:6px 0 0;padding-left:18px}
+.ifc .cres li{font-size:13.5px;color:var(--ink2);margin-bottom:3px}
+.ifc .dq{background:var(--card);border:1px solid var(--line);border-radius:13px;padding:16px 19px;margin-bottom:13px}
+.ifc .dqh{display:flex;align-items:center;gap:9px;flex-wrap:wrap;margin-bottom:8px}
+.ifc .dqn{width:23px;height:23px;border-radius:7px;background:var(--accent2);color:var(--accent);
+     display:inline-flex;align-items:center;justify-content:center;font-size:12px;font-weight:700}
+.ifc .jump{margin-left:auto;font-size:12px;color:var(--accent);cursor:pointer;text-decoration:none;border-bottom:1px dashed}
+.ifc .dqq{font-size:14.5px;line-height:1.8}
+.ifc .dnote{margin-top:8px;font-size:12.5px;color:var(--warn);background:var(--warnbg);
+       padding:6px 11px;border-radius:7px;display:inline-block}
+.ifc .reftb{width:100%;border-collapse:collapse;background:var(--card);border:1px solid var(--line);
+       border-radius:13px;overflow:hidden;font-size:13.5px}
+.ifc .reftb th{background:var(--bg);text-align:left;padding:10px 13px;font-size:12.5px;color:var(--ink3);
+          border-bottom:1px solid var(--line);font-weight:600}
+.ifc .reftb td{padding:9px 13px;border-bottom:1px solid #eef1f5;vertical-align:top;color:var(--ink2)}
+.ifc .reftb tr:last-child td{border-bottom:0}
+.ifc .reftb td:first-child{color:var(--ink3);font-size:12px;width:34px}
+.ifc .reftb td:nth-child(2){width:230px}
+.ifc .reftb .rf{font-variant-numeric:tabular-nums;color:var(--ink)}
+/* ==== 公式墙 ==== */
+.ifc .fwall{display:grid;gap:14px}
+.ifc .fcard{background:var(--card);border:1px solid var(--line);border-radius:13px;padding:16px 18px 15px}
+.ifc .fcard .fh{display:flex;align-items:center;gap:9px;flex-wrap:wrap;font-size:14.5px;color:var(--ink);font-weight:700}
+.ifc .fcard .fh .fno{display:inline-flex;align-items:center;justify-content:center;min-width:22px;height:22px;padding:0 6px;border-radius:7px;background:var(--accent);color:#fff;font-size:12px;font-weight:700;flex:none;line-height:1}
+.ifc .fcard .fh .fj{margin-left:auto;font-size:12.5px;font-weight:400;white-space:nowrap}
+.ifc .fcard .feq{text-align:center;font-size:22px;font-weight:700;color:var(--ink);padding:17px 8px 4px;line-height:1.65;font-variant-numeric:tabular-nums;letter-spacing:.2px}
+.ifc .fcard .feq .frac i,.ifc .fcard .feq .frac em{font-size:17.5px;font-weight:700;padding:0 10px}
+.ifc .fcard .feq .frac{vertical-align:-.62em;margin:0 5px}
+.ifc .fcard .feq .frac i{border-bottom-width:2px}
+.ifc .fcard .feq2{margin-top:9px;text-align:center;font-size:15px;color:var(--ink2);line-height:2.05;font-variant-numeric:tabular-nums}
+.ifc .fcard .feq2 .frac{vertical-align:-.5em}
+.ifc .fcard .feq2 .frac i,.ifc .fcard .feq2 .frac em{font-size:13.5px;padding:0 6px}
+.ifc .fcard .feq2 .frac i{border-bottom-width:1.8px}
+/* display:inline-block 已保证整组不被从中间断开；不能加 white-space:nowrap，
+   否则手机上超宽的那条（第 9 张套利）会撑破容器造成横向溢出 */
+.ifc .fcard .feq2 .nb{display:inline-block;margin:0 8px}
+.ifc .fcard .fvars{margin-top:14px;border-top:1px dashed var(--line);padding-top:11px;display:grid;grid-template-columns:1fr 1fr;gap:5px 20px;font-size:12.8px;color:var(--ink2);line-height:1.75}
+.ifc .fcard .fvars>div{padding-left:11px;position:relative}
+.ifc .fcard .fvars>div::before{content:"·";position:absolute;left:0;color:var(--ink3)}
+.ifc .fcard .fvars b{color:var(--accent);font-weight:700}
+.ifc .fcard .fnote{margin-top:12px;padding:10px 13px;background:var(--bg);border-radius:8px;font-size:12.8px;color:var(--ink2);line-height:1.85}
+.ifc .fcard .fnote b{color:var(--ink)}
+.ifc .fcard .fnote .warn{color:var(--warn)}
+@media(max-width:640px){
+  .ifc .fcard{padding:14px 15px 13px}
+  .ifc .fcard .feq{font-size:17px;padding:13px 4px 2px}
+  .ifc .fcard .feq .frac i,.ifc .fcard .feq .frac em{font-size:14px;padding:0 6px}
+  .ifc .fcard .feq2{font-size:13.5px}
+  .ifc .fcard .fvars{grid-template-columns:1fr}
+}
+.ifc .mh3{font-size:14.5px;margin:26px 0 12px;padding-left:11px;border-left:3px solid var(--accent)}
+.ifc .mh3 em{font-style:normal;font-size:12px;color:var(--ink3);font-weight:400;margin-left:8px}
+.ifc footer{margin-top:34px;padding-top:18px;border-top:1px solid var(--line);font-size:12.5px;color:var(--ink3);line-height:1.9}
+.ifc footer a{color:var(--accent);text-decoration:none}
+@media (max-width:760px){
+  .ifc .wrap{padding:0 13px 70px}
+  .ifc .hd h1{font-size:17.5px}
+  .ifc .hd h1 em{display:block;margin:3px 0 0}
+  .ifc .tools{margin-left:0;width:100%;overflow-x:auto}
+  .ifc .tabs{margin:10px 0 15px;padding:9px 0}
+  .ifc .tab{font-size:13px;padding:9px 15px;min-height:38px;display:inline-flex;align-items:center}
+  .ifc .card,.ifc .hero,.ifc .dq{padding:15px 15px}
+  .ifc .fi{display:block}
+  .ifc .fi .fl{margin-bottom:2px}
+  .ifc .fi .fv{font-size:14px}
+  .ifc .two{grid-template-columns:1fr}
+  .ifc .cfreq{margin-left:0;width:100%}
+  .ifc .kpis{grid-template-columns:1fr 1fr}
+  .ifc .reftb td:nth-child(2){width:auto}
+  .ifc .reftb,.ifc .reftb thead,.ifc .reftb tbody,.ifc .reftb tr,.ifc .reftb td,.ifc .reftb th{display:block}
+  .ifc .reftb thead{display:none}
+  .ifc .reftb tr{border-bottom:1px solid var(--line);padding:9px 0}
+  .ifc .reftb td{border:0;padding:2px 13px}
+  .ifc .cgrid{grid-template-columns:1fr}
+}
+
+.ifc .card.flash{box-shadow:0 0 0 3px rgba(47,107,216,.28);transition:box-shadow .25s}
+
+/* ==== 做题训练模块 ==== */
+.ifc .trwrap{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:18px 20px;margin-bottom:16px}
+.ifc .trbar{display:flex;gap:9px;flex-wrap:wrap;align-items:center}
+.ifc .trstat{display:flex;gap:26px;flex-wrap:wrap;margin:14px 0 0}
+.ifc .trstat>div{font-size:12px;color:var(--ink3)}
+.ifc .trstat b{display:block;font-size:22px;color:var(--accent);line-height:1.25;font-variant-numeric:tabular-nums}
+.ifc .trstat .g b{color:var(--ok)}.ifc .trstat .r b{color:var(--bad)}
+.ifc .pbar{height:9px;background:var(--bg);border:1px solid var(--line);border-radius:6px;overflow:hidden;margin:8px 0 2px}
+.ifc .pbar i{display:block;height:100%;background:linear-gradient(90deg,#4d86e0,#2f6bd8);width:0;transition:width .35s}
+.ifc .tq{border:1px solid var(--line);border-radius:12px;padding:14px 16px;margin-top:15px;background:#fbfcfe}
+.ifc .tqmeta{font-size:11.5px;color:var(--ink3);margin-bottom:7px;display:flex;gap:9px;align-items:center;flex-wrap:wrap}
+.ifc .tqmeta .ytag{background:var(--accent2);color:var(--accent);padding:1.5px 8px;border-radius:5px;font-weight:600}
+.ifc .tqq{font-size:14.5px;line-height:1.85}
+.ifc .tqa{margin-top:12px;border-left:3px solid var(--ok);padding:2px 0 2px 14px;display:none}
+.ifc .tqa.open{display:block}
+.ifc .tqa>b{display:block;font-size:12.5px;color:var(--ok);margin-bottom:5px}
+.ifc .tqa ol{margin:0;padding-left:18px}
+.ifc .tqa li{font-size:13.8px;margin-bottom:5px;color:var(--ink2)}
+.ifc .tqbtns{display:flex;gap:8px;margin-top:13px;flex-wrap:wrap}
+.ifc .tqbtns button{border:1px solid var(--line);background:#fff;border-radius:8px;padding:8px 16px;font-family:inherit;
+     font-size:13.5px;cursor:pointer;color:var(--ink2);transition:.14s}
+.ifc .tqbtns button:hover{border-color:#b9cbe8}
+.ifc .tqbtns .good{color:var(--ok);border-color:#bfe3d5;background:var(--okbg)}
+.ifc .tqbtns .bad{color:var(--bad);border-color:#f3cfc9;background:var(--badbg)}
+.ifc .tqbtns .pri{background:var(--accent);color:#fff;border-color:var(--accent);font-weight:600}
+.ifc .tqbtns .pri:hover{background:#2559b8}
+.ifc .trdone{margin-top:15px;font-size:14px;color:var(--ink2);background:var(--okbg);border:1px solid #bfe3d5;
+     border-radius:11px;padding:14px 16px}
+.ifc .wronglist{margin-top:4px}
+.ifc .wronglist .wi{border:1px solid #f3cfc9;background:var(--badbg);border-radius:11px;padding:12px 15px;margin-bottom:10px}
+.ifc .wronglist .wi .wm{font-size:11.5px;color:var(--bad);margin-bottom:5px;font-weight:600;display:flex;align-items:center;gap:7px;flex-wrap:wrap}
+.ifc .wronglist .wi .wm .wno{display:inline-flex;align-items:center;justify-content:center;min-width:19px;height:19px;padding:0 4px;border-radius:6px;background:var(--bad);color:#fff;font-size:11px;font-weight:700;flex:none;line-height:1}
+.ifc .wronglist .wi .wt{font-size:13.5px;color:var(--ink2);line-height:1.75}
+.ifc .wronglist .wi .wa{margin-top:11px;padding:11px 13px;background:#fff;border:1px solid #f0d9d5;border-radius:9px}
+.ifc .wronglist .wi .wa>b{display:block;font-size:12.5px;color:var(--ok);margin-bottom:6px}
+.ifc .wronglist .wi .wa ol{margin:0;padding-left:18px}
+.ifc .wronglist .wi .wa li{font-size:13.4px;margin-bottom:4px;color:var(--ink2);line-height:1.75}
+.ifc .wronglist .wi .wa .why{margin-top:10px;background:#f5f2fe}
+.ifc .wronglist .wi .wbtns{display:flex;gap:8px;margin-top:10px;flex-wrap:wrap}
+.ifc .wronglist .wi .wbtns button{border:1px solid var(--line);background:#fff;border-radius:8px;padding:6px 13px;font-family:inherit;font-size:12.5px;cursor:pointer;color:var(--ink2);transition:.14s}
+.ifc .wronglist .wi .wbtns button:hover{border-color:#b9cbe8}
+.ifc .wronglist .wi .wbtns button.pri{background:var(--accent);color:#fff;border-color:var(--accent);font-weight:600}
+.ifc .wronglist .wi .wbtns button.pri:hover{background:#2559b8}
+.ifc .wronglist .empty{font-size:13.5px;color:var(--ink3)}
+/* ==== 标准答题模板 ==== */
+.ifc .tpl{background:#fbfcfe;border:1px solid var(--line);border-radius:11px;padding:13px 16px;font-size:13.8px;color:var(--ink2);line-height:1.85}
+.ifc .tpl .tt{color:var(--accent);font-weight:700;display:block;margin-bottom:3px}
+.ifc .tpl ol{margin:6px 0 0;padding-left:19px}
+.ifc .tpl li{margin-bottom:5px}
+.ifc .tpl code{background:#fff;border:1px solid var(--line);border-radius:5px;padding:1px 6px;font-size:12.8px;
+     font-family:ui-monospace,Menlo,Consolas,monospace}
+.ifc .tpl .warnline{margin-top:10px;padding:7px 11px;background:var(--warnbg);border-left:3px solid #e0a54a;
+     border-radius:0 7px 7px 0;color:#7a4a06;font-size:13px}
+
+
+/* --- 买卖价口诀注释块（真题解答内联，2026-10-16 加） --- */
+.ifc .mnemo{margin-top:12px;padding:10px 13px;background:var(--accent2);border:1px solid #cddffa;
+  border-left:3px solid var(--accent);border-radius:0 8px 8px 0;color:var(--ink2);
+  font-size:13.5px;line-height:1.8}
+.ifc .mnemo>b{display:block;color:var(--accent);font-size:13px;margin-bottom:5px;letter-spacing:.2px}
+.ifc .mnemo ul{margin:0;padding-left:18px}
+.ifc .mnemo li{margin-bottom:3px}
+.ifc .mnemo .mline{margin-top:7px;padding-top:7px;border-top:1px dashed #cddffa;font-size:14px;color:var(--ink)}
+.ifc .mnemo .mapply{margin-top:7px;padding:7px 10px;background:#fff;border-radius:7px;
+  border:1px solid #e2ecfb;font-size:13.5px;color:var(--ink2)}
+.ifc .mnemo .mapply b{color:var(--core)}
+
+/* --- 「为什么这么做」注释块（真题 + 训练题，2026-10-16 加） --- */
+.ifc .why{margin-top:11px;padding:10px 13px;background:#f5f2fe;border:1px solid #ded4f8;
+  border-left:3px solid #6b4fd8;border-radius:0 8px 8px 0;color:var(--ink2);
+  font-size:13.4px;line-height:1.8}
+.ifc .why ul{margin:0;padding-left:18px}
+.ifc .why li{margin-bottom:3.5px}
+.ifc .why b{color:var(--ink)}
+/* 口径提醒变体（琥珀色），用于「这么写会不会丢分」类说明 */
+.ifc .why.alert{background:var(--warnbg);border-color:#f0dcb8;border-left-color:var(--warn)}
+.ifc .why.alert>b{color:var(--warn)}
+.ifc .why>b{display:block;color:#5b3fc4;font-size:13px;margin-bottom:5px;letter-spacing:.2px}
+.ifc .tqa .why{margin-top:11px}
+
+/* ================= 岛内细节对齐 bank 的视觉 ================= */
+/* 子标签吸顶条：底色换成 bank 的 --bg，免得滚动时出现一道浅色带 */
+.ifc .tabs{background:rgba(244,246,251,.95)}
+.ifc .tabs{top:0}
+
+/* ================= 悬浮计算器 ================= */
+#ifDock{position:fixed;inset:0;z-index:1200;pointer-events:none}
+#ifDock>*{pointer-events:auto}
+#ifDockBtn{position:fixed;right:18px;bottom:18px;display:flex;align-items:center;gap:7px;
+  border:none;border-radius:26px;padding:11px 18px 11px 15px;cursor:pointer;font-family:inherit;
+  font-size:13.5px;font-weight:700;color:#fff;background:linear-gradient(135deg,#3b6ef0,#5b3cf0);
+  box-shadow:0 10px 26px -8px rgba(59,110,240,.7);transition:.16s}
+#ifDockBtn .em{font-size:17px;line-height:1}
+#ifDockBtn:hover{transform:translateY(-2px);filter:brightness(1.06)}
+#ifDockBtn.on{background:linear-gradient(135deg,#5b6478,#1f2937);box-shadow:0 10px 26px -10px rgba(20,30,60,.6)}
+#ifDockPanel{position:fixed;right:18px;bottom:80px;width:min(430px,calc(100vw - 26px));
+  max-height:70vh;display:flex;flex-direction:column;background:#fff;border:1px solid #e6eaf2;
+  border-radius:15px;box-shadow:0 24px 60px -18px rgba(20,30,60,.4);overflow:hidden}
+#ifDockPanel.hide{display:none}
+#ifDockHead{display:flex;align-items:center;gap:8px;padding:9px 11px;flex:0 0 auto;
+  background:linear-gradient(135deg,#eef3ff,#f3eeff);border-bottom:1px solid #e6eaf2;
+  cursor:grab;touch-action:none;user-select:none}
+#ifDockPanel.dragging #ifDockHead{cursor:grabbing}
+#ifDockHead .grip{color:#8b95a8;font-size:14px;letter-spacing:-2px}
+#ifDockHead b{font-size:13.5px;color:#1f2937;white-space:nowrap}
+#ifDockHead select{flex:1 1 auto;min-width:0;border:1px solid #e6eaf2;border-radius:8px;background:#fff;
+  padding:5px 8px;font-family:inherit;font-size:12.5px;color:#1f2937;outline:none}
+#ifDockHead select:focus{border-color:#3b6ef0;box-shadow:0 0 0 3px #eef3ff}
+#ifDockHead button{flex:0 0 auto;width:27px;height:27px;border:1px solid #e6eaf2;background:#fff;
+  border-radius:8px;cursor:pointer;font-size:13px;line-height:1;color:#5b6478;font-family:inherit;transition:.15s}
+#ifDockHead button:hover{border-color:#3b6ef0;color:#3b6ef0}
+#ifDockBody{flex:1 1 auto;overflow:auto;padding:13px 14px 15px;-webkit-overflow-scrolling:touch}
+#ifDock .calcbox{background:transparent;border:none;padding:0;margin:0}
+#ifDock .cbh{margin:0 0 4px;font-size:14px}
+#ifDock .cbn{margin:0 0 12px}
+#ifDock .cgrid{grid-template-columns:repeat(auto-fit,minmax(118px,1fr));gap:9px}
+#ifDock .cres{font-size:12.8px}
+@media(max-width:640px){
+  #ifDockBtn{right:12px;bottom:12px;padding:10px 15px 10px 13px;font-size:12.5px}
+  #ifDockPanel{left:0;right:0;bottom:0;width:100%;max-height:78vh;border-radius:16px 16px 0 0}
+  #ifDockPanel.moved{left:auto;right:auto;bottom:auto;width:min(430px,calc(100vw - 20px));border-radius:14px}
+  #ifDockHead{border-radius:16px 16px 0 0}
+  #ifDockPanel.moved #ifDockHead{border-radius:14px 14px 0 0}
+}
+
+/* ================= 自由计算（三列 · 可加行）：补齐源文件的变量别名 ================= */
+#ifDock{--line2:#eef1f7;--mono:ui-monospace,SFMono-Regular,Menlo,Consolas,'Courier New',monospace;--r:11px;--accent3:#c3d3f8}
+#ifDock .hide{display:none!important}
+/* ---- 面板内的页签：自由计算 / 预设公式 ---- */
+#ifCalcTabs{flex:0 0 auto;display:flex;gap:6px;padding:8px 11px 0;background:#fff;border-bottom:1px solid #e6eaf2}
+#ifCalcTabs button{flex:1;border:1px solid #e6eaf2;border-bottom:0;background:#fff;color:#5b6478;border-radius:9px 9px 0 0;padding:7px 8px;font-family:inherit;font-size:12.5px;font-weight:600;cursor:pointer;transition:.15s}
+#ifCalcTabs button:hover{color:#3b6ef0}
+#ifCalcTabs button.on{background:#eef3ff;color:#3b6ef0;border-color:#c3d3f8}
+#ifDock .frowsbox{margin-top:12px;background:var(--card);border:1px solid var(--line);border-radius:var(--r);overflow:hidden;
+  box-shadow:0 1px 2px rgba(20,28,40,.04),0 8px 24px -18px rgba(20,28,40,.3)}
+#ifDock .frhd{display:flex;align-items:center;gap:8px;flex-wrap:wrap;padding:10px 14px;border-bottom:1px solid var(--line2);
+  font-size:12.5px;color:var(--ink3);font-weight:600}
+#ifDock .frhd code{background:var(--accent2);color:var(--accent);border-radius:5px;padding:1px 6px;
+  font-family:var(--mono);font-size:11.5px;font-weight:700}
+#ifDock .frfoot{display:flex;gap:8px;flex-wrap:wrap;padding:11px 13px;background:#fbfcfe;border-top:1px solid var(--line)}
+#ifDock .frfoot button{border:1px solid var(--line);background:#fff;color:var(--ink2);border-radius:9px;
+  padding:8px 14px;font-family:inherit;font-size:13px;cursor:pointer;transition:.13s}
+#ifDock .frfoot button:hover{border-color:var(--accent3);color:var(--accent);background:var(--accent2)}
+#ifDock .frfoot .pri{background:var(--accent);border-color:var(--accent);color:#fff;font-weight:600}
+#ifDock .frfoot .pri:hover{background:#2559b8;color:#fff}
+#ifDock .fkeys{margin-top:12px;display:grid;grid-template-columns:repeat(4,1fr);gap:9px}
+#ifDock .fkeys button{border:1px solid var(--line);background:#fff;color:var(--ink);border-radius:11px;
+  padding:15px 0;font-family:var(--mono);font-size:19px;font-weight:600;cursor:pointer;transition:.1s;user-select:none}
+#ifDock .fkeys button:hover{border-color:var(--accent3);background:var(--accent2);color:var(--accent)}
+#ifDock .fkeys button:active{transform:scale(.96)}
+#ifDock .fkeys .kop{color:var(--accent);background:#f6f9fe}
+#ifDock .fkeys .kfn{color:var(--ink2);font-size:16px;font-family:inherit}
+#ifDock .fkeys .kw2{grid-column:span 2;font-size:15px;font-family:inherit;font-weight:600}
+#ifDock .fkeys .keq{grid-column:1/-1;background:var(--accent);border-color:var(--accent);color:#fff;font-size:16px;padding:14px 0}
+#ifDock .fkeys .keq:hover{background:#2559b8;color:#fff}
+#ifDock .fkeys .keq:active{transform:scale(.99)}
+#ifDock .ffreehint{margin-top:14px;padding:11px 14px;background:var(--card);border:1px dashed var(--line);
+  border-radius:var(--r);font-size:12px;color:var(--ink3);line-height:2}
+#ifDock .ffreehint kbd{background:#fff;border:1px solid var(--line);border-bottom-width:2px;border-radius:5px;
+  padding:1px 7px;font-family:var(--mono);font-size:11.5px;color:var(--ink2);margin:0 1px}
+#ifDock .ffreehint code{background:#fff;border:1px solid var(--line);border-radius:5px;padding:1px 6px;
+  font-family:var(--mono);font-size:11.5px}
+#ifDock .fcrow{display:grid;grid-template-columns:26px 1fr minmax(84px,auto) auto 30px;gap:8px;align-items:center;
+  padding:9px 13px;border-bottom:1px solid var(--line2);transition:background .12s}
+#ifDock .fcrow:last-child{border-bottom:0}
+#ifDock .fcrow.cur{background:#f7faff}
+#ifDock .fcno{font-size:12px;color:var(--ink3);font-family:var(--mono);font-weight:700;text-align:center}
+#ifDock .fcexpr{width:100%;border:1.5px solid var(--line);border-radius:9px;padding:9px 11px;font-family:var(--mono);
+  font-size:16px;color:var(--ink);background:#fbfcfe;outline:none;transition:.13s;min-width:0;box-sizing:border-box}
+#ifDock .fcexpr:focus{border-color:var(--accent);background:#fff;box-shadow:0 0 0 3.5px rgba(47,107,216,.13)}
+#ifDock .fcres{font-family:var(--mono);font-size:16px;font-weight:700;color:var(--accent);text-align:right;
+  cursor:pointer;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;max-width:230px;padding-right:2px}
+#ifDock .fcres.dim{color:#c3cad3;font-weight:400}
+#ifDock .fcres.err{color:var(--bad)}
+#ifDock .fcdel{border:1px solid var(--line);background:#fff;color:var(--ink3);border-radius:8px;width:30px;height:34px;
+  cursor:pointer;font-size:13px;font-family:inherit;padding:0;transition:.12s;line-height:1}
+#ifDock .fcdel:hover{color:var(--bad);border-color:#f3cfc9;background:var(--badbg)}
+#ifDock .fcclr{border:1px solid var(--line);background:#fff;color:var(--ink2);border-radius:8px;height:34px;
+  padding:0 9px;cursor:pointer;font-family:inherit;font-size:12.5px;transition:.12s;line-height:1;white-space:nowrap}
+#ifDock .fcclr:hover{color:var(--accent);border-color:var(--accent3);background:var(--accent2)}
+#ifDock .fclock{width:30px;height:34px;display:flex;align-items:center;justify-content:center;
+  color:#c9d0da;font-size:12px;cursor:default;user-select:none;line-height:1}
+#ifDock .fcmsg{grid-column:2/6;font-size:12px;color:var(--bad);display:none;padding:3px 0 1px;line-height:1.55}
+#ifDock .fcmsg.on{display:block}
+/* ---- 面板宽度有限：行改 2 行布局 + 整体收小 ---- */
+#ifDock #ifDockBody{padding:10px 12px 13px}
+#ifDock .frowsbox{margin-top:0}
+#ifDock .frhd{padding:8px 11px;font-size:11.5px;line-height:1.7}
+#ifDock .fcrow{grid-template-columns:22px 1fr auto 30px;grid-template-areas:"n e c d" ". r r .";row-gap:5px;padding:7px 10px;gap:7px}
+#ifDock .fcno{grid-area:n}
+#ifDock .fcexpr{grid-area:e;font-size:15px;padding:7px 9px}
+#ifDock .fcclr{grid-area:c;height:31px;font-size:12px;padding:0 8px}
+#ifDock .fcdel{grid-area:d;width:30px;height:31px}
+#ifDock .fclock{grid-area:d;width:30px;height:31px}
+#ifDock .fcres{grid-area:r;text-align:left;max-width:none;font-size:14px;padding:2px 0}
+#ifDock .fcmsg{grid-column:2/5}
+#ifDock .frfoot{padding:8px 11px;gap:6px}
+#ifDock .frfoot button{padding:7px 11px;font-size:12.5px}
+#ifDock .fkeys{grid-template-columns:repeat(4,1fr);gap:7px;margin-top:10px}
+#ifDock .fkeys button{padding:13px 0;font-size:17px}
+#ifDock .fkeys .kw2{font-size:14px}
+#ifDock .ffreehint{margin-top:10px;padding:9px 11px;font-size:11.5px;line-height:1.85}
+#ifDock .ffreehint kbd,#ifDock .ffreehint code{font-size:11px;padding:0 5px}
+
 </style>
 <link rel="icon" href="../../assets/icon.svg">
 </head>
@@ -370,15 +760,180 @@ body{
     </div>
   </div>
 
-  <!-- ④ 计算题 -->
+  <!-- ④ 计算题（计算专项：题型卡 + 真题演练 + 训练 + 错题库） -->
   <div class="view" id="view-calc">
-    <div class="card">
-      <div class="sec-h"><span class="dot"></span>计算题<span class="sub" id="calcSub"></span></div>
-      <div class="row" style="margin-bottom:12px">
-        <button class="btn" onclick="expandAll('calcs',true)">全部展开</button>
-        <button class="btn" onclick="expandAll('calcs',false)">全部收起</button>
+    <div class="ifc" id="ifRoot">
+    <header class="hd">
+    <div class="hdrow">
+      <h1>计算专项<em>18 类题型 · 13 个计算器 · 真题 13 道 · 21 题训练</em></h1>
+      <div class="tools">
+        <button id="ifOpenAll">展开全部</button>
+        <button id="ifCloseAll">收起全部</button>
       </div>
-      <div class="clist" id="calcList"></div>
+    </div>
+  </header>
+
+  <nav class="tabs" id="ifTabs">
+      <button type="button" class="tab on" data-tab="must">必考四类<i>★</i></button>
+      <button type="button" class="tab" data-tab="prep">应备十四类<i>14</i></button>
+      <button type="button" class="tab" data-tab="drill">真题演练<i>13</i></button>
+      <button type="button" class="tab" data-tab="train">做题训练<i>21</i></button>
+      <button type="button" class="tab" data-tab="wrong">错题库<i class="bad" id="wrongTabN">0</i></button>
+      <button type="button" class="tab" data-tab="bankcalc">真题详解<i>9</i></button>
+    </nav>
+
+  <main id="ifView">
+    <section class="panel" id="pan-must">
+      <div class="hero">
+        <h2>00076 国际金融的计算题，考点其实收得很窄</h2>
+        <p>把 2019.04 — 2026.4 共 <b>13 套卷</b>的计算题逐道回查，再对着 <b>00076 大纲考点 14</b> 的口径核对：
+        每套卷固定 <b>1 道计算题、4 分</b>，题型只有下面 <b>4 类</b>在轮考，
+        另外 <b>14 类</b>在大纲与章节练习里要求掌握、卷面随时可能补位。每类都配了公式、阅卷采分点与原题解答，必考四类另配可直接输数字的<b>计算器</b>。</p>
+        <div class="kpis">
+          <div class="kpi"><b>13</b><span>套真题逐题回查<br>2019.04 — 2026.4</span></div>
+          <div class="kpi"><b>4</b><span>类轮考题型<br>远期 / 套算 / 铸币 / 报价</span></div>
+          <div class="kpi"><b>14</b><span>类大纲应备题型<br>套汇套利期权期货平价互换</span></div>
+          <div class="kpi"><b>13</b><span>个可输入计算器<br>点按钮出结果带步骤</span></div>
+          <div class="kpi"><b>21</b><span>题训练自测<br>随机抽题 · 错题重练</span></div>
+        </div>
+      </div>
+      <h3 class="mh3">一、必考四类<em>10 套卷里反复出现，先把这四类练到闭眼能写</em></h3>
+      <div class="card core" id="t-fwd"><div class="chd"><span class="cno">1</span><b>远期汇率：升水 / 贴水加减</b><span class="bg core">必考</span><span class="cfreq">10 套里考了 5 次</span></div><div class="cyr"><span class="yr">2022.10</span><span class="yr">2023.04</span><span class="yr">2024.04</span><span class="yr">2025.10</span><span class="yr">2026.04</span></div><div class="crule">口诀：前小后大往上加，前大后小往下减</div><p class="cdesc">每套卷的计算题基本就是这一道。给即期汇率和远期汇水（点数），求远期汇率。</p><div class="fmlbox"><div class="fi"><div class="fl">直接标价法</div><div class="fv">远期汇率 = 即期汇率 + 升水 = 即期汇率 − 贴水</div></div><div class="fi"><div class="fl">间接标价法</div><div class="fv">远期汇率 = 即期汇率 − 升水 = 即期汇率 + 贴水</div></div><div class="fi"><div class="fl">判方向的口诀</div><div class="fv">汇水「小数在前、大数在后」→ 加；「大数在前、小数在后」→ 减。<b>只看点数，与标价法无关</b>（大纲考点 14 的口径）</div></div><div class="fi"><div class="fl">点数折小数</div><div class="fv">报价有几位小数，1 点就是 10 的负几次方：4 位小数报价 <b>1 点 = 0.0001</b>；日元等 2 位小数报价 <b>1 点 = 0.01</b></div></div></div><div class="two"><div class="pt"><b>阅卷采分点</b><ul><li>判方向（说清是升水还是贴水）— 1 分</li><li>买入价算对 — 1 分；卖出价算对 — 1 分</li><li>把结果写全成「GBP1 = USD1.3490 ~ 1.3535」— 1 分</li></ul></div><div class="wn"><b>易错点</b><ul><li>两个价都必须算，算完检查斜线左边 < 右边；远期汇差一定比即期大，反了就是算错。</li><li>2025.10 那道特意考了间接标价法：写「间接标价法下远期汇率 = 即期汇率 + 贴水额」，算法仍是加法——别被名词绕进去。</li></ul></div></div><div class="foldwrap"><button class="fold" data-target="ex1">📝 真题例题与解答</button><div class="fbox" id="ex1"><div class="exq"><span class="exsrc">2026.04 真题</span>在美国外汇市场上，英镑(GBP)与美元(USD)的即期汇率报价为 GBP1=USD1.3540~1.3565，3 个月的汇水为 50-30，试计算英镑 3 个月的远期汇率。</div><div class="exa"><b>解答</b><ol><li>在美国外汇市场上是<b>直接标价法</b>。汇水 50~30，<b>前大后小 → 用减法（贴水）</b>。</li><li>1.3540 − 0.0050 = <b>1.3490</b></li><li>1.3565 − 0.0030 = <b>1.3535</b></li><li>即：英镑 3 个月远期汇率为 <b>GBP1 = USD1.3490 ~ 1.3535</b></li></ol></div></div></div><div class="foldwrap"><button class="fold" data-target="c1">🧮 打开「远期汇率（升水 / 贴水加减）」</button><div class="fbox" id="c1"><div class="calcbox" data-calc="fwd"></div></div></div><div class="foldwrap"><button class="fold" data-target="tpl1">🧭 标准答题模板</button><div class="fbox" id="tpl1"><div class="tpl"><span class="tt">答题四步（照格式套）</span><ol>
+<li><b>判标价法</b>：写明「××外汇市场为直接（间接）标价法」。</li>
+<li><b>判方向</b>：汇水「前小后大 → 升水（加）」「前大后小 → 贴水（减）」，只看点数不看标价法。</li>
+<li><b>两个价各算一次</b>：买入价、卖出价分开算，各占 1 分。</li>
+<li><b>写结论成双边报价</b>：<code>GBP1 = USD1.3490 ~ 1.3535</code>。</li></ol>
+<div class="warnline">易失分：只算一个价；结论没写成双边；点数小数位折错（4 位报价 1 点=0.0001，日元 2 位报价 1 点=0.01）。</div></div></div></div></div><div class="card core" id="t-cross"><div class="chd"><span class="cno">2</span><b>套算汇率：同边相乘 / 交叉相除</b><span class="bg core">必考</span><span class="cfreq">10 套里考了 2 次</span></div><div class="cyr"><span class="yr">2021.10</span><span class="yr">2023.10</span></div><div class="crule">口诀：一个直接一个间接 → 同边相乘；两个同为直接或同为间接 → 交叉相除</div><p class="cdesc">两地都不直接报 A 兑 B 的价，要绕道美元算出来；有时还要再按买卖价折算成金额。</p><div class="fmlbox"><div class="fi"><div class="fl">同边相乘</div><div class="fv">报价一个以美元为基准、一个以美元为计价 → 结果买入价 = A 买入 × B 买入；结果卖出价 = A 卖出 × B 卖出</div></div><div class="fi"><div class="fl">交叉相除</div><div class="fv">两个报价都以美元为基准（或都为计价）→ 结果买入价 = A 买入 ÷ B 卖出；结果卖出价 = A 卖出 ÷ B 买入</div></div><div class="fi"><div class="fl">折成金额</div><div class="fv">用「银行买入你手里那种货币」的那一侧价：出口商拿英镑换日元 → 用 GBP 的<b>买入价</b>（数值小的一侧）</div></div></div><div class="two"><div class="pt"><b>阅卷采分点</b><ul><li>算对两个价 — 2 分（同边相乘要写清「7.7820×1.5140」这类式子）</li><li>折成金额时选对买入/卖出价 — 2 分</li></ul></div><div class="wn"><b>易错点</b><ul><li>乘除方向搞反是最常见失分点。记法：结果斜线左边一定要 < 右边，算完自检。</li><li>换金额那一步别用中间价，用报价方那一侧。</li></ul></div></div><div class="foldwrap"><button class="fold" data-target="ex2">📝 真题例题与解答</button><div class="fbox" id="ex2"><div class="exq"><span class="exsrc">2021.10 真题</span>假定某一年 10 月 12 日，纽约外汇市场报出 GBP1=USD1.7210~1.7270，USD1=JPY111.52~112.50。试计算英镑（GBP）对日元（JPY）的套算汇率。若某一出口商持有 10 万英镑，可兑换多少日元？</div><div class="exa"><b>解答</b><ol><li>一个以美元为基准（USD1=JPY…）、一个以美元为计价（GBP1=USD…）→ 用 <b>同边相乘</b>。</li><li>1.7210 × 111.52 = <b>191.9259</b></li><li>1.7270 × 112.50 = <b>194.2875</b></li><li>即 GBP1 = JPY191.9259 ~ 194.2875</li><li>出口商拿英镑换日元，银行买入英镑用<b>买入价 191.9259</b>：</li><li>100 000 × 191.9259 = <b>19 192 590 日元</b>（约 1919.26 万日元）</li></ol></div></div></div><div class="foldwrap"><button class="fold" data-target="c2">🧮 打开「套算汇率」</button><div class="fbox" id="c2"><div class="calcbox" data-calc="cross"></div></div></div><div class="foldwrap"><button class="fold" data-target="tpl2">🧭 标准答题模板</button><div class="fbox" id="tpl2"><div class="tpl"><span class="tt">答题四步</span><ol>
+<li><b>看两个报价的基准货币</b>：一个以美元为基准、一个以美元为计价 → <b>同边相乘</b>；两个都以美元为基准（或都为计价）→ <b>交叉相除</b>。</li>
+<li><b>算两边</b>：同边相乘 → 买=买×买、卖=卖×卖；交叉相除 → 买=A买÷B卖、卖=A卖÷B买。</li>
+<li><b>自检</b>：结果的买入价必须小于卖出价。</li>
+<li><b>折成金额</b>：用「银行买入你手里那种货币」的那一侧价。</li></ol>
+<div class="warnline">易失分：把「同边相乘」与「交叉相除」用反，算出的买入价大于卖出价——一票否决。</div></div></div></div></div><div class="card core" id="t-gold"><div class="chd"><span class="cno">3</span><b>铸币平价与黄金输送点</b><span class="bg core">必考</span><span class="cfreq">10 套里考了 2 次</span></div><div class="cyr"><span class="yr">2024.10</span><span class="yr">2025.04</span></div><div class="crule">口诀：平价 = 两国含金量之比；输出点 = 平价 + 运费；输入点 = 平价 − 运费</div><p class="cdesc">金币本位制下的送分题，四个数、一个公式，只要单位对齐就不会错。</p><div class="fmlbox"><div class="fi"><div class="fl">铸币平价</div><div class="fv"><span class="frac"><i>甲国 1 单位货币含金量</i><em>乙国 1 单位货币含金量</em></span> = 1 甲币 = ？乙币</div></div><div class="fi"><div class="fl">黄金输出点</div><div class="fv">铸币平价 + 黄金运输成本（汇率的<b>上限</b>）</div></div><div class="fi"><div class="fl">黄金输入点</div><div class="fv">铸币平价 − 黄金运输成本（汇率的<b>下限</b>）</div></div><div class="fi"><div class="fl">记忆</div><div class="fv">输出／输入点之间的区间就是金本位下汇率的波动界限</div></div></div><div class="two"><div class="pt"><b>阅卷采分点</b><ul><li>铸币平价 — 2 分</li><li>黄金输出点 — 1 分</li><li>黄金输入点 — 1 分</li></ul></div><div class="wn"><b>易错点</b><ul><li>运费只有一份，别乘 2；被除数选「题目要问的 1 单位货币」的含金量。</li><li>113.0016 ÷ 23.22 别算成 4.866（要保留 4 位小数才等于 4.8666）。</li></ul></div></div><div class="foldwrap"><button class="fold" data-target="ex3">📝 真题例题与解答</button><div class="fbox" id="ex3"><div class="exq"><span class="exsrc">2025.04 真题</span>假定在金币本位制度下，英国规定 1 英镑金币的含金量为 113.0016 格令，美国规定 1 美元金币的含金量为 23.22 格令。另外，英、美两国之间的黄金运输成本为 0.02 美元。请计算：英镑与美元之间的铸币平价是多少？黄金输出点与黄金输入点各是多少？</div><div class="exa"><b>解答</b><ol><li>铸币平价 = 113.0016 ÷ 23.22 = <b>4.8666</b>，即 1 英镑 = 4.8666 美元</li><li>黄金输出点 = 铸币平价 + 运输成本 = 4.8666 + 0.02 = <b>4.8866</b>（1 英镑 = 4.8866 美元）</li><li>黄金输入点 = 铸币平价 − 运输成本 = 4.8666 − 0.02 = <b>4.8466</b>（1 英镑 = 4.8466 美元）</li></ol></div></div></div><div class="foldwrap"><button class="fold" data-target="c3">🧮 打开「铸币平价与黄金输送点」</button><div class="fbox" id="c3"><div class="calcbox" data-calc="gold"></div></div></div><div class="foldwrap"><button class="fold" data-target="tpl3">🧭 标准答题模板</button><div class="fbox" id="tpl3"><div class="tpl"><span class="tt">答题三步</span><ol>
+<li><b>铸币平价</b> = 甲国 1 单位货币含金量 ÷ 乙国 1 单位货币含金量。</li>
+<li><b>黄金输出点</b> = 平价 + 运输成本；<b>黄金输入点</b> = 平价 − 运输成本。</li>
+<li><b>写全</b>：<code>1 英镑 = x 美元</code>；波动区间 <code>[输入点, 输出点]</code>。</li></ol>
+<div class="warnline">易失分：把运输成本乘 2（题目只给一份）；两国含金量单位未统一。</div></div></div></div></div><div class="card core" id="t-quote"><div class="chd"><span class="cno">4</span><b>进出口报价折算（买入价 / 卖出价）</b><span class="bg core">必考</span><span class="cfreq">10 套里考了 1 次</span></div><div class="cyr"><span class="yr">2022.04</span></div><div class="crule">口诀：本币折外币用「买入价」除；外币折本币成本用「卖出价」乘</div><p class="cdesc">考的是「该用哪一侧价」，不是算数。选错价整个小问 0 分。</p><div class="fmlbox"><div class="fi"><div class="fl">出口商：本币底价 → 外币报价</div><div class="fv">外币报价 = <span class="frac"><i>本币底价</i><em>外币的买入价</em></span></div></div><div class="fi"><div class="fl">进口商：外币货款 → 本币成本</div><div class="fv">本币成本 = 外币金额 × 外币的卖出价</div></div><div class="fi"><div class="fl">判断口诀</div><div class="fv">银行买入外币用买入价，卖出外币用卖出价；站在出口商角度是把外币卖给银行（收进外币），所以用<b>买入价</b></div></div></div><div class="two"><div class="pt"><b>阅卷采分点</b><ul><li>选对买入/卖出价并说明理由 — 2 分</li><li>金额算对 — 2 分</li></ul></div><div class="wn"><b>易错点</b><ul><li>汇率报价 a~b 中，a 是买入价（数值小），b 是卖出价（数值大）——但要先确认报价里哪一种是外币。</li><li>报出价保留 2 位小数即可，题目要求「报出价」时不需要再四舍五入到整数。</li></ul></div></div><div class="foldwrap"><button class="fold" data-target="ex4">📝 真题例题与解答</button><div class="fbox" id="ex4"><div class="exq"><span class="exsrc">2022.04 真题</span>某日苏黎世外汇市场：1 美元 = 0.9784-0.9796 瑞士法郎。假设瑞士出口商报出的商品底价是 20 万瑞士法郎，现外国进口商要求以美元向其报价。请问：(1) 瑞士出口商应该按照哪个汇率计算美元报价？(2) 其报出的美元价格是多少？</div><div class="exa"><b>解答</b><ol><li>(1) 应按照<b>美元买入价 1 美元 = 0.9784 瑞士法郎</b>报出（2 分）</li><li>(2) 美元报价 = 200 000 ÷ 0.9784 = <b>204 415.37 美元</b>（2 分）</li></ol></div></div></div><div class="foldwrap"><button class="fold" data-target="c4">🧮 打开「进出口报价折算」</button><div class="fbox" id="c4"><div class="calcbox" data-calc="quote"></div></div></div><div class="foldwrap"><button class="fold" data-target="tpl4">🧭 标准答题模板</button><div class="fbox" id="tpl4"><div class="tpl"><span class="tt">答题三步</span><ol>
+<li><b>定方向</b>：本币底价 → 外币报价（<b>除</b>外币买入价）；外币货款 → 本币成本（<b>乘</b>外币卖出价）。</li>
+<li><b>选对价</b>：报价给出口商用「银行买入外币」的价；付款给进口商用「银行卖出外币」的价。</li>
+<li><b>写结论带单位</b>（美元 / 人民币 / 瑞士法郎都要写清）。</li></ol>
+<div class="warnline">易失分：该乘时用了除、该用卖出价时用了买入价；结果不写货币单位。</div></div></div></div></div>
+    </section>
+
+    <section class="panel hide" id="pan-prep">
+      <h3 class="mh3">二、应备十四类<em>大纲与章节练习要求掌握，卷面随时可能补位</em></h3>
+      <div class="card " id="t-prem"><div class="chd"><span class="cno">5</span><b>升（贴）水年率</b><span class="bg prep">应备</span><span class="cfreq">章节练习常客，卷面不定期出</span></div><div class="cyr"></div><div class="crule">口诀：基准货币用即期做分母，报价货币用远期做分母——分子顺序相反</div><p class="cdesc">把远期汇差换成「年率」，用来跟两国利差比大小。</p><div class="fmlbox"><div class="fi"><div class="fl">基准货币升（贴）水年率</div><div class="fv"><span class="frac"><i>远期汇率 − 即期汇率</i><em>即期汇率</em></span> × <span class="frac"><i>12</i><em>远期月数</em></span> × 100%</div></div><div class="fi"><div class="fl">报价货币升（贴）水年率</div><div class="fv"><span class="frac"><i>即期汇率 − 远期汇率</i><em>远期汇率</em></span> × <span class="frac"><i>12</i><em>远期月数</em></span> × 100%</div></div><div class="fi"><div class="fl">为什么分子反</div><div class="fv">基准货币升水 ⇔ 报价货币贴水，同一个现象的两种说法</div></div></div><div class="two"><div class="pt"><b>阅卷采分点</b><ul><li>写对公式 — 2 分</li><li>代入算对 — 1 分</li><li>判升水还是贴水 — 1 分</li></ul></div><div class="wn"><b>易错点</b><ul><li>分母不一样！基准货币除即期，报价货币除远期，混了就全错。</li></ul></div></div><div class="foldwrap"><button class="fold" data-target="ex5">📝 真题例题与解答</button><div class="fbox" id="ex5"><div class="exq"><span class="exsrc">课本例题 &amp; 章节练习</span>纽约市场年利率 8%，伦敦市场年利率 6%，即期汇率 GBP1=USD1.6025-1.6035，3 个月汇水 30-50 点。求 3 个月远期汇率，并算英镑的升水年率。</div><div class="exa"><b>解答</b><ol><li>汇水 30~50 前小后大 → 加：GBP1 = USD1.6055 ~ 1.6085</li><li>用中间汇率：即期 1.6030，远期 1.6070</li><li>英镑（基准货币）升水年率 = (1.6070 − 1.6030) ÷ 1.6030 × 12/3 × 100% = <b>0.998%</b></li><li>结论：英镑升水，升水年率约 1%，与英美利差 2% 之间存在套利空间（利差 &gt; 汇差）。</li></ol></div></div></div><div class="foldwrap"><button class="fold" data-target="c5">🧮 打开「升（贴）水年率」</button><div class="fbox" id="c5"><div class="calcbox" data-calc="prem"></div></div></div><div class="foldwrap"><button class="fold" data-target="tpl5">🧭 标准答题模板</button><div class="fbox" id="tpl5"><div class="tpl"><span class="tt">答题三步</span><ol>
+<li><b>先判用哪种货币</b>：基准货币除<b>即期</b>；报价货币除<b>远期</b>。</li>
+<li><b>套公式</b>：<code>(远期 − 即期)/即期 × 12/月数 × 100%</code>（基准货币口径）。</li>
+<li><b>判升 / 贴水并下结论</b>：与两国利差比较，利差 &gt; 汇差才有套利空间。</li></ol>
+<div class="warnline">易失分：分母用错（基准货币除即期、报价货币除远期，混了就全错）。</div></div></div></div></div><div class="card " id="t-irp"><div class="chd"><span class="cno">6</span><b>利率平价：用两国利差算远期汇率</b><span class="bg prep">应备</span><span class="cfreq">教材核心公式，卷面可作计算题第 2 小问</span></div><div class="cyr"></div><div class="crule">口诀：高利率货币远期贴水，低利率货币远期升水</div><p class="cdesc" style="background:var(--warnbg);border-left:3px solid var(--warn);border-radius:0 8px 8px 0;padding:8px 12px">⚠️ <b>真要防计算题，防的是这里</b>：2019.04 与 2019.10 两套真题的计算题都出自本节（只给两国利率 → 算远期汇率并判升贴水）。截图里 <code>F* = S(1+rh·n)/(1+rf·n)</code> 那类临界远期汇率公式，卷面上只作选择题/概念考，不单独成计算大题。</p><p class="cdesc">不给汇水点数、只给两国利率时，用这个公式算远期。</p><div class="fmlbox"><div class="fi"><div class="fl">升（贴）水额</div><div class="fv">即期汇率 × 两国利率差 × <span class="frac"><i>月数</i><em>12</em></span>　（或 × <span class="frac"><i>天数</i><em>360</em></span>）</div></div><div class="fi"><div class="fl">远期汇率</div><div class="fv">即期汇率 + 升（贴）水额（算出来是负值就是贴水）</div></div><div class="fi"><div class="fl">口径提醒</div><div class="fv">「两国利率差」＝ 报价货币利率 − 基准货币利率；报价货币利率高则升水额为负</div></div></div><div class="two"><div class="pt"><b>阅卷采分点</b><ul><li>写出利率平价关系式 — 2 分</li><li>代入求出远期汇率 — 2 分</li></ul></div><div class="wn"><b>易错点</b><ul><li>年率要按 月数/12 折算成期间利率，别直接用年利率。</li><li>结论一定要写一句「高利率货币远期贴水」，阅卷是看这句话给分的。</li></ul></div></div><div class="foldwrap"><button class="fold" data-target="ex6">📝 真题例题与解答</button><div class="fbox" id="ex6"><div class="exq"><span class="exsrc">教材例题（利率平价口径）</span>即期汇率 USD/CNY = 6.5000，美国年利率 2%，中国年利率 5%，求 6 个月期的远期汇率。</div><div class="exa"><b>解答</b><ol><li>报价货币（人民币）利率 5% 高于基准货币（美元）利率 2% → 人民币远期<b>贴水</b>。</li><li>升（贴）水额 = 6.5000 × (5% − 2%) × 6/12 = 6.5000 × 1.5% = <b>0.0975</b></li><li>远期汇率 = 6.5000 + 0.0975 = <b>6.5975</b></li><li>验算：人民币利率高、远期数值变大，即人民币贴水、美元升水 ✓</li></ol></div></div></div><div class="foldwrap"><button class="fold" data-target="c6">🧮 打开「利率平价：算远期汇率」</button><div class="fbox" id="c6"><div class="calcbox" data-calc="irp"></div></div></div><div class="foldwrap"><button class="fold" data-target="tpl6">🧭 标准答题模板</button><div class="fbox" id="tpl6"><div class="tpl"><span class="tt">答题三步</span><ol>
+<li><b>套公式</b>：升贴水额 = 即期汇率 × 两国利差 × 月数/12；远期汇率 = 即期汇率 ± 升贴水额。</li>
+<li><b>判方向</b>：高利率货币远期贴水，低利率货币远期升水。</li>
+<li><b>写清计价方式</b>：题目问「××货币的远期汇率」时，若求的是斜线右边那种货币，要取倒数再加减。</li></ol>
+<div class="warnline">易失分：升贴水方向反了（高利率货币是贴水）；求「另一种货币」的远期汇率时忘记取倒数。</div></div></div></div></div><div class="card " id="t-arb2"><div class="chd"><span class="cno">7</span><b>直接套汇（两点套汇）</b><span class="bg prep">应备</span><span class="cfreq">⚠️ 教辅标注 ★★★ 高频 · 题型白名单含「计算题」</span></div><div class="cyr"></div><div class="crule">口诀：同一时点两地利差：在低处买、高处卖</div><p class="cdesc">两个市场报同一种货币对，价比一下就出结论。</p><div class="fmlbox"><div class="fi"><div class="fl">机会判断</div><div class="fv">市场 A 的买入价 < 市场 B 的卖出价 → 有套汇机会（反之亦然，看方向）</div></div><div class="fi"><div class="fl">获利</div><div class="fv">金额 × （高价市场卖出价 ÷ 低价市场买入价 − 1）</div></div><div class="fi"><div class="fl">路线说法</div><div class="fv">「在纽约买入、在东京卖出」——答题要写清买在哪、卖在哪</div></div></div><div class="two"><div class="pt"><b>阅卷采分点</b><ul><li>判断有无机会并说明依据 — 2 分</li><li>写清套汇路线 — 1 分</li><li>算出获利 — 1 分</li></ul></div><div class="wn"><b>易错点</b><ul><li>方向写反等于没分：「低买高卖」要具体到市场名字和买卖方向。</li></ul></div></div><div class="foldwrap"><button class="fold" data-target="ex7">📝 真题例题与解答</button><div class="fbox" id="ex7"><div class="exq"><span class="exsrc">章节练习典型题</span>纽约市场 USD1 = JPY114.20/40，东京市场 USD1 = JPY114.65/85。某人以 1000 万日元进行套汇，收益是多少？</div><div class="exa"><b>解答</b><ol><li>东京的美元卖出价 114.85 高于纽约的美元买入价 114.40，美元在纽约便宜、东京贵 → 在纽约买美元、东京卖美元。</li><li>1000 ÷ 114.40 × 114.65 = 1002.185（万日元）</li><li>获利 = 1000 × (114.65 ÷ 114.40 − 1) = <b>约 2.19 万日元</b></li></ol></div></div></div><div class="foldwrap"><button class="fold" data-target="c7">🧮 打开「直接套汇（两点套汇）」</button><div class="fbox" id="c7"><div class="calcbox" data-calc="arb2"></div></div></div><div class="foldwrap"><button class="fold" data-target="tpl7">🧭 标准答题模板</button><div class="fbox" id="tpl7"><div class="tpl"><span class="tt">答题三步</span><ol>
+<li><b>比价</b>：比较 A 地卖出价与 B 地买入价（或反之），判断是否有价差。</li>
+<li><b>说方向</b>：在低价市场买入、在高价市场卖出。</li>
+<li><b>算获利</b>：获利 = 投入金额 × (卖出价 ÷ 买入价 − 1)。</li></ol>
+<div class="warnline">易失分：买入 / 卖出侧选错，获利算成负数；忽略交易成本直接判有套汇机会。</div></div></div></div></div><div class="card " id="t-arb3"><div class="chd"><span class="cno">8</span><b>三角套汇（间接套汇）</b><span class="bg prep">应备</span><span class="cfreq">⚠️ 教辅标注 ★★★ 高频 · 题型白名单含「计算题」</span></div><div class="cyr"></div><div class="crule">口诀：三地汇率顺路线连乘：≠1 就有机会；&gt;1 按该方向转，&lt;1 反向转</div><p class="cdesc">三个市场、三种货币转一圈，看兜里钱变多还是变少。</p><div class="fmlbox"><div class="fi"><div class="fl">判断</div><div class="fv">按某一方向把三地汇率（用中间价）连乘：连乘 ≠ 1 → 存在套汇机会</div></div><div class="fi"><div class="fl">方向</div><div class="fv">连乘 > 1 → 按这个方向转一圈获利；连乘 < 1 → 反方向转（相当于 1/连乘 > 1）</div></div><div class="fi"><div class="fl">获利</div><div class="fv">金额 × （连乘 − 1）　（反方向则乘 1/连乘）</div></div><div class="fi"><div class="fl">答题三步</div><div class="fv">① 连乘判断 → ② 写清路线（如「伦敦—法兰克福—纽约」）→ ③ 算获利</div></div></div><div class="two"><div class="pt"><b>阅卷采分点</b><ul><li>连乘判断 — 2 分</li><li>套汇路线 — 1 分</li><li>获利计算 — 1 分</li></ul></div><div class="wn"><b>易错点</b><ul><li>三地汇率必须取<b>中间价</b>（买入卖出平均值）再连乘，直接取单一报价会判错方向。</li><li>实际问题算获利时要用<b>买卖价</b>（买进用卖出价、卖出用买入价），和判断时用的中间价不同。</li></ul></div></div><div class="foldwrap"><button class="fold" data-target="ex8">📝 真题例题与解答</button><div class="fbox" id="ex8"><div class="exq"><span class="exsrc">章节练习典型题</span>纽约市场 USD1 = CHF1.5349/89，伦敦市场 GBP1 = USD1.6340/70，苏黎世市场 GBP1 = CHF2.5028/48。某瑞士商人有 100 万瑞士法郎，进行套汇可获利多少？</div><div class="exa"><b>解答</b><ol><li>① 取中间价连乘判断方向（以「→ 在苏黎世把 CHF 换成 GBP → 伦敦 GBP 换 USD → 纽约 USD 换 CHF」为例）：</li><li>　(1/2.5048) × 1.6340 × 1.5349 = 1.00129 &gt; 1 → <b>存在套汇机会</b></li><li>② 路线：<b>苏黎世 → 伦敦 → 纽约</b></li><li>③ 获利 = 100 × (1.00129 − 1) = <b>约 0.129 万瑞士法郎</b></li></ol></div></div></div><div class="foldwrap"><button class="fold" data-target="c8">🧮 打开「三角套汇（间接套汇）」</button><div class="fbox" id="c8"><div class="calcbox" data-calc="arb3"></div></div></div><div class="foldwrap"><button class="fold" data-target="tpl8">🧭 标准答题模板</button><div class="fbox" id="tpl8"><div class="tpl"><span class="tt">答题三步</span><ol>
+<li><b>统一成中间价连乘</b>：三地汇率按「1 单位 A = ? B」的形式连乘。</li>
+<li><b>判方向</b>：连乘 &gt; 1 按所填顺序转一圈；&lt; 1 按相反顺序；= 1 无机会。</li>
+<li><b>算获利</b>：判断用中间价，实际算获利必须用买卖价（买用卖出价、卖用买入价）。</li></ol>
+<div class="warnline">易失分：用中间价直接当获利金额；方向判断反了。</div></div></div></div></div><div class="card " id="t-intr"><div class="chd"><span class="cno">9</span><b>套利交易（抵补 / 不抵补）</b><span class="bg prep">应备</span><span class="cfreq">教辅口径：多选 · 名词解释 · 简答 · 论述（未列计算题）</span></div><div class="cyr"></div><div class="crule">口诀：先比「利差」和「汇差」：利差 &gt; 汇差，资金才从低利率国流向高利率国</div><p class="cdesc">把资金从低利率国调到高利率国赚利差，同时用远期锁掉汇率风险就是「抵补套利」。</p><p class="cdesc" style="margin-top:-4px"><b>口径注</b>：2024 版教材／教辅写「<b>抵补套利</b> / <b>不抵补套利</b>」（利率平价处称「无抛补利率平价」），与「抛补 / 非抛补」同义——<b>答题用「抵补」更贴教材原话</b>。</p><div class="fmlbox"><div class="fi"><div class="fl">抵补套利收益</div><div class="fv">A × 即期买入价 × (1 + 外币利率 × <span class="frac"><i>月数</i><em>12</em></span>) ÷ 远期卖出价　−　A × (1 + 本币利率 × <span class="frac"><i>月数</i><em>12</em></span>)</div></div><div class="fi"><div class="fl">是否划算</div><div class="fv">两国利差 > 远期汇差（掉的价）→ 值得做；否则不做</div></div><div class="fi"><div class="fl">不抵补套利</div><div class="fv">把上面公式里的「远期卖出价」换成「到期日的即期卖出价」，其余不变——风险全押在汇率预测上</div></div></div><div class="two"><div class="pt"><b>阅卷采分点</b><ul><li>判断资金流向并说明理由 — 2 分</li><li>抵补套利收益 — 2 分</li></ul></div><div class="wn"><b>易错点</b><ul><li>一定要把「比国内存款多赚的部分」算出来（作差），只报总投资收益会丢分。</li><li>方向：资金调往高利率国，但要减去远期换回来的损失。</li></ul></div></div><div class="arch" style="margin-top:12px">🔎 <b>会不会出计算题？——按教辅口径，基本不会</b><br>2024 版教辅给每一节都标了「容易出什么题」的题型白名单：<b>「四、套利交易」</b>写的是「一般容易出<b>多项选择题、名词解释题、简答题、论述题</b>」——<b>没有计算题</b>；而紧挨着的<b>「三、套汇交易」</b>写的是「…名词解释题、<b>计算题</b>、简答题…」。同一本书、同一能力层次（都是【识记、简单应用】）、同是 ★★★，却唯独套汇写了「计算题」——这是出题人给的题型白名单。再加上卷面只有 <b>1 道计算题、4 分</b>，而套利算收益要串 5~6 步、买卖价口径易起争议，出题人没理由用它。<br><b>结论</b>：套利按「名词解释＋选择题辨析＋简答/论述」准备；真要出计算，落点几乎一定在<b>套汇（第 7、8 类）</b>，或与<b>利率平价算远期汇率（第 6 类，2019.04 / 2019.10 已出过两次真题）</b>合并——不是下面这道章节练习的形状。</div><div class="foldwrap"><button class="fold" data-target="ex9">📝 真题例题与解答</button><div class="fbox" id="ex9"><div class="exq"><span class="exsrc">章节练习典型题</span>纽约市场年利率 8%，伦敦市场年利率 6%，即期汇率 GBP1=USD1.6025-1.6035，3 个月汇水 30-50 点。某投资者拥有 10 万英镑，应投在哪个市场有利？说明投资过程与获利情况（抵补套利）。</div><div class="exa"><b>解答</b><ol><li>3 个月远期汇率 = GBP1 = USD1.6055 ~ 1.6085（汇水 30~50，前小后大加法）</li><li>利差 2% 折 3 个月 = 0.5%；英镑 3 个月升水年率约 1%（汇差约 0.25%）→ <b>利差 &gt; 汇差</b>，资金应从伦敦调往纽约。</li><li>投资过程：伦敦市场按 1.6025 把 10 万英镑换成 160 250 美元 → 在纽约存 3 个月（8%×3/12）→ 得 163 455 美元 → 按 3 个月远期卖出价 1.6085 换回英镑 → 101 619.52 英镑</li><li>与留在伦敦（10 万 × 1.015 = 101 500 英镑）相比，多获利 = <b>119.52 英镑</b></li></ol></div></div></div><div class="foldwrap"><button class="fold" data-target="c9">🧮 打开「套利收益（抵补 / 不抵补）」</button><div class="fbox" id="c9"><div class="calcbox" data-calc="intr"></div></div></div><div class="foldwrap"><button class="fold" data-target="tpl9">🧭 标准答题模板</button><div class="fbox" id="tpl9"><div class="tpl"><span class="tt">答题四步</span><ol>
+<li><b>本币 → 高利率国</b>：按即期汇率换成外币。</li>
+<li><b>存满期限</b>：× (1 + 外币利率 × 月数/12)。</li>
+<li><b>换回本币</b>：抵补套利用<b>远期卖出价</b>；不抵补用<b>到期日即期卖出价</b>。</li>
+<li><b>与留本国比较</b>：留在本国 = × (1 + 本币利率 × 月数/12)，两者作差得套利收益。</li></ol>
+<div class="warnline">易失分：抵补与不抵补混用；忘了算「留本国」这一侧，无法比较。</div></div></div></div></div><div class="card " id="t-swap"><div class="chd"><span class="cno">10</span><b>掉期交易与掉期成本</b><span class="bg prep">应备</span><span class="cfreq">概念题为主，偶尔带计算</span></div><div class="cyr"></div><div class="crule">口诀：掉期 = 同时买进卖出、金额相同、期限不同；考的是「掉期成本年率（教材以贴水率表示）」和「掉期收益」</div><p class="cdesc">手里外汇数额没变，变的只是持有期限。</p><div class="fmlbox"><div class="fi"><div class="fl">掉期成本年率</div><div class="fv"><span class="frac"><i>远期汇率 − 即期汇率</i><em>即期汇率</em></span> × <span class="frac"><i>12</i><em>月数</em></span> × 100%</div></div><div class="fi"><div class="fl">掉期收益</div><div class="fv">投资额 × （两国利差 − 掉期成本年率）</div></div><div class="fi"><div class="fl">三种形式</div><div class="fv">即期对即期 / 即期对远期 / 远期对远期</div></div></div><div class="two"><div class="pt"><b>阅卷采分点</b><ul><li>写清掉期操作方向 — 2 分</li><li>掉期成本年率 — 2 分</li></ul></div><div class="wn"><b>易错点</b><ul><li>掉期改变的是货币的<b>期限结构</b>，不是持有量——这句话是概念题的标准答案。</li></ul></div></div><div class="foldwrap"><button class="fold" data-target="ex10">📝 真题例题与解答</button><div class="fbox" id="ex10"><div class="exq"><span class="exsrc">章节练习典型题</span>英国某银行欲以 1000 万英镑投资美国 3 个月期国库券，收益率 7%，即期汇率 GBP1=USD1.5360，3 个月后的期汇价为 GBP1=USD1.5410，求掉期交易的收益。</div><div class="exa"><b>解答</b><ol><li>掉期成本 = (1.5410 − 1.5360) ÷ 1.5360 × 12/3 = 1.302%（年率）</li><li>掉期收益 = 1000 × (7% − 1.302%) × 3/12 = <b>约 14.24 万英镑</b></li></ol></div></div></div><div class="foldwrap"><button class="fold" data-target="c10">🧮 打开「掉期成本与掉期收益」</button><div class="fbox" id="c10"><div class="calcbox" data-calc="swap"></div></div></div><div class="foldwrap"><button class="fold" data-target="tpl10">🧭 标准答题模板</button><div class="fbox" id="tpl10"><div class="tpl"><span class="tt">答题三步</span><ol>
+<li><b>掉期成本年率</b> = (远期 − 即期)/即期 × 12/月数 × 100%。</li>
+<li><b>净收益率</b> = 投资收益率 − 掉期成本年率。</li>
+<li><b>下结论</b>：净收益 &gt; 0 值得做，&lt; 0 不值得。</li></ol>
+<div class="warnline">易失分：成本年率方向反了（远期高于即期才是成本为正）；未换算成年率直接与投资收益率比较。</div></div></div></div></div><div class="card " id="t-hedge"><div class="chd"><span class="cno">11</span><b>远期外汇交易保值（进出口商损益对比）</b><span class="bg prep">应备</span><span class="cfreq">章节练习大题</span></div><div class="cyr"></div><div class="crule">口诀：先算「不保值亏多少」，再算「保值后锁定多少」，作差就是保值收益</div><p class="cdesc">标准两问：不做保值损失多少？如何用远期保值？</p><div class="fmlbox"><div class="fi"><div class="fl">不保值损益</div><div class="fv">金额 × （到期日即期汇率 − 签约日即期汇率）　（出口商收汇取<b>买入价</b>）</div></div><div class="fi"><div class="fl">保值操作</div><div class="fv">与银行签订远期合约，按签约时的远期汇率锁定交割</div></div><div class="fi"><div class="fl">保值收益</div><div class="fv">不保值损益 与 保值后损益 之差</div></div></div><div class="two"><div class="pt"><b>阅卷采分点</b><ul><li>不保值损失 — 2 分</li><li>保值操作方向 — 1 分</li><li>保值后收益/对比 — 1 分</li></ul></div><div class="wn"><b>易错点</b><ul><li>出口商收进外币是「银行买入外币」，用买入价；进口商付外币是「银行卖出外币」，用卖出价。</li></ul></div></div><div class="foldwrap"><button class="fold" data-target="ex11">📝 真题例题与解答</button><div class="fbox" id="ex11"><div class="exq"><span class="exsrc">章节练习典型题</span>某外汇市场 2005 年 10 月 5 日即期汇率 GBP1=USD1.6770/80，2 个月远期差价 30/20，2 个月后即期汇率 GBP1=USD1.6600/10。问：(1) 不采取保值措施，2 个月后美国出口商收入 10 万英镑将损失多少美元？(2) 应如何利用远期外汇交易保值？</div><div class="exa"><b>解答</b><ol><li>(1) 不保值：签约日银行买入英镑 1.6770，2 个月后买入价 1.6600</li><li>　损失 = 10 × (1.6770 − 1.6600) = <b>0.17 万美元 = 1700 美元</b></li><li>(2) 签订 2 个月远期合约卖出 10 万英镑。远期差价 30/20 前大后小 → 减法：1.6770 − 0.0030 = 1.6740</li><li>　按 1.6740 交割可得 16.74 万美元，比不保值多收 16.74 − 16.60 = <b>0.14 万美元</b></li></ol></div></div></div><div class="foldwrap"><button class="fold" data-target="c11">🧮 打开「远期外汇交易保值」计算器</button><div class="fbox" id="c11"><div class="calcbox" data-calc="hedge"></div></div></div><div class="foldwrap"><button class="fold" data-target="tpl11">🧭 标准答题模板</button><div class="fbox" id="tpl11"><div class="tpl"><span class="tt">答题三步</span><ol>
+<li><b>不保值</b>：金额 × (到期日即期汇率 − 签约日即期汇率)，出口商收汇取<b>买入价</b>。</li>
+<li><b>保值操作</b>：与银行签远期合约，按签约时的<b>远期汇率</b>锁定交割。写出「卖出 / 买入」方向。</li>
+<li><b>作差</b>：保值收益 = 保值后损益 − 不保值损益。</li></ol>
+<div class="warnline">易失分：出口商误用卖出价（收进外币是银行买入外币，用买入价）；漏写远期合约方向。</div></div></div></div></div><div class="card " id="t-opt"><div class="chd"><span class="cno">12</span><b>外汇期权盈亏（损益平衡点）</b><span class="bg prep">应备</span><span class="cfreq">章节练习 / 早年真题</span></div><div class="cyr"></div><div class="crule">口诀：买看涨：平衡点 = 协定价格 + 期权费；买看跌：平衡点 = 协定价格 − 期权费</div><p class="cdesc">核心动作只有一步：把「到期即期汇率」和「平衡点」比大小，决定行使还是不行使。</p><div class="fmlbox"><div class="fi"><div class="fl">买入看涨期权 Call</div><div class="fv">损益平衡点 = 协定价格 + 期权费；到期即期汇率 > 平衡点 → 行使</div></div><div class="fi"><div class="fl">买入看跌期权 Put</div><div class="fv">损益平衡点 = 协定价格 − 期权费；到期即期汇率 < 平衡点 → 行使</div></div><div class="fi"><div class="fl">最大损失</div><div class="fv">期权费（买方损失有限、收益无限；卖方相反）</div></div></div><div class="two"><div class="pt"><b>阅卷采分点</b><ul><li>算出损益平衡点 — 2 分</li><li>判断是否行使并说明理由 — 1 分</li><li>比较两种方案 — 1 分</li></ul></div><div class="wn"><b>易错点</b><ul><li>期权买方损失有限、收益无限——这句话常作为论述题的采分点。</li><li>「是否行使」判断完，还要把「行使」与「不行使（损失期权费）」两种结果都算出来做比较，题目问的就是比较。</li></ul></div></div><div class="foldwrap"><button class="fold" data-target="ex12">📝 真题例题与解答</button><div class="fbox" id="ex12"><div class="exq"><span class="exsrc">章节练习典型题（结构示意）</span>某公司买入美元看涨期权，金额 100 万美元，协定价格 1 美元 = 1.8400 德国马克，期权费 0.02 马克/美元。到期时即期汇率为 1 美元 = 1.8388/1.8400。问：该公司是否行使期权？</div><div class="exa"><b>解答</b><ol><li>损益平衡点 = 协定价格 + 期权费 = 1.8400 + 0.02 = <b>1.8600</b></li><li>到期即期汇率 1.8400 &lt; 平衡点 1.8600 → <b>不行使更划算</b></li><li>不行使：损失期权费 = 100 万 × 0.02 = <b>2 万马克</b></li><li>行使：以 1.8400 买入 100 万美元再按即期 1.8400 卖出 + 已付期权费 2 万马克，共亏 <b>2 万马克</b></li><li>两者相等，临界状态；只要汇率再跌，不行使就更优。</li></ol></div></div></div><div class="foldwrap"><button class="fold" data-target="c12">🧮 打开「外汇期权盈亏」计算器</button><div class="fbox" id="c12"><div class="calcbox" data-calc="opt"></div></div></div><div class="foldwrap"><button class="fold" data-target="tpl12">🧭 标准答题模板</button><div class="fbox" id="tpl12"><div class="tpl"><span class="tt">答题三步</span><ol>
+<li><b>算损益平衡点</b>：买看涨 = 协定价格 + 期权费；买看跌 = 协定价格 − 期权费。</li>
+<li><b>比大小判是否行使</b>：到期即期汇率高于（低于）平衡点 → 行使看涨（看跌）。</li>
+<li><b>两种结果都算</b>：行使的盈亏与不行使（损失全部期权费）都写出来做比较。</li></ol>
+<div class="warnline">易失分：只判断不给理由；只算一种结果，题目问的就是比较。</div></div></div></div></div><div class="card " id="t-fut"><div class="chd"><span class="cno">13</span><b>外汇期货套期保值（两地盈亏相抵）</b><span class="bg prep">应备</span><span class="cfreq">章节练习</span></div><div class="cyr"></div><div class="crule">口诀：现货市场盈亏 + 期货市场盈亏 = 净盈亏（方向相反才能对冲）</div><p class="cdesc">出口商怕外币贬值 → 卖出期货；进口商怕外币升值 → 买入期货。</p><div class="fmlbox"><div class="fi"><div class="fl">卖出套期保值（出口商）</div><div class="fv">现货：外币贬值亏损；期货：先卖后买平仓获利 → 相抵</div></div><div class="fi"><div class="fl">买入套期保值（进口商）</div><div class="fv">现货：外币升值多付本币；期货：先买后卖平仓获利 → 相抵</div></div><div class="fi"><div class="fl">份数</div><div class="fv">合约份数 = <span class="frac"><i>被保值外币总额</i><em>每份合约交易单位</em></span>（不足 1 份一般向上取整）</div></div></div><div class="two"><div class="pt"><b>阅卷采分点</b><ul><li>两地盈亏各算对 — 各 2 分</li><li>净盈亏与结论 — 1 分</li></ul></div><div class="wn"><b>易错点</b><ul><li>期货合约是标准化的，金额常常对不齐，剩余部分仍裸露在风险中——题目问「盈亏」时按题目给的份数算即可。</li></ul></div></div><div class="foldwrap"><button class="fold" data-target="ex13">📝 真题例题与解答</button><div class="fbox" id="ex13"><div class="exq"><span class="exsrc">章节练习典型题</span>美国 A 公司出口总价值 100 万瑞士法郎的货物，3 个月后收回货款。3 月 1 日即期汇率 USD1=CHF1.2740/50，A 公司在外汇期货市场卖出 8 份 6 月期瑞士法郎合约，每份 125 000 瑞士法郎，期货价格 CHF1=USD0.7830。6 月 1 日即期汇率 USD1=CHF1.2860/70，瑞士法郎 6 月期期货价格 CHF1=USD0.7800。问现货与期货市场盈亏。</div><div class="exa"><b>解答</b><ol><li>现货市场：3 月 1 日 CHF1 ≈ USD(1/1.2740)=0.7850 → 6 月 1 日 CHF1 ≈ USD(1/1.2860)=0.7776</li><li>　现货亏损 = 100 万 × (0.7776 − 0.7850) = <b>约 −7400 美元</b></li><li>期货市场：8 份 × 125 000 = 100 万 CHF；卖出价 0.7830，平仓买入价 0.7800</li><li>　期货获利 = 100 万 × (0.7830 − 0.7800) = <b>+3000 美元</b></li><li>净盈亏 = −7400 + 3000 = <b>约 −4400 美元</b>，套期保值对冲掉了大部分损失（不是全部，因基差变动）。</li></ol></div></div></div><div class="foldwrap"><button class="fold" data-target="c13">🧮 打开「外汇期货套期保值」计算器</button><div class="fbox" id="c13"><div class="calcbox" data-calc="fut"></div></div></div><div class="foldwrap"><button class="fold" data-target="tpl13">🧭 标准答题模板</button><div class="fbox" id="tpl13"><div class="tpl"><span class="tt">答题三步</span><ol>
+<li><b>现货市场</b>：金额 × (到期即期汇率 − 签约即期汇率)，方向按买卖判断。</li>
+<li><b>期货市场</b>：先卖后买（出口商）或先买后卖（进口商），盈亏 = 金额 × (开仓价 − 平仓价)。</li>
+<li><b>净盈亏</b> = 现货盈亏 + 期货盈亏，并说明「对冲掉大部分风险，非全部（基差变动）」。</li></ol>
+<div class="warnline">易失分：出口商与进口商的期货方向写反；只算一地盈亏。</div></div></div></div></div><div class="card " id="t-mem"><div class="chd"><span class="cno">14</span><b>数字型考点：择期报价原则 + 外债安全线</b><span class="bg prep">应备</span><span class="cfreq">单选常客（2024.10 起第三大题已由「判断改错题」改为「名词解释题」）</span></div><div class="cyr"></div><div class="crule">口诀：择期按「对银行最有利」报价；外债六项指标记安全线（2024 版教材口径）</div><p class="cdesc">不用复杂计算，但必须记住方向和数字，属于「会就能拿分、不会就白丢」的题。</p><div class="fmlbox"><div class="fi"><div class="fl">择期·银行买入基准货币</div><div class="fv">基准货币升水 → 按选择期<b>第一天</b>报价；贴水 → 按<b>最后一天</b>报价</div></div><div class="fi"><div class="fl">择期·银行卖出基准货币</div><div class="fv">基准货币升水 → 按选择期<b>最后一天</b>报价；贴水 → 按<b>第一天</b>报价</div></div><div class="fi"><div class="fl">国际储备规模</div><div class="fv">储备额 <b>≥ 3 个月</b>的进口额（2024 版教材口径；旧版「3~4 个月 / 特里芬口径」新教材不用）</div></div><div class="fi"><div class="fl">外债六项指标（2024 版教材）</div><div class="fv">① <b>负债率</b>＝年末外债余额 ÷ 当年 <b>GDP</b>，安全线 <b>20%</b>　② <b>债务率</b>＝外债余额 ÷ 当年出口收入，警戒线 <b>100%</b>　③ <b>偿债率</b>＝当年还本付息 ÷ 当年出口收入，安全线 <b>20%</b>　④ <b>短期外债 ÷ 外汇储备</b> ＝ <b>100%</b>　⑤ <b>短期外债 ÷ 外债余额</b> &lt; <b>25%</b>　⑥ <b>国际储备 ≥ 3 个月</b>进口额</div></div></div><div class="two"><div class="pt"><b>阅卷采分点</b><ul><li>选择题选中即得分</li><li>名词解释按教材原话作答（旧「判断改错题」自 2024.10 起已取消）</li></ul></div><div class="wn"><b>易错点</b><ul><li>择期报价的四个组合（买入/卖出 × 升水/贴水）最好画个 2×2 表格背，混一次就永远记不住。</li><li>负债率分母是当年 <b>GDP</b>、安全线 <b>20%</b>（2024 版口径）；旧教材用 GNP、8%～10%——两套数字别串。</li></ul></div></div><div class="foldwrap"><button class="fold" data-target="ex14">📝 真题例题与解答</button><div class="fbox" id="ex14"><div class="exq"><span class="exsrc">2024.10 单选真题</span>在外债的衡量指标中，负债率一般要求小于（　）</div><div class="exa"><b>解答</b><ol><li>选项：A. 8%　B. 20%　C. 25%　D. 100%</li><li>正确答案：<b>B. 20%</b>——负债率＝年末外债余额÷当年 GDP，国际公认安全线 20%。</li></ol></div><div class="exq" style="margin-top:10px"><span class="exsrc">2026.04 单选真题</span>国际上公认的偿债率的安全线为（　）</div><div class="exa"><b>解答</b><ol><li>选项：A. 10%　B. 15%　C. 20%　D. 25%</li><li>正确答案：<b>C. 20%</b></li></ol></div></div></div><div class="foldwrap"><button class="fold" data-target="tpl14">🧭 标准答题模板</button><div class="fbox" id="tpl14"><div class="tpl"><span class="tt">背记三步</span><ol>
+<li><b>择期报价</b>画 2×2 表：买卖方向 × 升水 / 贴水，四格分别背。</li>
+<li><b>外债六项指标</b>：负债率 20%、债务率 100%、偿债率 20%、短期外债/外汇储备 100%、短期外债/外债余额 &lt; 25%、国际储备 ≥ 3 个月进口额。</li>
+<li><b>认准教材版本</b>：2024 版负债率用 GDP、安全线 20%（旧版 GNP、8%～10% 不用）。</li></ol>
+<div class="warnline">易失分：把旧版数字当新教材口径写；择期四格混用。</div></div></div></div></div><div class="card " id="t-port"><div class="chd"><span class="cno">15</span><b>国际投资组合的预期收益率（含汇率变动）</b><span class="bg prep">应备</span><span class="cfreq">教材章节练习 · 卷面可能补位</span></div><div class="cyr"></div><div class="crule">口诀：海外资产的收益率先「＋汇率变动率」，再按权重加权求和</div><p class="cdesc">考两个动作：汇率变动要不要先并进去、权重有没有归一化。两步都对才有分。</p><div class="fmlbox"><div class="fi"><div class="fl">组合预期收益率</div><div class="fv">R = w₁r₁ + w₂r₂ + … + wₙrₙ　（w 为各资产权重，Σw = 1）</div></div><div class="fi"><div class="fl">海外资产的本币收益率</div><div class="fv">r<sub>本币</sub> = r<sub>外币口径</sub> ＋ 汇率变动率　（外币对本币升值取正、贬值取负）</div></div><div class="fi"><div class="fl">代入示例</div><div class="fv">R = 50% × 8% ＋ 50% × (10% ＋ 2%) = 4% ＋ 6% = <b>10%</b></div></div></div><div class="two"><div class="pt"><b>阅卷采分点</b><ul><li>先把汇率变动并入海外资产收益率 — 2 分</li><li>权重归一化（Σw = 1）— 1 分</li><li>加权求和算对 — 1 分</li></ul></div><div class="wn"><b>易错点</b><ul><li>把 8% 与 10% 简单平均成 9%，漏掉汇率变动那一项——本题的考点就在这。</li><li>权重当整数用（写成 50 + 50），结果被放大 100 倍。</li></ul></div></div><div class="foldwrap"><button class="fold" data-target="ex15">📝 例题与解答</button><div class="fbox" id="ex15"><div class="exq"><span class="exsrc">教材章节练习</span>一个投资者将其投资组合分配为 50% 的国内股票和 50% 的国际股票。国内股票的预期回报率为 8%，国际股票的预期回报率为 10%，汇率变动导致国际股票的回报率增加了 2%。计算新的投资组合预期回报率。</div><div class="exa"><b>解答</b><ol><li>国际股票的本币收益率 = 10% ＋ 2% = <b>12%</b></li><li>组合预期收益率 = 50% × 8% ＋ 50% × 12% = 4% ＋ 6% = <b>10%</b></li><li>即新的投资组合预期收益率为 10%，比全部投国内股票（8%）高 2 个百分点。</li></ol></div></div></div><div class="foldwrap"><button class="fold" data-target="tpl15">🧭 标准答题模板</button><div class="fbox" id="tpl15"><div class="tpl"><span class="tt">答题三步</span><ol><li><b>并汇率</b>：海外资产的本币收益率 = 外币口径收益率 ＋ 汇率变动率。</li><li><b>加权求和</b>：R = Σ(权重 × 收益率)，权重加总必须 = 1。</li><li><b>作比较</b>：与全部投国内（或原组合）比，说明高出／低了多少个百分点。</li></ol><div class="warnline">易失分：漏掉汇率变动那一项；把百分比权重当整数相乘。</div></div></div></div></div><div class="card " id="t-cswap"><div class="chd"><span class="cno">16</span><b>货币互换：折算应付外币金额</b><span class="bg prep">应备</span><span class="cfreq">金融衍生工具章节 · 卷面可能补位</span></div><div class="cyr"></div><div class="crule">口诀：先按约定汇率折算本金，再按题目给的互换成本率调整</div><p class="cdesc">货币互换＝双方按约定汇率交换两种货币的本金、并在期间互相支付利息。考点就是把「应付的外币本息」折算出来。</p><div class="fmlbox"><div class="fi"><div class="fl">第一步 折本金</div><div class="fv">应付外币 = 需支付的金额 × 约定（互换）汇率</div></div><div class="fi"><div class="fl">第二步 调成本</div><div class="fv">应付外币 = 折出的金额 × (1 ＋ 互换成本率 × 期限)　（是贴水就改成减）</div></div><div class="fi"><div class="fl">与「掉期」不是一回事</div><div class="fv">掉期＝「即期 ＋ 反向远期」两笔外汇买卖，期限短；货币互换期限长（常 1 年以上）、含利息交换，答题别混用名词</div></div></div><div class="two"><div class="pt"><b>阅卷采分点</b><ul><li>按约定汇率折算本金 — 2 分</li><li>成本调整（题目给了利率就要用上）— 1 分</li><li>结论带货币单位 — 1 分</li></ul></div><div class="wn"><b>易错点</b><ul><li>把「1 美元 = 0.95 欧元」用反成 1 ÷ 0.95——先看清斜线左边是哪种货币。</li><li>题目给的「互换利率」当成两国利差去套利率平价——题目口径是什么就按什么算。</li></ul></div></div><div class="foldwrap"><button class="fold" data-target="ex16">📝 例题与解答</button><div class="fbox" id="ex16"><div class="exq"><span class="exsrc">教材章节练习</span>某公司需要以美元支付 100 万美元的债务，但手上只有欧元。当前汇率为 1 美元 = 0.95 欧元，公司决定进行货币互换，互换利率为 1.5%。计算公司需要支付多少欧元。</div><div class="exa"><b>解答</b><ol><li>按约定汇率折算本金：100 万美元 × 0.95 = <b>95 万欧元</b></li><li>按题目给的互换成本率调整：95 × (1 ＋ 1.5%) = <b>96.425 万欧元</b></li><li>即公司约需支付 <b>96.425 万欧元</b>。</li><li>口径提醒：教材考货币互换一般只到「按约定汇率交换本金」这一步（95 万欧元）；本题多给了 1.5% 的互换利率，按题目口径当成本加上去。若题干给的是两国利率，则按 (1＋外币利率) ÷ (1＋本币利率) 折算——看题目给什么。</li></ol></div></div></div><div class="foldwrap"><button class="fold" data-target="tpl16">🧭 标准答题模板</button><div class="fbox" id="tpl16"><div class="tpl"><span class="tt">答题三步</span><ol><li><b>写清互换方案</b>：谁换成什么、按什么汇率，交换金额是多少。</li><li><b>折算</b>：应付外币 = 金额 × 约定汇率 × (1 ± 互换成本率)。</li><li><b>下结论带单位</b>：写成「约需支付 96.425 万欧元」。</li></ol><div class="warnline">易失分：汇率用反；题目给了成本率却没用；结论不带货币单位。</div></div></div></div></div><div class="card " id="t-ppp"><div class="chd"><span class="cno">17</span><b>购买力平价（PPP）：判断汇率是否符合</b><span class="bg prep">应备</span><span class="cfreq">单选真题常客（理论题）＋ 计算判断</span></div><div class="cyr"></div><div class="crule">口诀：绝对购买力平价 S = 本国物价 ÷ 外国物价；算出的理论值 ≠ 市场汇率 → 不符合</div><p class="cdesc">一价定律的直接应用：同一种商品用同一种货币衡量的价格应当相等，否则就不符合购买力平价。</p><div class="fmlbox"><div class="fi"><div class="fl">绝对购买力平价</div><div class="fv">S = P<sub>本国</sub> ÷ P<sub>外国</sub>　（S 为直接标价法「1 外币 = ? 本币」；若报价方向相反就取倒数）</div></div><div class="fi"><div class="fl">判断口径</div><div class="fv">算出理论 S → 与市场上实际汇率比 → 两者不相等即「不符合购买力平价」</div></div><div class="fi"><div class="fl">必须记住的考点</div><div class="fv">系统阐述购买力平价理论的是 <b>卡塞尔</b>；<b>购买力平价理论</b>是<b>现代汇率理论的基础</b>；<b>汇兑心理说</b>后来演变为<b>心理预期说</b></div></div></div><div class="two"><div class="pt"><b>阅卷采分点</b><ul><li>写出购买力平价的算式并算出理论值 — 2 分</li><li>与市场汇率比较并下「是否符合」的结论 — 2 分</li></ul></div><div class="wn"><b>易错点</b><ul><li>把两个商品价格直接相除却忘了报价方向：题目给「1 美元 = 0.95 欧元」，比大小前要换算成同一口径。</li><li>只算数字不给结论——题目问的是「是否符合」，那一句话才是得分点。</li></ul></div></div><div class="foldwrap"><button class="fold" data-target="ex17">📝 例题与解答</button><div class="fbox" id="ex17"><div class="exq"><span class="exsrc">教材章节练习</span>如果一个汉堡在美国的价格是 5 美元，而在法国的价格是 4 欧元，当前汇率为 1 美元 = 0.95 欧元，请问是否符合购买力平价理论？</div><div class="exa"><b>解答</b><ol><li>绝对购买力平价：S = 5 ÷ 4 = <b>1.25</b>，即 1 美元 = 1.25 欧元。</li><li>市场实际汇率 1 美元 = 0.95 欧元（折成同一口径为 1 ÷ 0.95 ≈ <b>1.053</b> 欧元／美元）。</li><li>1.053 ≠ 1.25，两者不一致 → <b>不符合购买力平价理论</b>。</li></ol></div></div></div><div class="foldwrap"><button class="fold" data-target="tpl17">🧭 标准答题模板</button><div class="fbox" id="tpl17"><div class="tpl"><span class="tt">答题三步</span><ol><li><b>算理论值</b>：S = P<sub>本国</sub> ÷ P<sub>外国</sub>，写清是哪两种货币的比价。</li><li><b>统一口径</b>：把市场汇率换算成和理论值同一个报价方向再比。</li><li><b>下结论</b>：相等 → 符合；不相等 → 不符合，并写明差值。</li></ol><div class="warnline">易失分：报价方向搞反；只算数不下结论。</div></div></div></div></div><div class="card " id="t-bop"><div class="chd"><span class="cno">18</span><b>国际收支平衡表：差额计算</b><span class="bg prep">应备</span><span class="cfreq">名词解释 / 单选常客 ＋ 差额计算</span></div><div class="cyr"></div><div class="crule">口诀：总差额 = 经常账户差额 ＋ 资本和金融账户差额；储备资产是平衡项，增加记负</div><p class="cdesc">四项账户凑成一个恒等式，带正负号相加即可；考的是「储备资产算不算进总差额」。</p><div class="fmlbox"><div class="fi"><div class="fl">国际收支总差额（综合差额）</div><div class="fv">= 经常账户差额 ＋ 资本和金融账户差额<b>（不含储备资产）</b></div></div><div class="fi"><div class="fl">平衡恒等式</div><div class="fv">经常账户 ＋ 资本和金融账户 ＋ 储备资产变动 ＋ 净误差与遗漏 = 0</div></div><div class="fi"><div class="fl">储备资产记账方向</div><div class="fv"><b>增加记借方（负号）</b>、减少记贷方（正号）</div></div><div class="fi"><div class="fl">必背两个概念</div><div class="fv">为使平衡表平衡而<b>人为设立</b>的账户是<b>净误差与遗漏账户</b>（不是储备资产账户）；<b>调节性交易账户</b>又称事后项目／补偿项目，指央行或货币当局为维持国际收支平衡、汇率稳定而进行的交易</div></div></div><div class="two"><div class="pt"><b>阅卷采分点</b><ul><li>写出总差额的构成式 — 2 分</li><li>带正负号算对差额 — 1 分</li><li>说明储备资产方向 — 1 分</li></ul></div><div class="wn"><b>易错点</b><ul><li>把「储备资产增加」当成正数加进总差额——增加要记负，方向反了整个题就反了。</li><li>把「净误差与遗漏账户」与「储备资产账户」记混（真题判断改错考过）。</li></ul></div></div><div class="foldwrap"><button class="fold" data-target="ex18">📝 例题与解答</button><div class="fbox" id="ex18"><div class="exq"><span class="exsrc">教材章节练习</span>某国某年国际收支平衡表中，经常账户顺差 100 亿美元，资本和金融账户（不含储备资产）逆差 50 亿美元。求该国国际收支总差额；为轧平该表，储备资产应增加还是减少、变动多少？</div><div class="exa"><b>解答</b><ol><li>国际收支总差额 = 经常账户差额 ＋ 资本和金融账户差额 = (＋100) ＋ (−50) = <b>＋50 亿美元</b>，即顺差 50 亿美元。</li><li>顺差要由储备资产增加来吸收：储备资产<b>增加 50 亿美元</b>（记借方 −50）。</li><li>验算：(＋50) ＋ (−50) = 0，平衡表轧平 ✅</li><li>提醒：网上流传的练习版给的是「储备资产增加 20 亿美元」，与 50 亿顺差对不上，题干自相矛盾；本页按教材口径重写。</li></ol></div></div></div><div class="foldwrap"><button class="fold" data-target="tpl18">🧭 标准答题模板</button><div class="fbox" id="tpl18"><div class="tpl"><span class="tt">答题三步</span><ol><li><b>列式</b>：总差额 = 经常账户 ＋ 资本和金融账户（不含储备资产）。</li><li><b>带号相加</b>：顺差取正、逆差取负，算出净额。</li><li><b>收尾</b>：说明储备资产增加（记负）还是减少（记正），使全表归零。</li></ol><div class="warnline">易失分：储备资产方向记反；把储备资产并入总差额。</div></div></div></div></div>
+    </section>
+
+    <section class="panel hide" id="pan-drill">
+      <h3 class="mh3">三、真题演练<em>2019.04 — 2026.4 共 13 道计算题原题，先自己做再展开解答</em></h3><div class="cdesc" style="background:var(--accent2);border:1px solid #cddffa;border-radius:10px;padding:10px 14px"><b>新旧说明</b>：2019.04 — 2024.04 这 <b>9 套</b>属旧教材期；<b>2024.10 起</b>（2024.10 / 2025.04 / 2025.10 / 2026.04）为 2024 版新教材期。两类卷的计算题<b>题型完全一样</b>（远期汇水加减 / 套算汇率 / 铸币平价 / 进出口报价），旧卷可直接当练习用；<b>口径一律以 2024 版教材为准</b>。</div>
+      <div class="dq"><div class="dqh"><span class="dqn">1</span><span class="yr">2021.10</span><a class="jump" data-go="t-cross">对应题型 →</a></div><div class="dqq">假定某一年 10 月 12 日，纽约外汇市场报出 GBP1=USD1.7210~1.7270，USD1=JPY111.52~112.50。试计算英镑（GBP）对日元（JPY）的套算汇率。若某一出口商持有 10 万英镑，可兑换多少日元？</div><div class="foldwrap"><button class="fold" data-target="da1">显示解答</button><div class="fbox" id="da1"><div class="exa"><ol><li>一个以美元为基准、一个以美元为计价 → <b>同边相乘</b></li><li>1.7210 × 111.52 = <b>191.9259</b>；1.7270 × 112.50 = <b>194.2875</b>（2 分）</li><li>GBP1 = JPY191.9259 ~ 194.2875</li><li>出口商换日元用英镑买入价：100 000 × 191.9259 = <b>19 192 590 日元</b>（2 分）</li></ol><div class="why"><b>💡 为什么这么做</b><ul><li><b>为什么套算</b>：没直接报 GBP/JPY，绕道美元。</li><li><b>为什么相乘</b>：美元一在基准位（USD1=JPY…）、一在计价位（GBP1=USD…）→ 同边相乘；身份相同才相除。</li><li><b>为什么买乘买</b>：同向才能连乘；混乘会「买价 &gt; 卖价」。</li><li><b>为什么用 191.9259</b>：银行买入英镑 → 客户只能拿低价（客户永远吃亏）。</li><li><b>为什么是 19 192 590</b>：用四舍五入后的 191.9259 乘，别拿 1.7210×111.52 连乘。</li></ul></div><div class="mnemo"><b>🔑 买卖价怎么选（对应口诀）</b><ul><li>手里拿着<b>基准货币</b>，交给银行（<b>交出基准</b>）👉 银行买它，用<b>左边 bid（买入价）</b></li><li>想要拿到<b>基准货币</b>，向银行买（<b>得到基准</b>）👉 银行卖它，用<b>右边 ask（卖出价）</b></li></ul><div class="mline">一句话极简版：<b>持基准兑换，用买入价；买基准货币，用卖出价。</b></div><div class="mapply">👉 <b>本题</b>：出口商手里攥着<b>英镑</b>（GBP 就是基准货币，报在左边 1.7210），要换成日元 → 属于「<b>交出基准</b>」→ 银行<b>买入</b>英镑 → 就用<b>左侧 1.7210</b> 算出的 <b>191.9259</b>：100 000 × 191.9259 = <b>19 192 590 日元</b>。</div></div></div></div></div></div><div class="dq"><div class="dqh"><span class="dqn">2</span><span class="yr">2022.04</span><a class="jump" data-go="t-quote">对应题型 →</a></div><div class="dqq">某日苏黎世外汇市场：1 美元 = 0.9784-0.9796 瑞士法郎。假设瑞士出口商报出的商品底价是 20 万瑞士法郎，现外国进口商要求以美元向其报价。请问：(1) 瑞士出口商应该按照哪个汇率计算美元报价？(2) 其报出的美元价格是多少？</div><div class="foldwrap"><button class="fold" data-target="da2">显示解答</button><div class="fbox" id="da2"><div class="exa"><ol><li>(1) 按<b>美元买入价 1 美元 = 0.9784 瑞士法郎</b>报出（2 分）</li><li>(2) 美元报价 = 200 000 ÷ 0.9784 = <b>204 415.37 美元</b>（2 分）</li></ol><div class="why"><b>💡 为什么这么做</b><ul><li><b>考的是选价</b>：两侧都除得出，选错整小问 0 分。</li><li><b>为什么用买入价 0.9784</b>：要保证换回瑞郎不少于 20 万。反算：按 0.9796 报 → 换回只剩 199 754.5 瑞郎，亏 245.5。</li><li><b>为什么除</b>：底价瑞郎 → 美元，200 000 ÷ 0.9784。</li><li><b>记一句</b>：收钱方报价，用对自己不利的那一侧。</li></ul></div><div class="mnemo"><b>🔑 买卖价怎么选（对应口诀）</b><ul><li>手里拿着<b>基准货币</b>，交给银行（<b>交出基准</b>）👉 银行买它，用<b>左边 bid（买入价）</b></li><li>想要拿到<b>基准货币</b>，向银行买（<b>得到基准</b>）👉 银行卖它，用<b>右边 ask（卖出价）</b></li></ul><div class="mline">一句话极简版：<b>持基准兑换，用买入价；买基准货币，用卖出价。</b></div><div class="mapply">👉 <b>本题</b>：出口商最终要把<b>美元</b>（基准货币）换回瑞士法郎 → 属于「<b>交出基准</b>」→ 银行<b>买入</b>美元 → 就用<b>左边买入价 0.9784</b>：200 000 ÷ 0.9784 = <b>204 415.37 美元</b>。</div></div></div></div></div></div><div class="dq"><div class="dqh"><span class="dqn">3</span><span class="yr">2022.10</span><a class="jump" data-go="t-fwd">对应题型 →</a></div><div class="dqq">假定在某一交易日，纽约外汇市场上，即期汇率是 GBP=USD1.5575～1.5581，6 个月期英镑升水 30～40，问英镑的 6 个月远期汇率是多少？</div><div class="foldwrap"><button class="fold" data-target="da3">显示解答</button><div class="fbox" id="da3"><div class="exa"><ol><li>直接标价法，汇水 30~40 <b>前小后大 → 加</b>（升水）</li><li>1.5575 + 0.0030 = <b>1.5605</b>；1.5581 + 0.0040 = <b>1.5621</b></li><li>6 个月远期汇率：GBP1 = USD1.5605 ~ 1.5621</li></ol><div class="why"><b>💡 为什么这么做</b><ul><li><b>直接标价法</b>：纽约报 GBP=USD，英镑是外币。</li><li><b>前小后大 → 加</b>：30~40 加（考点 14：只看点数，与标价法无关）。</li><li><b>买价加 30、卖价加 40</b>：才保证买价 &lt; 卖价。</li><li><b>点数换算</b>：4 位小数 1 点 = 0.0001 → 30 点 = 0.0030。</li><li><b>自检</b>：1.5605 &lt; 1.5621；价差 0.0016 &gt; 0.0006 ✅。</li></ul></div></div></div></div></div><div class="dq"><div class="dqh"><span class="dqn">4</span><span class="yr">2023.04</span><a class="jump" data-go="t-fwd">对应题型 →</a></div><div class="dqq">在香港外汇市场上，你看到的即期汇率是 USD1=HKD7.7465～7.7525，3 个月远期差价为 10～12，问美元兑港币的 3 个月远期汇率是多少？</div><div class="foldwrap"><button class="fold" data-target="da4">显示解答</button><div class="fbox" id="da4"><div class="exa"><ol><li>直接标价法，汇水 10~12 前小后大 → 加（升水）</li><li>7.7465 + 0.0010 = <b>7.7475</b>；7.7525 + 0.0012 = <b>7.7537</b></li><li>3 个月远期汇率：USD1 = HKD7.7475 ~ 7.7537</li></ol><div class="why"><b>💡 为什么这么做</b><ul><li><b>直接标价法</b>：香港报 USD1=HKD，美元是外币。</li><li><b>前小后大 → 加</b>：10~12 加（美元升水）。</li><li><b>点数换算</b>：1 点 = 0.0001 → 10 点 = 0.0010。</li><li><b>买价加 10、卖价加 12</b>：买价保持在左。</li><li><b>自检</b>：7.7475 &lt; 7.7537；价差 0.0062 &gt; 0.0060 ✅。</li></ul></div></div></div></div></div><div class="dq"><div class="dqh"><span class="dqn">5</span><span class="yr">2023.10</span><a class="jump" data-go="t-cross">对应题型 →</a></div><div class="dqq">假定某一日的汇率水平如下：纽约市场 USD1=HKD7.7820——7.7830；伦敦市场 GBP1=USD1.5140——1.5150。请问英镑与港元的汇率是多少？</div><div class="foldwrap"><button class="fold" data-target="da5">显示解答</button><div class="fbox" id="da5"><div class="exa"><ol><li>用<b>同边相乘</b>（一个美元为基准、一个为计价）</li><li>GBP1 = HKD 7.7820×1.5140 —— 7.7830×1.5150（2 分）</li><li>GBP1 = HKD<b>11.7819</b> ~ <b>11.7912</b>（2 分）</li></ol><div class="why"><b>💡 为什么这么做</b><ul><li><b>同边相乘</b>：美元一在基准位（USD1=HKD）、一在计价位（GBP1=USD）。</li><li><b>为什么不除</b>：身份相同才相除，本题不同。</li><li><b>各乘各的</b>：7.7820×1.5140 买入侧，7.7830×1.5150 卖出侧。</li><li><b>自检</b>：11.7819 &lt; 11.7912；买价 &gt; 卖价 = 一票否决。</li></ul></div></div></div></div></div><div class="dq"><div class="dqh"><span class="dqn">6</span><span class="yr">2024.04</span><a class="jump" data-go="t-fwd">对应题型 →</a></div><div class="dqq">在某日的外汇市场上，即期汇率是 USD1=SF1.3210~1.3220，6 个月远期差价为 80~60。一进口商 6 个月后将向出口商支付 1000 万美元，届时需用瑞士法郎(SF)兑换，那么该进口商将如何做远期外汇交易？</div><div class="foldwrap"><button class="fold" data-target="da6">显示解答</button><div class="fbox" id="da6"><div class="exa"><ol><li>远期差价 80~60 <b>前大后小 → 用减法</b></li><li>USD1 = SF (1.3210 − 0.0080) ~ (1.3220 − 0.0060) = SF<b>1.3130</b> ~ <b>1.3160</b>（2 分）</li><li>该进口商与银行签订 6 个月远期合约，<b>卖出瑞士法郎 1316 万、买入 1000 万美元</b>（2 分）</li></ol><div class="why"><b>💡 为什么这么做</b><ul><li><b>先算远期</b>：要锁的是 6 个月后的付款汇率。</li><li><b>前大后小 → 减</b>：80~60 减（贴水）。</li><li><b>为什么用 1.3160</b>：进口商买美元 → 银行卖美元用卖出价 → 1000 万 × 1.3160 = 1316 万瑞郎。</li><li><b>为什么签合约</b>：汇率定死 → 防美元升值，这就是保值。</li><li><b>别写反</b>：银行卖美元，用较大的那个价。</li></ul></div></div></div></div></div><div class="dq"><div class="dqh"><span class="dqn">7</span><span class="yr">2024.10</span><a class="jump" data-go="t-gold">对应题型 →</a></div><div class="dqq">在 19 世纪下半叶，英国和法国实行金币本位制度，英国当局规定 1 英镑的含金量为 7.32 克黄金，法国规定 1 法郎的含金量为 0.29 克黄金。在英、法两国运输黄金的成本是 0.03 法郎。请计算：英镑和法郎之间的铸币平价是多少？黄金输出点是多少？另外，黄金输入点又是多少？</div><div class="foldwrap"><button class="fold" data-target="da7">显示解答</button><div class="fbox" id="da7"><div class="exa"><ol><li>铸币平价 = 7.32 ÷ 0.29 = <b>25.24</b>，即 1 英镑 = 25.24 法郎（2 分）</li><li>黄金输出点 = 25.24 + 0.03 = <b>25.27</b>（1 分）</li><li>黄金输入点 = 25.24 − 0.03 = <b>25.21</b>（1 分）</li></ol><div class="why"><b>💡 为什么这么做</b><ul><li><b>为什么相除</b>：金币本位下比价由含金量定，谁金多谁值钱。</li><li><b>英镑在上</b>：问「1 英镑 = ? 法郎」→ 7.32 ÷ 0.29。</li><li><b>输出点 = 平价 + 0.03</b>：黄金运出国要花运费，这是上限。</li><li><b>输入点 = 平价 − 0.03</b>：运进来方向相反。输出上限、输入下限。</li><li><b>单位自检</b>：两个含金量同单位（都是克）。</li></ul></div></div></div></div></div><div class="dq"><div class="dqh"><span class="dqn">8</span><span class="yr">2025.04</span><a class="jump" data-go="t-gold">对应题型 →</a></div><div class="dqq">假定在金币本位制度下，英国规定 1 英镑金币的含金量为 113.0016 格令，美国规定 1 美元金币的含金量为 23.22 格令。另外，英、美两国之间的黄金运输成本为 0.02 美元。请计算：英镑与美元之间的铸币平价是多少？黄金输出点与黄金输入点各是多少？</div><div class="foldwrap"><button class="fold" data-target="da8">显示解答</button><div class="fbox" id="da8"><div class="exa"><ol><li>铸币平价 = 113.0016 ÷ 23.22 = <b>4.8666</b>，即 1 英镑 = 4.8666 美元（2 分）</li><li>黄金输出点 = 4.8666 + 0.02 = <b>4.8866</b>（1 分）</li><li>黄金输入点 = 4.8666 − 0.02 = <b>4.8466</b>（1 分）</li></ol><div class="why"><b>💡 为什么这么做</b><ul><li><b>为什么相除</b>：含金量之比 → 113.0016 ÷ 23.22（都是格令）。</li><li><b>出去加、进来减</b>：+0.02 / −0.02。</li><li><b>顺便记</b>：1 英镑 = 4.8666 美元，考过多次。</li><li><b>自检</b>：4.8466 &lt; 4.8666 &lt; 4.8866 ✅（顺序永远成立）。</li></ul></div></div></div></div></div><div class="dq"><div class="dqh"><span class="dqn">9</span><span class="yr">2025.10</span><a class="jump" data-go="t-fwd">对应题型 →</a></div><div class="dqq">假定：某一日在纽约外汇市场上，即期汇率报价为 US$1=CHF0.8950~0.8968。6 个月汇水为 200~300，则美元 6 个月远期汇率为多少？</div><div class="foldwrap"><button class="fold" data-target="da9">显示解答</button><div class="fbox" id="da9"><div class="exa"><ol><li>纽约市场报价 US$1=CHF… 属<b>间接标价法</b>；汇水 200~300 前小后大 → 加</li><li>间接标价法下：远期汇率 = 即期汇率 + 贴水额</li><li>买入价：0.8950 + 0.0200 = <b>0.9150</b>；卖出价：0.8968 + 0.0300 = <b>0.9268</b></li><li>即 US$1 = CHF<b>0.9150</b> ~ <b>0.9268</b></li></ol><div class="why"><b>💡 为什么这么做</b><ul><li><b>间接标价法</b>：纽约把美元当本币、报在基准位。</li><li><b>为什么「加」却叫贴水</b>：数字变大 = 美元升值 → 反过来是外币瑞郎贴水。公式写「间接标价法：远期 = 即期 + 贴水额」，别写「升水」。</li><li><b>买价加 200（0.0200）、卖价加 300（0.0300）</b>。</li><li><b>点数换算</b>：1 点 = 0.0001 → 200 点 = 0.0200。</li><li><b>自检</b>：0.9150 &lt; 0.9268；价差 0.0118 &gt; 0.0018 ✅。</li></ul></div><div class="why alert"><b>💡 计算题要不要管「直接 / 间接标价法」那两套公式？（已按真题库答案核对）</b><ul><li><b>算数不用管标价法</b>：前小后大加、前大后小减，结果与官方一致。</li><li><b>但「说方向」半句别删</b>：2025.10 官方「间接标价法下，远期汇率 = 即期汇率 + 贴水额」；2026.04「直接报价法下：远期汇率 = 即期汇率 − 贴水额」。这是「判方向」那 1 分。</li><li><b>⚠️ 别按直觉叫升贴水</b>：本题官方叫外币瑞郎贴水（瑞郎贬值），不是美元贴水。</li><li><b>收口</b>：加减只看点数排列，永远一样，只有名字会反过来。通用式「远期 = 即期 + 升水 − 贴水」要按基准货币口径才恒成立。</li></ul></div></div></div></div></div><div class="dq"><div class="dqh"><span class="dqn">10</span><span class="yr">2026.04</span><a class="jump" data-go="t-fwd">对应题型 →</a></div><div class="dqq">在某一外汇交易日，美国外汇市场上，英镑(GBP)与美元(USD)的即期汇率报价为 GBP1=USD1.3540~1.3565，3 个月的汇水为 50-30。试计算英镑 3 个月的远期汇率。</div><div class="foldwrap"><button class="fold" data-target="da10">显示解答</button><div class="fbox" id="da10"><div class="exa"><ol><li>美国市场上是<b>直接标价法</b>；汇水 50~30 前大后小 → 表示<b>贴水</b>，用减法</li><li>1.3540 − 0.0050 = <b>1.3490</b>（2 分）；1.3565 − 0.0030 = <b>1.3535</b>（2 分）</li><li>即英镑 3 个月远期汇率：GBP1 = USD<b>1.3490</b> ~ <b>1.3535</b></li></ol><div class="why"><b>💡 为什么这么做</b><ul><li><b>直接标价法</b>：美国市场报 GBP1=USD，英镑是外币。</li><li><b>前大后小 → 减</b>：50~30 减（英镑贴水）。</li><li><b>各减自己那个数</b>：1.3540 − 0.0050、1.3565 − 0.0030。</li><li><b>点数换算</b>：1 点 = 0.0001 → 50 点 = 0.0050。</li><li><b>自检</b>：1.3490 &lt; 1.3535；价差 0.0045 &gt; 0.0025 ✅。</li></ul></div></div></div></div></div>
+    <div class="dq"><div class="dqh"><span class="dqn">11</span><span class="yr">2019.04</span><a class="jump" data-go="t-irp">对应题型 →</a></div><div class="dqq">假定：伦敦货币市场的年利率为 9.5%，纽约货币市场的年利率为 7%，伦敦外汇市场的即期汇率为 GBP1=USD1.8000。求 3 个月<b>美元</b>的远期汇率是多少？</div><div class="foldwrap"><button class="fold" data-target="da11">显示解答</button><div class="fbox" id="da11"><div class="exa"><ol><li>英镑利率（9.5%）高于美元利率（7%）→ <b>英镑远期贴水、美元远期升水</b>。</li><li>3 个月期升（贴）水额 = 1.8000 × (9.5% − 7%) × 3/12 = <b>0.0113</b>（2 分）</li><li>3 个月英镑的远期汇率 = 1.8000 − 0.0113 = <b>1.7887</b>（美元）</li><li>题目问<b>美元</b>的远期汇率，取倒数：1 ÷ 1.7887 = <b>0.5591</b>（英镑）（2 分）</li></ol><div class="why"><b>💡 为什么这么做</b><ul><li><b>为什么用利率平价</b>：不给点数，只给利率 → 即期 × 利差 × 月数/12。</li><li><b>英镑贴水</b>：利率高的货币远期贴水。</li><li><b>为什么 9.5% − 7%</b>：先算出的永远是基准货币（英镑）那一侧。</li><li><b>为什么 × 3/12</b>：年利率折 3 个月。</li><li><b>⚠️ 为什么取倒数</b>：1.7887 是英镑的价，问的是美元 → 互为倒数 ⇒ 1 ÷ 1.7887 = 0.5591，不取 0 分。</li><li><b>自检</b>：0.5591 &lt; 1 ✅。</li></ul></div></div></div></div></div><div class="dq"><div class="dqh"><span class="dqn">12</span><span class="yr">2019.10</span><a class="jump" data-go="t-irp">对应题型 →</a></div><div class="dqq">假定：伦敦货币市场的年利率为 9.5%，纽约货币市场的年利率为 7%，伦敦外汇市场的即期汇率为 GBP1=USD1.8000。求 3 个月<b>英镑</b>的远期汇率是多少？</div><div class="foldwrap"><button class="fold" data-target="da12">显示解答</button><div class="fbox" id="da12"><div class="exa"><ol><li>伦敦利率高 → 英镑远期<b>贴水</b>，用减法。</li><li>3 个月期英镑的贴水额 = 1.8000 × (9.5% − 7%) × 3/12 = <b>0.0113</b>（美元）（2 分）</li><li>3 个月期英镑的远期汇率 = 即期汇率 − 贴水额 = 1.8000 − 0.0113 = <b>1.7887</b>（美元）（2 分）</li></ol><div class="why"><b>💡 为什么这么做</b><ul><li><b>为什么用利率平价</b>：同上一题，只给利率不给点数。</li><li><b>伦敦 9.5% &gt; 纽约 7%</b> → 英镑贴水 → 减。</li><li><b>⚠️ 为什么不取倒数</b>：题干与 2019.04 一样，只差别在问英镑（1 英镑 = ? 美元）→ 1.7887 直接就是答案。先看问哪种货币。</li><li><b>贴水额单位</b>：写成「1 英镑 = x 美元」，减的自然是美元。</li><li><b>自检</b>：1.7887 &lt; 1.8000 ✅。</li></ul></div></div></div></div></div><div class="dq"><div class="dqh"><span class="dqn">13</span><span class="yr">2020.10</span><a class="jump" data-go="t-fwd">对应题型 →</a></div><div class="dqq">（该卷计算题以单选形式出现）某日在纽约外汇市场上，即期汇率为 USD1=JPY100.48~100.58。如 3 个月远期差价为 10~20，则美元的 3 个月期远期汇率是多少？<br>A. 90.48~80.58　B. 100.38~100.38　C. 100.58~100.78　D. 110.48~120.58</div><div class="dnote">2020.10 卷未设独立计算大题，此为该卷唯一的汇率计算题（单选第 8 题）</div><div class="foldwrap"><button class="fold" data-target="da13">显示解答</button><div class="fbox" id="da13"><div class="exa"><ol><li>纽约市场为<b>间接标价法</b>（美元是本币、报在基准位）；远期差价 10~20 <b>前小后大 → 加</b>。</li><li>100.48 + 0.10 = 100.58；100.58 + 0.20 = 100.78</li><li>即 USD1 = JPY100.58 ~ 100.78，<b>正确答案 C</b></li></ol><div class="why"><b>💡 为什么这么做</b><ul><li><b>为什么是单选</b>：这卷没计算大题，考点换成四个选项。</li><li><b>间接标价法</b>：纽约报 USD1=JPY，美元在基准位（同第 9 题）。</li><li><b>还是加</b>：10~20 前小后大（与标价法无关）。</li><li><b>⚠️ 点数换算</b>：日元 2 位小数，1 点 = 0.01（不是 0.0001！）→ 10 点 = 0.10。</li><li><b>为什么选 C</b>：100.48 + 0.10 = 100.58；100.58 + 0.20 = 100.78。D 把点当 10/20 加，A 当 10/20 减。</li></ul></div></div></div></div></div></section>
+
+    <section class="panel hide" id="pan-train">
+      <h3 class="mh3">四、做题训练<em>随机抽题 · 自评判分 · 错题本附答案与解释（记录存在本机浏览器）</em></h3>
+      <div class="trwrap">
+        <div class="trbar">
+          <button class="cbtn" id="trStart">开始训练</button>
+          <button class="cbtn ghost" id="trNext">下一题</button>
+          <button class="cbtn ghost" id="trReset">清空记录</button>
+        </div>
+        <div class="trstat" id="trStat"></div>
+        <div class="pbar"><i id="trBar"></i></div>
+        <div id="trBox"></div>
+      </div>
+      <p style="font-size:12.5px;color:var(--ink3);margin-top:14px">训练说明：计算题没有唯一机器可判的答案，采用「先自己做 → 对答案 → 自评判分」的方式；
+      判「没答对」的题会自动进错题本（已单独成页，见顶部「错题库」标签），可随时重练。所有记录仅保存在本机浏览器。</p>
+      <div style="margin-top:12px"><button class="cbtn" id="gotoWrong">打开「错题库」→</button></div>
+    </section>
+
+    <section class="panel hide" id="pan-wrong">
+      <h3 class="mh3">五、错题库<em>判「没答对」的题自动进这里 · 每条附参考答案与「为什么这么做」</em></h3>
+      <div class="trwrap">
+        <div class="trbar">
+          <button class="cbtn" id="wrongRedoAll">重练全部错题</button>
+          <button class="cbtn ghost" id="trReset2">清空错题本</button>
+          <span style="font-size:12.5px;color:var(--ink3);margin-left:auto" id="wrongMeta"></span>
+        </div>
+        <div class="arch" id="wrongArchiveNote" style="display:none"></div>
+        <h4 style="margin:15px 0 0;font-size:15px">我的错题 <span style="font-size:12px;color:var(--ink3);font-weight:400" id="trWrongN"></span></h4>
+        <div class="wronglist" id="trWrong" style="margin-top:12px"></div>
+      </div>
+      <p style="font-size:12.5px;color:var(--ink3);margin-top:14px">错题本跟着「做题训练」的记录走：在旁边判一次「没答对」就自动进来，
+      答对或点「已掌握，移出错题本」就移出；点「重做这题」可直接回到训练区重答一遍。记录保存在当前浏览器里。</p>
+    </section>
+
+    
+  
+      <section class="panel hide" id="pan-bankcalc">
+        <div class="card">
+          <div class="sec-h"><span class="dot"></span>真题详解（题库抽取）<span class="sub" id="calcSub"></span></div>
+          <div class="row" style="margin-bottom:12px">
+            <button class="btn" onclick="expandAll('calcs',true)">全部展开</button>
+            <button class="btn" onclick="expandAll('calcs',false)">全部收起</button>
+          </div>
+          <div class="clist" id="calcList"></div>
+        </div>
+      </section>
+    </main>
+
+  <footer id="foot">
+    题型分类依据 2019.04 — 2026.4 共 13 套真题的计算题逐题归纳，公式口径对照《00076 国际金融》自学考试大纲与教材。<br>
+另按题库（计算题 21 道）与章节练习逐题比对，补入 4 类真题卷尚未考、但大纲与练习要求掌握的类型：国际投资组合收益率（含汇率变动）、货币互换、购买力平价判断、国际收支差额计算（第 15—18 类）。<br>
+    参考来源：自学考试 00076 大纲考点（远期差价「前小后大往上加，前大后小往下减」、黄金输送点）、
+    章节练习与公开真题页面（<a href="https://m.gdzkw.com.cn/a/3549.html" target="_blank" rel="noopener">广东自考网</a>、
+    <a href="https://www.daxuezikao.com/zbzk/12681.html" target="_blank" rel="noopener">00076 考试大纲</a>、
+    <a href="https://wiki.mbalib.com/wiki/%E8%BF%9C%E6%9C%9F%E6%B1%87%E7%8E%87" target="_blank" rel="noopener">远期汇率·MBA智库</a>）。<br>
+    计算器与「做题训练」模块仅供自测练手，正式答题仍须写出完整步骤与判断过程。
+  </footer>
+  </div>
+  </div>
+
+  <!-- ④b 公式墙（18 类 · 点「看详解」跳到上面的题型卡） -->
+  <div class="view" id="view-formula">
+    <div class="ifc" id="ifFw">
+      <h3 class="mh3">公式墙 · 18 类公式速查<em>大题照着抄 · 公式里全是中文名，不用背字母；点「看详解」跳到题型卡</em></h3>
+      <div class="fwall"><div class="fcard"><div class="fh"><span class="fno">1</span><b>远期汇率：升水 / 贴水加减</b><a class="fj jump" data-go="t-fwd">看详解 →</a></div><div class="feq">远期汇率 ＝ 即期汇率 ± 升（贴）水额</div><div class="feq2">直接标价法：远期汇率 ＝ 即期汇率 ＋ 升水 ＝ 即期汇率 − 贴水<br>间接标价法：远期汇率 ＝ 即期汇率 − 升水 ＝ 即期汇率 ＋ 贴水</div><div class="fvars"><div><b>远期汇率</b>要你求的那个价（斜线右边货币 1 单位值多少）</div><div><b>即期汇率</b>题目给的现货价</div><div><b>升（贴）水额</b>远期汇水点数折算成的小数</div><div><b>加点 / 减点</b>口诀定方向，不看标价法</div></div><div class="fnote"><b>判方向口诀</b>：汇水「小数在前、大数在后」→ 加；「大数在前、小数在后」→ 减。<b>只看点数，与标价法无关</b>（大纲考点 14 的口径）。<br><b>点数折小数</b>：报价有几位小数，1 点就是 10 的负几次方 —— 4 位小数报价 1 点 ＝ 0.0001；日元等 2 位小数报价 1 点 ＝ 0.01。<br><b>自检</b>：结果左边必须小于右边，且远期汇差一定大于即期汇差。</div></div><div class="fcard"><div class="fh"><span class="fno">2</span><b>套算汇率：同边相乘 / 交叉相除</b><a class="fj jump" data-go="t-cross">看详解 →</a></div><div class="feq">同边相乘：所求买入价 ＝ 甲买入价 × 乙买入价</div><div class="feq2"><span class="nb">交叉相除：所求买入价 ＝ <span class="frac"><i>甲买入价</i><em>乙卖出价</em></span></span><span class="nb">所求卖出价 ＝ <span class="frac"><i>甲卖出价</i><em>乙买入价</em></span></span></div><div class="fvars"><div><b>同边相乘</b>一个报价以美元为基准、另一个以美元为计价时用</div><div><b>交叉相除</b>两个报价都以美元为基准（或都为计价）时用</div><div><b>甲 / 乙</b>题目给的两个报价，第一个当甲</div><div><b>折成金额</b>用「银行买入你手里那种货币」的那一侧价（数值小的一侧）</div></div><div class="fnote"><b>判断口径</b>：先看两个报价里美元站在哪边 —— 一边基准、一边计价 → 同边相乘；两边身份相同 → 交叉相除。<br><b>折成金额</b>：出口商拿英镑换日元 → 用英镑的<b>买入价</b>（小的一侧）。<br><b>自检</b>：结果的买入价必须小于卖出价，反了就是一票否决。</div></div><div class="fcard"><div class="fh"><span class="fno">3</span><b>铸币平价与黄金输送点</b><a class="fj jump" data-go="t-gold">看详解 →</a></div><div class="feq">铸币平价 ＝ <span class="frac"><i>甲国 1 单位货币含金量</i><em>乙国 1 单位货币含金量</em></span></div><div class="feq2">黄金输出点 ＝ 铸币平价 ＋ 黄金运输成本（汇率上限）<br>黄金输入点 ＝ 铸币平价 − 黄金运输成本（汇率下限）</div><div class="fvars"><div><b>含金量</b>两国各自规定的每 1 单位金币含多少金</div><div><b>甲国</b>题目问「1 甲币 ＝ 多少乙币」里的甲</div><div><b>黄金运输成本</b>题目只给一份，别乘 2</div><div><b>输出 / 输入点</b>金本位下汇率波动区间的上下限</div></div><div class="fnote"><b>单位对齐</b>：两个含金量必须同一单位（格令／克），否则先换算。<br><b>顺序自检</b>：黄金输入点 ＜ 铸币平价 ＜ 黄金输出点，永远成立。<br><b>别算错</b>：113.0016 ÷ 23.22 要保留 4 位小数 ＝ 4.8666，写成 4.866 会丢分。</div></div><div class="fcard"><div class="fh"><span class="fno">4</span><b>进出口报价折算（买入价 / 卖出价）</b><a class="fj jump" data-go="t-quote">看详解 →</a></div><div class="feq">外币报价 ＝ <span class="frac"><i>本币底价</i><em>外币的买入价</em></span></div><div class="feq2">本币成本 ＝ 外币金额 × 外币的卖出价</div><div class="fvars"><div><b>本币底价</b>出口商自己报的商品底价（本币）</div><div><b>外币的买入价</b>报价里数值小的那一侧</div><div><b>外币的卖出价</b>报价里数值大的那一侧</div><div><b>出口商 / 进口商</b>决定用买价还是卖价</div></div><div class="fnote"><b>口诀</b>：本币底价折外币报价 → 用外币的<b>买入价</b>除；外币货款折本币成本 → 用外币的<b>卖出价</b>乘。<br><b>为什么</b>：银行买入外币用买入价、卖出外币用卖出价；出口商是收进外币、把外币卖给银行 → 用买入价。<br><b>反算自检</b>：若用卖出价报，换回本币会少于原底价（亏），所以必须用买入价。</div></div><div class="fcard"><div class="fh"><span class="fno">5</span><b>升（贴）水年率</b><a class="fj jump" data-go="t-prem">看详解 →</a></div><div class="feq">基准货币升（贴）水年率 ＝ <span class="frac"><i>远期汇率 − 即期汇率</i><em>即期汇率</em></span> × <span class="frac"><i>12</i><em>远期月数</em></span> × 100%</div><div class="feq2">报价货币升（贴）水年率 ＝ <span class="frac"><i>即期汇率 − 远期汇率</i><em>远期汇率</em></span> × <span class="frac"><i>12</i><em>远期月数</em></span> × 100%</div><div class="fvars"><div><b>基准货币</b>报价斜线左边那种货币</div><div><b>报价货币</b>报价斜线右边那种货币</div><div><b>远期月数</b>远期合约的期限（3 / 6 个月）</div><div><b>为什么要折年率</b>才能跟两国年利率（利差）比大小</div></div><div class="fnote"><b>分母不一样，别混</b>：<b>基准货币除即期</b>、<b>报价货币除远期</b> —— 混了就全错。<br><b>为什么分子反</b>：基准货币升水 ⇔ 报价货币贴水，是同一个现象的两种说法。<br><b>怎么用</b>：升（贴）水年率 ＜ 两国利差 → 有套利空间。</div></div><div class="fcard"><div class="fh"><span class="fno">6</span><b>利率平价：用两国利率算远期汇率</b><a class="fj jump" data-go="t-irp">看详解 →</a></div><div class="feq">F ＝ S × <span class="frac"><i>1 ＋ 标价利率 × t</i><em>1 ＋ 基准利率 × t</em></span></div><div class="feq2">考试常用的简化式：升（贴）水额 ＝ 即期汇率 × 两国利率差 × <span class="frac"><i>月数</i><em>12</em></span>　　远期汇率 ＝ 即期汇率 ± 升（贴）水额</div><div class="fvars"><div><b>F</b>远期汇率（要求的东西）</div><div><b>S</b>即期汇率（题目给的现货价）</div><div><b>标价利率</b>报价货币（斜线<b>右边</b>那种货币）的利率——人民币报 1 美元 ＝ ？人民币，它指人民币利率</div><div><b>基准利率</b>基准货币（斜线<b>左边</b>那种货币）的利率——上例里就是美元利率</div><div><b>t</b>期限，用<b>年</b>表示：3 个月 ＝ 3/12，6 个月 ＝ 6/12</div><div><b>两国利率差</b>＝ 标价利率 − 基准利率</div></div><div class="fnote"><b>为什么标价利率在分子</b>：本国利率高 → 本币远期必然贴水 → 远期汇率数值变大，只有放在分子才会变大。<br><b>一句话结论必须写</b>：<b>高利率货币远期贴水、低利率货币远期升水</b>（阅卷看这句给分）。<br><b>⚠️ 真出计算题的就是本节</b>：2019.04 与 2019.10 两套真题的计算题都出自这里（只给两国利率 → 算远期 → 判升贴水）。</div></div><div class="fcard"><div class="fh"><span class="fno">7</span><b>直接套汇（两点套汇）</b><a class="fj jump" data-go="t-arb2">看详解 →</a></div><div class="feq">套汇获利 ＝ 投入金额 × （<span class="frac"><i>高价市场的卖出价</i><em>低价市场的买入价</em></span> − 1）</div><div class="feq2">机会判断：市场 A 的买入价 ＜ 市场 B 的卖出价 → 有套汇机会</div><div class="fvars"><div><b>低价市场</b>买进那种货币的地方</div><div><b>高价市场</b>卖出那种货币的地方</div><div><b>买入价 / 卖出价</b>站在你的方向：你买用卖出价、你卖用买入价</div><div><b>路线必须写清</b>「在纽约买入、在东京卖出」</div></div><div class="fnote"><b>口诀</b>：同一时点两地利差 —— 在低处买、在高处卖。<br><b>答题要写三样</b>：① 判断有无机会并说明依据 ② 写清套汇路线 ③ 算出获利。<br><b>失分点</b>：买卖方向写反（获利算成负数）；忽略交易成本直接判有机会。</div></div><div class="fcard"><div class="fh"><span class="fno">8</span><b>三角套汇（间接套汇）</b><a class="fj jump" data-go="t-arb3">看详解 →</a></div><div class="feq">三者连乘 ＝ 汇率₁ × 汇率₂ × 汇率₃（都取中间价）</div><div class="feq2">套汇获利 ＝ 投入金额 × （连乘 − 1）　（反方向则乘 <span class="frac"><i>1</i><em>连乘</em></span>）</div><div class="fvars"><div><b>中间价</b>买入价与卖出价的平均值（判断方向时用）</div><div><b>连乘 ≠ 1</b>就有套汇机会；＝ 1 无机会</div><div><b>连乘 ＞ 1</b>按这个方向转一圈；＜ 1 反方向转</div><div><b>算获利时</b>要用买卖价（买进用卖出价、卖出用买入价），不再是中间价</div></div><div class="fnote"><b>答题三步</b>：① 取中间价连乘判断方向 → ② 写清路线（如「伦敦—法兰克福—纽约」）→ ③ 用买卖价算获利。<br><b>最常失分</b>：判断用了中间价、算获利也直接拿中间价的连乘当收益。</div></div><div class="fcard"><div class="fh"><span class="fno">9</span><b>套利交易（抵补 / 不抵补）</b><a class="fj jump" data-go="t-intr">看详解 →</a></div><div class="feq">抵补套利收益 ＝ 金额 × 即期买入价 × (1 ＋ 外币利率 × t) ÷ 远期卖出价 − 金额 × (1 ＋ 本币利率 × t)</div><div class="feq2"><span class="nb">每 1 元本币的抛补收益 ＝ <span class="frac"><i>远期汇率</i><em>即期汇率</em></span> ×（1 ＋ <b>基准利率</b> × t）−（1 ＋ <b>标价利率</b> × t）</span><span class="nb">＞ 0 才值得做</span><br><span class="nb">是否划算：两国利差 ＞ 远期汇差（掉的价）→ 值得做</span><br><span class="nb">不抵补套利：把主式的「远期卖出价」换成「到期日的即期卖出价」，其余不变</span></div><div class="fvars"><div><b>抵补套利</b>搬钱的同时做远期对冲，锁死汇率</div><div><b>不抵补套利</b>只搬利差、不做远期，赌汇率，风险自担</div><div><b>外币利率</b>高息国（资金调往国）的利率</div><div><b>本币利率</b>低息国（资金原来所在国）的利率</div><div><b>t</b>期限，用年表示（月数 ÷ 12）</div></div><div class="fnote"><b>中文名对照</b>：<b>标价利率</b>＝报价货币（斜线<b>右边</b>）的利率，<b>基准利率</b>＝基准货币（斜线<b>左边</b>）的利率——与第 6 张卡同一套名字。<br><b>关键一步别漏</b>：一定要算出「比留在本国多赚多少」——<b>与国内存款作差</b>，只报总投资收益会丢分。<br><b>口径</b>：2024 版教材／教辅写「抵补 / 不抵补」，利率平价处写「抛补 / 非抛补」，是同一件事的两种说法。<br><b class="warn">⚠️ 教辅题型白名单里，本节是「多选 · 名词解释 · 简答 · 论述」，不含计算题</b> —— 按概念＋简答准备即可（详见第 9 类题型卡）。</div></div><div class="fcard"><div class="fh"><span class="fno">10</span><b>掉期交易与掉期成本</b><a class="fj jump" data-go="t-swap">看详解 →</a></div><div class="feq">掉期成本年率 ＝ <span class="frac"><i>远期汇率 − 即期汇率</i><em>即期汇率</em></span> × <span class="frac"><i>12</i><em>月数</em></span> × 100%</div><div class="feq2">掉期收益 ＝ 投资额 × （两国利差 − 掉期成本年率）</div><div class="fvars"><div><b>掉期</b>同时买进卖出、金额相同、期限不同（币种也相同）</div><div><b>掉期成本年率</b>教材以贴水率表示，即折成年率的贴水率</div><div><b>净收益率</b>＝ 投资收益率 − 掉期成本年率，＞ 0 才值得做</div><div><b>三种形式</b>即期对即期 / 即期对远期 / 远期对远期</div></div><div class="fnote"><b>概念题标准答案</b>：掉期改变的是货币的<b>期限结构</b>，不是持有量 —— 这句话是概念题的采分点。<br><b>易失分</b>：成本年率方向算反（远期高于即期才是成本为正）；没折成年率就与投资收益率直接比。</div></div><div class="fcard"><div class="fh"><span class="fno">11</span><b>远期外汇交易保值（进出口商损益对比）</b><a class="fj jump" data-go="t-hedge">看详解 →</a></div><div class="feq">不保值损益 ＝ 金额 × （到期日即期汇率 − 签约日即期汇率）</div><div class="feq2">保值收益 ＝ 保值后损益 − 不保值损益</div><div class="fvars"><div><b>不保值损益</b>汇率不利变动造成的损失</div><div><b>出口商收汇</b>取<b>买入价</b>（银行买入外币）</div><div><b>进口商付汇</b>取<b>卖出价</b>（银行卖出外币）</div><div><b>保值操作</b>与银行签远期合约，按签约时的远期汇率锁定交割</div></div><div class="fnote"><b>答题三步</b>：① 先算不保值亏多少 ② 写清远期合约方向（卖出 / 买入什么）③ 两者作差得保值收益。<br><b>失分点</b>：出口商误用卖出价；漏写远期合约的方向。</div></div><div class="fcard"><div class="fh"><span class="fno">12</span><b>外汇期权盈亏（损益平衡点）</b><a class="fj jump" data-go="t-opt">看详解 →</a></div><div class="feq">买入看涨期权：损益平衡点 ＝ 协定价格 ＋ 期权费</div><div class="feq2">买入看跌期权：损益平衡点 ＝ 协定价格 − 期权费<br>看涨期权收益 ＝ （到期即期汇率 − 协定价格）− 期权费</div><div class="fvars"><div><b>协定价格</b>期权合约约定的行权价</div><div><b>期权费</b>买期权付的钱，也是<b>最大损失</b></div><div><b>损益平衡点</b>行权与不行权打平的那个汇率</div><div><b>行使判断</b>看涨：到期汇率 ＞ 平衡点才行使；看跌反之</div></div><div class="fnote"><b>核心动作只有一步</b>：把「到期即期汇率」和「平衡点」比大小。<br><b>必须两种结果都算</b>：行使的盈亏 + 不行使（损失全部期权费），题目问的就是这个比较。<br><b>常考采分句</b>：期权买方损失有限（最多亏期权费）、收益无限。</div></div><div class="fcard"><div class="fh"><span class="fno">13</span><b>外汇期货套期保值（两地盈亏相抵）</b><a class="fj jump" data-go="t-fut">看详解 →</a></div><div class="feq">净盈亏 ＝ 现货市场盈亏 ＋ 期货市场盈亏</div><div class="feq2">现货盈亏 ＝ 金额 × （到期即期汇率 − 签约即期汇率）<br>期货盈亏 ＝ 金额 × （平仓价 − 开仓价）<br>合约份数 ＝ <span class="frac"><i>被保值外币总额</i><em>每份合约交易单位</em></span></div><div class="fvars"><div><b>卖出套期保值</b>出口商怕外币贬值 → 先在期货市场卖出</div><div><b>买入套期保值</b>进口商怕外币升值 → 先在期货市场买入</div><div><b>开仓价 / 平仓价</b>期货的建仓价与对冲平仓价</div><div><b>份数</b>不足 1 份一般向上取整</div></div><div class="fnote"><b>方向口诀</b>：现货与期货方向相反才能对冲 —— 出口商「先卖后买」、进口商「先买后卖」。<br><b>结论要写全</b>：净盈亏 + 「对冲掉大部分风险，但不是全部（因为基差变动）」。</div></div><div class="fcard"><div class="fh"><span class="fno">14</span><b>数字型考点：择期报价原则 + 外债安全线</b><a class="fj jump" data-go="t-mem">看详解 →</a></div><div class="feq">负债率 ＝ <span class="frac"><i>年末外债余额</i><em>当年 GDP</em></span>（安全线 20%）　债务率 ＝ <span class="frac"><i>外债余额</i><em>当年出口收入</em></span>（警戒线 100%）</div><div class="feq2">偿债率 ＝ <span class="frac"><i>当年还本付息额</i><em>当年出口收入</em></span>（安全线 20%）　短期外债/外汇储备 ＝ 100%<br>短期外债/外债余额 ＜ 25%　　国际储备 ≥ 3 个月的进口额</div><div class="fvars"><div><b>择期·银行买入基准货币</b>基准货币升水 → 按选择期<b>第一天</b>报价；贴水 → 按<b>最后一天</b></div><div><b>择期·银行卖出基准货币</b>基准货币升水 → 按<b>最后一天</b>报价；贴水 → 按<b>第一天</b></div><div><b>负债率分母</b>是当年 <b>GDP</b>（2024 版口径，旧版用 GNP）</div><div><b>安全线</b>负债率 20%、债务率 100%、偿债率 20%</div></div><div class="fnote"><b>择期四格</b>建议画 2×2 表背：买入/卖出 × 升水/贴水，四个格子混一次就永远记不住。<br><b>认准教材版本</b>：2024 版负债率用 <b>GDP</b>、安全线 <b>20%</b>；旧版 GNP、8%～10% 不再使用。</div></div><div class="fcard"><div class="fh"><span class="fno">15</span><b>国际投资组合的预期收益率（含汇率变动）</b><a class="fj jump" data-go="t-port">看详解 →</a></div><div class="feq">组合预期收益率 ＝ 国内权重 × 国内收益率 ＋ 国际权重 × 国际收益率</div><div class="feq2">海外资产（本币口径）收益率 ＝ 外币口径收益率 ＋ 汇率变动率<br>示例：50% × 8% ＋ 50% × (10% ＋ 2%) ＝ 4% ＋ 6% ＝ 10%</div><div class="fvars"><div><b>权重</b>各资产占组合的比例，<b>加起来必须等于 1</b></div><div><b>外币口径收益率</b>国际资产本来的收益率</div><div><b>汇率变动率</b>外币对本币升值取正、贬值取负</div><div><b>组合收益率</b>加权求和的结果</div></div><div class="fnote"><b>本题的考点就在</b>：先把汇率变动并进海外资产收益率，再加权 —— 直接 (8%＋10%)÷2 是错的。<br><b>易失分</b>：权重当整数用（写成 50 ＋ 50），结果被放大 100 倍。</div></div><div class="fcard"><div class="fh"><span class="fno">16</span><b>货币互换：折算应付外币金额</b><a class="fj jump" data-go="t-cswap">看详解 →</a></div><div class="feq">应付外币 ＝ 需支付的金额 × 约定（互换）汇率</div><div class="feq2">应付外币 ＝ 折出的金额 × （1 ± 互换成本率 × 期限）</div><div class="fvars"><div><b>货币互换</b>双方按约定汇率交换两种货币本金，并互相支付利息（期限常 1 年以上）</div><div><b>约定汇率</b>互换合约里定死的那个汇率</div><div><b>互换成本率</b>题目给的互换利率，当成本调整用</div><div><b>与掉期的区别</b>掉期＝即期＋反向远期两笔买卖、期限短；货币互换期限长、含利息交换</div></div><div class="fnote"><b>教材通常只考到第一步</b>：按约定汇率交换本金。<br><b>若题干给的是两国利率</b>，则按 (1 ＋ 外币利率) ÷ (1 ＋ 本币利率) 折算 —— 看题目给什么。</div></div><div class="fcard"><div class="fh"><span class="fno">17</span><b>购买力平价（PPP）：判断汇率是否符合</b><a class="fj jump" data-go="t-ppp">看详解 →</a></div><div class="feq">绝对购买力平价汇率 ＝ <span class="frac"><i>本国物价水平</i><em>外国物价水平</em></span></div><div class="feq2">判断口径：算出的理论汇率 ≠ 市场实际汇率 → 不符合购买力平价</div><div class="fvars"><div><b>本国物价水平</b>同一种商品在本国的本币价格</div><div><b>外国物价水平</b>同一种商品在外国的外币价格</div><div><b>报价方向</b>若题目给的报价方向相反，取倒数后再比</div><div><b>必背考点</b>系统阐述者＝卡塞尔；购买力平价理论＝现代汇率理论的基础</div></div><div class="fnote"><b>答题三步</b>：① 算理论汇率 ② 把市场汇率换算成同一报价方向 ③ 写一句「不一致 → 不符合」——<br>那句话才是采分点，只算数不给结论等于没答。<br><b>顺带记</b>：「汇兑心理说」后来演变为「心理预期说」（选择题考过）。</div></div><div class="fcard"><div class="fh"><span class="fno">18</span><b>国际收支平衡表：差额计算</b><a class="fj jump" data-go="t-bop">看详解 →</a></div><div class="feq">国际收支总差额 ＝ 经常账户差额 ＋ 资本和金融账户差额</div><div class="feq2">平衡恒等式：经常账户 ＋ 资本和金融账户 ＋ 储备资产变动 ＋ 净误差与遗漏 ＝ 0<br>储备资产：<b>增加记借方（负号）</b>、减少记贷方（正号）</div><div class="fvars"><div><b>经常账户</b>货物、服务、收益、经常转移</div><div><b>资本和金融账户</b>资本转移与非储备金融资产交易（<b>不含储备资产</b>）</div><div><b>储备资产</b>是<b>平衡项</b>，不并入总差额</div><div><b>净误差与遗漏账户</b>为使平衡表平衡而<b>人为设立</b>的账户</div></div><div class="fnote"><b>易失分</b>：把「储备资产增加」当正数加进总差额 —— 增加要记<b>负</b>，方向反了整个题就反了。<br><b>真题判断改错考过</b>：平衡账户是<b>净误差与遗漏账户</b>，不是储备资产账户。<br><b>名词解释</b>：调节性交易账户 ＝ 事后项目／补偿项目。</div></div></div>
     </div>
   </div>
 
@@ -579,6 +1134,7 @@ const TABS = [
   { id:'terms', ic:'📖', label:'名词解释', n: DB.meta.termTotal },
   { id:'over',  ic:'🧾', label:'概述题',   n: DB.meta.overTotal },
   { id:'calc',  ic:'🧮', label:'计算题',   n: DB.meta.calcTotal },
+  { id:'formula',ic:'📐', label:'公式墙',   n: 18 },
   { id:'points',ic:'🎯', label:'考前预测', n: DB.meta.predictTotal },
   { id:'outline',ic:'📚', label:'大纲背诵库', n: DB.meta.outlineTermTotal + DB.meta.outlineOverTotal + DB.meta.outlineCalcTotal }
 ];
@@ -615,6 +1171,7 @@ function go(v){
   }
   if (v === 'outline'){ renderOutline(); }
   if (v === 'wrong'){ renderWrong(); }
+  if (v === 'calc' && window.IF_CALC){ window.IF_CALC.enter(); }
   window.scrollTo({ top:0, behavior:'smooth' });
 }
 
@@ -1543,6 +2100,1156 @@ renderTerms(TERMS);
 renderOvers(OVERS);
 renderCalcs();
 renderPoints();
+/* 供计算专项岛调用：切视图 / 触发云同步 */
+window.__bankGo = go;
+window.__ifSyncCommit = function(why){ try{ syncCommit(why); }catch(e){} };
+if (window.IF_CALC) window.IF_CALC.enter();
 </script>
+
+<!-- ===== 悬浮计算器：自由计算（三列）+ 预设公式（13 个）· 可拖动 / 可吸附右下角 ===== -->
+<div class="ifc" id="ifDock">
+  <button type="button" id="ifDockBtn" aria-label="打开计算器"><span class="em">🧮</span><span class="tx">计算器</span></button>
+  <div id="ifDockPanel" class="hide">
+    <div id="ifDockHead">
+      <span class="grip">⠿</span>
+      <b>计算器</b>
+      <select id="ifDockPick"></select>
+      <button type="button" id="ifDockSnap" title="吸回右下角">⇲</button>
+      <button type="button" id="ifDockClose" title="收起">✕</button>
+    </div>
+    <div id="ifCalcTabs">
+      <button type="button" class="on" data-ct="free">自由计算</button>
+      <button type="button" data-ct="preset">预设公式 · 13</button>
+    </div>
+    <div id="ifDockBody">
+      <div id="ifFree">
+<div class="frowsbox">
+      <div class="frhd">多计算区<span style="font-weight:400">前 3 行固定、不可删除；每行右侧 <b>清空</b> 只清本行；后面行可用 <code>$1</code> 引用第 1 行的结果，实现「先分开算、再合并算」</span></div>
+      <div id="ifRows"></div>
+      <div class="frfoot">
+        <button class="pri" id="ifAddRow">＋ 添加一行</button>
+        <button id="ifClearRows">清空内容</button>
+        <button id="ifToggleKeys">显示数字键盘</button>
+      </div>
+    </div>
+
+    <div class="fkeys hide" id="ifKeys">
+      <button class="kfn" data-act="clear" title="清空本行（Esc）">C</button>
+      <button class="kfn" data-act="back" title="退格">⌫</button>
+      <button class="kfn" data-k="(">(</button>
+      <button class="kfn" data-k=")">)</button>
+      <button data-k="7">7</button>
+      <button data-k="8">8</button>
+      <button data-k="9">9</button>
+      <button class="kop" data-k="/">÷</button>
+      <button data-k="4">4</button>
+      <button data-k="5">5</button>
+      <button data-k="6">6</button>
+      <button class="kop" data-k="*">×</button>
+      <button data-k="1">1</button>
+      <button data-k="2">2</button>
+      <button data-k="3">3</button>
+      <button class="kop" data-k="-">−</button>
+      <button data-k="0">0</button>
+      <button data-k=".">.</button>
+      <button data-k="%">%</button>
+      <button class="kop" data-k="+">+</button>
+      <button class="kw2" data-k="$" title="引用前面某一行的结果">$ 引用</button>
+      <button class="kw2" data-k="^" title="乘方">^ 乘方</button>
+      <button class="keq" data-act="eq">＝ 计算（Enter）</button>
+    </div>
+
+    <div class="ffreehint">
+      <kbd>Enter</kbd> 计算并跳到下一行　<kbd>Esc</kbd> 清空本行　<kbd>↑</kbd><kbd>↓</kbd> 上下行<br>
+      前 3 行固定不可删；每行右侧 <b>清空</b> 只清本行，<b>＋ 添加一行</b> 新增的行（第 4 行起）可用 <b>✕</b> 删除，<b>清空内容</b> 一次清空全部算式<br>
+      支持 <b>+ − × ÷ ( ) % ^</b> 与小数、千分位；乘号写 <code>*</code>、<code>×</code>、甚至字母 <code>x</code> 都认；
+      <b>%</b> 表示除以 100，所以 <code>100*(1+9.5%)</code> 能直接算。<code>$1</code> 表示第 1 行的结果。
+    </div>
+      </div>
+      <div id="ifPreset" class="hide"></div>
+    </div>
+  </div>
+</div>
+
+<script>
+/* =========================================================================
+ * 国际金融 00076 · 计算专项（从「国际金融_00076_计算题专项.html」移植）
+ *   · 5 个子标签：必考四类 / 应备十四类 / 真题演练 / 做题训练 / 错题库
+ *   · 13 个计算器（页内 + 右下角悬浮面板共用同一套 CALC 定义）
+ *   · 进度写在 if00076_* 键 → 由 cloud.js 同步到 data/IF00076-sync.json
+ *   全部包在 IIFE 里：本页顶部脚本已占用 $ / $$ / TABS 等全局名，不能裸声明。
+ * ========================================================================= */
+(function(){
+"use strict";
+
+const CALC = {"hedge":{"title":"远期外汇交易保值计算器","note":"填签约日与到期日的即期汇率、签约时的远期汇率和金额，算不保值损失、保值后损益与保值收益。","inputs":[["s1","签约日即期汇率（银行买入价）",1.677,0.0001],["s2","到期日即期汇率（银行买入价）",1.66,0.0001],["f1","签约时远期汇率（银行买入价）",1.674,0.0001],["amt","外币金额",100000,10000]]},"opt":{"title":"外汇期权盈亏计算器","note":"填协定价格、期权费、到期即期汇率与金额，自动算损益平衡点、判断是否行使并算盈亏。","inputs":[["k","协定价格",1.84,0.0001],["p","期权费（每 1 外币）",0.02,0.0001],["s","到期即期汇率",1.8388,0.0001],["amt","合约金额",1000000,100000]],"selects":[["kind","期权类型",[["call","买入看涨期权（Call）"],["put","买入看跌期权（Put）"]]]]},"fut":{"title":"外汇期货套期保值计算器","note":"填现货签约/到期汇率、期货开仓/平仓价与金额，算现货盈亏、期货盈亏与净盈亏。汇率按「1 外币 = ? 本币」填。","inputs":[["s1","现货·签约汇率",0.785,0.0001],["s2","现货·到期汇率",0.7776,0.0001],["f1","期货·开仓价",0.783,0.0001],["f2","期货·平仓价",0.78,0.0001],["amt","外币金额",1000000,100000]],"selects":[["dir","套保方向",[["sell","卖出套保（出口商，怕外币贬值）"],["buy","买入套保（进口商，怕外币升值）"]]]]},"fwd":{"title":"远期汇率计算器（升水 / 贴水加减）","note":"填即期汇率的两个价和汇水点数，自动判方向、算远期。点数按报价小数位折算。","inputs":[["s1","即期汇率 买入价",1.354,0.0001],["s2","即期汇率 卖出价",1.3565,0.0001],["p1","汇水 前一个数（点）",50,1],["p2","汇水 后一个数（点）",30,1],["d","报价小数位数（4 或 2）",4,1]]},"cross":{"title":"套算汇率计算器","note":"选「同边相乘 / 交叉相除」，填两组报价即可。还可填金额，算出能换多少。","inputs":[["a1","报价 A 买入价",1.721,0.0001],["a2","报价 A 卖出价",1.727,0.0001],["b1","报价 B 买入价",111.52,0.01],["b2","报价 B 卖出价",112.5,0.01],["amt","要折算的金额（可填 0）",100000,1000]],"selects":[["mode","套算方式",[["mul","同边相乘（一个美元为基准、一个为计价）"],["div","交叉相除（两个都以美元为基准或都为计价）"]]]]},"gold":{"title":"铸币平价与黄金输送点计算器","note":"填两国 1 单位货币的含金量（单位要一致）和黄金运输成本。","inputs":[["g1","甲国 1 单位货币含金量",113.0016,0.0001],["g2","乙国 1 单位货币含金量",23.22,0.0001],["c","黄金运输成本",0.02,0.01]]},"quote":{"title":"进出口报价折算计算器","note":"两种方向：把本币底价折成外币报价，或把外币货款折成本币成本。","inputs":[["b","外币买入价（小的一侧）",0.9784,0.0001],["s","外币卖出价（大的一侧）",0.9796,0.0001],["amt","金额",200000,10000]],"selects":[["dir","折算方向",[["out","出口商：本币底价 → 外币报价"],["in","进口商：外币货款 → 本币成本"]]]]},"prem":{"title":"升（贴）水年率计算器","note":"基准货币用即期做分母，报价货币用远期做分母。","inputs":[["s","即期汇率",1.603,0.0001],["f","远期汇率",1.607,0.0001],["m","远期月数",3,1]],"selects":[["side","算哪种货币",[["base","基准货币（第一个）"],["quote","报价货币（第二个）"]]]]},"irp":{"title":"利率平价：算远期汇率","note":"只给两国利率、不给汇水点数时用这个。按「报价货币利率 − 基准货币利率」算升贴水额。","inputs":[["s","即期汇率",6.5,0.01],["r1","基准货币年利率 %",2,0.1],["r2","报价货币年利率 %",5,0.1],["m","远期月数",6,1]]},"arb2":{"title":"直接套汇（两点套汇）计算器","note":"填两地的买入价/卖出价，自动判断方向并算获利。","inputs":[["a1","纽约市场 买入价",114.2,0.01],["a2","纽约市场 卖出价",114.4,0.01],["b1","东京市场 买入价",114.65,0.01],["b2","东京市场 卖出价",114.85,0.01],["amt","投入金额",1000,100]]},"arb3":{"title":"三角套汇（间接套汇）计算器","note":"填三个市场的汇率（按「1 单位 A = ? B」的形式填中间价），连乘判断方向。","inputs":[["k1","第一地汇率（中间价）",0.3992334717342702,0.0001],["k2","第二地汇率（中间价）",1.634,0.0001],["k3","第三地汇率（中间价）",1.5349,0.0001],["amt","投入金额",100,10]]},"intr":{"title":"套利收益计算器（抵补 / 不抵补）","note":"抵补套利（教材口径，旧称抛补）需要远期卖出价；不抵补用到期日即期卖出价代替，其余相同。","inputs":[["s","即期买入价",1.6025,0.0001],["f","卖出时用的汇率（远期或到期即期）",1.6085,0.0001],["rh","本币（低利率国）年利率 %",6,0.1],["rf","外币（高利率国）年利率 %",8,0.1],["m","期限（月）",3,1],["amt","套利资本",100000,10000]]},"swap":{"title":"掉期成本与掉期收益计算器","note":"掉期成本按年率算，再与两国利差比较。","inputs":[["s","即期汇率",1.536,0.0001],["f","远期汇率",1.541,0.0001],["m","期限（月）",3,1],["sp","投资收益率 %",7,0.1],["amt","投资额",1000,100]]}};
+const $ = (s,r)=> (r||document).querySelector(s);
+const $$ = (s,r)=> [...(r||document).querySelectorAll(s)];
+const fx = (v,n)=> { const p=Math.pow(10,n); return (Math.round(v*p)/p).toFixed(n); };
+const fxs = (v,n)=> { const s = fx(v,n); return s.indexOf(".")>=0 ? s.replace(/0+$/,"").replace(/\.$/,"") : s; };
+const num = v=> { const x=parseFloat(v); return isFinite(x)? x : 0; };
+
+function buildCalc(box){
+  const k = box.dataset.calc, c = CALC[k];
+  if(!c || box.dataset.done) return;
+  box.dataset.done = "1";
+  let h = '<p class="cbh">'+c.title+'</p><p class="cbn">'+c.note+'</p><div class="cgrid">';
+  (c.inputs||[]).forEach(function(it){
+    const st = it[3] ? ' step="'+it[3]+'"' : '';
+    h += '<div class="cf"><label>'+it[1]+'</label><input type="number" data-k="'+it[0]+'" value="'+it[2]+'"'+st+'></div>';
+  });
+  (c.selects||[]).forEach(function(sel){
+    h += '<div class="cf"><label>'+sel[1]+'</label><select data-k="'+sel[0]+'">'
+       + sel[2].map(function(o){ return '<option value="'+o[0]+'">'+o[1]+'</option>'; }).join("")
+       + '</select></div>';
+  });
+  h += '</div><button class="cbtn" data-calc-run="'+k+'">计算</button>'
+     + '<button class="cbtn ghost" data-calc-clear="'+k+'">重置</button>'
+     + '<div class="cres"></div>';
+  box.innerHTML = h;
+}
+
+function vals(box){
+  const v = {};
+  $$("input,select", box).forEach(function(e){ v[e.dataset.k] = e.value; });
+  return v;
+}
+
+/* ---------------- 各计算器逻辑 ---------------- */
+const RUN = {
+  hedge: function(v){
+    const s1=num(v.s1), s2=num(v.s2), f1=num(v.f1), A=num(v.amt);
+    const noHedge = A*(s2-s1), hedged = A*(f1-s1), gain = A*(f1-s2);
+    return { cls: gain>=0?"hit":"miss", head:"远期保值效果", big:"多收 " + fx(gain,2) + "（本币）",
+      steps: [
+        "不保值：按到期日即期买入价 " + s2 + " 折算 → " + A + " × (" + s2 + " − " + s1 + ") = " + fx(noHedge,2),
+        "保值后：签约时锁定远期汇率 " + f1 + " → " + A + " × (" + f1 + " − " + s1 + ") = " + fx(hedged,2),
+        "保值收益 = " + fx(hedged,2) + " − (" + fx(noHedge,2) + ") = " + fx(gain,2),
+        gain>=0 ? "保值锁住了汇率下跌风险 → 比不保值多收 " + fx(gain,2) : "本例远期汇率低于到期即期汇率，保值反而少收，但锁定了不确定性",
+        "提醒：出口商收进外币用银行买入价；进口商付外币用卖出价"
+      ] };
+  },
+  opt: function(v){
+    const k=num(v.k), p=num(v.p), S=num(v.s), A=num(v.amt);
+    const call = v.kind !== "put";
+    const be = call ? k+p : k-p;
+    const exer = call ? (S > be) : (S < be);
+    const pl = exer ? (call ? (S-k-p)*A : (k-S-p)*A) : (-p*A);
+    return { cls: exer?"hit":"miss",
+      head: (call?"买入看涨期权":"买入看跌期权") + " · 损益平衡点 " + fx(be,4) + " → " + (exer?"行使":"不行使"),
+      big: "盈亏 " + fx(pl,2),
+      steps: [
+        "损益平衡点 = 协定价格 " + k + (call?" + ":" − ") + " 期权费 " + p + " = " + fx(be,4),
+        "到期即期汇率 " + S + (call ? (S>be?" > ":" < ") : (S<be?" < ":" > ")) + "平衡点 " + fx(be,4) + " → " + (exer?"行使划算":"不行使更划算"),
+        exer ? ("行使盈亏 = (" + S + (call?" − ":" − ") + "…) 计算得 " + fx(pl,2))
+             : ("不行使：损失全部期权费 = " + A + " × " + p + " = " + fx(pl,2)),
+        "对照：另一方案为 " + fx(exer? -p*A : (call?(S-k-p)*A:(k-S-p)*A), 2) + "，两者取其大",
+        "提醒：买方最大损失 = 期权费，收益理论上无限"
+      ] };
+  },
+  fut: function(v){
+    const s1=num(v.s1), s2=num(v.s2), f1=num(v.f1), f2=num(v.f2), A=num(v.amt);
+    const sell = v.dir !== "buy";
+    const spot = sell ? A*(s2-s1) : A*(s1-s2);
+    const fut  = sell ? A*(f1-f2) : A*(f2-f1);
+    return { cls: Math.abs(spot+fut) < Math.abs(spot)+0.0001 ? "hit":"plain",
+      head: sell?"卖出套期保值（出口商）":"买入套期保值（进口商）",
+      big: "净盈亏 " + fx(spot+fut,2),
+      steps: [
+        "现货市场盈亏 = " + A + " × (" + (sell? s2+" − "+s1 : s1+" − "+s2) + ") = " + fx(spot,2),
+        "期货市场盈亏 = " + A + " × (" + (sell? f1+" − "+f2 : f2+" − "+f1) + ") = " + fx(fut,2),
+        "净盈亏 = " + fx(spot,2) + " + (" + fx(fut,2) + ") = " + fx(spot+fut,2),
+        "两市场方向相反 → 盈亏相抵，套保不是消除全部风险（基差变动仍留缺口）"
+      ] };
+  },
+  fwd: function(v){
+    const d = Math.round(num(v.d)) || 4, k = Math.pow(10, d);
+    const p1 = num(v.p1)/k, p2 = num(v.p2)/k;
+    const up = num(v.p1) < num(v.p2);
+    const sgn = up ? 1 : -1;
+    const f1 = num(v.s1) + sgn*p1, f2 = num(v.s2) + sgn*p2;
+    return {
+      cls: up ? "hit" : "plain", head: (up ? "汇水前小后大 → 加" : "汇水前大后小 → 减"),
+      big: fx(f1, d) + " ~ " + fx(f2, d),
+      steps: [
+        "点数折小数：1 点 = 1/" + k + " → 汇水 " + v.p1 + "~" + v.p2 + " = " + fx(p1, d) + " ~ " + fx(p2, d),
+        "方向：汇水 " + v.p1 + " 与 " + v.p2 + (up ? "，小的在前大的在后 → 往上加" : "，大的在前小的在后 → 往下减"),
+        "远期买入价 = " + fx(num(v.s1), d) + (up ? " + " : " − ") + fx(p1, d) + " = " + fx(f1, d),
+        "远期卖出价 = " + fx(num(v.s2), d) + (up ? " + " : " − ") + fx(p2, d) + " = " + fx(f2, d),
+        "自检：左边 " + fx(f1, d) + " 应小于右边 " + fx(f2, d) + " → " + (f1 < f2 ? "通过 ✓" : "不通过 ✗ 检查输入")
+      ]
+    };
+  },
+  cross: function(v){
+    const mul = v.mode === "mul";
+    const b1 = mul ? num(v.a1)*num(v.b1) : num(v.a1)/num(v.b2);
+    const b2 = mul ? num(v.a2)*num(v.b2) : num(v.a2)/num(v.b1);
+    const d = b1 > 1000 ? 2 : 4;
+    const amt = num(v.amt);
+    const steps = [
+      "方式：" + (mul ? "同边相乘" : "交叉相除"),
+      "买入价 = " + fx(num(v.a1),4) + (mul ? " × " : " ÷ ") + fx(num(mul?num(v.b1):num(v.b2)),4) + " = " + fx(b1,d),
+      "卖出价 = " + fx(num(v.a2),4) + (mul ? " × " : " ÷ ") + fx(num(mul?num(v.b2):num(v.b1)),4) + " = " + fx(b2,d),
+      "结果：1 单位报价 A 货币 = " + fx(b1,d) + " ~ " + fx(b2,d) + " 单位报价 B 货币"
+    ];
+    if(amt>0){
+      steps.push("折算金额（用买入价那一侧）：" + amt + " × " + fx(b1,d) + " = " + fx(amt*b1, 2));
+    }
+    return { cls:"plain", head:"套算结果", big: fx(b1,d)+" ~ "+fx(b2,d), steps:steps };
+  },
+  gold: function(v){
+    const g1 = num(v.g1), g2 = num(v.g2), c = num(v.c);
+    const par = g1/g2;
+    const r2 = function(x){ return fxs(x,4) + (fxs(x,4) !== fxs(x,2) ? "（题目惯例也可写成 " + fxs(x,2) + "）" : ""); };
+    return { cls:"plain", head:"铸币平价与黄金输送点", big: fx(par,4),
+      steps: [
+        "铸币平价 = " + g1 + " ÷ " + g2 + " = " + r2(par) + "　→ 1 甲币 = " + fx(par,4) + " 乙币",
+        "黄金输出点（汇率上限）= " + fx(par,4) + " + " + c + " = " + fxs(par+c,4),
+        "黄金输入点（汇率下限）= " + fx(par,4) + " − " + c + " = " + fxs(par-c,4),
+        "汇率波动区间：" + fxs(par-c,4) + " ~ " + fxs(par+c,4),
+        "别把运费乘 2——题目只给一份运输成本"
+      ] };
+  },
+  quote: function(v){
+    const b = num(v.b), s = num(v.s), amt = num(v.amt);
+    if(v.dir === "out"){
+      const r = amt/b;
+      return { cls:"plain", head:"出口商对外报价（本币底价 → 外币报价）", big: fx(r,2) + " （外币）",
+        steps: ["本币底价折外币报价用<b>外币买入价</b>（" + b + "）",
+                "外币报价 = " + amt + " ÷ " + b + " = " + fx(r,2)] };
+    }
+    const r = amt*s;
+    return { cls:"plain", head:"进口商折算成本（外币货款 → 本币成本）", big: fx(r,2) + " （本币）",
+      steps: ["外币货款折本币成本用<b>外币卖出价</b>（" + s + "）",
+              "本币成本 = " + amt + " × " + s + " = " + fx(r,2)] };
+  },
+  prem: function(v){
+    const s = num(v.s), f = num(v.f), m = num(v.m) || 1;
+    let r, name, numTxt, denTxt;
+    if(v.side === "base"){ r = (f-s)/s*12/m*100; name = "基准货币（斜线左边那个）"; numTxt = f+" − "+s; denTxt = s; }
+    else { r = (s-f)/f*12/m*100; name = "报价货币（斜线右边那个）"; numTxt = s+" − "+f; denTxt = f; }
+    return { cls: r>=0?"hit":"miss", head: name + (r>=0?" 升水年率":" 贴水年率"), big: fx(r,3) + "%",
+      steps: [
+        (v.side==="base" ? "(远期 − 即期) ÷ 即期" : "(即期 − 远期) ÷ 远期") + " × 12/月数 × 100%",
+        "= (" + numTxt + ") ÷ " + denTxt + " × 12/" + m + " × 100%",
+        "= " + fx(r,3) + "% → " + (r>=0?"升水":"贴水"),
+        "提醒：基准货币除即期(" + s + ")、报价货币除远期(" + f + ")，分母别弄反"
+      ] };
+  },
+  irp: function(v){
+    const s = num(v.s), r1 = num(v.r1)/100, r2 = num(v.r2)/100, m = num(v.m);
+    const prem = s*(r2-r1)*m/12;
+    const f = s + prem;
+    return { cls: prem>=0?"plain":"hit", head: "利率平价下的远期汇率", big: fx(f,4),
+      steps: [
+        "报价货币利率 " + v.r2 + "% 与基准货币利率 " + v.r1 + "% 之差 = " + fx((r2-r1)*100,3) + "%",
+        "升（贴）水额 = " + s + " × " + fx((r2-r1)*100,3) + "% × " + m + "/12 = " + fx(prem,4),
+        "远期汇率 = " + s + (prem>=0?" + ":" − ") + fx(Math.abs(prem),4) + " = " + fx(f,4),
+        "结论：利率高的货币远期" + (r2>r1 ? "贴水（报价货币贴水，即远期数值变大）" : "升水")
+      ] };
+  },
+  arb2: function(v){
+    const a1=num(v.a1), a2=num(v.a2), b1=num(v.b1), b2=num(v.b2), amt=num(v.amt);
+    let dir, gain, route;
+    if(b1 > a2){ dir = true; gain = amt*(b1/a2 - 1); route = "在 A 地（低价）买入，在 B 地（高价）卖出"; }
+    else if(a1 > b2){ dir = true; gain = amt*(a1/b2 - 1); route = "在 B 地（低价）买入，在 A 地（高价）卖出"; }
+    else { dir = false; gain = 0; route = "两地价差不足以覆盖成本，无套汇机会"; }
+    return { cls: dir?"hit":"miss", head: dir?"存在套汇机会":"无套汇机会", big: dir? ("获利约 " + fx(gain,2)) : "—",
+      steps: [
+        "A 地报 " + a1 + " / " + a2 + "，B 地报 " + b1 + " / " + b2,
+        "方向：比较 A 地卖出价 " + a2 + " 与 B 地买入价 " + b1 + "（反之亦然）",
+        route,
+        dir ? ("获利 = " + amt + " × (" + fx(Math.max(b1/a2, a1/b2),6) + " − 1) = " + fx(gain,2)) : "两地对不上"
+      ] };
+  },
+  arb3: function(v){
+    const k = num(v.k1)*num(v.k2)*num(v.k3), amt = num(v.amt);
+    const ok = Math.abs(k-1) > 0.0001;
+    const gain = amt*(k-1);
+    return { cls: ok?"hit":"miss", head: ok? "存在套汇机会" : "无套汇机会（连乘≈1）", big: "连乘 = " + fx(k,6),
+      steps: [
+        "三地汇率中间价：" + v.k1 + " × " + v.k2 + " × " + v.k3 + " = " + fx(k,6),
+        k > 1 ? "连乘 > 1 → 按你填的顺序转一圈可以获利" : (k < 1 ? "连乘 < 1 → 按相反顺序转一圈可以获利" : "连乘 = 1 → 无机会"),
+        "获利 ≈ " + amt + " × (" + fx(k,6) + " − 1) = " + fx(gain,4),
+        "提醒：判断用中间价，实际算获利要用买卖价（买用卖出价、卖用买入价）"
+      ] };
+  },
+  intr: function(v){
+    const s=num(v.s), f=num(v.f), rh=num(v.rh)/100, rf=num(v.rf)/100, m=num(v.m), A=num(v.amt);
+    const out = A*s*(1+rf*m/12)/f;
+    const home = A*(1+rh*m/12);
+    const gain = out - home;
+    return { cls: gain>0?"hit":"miss", head: (gain>0?"值得套利（利差 > 汇差）":"不划算（汇差吃掉利差）"),
+      big: "多获利 " + fx(gain,2) + "（本币）",
+      steps: [
+        "本币调往高利率国：" + A + " × " + s + " = " + fx(A*s,2) + "（外币）",
+        "存 " + m + " 个月（" + v.rf + "%）：× (1 + " + v.rf + "% × " + m + "/12) = " + fx(A*s*(1+rf*m/12),2),
+        "按 " + f + " 换回本币：÷ " + f + " = " + fx(out,2),
+        "留在本国：× (1 + " + v.rh + "% × " + m + "/12) = " + fx(home,2),
+        "差额 = " + fx(out,2) + " − " + fx(home,2) + " = " + fx(gain,2)
+      ] };
+  },
+  swap: function(v){
+    const s=num(v.s), f=num(v.f), m=num(v.m)||1, sp=num(v.sp)/100, A=num(v.amt);
+    const cost = (f-s)/s*12/m*100;
+    const net = sp*100 - cost;
+    const gain = A*net/100*m/12;
+    return { cls: net>0?"hit":"miss", head: "掉期成本年率 " + fx(cost,3) + "%", big: "掉期收益 " + fx(gain,2),
+      steps: [
+        "掉期成本年率 = (" + f + " − " + s + ") ÷ " + s + " × 12/" + m + " × 100% = " + fx(cost,3) + "%",
+        "净收益率 = 投资收益率 " + v.sp + "% − 掉期成本 " + fx(cost,3) + "% = " + fx(net,3) + "%",
+        "掉期收益 = " + A + " × " + fx(net,3) + "% × " + m + "/12 = " + fx(gain,2),
+        net>0 ? "净收益为正 → 值得做这笔抵补投资" : "净收益为负 → 不值得"
+      ] };
+  }
+};
+
+function runCalc(btn){
+  const k = btn.dataset.calcRun;
+  const box = btn.closest(".calcbox");
+  const r = RUN[k](vals(box));
+  const res = $(".cres", box);
+  res.className = "cres show " + (r.cls||"plain");
+  res.innerHTML = '<span class="big">' + r.head + '：' + r.big + '</span>'
+    + '<ol>' + r.steps.map(function(s){ return '<li>'+s+'</li>'; }).join("") + '</ol>';
+  if(btn.scrollIntoView) res.scrollIntoView({block:"nearest", behavior:"smooth"});
+}
+
+/* ---------------- 子标签机制（改写：只作用于 #ifTabs，不碰顶部标签） ---------------- */
+const TABS = ["must","prep","drill","train","wrong","bankcalc"];
+const tabsEl = document.getElementById("ifTabs");
+function goTop(el){
+  const h = tabsEl.getBoundingClientRect().height;
+  const r = el.getBoundingClientRect();
+  if(r.top >= h && r.top < window.innerHeight*0.55) return;
+  window.scrollTo({top: Math.max(0, window.pageYOffset + r.top - h - 12), behavior:"smooth"});
+}
+let TAB = localStorage.getItem("if00076_calc_tab") || "must";
+if(TABS.indexOf(TAB) < 0) TAB = "must";
+function switchTab(t, doScroll){
+  if(TABS.indexOf(t) < 0) t = "must";
+  TAB = t; try{ localStorage.setItem("if00076_calc_tab", t); }catch(e){}
+  $$("#ifTabs .tab").forEach(function(b){ b.classList.toggle("on", b.dataset.tab===t); });
+  TABS.forEach(function(k){ const p = document.getElementById("pan-"+k); if(p) p.classList.toggle("hide", k!==t); });
+  $$("#ifRoot .calcbox").forEach(buildCalc);   /* 只重建岛内页面上的，悬浮面板里另有一套 */
+  const on = $('#ifTabs .tab[data-tab="'+t+'"]');
+  if(on && on.scrollIntoView) on.scrollIntoView({block:"nearest", inline:"nearest"});
+  if(doScroll !== false) goTop(document.getElementById("pan-"+t));
+}
+
+document.addEventListener("click", function(e){
+  const tb = e.target.closest("#ifTabs .tab");
+  if(tb){ switchTab(tb.dataset.tab); return; }
+  const jp = e.target.closest(".jump");
+  if(jp){ jumpTo(jp.dataset.go); return; }
+  const fd = e.target.closest(".fold");
+  if(fd){
+    const box = document.getElementById(fd.dataset.target);
+    if(box){ box.classList.toggle("open"); fd.classList.toggle("on"); }
+    return;
+  }
+  const rb = e.target.closest("[data-calc-run]");
+  if(rb){ runCalc(rb); return; }
+  const cb = e.target.closest("[data-calc-clear]");
+  if(cb){
+    const box = cb.closest(".calcbox"); const k = cb.dataset.calcClear;
+    const c = CALC[k];
+    $$("input,select", box).forEach(function(el){
+      (c.inputs||[]).forEach(function(it){ if(it[0]===el.dataset.k) el.value = it[2]; });
+      (c.selects||[]).forEach(function(se){ if(se[0]===el.dataset.k) el.value = se[1][0][0]; });
+    });
+    $(".cres", box).className = "cres";
+    return;
+  }
+});
+
+/* 看详解：先让顶部切到「计算题」，再切子标签并滚到目标卡 */
+function jumpTo(id){
+  const el = document.getElementById(id);
+  if(!el) return;
+  try{
+    const vc = document.getElementById("view-calc");
+    if(vc && !vc.classList.contains("on") && typeof window.go === "function") window.go("calc");
+  }catch(e){}
+  const pan = el.closest(".panel").id.replace("pan-","");
+  if(pan !== TAB) switchTab(pan, false);
+  setTimeout(function(){
+    const h = tabsEl.getBoundingClientRect().height;
+    window.scrollTo({top: Math.max(0, window.pageYOffset + el.getBoundingClientRect().top - h - 12), behavior:"smooth"});
+    el.classList.add("flash");
+    setTimeout(function(){ el.classList.remove("flash"); }, 1400);
+  }, 80);
+}
+
+/* ---------------- 展开 / 收起（本页自己的按钮） ---------------- */
+document.getElementById("ifOpenAll").addEventListener("click", function(){
+  const p = document.getElementById("pan-"+TAB);
+  $$(".fbox", p).forEach(function(b){ b.classList.add("open"); });
+  $$(".fold", p).forEach(function(b){ b.classList.add("on"); });
+});
+document.getElementById("ifCloseAll").addEventListener("click", function(){
+  const p = document.getElementById("pan-"+TAB);
+  $$(".fbox", p).forEach(function(b){ b.classList.remove("open"); });
+  $$(".fold", p).forEach(function(b){ b.classList.remove("on"); });
+});
+
+/* ================= 做题训练 ================= */
+const TQ = [
+ {y:"2021.10",k:"t-cross",tag:"套算汇率",
+  q:"纽约市场 GBP1=USD1.7210~1.7270，USD1=JPY111.52~112.50。计算英镑对日元的套算汇率；某出口商持 10 万英镑可兑换多少日元？",
+  a:["两个报价基准货币不同 → 同边相乘。","GBP1 = JPY(1.7210×111.52)~(1.7270×112.50) = JPY191.9259~194.2875。","出口商按英镑买入价换日元：100 000 × 191.9259 = 19 192 590 日元。"],
+  w:["<b>为什么套算</b>：没直接报 GBP/JPY，绕道美元。", "<b>为什么相乘</b>：美元一在基准位（USD1=JPY…）、一在计价位（GBP1=USD…）→ 同边相乘；身份相同才相除。", "<b>为什么买乘买</b>：同向才能连乘；混乘会「买价 &gt; 卖价」。", "<b>为什么用 191.9259</b>：银行买入英镑 → 客户只能拿低价（客户永远吃亏）。", "<b>为什么是 19 192 590</b>：用四舍五入后的 191.9259 乘，别拿 1.7210×111.52 连乘。"]},
+ {y:"2022.04",k:"t-quote",tag:"进出口报价",
+  q:"苏黎世市场 1 美元 = 0.9784~0.9796 瑞士法郎。瑞士出口商底价 20 万瑞士法郎，外国进口商要求以美元报价。应按哪个汇率？美元价格是多少？",
+  a:["以美元买入价 1 美元 = 0.9784 瑞士法郎报出（2 分）。","报价 = 200 000 ÷ 0.9784 = 204 415.37 美元（2 分）。"],
+  w:["<b>考的是选价</b>：两侧都除得出，选错整小问 0 分。", "<b>为什么用买入价 0.9784</b>：要保证换回瑞郎不少于 20 万。反算：按 0.9796 报 → 换回只剩 199 754.5 瑞郎，亏 245.5。", "<b>为什么除</b>：底价瑞郎 → 美元，200 000 ÷ 0.9784。", "<b>记一句</b>：收钱方报价，用对自己不利的那一侧。"]},
+ {y:"2022.10",k:"t-fwd",tag:"远期汇率",
+  q:"纽约市场即期 GBP=USD1.5575~1.5581，6 个月期英镑升水 30~40，求 6 个月远期汇率。",
+  a:["直接标价法，前小后大 → 加（升水）。","1.5575+0.0030=1.5605；1.5581+0.0040=1.5621。","即 GBP1 = USD1.5605~1.5621。"],
+  w:["<b>直接标价法</b>：纽约报 GBP=USD，英镑是外币。", "<b>前小后大 → 加</b>：30~40 加（考点 14：只看点数，与标价法无关）。", "<b>买价加 30、卖价加 40</b>：才保证买价 &lt; 卖价。", "<b>点数换算</b>：4 位小数 1 点 = 0.0001 → 30 点 = 0.0030。", "<b>自检</b>：1.5605 &lt; 1.5621；价差 0.0016 &gt; 0.0006 ✅。"]},
+ {y:"2023.04",k:"t-fwd",tag:"远期汇率",
+  q:"香港市场即期 USD1=HKD7.7465~7.7525，3 个月远期差价 10~12，求美元兑港币的 3 个月远期汇率。",
+  a:["直接标价法，前小后大 → 加。","7.7465+0.0010=7.7475；7.7525+0.0012=7.7537。","即 USD1 = HKD7.7475~7.7537。"],
+  w:["<b>直接标价法</b>：香港报 USD1=HKD，美元是外币。", "<b>前小后大 → 加</b>：10~12 加（美元升水）。", "<b>点数换算</b>：1 点 = 0.0001 → 10 点 = 0.0010。", "<b>买价加 10、卖价加 12</b>：买价保持在左。", "<b>自检</b>：7.7475 &lt; 7.7537；价差 0.0062 &gt; 0.0060 ✅。"]},
+ {y:"2023.10",k:"t-cross",tag:"套算汇率",
+  q:"纽约市场 USD1=HKD7.7820~7.7830；伦敦市场 GBP1=USD1.5140~1.5150。求英镑与港元的汇率。",
+  a:["一个以美元为基准、一个以美元为计价 → 同边相乘。","GBP1 = HKD(7.7820×1.5140)~(7.7830×1.5150)（2 分）。","GBP1 = HKD11.7819~11.7912（2 分）。"],
+  w:["<b>同边相乘</b>：美元一在基准位（USD1=HKD）、一在计价位（GBP1=USD）。", "<b>为什么不除</b>：身份相同才相除，本题不同。", "<b>各乘各的</b>：7.7820×1.5140 买入侧，7.7830×1.5150 卖出侧。", "<b>自检</b>：11.7819 &lt; 11.7912；买价 &gt; 卖价 = 一票否决。"]},
+ {y:"2024.04",k:"t-fwd",tag:"远期汇率·进口商",
+  q:"即期 USD1=SF1.3210~1.3220，6 个月远期差价 80~60。进口商 6 个月后须付 1000 万美元，届时需用瑞士法郎兑换，应如何做远期外汇交易？",
+  a:["差价前大后小 → 减法：USD1 = SF(1.3210−0.0080)~(1.3220−0.0060) = SF1.3130~1.3160（2 分）。","该进口商与银行签 6 个月远期合约，卖出瑞士法郎 1316 万、买入 1000 万美元（2 分）。"],
+  w:["<b>先算远期</b>：要锁的是 6 个月后的付款汇率。", "<b>前大后小 → 减</b>：80~60 减（贴水）。", "<b>为什么用 1.3160</b>：进口商买美元 → 银行卖美元用卖出价 → 1000 万 × 1.3160 = 1316 万瑞郎。", "<b>为什么签合约</b>：汇率定死 → 防美元升值，这就是保值。", "<b>别写反</b>：银行卖美元，用较大的那个价。"]},
+ {y:"2024.10",k:"t-gold",tag:"铸币平价",
+  q:"金币本位下，1 英镑含金 7.32 克，1 法郎含金 0.29 克，英法间黄金运输成本 0.03 法郎。求铸币平价、黄金输出点与输入点。",
+  a:["铸币平价 = 7.32÷0.29 = 25.24，即 1 英镑 = 25.24 法郎（2 分）。","黄金输出点 = 25.24+0.03 = 25.27（1 分）。","黄金输入点 = 25.24−0.03 = 25.21（1 分）。"],
+  w:["<b>为什么相除</b>：金币本位下比价由含金量定，谁金多谁值钱。", "<b>英镑在上</b>：问「1 英镑 = ? 法郎」→ 7.32 ÷ 0.29。", "<b>输出点 = 平价 + 0.03</b>：黄金运出国要花运费，这是上限。", "<b>输入点 = 平价 − 0.03</b>：运进来方向相反。输出上限、输入下限。", "<b>单位自检</b>：两个含金量同单位（都是克）。"]},
+ {y:"2025.04",k:"t-gold",tag:"铸币平价",
+  q:"1 英镑含金 113.0016 格令，1 美元含金 23.22 格令，两国黄金运输成本 0.02 美元。求铸币平价、黄金输出点与输入点。",
+  a:["铸币平价 = 113.0016÷23.22 = 4.8666，即 1 英镑 = 4.8666 美元（2 分）。","黄金输出点 = 4.8666+0.02 = 4.8866（1 分）。","黄金输入点 = 4.8666−0.02 = 4.8466（1 分）。"],
+  w:["<b>为什么相除</b>：含金量之比 → 113.0016 ÷ 23.22（都是格令）。", "<b>出去加、进来减</b>：+0.02 / −0.02。", "<b>顺便记</b>：1 英镑 = 4.8666 美元，考过多次。", "<b>自检</b>：4.8466 &lt; 4.8666 &lt; 4.8866 ✅（顺序永远成立）。"]},
+ {y:"2025.10",k:"t-fwd",tag:"远期汇率·间接标价",
+  q:"纽约市场即期 US$1=CHF0.8950~0.8968，6 个月汇水 200~300，求美元 6 个月远期汇率。",
+  a:["纽约市场报价 US$1=CHF… 属间接标价法；汇水前小后大 → 加。","间接标价法下远期汇率 = 即期汇率 + 贴水额。","0.8950+0.0200=0.9150；0.8968+0.0300=0.9268，即 US$1 = CHF0.9150~0.9268。"],
+  w:["<b>间接标价法</b>：纽约把美元当本币、报在基准位。", "<b>为什么「加」却叫贴水</b>：数字变大 = 美元升值 → 反过来是外币瑞郎贴水。公式写「间接标价法：远期 = 即期 + 贴水额」，别写「升水」。", "<b>买价加 200（0.0200）、卖价加 300（0.0300）</b>。", "<b>点数换算</b>：1 点 = 0.0001 → 200 点 = 0.0200。", "<b>自检</b>：0.9150 &lt; 0.9268；价差 0.0118 &gt; 0.0018 ✅。"]},
+ {y:"2026.04",k:"t-fwd",tag:"远期汇率",
+  q:"美国市场即期 GBP1=USD1.3540~1.3565，3 个月汇水 50-30，求英镑 3 个月远期汇率。",
+  a:["直接标价法，汇水前大后小 → 贴水，用减法。","1.3540−0.0050=1.3490（2 分）；1.3565−0.0030=1.3535（2 分）。","即 GBP1 = USD1.3490~1.3535。"],
+  w:["<b>直接标价法</b>：美国市场报 GBP1=USD，英镑是外币。", "<b>前大后小 → 减</b>：50~30 减（英镑贴水）。", "<b>各减自己那个数</b>：1.3540 − 0.0050、1.3565 − 0.0030。", "<b>点数换算</b>：1 点 = 0.0001 → 50 点 = 0.0050。", "<b>自检</b>：1.3490 &lt; 1.3535；价差 0.0045 &gt; 0.0025 ✅。"]},
+ {y:"2019.04",k:"t-irp",tag:"利率平价",
+  q:"伦敦年利率 9.5%，纽约年利率 7%，即期 GBP1=USD1.8000。求 3 个月美元的远期汇率。",
+  a:["英镑利率高 → 英镑远期贴水、美元远期升水。","升贴水额 = 1.8000×(9.5%−7%)×3/12 = 0.0113（2 分）。","3 个月英镑远期汇率 = 1.8000−0.0113 = 1.7887。","求美元的远期汇率取倒数：1÷1.7887 = 0.5591（英镑）（2 分）。"],
+  w:["<b>为什么用利率平价</b>：不给点数，只给利率 → 即期 × 利差 × 月数/12。", "<b>英镑贴水</b>：利率高的货币远期贴水。", "<b>为什么 9.5% − 7%</b>：先算出的永远是基准货币（英镑）那一侧。", "<b>为什么 × 3/12</b>：年利率折 3 个月。", "<b>⚠️ 为什么取倒数</b>：1.7887 是英镑的价，问的是美元 → 互为倒数 ⇒ 1 ÷ 1.7887 = 0.5591，不取 0 分。", "<b>自检</b>：0.5591 &lt; 1 ✅。"]},
+ {y:"2019.10",k:"t-irp",tag:"利率平价",
+  q:"伦敦年利率 9.5%，纽约年利率 7%，即期 GBP1=USD1.8000。求 3 个月英镑的远期汇率。",
+  a:["伦敦利率高 → 英镑远期贴水，用减法。","贴水额 = 1.8000×(9.5%−7%)×3/12 = 0.0113（美元）（2 分）。","远期汇率 = 1.8000−0.0113 = 1.7887（美元）（2 分）。"],
+  w:["<b>为什么用利率平价</b>：同上一题，只给利率不给点数。", "<b>伦敦 9.5% &gt; 纽约 7%</b> → 英镑贴水 → 减。", "<b>⚠️ 为什么不取倒数</b>：题干与 2019.04 一样，只差别在问英镑（1 英镑 = ? 美元）→ 1.7887 直接就是答案。先看问哪种货币。", "<b>贴水额单位</b>：写成「1 英镑 = x 美元」，减的自然是美元。", "<b>自检</b>：1.7887 &lt; 1.8000 ✅。"]},
+ {y:"2020.10",k:"t-fwd",tag:"远期汇率·单选",
+  q:"纽约市场即期 USD1=JPY100.48~100.58，3 个月远期差价 10~20，求美元的 3 个月期远期汇率。（A.90.48~80.58　B.100.38~100.38　C.100.58~100.78　D.110.48~120.58）",
+  a:["纽约市场为间接标价法（美元是本币、报在基准位）；前小后大 → 加。","100.48+0.10=100.58；100.58+0.20=100.78。","即 USD1 = JPY100.58~100.78，正确答案 C。"],
+  w:["<b>为什么是单选</b>：这卷没计算大题，考点换成四个选项。", "<b>间接标价法</b>：纽约报 USD1=JPY，美元在基准位（同第 9 题）。", "<b>还是加</b>：10~20 前小后大（与标价法无关）。", "<b>⚠️ 点数换算</b>：日元 2 位小数，1 点 = 0.01（不是 0.0001！）→ 10 点 = 0.10。", "<b>为什么选 C</b>：100.48 + 0.10 = 100.58；100.58 + 0.20 = 100.78。D 把点当 10/20 加，A 当 10/20 减。"]},
+ {y:"练习",k:"t-cross",tag:"套算汇率·交叉相除",
+  q:"已知 USD/CNY=6.9250/6.9280，USD/EUR=0.9200/0.9230，求银行对客户报出的 EUR/CNY 买卖汇率。",
+  a:["两个报价都以美元为基准 → 交叉相除。","EUR/CNY 买入价 = 6.9250 ÷ 0.9230 = 7.5027。","EUR/CNY 卖出价 = 6.9280 ÷ 0.9200 = 7.5304。","即 EUR/CNY = 7.5027 ~ 7.5304。"],
+  w:["<b>为什么套算</b>：没有直接的 EUR/CNY，绕道美元。", "<b>为什么相除</b>：USD/CNY、USD/EUR 里美元都在基准位 → 身份相同。", "<b>为什么 6.9250 ÷ 0.9230</b>：买价的分母取对方卖出价，除出来才比卖价小。", "<b>自检</b>：7.5027 &lt; 7.5304；除反了一票否决。"]},
+ {y:"练习",k:"t-irp",tag:"抛补利率平价",
+  q:"即期 USD/CNY=6.9200，美元 1 年期利率 2%，人民币 1 年期利率 4%。按抛补利率平价求 1 年期远期汇率，并判断升贴水与点数。",
+  a:["远期汇率 F = S × (1+r_人民币)/(1+r_美元) = 6.9200 × 1.04/1.02 = 7.0557。","人民币利率高 → 人民币远期贴水、美元远期升水。","升水点数 = 7.0557 − 6.9200 = 0.1357（约 1357 点）。"],
+  w:["<b>为什么用利率平价</b>：只给利率不给点数 → F = S × (1+r标价) ÷ (1+r基准)。", "<b>人民币在分子</b>：报价是「1 美元 = 若干人民币」，人民币是标价货币。", "<b>人民币贴水</b>：4% &gt; 2% → 高利率货币远期贴水；美元反之升水。", "<b>点数 = F − S</b>：7.0557 − 6.9200 = 0.1357 ≈ 1357 点。", "<b>自检</b>：7.0557 &gt; 6.9200 ✅。"]},
+ {y:"练习",k:"t-opt",tag:"期权收益",
+  q:"买入欧元看涨期权，执行价格 1.30 美元，期权费 0.03 美元；到期欧元升至 1.35 美元。计算投资者的期权收益（每 1 欧元）。",
+  a:["买入看涨，损益平衡点 = 1.30+0.03 = 1.33。","到期 1.35 > 1.33 → 行使。","收益 = (1.35−1.30) − 0.03 = 0.02（美元／欧元）。"],
+  w:["<b>先算平衡点</b>：平衡点 = 1.30 + 0.03 = 1.33。", "<b>为什么行使</b>：1.35 &gt; 1.33，用 1.30 买市场价 1.35 的欧元。", "<b>为什么减 0.03</b>：(1.35 − 1.30) 是毛收益，扣期权费 → 0.02。", "<b>换个区间</b>：1.30~1.33 行使仍亏；跌破 1.30 就放弃，最多亏 0.03（损失有限）。"]},
+ {y:"练习",k:"t-swap",tag:"掉期成本",
+  q:"企业需将 1 亿欧元兑换为美元，即期 1 EUR=1.1 USD，掉期汇率 1 EUR=1.09 USD。计算通过掉期可节省多少成本。",
+  a:["按即期换：1 亿 × 1.1 = 1.1 亿美元。","按掉期汇率换：1 亿 × 1.09 = 1.09 亿美元。","节省 = 1.1 − 1.09 = 0.01 亿美元 = 100 万美元。","（注意：1 亿欧元单位换算要写对，勿写成 1000 万。）"],
+  w:["<b>各算一次</b>：换汇结果 = 欧元金额 × 汇率，差额就是掉期效果。", "<b>两个金额</b>：1 亿 × 1.1 = 1.1 亿；1 亿 × 1.09 = 1.09 亿。", "<b>⚠️ 方向</b>：先问自己收美元还是付美元。本题默认付美元方（付得少 = 省），收美元方则反之。", "<b>单位</b>：1 亿欧元 = 100 000 000，别写成 1000 万。"]},
+ {y:"补充练习",k:"t-port",tag:"投资组合收益率",
+  q:"某投资者把投资组合平均分配为 50% 国内股票、50% 国际股票。国内股票的预期收益率为 8%，国际股票的预期收益率为 10%，汇率变动使国际股票的收益率提高了 2%。计算该投资组合新的预期收益率。",
+  a:["国际股票的本币收益率 = 10% + 2% = 12%。","组合预期收益率 = 50% × 8% + 50% × 12% = 4% + 6% = 10%。","即新投资组合的预期收益率为 10%。"],
+  w:["<b>为什么先加 2%</b>：国际股票的 10% 是外币口径收益，汇率变动要先并进去才是本币收益。","<b>为什么加权</b>：组合收益率 = Σ(权重 × 各资产收益率)。","<b>权重和为 1</b>：50% + 50% = 100%，权重必须先归一化。","<b>为什么是 10%</b>：4% + 6% = 10%，比全部投国内（8%）高 2 个百分点。"]},
+ {y:"补充练习",k:"t-cswap",tag:"货币互换",
+  q:"某公司需要以美元支付 100 万美元的债务，但手上只有欧元。当前汇率为 1 美元 = 0.95 欧元，公司决定做货币互换，互换利率（互换成本率）为 1.5%。计算公司需要支付多少欧元。",
+  a:["按约定汇率折算本金：100 万美元 × 0.95 = 95 万欧元。","按互换成本率调整：95 × (1 + 1.5%) = 96.425 万欧元。","即公司约需支付 96.425 万欧元。"],
+  w:["<b>货币互换是什么</b>：双方按约定汇率交换两种货币的本金、并互相支付利息，期限常 1 年以上，与「掉期」不是一个工具。","<b>为什么先乘 0.95</b>：报价 1 美元 = 0.95 欧元 → 100 万美元值 95 万欧元。","<b>为什么再乘 1.015</b>：题目多给了 1.5% 的「互换利率」，按题目口径当成本加上去。","<b>⚠️ 口径</b>：教材通常只考「按约定汇率交换本金」这一步（95 万欧元）；若题干给的是两国利率，则按 (1+外币利率) ÷ (1+本币利率) 折算——看题目给什么。"]},
+ {y:"补充练习",k:"t-ppp",tag:"购买力平价",
+  q:"同一个汉堡在美国卖 5 美元，在法国卖 4 欧元，当前市场汇率为 1 美元 = 0.95 欧元。请问该汇率是否符合购买力平价理论？",
+  a:["绝对购买力平价：S = 本国物价 ÷ 外国物价 = 5 ÷ 4 = 1.25，即 1 美元 = 1.25 欧元。","市场实际汇率 1 美元 = 0.95 欧元（折成 1 美元 = ? 欧元 的口径为 1 ÷ 0.95 ≈ 1.053）。","1.053 ≠ 1.25，两者不一致 → 不符合购买力平价理论。"],
+  w:["<b>为什么用除法</b>：绝对购买力平价 S = P本国 ÷ P外国，分子是同一种商品在本国的本币价。","<b>为什么取倒数</b>：题目给「1 美元 = 0.95 欧元」，要换成「1 美元 = ? 欧元」的口径才能跟 1.25 比。","<b>结论怎么写</b>：先写理论值 1.25，再写实际值 1.053，最后一句「不一致 → 不符合」——这句话才是采分点。","<b>顺带记</b>：系统阐述购买力平价的是<b>卡塞尔</b>；购买力平价理论是<b>现代汇率理论的基础</b>。"]},
+ {y:"补充练习",k:"t-bop",tag:"国际收支差额",
+  q:"某国某年国际收支平衡表中，经常账户顺差 100 亿美元，资本和金融账户（不含储备资产）逆差 50 亿美元。求该国国际收支总差额；为轧平该表，储备资产应增加还是减少、变动多少？",
+  a:["国际收支总差额 = 经常账户差额 + 资本和金融账户差额 = (+100) + (−50) = +50 亿美元（顺差 50 亿）。","顺差要由储备资产增加来吸收：储备资产增加 50 亿美元（记借方 −50）。","验算：(+50) + (−50) = 0，平衡表轧平。"],
+  w:["<b>为什么相加</b>：总差额 = 经常账户 + 资本和金融账户，两项带正负号直接相加。","<b>储备资产是平衡项</b>：<b>增加记借方（负号）</b>、减少记贷方（正号），不并入总差额。","<b>平衡账户是谁</b>：为使平衡表平衡而人为设立的是<b>净误差与遗漏账户</b>，不是储备资产账户（真题判断改错考过）。","<b>⚠️ 提醒</b>：流传的练习版给「经常账户 +100、资本金融账户 −50、储备资产增加 20」，三项对不上（顺差 50 却只增 20），题干自相矛盾；本页按教材口径重写。"]}
+];
+const TRKEY = "if00076_calc_train_v1";
+/* 错题存档：file:// 打开与 http://127.0.0.1 预览是两套 localStorage，
+   换一种打开方式就读不到记录。读不到时先用这份存档兜底，页面会明确标注。 */
+const TRARCHIVE = {
+  date: "2026-10-16",
+  order: [4,1,6,5,15,0,11,16,8,13,7,10,2,9,14,3,12],
+  done: {"0":"ok","1":"no","2":"ok","3":"ok","4":"ok","5":"ok","6":"ok","7":"ok","8":"ok","9":"ok",
+         "10":"ok","11":"no","12":"ok","13":"no","14":"no","15":"no","16":"ok"},
+  wrong: {"1":1,"11":1,"13":1,"14":1,"15":1}
+};
+function trArchive(){
+  return { order: TRARCHIVE.order.slice(), pos: 0,
+           done: JSON.parse(JSON.stringify(TRARCHIVE.done)),
+           wrong: JSON.parse(JSON.stringify(TRARCHIVE.wrong)),
+           cur: null, archive: true };
+}
+function trLoad(){
+  try{
+    const raw = localStorage.getItem(TRKEY);
+    if(raw){ const o = JSON.parse(raw); if(o && typeof o === "object") return o; }
+  }catch(e){}
+  return trArchive();                     /* 本机这个打开方式下还没有记录 → 用存档兜底 */
+}
+function trSave(){
+  try{ delete TR.archive; localStorage.setItem(TRKEY, JSON.stringify(TR)); }catch(e){}
+  /* 进度落盘后立即交给云同步引擎 → data/IF00076-sync.json */
+  try{ if(typeof window.__ifSyncCommit === "function") window.__ifSyncCommit("计算专项进度"); }catch(e){}
+}
+let TR = trLoad();
+function trShuffle(a){ for(let i=a.length-1;i>0;i--){ const j=Math.floor(Math.random()*(i+1)); const t=a[i];a[i]=a[j];a[j]=t; } return a; }
+function trInit(){
+  if(!TR.order || TR.order.length !== TQ.length) TR.order = trShuffle(TQ.map((_,i)=>i));
+  if(typeof TR.pos !== "number" || TR.pos >= TQ.length) TR.pos = 0;
+}
+function trStats(){
+  const d = Object.keys(TR.done).length, w = Object.keys(TR.wrong).length;
+  const right = Object.values(TR.done).filter(x=>x==="ok").length;
+  const rate = d ? Math.round(right/d*100) : 0;
+  $("#trStat").innerHTML =
+    '<div><b>'+d+'/'+TQ.length+'</b>已练题数</div>'+
+    '<div class="g"><b>'+rate+'%</b>自评正确率</div>'+
+    '<div class="r"><b>'+w+'</b>错题累计</div>';
+  $("#trBar").style.width = (d/TQ.length*100)+"%";
+}
+function trStatWrap(){
+  const d = Object.keys(TR.done).length, right = Object.values(TR.done).filter(function(x){ return x === "ok"; }).length;
+  const ks = Object.keys(TR.wrong).length;
+  const el = $("#wrongTabN");
+  if(el){ el.textContent = ks; el.style.display = ks ? "" : "none"; }
+  const meta = $("#wrongMeta");
+  if(meta){
+    meta.textContent = "共 " + ks + " 题错题 · 已练 " + d + "/" + TQ.length +
+      " · 自评正确率 " + (d ? Math.round(right/d*100) : 0) + "%";
+  }
+  const note = $("#wrongArchiveNote");
+  if(note){
+    if(TR.archive){
+      note.style.display = "";
+      note.innerHTML = "⚠️ <b>这次打开没读到你在本机的训练记录</b>（文件用 file:// 打开和用 http:// 网页预览打开，浏览器算两个不同的存储），" +
+        "所以先把 <b>" + TRARCHIVE.date + "</b> 的错题存档显示给你。上面随便答一题、或点「清空错题本」，就会切换到本次打开方式的真实记录。";
+    } else { note.style.display = "none"; }
+  }
+}
+function trRenderWrong(){
+  const ks = Object.keys(TR.wrong).map(Number)
+    .filter(function(i){ return !isNaN(i) && TQ[i]; })
+    .sort(function(a,b){ return a-b; });
+  trStatWrap();
+  const hn = $("#trWrongN");
+  if(hn) hn.textContent = ks.length ? ("共 "+ks.length+" 题 · 每条附答案与解释") : "";
+  if(!ks.length){
+    $("#trWrong").innerHTML = '<div class="empty">还没有错题。到「做题训练」里判一次「没答对」，题目就会自动出现在这里。</div>';
+    return;
+  }
+  $("#trWrong").innerHTML = ks.map(function(i, n){
+    const t = TQ[i];
+    return '<div class="wi">'+
+      '<div class="wm"><span class="wno">'+(n+1)+'</span>'+t.y+' · '+t.tag+'</div>'+
+      '<div class="wt">'+t.q+'</div>'+
+      '<div class="wa"><b>参考答案</b><ol>'+t.a.map(function(x){ return '<li>'+x+'</li>'; }).join("")+'</ol>'+
+        (t.w ? '<div class="why"><b>💡 为什么这么做</b><ul>'+t.w.map(function(x){ return '<li>'+x+'</li>'; }).join("")+'</ul></div>' : '')+
+      '</div>'+
+      '<div class="wbtns">'+
+        '<button class="pri" data-redo="'+i+'">重做这题</button>'+
+        '<button data-unmark="'+i+'">✔ 已掌握，移出错题本</button>'+
+      '</div>'+
+    '</div>';
+  }).join("");
+}
+function trRender(){
+  trStats(); trRenderWrong();
+  const box = $("#trBox");
+  const un = TR.order.filter(function(i){ return TR.done[i]===undefined; });
+  if((TR.cur===null||TR.cur===undefined) && un.length===0){
+    box.innerHTML = '<div class="trdone">全部 '+TQ.length+' 题都练过一轮了 🎉 自评正确率 '+
+      (Object.values(TR.done).filter(x=>x==="ok").length/Object.keys(TR.done).length*100).toFixed(0)+
+      '%。点「清空记录」可重新开始，或到上面看错题本。</div>';
+    return;
+  }
+  const idx = (TR.cur!==null && TR.cur!==undefined) ? TR.cur : un[0];
+  if(idx===undefined){ box.innerHTML=''; return; }
+  TR.cur = idx;
+  const t = TQ[idx];
+  box.innerHTML = '<div class="tq"><div class="tqmeta"><span class="ytag">'+t.y+'</span><span>'+t.tag+'</span>'+
+    '<a class="jump" data-go="'+t.k+'" style="margin-left:auto">看题型详解 →</a></div>'+
+    '<div class="tqq">'+t.q+'</div>'+
+    '<div class="tqa" id="trAns"><b>参考答案</b><ol>'+t.a.map(function(x){return '<li>'+x+'</li>';}).join("")+'</ol>'+(t.w?'<div class="why"><b>💡 为什么这么做</b><ul>'+t.w.map(function(x){return '<li>'+x+'</li>';}).join("")+'</ul></div>':'')+'</div>'+
+    '<div class="tqbtns">'+
+      '<button class="pri" data-tr="show">查看答案</button>'+
+      '<button class="good" data-tr="ok">✔ 我答对了</button>'+
+      '<button class="bad" data-tr="no">✘ 没答对</button>'+
+    '</div></div>';
+}
+function trNext(){
+  const un = TR.order.filter(function(i){ return TR.done[i]===undefined; });
+  if(un.length===0){ TR.cur = null; trRender(); return; }
+  TR.cur = (TR.cur!==null && TR.cur!==undefined && TR.done[TR.cur]===undefined) ? TR.cur : un[0];
+  trRender();
+}
+
+document.addEventListener("click", function(e){
+  const rd = e.target.closest("[data-redo]");
+  if(rd){
+    const i = Number(rd.dataset.redo);
+    if(TQ[i]){ TR.cur = i; switchTab("train", false); trRender();
+      const bx = $("#trBox"); if(bx) bx.scrollIntoView({behavior:"smooth", block:"center"}); }
+    return;
+  }
+  const um = e.target.closest("[data-unmark]");
+  if(um){ delete TR.wrong[Number(um.dataset.unmark)]; trSave(); trRenderWrong(); trStats(); return; }
+  const b = e.target.closest("[data-tr]");
+  if(b){
+    const act = b.dataset.tr;
+    if(act==="show"){ $("#trAns").classList.add("open"); b.style.display="none"; return; }
+    const idx = TR.cur;
+    if(idx===null||idx===undefined) return;
+    TR.done[idx] = (act==="ok") ? "ok" : "no";
+    if(act==="ok"){ delete TR.wrong[idx]; } else { TR.wrong[idx] = 1; }
+    TR.cur = null; trSave(); trNext(); trSave(); return;
+  }
+  if(e.target.closest("#gotoWrong")){ switchTab("wrong"); return; }
+  if(e.target.closest("#wrongRedoAll")){
+    const ks = Object.keys(TR.wrong).map(Number).sort(function(a,b){ return a-b; });
+    if(!ks.length) return;
+    ks.forEach(function(i){ delete TR.done[i]; });     /* 重新排进训练队列，错题本先留着 */
+    TR.cur = ks[0]; trSave();
+    switchTab("train", true); trRender();
+    return;
+  }
+  if(e.target.closest("#trReset2")){
+    TR.wrong = {}; trSave(); trRenderWrong(); trStats(); return;
+  }
+  if(e.target.closest("#trStart")){ trInit(); TR.cur=null; trNext(); return; }
+  if(e.target.closest("#trNext")){ TR.cur=null; trNext(); return; }
+  if(e.target.closest("#trReset")){
+    TR = {order:trShuffle(TQ.map((_,i)=>i)), pos:0, done:{}, wrong:{}, cur:null};
+    trSave(); trRender(); return;
+  }
+});
+
+let MODE = 'free';
+const RKEY = 'if00076_calc_rows_v2';
+const KKEY = 'if00076_keys_open';
+const FIXED = 3;   /* 前 3 行固定，不可删除；第 4 行起可增可删 */
+const DEF_ROWS = [{e:'1.7210*111.52'}, {e:'$1*100000'}, {e:''}];
+
+let rows = [];
+let activeRow = 0;
+let keysOpen = false;
+
+try{
+  const d = JSON.parse(localStorage.getItem(RKEY));
+  rows = (Array.isArray(d) && d.length) ? d.map(function(x){ return { e: String((x&&x.e)||'') }; })
+                                       : DEF_ROWS.map(function(x){ return { e:x.e }; });
+}catch(e){ rows = DEF_ROWS.map(function(x){ return { e:x.e }; }); }
+while(rows.length < FIXED) rows.push({ e:'' });   /* 前 FIXED 行固定：不足则补齐 */
+try{ keysOpen = localStorage.getItem(KKEY) === '1'; }catch(e){}
+
+let _fcSyncT = null;
+const saveRows = function(){
+  try{ localStorage.setItem(RKEY, JSON.stringify(rows)); }catch(e){}
+  /* 停笔 1.2 秒再提交，避免每个字符都触发一次上传 */
+  clearTimeout(_fcSyncT);
+  _fcSyncT = setTimeout(function(){
+    try{ if(typeof window.__ifSyncCommit === "function") window.__ifSyncCommit("自由计算"); }catch(e){}
+  }, 1200);
+};
+
+/* ---------- 规范化：全角→半角、字母 x 当乘号、去千分位 ---------- */
+function normExpr(src){
+  return String(src)
+    .replace(/[０-９]/g, function(c){ return String.fromCharCode(c.charCodeAt(0) - 0xFEE0); })
+    .replace(/（/g,'(').replace(/）/g,')')
+    .replace(/[×✕✖xX*·・]/g,'*')
+    .replace(/[÷／]/g,'/')
+    .replace(/[－—–−]/g,'-')
+    .replace(/＋/g,'+')
+    .replace(/．/g,'.')
+    .replace(/％/g,'%')
+    .replace(/[,\s，]/g,'');
+}
+
+/* ---------- 表达式求值（递归下降） ---------- */
+function evaluate(src){
+  const s = normExpr(src);
+  if(!s) throw new Error('请输入算式');
+  let i = 0;
+  const bad = function(m){ throw new Error(m); };
+
+  function expr(){
+    let v = term();
+    while(i < s.length && (s[i]==='+' || s[i]==='-')){
+      const op = s[i++], r = term();
+      v = op === '+' ? v + r : v - r;
+    }
+    return v;
+  }
+  function term(){
+    let v = unary();
+    while(i < s.length && (s[i]==='*' || s[i]==='/')){
+      const op = s[i++], r = unary();
+      if(op === '/'){ if(r === 0) bad('除数不能为 0'); v = v / r; }
+      else v = v * r;
+    }
+    return v;
+  }
+  function unary(){
+    if(s[i] === '-'){ i++; return -unary(); }
+    if(s[i] === '+'){ i++; return unary(); }
+    return power();
+  }
+  function power(){
+    const base = primary();
+    if(s[i] === '^'){ i++; return Math.pow(base, unary()); }
+    return base;
+  }
+  function primary(){
+    if(s[i] === '('){
+      i++;
+      const v = expr();
+      if(s[i] !== ')') bad('括号不匹配：缺少右括号');
+      i++;
+      if(s[i] === '%'){ i++; return v / 100; }
+      return v;
+    }
+    const st = i;
+    while(i < s.length && /[0-9.]/.test(s[i])) i++;
+    if(i === st) bad('「' + (s[i] || '结尾') + '」这里不是数字或括号');
+    const lit = s.slice(st, i);
+    if((lit.match(/\./g) || []).length > 1) bad('数字里出现两个小数点：' + lit);
+    const v = parseFloat(lit);
+    if(!isFinite(v)) bad('数字格式有误：' + lit);
+    if(s[i] === '%'){ i++; return v / 100; }
+    return v;
+  }
+
+  const v = expr();
+  if(i < s.length) bad('「' + s.slice(i) + '」无法识别（是否漏了运算符？）');
+  if(!isFinite(v)) bad('结果不是有限数');
+  return v;
+}
+
+/* ---------- 数字格式化 ---------- */
+function fmtNum(v){
+  if(!isFinite(v)) return v > 0 ? '∞' : '-∞';
+  if(v === 0) return '0';
+  const a = Math.abs(v);
+  if(a < 1e-10 || a >= 1e15) return v.toExponential(6);
+  let t = parseFloat(v.toPrecision(12)).toString();
+  if(t.indexOf('e') >= 0) return t;
+  const neg = t[0] === '-';
+  if(neg) t = t.slice(1);
+  const p = t.split('.');
+  p[0] = p[0].replace(/\B(?=(\d{3})+(?!\d))/g, ',');
+  return (neg ? '-' : '') + p.join('.');
+}
+const escHtml = function(x){ return String(x).replace(/[&<>"]/g, function(c){ return ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'})[c]; }); };
+
+/* ---------- 逐行计算（后行可引用前行） ---------- */
+function computeRows(){
+  const out = [];
+  rows.forEach(function(r, i){
+    const raw = String(r.e || '').trim();
+    if(!raw){ out.push({ empty:true }); return; }
+    try{
+      const src = raw.replace(/\$(\d+)/g, function(m, d){
+        const k = parseInt(d, 10) - 1;
+        if(k < 0 || k >= i) throw new Error('$' + d + ' 只能引用它前面某一行的结果');
+        const p = out[k];
+        if(!p || p.empty) throw new Error('第 ' + (k+1) + ' 行还没有算式');
+        if(!p.ok)      throw new Error('第 ' + (k+1) + ' 行本身有错，先修好它');
+        return '(' + p.v + ')';
+      });
+      out.push({ ok:true, v: evaluate(src) });
+    }catch(ex){ out.push({ ok:false, msg: ex.message }); }
+  });
+  return out;
+}
+
+/* ---------- 渲染 ---------- */
+function renderRows(focusIdx){
+  const box = $('#ifRows');
+  box.innerHTML = rows.map(function(r, i){
+    const ph = i === 0 ? '输入算式，例如 (1+2)/5  或  1.7210*111.52'
+                       : '可写 $1 引用第 1 行的结果，例如 $1*100000';
+    return '<div class="fcrow' + (i === activeRow ? ' cur' : '') + '" data-row="' + i + '">' +
+      '<span class="fcno">' + (i+1) + '</span>' +
+      '<input class="fcexpr" data-i="' + i + '" autocomplete="off" spellcheck="false" autocapitalize="off" ' +
+        'value="' + escHtml(r.e) + '" placeholder="' + ph + '">' +
+      '<span class="fcres dim" data-res="' + i + '" title="点击复制">—</span>' +
+      '<button class="fcclr" data-clr="' + i + '" title="清空本行">清空</button>' +
+      (i < FIXED
+        ? '<span class="fclock" title="前 3 行固定，不可删除">🔒</span>'
+        : '<button class="fcdel" data-del="' + i + '" title="删除本行">✕</button>') +
+      '<div class="fcmsg" data-msg="' + i + '"></div>' +
+    '</div>';
+  }).join('');
+  refreshResults();
+  if(focusIdx !== undefined){
+    const el = box.querySelector('.fcexpr[data-i="' + focusIdx + '"]');
+    if(el){ el.focus(); el.setSelectionRange(el.value.length, el.value.length); }
+  }
+}
+
+function refreshResults(){
+  const res = computeRows();
+  rows.forEach(function(r, i){
+    const el = document.querySelector('.fcres[data-res="' + i + '"]');
+    const mg = document.querySelector('.fcmsg[data-msg="' + i + '"]');
+    if(!el) return;
+    const r0 = res[i];
+    if(r0.empty){ el.textContent = '—'; el.className = 'fcres dim'; el.title = ''; el.dataset.val = ''; }
+    else if(r0.ok){ el.textContent = fmtNum(r0.v); el.className = 'fcres'; el.title = '点击复制';
+      el.dataset.val = String(r0.v); }
+    else { el.textContent = '！'; el.className = 'fcres err'; el.title = r0.msg; el.dataset.val = ''; }
+    if(mg && !(mg.classList.contains('on') && mg._keep)){ /* 占位 */ }
+  });
+  return res;
+}
+
+/* 错误详情只在失焦 / 按 Enter 时显示，避免边输入边飘红 */
+function showRowMsg(i){
+  const res = computeRows();
+  const mg = document.querySelector('.fcmsg[data-msg="' + i + '"]');
+  if(!mg) return;
+  const r0 = res[i];
+  if(r0 && r0.ok === false){ mg.textContent = r0.msg; mg.classList.add('on'); }
+  else { mg.textContent = ''; mg.classList.remove('on'); }
+}
+function clearMsg(i){
+  const mg = document.querySelector('.fcmsg[data-msg="' + i + '"]');
+  if(mg){ mg.textContent = ''; mg.classList.remove('on'); }
+}
+function clearAllMsg(){ document.querySelectorAll('.fcmsg').forEach(function(m){ m.textContent=''; m.classList.remove('on'); }); }
+
+/* ---------- 行操作 ---------- */
+function addRow(after){
+  /* 新行一律排在第 FIXED 行之后，保证前 3 行固定不位移 */
+  const at = Math.max(FIXED, (after === undefined) ? rows.length : after + 1);
+  rows.splice(at, 0, { e:'' });
+  activeRow = at;
+  saveRows(); renderRows(at);
+}
+function delRow(i){
+  if(i < FIXED) return;                 /* 前 FIXED 行固定，删不了 */
+  rows.splice(i, 1);
+  if(activeRow >= rows.length) activeRow = rows.length - 1;
+  saveRows(); renderRows(activeRow);
+}
+function clearRow(i){                   /* 行内「清空」：只清这一行 */
+  if(i < 0 || i >= rows.length) return;
+  rows[i].e = '';
+  clearMsg(i);
+  activeRow = i;
+  saveRows(); renderRows(i);
+}
+function clearRows(){                  /* 「清空内容」：清掉全部算式，回到 3 行空行 */
+  rows = [];
+  for(let i = 0; i < FIXED; i++) rows.push({ e:'' });
+  activeRow = 0; saveRows(); renderRows(0);
+}
+
+/* ---------- 数字键盘 ---------- */
+function setKeys(open){
+  keysOpen = !!open;
+  $('#ifKeys').classList.toggle('hide', !keysOpen);
+  const b = $('#ifToggleKeys');
+  if(b) b.textContent = keysOpen ? '收起数字键盘' : '显示数字键盘';
+  try{ localStorage.setItem(KKEY, keysOpen ? '1' : '0'); }catch(e){}
+}
+function activeInput(){ return document.querySelector('.fcexpr[data-i="' + activeRow + '"]'); }
+function ins(txt){
+  const el = activeInput();
+  if(!el) return;
+  const a = el.selectionStart || 0, b = el.selectionEnd || 0;
+  el.value = el.value.slice(0, a) + txt + el.value.slice(b);
+  el.focus();
+  el.setSelectionRange(a + txt.length, a + txt.length);
+  rows[activeRow].e = el.value; saveRows(); refreshResults();
+}
+function del(){
+  const el = activeInput();
+  if(!el) return;
+  const a = el.selectionStart || 0, b = el.selectionEnd || 0;
+  if(a === b && a > 0){ el.value = el.value.slice(0, a-1) + el.value.slice(a); el.setSelectionRange(a-1, a-1); }
+  else { el.value = el.value.slice(0, a) + el.value.slice(b); el.setSelectionRange(a, a); }
+  el.focus();
+  rows[activeRow].e = el.value; saveRows(); refreshResults();
+}
+
+/* ---------- 复制 ---------- */
+function copyVal(i){
+  const el = document.querySelector('.fcres[data-res="' + i + '"]');
+  if(!el || !el.dataset.val) return;
+  const txt = el.dataset.val;
+  const done = function(){
+    const old = el.textContent;
+    el.textContent = '已复制';
+    setTimeout(function(){ el.textContent = old; }, 700);
+  };
+  if(navigator.clipboard && navigator.clipboard.writeText){
+    navigator.clipboard.writeText(txt).then(done, function(){ fbCopy(txt, done); });
+  } else fbCopy(txt, done);
+}
+function fbCopy(txt, done){
+  const ta = document.createElement('textarea');
+  ta.value = txt; ta.style.position = 'fixed'; ta.style.opacity = '0';
+  document.body.appendChild(ta); ta.select();
+  try{ document.execCommand('copy'); done(); }catch(e){}
+  document.body.removeChild(ta);
+}
+
+/* ---------- 页签切换（改：自由计算 / 预设公式）---------- */
+function setMode(m, noFocus){
+  MODE = (m === 'preset') ? 'preset' : 'free';
+  $$('#ifCalcTabs button').forEach(function(b){ b.classList.toggle('on', b.dataset.ct === MODE); });
+  const f = document.getElementById('ifFree'), p = document.getElementById('ifPreset');
+  if(f) f.classList.toggle('hide', MODE !== 'free');
+  if(p) p.classList.toggle('hide', MODE !== 'preset');
+  /* 「预设公式」才用得上右上角的题型下拉 */
+  const pk = document.getElementById('ifDockPick');
+  if(pk) pk.style.display = (MODE === 'free') ? 'none' : '';
+  try{ localStorage.setItem('if00076_calc_ctab', MODE); }catch(e){}
+  if(MODE === 'free' && !noFocus) setTimeout(function(){ const el = activeInput(); if(el) el.focus(); }, 40);
+}
+
+/* ---------- 事件 ---------- */
+document.addEventListener('input', function(e){
+  const el = e.target;
+  if(MODE !== 'free' || !el.classList || !el.classList.contains('fcexpr')) return;
+  const i = parseInt(el.dataset.i, 10);
+  rows[i].e = el.value;
+  activeRow = i;
+  saveRows();
+  clearMsg(i);
+  refreshResults();
+});
+
+document.addEventListener('focusin', function(e){
+  const el = e.target;
+  if(el && el.classList && el.classList.contains('fcexpr')){
+    const i = parseInt(el.dataset.i, 10);
+    if(activeRow !== i){
+      activeRow = i;
+      $$('.fcrow').forEach(function(c){ c.classList.toggle('cur', parseInt(c.dataset.row,10) === i); });
+    }
+  }
+});
+document.addEventListener('focusout', function(e){
+  const el = e.target;
+  if(el && el.classList && el.classList.contains('fcexpr') && MODE === 'free'){
+    showRowMsg(parseInt(el.dataset.i, 10));
+  }
+});
+
+document.addEventListener('keydown', function(e){
+  if(MODE !== 'free' || !ifDockIsOpen()) return;   /* 面板收起时不劫持键盘 */
+  const el = document.activeElement;
+  const inExpr = el && el.classList && el.classList.contains('fcexpr');
+  /* 别抢别的输入框：名词/概述/考前预测的搜索框、题库里的填空等 */
+  if(el && !inExpr && (el.tagName === 'INPUT' || el.tagName === 'TEXTAREA' ||
+     el.tagName === 'SELECT' || el.isContentEditable)) return;
+  const meta = e.metaKey || e.ctrlKey || e.altKey;
+
+  if(e.key === 'Enter'){
+    if(inExpr || el === document.body){ e.preventDefault(); commitRow(); }
+    return;
+  }
+  if(!inExpr){
+    if(meta) return;
+    if(e.key.length === 1 && /[0-9.+\-*/()%^$xX]/.test(e.key)){
+      e.preventDefault();
+      const a = activeInput();
+      if(a){ a.focus(); ins(e.key); }
+    }
+    return;
+  }
+  if(e.key === 'Escape'){ e.preventDefault(); el.value=''; rows[activeRow].e=''; saveRows(); refreshResults(); clearMsg(activeRow); return; }
+  if(e.key === 'ArrowUp'){ e.preventDefault(); moveRow(-1); return; }
+  if(e.key === 'ArrowDown'){ e.preventDefault(); moveRow(1); return; }
+});
+
+function moveRow(d){
+  const n = activeRow + d;
+  if(n < 0) return;
+  if(n >= rows.length) addRow(activeRow);
+  const el = document.querySelector('.fcexpr[data-i="' + n + '"]');
+  if(el){ activeRow = n; el.focus(); el.setSelectionRange(el.value.length, el.value.length); }
+  $$('.fcrow').forEach(function(c){ c.classList.toggle('cur', parseInt(c.dataset.row,10) === activeRow); });
+}
+function commitRow(){
+  clearAllMsg();
+  showRowMsg(activeRow);
+  refreshResults();
+  moveRow(1);
+}
+
+document.addEventListener('click', function(e){
+  const mb = e.target.closest('#ifCalcTabs button');
+  if(mb){ setMode(mb.dataset.ct); return; }
+  if(MODE !== 'free') return;
+
+  const k = e.target.closest('#ifKeys [data-k], #ifKeys [data-act]');
+  if(k){
+    if(k.dataset.act === 'clear'){ const el = activeInput(); if(el){ el.value=''; rows[activeRow].e=''; saveRows(); refreshResults(); clearMsg(activeRow); el.focus(); } return; }
+    if(k.dataset.act === 'back'){ del(); return; }
+    if(k.dataset.act === 'eq'){ commitRow(); return; }
+    if(k.dataset.k){ ins(k.dataset.k); return; }
+  }
+  const cr = e.target.closest('[data-clr]');
+  if(cr){ clearRow(parseInt(cr.dataset.clr, 10)); return; }
+  const dl = e.target.closest('[data-del]');
+  if(dl){ delRow(parseInt(dl.dataset.del, 10)); return; }
+  const cp = e.target.closest('[data-res]');
+  if(cp){ copyVal(parseInt(cp.dataset.res, 10)); return; }
+  if(e.target.closest('#ifAddRow')){ addRow(activeRow); return; }
+  if(e.target.closest('#ifClearRows')){ clearRows(); return; }
+  if(e.target.closest('#ifToggleKeys')){ setKeys(!keysOpen); return; }
+});
+
+/* ================= 悬浮计算器：自由计算（三列）+ 预设公式（13 个）================= */
+/* 面板是否展开：自由计算的键盘快捷键只在展开时生效 */
+function ifDockIsOpen(){
+  const p = document.getElementById("ifDockPanel");
+  return !!(p && !p.classList.contains("hide"));
+}
+(function(){
+  const dock = document.getElementById("ifDock");
+  if(!dock) return;
+  const panel  = document.getElementById("ifDockPanel");
+  const preset = document.getElementById("ifPreset");
+  const pick   = document.getElementById("ifDockPick");
+  const head   = document.getElementById("ifDockHead");
+  const btn    = document.getElementById("ifDockBtn");
+  if(!panel || !preset || !pick || !head || !btn) return;
+  const POSKEY = "if00076_calc_dock";
+  const KEYS = Object.keys(CALC);
+
+  /* --- 预设公式：13 个（原有能力，全部保留）--- */
+  pick.innerHTML = KEYS.map(function(k){ return '<option value="'+k+'">'+CALC[k].title+'</option>'; }).join("");
+  preset.innerHTML = KEYS.map(function(k){ return '<div class="calcbox" data-calc="'+k+'" style="display:none"></div>'; }).join("");
+  const boxes = Array.prototype.slice.call(preset.querySelectorAll(".calcbox"));
+  boxes.forEach(buildCalc);
+  function show(k){ boxes.forEach(function(b){ b.style.display = (b.dataset.calc===k) ? "block" : "none"; }); }
+  show(KEYS[0]);
+
+  /* --- 自由计算：应用数字键盘的显示状态 + 渲染行 + 切到上次的页签 --- */
+  setKeys(keysOpen);
+  renderRows();
+  let ctab = "free";
+  try{ ctab = localStorage.getItem("if00076_calc_ctab") || "free"; }catch(e){}
+  setMode(ctab, true);              /* true = 初次进页面不抢焦点 */
+
+  /* 页签点击 */
+  const tabbar = document.getElementById("ifCalcTabs");
+  if(tabbar){
+    tabbar.addEventListener("click", function(e){
+      const b = e.target.closest("button[data-ct]");
+      if(b) setMode(b.dataset.ct);
+    });
+  }
+
+  function openPanel(on){
+    panel.classList.toggle("hide", !on);
+    btn.classList.toggle("on", !!on);
+    dock.classList.toggle("open", !!on);
+    if(on){
+      if(MODE === "preset") show(pick.value);
+      setMode(MODE);                /* 重新应用页签；自由计算会把焦点放到当前行，打开即可敲数字 */
+    } else {
+      /* 收起时把焦点还回去：否则继续打字会悄悄落进看不见的算式框里 */
+      const ae = document.activeElement;
+      if(ae && dock.contains(ae) && ae.blur) ae.blur();
+    }
+  }
+  btn.addEventListener("click", function(){ openPanel(panel.classList.contains("hide")); });
+  document.getElementById("ifDockClose").addEventListener("click", function(){ openPanel(false); });
+  pick.addEventListener("change", function(){ show(pick.value); });
+
+  /* --- 位置：本机记忆；拖动后不再吸附 --- */
+  function applyPos(){
+    let p = null;
+    try{ p = JSON.parse(localStorage.getItem(POSKEY) || "null"); }catch(e){}
+    if(p && typeof p.left === "number" && typeof p.top === "number"){
+      panel.style.left = p.left + "px"; panel.style.top = p.top + "px";
+      panel.style.right = "auto"; panel.style.bottom = "auto";
+      panel.classList.add("moved");
+    }
+    clamp();
+  }
+  function savePos(){
+    try{ localStorage.setItem(POSKEY, JSON.stringify({
+      left: parseInt(panel.style.left,10) || 0, top: parseInt(panel.style.top,10) || 0 })); }catch(e){}
+  }
+  function clamp(){
+    if(!panel.classList.contains("moved")) return;
+    const w = panel.offsetWidth, h = panel.offsetHeight;
+    let x = Math.min(Math.max(4, parseInt(panel.style.left,10) || 0), Math.max(4, window.innerWidth - w - 4));
+    let y = Math.min(Math.max(4, parseInt(panel.style.top,10) || 0), Math.max(4, window.innerHeight - Math.min(h, window.innerHeight) - 4));
+    panel.style.left = x + "px"; panel.style.top = y + "px";
+  }
+  document.getElementById("ifDockSnap").addEventListener("click", function(){
+    try{ localStorage.removeItem(POSKEY); }catch(e){}
+    panel.style.left = panel.style.top = "";
+    panel.style.right = panel.style.bottom = "";
+    panel.classList.remove("moved");
+    openPanel(true);
+  });
+
+  let drag = null;
+  head.addEventListener("pointerdown", function(e){
+    if(e.target.closest("select,button")) return;
+    const r = panel.getBoundingClientRect();
+    drag = { dx: e.clientX - r.left, dy: e.clientY - r.top };
+    panel.classList.add("moved", "dragging");
+    panel.style.right = panel.style.bottom = "auto";
+    panel.style.left = r.left + "px"; panel.style.top = r.top + "px";
+    try{ head.setPointerCapture(e.pointerId); }catch(err){}
+    e.preventDefault();
+  });
+  head.addEventListener("pointermove", function(e){
+    if(!drag) return;
+    const w = panel.offsetWidth, h = Math.min(panel.offsetHeight, window.innerHeight);
+    panel.style.left = Math.min(Math.max(4, e.clientX - drag.dx), Math.max(4, window.innerWidth - w - 4)) + "px";
+    panel.style.top  = Math.min(Math.max(4, e.clientY - drag.dy), Math.max(4, window.innerHeight - h - 4)) + "px";
+  });
+  function endDrag(){ if(!drag) return; drag = null; panel.classList.remove("dragging"); clamp(); savePos(); }
+  head.addEventListener("pointerup", endDrag);
+  head.addEventListener("pointercancel", endDrag);
+  window.addEventListener("resize", clamp);
+  applyPos();
+})();
+
+
+/* ---------------- 启动 ---------------- */
+trInit();
+if(document.getElementById("ifTabs")) switchTab(TAB, false);
+if(document.getElementById("trBox")) trRender();
+$$("#ifRoot .calcbox").forEach(buildCalc);
+
+/* 交给顶部脚本用的钩子 */
+window.IF_CALC = {
+  tab: function(){ return TAB; },
+  enter: function(){ $$("#ifRoot .calcbox").forEach(buildCalc); trStatWrap(); },
+  jump: function(id){ jumpTo(id); },
+  dockOpen: function(){ return ifDockIsOpen(); },
+  dockTab: function(t){ setMode(t); }
+};
+})();
+</script>
+
 </body>
 </html>
