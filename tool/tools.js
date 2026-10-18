@@ -19,15 +19,6 @@ window.WB_TOOLS = [
   {
     id: 'task-sync',
     name: '任务同步站',
-    desc: '把不同电脑上 WorkBuddy 的任务记录、会话产物汇总到一个看板，微信扫码登录。',
-    href: 'https://wb-task-sync.app.workbuddy.host/',
-    tag: '在线',
-    icon: '↻',
-    open: true,
-  },
-  {
-    id: 'task-sync',
-    name: '任务同步站',
     desc: '站内直接操作：不同电脑上 WorkBuddy 的任务记录、会话产物汇总到一个看板。首次使用先在新窗口登录一次。',
     href: 'tasksync.html',
     tag: '站内',
