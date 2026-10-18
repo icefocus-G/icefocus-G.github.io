@@ -1,0 +1,432 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover" />
+<meta name="theme-color" content="#070b18" />
+<title>工具箱 · ICEFOCUS</title>
+<link rel="icon" href="../assets/icon.svg" />
+<style>
+  :root {
+    --bg: #070b18;
+    --ink: #e8eefb;
+    --dim: #8b9ec2;
+    --line: rgba(140, 170, 220, 0.16);
+    --line-2: rgba(140, 170, 220, 0.28);
+    --a1: #38bdf8;
+    --a2: #a78bfa;
+    --card: rgba(255, 255, 255, 0.028);
+  }
+
+  * { box-sizing: border-box; }
+
+  html { -webkit-text-size-adjust: 100%; }
+
+  body {
+    margin: 0;
+    min-height: 100%;
+    background: var(--bg);
+    color: var(--ink);
+    font-family: -apple-system, BlinkMacSystemFont, "PingFang SC", "Microsoft YaHei", "Segoe UI", Inter, Roboto, sans-serif;
+    -webkit-font-smoothing: antialiased;
+    overflow-x: hidden;
+  }
+
+  /* 背景光斑，跟首页同一个调子 */
+  .mesh {
+    position: fixed;
+    inset: 0;
+    z-index: 0;
+    pointer-events: none;
+    background:
+      radial-gradient(60% 45% at 12% 8%, rgba(56, 189, 248, 0.16), transparent 70%),
+      radial-gradient(50% 40% at 88% 0%, rgba(167, 139, 250, 0.14), transparent 70%),
+      radial-gradient(70% 50% at 50% 100%, rgba(56, 189, 248, 0.07), transparent 70%);
+  }
+
+  header {
+    position: sticky;
+    top: 0;
+    z-index: 10;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 16px;
+    padding: 16px clamp(18px, 4vw, 46px);
+    background: rgba(7, 11, 24, 0.72);
+    backdrop-filter: blur(14px);
+    -webkit-backdrop-filter: blur(14px);
+    border-bottom: 1px solid var(--line);
+  }
+
+  .brand {
+    display: inline-flex;
+    align-items: baseline;
+    gap: 2px;
+    font-size: 19px;
+    font-weight: 800;
+    letter-spacing: 0.04em;
+    color: var(--ink);
+    text-decoration: none;
+  }
+
+  .brand span { color: var(--a1); }
+
+  header nav { display: flex; gap: 18px; align-items: center; }
+
+  header nav a {
+    font-size: 12.5px;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--dim);
+    text-decoration: none;
+    transition: color 0.2s;
+  }
+
+  header nav a:hover { color: var(--ink); }
+
+  main {
+    position: relative;
+    z-index: 1;
+    max-width: 1240px;
+    margin: 0 auto;
+    padding: clamp(34px, 6vw, 72px) clamp(18px, 4vw, 46px) 90px;
+  }
+
+  .head { margin-bottom: 28px; }
+
+  .eyebrow {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 11px;
+    letter-spacing: 0.22em;
+    text-transform: uppercase;
+    color: var(--dim);
+  }
+
+  .eyebrow i {
+    width: 18px;
+    height: 1px;
+    background: linear-gradient(90deg, var(--a1), var(--a2));
+  }
+
+  h1 {
+    margin: 14px 0 10px;
+    font-size: clamp(30px, 5.4vw, 46px);
+    line-height: 1.14;
+    letter-spacing: -0.01em;
+  }
+
+  h1 em {
+    font-style: normal;
+    background: linear-gradient(100deg, var(--a1), var(--a2));
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent;
+  }
+
+  .lede {
+    max-width: 620px;
+    margin: 0;
+    font-size: 13.5px;
+    line-height: 1.9;
+    color: var(--dim);
+  }
+
+  .counter {
+    display: inline-flex;
+    align-items: center;
+    gap: 9px;
+    margin-top: 20px;
+    padding: 6px 12px;
+    border: 1px solid var(--line);
+    border-radius: 999px;
+    font-size: 12px;
+    color: var(--dim);
+  }
+
+  .counter b { color: var(--ink); font-weight: 600; }
+
+  .counter .pips { display: inline-flex; gap: 3px; }
+
+  .counter .pip {
+    width: 5px;
+    height: 5px;
+    border-radius: 50%;
+    background: rgba(140, 170, 220, 0.28);
+  }
+
+  .counter .pip.on { background: var(--a1); box-shadow: 0 0 6px var(--a1); }
+
+  .grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(238px, 1fr));
+    gap: 14px;
+    margin-top: 30px;
+  }
+
+  .card {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    min-height: 168px;
+    padding: 18px;
+    border: 1px solid var(--line);
+    border-radius: 16px;
+    background: var(--card);
+    text-decoration: none;
+    color: inherit;
+    overflow: hidden;
+    transition: transform 0.22s ease, border-color 0.22s ease, background 0.22s ease, box-shadow 0.22s ease;
+  }
+
+  a.card:hover {
+    transform: translateY(-3px);
+    border-color: var(--line-2);
+    background: rgba(255, 255, 255, 0.05);
+    box-shadow: 0 18px 38px -24px rgba(56, 189, 248, 0.55);
+  }
+
+  a.card::after {
+    content: "";
+    position: absolute;
+    inset: 0;
+    border-radius: inherit;
+    padding: 1px;
+    background: linear-gradient(140deg, rgba(56, 189, 248, 0.55), rgba(167, 139, 250, 0.45));
+    -webkit-mask: linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0);
+    -webkit-mask-composite: xor;
+    mask-composite: exclude;
+    opacity: 0;
+    transition: opacity 0.22s ease;
+    pointer-events: none;
+  }
+
+  a.card:hover::after { opacity: 1; }
+
+  .idx {
+    position: absolute;
+    top: 14px;
+    right: 16px;
+    font-size: 11px;
+    letter-spacing: 0.12em;
+    color: rgba(139, 158, 194, 0.5);
+    font-variant-numeric: tabular-nums;
+  }
+
+  .ico {
+    width: 38px;
+    height: 38px;
+    display: grid;
+    place-items: center;
+    margin-bottom: 14px;
+    border-radius: 11px;
+    font-size: 17px;
+    color: #06121f;
+    background: linear-gradient(140deg, var(--a1), var(--a2));
+    box-shadow: 0 8px 20px -12px rgba(56, 189, 248, 0.9);
+  }
+
+  .card h2 {
+    margin: 0 0 7px;
+    font-size: 15px;
+    font-weight: 600;
+    letter-spacing: 0.01em;
+  }
+
+  .card p {
+    margin: 0;
+    font-size: 12px;
+    line-height: 1.72;
+    color: var(--dim);
+  }
+
+  .tag {
+    display: inline-block;
+    align-self: flex-start;
+    margin-bottom: 11px;
+    padding: 2px 8px;
+    border-radius: 999px;
+    font-size: 10.5px;
+    letter-spacing: 0.06em;
+    color: var(--a1);
+    background: rgba(56, 189, 248, 0.12);
+    border: 1px solid rgba(56, 189, 248, 0.3);
+  }
+
+  .go {
+    margin-top: auto;
+    padding-top: 14px;
+    font-size: 12px;
+    color: var(--a1);
+    opacity: 0;
+    transform: translateX(-4px);
+    transition: opacity 0.22s ease, transform 0.22s ease;
+  }
+
+  a.card:hover .go { opacity: 1; transform: translateX(0); }
+
+  /* 空位 */
+  .card.empty {
+    border-style: dashed;
+    background: transparent;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    cursor: default;
+  }
+
+  .card.empty .plus {
+    width: 34px;
+    height: 34px;
+    display: grid;
+    place-items: center;
+    border-radius: 50%;
+    border: 1px dashed rgba(140, 170, 220, 0.32);
+    color: rgba(139, 158, 194, 0.6);
+    font-size: 17px;
+    line-height: 1;
+    transition: 0.22s;
+  }
+
+  .card.empty:hover .plus {
+    border-color: var(--line-2);
+    color: var(--dim);
+  }
+
+  .card.empty .hint {
+    margin-top: 10px;
+    font-size: 11.5px;
+    letter-spacing: 0.08em;
+    color: rgba(139, 158, 194, 0.5);
+  }
+
+  footer {
+    position: relative;
+    z-index: 1;
+    padding: 26px clamp(18px, 4vw, 46px) 40px;
+    max-width: 1240px;
+    margin: 0 auto;
+    font-size: 12px;
+    color: rgba(139, 158, 194, 0.72);
+    border-top: 1px solid var(--line);
+  }
+
+  footer a { color: var(--dim); text-decoration: none; }
+  footer a:hover { color: var(--ink); }
+
+  @media (max-width: 560px) {
+    .grid { grid-template-columns: repeat(2, 1fr); gap: 10px; }
+    .card { min-height: 140px; padding: 14px; }
+    .ico { width: 32px; height: 32px; font-size: 15px; margin-bottom: 10px; }
+    .card h2 { font-size: 13.5px; }
+    .card p { font-size: 11.5px; }
+    .idx { top: 11px; right: 12px; font-size: 10px; }
+  }
+</style>
+</head>
+<body>
+
+<div class="mesh"></div>
+
+<header>
+  <a class="brand" href="../">IF<span>.</span></a>
+  <nav>
+    <a href="../">首页</a>
+    <a href="../examination/">Learning Course</a>
+  </nav>
+</header>
+
+<main>
+  <div class="head">
+    <div class="eyebrow"><i></i>TOOLBOX</div>
+    <h1>工具<em>箱</em></h1>
+    <p class="lede">
+      自己写的、天天在用的小工具都放这里。预留 20 个位置，填一个用一个 —— 数据在
+      <code>tool/tools.js</code>，改那个文件就行，页面自动更新。
+    </p>
+    <div class="counter">
+      <span class="pips" id="pips"></span>
+      <b id="used">0</b> / 20 已启用
+    </div>
+  </div>
+
+  <section class="grid" id="grid"></section>
+</main>
+
+<footer>
+  © 2026 ICEFOCUS · designed &amp; built by hand ·
+  <a href="../examination/">Learning Course</a>
+</footer>
+
+<script src="tools.js"></script>
+<script>
+(function () {
+  'use strict';
+
+  var SLOTS = 20;
+  var raw = Array.isArray(window.WB_TOOLS) ? window.WB_TOOLS.slice(0, SLOTS) : [];
+
+  // 不足 20 个就补空位，保证版面始终是 20 格
+  while (raw.length < SLOTS) raw.push({});
+
+  var grid = document.getElementById('grid');
+  var pips = document.getElementById('pips');
+  var usedEl = document.getElementById('used');
+  var used = 0;
+
+  function esc(s) {
+    return String(s == null ? '' : s).replace(/[&<>"']/g, function (c) {
+      return { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c];
+    });
+  }
+
+  function pad(n) {
+    return n < 10 ? '0' + n : String(n);
+  }
+
+  function card(item, i) {
+    var idx = '<span class="idx">' + pad(i + 1) + '</span>';
+    var href = String(item.href || '').trim();
+
+    if (!href) {
+      return (
+        '<div class="card empty">' +
+        idx +
+        '<span class="plus">+</span>' +
+        '<span class="hint">待添加</span>' +
+        '</div>'
+      );
+    }
+
+    used += 1;
+    var name = String(item.name || '').trim() || '未命名工具';
+    var icon = String(item.icon || '').trim() || name.slice(0, 1);
+    var target = item.open === false ? '' : ' target="_blank" rel="noopener"';
+
+    return (
+      '<a class="card" href="' + esc(href) + '"' + target + '>' +
+      idx +
+      (item.tag ? '<span class="tag">' + esc(item.tag) + '</span>' : '') +
+      '<span class="ico">' + esc(icon) + '</span>' +
+      '<h2>' + esc(name) + '</h2>' +
+      (item.desc ? '<p>' + esc(item.desc) + '</p>' : '') +
+      '<span class="go">打开 →</span>' +
+      '</a>'
+    );
+  }
+
+  var html = '';
+  for (var i = 0; i < raw.length; i += 1) html += card(raw[i], i);
+  grid.innerHTML = html;
+
+  usedEl.textContent = String(used);
+
+  var pipHtml = '';
+  for (var j = 0; j < SLOTS; j += 1) pipHtml += '<span class="pip' + (j < used ? ' on' : '') + '"></span>';
+  pips.innerHTML = pipHtml;
+})();
+</script>
+</body>
+</html>
