@@ -1,0 +1,304 @@
+#!/usr/bin/env bash
+# WorkBuddy 任务同步 —— 一键安装采集器（macOS / Linux）
+#
+# 注意：这份文件后缀是 .txt，不是笔误 —— 站点前的 WAF 会直接拦掉 .sh 的下载
+# （返回 403 WAF 拦截页）。内容就是 bash 脚本，用 `bash install.txt` 或
+# `curl -fsSL <url> | bash` 都正常工作。
+#
+#   bash install.txt                 装到 ~/.wb-task-sync 并注册开机自启
+#   bash install.txt --port 8790     换端口
+#   bash install.txt --uninstall     卸载（停服务 + 删自启 + 删目录）
+#   bash install.txt --no-service    只下载，不注册自启
+#
+# 环境变量
+#   WB_SYNC_BASE_URL   采集器下载地址（默认线上站点）
+#   WB_SYNC_PORT       本机桥端口（默认 8787）
+#
+# 设计原则：零依赖、幂等、失败不破坏已有环境。
+
+set -euo pipefail
+
+BASE_URL="${WB_SYNC_BASE_URL:-https://wb-task-sync.app.workbuddy.host}"
+PORT="${WB_SYNC_PORT:-8787}"
+DIR="$HOME/.wb-task-sync"
+LABEL="dev.workbuddy.tasksync"
+PLIST="$HOME/Library/LaunchAgents/$LABEL.plist"
+UNIT_DIR="$HOME/.config/systemd/user"
+UNIT="$UNIT_DIR/wb-task-sync.service"
+
+# 很多人的 shell 里 export 了 http_proxy（Clash / V2Ray / 公司网关），
+# 那样 curl 连 127.0.0.1 也会被丢给代理，健康检查必然失败，
+# 安装脚本就会误报「服务没起来」。这里把本机地址永久排除在代理外。
+export no_proxy="127.0.0.1,localhost,::1${no_proxy:+,$no_proxy}"
+export NO_PROXY="$no_proxy"
+
+MODE="install"
+for arg in "$@"; do
+  case "$arg" in
+    --uninstall) MODE="uninstall" ;;
+    --no-service) MODE="download" ;;
+    --port=*) PORT="${arg#*=}" ;;
+    --help|-h) MODE="help" ;;
+  esac
+done
+# 支持 `--port 8790` 这种空格写法
+prev=""
+for arg in "$@"; do
+  if [ "$prev" = "--port" ]; then PORT="$arg"; fi
+  prev="$arg"
+done
+
+info() { printf '  %s\n' "$*"; }
+ok()   { printf '  ✅ %s\n' "$*"; }
+warn() { printf '  ⚠️  %s\n' "$*"; }
+die()  { printf '  ❌ %s\n' "$*" >&2; exit 1; }
+
+if [ "$MODE" = "help" ]; then
+  if [ -r "$0" ]; then
+    sed -n '8,16p' "$0" | sed 's/^# \{0,1\}//'
+  else
+    cat <<'USAGE_EOF'
+  bash install.txt                 装到 ~/.wb-task-sync 并注册开机自启
+  bash install.txt --port 8790     换端口
+  bash install.txt --uninstall     卸载（停服务 + 删自启 + 删目录）
+  bash install.txt --no-service    只下载，不注册自启
+USAGE_EOF
+  fi
+  exit 0
+fi
+
+# ------------------------------------------------------------------ 卸载
+if [ "$MODE" = "uninstall" ]; then
+  echo "卸载 WorkBuddy 任务同步采集器"
+  if [ "$(uname -s)" = "Darwin" ] && [ -f "$PLIST" ]; then
+    launchctl bootout "gui/$(id -u)/$LABEL" 2>/dev/null || launchctl unload "$PLIST" 2>/dev/null || true
+    rm -f "$PLIST"
+    ok "已移除 LaunchAgent"
+  fi
+  if [ -f "$UNIT" ]; then
+    systemctl --user disable --now wb-task-sync.service 2>/dev/null || true
+    rm -f "$UNIT"
+    systemctl --user daemon-reload 2>/dev/null || true
+    ok "已移除 systemd user unit"
+  fi
+  # 只停本目录的采集器，别误伤用户别处手动起的进程
+  pkill -f "$DIR/collect.js" 2>/dev/null || true
+  rm -rf "$DIR"
+  ok "已删除 $DIR"
+  echo "完成。看板不再能读取本机任务。"
+  exit 0
+fi
+
+# ------------------------------------------------------------------ 前置检查
+echo "WorkBuddy 任务同步 · 采集器安装"
+echo
+
+command -v node >/dev/null 2>&1 || die "没找到 node。先装 Node 18+：https://nodejs.org"
+
+# 挑一个「长期不会消失」的 node：
+# App 内置的 node（…/Application Support/xxx/bin/node）能用，但 App 升级/重装后就没了，
+# 写进 LaunchAgent 会导致有一天开机自启静默失效。所以优先 Homebrew / ~/.workbuddy / nvm。
+resolve_node() {
+  local c
+  if [ -n "${WB_SYNC_NODE:-}" ] && [ -x "${WB_SYNC_NODE}" ]; then printf '%s' "$WB_SYNC_NODE"; return; fi
+  for c in /opt/homebrew/bin/node /usr/local/bin/node; do
+    [ -x "$c" ] && { printf '%s' "$c"; return; }
+  done
+  c="$(ls -d "$HOME"/.workbuddy/binaries/node/versions/*/bin/node 2>/dev/null | sort -V | tail -1)"
+  [ -n "$c" ] && [ -x "$c" ] && { printf '%s' "$c"; return; }
+  c="$(ls -d "$HOME"/.nvm/versions/node/*/bin/node 2>/dev/null | sort -V | tail -1)"
+  [ -n "$c" ] && [ -x "$c" ] && { printf '%s' "$c"; return; }
+  command -v node 2>/dev/null || true
+}
+
+NODE_BIN="$(resolve_node)"
+[ -n "$NODE_BIN" ] || die "没找到可用的 node 可执行文件"
+NODE_MAJOR="$("$NODE_BIN" -p 'process.versions.node.split(".")[0]' 2>/dev/null || echo 0)"
+if [ "${NODE_MAJOR:-0}" -lt 18 ]; then
+  die "Node 版本过低（当前 $("$NODE_BIN" -v)），需要 18 或更高"
+fi
+info "Node: $NODE_BIN ($("$NODE_BIN" -v))"
+case "$NODE_BIN" in
+  *"Application Support"*|*.app/*)
+    warn "这是某个 App 内置的 node —— 能用，但那个 App 升级/卸载后会失效"
+    warn "  想更稳：装一个 Homebrew node（brew install node）后再运行本脚本"
+    ;;
+esac
+
+if ! command -v sqlite3 >/dev/null 2>&1; then
+  warn "没找到 sqlite3：会话标题会显示成「会话 xxxxxxxx」，任务也归不到 WorkBuddy 账号"
+  warn "  macOS 自带；Debian/Ubuntu 可装：sudo apt install -y sqlite3"
+fi
+
+if [ ! -d "$HOME/.workbuddy" ]; then
+  warn "没找到 ~/.workbuddy —— 这台机器上可能还没用过 WorkBuddy，装了也读不到任务"
+fi
+
+# ------------------------------------------------------------------ 下载
+mkdir -p "$DIR"
+info "下载到 $DIR"
+curl -fsSL "$BASE_URL/collector/collect.js" -o "$DIR/collect.js" || die "下载失败，检查网络或 WB_SYNC_BASE_URL"
+curl -fsSL "$BASE_URL/collector/import.js" -o "$DIR/import.js" 2>/dev/null || true
+chmod +x "$DIR/collect.js"
+
+# 现场跑一次，确认这份文件在这台机器上真能用
+if ! "$NODE_BIN" "$DIR/collect.js" --json >"$DIR/.selftest.json" 2>"$DIR/.selftest.err"; then
+  warn "自检失败，错误如下："
+  sed 's/^/     /' "$DIR/.selftest.err" >&2 || true
+  die "采集器在这台机器上跑不起来，已中止（未注册自启）"
+fi
+TASK_COUNT="$("$NODE_BIN" -e '
+  try { const d = require(process.argv[1]); process.stdout.write(String((d.tasks||[]).length)); }
+  catch { process.stdout.write("0"); }
+' "$DIR/.selftest.json" 2>/dev/null || echo 0)"
+rm -f "$DIR/.selftest.json" "$DIR/.selftest.err"
+ok "自检通过：读到 $TASK_COUNT 个任务"
+
+if [ "$MODE" = "download" ]; then
+  echo
+  echo "已下载，未注册自启。手动启动："
+  echo "  node $DIR/collect.js --serve --port $PORT"
+  exit 0
+fi
+
+# ------------------------------------------------------------------ 注册自启
+OS="$(uname -s)"
+mkdir -p "$DIR/logs"
+
+if [ "$OS" = "Darwin" ]; then
+  mkdir -p "$HOME/Library/LaunchAgents"
+  cat >"$PLIST" <<PLIST_EOF
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+  <key>Label</key><string>$LABEL</string>
+  <key>ProgramArguments</key>
+  <array>
+    <string>$NODE_BIN</string>
+    <string>$DIR/collect.js</string>
+    <string>--serve</string>
+    <string>--port</string>
+    <string>$PORT</string>
+  </array>
+  <key>RunAtLoad</key><true/>
+  <key>KeepAlive</key><true/>
+  <key>WorkingDirectory</key><string>$DIR</string>
+  <key>StandardOutPath</key><string>$DIR/logs/collector.log</string>
+  <key>StandardErrorPath</key><string>$DIR/logs/collector.err</string>
+</dict>
+</plist>
+PLIST_EOF
+
+  # launchctl 只能从「图形登录会话」里注册任务：
+  # macOS 终端.app / iTerm 有，IDE 内置终端、SSH、自动化脚本通常没有（$SECURITYSESSIONID 为空），
+  # 那种情况下 bootstrap 一律报 5: Input/output error。
+  if [ -z "${SECURITYSESSIONID:-}" ]; then
+    warn "当前不是图形登录会话（IDE 内置终端 / SSH / 自动化调用都会这样）"
+    warn "在这种终端里 launchctl 一定失败，开机自启注册不上。"
+    warn "请改用 macOS 自带的「终端」App 或 iTerm 重新运行本脚本，"
+    warn "或者双击桌面上的「安装任务同步.command」。"
+    echo
+  fi
+
+  launchctl bootout "gui/$(id -u)/$LABEL" 2>/dev/null || true
+  launchctl bootstrap "gui/$(id -u)" "$PLIST" 2>/dev/null || launchctl load -w "$PLIST" 2>/dev/null || true
+
+  if launchctl print "gui/$(id -u)/$LABEL" >/dev/null 2>&1; then
+    AUTOSTART_OK="yes"
+    ok "已注册 LaunchAgent（开机自启，退出后自动重启）"
+  else
+    AUTOSTART_OK="pending"
+    warn "launchctl 没能立即加载配置"
+    info "配置已写好：$PLIST"
+    info "它会在下次登录时自动生效"
+  fi
+  info "配置文件：$PLIST"
+elif [ "$OS" = "Linux" ]; then
+  mkdir -p "$UNIT_DIR"
+  cat >"$UNIT" <<UNIT_EOF
+[Unit]
+Description=WorkBuddy 任务同步采集器
+After=network.target
+
+[Service]
+Type=simple
+ExecStart=$NODE_BIN $DIR/collect.js --serve --port $PORT
+WorkingDirectory=$DIR
+Restart=always
+RestartSec=3
+StandardOutput=append:$DIR/logs/collector.log
+StandardError=append:$DIR/logs/collector.err
+
+[Install]
+WantedBy=default.target
+UNIT_EOF
+
+  systemctl --user daemon-reload
+  systemctl --user enable --now wb-task-sync.service
+  if systemctl --user is-active --quiet wb-task-sync.service; then
+    AUTOSTART_OK="yes"
+    ok "已注册 systemd user unit（开机自启，退出后自动重启）"
+  else
+    AUTOSTART_OK="pending"
+    warn "systemd 没能立即拉起服务"
+  fi
+  if command -v loginctl >/dev/null 2>&1; then
+    loginctl enable-linger "$(id -un)" 2>/dev/null \
+      && info "已开启 linger（未登录也常驻）" \
+      || warn "没能开启 linger，重新登录后才会自启：sudo loginctl enable-linger $(id -un)"
+  fi
+  info "查看状态：systemctl --user status wb-task-sync"
+else
+  warn "未知系统 $OS，只下载不注册自启"
+  echo "  手动启动：node $DIR/collect.js --serve --port $PORT"
+  exit 0
+fi
+
+# ------------------------------------------------------------------ 自启没生效就先顶一个
+if [ "${AUTOSTART_OK:-}" != "yes" ]; then
+  if curl -fsS -m 2 --noproxy '*' "http://127.0.0.1:$PORT/health" >/dev/null 2>&1; then
+    info "本机已有采集器在 $PORT 上跑着，跳过"
+  else
+    echo
+    warn "开机自启没注册成功，改成前台运行：这个窗口要一直开着，关掉采集器就停了。"
+    info "想让它彻底后台常驻：换「终端.app」或 iTerm 重新运行本脚本一次。"
+    info "现在就开始同步，网页上可以直接用了 ↓"
+    echo
+    exec "$NODE_BIN" "$DIR/collect.js" --serve --port "$PORT"
+  fi
+fi
+
+# ------------------------------------------------------------------ 验证
+echo
+info "等待服务就绪…"
+READY=""
+for _ in 1 2 3 4 5 6 7 8 9 10; do
+  if curl -fsS -m 2 --noproxy '*' "http://127.0.0.1:$PORT/health" >/dev/null 2>&1; then READY="yes"; break; fi
+  sleep 1
+done
+
+if [ -n "$READY" ]; then
+  ok "采集器已就绪：http://127.0.0.1:$PORT"
+  if [ "${AUTOSTART_OK:-}" != "yes" ]; then
+    info "注意：现在跑的是手动拉起的进程，下次登录会由自启配置接手"
+  fi
+  echo
+  echo "现在打开看板 → 左下角「同步本机任务」→「从本机同步」："
+  echo "  https://wb-task-sync.app.workbuddy.host/"
+  echo
+  echo "端口不对/被占用？重装并换端口：bash install.txt --port 8790"
+  echo "不想要了？bash install.txt --uninstall"
+else
+  warn "服务没在 10 秒内起来"
+  if [ -s "$DIR/logs/collector.err" ]; then
+    info "错误日志："
+    tail -12 "$DIR/logs/collector.err" | sed 's/^/     /'
+  else
+    info "日志是空的 —— 说明进程还没被拉起来（自启没生效，不是程序崩了）"
+    info "先手动起一个，确认能跑："
+    info "  node $DIR/collect.js --serve --port $PORT"
+    info "能跑的话再执行一遍安装，或直接重启一次电脑让 LaunchAgent 生效。"
+  fi
+  exit 1
+fi
