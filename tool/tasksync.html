@@ -1,0 +1,127 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover" />
+<meta name="theme-color" content="#070b18" />
+<title>任务同步站 · 工具箱</title>
+<link rel="icon" href="../assets/icon.svg" />
+<style>
+  :root {
+    --bg: #070b18;
+    --ink: #e8eefb;
+    --dim: #8b9ec2;
+    --line: rgba(140, 170, 220, 0.16);
+    --a1: #38bdf8;
+  }
+  * { box-sizing: border-box; }
+  html, body { height: 100%; }
+  body {
+    margin: 0;
+    background: var(--bg);
+    color: var(--ink);
+    font-family: -apple-system, BlinkMacSystemFont, "PingFang SC", "Microsoft YaHei", "Segoe UI", sans-serif;
+    display: flex;
+    flex-direction: column;
+  }
+  .bar {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    padding: 10px clamp(14px, 3vw, 26px);
+    border-bottom: 1px solid var(--line);
+    background: rgba(7, 11, 24, 0.9);
+    flex: 0 0 auto;
+  }
+  .bar a.back {
+    color: var(--dim);
+    text-decoration: none;
+    font-size: 12.5px;
+    letter-spacing: 0.06em;
+  }
+  .bar a.back:hover { color: var(--ink); }
+  .bar b { font-size: 14px; font-weight: 700; letter-spacing: 0.02em; }
+  .bar b i { font-style: normal; color: var(--a1); }
+  .bar .sp { flex: 1; }
+  .bar a.win {
+    font-size: 12px;
+    color: var(--a1);
+    text-decoration: none;
+    border: 1px solid rgba(56, 189, 248, 0.35);
+    border-radius: 999px;
+    padding: 5px 12px;
+    white-space: nowrap;
+  }
+  .bar a.win:hover { background: rgba(56, 189, 248, 0.12); }
+  .tip {
+    display: none;
+    align-items: flex-start;
+    gap: 8px;
+    padding: 8px clamp(14px, 3vw, 26px);
+    font-size: 12px;
+    line-height: 1.7;
+    color: var(--dim);
+    background: rgba(56, 189, 248, 0.06);
+    border-bottom: 1px solid var(--line);
+    flex: 0 0 auto;
+  }
+  .tip.show { display: flex; }
+  .tip b { color: var(--ink); }
+  .tip button {
+    margin-left: auto;
+    flex: 0 0 auto;
+    background: none;
+    border: 0;
+    color: var(--a1);
+    cursor: pointer;
+    font-size: 12px;
+  }
+  .frame-wrap { position: relative; flex: 1 1 auto; min-height: 0; }
+  iframe {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    border: 0;
+    background: var(--bg);
+  }
+</style>
+</head>
+<body>
+  <div class="bar">
+    <a class="back" href="index.html">← 工具箱</a>
+    <b>任务<i>同步站</i></b>
+    <span class="sp"></span>
+    <a class="win" href="https://wb-task-sync.app.workbuddy.host/" target="_blank" rel="noopener">新窗口打开 ↗</a>
+  </div>
+  <div class="tip" id="tip">
+    <span>
+      <b>第一次用：</b>点右上角「新窗口打开」，微信扫码登录一次；回到本页刷新后即可直接操作。
+      如果在这里扫码没反应，就用新窗口里的「验证码登录」。这里的登录状态和独立打开是分开存放的，两边各登一次最稳。
+    </span>
+    <button type="button" id="tipClose">知道了</button>
+  </div>
+  <div class="frame-wrap">
+    <iframe
+      id="app"
+      src="https://wb-task-sync.app.workbuddy.host/"
+      title="任务同步站"
+      allow="clipboard-write; clipboard-read"
+      referrerpolicy="no-referrer-when-downgrade"
+    ></iframe>
+  </div>
+  <script>
+    (function () {
+      var KEY = 'wb_tool_tasksync_tip_hidden';
+      var tip = document.getElementById('tip');
+      var hidden = false;
+      try { hidden = localStorage.getItem(KEY) === '1'; } catch (e) {}
+      if (!hidden) tip.classList.add('show');
+      document.getElementById('tipClose').addEventListener('click', function () {
+        tip.classList.remove('show');
+        try { localStorage.setItem(KEY, '1'); } catch (e) {}
+      });
+    })();
+  </script>
+</body>
+</html>
