@@ -403,16 +403,27 @@
     used += 1;
     var name = String(item.name || '').trim() || '未命名工具';
     var icon = String(item.icon || '').trim() || name.slice(0, 1);
-    var target = item.open === false ? '' : ' target="_blank" rel="noopener"';
+
+    // download:true 表示点了直接下载文件。
+    // 注意：download 属性只对同域链接生效，外链加了浏览器也会忽略，
+    // 所以这类条目必须指向本站内的文件（见 tool/downloads/）。
+    var attrs = '';
+    var go = '打开 →';
+    if (item.download) {
+      attrs += ' download' + (item.saveAs ? '="' + esc(item.saveAs) + '"' : '');
+      go = '下载 ↓';
+    } else {
+      attrs += item.open === false ? '' : ' target="_blank" rel="noopener"';
+    }
 
     return (
-      '<a class="card" href="' + esc(href) + '"' + target + '>' +
+      '<a class="card" href="' + esc(href) + '"' + attrs + '>' +
       idx +
       (item.tag ? '<span class="tag">' + esc(item.tag) + '</span>' : '') +
       '<span class="ico">' + esc(icon) + '</span>' +
       '<h2>' + esc(name) + '</h2>' +
       (item.desc ? '<p>' + esc(item.desc) + '</p>' : '') +
-      '<span class="go">打开 →</span>' +
+      '<span class="go">' + go + '</span>' +
       '</a>'
     );
   }
