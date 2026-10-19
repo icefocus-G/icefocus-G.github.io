@@ -1,0 +1,2237 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>AI 图片切图 · 去背景 + 自动分块导出</title>
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='7' fill='%234f8cff'/%3E%3Cpath d='M9 21l5-6 3 3 6-8' stroke='white' stroke-width='2.4' fill='none' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E">
+<style>
+  :root {
+    --page: #10131a;
+    --panel: #171b24;
+    --panel-soft: #1e2330;
+    --line: #2b3242;
+    --text: #e9edf6;
+    --muted: #8d98ac;
+    --accent: #4f8cff;
+    --accent-soft: rgba(79, 140, 255, 0.14);
+    --good: #31c48d;
+    --warn: #ffb454;
+    --danger: #ff6b5e;
+    --checker-a: #262c39;
+    --checker-b: #1c212c;
+    --radius: 12px;
+  }
+
+  * { box-sizing: border-box; }
+
+  html, body {
+    margin: 0;
+    padding: 0;
+    background: var(--page);
+    color: var(--text);
+    font-family: -apple-system, BlinkMacSystemFont, "PingFang SC", "Helvetica Neue", "Microsoft YaHei", sans-serif;
+    font-size: 14px;
+    line-height: 1.55;
+    -webkit-font-smoothing: antialiased;
+  }
+
+  /* 页面必须始终可自由滚动，不做任何锁定 */
+  body { overflow-x: hidden; overflow-y: auto; }
+
+  h1, h2, h3, p, figure { margin: 0; }
+
+  button {
+    font: inherit;
+    color: var(--text);
+    background: var(--panel-soft);
+    border: 1px solid var(--line);
+    border-radius: 8px;
+    padding: 7px 13px;
+    cursor: pointer;
+    transition: background 0.15s ease, border-color 0.15s ease, opacity 0.15s ease;
+  }
+  button:hover:not(:disabled) { background: #262d3c; border-color: #3a4459; }
+  button:disabled { opacity: 0.42; cursor: not-allowed; }
+  button.primary { background: var(--accent); border-color: var(--accent); color: #fff; font-weight: 600; }
+  button.primary:hover:not(:disabled) { background: #6099ff; border-color: #6099ff; }
+  button.danger { color: var(--danger); border-color: rgba(255, 107, 94, 0.4); }
+  button.danger:hover:not(:disabled) { background: rgba(255, 107, 94, 0.12); }
+
+  input[type="text"], input[type="number"] {
+    font: inherit;
+    color: var(--text);
+    background: #12161f;
+    border: 1px solid var(--line);
+    border-radius: 8px;
+    padding: 6px 9px;
+    width: 100%;
+  }
+  input[type="text"]:focus, input[type="number"]:focus { outline: none; border-color: var(--accent); }
+
+  input[type="range"] {
+    -webkit-appearance: none;
+    appearance: none;
+    width: 100%;
+    height: 4px;
+    border-radius: 3px;
+    background: #2f3646;
+    margin: 6px 0 2px;
+  }
+  input[type="range"]::-webkit-slider-thumb {
+    -webkit-appearance: none;
+    width: 15px;
+    height: 15px;
+    border-radius: 50%;
+    background: var(--accent);
+    border: 2px solid #10131a;
+    cursor: pointer;
+  }
+
+  .topbar {
+    position: sticky;
+    top: 0;
+    z-index: 20;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 16px;
+    padding: 13px 22px;
+    background: #141821;
+    border-bottom: 1px solid var(--line);
+  }
+  .brand { display: flex; align-items: baseline; gap: 12px; flex-wrap: wrap; }
+  .brand h1 { font-size: 17px; font-weight: 650; letter-spacing: 0.3px; }
+  .brand span { color: var(--muted); font-size: 12.5px; }
+  .topbar-actions { display: flex; gap: 8px; flex-wrap: wrap; }
+
+  .layout {
+    display: grid;
+    grid-template-columns: 372px minmax(0, 1fr);
+    gap: 16px;
+    padding: 16px 22px 40px;
+    align-items: start;
+  }
+  @media (max-width: 1080px) {
+    .layout { grid-template-columns: minmax(0, 1fr); }
+  }
+
+  .card {
+    background: var(--panel);
+    border: 1px solid var(--line);
+    border-radius: var(--radius);
+    padding: 15px;
+    margin-bottom: 14px;
+  }
+  .card > h2 {
+    font-size: 13px;
+    font-weight: 650;
+    letter-spacing: 0.6px;
+    color: var(--muted);
+    text-transform: uppercase;
+    margin-bottom: 11px;
+  }
+
+  .dropzone {
+    border: 1.5px dashed #3b4559;
+    border-radius: var(--radius);
+    background: linear-gradient(160deg, #1a1f2b, #161a23);
+    padding: 26px 18px;
+    text-align: center;
+    cursor: pointer;
+    transition: border-color 0.15s ease, background 0.15s ease, transform 0.1s ease;
+  }
+  .dropzone:hover { border-color: var(--accent); background: #1c2231; }
+  .dropzone.dragging { border-color: var(--accent); background: var(--accent-soft); transform: scale(1.01); }
+  .dropzone .big { font-size: 15px; font-weight: 600; margin-bottom: 5px; }
+  .dropzone .small { color: var(--muted); font-size: 12.5px; line-height: 1.7; }
+  .dropzone kbd {
+    background: #2a3143;
+    border: 1px solid #3a4459;
+    border-radius: 5px;
+    padding: 1px 6px;
+    font-size: 11.5px;
+    font-family: inherit;
+  }
+
+  .field { margin-bottom: 13px; }
+  .field:last-child { margin-bottom: 0; }
+  .field-head { display: flex; align-items: center; justify-content: space-between; gap: 10px; }
+  .field-head label { font-size: 13px; }
+  .field-head output { font-size: 12.5px; color: var(--accent); font-variant-numeric: tabular-nums; }
+  .field-hint { font-size: 11.5px; color: var(--muted); margin-top: 3px; }
+
+  /* 「源文件」列表：点一项就在右侧预览区显示 */
+  .card-head { display: flex; align-items: center; justify-content: space-between; gap: 10px; }
+  .card-head h2 { margin-bottom: 0; }
+  .card-head button { padding: 3px 10px; font-size: 12px; }
+  .source-list {
+    margin-top: 11px;
+    max-height: 216px;
+    overflow-y: auto;
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+    padding-right: 2px;
+  }
+  .source-item {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    width: 100%;
+    text-align: left;
+    padding: 7px 10px;
+    border-radius: 8px;
+    background: #171c26;
+    border: 1px solid var(--line);
+    color: var(--text);
+    font-size: 12.5px;
+    cursor: pointer;
+  }
+  .source-item:hover:not(:disabled) { background: #1f2634; border-color: #3a4459; }
+  .source-item.selected {
+    background: var(--accent-soft);
+    border-color: rgba(79, 140, 255, 0.55);
+    color: #dce8ff;
+  }
+  .source-item .source-name {
+    flex: 1 1 auto;
+    min-width: 0;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+  .source-item .source-size {
+    flex: 0 0 auto;
+    color: var(--muted);
+    font-size: 11.5px;
+    font-variant-numeric: tabular-nums;
+  }
+  .source-item.selected .source-size { color: #9db8e8; }
+  .source-empty {
+    padding: 12px 10px;
+    border-radius: 8px;
+    background: #14181f;
+    border: 1px dashed #333c4d;
+    color: var(--muted);
+    font-size: 12px;
+    line-height: 1.7;
+  }
+  code {
+    background: #232a38;
+    border-radius: 4px;
+    padding: 1px 5px;
+    font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+    font-size: 11.5px;
+  }
+  .switch { display: flex; align-items: center; gap: 9px; cursor: pointer; font-size: 13px; }
+  .switch input { width: 15px; height: 15px; accent-color: var(--accent); cursor: pointer; }
+
+  .stage { min-width: 0; }
+  .stage-card {
+    background: var(--panel);
+    border: 1px solid var(--line);
+    border-radius: var(--radius);
+    padding: 15px;
+    margin-bottom: 14px;
+  }
+  .stage-head {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 14px;
+    flex-wrap: wrap;
+    margin-bottom: 12px;
+  }
+  .stage-head h2 { font-size: 14px; font-weight: 650; }
+  .stage-head .sub { font-size: 12.5px; color: var(--muted); }
+
+  .checker {
+    background-color: var(--checker-a);
+    background-image:
+      linear-gradient(45deg, var(--checker-b) 25%, transparent 25%, transparent 75%, var(--checker-b) 75%),
+      linear-gradient(45deg, var(--checker-b) 25%, transparent 25%, transparent 75%, var(--checker-b) 75%);
+    background-size: 16px 16px;
+    background-position: 0 0, 8px 8px;
+  }
+
+  .preview-box {
+    border: 1px solid var(--line);
+    border-radius: 10px;
+    overflow: hidden;
+    min-height: 150px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 10px;
+  }
+  .preview-box canvas { max-width: 100%; height: auto; display: block; }
+  .preview-empty { color: var(--muted); font-size: 13px; padding: 34px 10px; }
+
+  .preview-pair { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 12px; }
+  .preview-pair figcaption { font-size: 12.5px; color: var(--muted); margin-bottom: 6px; }
+
+  .element-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(122px, 1fr));
+    gap: 11px;
+  }
+  .element-card {
+    background: #141821;
+    border: 1px solid var(--line);
+    border-radius: 10px;
+    padding: 8px;
+    display: flex;
+    flex-direction: column;
+    gap: 7px;
+  }
+  .element-card.excluded { opacity: 0.36; }
+  .element-card .thumb {
+    border-radius: 7px;
+    height: 96px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    overflow: hidden;
+    border: 1px solid #2a3142;
+  }
+  .element-card .thumb img { max-width: 100%; max-height: 100%; display: block; }
+  .element-card .caption {
+    font-size: 11.5px;
+    color: var(--muted);
+    display: flex;
+    justify-content: space-between;
+    gap: 6px;
+    font-variant-numeric: tabular-nums;
+  }
+  .element-card .caption b { color: var(--text); font-weight: 600; }
+  .element-card button { padding: 4px 8px; font-size: 12px; }
+
+  .save-bar {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    flex-wrap: wrap;
+    padding-top: 13px;
+    margin-top: 13px;
+    border-top: 1px solid var(--line);
+  }
+  .save-bar .prefix { width: 210px; }
+  .save-bar .grow { flex: 1 1 auto; }
+
+  .save-target {
+    margin-top: 10px;
+    padding: 8px 11px;
+    border-radius: 8px;
+    background: rgba(79, 140, 255, 0.1);
+    border: 1px solid rgba(79, 140, 255, 0.28);
+    color: #b7cfff;
+    font-size: 12.5px;
+    line-height: 1.6;
+    word-break: break-all;
+  }
+  .save-target b { color: #eaf1ff; font-weight: 650; }
+
+  .folder-path {
+    margin-top: 10px;
+    padding: 8px 11px;
+    border-radius: 8px;
+    background: rgba(46, 196, 128, 0.1);
+    border: 1px solid rgba(46, 196, 128, 0.32);
+    color: #96e0bb;
+    font-size: 12.5px;
+    line-height: 1.7;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    flex-wrap: wrap;
+  }
+  .folder-path code {
+    flex: 1 1 320px;
+    min-width: 0;
+    color: #e8fff4;
+    font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+    word-break: break-all;
+  }
+  .folder-path button { padding: 3px 9px; font-size: 12px; }
+
+  /* 提示弹窗：无法切图 / 图片过大 / 处理超时 */
+  .modal-mask {
+    position: fixed;
+    inset: 0;
+    z-index: 60;
+    background: rgba(5, 8, 13, 0.7);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 26px;
+  }
+  .modal-mask[hidden] { display: none; }
+  .modal {
+    width: 100%;
+    max-width: 540px;
+    background: var(--panel);
+    border: 1px solid var(--line);
+    border-radius: 14px;
+    padding: 20px 22px;
+    box-shadow: 0 20px 60px rgba(0, 0, 0, 0.55);
+  }
+  .modal h3 {
+    margin: 0 0 10px;
+    font-size: 16px;
+    color: var(--danger);
+    letter-spacing: 0.2px;
+  }
+  .modal-body { font-size: 13px; line-height: 1.85; color: var(--muted); }
+  .modal-body p { margin: 0; }
+  .modal-body ul { margin: 9px 0 0; padding-left: 19px; }
+  .modal-body li { margin-bottom: 3px; }
+  .modal-body b { color: var(--text); }
+  .modal-body .modal-hint {
+    margin-top: 12px;
+    padding: 9px 12px;
+    border-radius: 8px;
+    background: rgba(79, 140, 255, 0.1);
+    border: 1px solid rgba(79, 140, 255, 0.3);
+    color: #b7cfff;
+  }
+  .modal-actions { margin-top: 18px; display: flex; justify-content: flex-end; gap: 10px; }
+
+  .log {
+    margin-top: 12px;
+    background: #0e1219;
+    border: 1px solid var(--line);
+    border-radius: 9px;
+    padding: 10px 12px;
+    max-height: 190px;
+    overflow-y: auto;
+    font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+    font-size: 12px;
+    line-height: 1.65;
+    color: #a9b6cc;
+    white-space: pre-wrap;
+    word-break: break-all;
+  }
+  .log .ok { color: var(--good); }
+  .log .err { color: var(--danger); }
+  .log .warn { color: var(--warn); }
+  .log:empty { display: none; }
+
+  .statusbar {
+    position: sticky;
+    bottom: 0;
+    z-index: 15;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 14px;
+    padding: 9px 22px;
+    background: #141821;
+    border-top: 1px solid var(--line);
+    font-size: 12.5px;
+    color: var(--muted);
+    flex-wrap: wrap;
+  }  .notice {
+    margin: 14px 22px -2px;
+    padding: 11px 15px;
+    border-radius: 10px;
+    background: rgba(255, 180, 84, 0.12);
+    border: 1px solid rgba(255, 180, 84, 0.42);
+    color: #ffd79a;
+    font-size: 13px;
+    line-height: 1.7;
+  }
+  .notice b { color: #fff; }
+  .notice code {
+    background: rgba(255, 255, 255, 0.1);
+    padding: 1px 6px;
+    border-radius: 5px;
+    font-size: 12.5px;
+  }
+
+  .statusbar b { color: var(--text); font-weight: 600; }
+  .badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    padding: 2px 9px;
+    border-radius: 999px;
+    background: var(--accent-soft);
+    color: #a8c6ff;
+    font-size: 12px;
+  }
+  .busy .dot-live {
+    width: 7px;
+    height: 7px;
+    border-radius: 50%;
+    background: var(--accent);
+    animation: pulse 0.9s ease-in-out infinite;
+  }
+  @keyframes pulse { 0%, 100% { opacity: 0.25; } 50% { opacity: 1; } }
+  .dot-live { width: 7px; height: 7px; border-radius: 50%; background: var(--good); display: inline-block; }
+</style>
+<link rel="stylesheet" href="../lib/localfs.css">
+<style>
+  .wrap-paths{ padding:16px 22px 0; }
+  .wrap-paths .lfs-panel{ margin:0; }
+</style>
+</head>
+<body>
+
+<header class="topbar">
+  <div class="brand">
+    <h1>AI 图片切图</h1>
+    <span>去背景 · 按独立元素自动分块 · 逐张导出到「切图文件」</span>
+  </div>
+  <div class="topbar-actions">
+    <button id="buttonReveal">定位输出目录</button>
+    <button id="buttonClear" class="danger">清空切图文件</button>
+  </div>
+</header>
+
+<div class="notice" id="fileProtocolNotice" hidden>
+  <b>这个页面要由浏览器直接读写你电脑上的文件夹</b>，需要用 Chrome / Edge 打开，并且页面地址是
+  <code>https://</code> 或 <code>http://localhost</code>。若你现在是用双击文件的方式（<code>file://</code>）打开，
+  浏览器不允许网页碰本地磁盘：请到工具箱里从网页链接进入，或在本机起一个静态服务再访问。
+</div>
+
+<!-- 本地路径设置：源文件目录 + 切图输出目录，选一次就记住 -->
+<div class="wrap-paths">
+  <div id="localPaths"></div>
+</div>
+
+<div class="layout">
+
+  <!-- ============ 左栏：导入 + 参数 ============ -->
+  <aside>
+    <section class="card">
+      <h2>1 · 导入图片</h2>
+      <div class="dropzone" id="dropzone">
+        <div class="big">点击选择图片</div>
+        <div class="small">
+          也可以把图片拖到这里，或直接 <kbd>⌘</kbd> + <kbd>V</kbd> 粘贴剪贴板图片
+        </div>
+      </div>
+      <input type="file" id="fileInput" accept="image/*" multiple hidden>
+    </section>
+
+    <section class="card">
+      <div class="card-head">
+        <h2 id="sourceCardTitle">从「源文件目录」选择</h2>
+        <button id="buttonRefreshSources" title="重新读取 源文件/ 文件夹">刷新</button>
+      </div>
+      <div class="source-list" id="sourceList">
+        <div class="source-empty">读取中…</div>
+      </div>
+      <div class="field-hint" id="sourceHint">
+        目录在页面顶部设置。列出来的是该文件夹里的图片，点某一项，右侧预览区就会显示它，随后按参数切图即可。
+      </div>
+    </section>
+
+    <section class="card">
+      <h2>2 · 去背景与分块参数</h2>
+
+      <div class="field">
+        <div class="field-head">
+          <label for="rangeTolerance">背景容差</label>
+          <output id="outputTolerance">32</output>
+        </div>
+        <input type="range" id="rangeTolerance" min="0" max="120" step="1" value="32">
+        <div class="field-hint">背景色相似到何种程度算背景。纯白底 20–40 足够；背景有噪点或渐变时调大。</div>
+      </div>
+
+      <div class="field">
+        <div class="field-head">
+          <label for="rangeErode">边缘收缩（去残留白边）</label>
+          <output id="outputErode">1</output>
+        </div>
+        <input type="range" id="rangeErode" min="0" max="4" step="1" value="1">
+        <div class="field-hint">把元素边缘再向内收 0–4 像素，消除抠图后残留的浅色描边。</div>
+      </div>
+
+      <div class="field">
+        <label class="switch">
+          <input type="checkbox" id="checkSoftEdge" checked>
+          <span>边缘羽化（半透明过渡，锯齿更柔和）</span>
+        </label>
+      </div>
+
+      <div class="field">
+        <label class="switch">
+          <input type="checkbox" id="checkHollow">
+          <span>内孔透明化（数字 0 / 8 / 9 的内部孔洞）</span>
+        </label>
+        <div class="field-hint">默认关闭：保留元素原貌。纯色底图的字模可开启，让被元素包围的背景色区域也变透明；若元素表面的白色高光被挖空，请关闭此项。</div>
+      </div>
+
+      <div class="field">
+        <div class="field-head">
+          <label for="rangeMinArea">最小元素面积</label>
+          <output id="outputMinArea">80</output>
+        </div>
+        <input type="range" id="rangeMinArea" min="0" max="4000" step="10" value="80">
+        <div class="field-hint">小于该像素面积的碎片会被丢弃，用于过滤噪点。</div>
+      </div>
+
+      <div class="field">
+        <div class="field-head">
+          <label for="rangeGap">间隙合并距离</label>
+          <output id="outputGap">0</output>
+        </div>
+        <input type="range" id="rangeGap" min="0" max="24" step="1" value="0">
+        <div class="field-hint">两个元素间隔小于该像素数时合并为一个切图。默认 0 = 严格按不挨着的块切分。</div>
+      </div>
+
+      <div class="field">
+        <div class="field-head">
+          <label for="rangePadding">裁切留白</label>
+          <output id="outputPadding">0</output>
+        </div>
+        <input type="range" id="rangePadding" min="0" max="40" step="1" value="0">
+        <div class="field-hint">每张切图四周额外保留的透明像素。</div>
+      </div>
+
+      <div class="field">
+        <div class="field-head">
+          <label for="selectScale">导出缩放</label>
+        </div>
+        <select id="selectScale" style="width:100%;font:inherit;color:var(--text);background:#12161f;border:1px solid var(--line);border-radius:8px;padding:6px 9px">
+          <option value="0.5">0.5×</option>
+          <option value="1" selected>1×（原尺寸）</option>
+          <option value="2">2×</option>
+          <option value="3">3×</option>
+        </select>
+      </div>
+
+      <div class="field">
+        <label class="switch">
+          <input type="checkbox" id="checkUniform" checked>
+          <span>统一画布尺寸（以最大元素为准，居中）</span>
+        </label>
+        <div class="field-hint">默认开启：所有切图输出成同一尺寸的画布，宽高取「最大那个元素」的尺寸，其余元素居中摆放，四周透明。取消勾选则每张按自身大小紧贴裁切。</div>
+      </div>
+
+      <div class="field">
+        <button id="buttonResetParams" style="width:100%">恢复默认参数</button>
+      </div>
+    </section>
+  </aside>
+
+  <!-- ============ 右栏：预览与导出 ============ -->
+  <main class="stage">
+    <section class="stage-card">
+      <div class="stage-head">
+        <h2>预览</h2>
+        <div class="sub" id="previewMeta">尚未导入图片</div>
+      </div>
+      <div class="preview-pair">
+        <figure>
+          <figcaption>原图</figcaption>
+          <div class="preview-box" id="previewOriginal">
+            <div class="preview-empty">等待导入…</div>
+          </div>
+        </figure>
+        <figure>
+          <figcaption>去背景结果（棋盘格 = 透明区域）</figcaption>
+          <div class="preview-box checker" id="previewCutout">
+            <div class="preview-empty">等待导入…</div>
+          </div>
+        </figure>
+      </div>
+    </section>
+
+    <section class="stage-card">
+      <div class="stage-head">
+        <h2>切图结果</h2>
+        <div class="sub" id="elementMeta">尚未生成切图</div>
+      </div>
+      <div class="element-grid" id="elementGrid"></div>
+      <div class="save-bar">
+        <label for="inputPrefix" style="color:var(--muted);font-size:12.5px">文件名前缀</label>
+        <input type="text" id="inputPrefix" class="prefix" value="切图">
+        <button id="buttonSaveAll" class="primary" disabled>全部保存到「切图文件」</button>
+        <button id="buttonOpenFolder" title="在 Finder 中打开「切图文件」的本地位置">图片目录</button>
+        <span class="grow"></span>
+        <span class="field-hint" id="outputInfo"></span>
+      </div>
+      <div class="save-target" id="batchTarget" hidden></div>
+      <div class="folder-path" id="folderPath" hidden></div>
+      <div class="log" id="log"></div>
+    </section>
+  </main>
+</div>
+
+<div class="modal-mask" id="cutDialog" hidden>
+  <div class="modal" role="alertdialog" aria-modal="true" aria-labelledby="cutDialogTitle">
+    <h3 id="cutDialogTitle">无法切图</h3>
+    <div class="modal-body" id="cutDialogBody"></div>
+    <div class="modal-actions">
+      <button id="cutDialogClose" class="primary">知道了</button>
+    </div>
+  </div>
+</div>
+
+<div class="statusbar">
+  <div id="statusText"><span class="dot-live"></span> 就绪</div>
+  <div id="outputPath">输出目录：读取中…</div>
+</div>
+
+<!-- ======================================================================
+     核心算法（纯函数，不依赖任何 DOM，可单独用 Node 做单元测试）
+     ====================================================================== -->
+<script id="coreAlgorithm">
+const AlgorithmCore = (function () {
+  'use strict';
+
+  /* ---------- 工具 ---------- */
+
+  // 颜色距离：取三通道差值的最大值，与「容差」滑杆的语义一致
+  // （容差 32 就表示每个通道相差都不超过 32）
+  function colorDistance(r1, g1, b1, targetR, targetG, targetB) {
+    const deltaR = r1 > targetR ? r1 - targetR : targetR - r1;
+    const deltaG = g1 > targetG ? g1 - targetG : targetG - g1;
+    const deltaB = b1 > targetB ? b1 - targetB : targetB - b1;
+    if (deltaR >= deltaG && deltaR >= deltaB) return deltaR;
+    return deltaG >= deltaB ? deltaG : deltaB;
+  }
+
+  /* ---------- 背景色估计：采样四条边，取量化后的主色 ---------- */
+
+  function estimateBackgroundColor(pixels, width, height) {
+    const shift = 4;                       // 量化到 16 级
+    const buckets = new Map();
+    const step = Math.max(1, Math.round(Math.min(width, height) / 120));
+    let transparentCount = 0;
+    let totalCount = 0;
+
+    function record(x, y) {
+      const offset = (y * width + x) * 4;
+      totalCount += 1;
+      if (pixels[offset + 3] < 16) { transparentCount += 1; return; }
+      const r = pixels[offset];
+      const g = pixels[offset + 1];
+      const b = pixels[offset + 2];
+      const key = ((r >> shift) << 8) | ((g >> shift) << 4) | (b >> shift);
+      let bucket = buckets.get(key);
+      if (!bucket) { bucket = { count: 0, r: 0, g: 0, b: 0 }; buckets.set(key, bucket); }
+      bucket.count += 1;
+      bucket.r += r;
+      bucket.g += g;
+      bucket.b += b;
+    }
+
+    for (let x = 0; x < width; x += step) { record(x, 0); record(x, height - 1); }
+    for (let y = 0; y < height; y += step) { record(0, y); record(width - 1, y); }
+
+    let best = null;
+    buckets.forEach(function (bucket) {
+      if (!best || bucket.count > best.count) best = bucket;
+    });
+
+    const transparentRatio = totalCount > 0 ? transparentCount / totalCount : 0;
+    if (!best) return { color: [255, 255, 255], transparentRatio: transparentRatio, coverage: 0 };
+    return {
+      color: [
+        Math.round(best.r / best.count),
+        Math.round(best.g / best.count),
+        Math.round(best.b / best.count)
+      ],
+      transparentRatio: transparentRatio,
+      coverage: best.count / Math.max(1, totalCount)
+    };
+  }
+
+  /* ---------- 去背景 ----------
+     思路：从四条边做 flood fill，只清除「与图像边缘连通」的背景像素。
+     这样元素内部恰好同色的区域（例如数字 0 的孔洞中心）不会被挖空。
+     返回去背景后的像素、前景掩码、以及背景色估计结果。
+  */
+
+  function removeBackground(pixels, width, height, options) {
+    const settings = options || {};
+    const tolerance = Math.max(0, Math.min(255, Number(settings.tolerance) || 0));
+    const erodeRadius = Math.max(0, Math.min(8, Math.round(Number(settings.erodeRadius) || 0)));
+    const softEdge = settings.softEdge !== false;
+
+    const backgroundInfo = estimateBackgroundColor(pixels, width, height);
+    const backgroundRed = backgroundInfo.color[0];
+    const backgroundGreen = backgroundInfo.color[1];
+    const backgroundBlue = backgroundInfo.color[2];
+    // 原图本身就有大量透明像素时，直接以 alpha 通道作为背景判据
+    const useAlphaChannel = backgroundInfo.transparentRatio >= 0.5;
+
+    const total = width * height;
+    const isBackground = new Uint8Array(total);
+    const stack = new Int32Array(total);
+    let stackLength = 0;
+    const distanceThreshold = tolerance;
+    const alphaThreshold = 48;
+
+    function isBackgroundPixel(index) {
+      if (isBackground[index]) return false;
+      const offset = index * 4;
+      const alpha = pixels[offset + 3];
+      if (useAlphaChannel) return alpha <= alphaThreshold;
+      if (alpha <= 8) return true;
+      return colorDistance(
+        pixels[offset], pixels[offset + 1], pixels[offset + 2],
+        backgroundRed, backgroundGreen, backgroundBlue
+      ) <= distanceThreshold;
+    }
+
+    function pushSeed(index) {
+      if (isBackgroundPixel(index)) {
+        isBackground[index] = 1;
+        stack[stackLength] = index;
+        stackLength += 1;
+      }
+    }
+
+    for (let x = 0; x < width; x += 1) {
+      pushSeed(x);
+      pushSeed((height - 1) * width + x);
+    }
+    for (let y = 0; y < height; y += 1) {
+      pushSeed(y * width);
+      pushSeed(y * width + width - 1);
+    }
+
+    while (stackLength > 0) {
+      stackLength -= 1;
+      const index = stack[stackLength];
+      const x = index % width;
+      const y = (index - x) / width;
+      if (x > 0) pushSeed(index - 1);
+      if (x < width - 1) pushSeed(index + 1);
+      if (y > 0) pushSeed(index - width);
+      if (y < height - 1) pushSeed(index + width);
+    }
+
+    // 封闭孔洞处理（可选）：颜色接近背景、但被元素完全包住（与图像边缘不连通）的区域。
+    // 例如纯色底图中数字 0 / 6 / 8 / 9 的内孔 → 一并透明。
+    // 注意：3D 质感字模表面的纯白高光与背景色几乎同色，无法可靠区分，
+    // 因此该功能默认关闭，避免把高光挖成透明小洞。
+    // 开启时用「该区域膨胀后是否碰到外部背景」来保护贴边高光（整块判定）。
+    if (settings.hollowEnclosed === true) {
+      const outlineContactRadius = 8;
+      const hollowCandidate = new Uint8Array(total);
+      for (let index = 0; index < total; index += 1) {
+        if (isBackground[index]) continue;
+        const offset = index * 4;
+        if (pixels[offset + 3] <= 8) continue;
+        if (colorDistance(
+          pixels[offset], pixels[offset + 1], pixels[offset + 2],
+          backgroundRed, backgroundGreen, backgroundBlue
+        ) <= distanceThreshold) {
+          hollowCandidate[index] = 1;
+        }
+      }
+      const hollow = labelComponents(hollowCandidate, width, height);
+      if (hollow.count > 0) {
+        const expandedBackground = dilateMask(isBackground, width, height, outlineContactRadius);
+        const touchesOutside = new Uint8Array(hollow.count + 1);
+        for (let index = 0; index < total; index += 1) {
+          const label = hollow.labels[index];
+          if (!label) continue;
+          if (expandedBackground[index]) touchesOutside[label] = 1;
+        }
+        for (let index = 0; index < total; index += 1) {
+          const label = hollow.labels[index];
+          if (!label || touchesOutside[label]) continue;
+          isBackground[index] = 1;      // 真正的内孔 → 一并透明
+        }
+      }
+    }
+
+    let foreground = new Uint8Array(total);
+    for (let index = 0; index < total; index += 1) {
+      foreground[index] = isBackground[index] ? 0 : 1;
+    }
+
+    // 边缘收缩：去掉元素外圈那 1–2 像素的残留背景色描边
+    for (let pass = 0; pass < erodeRadius; pass += 1) {
+      const next = foreground.slice();
+      for (let y = 0; y < height; y += 1) {
+        for (let x = 0; x < width; x += 1) {
+          const index = y * width + x;
+          if (!foreground[index]) continue;
+          const touchesOutside =
+            x === 0 || y === 0 || x === width - 1 || y === height - 1 ||
+            !foreground[index - 1] || !foreground[index + 1] ||
+            !foreground[index - width] || !foreground[index + width];
+          if (touchesOutside) next[index] = 0;
+        }
+      }
+      foreground = next;
+    }
+
+    // 输出：收缩后保留下来的像素保持不透明；被收缩掉的那圈按颜色距离做半透明过渡
+    const output = new Uint8ClampedArray(pixels.length);
+    output.set(pixels);
+    const softStart = tolerance;
+    const softEnd = tolerance * 2;
+
+    for (let index = 0; index < total; index += 1) {
+      const offset = index * 4;
+      const originalAlpha = pixels[offset + 3];
+      if (!foreground[index]) {
+        if (!isBackground[index] && softEdge && erodeRadius > 0) {
+          // 属于原始前景、但被收缩掉的边缘像素：按它离背景色多远决定透明度
+          let distance;
+          if (useAlphaChannel || originalAlpha <= 8) {
+            distance = 255;
+          } else {
+            distance = colorDistance(
+              pixels[offset], pixels[offset + 1], pixels[offset + 2],
+              backgroundRed, backgroundGreen, backgroundBlue
+            );
+          }
+          let alpha;
+          if (distance <= softStart) alpha = 0;
+          else if (distance >= softEnd || softEnd <= softStart) alpha = 255;
+          else alpha = Math.round((255 * (distance - softStart)) / (softEnd - softStart));
+          output[offset + 3] = Math.min(originalAlpha, alpha);
+        } else {
+          output[offset + 3] = 0;
+        }
+        continue;
+      }
+      output[offset + 3] = originalAlpha;
+    }
+
+    return {
+      pixels: output,
+      foreground: foreground,
+      backgroundColor: backgroundInfo.color,
+      backgroundCoverage: backgroundInfo.coverage,
+      usedAlphaChannel: useAlphaChannel,
+      backgroundPixelCount: isBackground.reduce(function (sum, value) { return sum + value; }, 0)
+    };
+  }
+
+  /* ---------- 形态学膨胀：用于「间隙合并」 ---------- */
+
+  function dilateMask(mask, width, height, radius) {
+    let current = mask;
+    for (let pass = 0; pass < radius; pass += 1) {
+      const next = new Uint8Array(current.length);
+      for (let y = 0; y < height; y += 1) {
+        for (let x = 0; x < width; x += 1) {
+          const index = y * width + x;
+          if (current[index]) { next[index] = 1; continue; }
+          if ((x > 0 && current[index - 1]) ||
+              (x < width - 1 && current[index + 1]) ||
+              (y > 0 && current[index - width]) ||
+              (y < height - 1 && current[index + width])) {
+            next[index] = 1;
+          }
+        }
+      }
+      current = next;
+    }
+    return current;
+  }
+
+  /* ---------- 连通域标记（8 连通，两遍扫描 + 并查集） ---------- */
+
+  function labelComponents(mask, width, height) {
+    const labels = new Int32Array(width * height);
+    const parent = [0];
+
+    function find(value) {
+      let root = value;
+      while (parent[root] !== root) root = parent[root];
+      while (parent[value] !== root) {
+        const next = parent[value];
+        parent[value] = root;
+        value = next;
+      }
+      return root;
+    }
+
+    function union(left, right) {
+      const rootLeft = find(left);
+      const rootRight = find(right);
+      if (rootLeft === rootRight) return;
+      if (rootLeft < rootRight) parent[rootRight] = rootLeft;
+      else parent[rootLeft] = rootRight;
+    }
+
+    let nextLabel = 1;
+    for (let y = 0; y < height; y += 1) {
+      for (let x = 0; x < width; x += 1) {
+        const index = y * width + x;
+        if (!mask[index]) continue;
+        // 不建数组：整张图都是前景时（例如"没有透明区域"的图）这里会被调用上千万次，
+        // 每个像素分一个小数组会制造巨大 GC 压力，表现就是页面卡住
+        const upLeft = (y > 0 && x > 0) ? labels[index - width - 1] : 0;
+        const up = y > 0 ? labels[index - width] : 0;
+        const upRight = (y > 0 && x < width - 1) ? labels[index - width + 1] : 0;
+        const left = x > 0 ? labels[index - 1] : 0;
+        let smallest = 0;
+        if (upLeft && (!smallest || upLeft < smallest)) smallest = upLeft;
+        if (up && (!smallest || up < smallest)) smallest = up;
+        if (upRight && (!smallest || upRight < smallest)) smallest = upRight;
+        if (left && (!smallest || left < smallest)) smallest = left;
+        if (!smallest) {
+          labels[index] = nextLabel;
+          parent[nextLabel] = nextLabel;
+          nextLabel += 1;
+        } else {
+          labels[index] = smallest;
+          if (upLeft && upLeft !== smallest) union(smallest, upLeft);
+          if (up && up !== smallest) union(smallest, up);
+          if (upRight && upRight !== smallest) union(smallest, upRight);
+          if (left && left !== smallest) union(smallest, left);
+        }
+      }
+    }
+
+    const remap = new Int32Array(nextLabel);
+    const boxes = [];
+    for (let index = 0; index < labels.length; index += 1) {
+      const raw = labels[index];
+      if (!raw) continue;
+      // 关键：必须先找到并查集的根，否则同一连通块会被拆成多个标签
+      const root = find(raw);
+      let mapped = remap[root];
+      if (!mapped) {
+        mapped = boxes.length + 1;
+        remap[root] = mapped;
+        boxes.push({ label: mapped, minX: width, minY: height, maxX: -1, maxY: -1, area: 0 });
+      }
+      labels[index] = mapped;
+      const box = boxes[mapped - 1];
+      const x = index % width;
+      const y = (index - x) / width;
+      if (x < box.minX) box.minX = x;
+      if (x > box.maxX) box.maxX = x;
+      if (y < box.minY) box.minY = y;
+      if (y > box.maxY) box.maxY = y;
+      box.area += 1;
+    }
+
+    return { labels: labels, boxes: boxes, count: boxes.length };
+  }
+
+  /* ---------- 无损 PNG 编码（自己拼 PNG，避免 canvas 预乘导致的边缘色偏） ---------- */
+
+  const crcTable = (function () {
+    const table = new Uint32Array(256);
+    for (let n = 0; n < 256; n += 1) {
+      let value = n;
+      for (let k = 0; k < 8; k += 1) {
+        value = (value & 1) ? (0xedb88320 ^ (value >>> 1)) : (value >>> 1);
+      }
+      table[n] = value >>> 0;
+    }
+    return table;
+  })();
+
+  function crc32(bytes) {
+    let crc = 0xffffffff;
+    for (let i = 0; i < bytes.length; i += 1) {
+      crc = crcTable[(crc ^ bytes[i]) & 0xff] ^ (crc >>> 8);
+    }
+    return (crc ^ 0xffffffff) >>> 0;
+  }
+
+  function buildChunk(typeText, dataBytes) {
+    const chunk = new Uint8Array(12 + dataBytes.length);
+    const view = new DataView(chunk.buffer);
+    view.setUint32(0, dataBytes.length);
+    for (let i = 0; i < 4; i += 1) chunk[4 + i] = typeText.charCodeAt(i);
+    chunk.set(dataBytes, 8);
+    view.setUint32(8 + dataBytes.length, crc32(chunk.subarray(4, 8 + dataBytes.length)));
+    return chunk;
+  }
+
+  async function deflateBytes(bytes) {
+    if (typeof CompressionStream === 'undefined') return null;
+    const stream = new Blob([bytes]).stream().pipeThrough(new CompressionStream('deflate'));
+    return new Uint8Array(await new Response(stream).arrayBuffer());
+  }
+
+  async function encodePng(pixels, width, height) {
+    if (width <= 0 || height <= 0) return null;
+    const stride = width * 4 + 1;
+    const raw = new Uint8Array(stride * height);
+    for (let y = 0; y < height; y += 1) {
+      raw[y * stride] = 0;                                    // filter type 0
+      raw.set(pixels.subarray(y * width * 4, (y + 1) * width * 4), y * stride + 1);
+    }
+    const compressed = await deflateBytes(raw);
+    if (!compressed) return null;
+    const header = new Uint8Array(13);
+    const headerView = new DataView(header.buffer);
+    headerView.setUint32(0, width);
+    headerView.setUint32(4, height);
+    header[8] = 8;    // bit depth
+    header[9] = 6;    // color type: RGBA
+    header[10] = 0;   // compression
+    header[11] = 0;   // filter
+    header[12] = 0;   // interlace
+    const parts = [
+      new Uint8Array([137, 80, 78, 71, 13, 10, 26, 10]),
+      buildChunk('IHDR', header),
+      buildChunk('IDAT', compressed),
+      buildChunk('IEND', new Uint8Array(0))
+    ];
+    let totalLength = 0;
+    for (let i = 0; i < parts.length; i += 1) totalLength += parts[i].length;
+    const output = new Uint8Array(totalLength);
+    let offset = 0;
+    for (let i = 0; i < parts.length; i += 1) {
+      output.set(parts[i], offset);
+      offset += parts[i].length;
+    }
+    return output;
+  }
+
+  /* ---------- 裁切单个元素 ---------- */
+
+  function cropElement(pixels, width, height, labels, labelValue, box, padding) {
+    const minX = Math.max(0, box.minX - padding);
+    const minY = Math.max(0, box.minY - padding);
+    const maxX = Math.min(width - 1, box.maxX + padding);
+    const maxY = Math.min(height - 1, box.maxY + padding);
+    const cropWidth = maxX - minX + 1;
+    const cropHeight = maxY - minY + 1;
+    const output = new Uint8ClampedArray(cropWidth * cropHeight * 4);
+    for (let y = 0; y < cropHeight; y += 1) {
+      for (let x = 0; x < cropWidth; x += 1) {
+        const sourceIndex = (minY + y) * width + (minX + x);
+        const targetOffset = (y * cropWidth + x) * 4;
+        if (labels[sourceIndex] !== labelValue) continue;
+        const sourceOffset = sourceIndex * 4;
+        output[targetOffset] = pixels[sourceOffset];
+        output[targetOffset + 1] = pixels[sourceOffset + 1];
+        output[targetOffset + 2] = pixels[sourceOffset + 2];
+        output[targetOffset + 3] = pixels[sourceOffset + 3];
+      }
+    }
+    return { pixels: output, width: cropWidth, height: cropHeight, x: minX, y: minY };
+  }
+
+  /* ---------- 主流程：去背景 + 分块 + 裁切 ---------- */
+
+  function extractElements(pixels, width, height, options) {
+    const settings = options || {};
+    const minArea = Math.max(0, Math.round(Number(settings.minArea) || 0));
+    const padding = Math.max(0, Math.round(Number(settings.padding) || 0));
+    const gapMerge = Math.max(0, Math.round(Number(settings.gapMerge) || 0));
+    const alphaThreshold = Math.max(1, Math.round(Number(settings.alphaThreshold) || 12));
+
+    const cutout = removeBackground(pixels, width, height, settings);
+
+    // 用于分块的前景掩码：以最终 alpha 为准（羽化出的半透明像素仍算元素的一部分）
+    const mask = new Uint8Array(width * height);
+    for (let index = 0; index < mask.length; index += 1) {
+      mask[index] = cutout.pixels[index * 4 + 3] >= alphaThreshold ? 1 : 0;
+    }
+
+    let labelSource = mask;
+    if (gapMerge > 0) labelSource = dilateMask(mask, width, height, gapMerge);
+
+    const labeling = labelComponents(labelSource, width, height);
+
+    // 收缩过的话，把膨胀标签回填到原始掩码上，长宽仍按原始像素统计
+    const boxes = [];
+    if (gapMerge > 0) {
+      const merged = new Map();
+      for (let index = 0; index < mask.length; index += 1) {
+        if (!mask[index]) continue;
+        const label = labeling.labels[index];
+        if (!label) continue;
+        let box = merged.get(label);
+        if (!box) {
+          box = { label: label, minX: width, minY: height, maxX: -1, maxY: -1, area: 0 };
+          merged.set(label, box);
+        }
+        const x = index % width;
+        const y = (index - x) / width;
+        if (x < box.minX) box.minX = x;
+        if (x > box.maxX) box.maxX = x;
+        if (y < box.minY) box.minY = y;
+        if (y > box.maxY) box.maxY = y;
+        box.area += 1;
+      }
+      merged.forEach(function (box) { boxes.push(box); });
+    } else {
+      for (let i = 0; i < labeling.boxes.length; i += 1) boxes.push(labeling.boxes[i]);
+    }
+
+    const elements = [];
+    for (let i = 0; i < boxes.length; i += 1) {
+      const box = boxes[i];
+      if (box.area < minArea) continue;
+      const cropped = cropElement(
+        cutout.pixels, width, height, labeling.labels, box.label, box, padding
+      );
+      elements.push({
+        label: box.label,
+        sourceX: box.minX,
+        sourceY: box.minY,
+        sourceWidth: box.maxX - box.minX + 1,
+        sourceHeight: box.maxY - box.minY + 1,
+        area: box.area,
+        pixels: cropped.pixels,
+        width: cropped.width,
+        height: cropped.height
+      });
+    }
+
+    // 排序：先按行分组（行间距超过中位高度的一半就换行），行内按 x 从左到右
+    const heights = elements.map(function (element) { return element.sourceHeight; })
+      .sort(function (a, b) { return a - b; });
+    const medianHeight = heights.length ? heights[Math.floor(heights.length / 2)] : 1;
+    const toleranceY = Math.max(8, medianHeight * 0.5);
+    elements.sort(function (left, right) {
+      const centerLeftY = left.sourceY + left.sourceHeight / 2;
+      const centerRightY = right.sourceY + right.sourceHeight / 2;
+      if (Math.abs(centerLeftY - centerRightY) > toleranceY) return centerLeftY - centerRightY;
+      return left.sourceX - right.sourceX;
+    });
+    elements.forEach(function (element, index) { element.index = index + 1; });
+
+    return {
+      cutout: cutout,
+      elements: elements,
+      totalComponents: boxes.length,
+      backgroundColor: cutout.backgroundColor,
+      mask: mask
+    };
+  }
+
+  return {
+    estimateBackgroundColor: estimateBackgroundColor,
+    removeBackground: removeBackground,
+    dilateMask: dilateMask,
+    labelComponents: labelComponents,
+    cropElement: cropElement,
+    encodePng: encodePng,
+    extractElements: extractElements
+  };
+})();
+</script>
+
+<!-- ======================================================================
+     界面逻辑
+     ====================================================================== -->
+<script src="../lib/localfs.js"></script>
+<script>
+(function () {
+  'use strict';
+
+  const state = {
+    imageBitmap: null,
+    imageName: '',
+    imageWidth: 0,
+    imageHeight: 0,
+    cutoutPixels: null,
+    elements: [],
+    excluded: new Set(),
+    batchFolder: '',
+    outputSize: null,
+    emptyMessage: '',
+    busy: false,
+    processToken: 0
+  };
+
+  const elements = {
+    dropzone: document.getElementById('dropzone'),
+    fileInput: document.getElementById('fileInput'),
+    previewOriginal: document.getElementById('previewOriginal'),
+    previewCutout: document.getElementById('previewCutout'),
+    previewMeta: document.getElementById('previewMeta'),
+    elementGrid: document.getElementById('elementGrid'),
+    elementMeta: document.getElementById('elementMeta'),
+    inputPrefix: document.getElementById('inputPrefix'),
+    buttonSaveAll: document.getElementById('buttonSaveAll'),
+    log: document.getElementById('log'),
+    statusText: document.getElementById('statusText'),
+    outputPath: document.getElementById('outputPath'),
+    outputInfo: document.getElementById('outputInfo'),
+    batchTarget: document.getElementById('batchTarget'),
+    folderPath: document.getElementById('folderPath'),
+    sourceList: document.getElementById('sourceList'),
+    cutDialog: document.getElementById('cutDialog'),
+    cutDialogClose: document.getElementById('cutDialogClose')
+  };
+
+  const parameterBindings = [
+    { key: 'tolerance', rangeId: 'rangeTolerance', outputId: 'outputTolerance' },
+    { key: 'erodeRadius', rangeId: 'rangeErode', outputId: 'outputErode' },
+    { key: 'minArea', rangeId: 'rangeMinArea', outputId: 'outputMinArea' },
+    { key: 'gapMerge', rangeId: 'rangeGap', outputId: 'outputGap' },
+    { key: 'padding', rangeId: 'rangePadding', outputId: 'outputPadding' }
+  ];
+
+  function readParameters() {
+    return {
+      tolerance: Number(document.getElementById('rangeTolerance').value),
+      erodeRadius: Number(document.getElementById('rangeErode').value),
+      minArea: Number(document.getElementById('rangeMinArea').value),
+      gapMerge: Number(document.getElementById('rangeGap').value),
+      padding: Number(document.getElementById('rangePadding').value),
+      softEdge: document.getElementById('checkSoftEdge').checked,
+      hollowEnclosed: document.getElementById('checkHollow').checked,
+      uniformCanvas: document.getElementById('checkUniform').checked,
+      scale: Number(document.getElementById('selectScale').value)
+    };
+  }
+
+  function setStatus(text, busy) {
+    elements.statusText.innerHTML = (busy ? '<span class="dot-live"></span> ' : '') + escapeHtml(text);
+  }
+
+  function escapeHtml(text) {
+    return String(text).replace(/[&<>"']/g, function (character) {
+      return { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[character];
+    });
+  }
+
+  function logLine(text, kind) {
+    const line = document.createElement('div');
+    if (kind) line.className = kind;
+    line.textContent = text;
+    elements.log.appendChild(line);
+    elements.log.scrollTop = elements.log.scrollHeight;
+  }
+
+  function nextFrame() {
+    return new Promise(function (resolve) {
+      requestAnimationFrame(function () { setTimeout(resolve, 0); });
+    });
+  }
+
+  function formatBytes(size) {
+    if (size < 1024) return size + ' B';
+    if (size < 1024 * 1024) return (size / 1024).toFixed(1) + ' KB';
+    return (size / 1024 / 1024).toFixed(2) + ' MB';
+  }
+
+  /* ---------- 载入图片 ---------- */
+
+  async function loadImageSource(blob, name) {
+    try {
+      const bitmap = await createImageBitmap(blob);
+      setCurrentImage(bitmap, name || '剪贴板图片');
+    } catch (error) {
+      logLine('图片解码失败：' + error.message, 'err');
+    }
+  }
+
+  function setCurrentImage(bitmap, name) {
+    if (state.imageBitmap && state.imageBitmap.close) state.imageBitmap.close();
+    state.imageBitmap = bitmap;
+    state.imageName = name;
+    state.imageWidth = bitmap.width;
+    state.imageHeight = bitmap.height;
+    state.excluded = new Set();
+    state.emptyMessage = '';
+    elements.inputPrefix.value = buildDefaultPrefix(name);
+    // 每导入一张图片就确定一个独立的输出目录：时间（精确到秒）+ 图片名（无名字则 切图 + 4 位随机数）
+    state.batchFolder = buildBatchFolderName(name);
+    renderBatchTarget();
+
+    const canvas = document.createElement('canvas');
+    canvas.width = bitmap.width;
+    canvas.height = bitmap.height;
+    canvas.style.maxWidth = '100%';
+    canvas.style.height = 'auto';
+    const context = canvas.getContext('2d');
+    context.clearRect(0, 0, canvas.width, canvas.height);
+    context.drawImage(bitmap, 0, 0);
+    elements.previewOriginal.innerHTML = '';
+    elements.previewOriginal.appendChild(canvas);
+    elements.previewMeta.textContent =
+      name + ' · ' + bitmap.width + ' × ' + bitmap.height + ' 像素';
+    scheduleProcessing();
+  }
+
+  function buildDefaultPrefix(name) {
+    let base = String(name || '').replace(/\.[^.]+$/, '');
+    if (/^[0-9a-zA-Z_\-]{16,}$/.test(base)) base = '切图';
+    base = base.replace(/[\\/:*?"<>|]/g, '_').slice(0, 20).trim();
+    return base || '切图';
+  }
+
+  /* ---------- 输出目录命名：时间（精确到秒）+ 图片名 ---------- */
+
+  function buildTimestamp() {
+    const now = new Date();
+    const pad = function (value) { return String(value).padStart(2, '0'); };
+    return String(now.getFullYear()) + pad(now.getMonth() + 1) + pad(now.getDate()) +
+      '_' + pad(now.getHours()) + pad(now.getMinutes()) + pad(now.getSeconds());
+  }
+
+  function buildRandomToken(length) {
+    const alphabet = 'abcdefghijkmnpqrstuvwxyz23456789';
+    const size = length && length > 0 ? length : 8;
+    const values = new Uint32Array(size);
+    crypto.getRandomValues(values);
+    let token = '';
+    for (let i = 0; i < size; i += 1) token += alphabet[values[i] % alphabet.length];
+    return token;
+  }
+
+  // 浏览器给的通用占位名（粘贴 / 拖拽常见）不算"有名字"
+  const GENERIC_IMAGE_NAMES = /^(image|img|photo|picture|clipboard|blob|paste|pasted|screenshot|screen\s?shot|untitled|unnamed|无标题|未命名|剪贴板|截图|粘贴|切图)$/i;
+
+  // 目录名 = 时间(YYYYMMDD_HHmmss) + '_' + 图片名；图片没有可用名字时用「切图_4位随机数」占位
+  function buildBatchFolderName(name) {
+    let base = String(name || '')
+      .replace(/^.*[\\/]/, '')
+      .replace(/\.[^.]+$/, '')
+      .replace(/[\\/:*?"<>|]/g, '_')
+      .replace(/\s+/g, ' ')
+      .trim()
+      .slice(0, 40)
+      .replace(/[ .]+$/, '');
+    if (!base || GENERIC_IMAGE_NAMES.test(base)) base = '切图_' + buildRandomToken(4);
+    return buildTimestamp() + '_' + base;
+  }
+
+  function renderBatchTarget() {
+    if (!state.batchFolder) {
+      elements.batchTarget.hidden = true;
+      return;
+    }
+    elements.batchTarget.hidden = false;
+    elements.batchTarget.innerHTML = '本次保存目标目录：<b>切图文件 / ' +
+      escapeHtml(state.batchFolder) + ' /</b>';
+  }
+
+  /* ---------- 处理管线 ---------- */
+
+  let processTimer = null;
+  function scheduleProcessing() {
+    if (processTimer) clearTimeout(processTimer);
+    processTimer = setTimeout(function () { processCurrentImage(); }, 90);
+  }
+
+  async function processCurrentImage() {
+    if (!state.imageBitmap) return;
+    const token = ++state.processToken;
+    const parameters = readParameters();
+    setStatus('正在去背景并分析元素…', true);
+    await nextFrame();
+    if (token !== state.processToken) return;
+
+    const width = state.imageWidth;
+    const height = state.imageHeight;
+    const totalPixels = width * height;
+
+    // 尺寸守卫：超大图先拦下来，别让后面的内存分配把标签页拖死（症状是"卡住不动"）
+    const sizeGuard = checkSizeGuard(width, height);
+    if (sizeGuard.blocked) {
+      abortProcessing(token, {
+        title: '无法切图：图片太大',
+        reason: '这张图是 ' + width + ' × ' + height + '（约 ' + formatPixelCount(totalPixels) +
+          '），超过了本工具一次能处理的上限（约 ' + formatPixelCount(MAX_PROCESS_PIXELS) + '）。',
+        details: [
+          '继续处理会占用几个 GB 内存，浏览器很可能直接卡死，所以先停下。',
+          '素材图标 / 字模通常不需要这么大，缩小后再切结果一样。'
+        ],
+        hint: '把图片缩到 2000 像素以内再拖进来；或点左侧「从『源文件』选择」、重新拖放 / ⌘V 粘贴换一张图，都可以继续。'
+      });
+      return;
+    }
+
+    // 看门狗：算太久（大图 + 复杂元素）就中止，避免页面一直转圈装作还在干活
+    const watchdog = setTimeout(function () {
+      if (token !== state.processToken) return;
+      abortProcessing(token, {
+        title: '无法切图：处理超时',
+        reason: '这张图（' + width + ' × ' + height + '）超过 ' + Math.round(PROCESS_TIMEOUT_MS / 1000) +
+          ' 秒还没算完，已经中止，页面可以继续用。',
+        details: ['元素太多或图太大时会出现这种情况。'],
+        hint: '先缩小图片，或调大「最小元素面积」过滤掉碎片；也可以直接换一张图（列表点选 / 拖放 / ⌘V 粘贴）。'
+      });
+    }, PROCESS_TIMEOUT_MS);
+
+    try {
+      const sourceCanvas = document.createElement('canvas');
+      sourceCanvas.width = width;
+      sourceCanvas.height = height;
+      const sourceContext = sourceCanvas.getContext('2d', { willReadFrequently: true });
+      sourceContext.clearRect(0, 0, sourceCanvas.width, sourceCanvas.height);
+      sourceContext.drawImage(state.imageBitmap, 0, 0);
+      const imageData = sourceContext.getImageData(0, 0, width, height);
+      const transparentPixels = countTransparentPixels(imageData.data, 16);
+
+      let result;
+      try {
+        result = AlgorithmCore.extractElements(imageData.data, width, height, parameters);
+      } catch (error) {
+        abortProcessing(token, {
+          title: '无法切图：处理出错',
+          reason: '去背景 / 分块这一步出错了：' + error.message,
+          hint: '换一张图（列表点选 / 拖放 / ⌘V 粘贴）即可继续。'
+        });
+        return;
+      }
+      if (token !== state.processToken) return;
+
+      state.cutoutPixels = result.cutout.pixels;
+      renderCutoutPreview(result.cutout.pixels, width, height);
+
+      // 业务判断：这张图是不是根本切不出东西（没有透明区域、也没有可识别的纯色背景）
+      const judgement = judgeCuttable({
+        width: width,
+        height: height,
+        totalPixels: totalPixels,
+        transparentPixels: transparentPixels,
+        backgroundPixelCount: result.cutout.backgroundPixelCount,
+        usedAlphaChannel: result.cutout.usedAlphaChannel,
+        backgroundColor: result.backgroundColor,
+        elements: result.elements
+      });
+      if (judgement.cannotCut) {
+        abortProcessing(token, judgement.dialog);
+        return;
+      }
+
+      // 导出尺寸规划：
+      //  · uniformCanvas（默认开）= 所有切图统一成同一张画布，宽高取最大元素的尺寸，元素居中；
+      //  · 再叠加「导出缩放」得到最终输出尺寸。
+      const plan = planOutputSize(result.elements, parameters);
+      state.outputSize = plan;
+
+      // 逐个元素编码成 PNG（无损，避免 canvas 预乘导致边缘偏色）
+      const encoded = [];
+      for (let i = 0; i < result.elements.length; i += 1) {
+        const element = result.elements[i];
+        const rendered = renderElementPixels(element, plan);
+        const pngBytes = await AlgorithmCore.encodePng(rendered.pixels, rendered.width, rendered.height);
+        if (token !== state.processToken) return;
+        encoded.push(buildElementRecord(element, pngBytes, rendered));
+        if (i % 8 === 0) await nextFrame();
+      }
+
+      if (token !== state.processToken) return;
+      state.elements.forEach(function (element) { URL.revokeObjectURL(element.url); });
+      state.elements = encoded;
+      state.excluded = new Set();
+      state.emptyMessage = '';
+
+      renderElementGrid();
+      elements.elementMeta.textContent =
+        '共切出 ' + encoded.length + ' 个独立元素（连通块 ' + result.totalComponents +
+        ' 个，最小面积过滤后 ' + encoded.length + ' 个）· 背景色 rgb(' +
+        result.backgroundColor.join(', ') + ')' +
+        (plan.uniform ? ' · 统一画布 ' + plan.width + ' × ' + plan.height + ' 像素（元素居中）' : '');
+      setStatus('处理完成，可调参数实时重算', false);
+      elements.buttonSaveAll.disabled = encoded.length === 0;
+    } catch (error) {
+      logLine('处理失败：' + error.message, 'err');
+      setStatus('处理失败：' + error.message, false);
+    } finally {
+      clearTimeout(watchdog);
+    }
+  }
+
+  /* ---------- 业务判断：这张图能不能切 ---------- */
+
+  const MAX_PROCESS_PIXELS = 24000000;   // 约 6000×4000，超过就先拦下（再大极易把标签页拖死）
+  const PROCESS_TIMEOUT_MS = 45000;      // 看门狗：超过这个时间还没算完就中止
+
+  function checkSizeGuard(width, height) {
+    const pixels = Math.max(0, Math.round(width) * Math.round(height));
+    return { blocked: pixels > MAX_PROCESS_PIXELS, pixels: pixels, limit: MAX_PROCESS_PIXELS };
+  }
+
+  function countTransparentPixels(pixels, threshold) {
+    let count = 0;
+    for (let index = 3; index < pixels.length; index += 4) {
+      if (pixels[index] < threshold) count += 1;
+    }
+    return count;
+  }
+
+  function formatPixelCount(pixels) {
+    if (pixels >= 10000000) return (pixels / 1000000).toFixed(1) + ' 百万像素';
+    if (pixels >= 10000) return (pixels / 10000).toFixed(1) + ' 万像素';
+    return pixels + ' 像素';
+  }
+
+  // 返回 {cannotCut, dialog}：
+  //  ① 一个元素都没有（整张都被当背景去掉了）；
+  //  ② 原图没有任何透明像素、也识别不出纯色背景，去背景后整张图仍连成一整块 →
+  //     这就是用户报的那类"没有透明区域的图标"，切出来只是一张整图，没有意义，直接弹窗拦掉。
+  function judgeCuttable(scope) {
+    const total = Math.max(1, scope.totalPixels);
+    const elements = scope.elements || [];
+    const removedRatio = scope.backgroundPixelCount / total;
+    const hasTransparency = scope.transparentPixels > 0;
+    let largestArea = 0;
+    elements.forEach(function (element) { largestArea = Math.max(largestArea, element.area); });
+    const largestRatio = largestArea / total;
+
+    if (elements.length === 0) {
+      return {
+        cannotCut: true,
+        dialog: {
+          title: '无法切图：没有可切分的元素',
+          reason: '整张图都被判定成背景色去掉了，剩下 0 个元素。',
+          details: [
+            '识别到的背景色是 rgb(' + (scope.backgroundColor || []).join(', ') + ')，占整图 ' +
+              Math.round(removedRatio * 100) + '%。',
+            '原图里没有透明像素，也没有和背景色不一样的形状可供切分。'
+          ],
+          hint: '把「背景容差」调小一点再试；或换一张有明确元素的素材图（列表点选 / 拖放 / ⌘V 粘贴都可以继续）。'
+        }
+      };
+    }
+
+    if (!hasTransparency && removedRatio < 0.02 && elements.length === 1 && largestRatio > 0.85) {
+      return {
+        cannotCut: true,
+        dialog: {
+          title: '无法切图：这张图没有透明区域',
+          reason: '这张图没有任何透明像素，也识别不出可以去掉的纯色背景，去背景后整张图仍然连成一整块（' +
+            scope.width + ' × ' + scope.height + '），切不出互相独立的元素。',
+          details: [
+            '背景色估计结果：rgb(' + (scope.backgroundColor || []).join(', ') +
+              ')，只去掉了约 ' + Math.round(removedRatio * 1000) / 10 + '% 的像素。',
+            '结果只有 1 个元素，占整张图 ' + Math.round(largestRatio * 100) + '%，等于把原图原样搬了过来。'
+          ],
+          hint: '换一张「透明背景 PNG」或「纯色底」的素材图：点左侧「从『源文件』选择」列表、重新拖放、或直接 ⌘V 粘贴，都可以继续切图。'
+        }
+      };
+    }
+
+    return { cannotCut: false, dialog: null };
+  }
+
+  // 中止本次处理：作废当前 token、清掉假结果、弹窗提示，保证接下来还能正常换图
+  function abortProcessing(token, dialog) {
+    state.processToken += 1;
+    state.cutoutPixels = null;
+    state.elements.forEach(function (element) { URL.revokeObjectURL(element.url); });
+    state.elements = [];
+    state.excluded = new Set();
+    state.emptyMessage = '这张图无法切分：' + dialog.title.replace(/^无法切图[:：]?/, '');
+    renderElementGrid();
+    elements.elementMeta.textContent = '没有可切分的元素';
+    elements.outputInfo.textContent = '';
+    elements.buttonSaveAll.disabled = true;
+    // 这张图没有产出，别留着"本次保存目标目录"误导用户
+    state.batchFolder = '';
+    renderBatchTarget();
+    setStatus(dialog.title, false);
+    showCutDialog(dialog);
+  }
+
+  /* ---------- 提示弹窗 ---------- */
+
+  function showCutDialog(dialog) {
+    document.getElementById('cutDialogTitle').textContent = dialog.title || '无法切图';
+    const body = document.getElementById('cutDialogBody');
+    body.innerHTML = '';
+
+    const reason = document.createElement('p');
+    reason.textContent = dialog.reason || '';
+    body.appendChild(reason);
+
+    if (dialog.details && dialog.details.length) {
+      const list = document.createElement('ul');
+      dialog.details.forEach(function (text) {
+        const item = document.createElement('li');
+        item.textContent = text;
+        list.appendChild(item);
+      });
+      body.appendChild(list);
+    }
+    if (dialog.hint) {
+      const hint = document.createElement('p');
+      hint.className = 'modal-hint';
+      hint.textContent = dialog.hint;
+      body.appendChild(hint);
+    }
+
+    elements.cutDialog.hidden = false;
+    logLine((dialog.title || '无法切图') + '：' + (dialog.reason || ''), 'err');
+    elements.cutDialogClose.focus();
+  }
+
+  function hideCutDialog() {
+    elements.cutDialog.hidden = true;
+  }
+
+  /* ---------- 导出尺寸：统一画布 + 居中 + 缩放 ---------- */
+
+  function planOutputSize(list, parameters) {
+    const scale = parameters.scale > 0 ? parameters.scale : 1;
+    if (parameters.uniformCanvas && list.length > 0) {
+      // 画布取所有元素里最大的宽和高（不取"最大面积那个"，横长与竖长要分别取，才装得下每一个）
+      let canvasWidth = 0;
+      let canvasHeight = 0;
+      list.forEach(function (element) {
+        canvasWidth = Math.max(canvasWidth, element.width);
+        canvasHeight = Math.max(canvasHeight, element.height);
+      });
+      return {
+        uniform: true,
+        canvasWidth: canvasWidth,
+        canvasHeight: canvasHeight,
+        width: Math.max(1, Math.round(canvasWidth * scale)),
+        height: Math.max(1, Math.round(canvasHeight * scale)),
+        scale: scale
+      };
+    }
+    return { uniform: false, canvasWidth: 0, canvasHeight: 0, width: 0, height: 0, scale: scale };
+  }
+
+  // 把元素画到统一画布的中央（透明底），再按需缩放；返回可直接编码成 PNG 的 RGBA 像素
+  function renderElementPixels(element, plan) {
+    let width = element.width;
+    let height = element.height;
+    let pixels = element.pixels;
+
+    if (plan.uniform) {
+      width = plan.canvasWidth;
+      height = plan.canvasHeight;
+      pixels = centerOnCanvas(element, width, height);
+    }
+    if (plan.scale !== 1 && width > 0 && height > 0) {
+      const targetWidth = Math.max(1, Math.round(width * plan.scale));
+      const targetHeight = Math.max(1, Math.round(height * plan.scale));
+      pixels = resamplePixels(pixels, width, height, targetWidth, targetHeight);
+      width = targetWidth;
+      height = targetHeight;
+    }
+    return { pixels: pixels, width: width, height: height };
+  }
+
+  function centerOnCanvas(element, canvasWidth, canvasHeight) {
+    const buffer = new Uint8Array(canvasWidth * canvasHeight * 4);
+    const offsetX = Math.floor((canvasWidth - element.width) / 2);
+    const offsetY = Math.floor((canvasHeight - element.height) / 2);
+    const rowBytes = element.width * 4;
+    for (let y = 0; y < element.height; y += 1) {
+      const targetY = y + offsetY;
+      if (targetY < 0 || targetY >= canvasHeight) continue;
+      const start = y * rowBytes;
+      const target = (targetY * canvasWidth + offsetX) * 4;
+      buffer.set(element.pixels.subarray(start, start + rowBytes), target);
+    }
+    return buffer;
+  }
+
+  // 缩放：先按 alpha 预乘做区域平均，再还原成直通 alpha，避免透明边缘出现深色描边
+  function resamplePixels(pixels, width, height, targetWidth, targetHeight) {
+    const output = new Uint8Array(targetWidth * targetHeight * 4);
+    const stepX = width / targetWidth;
+    const stepY = height / targetHeight;
+    for (let y = 0; y < targetHeight; y += 1) {
+      const startY = Math.floor(y * stepY);
+      const endY = Math.min(height, Math.max(startY + 1, Math.ceil((y + 1) * stepY)));
+      for (let x = 0; x < targetWidth; x += 1) {
+        const startX = Math.floor(x * stepX);
+        const endX = Math.min(width, Math.max(startX + 1, Math.ceil((x + 1) * stepX)));
+        let red = 0;
+        let green = 0;
+        let blue = 0;
+        let alphaSum = 0;
+        let count = 0;
+        for (let sy = startY; sy < endY; sy += 1) {
+          for (let sx = startX; sx < endX; sx += 1) {
+            const index = (sy * width + sx) * 4;
+            const alpha = pixels[index + 3];
+            red += pixels[index] * alpha;
+            green += pixels[index + 1] * alpha;
+            blue += pixels[index + 2] * alpha;
+            alphaSum += alpha;
+            count += 1;
+          }
+        }
+        const offset = (y * targetWidth + x) * 4;
+        if (alphaSum > 0 && count > 0) {
+          output[offset] = Math.round(red / alphaSum);
+          output[offset + 1] = Math.round(green / alphaSum);
+          output[offset + 2] = Math.round(blue / alphaSum);
+          output[offset + 3] = Math.round(alphaSum / count);
+        }
+      }
+    }
+    return output;
+  }
+
+  function buildElementRecord(element, pngBytes, rendered) {
+    let blob;
+    if (pngBytes) {
+      blob = new Blob([pngBytes], { type: 'image/png' });
+    } else {
+      blob = encodeWithCanvasFallback(rendered.pixels, rendered.width, rendered.height);
+    }
+    return {
+      index: element.index,
+      area: element.area,
+      width: rendered.width,
+      height: rendered.height,
+      elementWidth: element.width,
+      elementHeight: element.height,
+      sourceX: element.sourceX,
+      sourceY: element.sourceY,
+      blob: blob,
+      url: URL.createObjectURL(blob)
+    };
+  }
+
+  function encodeWithCanvasFallback(pixels, width, height) {
+    const canvas = document.createElement('canvas');
+    canvas.width = width;
+    canvas.height = height;
+    const context = canvas.getContext('2d');
+    const imageData = new ImageData(new Uint8ClampedArray(pixels), width, height);
+    context.putImageData(imageData, 0, 0);
+    return dataUrlToBlob(canvas.toDataURL('image/png'));
+  }
+
+  function dataUrlToBlob(dataUrl) {
+    const parts = dataUrl.split(',');
+    const binary = atob(parts[1]);
+    const bytes = new Uint8Array(binary.length);
+    for (let i = 0; i < binary.length; i += 1) bytes[i] = binary.charCodeAt(i);
+    return new Blob([bytes], { type: 'image/png' });
+  }
+
+  function renderCutoutPreview(pixels, width, height) {
+    const canvas = document.createElement('canvas');
+    canvas.width = width;
+    canvas.height = height;
+    canvas.style.maxWidth = '100%';
+    canvas.style.height = 'auto';
+    const context = canvas.getContext('2d');
+    context.putImageData(new ImageData(new Uint8ClampedArray(pixels), width, height), 0, 0);
+    elements.previewCutout.innerHTML = '';
+    elements.previewCutout.appendChild(canvas);
+  }
+
+  function renderElementGrid() {
+    elements.elementGrid.innerHTML = '';
+    if (state.elements.length === 0) {
+      const empty = document.createElement('div');
+      empty.className = 'preview-empty';
+      empty.textContent = state.emptyMessage ||
+        '没有检测到独立元素，试试调大「背景容差」或调小「最小元素面积」。';
+      elements.elementGrid.appendChild(empty);
+      return;
+    }
+    const fragment = document.createDocumentFragment();
+    state.elements.forEach(function (element) {
+      const card = document.createElement('figure');
+      card.className = 'element-card';
+      card.dataset.index = String(element.index);
+
+      const thumb = document.createElement('div');
+      thumb.className = 'thumb checker';
+      const image = document.createElement('img');
+      image.src = element.url;
+      image.alt = '元素 ' + element.index;
+      thumb.appendChild(image);
+
+      const caption = document.createElement('figcaption');
+      caption.className = 'caption';
+      caption.innerHTML = '<b>#' + String(element.index).padStart(2, '0') + '</b><span>' +
+        element.width + '×' + element.height + '</span>';
+      if (element.elementWidth !== element.width || element.elementHeight !== element.height) {
+        card.title = '画布 ' + element.width + '×' + element.height +
+          '，元素本体 ' + element.elementWidth + '×' + element.elementHeight + '（居中）';
+      }
+
+      const button = document.createElement('button');
+      button.textContent = '排除';
+      button.addEventListener('click', function () {
+        if (state.excluded.has(element.index)) {
+          state.excluded.delete(element.index);
+          card.classList.remove('excluded');
+          button.textContent = '排除';
+        } else {
+          state.excluded.add(element.index);
+          card.classList.add('excluded');
+          button.textContent = '恢复';
+        }
+        updateOutputInfo();
+      });
+
+      card.appendChild(thumb);
+      card.appendChild(caption);
+      card.appendChild(button);
+      fragment.appendChild(card);
+    });
+    elements.elementGrid.appendChild(fragment);
+    updateOutputInfo();
+  }
+
+  function selectedElements() {
+    return state.elements.filter(function (element) { return !state.excluded.has(element.index); });
+  }
+
+  function updateOutputInfo() {
+    const list = selectedElements();
+    const totalBytes = list.reduce(function (sum, element) { return sum + element.blob.size; }, 0);
+    elements.outputInfo.textContent = '将保存 ' + list.length + ' 张 · 合计约 ' + formatBytes(totalBytes);
+  }
+
+  /* ---------- 保存 ---------- */
+
+  function blobToDataUrl(blob) {
+    return new Promise(function (resolve, reject) {
+      const reader = new FileReader();
+      reader.onload = function () { resolve(reader.result); };
+      reader.onerror = function () { reject(reader.error); };
+      reader.readAsDataURL(blob);
+    });
+  }
+
+  async function saveElements() {
+    const list = selectedElements();
+    if (list.length === 0) return;
+    if (!paths.require(['output'], '切图要写到你指定的「切图输出目录」，请先在页面顶部把它设好。')) return;
+    const outDir = paths.get('output').handle;
+    const prefix = (elements.inputPrefix.value.trim() || '切图').replace(/[\\/:*?"<>|]/g, '_');
+    const digits = String(list.length).length < 2 ? 2 : String(list.length).length;
+    const folder = state.batchFolder || buildBatchFolderName(state.imageName);
+
+    setStatus('正在保存 ' + list.length + ' 张切图…', true);
+    elements.buttonSaveAll.disabled = true;
+    logLine('开始保存 ' + list.length + ' 张切图到「' + outDir.name + '/' + folder + '/」…');
+
+    let savedCount = 0;
+    try {
+      const batchDir = await ensureBatchDir(outDir, folder);
+      for (let i = 0; i < list.length; i += 1) {
+        const element = list[i];
+        const fileName = prefix + '_' + String(i + 1).padStart(digits, '0') + '.png';
+        await LocalFS.writeBlob(batchDir, fileName, element.blob);
+        savedCount += 1;
+        logLine('已保存 ' + folder + '/' + fileName + '  （' + element.width + '×' + element.height +
+          '，' + formatBytes(element.blob.size) + '）', 'ok');
+        setStatus('正在保存… ' + savedCount + '/' + list.length, true);
+      }
+      logLine('全部完成：' + savedCount + ' 张切图已写入「' + outDir.name + '/' + folder + '」', 'ok');
+      setStatus('已保存 ' + savedCount + ' 张切图', false);
+      renderFolderPath({ folder: folder, path: outDir.name + '/' + folder });
+      refreshOutputInfo();
+    } catch (error) {
+      logLine('保存中断：' + error.message + '（已完成 ' + savedCount + ' 张）', 'err');
+      setStatus('保存失败', false);
+    } finally {
+      elements.buttonSaveAll.disabled = false;
+    }
+  }
+
+  // 批次目录：输出目录/{批次名}；已存在就直接用
+  function ensureBatchDir(outDir, folder) {
+    return LocalFS.ensureDir(outDir, folder).catch(function () { return outDir; });
+  }
+
+  /* ---------- 本地目录（LocalFS）：输出目录统计 ---------- */
+
+  async function refreshOutputInfo() {
+    const info = paths.get('output');
+    if (!info || !info.ready) {
+      elements.outputPath.textContent = '输出目录：尚未设置（在页面顶部选一个文件夹）';
+      return;
+    }
+    try {
+      const stat = await LocalFS.describeDir(info.handle);
+      elements.outputPath.textContent = '输出目录：' + info.name +
+        '（' + stat.dirCount + ' 个切图文件夹，' + stat.fileCount + ' 个文件，' + formatBytes(stat.bytes) + '）';
+    } catch (error) {
+      elements.outputPath.textContent = '输出目录：读取失败（' + error.message + '）';
+    }
+  }
+
+  /* ---------- 「源文件」列表：点一项即在预览区显示 ---------- */
+
+  const SOURCE_EXTS = ['.png', '.jpg', '.jpeg', '.webp', '.gif', '.bmp', '.avif'];
+
+  async function refreshSourceList() {
+    const info = paths.get('source');
+    if (!info || !info.ready) {
+      elements.sourceList.innerHTML =
+        '<div class="source-empty">还没设置「源文件目录」。在页面顶部点「选择…」指定一个放原图的文件夹，' +
+        '以后打开本页会自动沿用。</div>';
+      return;
+    }
+    try {
+      const entries = await LocalFS.listEntries(info.handle, { want: 'file', exts: SOURCE_EXTS });
+      const files = [];
+      for (const entry of entries) {
+        try {
+          const file = await LocalFS.getFile(entry);
+          files.push({ name: entry.name, bytes: file.size, handle: entry, file: file });
+        } catch (error) { /* 读不了就跳过 */ }
+      }
+      renderSourceList(files);
+    } catch (error) {
+      elements.sourceList.innerHTML =
+        '<div class="source-empty">读取「' + escapeHtml(info.name) + '」失败：' + escapeHtml(error.message) + '</div>';
+    }
+  }
+
+  function renderSourceList(files) {
+    const info = paths.get('source');
+    const dirName = (info && info.name) || '源文件';
+    elements.sourceList.innerHTML = '';
+    if (files.length === 0) {
+      elements.sourceList.innerHTML =
+        '<div class="source-empty">「' + escapeHtml(dirName) + '」里还没有图片。' +
+        '把图片拷进去后点右上角「刷新」。</div>';
+      return;
+    }
+    files.forEach(function (file) {
+      const item = document.createElement('button');
+      item.type = 'button';
+      item.className = 'source-item';
+      item.dataset.sourceName = file.name;
+      item.title = file.name + '（' + formatBytes(file.bytes) + '）';
+
+      const nameSpan = document.createElement('span');
+      nameSpan.className = 'source-name';
+      nameSpan.textContent = file.name;
+
+      const sizeSpan = document.createElement('span');
+      sizeSpan.className = 'source-size';
+      sizeSpan.textContent = formatBytes(file.bytes);
+
+      item.append(nameSpan, sizeSpan);
+      item.addEventListener('click', function () { openSourceFile(file, item); });
+      elements.sourceList.appendChild(item);
+    });
+    // 已经载入过的那张图，列表里保持高亮
+    if (state.imageName) {
+      const matched = elements.sourceList.querySelector(
+        '.source-item[data-source-name="' + cssEscape(state.imageName) + '"]');
+      if (matched) matched.classList.add('selected');
+    }
+  }
+
+  async function openSourceFile(file, item) {
+    markSelectedSource(item);
+    setStatus('正在读取 ' + file.name + '…', true);
+    try {
+      const blob = file.file || await LocalFS.getFile(file.handle);
+      await loadImageSource(blob, file.name);
+      logLine('已从「源文件」载入：' + file.name + '（' + formatBytes(blob.size) + '）', 'ok');
+      setStatus('已载入 ' + file.name, false);
+    } catch (error) {
+      logLine('读取「源文件」失败：' + error.message, 'err');
+      setStatus('读取源文件失败', false);
+    }
+  }
+
+  function markSelectedSource(item) {
+    elements.sourceList.querySelectorAll('.source-item').forEach(function (node) {
+      node.classList.toggle('selected', node === item);
+    });
+  }
+
+  // 按文件名点开列表里的一项（自动化测试与快速切换用）
+  function openSourceByName(name) {
+    const item = elements.sourceList.querySelector(
+      '.source-item[data-source-name="' + cssEscape(name) + '"]');
+    if (!item) return false;
+    item.click();
+    return true;
+  }
+
+  function cssEscape(value) {
+    if (window.CSS && typeof window.CSS.escape === 'function') return window.CSS.escape(value);
+    return String(value).replace(/["\\]/g, '\\$&');
+  }
+
+  /* ---------- 事件绑定 ---------- */
+
+  document.getElementById('buttonRefreshSources').addEventListener('click', function () {
+    logLine('重新读取「源文件」文件夹…');
+    refreshSourceList();
+  });
+
+  // 弹窗关闭：按钮 / 点遮罩 / Esc；关掉之后页面照常可用（换图、调参数、保存都不受影响）
+  elements.cutDialogClose.addEventListener('click', hideCutDialog);
+  elements.cutDialog.addEventListener('click', function (event) {
+    if (event.target === elements.cutDialog) hideCutDialog();
+  });
+  document.addEventListener('keydown', function (event) {
+    if (event.key === 'Escape' && !elements.cutDialog.hidden) hideCutDialog();
+  });
+
+  elements.dropzone.addEventListener('click', function () { elements.fileInput.click(); });
+
+  elements.fileInput.addEventListener('change', async function () {
+    const files = Array.from(elements.fileInput.files || []);
+    for (const file of files) {
+      logLine('载入本地文件：' + file.name);
+      await loadImageSource(file, file.name);
+    }
+    elements.fileInput.value = '';
+  });
+
+  ['dragenter', 'dragover'].forEach(function (type) {
+    elements.dropzone.addEventListener(type, function (event) {
+      event.preventDefault();
+      elements.dropzone.classList.add('dragging');
+    });
+  });
+  ['dragleave', 'drop'].forEach(function (type) {
+    elements.dropzone.addEventListener(type, function (event) {
+      event.preventDefault();
+      elements.dropzone.classList.remove('dragging');
+    });
+  });
+  elements.dropzone.addEventListener('drop', async function (event) {
+    const files = Array.from((event.dataTransfer && event.dataTransfer.files) || []);
+    for (const file of files) {
+      if (!file.type.startsWith('image/')) continue;
+      logLine('拖入文件：' + file.name);
+      await loadImageSource(file, file.name);
+    }
+  });
+
+  // 整页粘贴：支持从截图工具、浏览器、设计软件直接 ⌘V
+  window.addEventListener('paste', async function (event) {
+    const items = Array.from((event.clipboardData && event.clipboardData.items) || []);
+    for (const item of items) {
+      if (item.kind !== 'file') continue;
+      const file = item.getAsFile();
+      if (!file || !file.type.startsWith('image/')) continue;
+      logLine('从剪贴板粘贴图片：' + (file.name || 'clipboard.png'));
+      await loadImageSource(file, file.name || '剪贴板图片.png');
+    }
+  });
+
+  parameterBindings.forEach(function (binding) {
+    const range = document.getElementById(binding.rangeId);
+    const output = document.getElementById(binding.outputId);
+    range.addEventListener('input', function () {
+      output.textContent = range.value;
+      scheduleProcessing();
+    });
+  });
+  document.getElementById('checkSoftEdge').addEventListener('change', scheduleProcessing);
+  document.getElementById('checkHollow').addEventListener('change', scheduleProcessing);
+  document.getElementById('checkUniform').addEventListener('change', scheduleProcessing);
+  document.getElementById('selectScale').addEventListener('change', scheduleProcessing);
+  document.getElementById('buttonResetParams').addEventListener('click', function () {
+    const defaults = { rangeTolerance: 32, rangeErode: 1, rangeMinArea: 80, rangeGap: 0, rangePadding: 0 };
+    Object.keys(defaults).forEach(function (id) {
+      document.getElementById(id).value = String(defaults[id]);
+    });
+    document.getElementById('checkSoftEdge').checked = true;
+    document.getElementById('checkHollow').checked = false;
+    document.getElementById('checkUniform').checked = true;
+    document.getElementById('selectScale').value = '1';
+    parameterBindings.forEach(function (binding) {
+      document.getElementById(binding.outputId).textContent =
+        document.getElementById(binding.rangeId).value;
+    });
+    scheduleProcessing();
+  });
+
+  /* ---------- 图片目录：直接弹出切图所在的文件夹 ---------- */
+
+  // 把「切图落在哪个文件夹」画成一条提示条（浏览器不暴露绝对路径，只显示已选的目录名）
+  function renderFolderPath(payload) {
+    elements.folderPath.hidden = false;
+    elements.folderPath.innerHTML = '';
+
+    const label = document.createElement('span');
+    label.textContent = payload.folder ? '本批切图文件夹：' : '切图输出目录：';
+
+    const code = document.createElement('code');
+    code.id = 'folderPathText';
+    code.textContent = payload.path;
+
+    const openButton = document.createElement('button');
+    openButton.type = 'button';
+    openButton.textContent = '在设置里查看';
+    openButton.addEventListener('click', function () { locateOutputDir(); });
+
+    elements.folderPath.append(label, code, openButton);
+  }
+
+  // 浏览器无法直接唤起 Finder / 资源管理器，改成把页面滚到路径设置区并高亮那一行
+  function locateOutputDir() {
+    const panel = document.getElementById('localPaths');
+    if (!panel) return;
+    panel.scrollIntoView({ behavior: 'smooth', block: 'center' });
+    const rows = panel.querySelectorAll('.lfs-row');
+    if (rows.length > 1) {
+      rows[1].style.transition = 'box-shadow .4s';
+      rows[1].style.boxShadow = '0 0 0 3px rgba(79,140,255,.45)';
+      setTimeout(function () { rows[1].style.boxShadow = ''; }, 1200);
+    }
+  }
+
+  async function revealOutputFolder() { locateOutputDir(); }
+
+  elements.buttonSaveAll.addEventListener('click', saveElements);
+  document.getElementById('buttonOpenFolder').addEventListener('click', function () { revealOutputFolder(); });
+  document.getElementById('buttonReveal').addEventListener('click', function () { revealOutputFolder(); });
+  document.getElementById('buttonClear').addEventListener('click', async function () {
+    const info = paths.get('output');
+    if (!paths.require(['output'], '要先设置「切图输出目录」才能清空。')) return;
+    if (!confirm('确定清空「' + info.name + '」目录吗？里面所有切图文件夹与文件都会被删除，此操作不可撤销。')) return;
+    try {
+      const counters = await LocalFS.clearDir(info.handle);
+      logLine('已清空 ' + counters.files + ' 个文件、' + counters.dirs + ' 个文件夹', 'warn');
+      refreshOutputInfo();
+    } catch (error) {
+      logLine('清空失败：' + error.message, 'warn');
+    }
+  });
+
+  /* ---------- 本地路径设置（每台电脑各自记一次） ---------- */
+
+  const paths = LocalFS.mountPanel({
+    mount: '#localPaths',
+    title: '本地路径设置',
+    subtitle: '选一次就记住：下次在同一台电脑、同一个浏览器打开本页，会自动沿用这两个目录（只存在本机浏览器里，不会上传）。',
+    items: [
+      { key: 'source', label: '源文件目录', kind: 'dir', hint: '放待切的原图，页面会列出里面的图片供点选', pickId: 'imgcut-source' },
+      { key: 'output', label: '切图输出目录', kind: 'dir', write: true, hint: '切好的 PNG 按批次建子目录写到这里', pickId: 'imgcut-output' }
+    ],
+    onChange: function () {
+      refreshSourceList();
+      refreshOutputInfo();
+    }
+  });
+
+  if (location.protocol === 'file:' || !LocalFS.supported()) {
+    document.getElementById('fileProtocolNotice').hidden = false;
+    elements.statusText.textContent = LocalFS.supported()
+      ? '未连接：请从网页链接打开本页'
+      : '当前浏览器不支持本地目录读写，请用 Chrome / Edge';
+  }
+
+  // 面板初始化是异步的（要从 IndexedDB 读回上次的目录），读完再刷新一次列表
+  paths.refresh().then(function () {
+    refreshSourceList();
+    refreshOutputInfo();
+  });
+
+  // 供自动化测试调用
+  window.CuttingTool = {
+    loadImageSource: loadImageSource,
+    processCurrentImage: processCurrentImage,
+    saveElements: saveElements,
+    revealOutputFolder: revealOutputFolder,
+    refreshSourceList: refreshSourceList,
+    openSourceByName: openSourceByName,
+    judgeCuttable: judgeCuttable,
+    checkSizeGuard: checkSizeGuard,
+    showCutDialog: showCutDialog,
+    hideCutDialog: hideCutDialog,
+    limits: { maxPixels: MAX_PROCESS_PIXELS, timeoutMs: PROCESS_TIMEOUT_MS },
+    state: state,
+    readParameters: readParameters
+  };
+})();
+</script>
+</body>
+</html>

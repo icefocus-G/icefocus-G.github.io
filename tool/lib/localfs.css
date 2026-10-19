@@ -1,0 +1,50 @@
+/* localfs.js 配套样式：本地路径设置面板 */
+.lfs-panel{
+  border:1px solid rgba(140,170,220,.22);
+  background:rgba(12,18,34,.55);
+  border-radius:14px;
+  padding:14px 16px;
+  margin:0 0 16px;
+}
+.lfs-head{margin-bottom:10px}
+.lfs-title{
+  font-size:14px;font-weight:700;letter-spacing:.04em;
+  display:flex;align-items:center;gap:8px;
+}
+.lfs-title::before{
+  content:"";width:7px;height:7px;border-radius:50%;
+  background:#38bdf8;box-shadow:0 0 8px rgba(56,189,248,.8);
+}
+.lfs-sub{font-size:12px;line-height:1.7;opacity:.68;margin-top:4px}
+.lfs-warn{
+  margin:8px 0 12px;padding:9px 12px;border-radius:10px;font-size:12.5px;line-height:1.7;
+  background:rgba(229,168,61,.12);border:1px solid rgba(229,168,61,.35);color:#f3d49a;
+}
+.lfs-row{
+  display:flex;align-items:center;gap:12px;flex-wrap:wrap;
+  padding:10px 12px;margin-top:8px;border-radius:11px;
+  border:1px solid rgba(140,170,220,.16);background:rgba(255,255,255,.03);
+  transition:.18s;
+}
+.lfs-row.ok{border-color:rgba(52,211,153,.42);background:rgba(52,211,153,.08)}
+.lfs-row.warn{border-color:rgba(229,168,61,.42);background:rgba(229,168,61,.08)}
+.lfs-row.unset{border-color:rgba(140,170,220,.2)}
+.lfs-main{flex:1 1 240px;min-width:0}
+.lfs-label{font-size:13px;font-weight:600}
+.lfs-value{
+  font-size:12.5px;margin-top:3px;font-family:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;
+  word-break:break-all;opacity:.9;
+}
+.lfs-hint{font-size:11.5px;opacity:.62;margin-top:3px;line-height:1.6}
+.lfs-side{display:flex;align-items:center;gap:8px;flex-wrap:wrap}
+.lfs-state{font-size:11.5px;padding:3px 9px;border-radius:999px;background:rgba(140,170,220,.14);opacity:.85}
+.lfs-row.ok .lfs-state{background:rgba(52,211,153,.18);color:#6ee7b7}
+.lfs-row.warn .lfs-state{background:rgba(229,168,61,.18);color:#f3d49a}
+.lfs-btns{display:flex;gap:6px;flex-wrap:wrap}
+.lfs-btn{
+  border:1px solid rgba(140,170,220,.28);background:rgba(255,255,255,.05);color:inherit;
+  border-radius:9px;padding:6px 12px;font-size:12.5px;font-family:inherit;cursor:pointer;transition:.15s;
+}
+.lfs-btn:hover{border-color:rgba(140,170,220,.55);background:rgba(255,255,255,.1)}
+.lfs-btn.primary{background:linear-gradient(135deg,#38bdf8,#6366f1);border-color:transparent;color:#08101f;font-weight:700}
+.lfs-btn.ghost{opacity:.65}

@@ -1,0 +1,1821 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="theme-color" content="#070a12">
+<title>投放图 PSD 生成工具</title>
+<style>
+  :root{
+    --bg:#070a12;
+    --panel:rgba(18,24,38,.62);
+    --panel-2:rgba(24,32,50,.75);
+    --line:rgba(120,150,220,.16);
+    --line-soft:rgba(120,150,220,.09);
+    --text:#e8edf7;
+    --text-2:#9aa7c2;
+    --text-3:#6b7896;
+    --cy:#35e6ff;
+    --vi:#8b5cff;
+    --pk:#ff5ec7;
+    --gr:#2ff2a3;
+    --am:#ffc25e;
+    --rd:#ff6b6b;
+    --glow-cy:0 0 0 1px rgba(53,230,255,.35), 0 0 24px rgba(53,230,255,.22);
+    --glow-vi:0 0 0 1px rgba(139,92,255,.35), 0 0 28px rgba(139,92,255,.25);
+    --radius:16px;
+  }
+  *{box-sizing:border-box}
+  html,body{margin:0;padding:0;min-height:100%}
+  body{
+    background:var(--bg); color:var(--text);
+    font:15px/1.65 -apple-system,BlinkMacSystemFont,"PingFang SC","Helvetica Neue","Microsoft YaHei",sans-serif;
+    -webkit-font-smoothing:antialiased;
+    overflow-x:hidden;
+  }
+
+  /* ---------- 背景特效 ---------- */
+  .bg{position:fixed;inset:0;z-index:0;overflow:hidden;pointer-events:none}
+  .bg .blob{position:absolute;border-radius:50%;filter:blur(90px);opacity:.5;mix-blend-mode:screen}
+  .bg .b1{width:620px;height:620px;left:-140px;top:-180px;background:radial-gradient(circle at 30% 30%,#1f6bff,#0b1a44 60%,transparent 70%);animation:float1 22s ease-in-out infinite}
+  .bg .b2{width:560px;height:560px;right:-120px;top:8%;background:radial-gradient(circle at 60% 40%,#a13dff,#170a3a 60%,transparent 70%);animation:float2 26s ease-in-out infinite}
+  .bg .b3{width:680px;height:680px;left:22%;bottom:-260px;background:radial-gradient(circle at 50% 50%,#00d6c2,#06202a 60%,transparent 70%);animation:float3 30s ease-in-out infinite;opacity:.35}
+  .bg .grid{position:absolute;inset:0;
+    background-image:linear-gradient(rgba(120,160,255,.055) 1px,transparent 1px),linear-gradient(90deg,rgba(120,160,255,.055) 1px,transparent 1px);
+    background-size:44px 44px;
+    mask-image:radial-gradient(ellipse 90% 70% at 50% 30%,#000 40%,transparent 100%);
+    -webkit-mask-image:radial-gradient(ellipse 90% 70% at 50% 30%,#000 40%,transparent 100%);
+  }
+  .bg .scan{position:absolute;left:0;right:0;height:180px;
+    background:linear-gradient(180deg,transparent,rgba(53,230,255,.05),transparent);
+    animation:scan 9s linear infinite}
+  @keyframes float1{0%,100%{transform:translate(0,0) scale(1)}50%{transform:translate(90px,70px) scale(1.12)}}
+  @keyframes float2{0%,100%{transform:translate(0,0) scale(1.05)}50%{transform:translate(-80px,110px) scale(.92)}}
+  @keyframes float3{0%,100%{transform:translate(0,0) scale(1)}50%{transform:translate(70px,-90px) scale(1.15)}}
+  @keyframes scan{0%{top:-20%}100%{top:110%}}
+  @keyframes hue{0%,100%{filter:hue-rotate(0deg)}50%{filter:hue-rotate(25deg)}}
+
+  .wrap{position:relative;z-index:1;max-width:1080px;margin:0 auto;padding:26px 18px 70px}
+
+  /* ---------- 头部 ---------- */
+  header.top{margin-bottom:20px;position:relative}
+  h1{
+    font-size:27px;margin:0 0 8px;letter-spacing:.4px;font-weight:800;
+    background:linear-gradient(92deg,#35e6ff,#8b5cff 38%,#ff5ec7 62%,#2ff2a3 92%);
+    background-size:300% 100%;-webkit-background-clip:text;background-clip:text;color:transparent;
+    animation:slide 9s linear infinite;
+  }
+  @keyframes slide{0%{background-position:0% 50%}100%{background-position:300% 50%}}
+  .sub{color:var(--text-2);font-size:13.5px}
+  .sub b{color:var(--cy);font-weight:600}
+  .bar{height:2px;margin-top:14px;border-radius:2px;
+    background:linear-gradient(90deg,transparent,var(--cy),var(--vi),var(--pk),transparent);
+    background-size:200% 100%;animation:slide 6s linear infinite;opacity:.75;
+    box-shadow:0 0 14px rgba(53,230,255,.35)}
+
+  /* ---------- 卡片 ---------- */
+  .card{
+    position:relative;background:var(--panel);
+    border:1px solid var(--line);border-radius:var(--radius);
+    padding:18px 18px;margin-bottom:18px;
+    backdrop-filter:blur(14px) saturate(140%);-webkit-backdrop-filter:blur(14px) saturate(140%);
+    box-shadow:0 12px 40px rgba(0,0,0,.42), inset 0 1px 0 rgba(255,255,255,.05);
+    overflow:hidden;transition:.25s;
+  }
+  .card::before{
+    content:"";position:absolute;inset:0;border-radius:var(--radius);padding:1px;pointer-events:none;
+    background:linear-gradient(130deg,rgba(53,230,255,.5),transparent 32%,transparent 68%,rgba(139,92,255,.5));
+    -webkit-mask:linear-gradient(#000,#000) content-box,linear-gradient(#000,#000);
+    -webkit-mask-composite:xor;mask-composite:exclude;opacity:.7;
+  }
+  .card:hover{transform:translateY(-2px);box-shadow:0 18px 52px rgba(0,0,0,.5),0 0 26px rgba(53,230,255,.10)}
+  .card h2{font-size:15.5px;margin:0 0 14px;display:flex;align-items:center;gap:9px;flex-wrap:wrap;font-weight:700}
+  .card h2 .no{
+    width:24px;height:24px;flex:none;border-radius:8px;display:grid;place-items:center;font-size:12.5px;font-weight:800;
+    color:#04121b;background:linear-gradient(135deg,var(--cy),#6ff0ff);box-shadow:0 0 16px rgba(53,230,255,.45)
+  }
+  .card h2 .no.v{background:linear-gradient(135deg,var(--vi),#c39dff);color:#0b0520;box-shadow:0 0 16px rgba(139,92,255,.45)}
+  .card h2 .no.p{background:linear-gradient(135deg,var(--pk),#ffa8e0);color:#20061a;box-shadow:0 0 16px rgba(255,94,199,.45)}
+  .card h2 .tag{
+    font-size:11.5px;font-weight:500;color:var(--text-2);background:rgba(255,255,255,.05);
+    border:1px solid var(--line);border-radius:999px;padding:2px 10px;max-width:58%;
+    overflow:hidden;text-overflow:ellipsis;white-space:nowrap
+  }
+
+  /* ---------- 按钮 ---------- */
+  .btn{
+    appearance:none;border:1px solid var(--line);background:rgba(255,255,255,.05);color:var(--text);
+    border-radius:11px;padding:8px 15px;font-size:14px;cursor:pointer;transition:.18s;white-space:nowrap;
+    backdrop-filter:blur(6px);
+  }
+  .btn:hover{border-color:rgba(53,230,255,.55);background:rgba(53,230,255,.10);box-shadow:0 0 18px rgba(53,230,255,.22);transform:translateY(-1px)}
+  .btn:active{transform:translateY(1px)}
+  .btn.sm{padding:5px 11px;font-size:13px;border-radius:9px}
+  .btn.primary{
+    position:relative;overflow:hidden;border:0;color:#041019;font-weight:800;letter-spacing:.3px;
+    background:linear-gradient(100deg,var(--cy),#4ad9ff 35%,var(--vi) 72%,var(--pk));
+    background-size:220% 100%;animation:slide 7s linear infinite;
+    box-shadow:0 8px 26px rgba(53,230,255,.30),0 0 0 1px rgba(255,255,255,.14) inset;
+    padding:10px 22px;
+  }
+  .btn.primary::after{
+    content:"";position:absolute;top:0;bottom:0;width:45%;left:-60%;
+    background:linear-gradient(90deg,transparent,rgba(255,255,255,.55),transparent);
+    transform:skewX(-18deg);animation:sheen 3.4s ease-in-out infinite;
+  }
+  @keyframes sheen{0%{left:-60%}55%{left:120%}100%{left:120%}}
+  .btn.primary:hover{box-shadow:0 12px 34px rgba(53,230,255,.45)}
+  .btn.primary[disabled]{opacity:.45;cursor:not-allowed;animation:none;box-shadow:none}
+  .btn.primary[disabled]::after{display:none}
+  .btn.danger{color:#ffb3b3;border-color:rgba(255,107,107,.4)}
+  .btn.danger:hover{background:rgba(255,107,107,.14);border-color:rgba(255,107,107,.7);box-shadow:0 0 16px rgba(255,107,107,.25)}
+
+  .spinner{display:inline-block;width:13px;height:13px;margin-right:7px;vertical-align:-2px;
+    border:2px solid rgba(4,16,25,.35);border-top-color:#041019;border-radius:50%;animation:spin .8s linear infinite}
+  @keyframes spin{to{transform:rotate(360deg)}}
+
+  /* ---------- 上传 ---------- */
+  .drop{
+    position:relative;border:1.5px dashed rgba(53,230,255,.42);border-radius:14px;
+    background:linear-gradient(180deg,rgba(53,230,255,.07),rgba(139,92,255,.05));
+    padding:20px;text-align:center;color:var(--text-2);font-size:14.5px;cursor:pointer;transition:.2s;overflow:hidden;
+  }
+  .drop::before{
+    content:"";position:absolute;inset:-1px;border-radius:14px;pointer-events:none;
+    background:radial-gradient(120% 60% at 50% 120%,rgba(53,230,255,.22),transparent 70%);
+    opacity:0;transition:.25s;
+  }
+  .drop:hover,.drop.over{border-color:var(--cy);color:#dff8ff;box-shadow:0 0 28px rgba(53,230,255,.28) , inset 0 0 30px rgba(53,230,255,.08)}
+  .drop:hover::before,.drop.over::before{opacity:1}
+  .drop strong{color:var(--cy);font-weight:700;text-shadow:0 0 14px rgba(53,230,255,.5)}
+  .hint{font-size:12px;color:var(--text-3);margin-top:8px}
+
+  /* ---------- 文档列表 ---------- */
+  .doclist{margin-top:13px;display:flex;flex-direction:column;gap:9px}
+  .doc{
+    display:flex;align-items:center;gap:12px;border:1px solid var(--line);border-radius:13px;
+    padding:11px 13px;background:rgba(255,255,255,.03);cursor:pointer;transition:.18s;position:relative;overflow:hidden;
+  }
+  .doc:hover{border-color:rgba(53,230,255,.5);background:rgba(53,230,255,.07);transform:translateX(3px)}
+  .doc.on{
+    border-color:transparent;
+    background:linear-gradient(100deg,rgba(53,230,255,.16),rgba(139,92,255,.14));
+    box-shadow:var(--glow-cy);
+  }
+  .doc.on::before{content:"";position:absolute;left:0;top:0;bottom:0;width:3px;
+    background:linear-gradient(180deg,var(--cy),var(--vi));box-shadow:0 0 14px var(--cy)}
+  .doc input{accent-color:var(--cy);width:16px;height:16px;flex:none}
+  .doc .meta{flex:1;min-width:0}
+  .doc .nm{font-weight:700;font-size:14px;word-break:break-all;letter-spacing:.2px}
+  .doc .dt{font-size:12px;color:var(--text-3);margin-top:2px}
+  .badge{font-size:11px;border-radius:999px;padding:2px 9px;flex:none;font-weight:700;letter-spacing:.3px}
+  .badge.new{color:#04121b;background:linear-gradient(135deg,var(--gr),#9bffdd);box-shadow:0 0 16px rgba(47,242,163,.5)}
+  .badge.idle{color:var(--text-3);background:rgba(255,255,255,.05);border:1px solid var(--line)}
+  .empty{padding:16px;color:var(--text-3);font-size:13px;text-align:center;
+    background:rgba(255,255,255,.02);border:1px dashed var(--line);border-radius:12px}
+
+  /* ---------- 统计 ---------- */
+  .stats{display:flex;gap:11px;flex-wrap:wrap;margin-bottom:13px}
+  .stat{
+    position:relative;flex:1;min-width:120px;border:1px solid var(--line-soft);
+    background:linear-gradient(180deg,rgba(255,255,255,.055),rgba(255,255,255,.02));
+    border-radius:13px;padding:11px 13px;overflow:hidden;
+  }
+  .stat::after{content:"";position:absolute;right:-30px;top:-30px;width:80px;height:80px;border-radius:50%;
+    background:radial-gradient(circle,rgba(53,230,255,.22),transparent 70%)}
+  .stat:nth-child(2)::after{background:radial-gradient(circle,rgba(139,92,255,.24),transparent 70%)}
+  .stat:nth-child(3)::after{background:radial-gradient(circle,rgba(255,94,199,.20),transparent 70%)}
+  .stat:nth-child(4)::after{background:radial-gradient(circle,rgba(47,242,163,.20),transparent 70%)}
+  .stat .k{font-size:12px;color:var(--text-3);letter-spacing:.3px}
+  .stat .v{font-size:19px;font-weight:800;margin-top:2px;
+    background:linear-gradient(92deg,#dff6ff,#9ad9ff);-webkit-background-clip:text;background-clip:text;color:transparent}
+
+  /* ---------- 表格 ---------- */
+  .scroll{max-height:430px;overflow:auto;border:1px solid var(--line-soft);border-radius:13px;background:rgba(6,10,20,.35)}
+  table{width:100%;border-collapse:collapse;font-size:13px}
+  th,td{text-align:left;padding:9px 11px;border-bottom:1px solid var(--line-soft);vertical-align:top}
+  th{color:var(--text-3);font-weight:700;font-size:12px;background:rgba(10,16,30,.92);position:sticky;top:0;z-index:2;
+    backdrop-filter:blur(8px);letter-spacing:.3px}
+  tbody tr{transition:.15s}
+  tbody tr:hover{background:rgba(53,230,255,.07)}
+  td.name{word-break:break-all;font-family:ui-monospace,SFMono-Regular,Menlo,monospace;font-size:12px;color:#cfe6ff}
+  .pill{font-size:11px;border-radius:7px;padding:2px 8px;white-space:nowrap;font-weight:700}
+  .pill.ok{color:#062b1e;background:linear-gradient(135deg,var(--gr),#a6ffdc);box-shadow:0 0 12px rgba(47,242,163,.35)}
+  .pill.warn{color:#2b1c00;background:linear-gradient(135deg,var(--am),#ffe3a8);box-shadow:0 0 12px rgba(255,194,94,.3)}
+  .pill.err{color:#2b0505;background:linear-gradient(135deg,var(--rd),#ffb3b3)}
+  .warnbox{margin-top:11px;background:rgba(255,194,94,.09);border:1px solid rgba(255,194,94,.35);
+    border-radius:12px;padding:11px 13px;font-size:13px;color:#ffdc9e;box-shadow:0 0 22px rgba(255,194,94,.10) inset}
+  .warnbox ul{margin:6px 0 0;padding-left:18px}
+
+  /* 视频用图单独区块 */
+  .subhead{
+    display:flex;align-items:center;gap:9px;flex-wrap:wrap;
+    margin:16px 0 10px;font-size:13.5px;font-weight:700;color:#e9d9ff;
+  }
+  .subhead .chip{
+    font-size:11.5px;font-weight:700;letter-spacing:.3px;padding:2px 10px;border-radius:999px;
+    color:#20061a;background:linear-gradient(135deg,var(--pk),#ffa8e0);box-shadow:0 0 16px rgba(255,94,199,.4)
+  }
+  .subhead .path{font-size:11.5px;font-weight:500;color:var(--text-3);
+    background:rgba(255,255,255,.05);border:1px solid var(--line);border-radius:999px;padding:2px 10px;
+    max-width:60%;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+
+  /* ---------- 日志 ---------- */
+  .log{
+    position:relative;background:linear-gradient(180deg,#050a14,#080f1c);color:#cfe0f5;
+    border:1px solid rgba(53,230,255,.18);border-radius:13px;padding:13px 15px;
+    font-family:ui-monospace,SFMono-Regular,Menlo,monospace;font-size:12.5px;
+    max-height:330px;overflow:auto;white-space:pre-wrap;line-height:1.75;
+    box-shadow:inset 0 0 34px rgba(53,230,255,.06);
+  }
+  .log::after{content:"";position:absolute;left:0;right:0;height:60px;pointer-events:none;
+    background:linear-gradient(180deg,transparent,rgba(53,230,255,.06),transparent);animation:scanline 5s linear infinite}
+  @keyframes scanline{0%{top:-60px}100%{top:100%}}
+  .log .g{color:#5cf5b0}.log .r{color:#ff8f8f}.log .y{color:#ffd479}.log .b{color:#7fd4ff}
+
+  .switch{display:inline-flex;align-items:center;gap:7px;font-size:13px;color:var(--text-2);cursor:pointer;user-select:none}
+  .switch input{accent-color:var(--cy);width:15px;height:15px}
+  .btn.primary.alt{
+    background:linear-gradient(100deg,var(--pk),#ff8ad4 35%,var(--vi) 72%,var(--cy));
+    box-shadow:0 8px 26px rgba(255,94,199,.28),0 0 0 1px rgba(255,255,255,.14) inset;
+  }
+  .btn.primary.alt:hover{box-shadow:0 12px 34px rgba(255,94,199,.42)}
+  /* ---------- 顶部标签 ---------- */
+  .navtabs{
+    position:sticky;top:0;z-index:30;display:flex;align-items:center;gap:10px;flex-wrap:wrap;
+    margin-top:14px;padding:10px 0 9px;
+    background:linear-gradient(180deg,rgba(7,10,18,.96),rgba(7,10,18,.72));
+    backdrop-filter:blur(12px);-webkit-backdrop-filter:blur(12px);
+    border-bottom:1px solid var(--line-soft);
+  }
+  .navtab{
+    position:relative;border:1px solid var(--line);background:rgba(255,255,255,.05);color:var(--text-2);
+    border-radius:11px;padding:8px 20px;font-size:14px;font-weight:600;cursor:pointer;transition:.18s;letter-spacing:.3px;
+  }
+  .navtab:hover{border-color:rgba(53,230,255,.55);color:var(--text);box-shadow:0 0 18px rgba(53,230,255,.18)}
+  .navtab.on{
+    color:#041019;border-color:transparent;font-weight:800;
+    background:linear-gradient(100deg,var(--cy),#7fe9ff 45%,var(--vi));
+    box-shadow:0 8px 24px rgba(53,230,255,.32);
+  }
+  .navtab .dot{display:inline-block;width:7px;height:7px;border-radius:50%;margin-left:8px;vertical-align:middle;
+    background:var(--gr);box-shadow:0 0 10px var(--gr)}
+  .navtab.on .dot{background:#041019;box-shadow:none}
+  .navtip{font-size:12px;color:var(--text-3);margin-left:auto}
+
+  /* ---------- 命名规则 ---------- */
+  .tabs{display:flex;gap:8px;margin-bottom:12px;flex-wrap:wrap;align-items:center}
+  .savetag{font-size:11.5px;color:var(--gr);border:1px solid rgba(47,242,163,.4);
+    background:rgba(47,242,163,.09);border-radius:999px;padding:2px 10px}
+  .rulegrid{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1.15fr);gap:14px}
+  .panel{border:1px solid var(--line-soft);border-radius:13px;padding:12px 13px;background:rgba(6,10,20,.35);min-width:0}
+  .ph{display:flex;align-items:center;gap:8px;font-size:13.5px;font-weight:700;color:#e9d9ff;margin-bottom:9px;flex-wrap:wrap}
+  .ph .pn{width:20px;height:20px;border-radius:7px;display:grid;place-items:center;font-size:11px;font-weight:800;
+    background:linear-gradient(135deg,var(--vi),#c39dff);color:#0b0520;box-shadow:0 0 14px rgba(139,92,255,.45)}
+  .ph .phint{font-size:11.5px;font-weight:500;color:var(--text-3)}
+  .modgroup{margin-bottom:12px}
+  .mgt{font-size:12px;color:var(--text-2);margin-bottom:7px;font-weight:600}
+  .palette{display:flex;flex-wrap:wrap;gap:7px}
+  .palette.scroll{max-height:230px;overflow:auto;padding-right:4px}
+  .pmod{
+    border:1px solid var(--line);border-radius:9px;padding:4px 10px;font-size:12.5px;cursor:grab;
+    background:linear-gradient(180deg,rgba(255,255,255,.07),rgba(255,255,255,.02));transition:.15s;user-select:none;
+  }
+  .pmod:hover{border-color:var(--cy);color:#dff8ff;box-shadow:0 0 16px rgba(53,230,255,.25);transform:translateY(-1px)}
+  .pmod:active{cursor:grabbing}
+  .pmod.special{border-color:rgba(255,94,199,.45);color:#ffd6f2}
+  .pmod.special:hover{border-color:var(--pk);box-shadow:0 0 16px rgba(255,94,199,.3)}
+  .dropzone{
+    min-height:110px;border:1.5px dashed rgba(53,230,255,.35);border-radius:12px;padding:10px;
+    background:linear-gradient(180deg,rgba(53,230,255,.05),rgba(139,92,255,.04));
+    display:flex;flex-wrap:wrap;gap:8px;align-content:flex-start;transition:.18s;
+  }
+  .dropzone.over{border-color:var(--cy);box-shadow:inset 0 0 26px rgba(53,230,255,.16),0 0 22px rgba(53,230,255,.2)}
+  .dropzone .empty{align-self:center;margin:auto;color:var(--text-3);font-size:13px}
+  .zitem{
+    display:flex;align-items:center;gap:7px;border:1px solid rgba(53,230,255,.35);
+    background:linear-gradient(180deg,rgba(53,230,255,.16),rgba(139,92,255,.12));
+    border-radius:10px;padding:5px 9px;font-size:13px;cursor:grab;user-select:none;
+    box-shadow:0 0 14px rgba(53,230,255,.12);
+  }
+  .zitem.drag{opacity:.4}
+  .zitem .idx{font-size:11px;color:var(--text-3);min-width:12px;text-align:right}
+  .zitem .kind{font-size:10.5px;color:#041019;background:linear-gradient(135deg,var(--cy),#9df1ff);
+    border-radius:5px;padding:0 5px;font-weight:700}
+  .zitem .mv{cursor:pointer;color:var(--text-3);padding:0 2px;font-size:11px}
+  .zitem .mv:hover{color:var(--cy)}
+  .zitem .del{color:#ff9a9a;cursor:pointer;font-size:13px}
+  .zitem.ghost{border-style:dashed;background:rgba(53,230,255,.08);box-shadow:none;min-width:70px;min-height:30px}
+  .zitem.ghost *{visibility:hidden}
+  .trash{margin-top:9px;border:1.5px dashed rgba(255,107,107,.4);border-radius:11px;padding:8px;text-align:center;
+    font-size:12.5px;color:#ffb3b3;background:rgba(255,107,107,.05);transition:.18s}
+  .trash.over{border-color:var(--rd);background:rgba(255,107,107,.16);box-shadow:0 0 20px rgba(255,107,107,.25)}
+  .opts{display:flex;gap:11px;flex-wrap:wrap;align-items:center}
+  /* 方案库 */
+  .presets{display:flex;flex-direction:column;gap:8px}
+  .prow{
+    position:relative;overflow:hidden;
+    display:flex;align-items:center;gap:10px;flex-wrap:wrap;
+    border:1px solid var(--line-soft);border-radius:11px;padding:9px 11px;
+    background:linear-gradient(180deg,rgba(255,255,255,.05),rgba(255,255,255,.02));transition:.16s;
+  }
+  /* 动态光效的关键帧 */
+  @keyframes prowFlow{0%{background-position:0% 50%}100%{background-position:220% 50%}}
+  @keyframes prowPulse{
+    0%,100%{box-shadow:0 0 0 1px rgba(53,230,255,.32),0 0 18px rgba(53,230,255,.16),inset 0 0 18px rgba(53,230,255,.06)}
+    50%{box-shadow:0 0 0 1px rgba(53,230,255,.62),0 0 32px rgba(53,230,255,.42),inset 0 0 26px rgba(53,230,255,.12)}
+  }
+  @keyframes prowBeam{0%{left:-60%}55%{left:135%}100%{left:135%}}
+  @keyframes prowBar{0%{background-position:0 0}50%{background-position:0 100%}100%{background-position:0 0}}
+  @keyframes chipGlow{
+    0%,100%{box-shadow:0 0 10px rgba(53,230,255,.35)}
+    50%{box-shadow:0 0 20px rgba(53,230,255,.75)}
+  }
+
+  /* 只有「选中」那一行才有发光效果；未选中的保持朴素 */
+  .prow{cursor:default}
+  .prow.on, .prow:hover, .prow.on.is-default:hover{
+    border-color:transparent;
+    /* 流动渐变底 */
+    background:linear-gradient(100deg,rgba(53,230,255,.14),rgba(139,92,255,.20),rgba(53,230,255,.14));
+    background-size:220% 100%;
+    animation:prowFlow 4.2s linear infinite, prowPulse 2.4s ease-in-out infinite;
+  }
+  /* 扫光：一道斜向高光循环扫过 */
+  .prow.on::before, .prow:hover::before, .prow.on.is-default:hover::before{
+    content:"";position:absolute;top:0;bottom:0;width:34%;left:-60%;pointer-events:none;
+    background:linear-gradient(90deg,transparent,rgba(255,255,255,.16),transparent);
+    transform:skewX(-16deg);
+    animation:prowBeam 3.1s ease-in-out infinite;
+  }
+  /* 左侧竖条流光 */
+  .prow.on::after, .prow:hover::after, .prow.on.is-default:hover::after{
+    content:"";position:absolute;left:0;top:0;bottom:0;width:3px;border-radius:11px 0 0 11px;
+    background:linear-gradient(180deg,var(--cy),var(--vi),var(--cy));
+    background-size:100% 200%;
+    box-shadow:0 0 14px var(--cy);
+    animation:prowBar 2.2s linear infinite;
+  }
+  /* 内置默认规则：生效也保持素净（不发光、不动） */
+  .prow.on.is-default{
+    border-color:rgba(120,150,220,.28);
+    background:rgba(255,255,255,.045);
+    animation:none;
+  }
+  .prow.on.is-default::after{
+    background:rgba(150,170,200,.5);
+    background-size:auto;
+    box-shadow:none;
+    animation:none;
+  }
+  .prow.on.is-default::before{
+    display:none;          /* 默认行生效时不扫光，保持素净 */
+    animation:none;
+  }
+  .prow.on.is-default:hover::before{
+    display:block;         /* 但鼠标移上去照样有扫光 */
+    animation:prowBeam 3.1s ease-in-out infinite;
+  }
+  .using{font-size:11px;font-weight:700;color:#04121b;background:linear-gradient(135deg,var(--cy),#9df1ff);
+    border-radius:999px;padding:2px 9px;animation:chipGlow 1.8s ease-in-out infinite}
+  .using.plain{color:var(--text-2);background:rgba(255,255,255,.06);border:1px solid var(--line);box-shadow:none;font-weight:600;animation:none}
+  .prow .pname{font-weight:700;font-size:13.5px;min-width:120px}
+  .prow .pmeta{flex:1;min-width:180px;font-size:11.5px;color:var(--text-3);line-height:1.6}
+  .prow .psum{font-family:ui-monospace,SFMono-Regular,Menlo,monospace;font-size:11.5px;color:#9fe8ff;word-break:break-all}
+  .prow .pbtns{display:flex;gap:6px}
+  @media (max-width:860px){ .rulegrid{grid-template-columns:1fr} }
+  .tab{border:1px solid var(--line);background:rgba(255,255,255,.04);color:var(--text-2);
+    border-radius:999px;padding:5px 14px;font-size:13px;cursor:pointer;transition:.18s}
+  .tab:hover{border-color:rgba(53,230,255,.5);color:var(--text)}
+  .tab.on{color:#04121b;font-weight:700;border-color:transparent;
+    background:linear-gradient(135deg,var(--cy),#7fe9ff);box-shadow:0 0 18px rgba(53,230,255,.35)}
+  .itemlist{display:flex;flex-wrap:wrap;gap:8px;margin:4px 0 12px;min-height:34px}
+  .item{display:flex;align-items:center;gap:7px;border:1px solid var(--line);
+    background:linear-gradient(180deg,rgba(255,255,255,.06),rgba(255,255,255,.02));
+    border-radius:10px;padding:5px 9px;font-size:13px}
+  .item .idx{font-size:11px;color:var(--text-3);min-width:12px;text-align:right}
+  .item .kind{font-size:10.5px;color:var(--text-3);border:1px solid var(--line);border-radius:5px;padding:0 5px}
+  .item .mv{cursor:pointer;color:var(--text-3);padding:0 2px;font-size:12px}
+  .item .mv:hover{color:var(--cy);text-shadow:0 0 10px rgba(53,230,255,.6)}
+  .item .del{color:#ff8f8f;cursor:pointer;font-size:13px}
+  .item .del:hover{text-shadow:0 0 10px rgba(255,107,107,.6)}
+  .rulebar{display:flex;gap:9px;flex-wrap:wrap;align-items:center}
+  select,input[type="text"]{
+    background:rgba(255,255,255,.05);border:1px solid var(--line);color:var(--text);
+    border-radius:9px;padding:6px 9px;font-size:13px;font-family:inherit;
+  }
+  select:focus,input[type="text"]:focus{outline:none;border-color:var(--cy);box-shadow:0 0 12px rgba(53,230,255,.25)}
+  select option{background:#111827;color:#e8edf7}
+  .field{display:inline-flex;align-items:center;gap:6px;font-size:13px;color:var(--text-2)}
+  .sample{margin-top:12px;font-family:ui-monospace,SFMono-Regular,Menlo,monospace;font-size:12px;
+    color:#9fe8ff;background:rgba(53,230,255,.07);border:1px solid rgba(53,230,255,.25);
+    border-radius:11px;padding:9px 12px;word-break:break-all;line-height:1.8;white-space:pre-wrap}
+  .sample b{color:var(--text-2);font-family:inherit;font-weight:600}
+  .no.g{background:linear-gradient(135deg,var(--gr),#9bffdd);color:#04121b;box-shadow:0 0 16px rgba(47,242,163,.45)}
+  .tpl{display:flex;gap:9px;flex-wrap:wrap;font-size:12px;color:var(--text-2);align-items:center}
+  .tpl span{border:1px solid var(--line);border-radius:9px;padding:4px 11px;background:rgba(255,255,255,.04)}
+  .tpl span.miss{border-color:rgba(255,107,107,.5);background:rgba(255,107,107,.12);color:#ffb3b3;
+    box-shadow:0 0 14px rgba(255,107,107,.18)}
+  footer{color:var(--text-3);font-size:12px;text-align:center;margin-top:20px;line-height:1.9}
+  footer .dot{color:var(--cy)}
+
+  @media (max-width:720px){
+    .wrap{padding:16px 12px 56px}
+    h1{font-size:21px}
+    .card{padding:14px 13px;border-radius:14px}
+    .card::before{opacity:.5}
+    table{font-size:12px}
+    th:nth-child(3),td:nth-child(3){display:none}
+    th:nth-child(4),td:nth-child(4){display:none}
+    .scroll{max-height:none}
+    .btn{padding:9px 13px}
+    .stat{min-width:calc(50% - 6px)}
+    .bg .blob{filter:blur(70px);opacity:.4}
+  }
+  @media (prefers-reduced-motion:reduce){
+    *{animation:none!important;transition:none!important}
+  }
+</style>
+<link rel="stylesheet" href="../lib/localfs.css">
+<style>
+  .wrap-paths{ margin:0 0 14px; }
+</style>
+</head>
+<body>
+
+<div class="bg" aria-hidden="true">
+  <div class="blob b1"></div>
+  <div class="blob b2"></div>
+  <div class="blob b3"></div>
+  <div class="grid"></div>
+  <div class="scan"></div>
+</div>
+
+<div class="wrap">
+
+  <header class="top">
+    <h1>投放图 PSD 生成工具</h1>
+    <div class="sub">指定本机的 <b>表格目录</b>、<b>模板目录</b>、<b>输出目录</b> → 一个按钮同时生成投放图与视频用图 → 下方查看明细预览</div>
+    <div class="bar"></div>
+    <div class="navtabs">
+      <button class="navtab on" data-view="work">工作台</button>
+      <button class="navtab" data-view="rule">命名规则<span class="dot" id="navRuleDot"></span></button>
+      <span class="navtip" id="navTip">规则：默认</span>
+    </div>
+  </header>
+
+  <!-- 本地路径设置：表格 / 模板 / 输出，选一次就记住（换电脑各自设一次） -->
+  <div class="wrap-paths"><div id="localPaths"></div></div>
+
+  <div class="workview">
+
+  <!-- ① 文档 -->
+  <section class="card">
+    <h2><span class="no">1</span>表格 <span class="tag" id="docDir">未设置</span>
+      <span style="flex:1"></span>
+      <button class="btn sm" id="btnRefresh">刷新列表</button>
+      <button class="btn sm" id="btnOpenDoc">定位表格目录</button>
+    </h2>
+
+    <div class="drop" id="drop">
+      <div>点击直接挑一个 Excel（临时用，刷新后需重选）</div>
+      <div class="hint">要长期记住就到页面顶部把<strong>表格目录</strong>设成放 Excel 的文件夹，
+        之后每次打开本页都会自动列出里面的表格（当前目录：<strong id="docDirInline">未设置</strong>）</div>
+      <input type="file" id="file" accept=".xlsx,.xlsm" hidden>
+    </div>
+
+    <div class="doclist" id="docList"></div>
+  </section>
+
+  </div><!-- /workview -->
+
+  <!-- 命名规则（顶部标签切换过来的独立页） -->
+  <div id="viewRule" hidden>
+  <section class="card">
+    <h2><span class="no p">规</span>命名规则
+      <span class="tag" id="ruleHint">默认规则</span>
+      <span style="flex:1"></span>
+      <button class="btn sm" id="btnRuleReset">恢复默认</button>
+    </h2>
+
+    <div class="tabs">
+      <button class="tab on" data-ruletab="main">投放图命名</button>
+      <button class="tab" data-ruletab="video">视频用图命名</button>
+      <span style="flex:1"></span>
+      <span class="savetag" id="saveTag">已存本机</span>
+    </div>
+
+    <div class="rulegrid">
+      <!-- 左：可用模块 -->
+      <div class="panel">
+        <div class="ph"><span class="pn">①</span>可用模块<span class="phint">拖到右边 · 双击直接添加</span></div>
+        <div class="modgroup">
+          <div class="mgt">时间与日期</div>
+          <div class="palette" id="paletteDate"></div>
+        </div>
+        <div class="modgroup">
+          <div class="mgt">表格列 <span class="phint" id="colCount"></span></div>
+          <input type="text" id="colSearch" placeholder="搜索列名…" style="width:100%;margin-bottom:7px">
+          <div class="palette scroll" id="paletteCols"></div>
+        </div>
+        <div class="modgroup">
+          <div class="mgt">固定文本</div>
+          <div class="rulebar">
+            <input type="text" id="textInput" placeholder="例如：投放" style="flex:1;min-width:90px">
+            <button class="btn sm" id="btnAddText">+ 添加</button>
+          </div>
+        </div>
+      </div>
+
+      <!-- 右：当前组合 -->
+      <div class="panel">
+        <div class="ph"><span class="pn">②</span>当前组合<span class="phint">拖动排序 · 拖到垃圾桶删除</span></div>
+        <div class="dropzone" id="dropzone"></div>
+        <div class="trash" id="trashZone">🗑 拖到这里删除</div>
+
+        <div class="ph" style="margin-top:14px"><span class="pn">③</span>细节选项</div>
+        <div class="opts">
+          <span class="field">分隔符 <input type="text" id="sepInput" size="3" maxlength="3" style="width:56px"></span>
+          <span class="field">日期格式
+            <select id="dateFmtSel">
+              <option value="%Y%m%d">20261016</option>
+              <option value="%Y-%m-%d">2026-10-16</option>
+            </select>
+          </span>
+          <span class="field">大小写
+            <select id="caseSel">
+              <option value="normal">原样</option>
+              <option value="upper">全大写</option>
+              <option value="lower">全小写</option>
+            </select>
+          </span>
+          <label class="switch"><input type="checkbox" id="spaceChk"> 空格转成分隔符</label>
+          <label class="switch"><input type="checkbox" id="sanitizeChk"> 清理非法字符</label>
+          <label class="switch"><input type="checkbox" id="skipEmptyChk"> 空值自动跳过</label>
+        </div>
+
+        <div class="ph" style="margin-top:15px"><span class="pn">④</span>保存为方案
+          <span class="phint">自己命名，或让系统自动命名</span></div>
+        <div class="rulebar">
+          <input type="text" id="presetName" placeholder="自己起个名，例如：万圣节-带日期" style="flex:1;min-width:140px">
+          <button class="btn sm" id="btnAutoName">系统命名</button>
+          <button class="btn sm primary" id="btnSavePreset">保存当前</button>
+        </div>
+        <div class="hint" id="presetTip">名字留空直接点保存 = 自动用系统命名</div>
+      </div>
+    </div>
+
+    <div class="ph" style="margin-top:18px"><span class="pn">⑤</span>我的方案
+      <span class="phint">用「应用」按钮切换 · 重命名 / 删除 · 存在本机浏览器，换电脑用导出 / 导入带走</span>
+      <span style="flex:1"></span>
+      <span id="presetTools">
+        <button class="btn sm" data-ptool="export">导出方案</button>
+        <button class="btn sm" data-ptool="import">导入方案</button>
+      </span>
+      <input type="file" id="presetFile" accept=".json" hidden>
+      <button class="btn sm" id="btnUseDefault">用默认规则</button>
+    </div>
+    <div class="presets" id="presetList"></div>
+
+    <div class="sample" id="ruleSample">示例：解析后显示</div>
+  </section>
+
+  </div><!-- /viewRule -->
+
+  <div class="workview">
+
+  <!-- ② 生成 -->
+  <section class="card">
+    <h2><span class="no v">2</span>生成 <span class="tag" id="outDir"></span></h2>
+    <div class="row" style="display:flex;gap:11px;align-items:center;flex-wrap:wrap;margin-bottom:13px">
+      <button class="btn primary" id="btnRun" disabled>开始创建 PSD（投放图 + 视频用图）</button>
+      <label class="switch"><input type="checkbox" id="overwrite" checked> 覆盖已存在的同名文件</label>
+      <span style="flex:1"></span>
+      <button class="btn sm" id="btnOpenVideo">定位视频用图目录</button>
+      <button class="btn sm" id="btnOpenOut">定位输出目录</button>
+    </div>
+    <div class="log" id="log">等待操作…</div>
+    <div class="tpl" id="tplBox" style="margin-top:13px"></div>
+  </section>
+
+  <!-- ③ 预览 -->
+  <section class="card">
+    <h2><span class="no p">3</span>预览 <span class="tag" id="previewDoc">未选择文档</span>
+      <span style="flex:1"></span>
+      <button class="btn sm" id="btnPreview">重新解析</button>
+    </h2>
+    <div class="stats">
+      <div class="stat"><div class="k">最新制作日期</div><div class="v" id="stDate">—</div></div>
+      <div class="stat"><div class="k">本轮记录数</div><div class="v" id="stRows">—</div></div>
+      <div class="stat"><div class="k">项目目录</div><div class="v" id="stFolders">—</div></div>
+      <div class="stat"><div class="k">待生成 PSD</div><div class="v" id="stFiles">—</div></div>
+      <div class="stat"><div class="k">视频用图</div><div class="v" id="stVideo">—</div></div>
+    </div>
+    <div class="scroll">
+      <table>
+        <thead>
+          <tr><th style="width:16%">项目</th><th style="width:14%">主题</th><th style="width:14%">匹配规则</th><th style="width:14%">源模板</th><th>目标文件名</th><th style="width:88px">状态</th></tr>
+        </thead>
+        <tbody id="fileBody"><tr><td colspan="6" style="text-align:center;color:#6b7896;padding:24px">选择文档后自动解析</td></tr></tbody>
+      </table>
+    </div>
+    <div id="warnBox"></div>
+
+    <div class="subhead">
+      <span class="chip">视频用图</span>
+      <span>出图列 = 视频用图（全表扫描，不进投放图目录）</span>
+      <span class="path" id="videoDate">—</span>
+      <span class="path" id="videoFolder">—</span>
+      <span style="flex:1"></span>
+      <button class="btn sm" id="btnPreviewVideo">重新解析</button>
+    </div>
+    <div class="scroll" style="max-height:300px">
+      <table>
+        <thead>
+          <tr><th style="width:20%">项目</th><th style="width:24%">主题</th><th style="width:16%">源模板</th><th>子目录 / 文件名</th><th style="width:88px">状态</th></tr>
+        </thead>
+        <tbody id="videoBody"><tr><td colspan="5" style="text-align:center;color:#6b7896;padding:24px">选择文档后自动解析</td></tr></tbody>
+      </table>
+    </div>
+    <div id="videoWarnBox"></div>
+  </section>
+
+  </div><!-- /workview -->
+
+  <footer>
+    模板 <span class="dot">◆</span> 1200x1200 → 1200_1200.psd　<span class="dot">◆</span> 1200x628 → 1200_628.psd　<span class="dot">◆</span> 含「视频用图文字」→ 4000_4000.psd
+  </footer>
+</div>
+
+<script src="../lib/xlsx.mini.min.js"></script>
+<script src="../lib/localfs.js"></script>
+<script>
+const $ = (id) => document.getElementById(id);
+const KEY_DOC = 'psd_rename_selected_doc';
+const KEY_OVERWRITE = 'psd_rename_overwrite';   // 缺省就是「覆盖」
+const KEY_RULES = 'psd_rename_rules';
+const KEY_RULE_TAB = 'psd_rename_rule_tab';
+const KEY_VIEW = 'psd_rename_view';
+const KEY_PRESET = 'psd_rename_preset';
+let currentDoc = '';
+let currentPreset = '';
+
+// 默认命名规则 = 原来的规则；页面里可以自由拖动组合
+const BASE_RULE = {separator:'-', datePrefix:'none', dateFormat:'%Y%m%d', timeSuffix:false, sanitize:true,
+                   case:'normal', spaceToSep:false, skipEmpty:true};
+const DEFAULT_RULES = {
+  main:  Object.assign({}, BASE_RULE, {items:[{type:'column', value:'自动名称-复制'}]}),
+  video: Object.assign({}, BASE_RULE, {items:[{type:'date', value:'today'}, {type:'column', value:'主题'}]}),
+};
+let rules = JSON.parse(JSON.stringify(DEFAULT_RULES));
+let ruleTab = 'main';
+let currentView = 'work';
+let docColumns = [];
+let previewTimer = null;
+const KEY_PRESETS = 'psd_rename_presets';       // 方案库改存本机（原来在项目目录「规则方案.json」）
+let paths = null;                                // 本地路径面板（LocalFS）
+let docEntries = [];                             // 表格目录里的 Excel（句柄 + 元信息）
+let currentEntry = null;                         // 当前选中的表格（句柄或 File 对象）
+let sheetCache = { key: '', rows: null, columns: null };
+
+/* ==========================================================================
+ * 本地化核心：原 process_files.py 的处理逻辑，移植成浏览器版本
+ *  · 表格从用户指定的「表格目录」读（SheetJS 解析）
+ *  · 模板从「模板目录」找（1200_1200 / 1200_628 / 4000_4000）
+ *  · 结果写进「输出目录」（File System Access API）
+ * ========================================================================*/
+const SHEET_NAME = '需求数据表';
+const DOC_EXTS = ['.xlsx', '.xlsm'];
+const VIDEO_TEXT_KEYWORD = '视频用图文字';
+const VIDEO_COLUMN = '出图';
+const VIDEO_MARK = '视频用图';
+const VIDEO_SOURCE_KEY = '4000_4000';
+const SIZE_TO_SOURCE = { '1200x1200': '1200_1200', '1200x628': '1200_628', '视频用图文字': '4000_4000' };
+const TEMPLATE_KEYS = ['1200_1200', '1200_628', '4000_4000'];
+
+function excelSerialToDate(serial){
+  return new Date(Date.UTC(1899, 11, 30) + Math.round(Number(serial) * 86400000));
+}
+/* 表格库的序列号换算偶尔有几秒误差（会表现为「前一天 23:59:5x」），
+   离次日零点不到 2 分钟就归到次日，避免日期整体差一天 */
+function snapDate(date){
+  if (!(date instanceof Date) || isNaN(date.getTime())) return date;
+  const start = new Date(date.getFullYear(), date.getMonth(), date.getDate()).getTime();
+  if (date.getTime() - start > 86400000 - 120000){
+    const fixed = new Date(date.getTime());
+    fixed.setDate(fixed.getDate() + 1);
+    return fixed;
+  }
+  return date;
+}
+function toDateValue(value){
+  if (value instanceof Date) return isNaN(value.getTime()) ? null : snapDate(value);
+  if (typeof value === 'number' && isFinite(value) && value > 20000 && value < 60000) return excelSerialToDate(value);
+  if (typeof value === 'string'){
+    const text = value.trim();
+    if (!text) return null;
+    let m = /^(\d{4})[-\/.](\d{1,2})[-\/.](\d{1,2})/.exec(text);
+    if (m) return new Date(Number(m[1]), Number(m[2]) - 1, Number(m[3]));
+    m = /^(\d{4})(\d{2})(\d{2})$/.exec(text);
+    if (m) return new Date(Number(m[1]), Number(m[2]) - 1, Number(m[3]));
+  }
+  return null;
+}
+function fmtDate(value, format){
+  const date = toDateValue(value);
+  const f = format || '%Y%m%d';
+  const p = (n) => String(n).padStart(2, '0');
+  if (date) return f === '%Y-%m-%d'
+    ? date.getFullYear() + '-' + p(date.getMonth() + 1) + '-' + p(date.getDate())
+    : String(date.getFullYear()) + p(date.getMonth() + 1) + p(date.getDate());
+  return String(value == null ? '' : value).trim();
+}
+function sanitizeFilename(name){
+  let text = String(name == null ? '' : name).trim();
+  if (text.startsWith('-')) text = text.slice(1);
+  text = text.replace(/\*/g, 'x');
+  text = text.replace(/[\\/:*?"<>|]/g, '-');
+  return text;
+}
+function parseSize(size){
+  if (!size) return '';
+  const text = String(size);
+  if (text.indexOf('628') >= 0) return '1200x628';
+  if (text.split('1200').length - 1 >= 2) return '1200x1200';
+  return '';
+}
+function hasVideoText(row){
+  return Object.keys(row).some(function (key){
+    const value = row[key];
+    return value != null && String(value).indexOf(VIDEO_TEXT_KEYWORD) >= 0;
+  });
+}
+function classifyRow(row){
+  if (hasVideoText(row)) return { key: SIZE_TO_SOURCE[VIDEO_TEXT_KEYWORD], rule: VIDEO_TEXT_KEYWORD };
+  const size = parseSize(row['尺寸'] || '');
+  if (size) return { key: SIZE_TO_SOURCE[size], rule: size };
+  return { key: '', rule: '' };
+}
+function isVideoRow(row){
+  return String(row[VIDEO_COLUMN] == null ? '' : row[VIDEO_COLUMN]).indexOf(VIDEO_MARK) >= 0;
+}
+function projectFolderName(dateStr, project){
+  return dateStr + '-' + project + '-投放图';
+}
+function videoFolderName(todayStr){
+  return todayStr + '-' + VIDEO_MARK;
+}
+function renderName(row, rule, today){
+  const now = today || new Date();
+  const format = rule.dateFormat || '%Y%m%d';
+  const sep = rule.separator == null ? '-' : rule.separator;
+  const parts = [];
+  const dateText = function (kind){ return kind === 'prod' ? fmtDate(row['制作日期'], format) : fmtDate(now, format); };
+  if (rule.datePrefix && rule.datePrefix !== 'none'){
+    const text = dateText(rule.datePrefix);
+    if (text) parts.push(text);
+  }
+  (rule.items || []).forEach(function (item){
+    if (item.type === 'text') parts.push(item.value);
+    else if (item.type === 'date'){ const t = dateText(item.value); if (t) parts.push(t); }
+    else if (item.type === 'time') parts.push(String(now.getHours()).padStart(2, '0') + String(now.getMinutes()).padStart(2, '0') + String(now.getSeconds()).padStart(2, '0'));
+    else {
+      let value = row[item.value];
+      if (value instanceof Date) value = fmtDate(value, format);
+      value = value == null ? '' : String(value).trim();
+      if (value || !rule.skipEmpty) parts.push(value);
+    }
+  });
+  if (rule.timeSuffix) parts.push(String(now.getHours()).padStart(2, '0') + String(now.getMinutes()).padStart(2, '0') + String(now.getSeconds()).padStart(2, '0'));
+  let name = parts.join(sep);
+  if (rule.spaceToSep) name = name.replace(/ /g, sep || '-');
+  if (rule.case === 'upper') name = name.toUpperCase();
+  else if (rule.case === 'lower') name = name.toLowerCase();
+  if (rule.sanitize !== false) name = sanitizeFilename(name);
+  return name;
+}
+
+/* ---- 解析 Excel（SheetJS） ---- */
+function parseSheet(buffer){
+  if (typeof XLSX === 'undefined') throw new Error('表格解析库未加载（xlsx.mini.min.js）');
+  const wb = XLSX.read(new Uint8Array(buffer), { type: 'array', cellDates: true });
+  if (wb.SheetNames.indexOf(SHEET_NAME) < 0) throw new Error('文档里没有工作表「' + SHEET_NAME + '」');
+  const ws = wb.Sheets[SHEET_NAME];
+  const rows = XLSX.utils.sheet_to_json(ws, { defval: null, raw: true });
+  const columns = [];
+  const range = XLSX.utils.decode_range(ws['!ref']);
+  for (let c = range.s.c; c <= range.e.c; c += 1){
+    const cell = ws[XLSX.utils.encode_cell({ r: range.s.r, c: c })];
+    const name = cell && cell.v != null ? String(cell.v).trim() : '';
+    if (name) columns.push(name);
+  }
+  return { rows: rows, columns: columns };
+}
+async function currentRows(){
+  if (!currentEntry) throw new Error('还没有选择表格');
+  const key = currentEntry.name + '@' + (currentEntry.mtime || 0);
+  if (sheetCache.key === key && sheetCache.rows) return sheetCache;
+  const buffer = await readEntryBuffer(currentEntry);
+  const parsed = parseSheet(buffer);
+  sheetCache = { key: key, rows: parsed.rows, columns: parsed.columns };
+  return sheetCache;
+}
+function readEntryBuffer(entry){
+  if (entry.file) return entry.file.arrayBuffer();
+  return LocalFS.getFile(entry.handle).then(function (file){ return file.arrayBuffer(); });
+}
+function latestRows(rows){
+  const dated = rows.filter(function (row){
+    const value = row['制作日期'];
+    return value != null && String(value).trim() !== '';
+  });
+  if (!dated.length) throw new Error('表格里没有找到「制作日期」数据');
+  let top = dated[0], topTime = -Infinity;
+  dated.forEach(function (row){
+    const date = toDateValue(row['制作日期']);
+    const time = date ? date.getTime() : 0;
+    if (time > topTime){ topTime = time; top = row; }
+  });
+  const value = top['制作日期'];
+  const latest = dated.filter(function (row){
+    const d1 = toDateValue(row['制作日期']), d2 = toDateValue(value);
+    if (d1 && d2) return d1.getTime() === d2.getTime();
+    return String(row['制作日期']) === String(value);
+  });
+  const date = toDateValue(value);
+  return { latestDate: date, dateStr: fmtDate(value), rows: latest };
+}
+
+/* ---- 模板目录：找 1200_1200 / 1200_628 / 4000_4000 ---- */
+async function findTemplate(key){
+  const info = paths.get('tpl');
+  if (!info || !info.ready) throw new Error('未设置模板目录');
+  const entries = await LocalFS.listEntries(info.handle);
+  const hit = entries.filter(function (e){
+    if (e.kind !== 'file') return false;
+    const base = String(e.name).replace(/\.[^.]+$/, '');
+    return base === key;
+  });
+  if (hit.length) return { name: hit[0].name, handle: hit[0] };
+  const dirs = entries.filter(function (e){ return e.kind === 'directory' && String(e.name) === key; });
+  if (dirs.length){
+    const inner = await LocalFS.listEntries(dirs[0], { want: 'file' });
+    if (inner.length === 1) return { name: inner[0].name, handle: inner[0] };
+    if (inner.length > 1) throw new Error('模板目录 ' + key + '/ 里有多个文件，请只保留一个');
+  }
+  throw new Error('模板目录里找不到 ' + key + '（需要 ' + key + '.psd 或同名文件夹）');
+}
+
+/* ---- 输出目录：按相对路径查存在 / 建目录 ---- */
+async function pathExists(outDir, relPath){
+  const parts = relPath.split('/');
+  let dir = outDir;
+  try{
+    for (let i = 0; i < parts.length - 1; i += 1) dir = await dir.getDirectoryHandle(parts[i]);
+    await dir.getFileHandle(parts[parts.length - 1]);
+    return true;
+  }catch(e){ return false; }
+}
+async function ensureRelDir(outDir, relDir){
+  if (!relDir) return outDir;
+  let dir = outDir;
+  const parts = relDir.split('/');
+  for (let i = 0; i < parts.length; i += 1) dir = await dir.getDirectoryHandle(parts[i], { create: true });
+  return dir;
+}
+async function dirExists(outDir, relDir){
+  if (!relDir) return true;
+  let dir = outDir;
+  const parts = relDir.split('/');
+  try{
+    for (let i = 0; i < parts.length; i += 1) dir = await dir.getDirectoryHandle(parts[i]);
+    return true;
+  }catch(e){ return false; }
+}
+
+/* ---- 计划（只算不写） ---- */
+async function buildPlanLocal(){
+  const cache = await currentRows();
+  const all = cache.rows || [];
+  const picked = latestRows(all);
+  const outInfo = paths.get('output');
+  const mainRule = rules.main, videoRule = rules.video;
+  const folders = [], files = [], warnings = [];
+  const seen = {};
+  let videoExcluded = 0;
+
+  for (let i = 0; i < picked.rows.length; i += 1){
+    const row = picked.rows[i];
+    const index = i + 2;
+    const project = String(row['项目-名称'] == null ? '' : row['项目-名称']).trim();
+    const theme = String(row['主题'] == null ? '' : row['主题']).trim();
+    if (isVideoRow(row)){ videoExcluded += 1; continue; }
+    const cls = classifyRow(row);
+    if (!project){ warnings.push('第 ' + index + ' 行缺少项目-名称，已跳过'); continue; }
+    if (!seen[project]){
+      seen[project] = true;
+      folders.push(projectFolderName(picked.dateStr, project));
+    }
+    if (!cls.key){ warnings.push('第 ' + index + ' 行无法识别尺寸：' + String(row['尺寸'] == null ? '' : row['尺寸']).trim() + '（项目=' + project + '），已跳过'); continue; }
+    let source;
+    try{ source = await findTemplate(cls.key); }
+    catch (err){ warnings.push('第 ' + index + ' 行模板缺失：' + err.message); continue; }
+    const name = renderName(row, mainRule);
+    if (!name){ warnings.push('第 ' + index + ' 行按命名规则拼不出文件名（项目=' + project + '），已跳过'); continue; }
+    const targetName = name + (String(source.name).match(/\.[^.]+$/) || ['.psd'])[0];
+    const relPath = projectFolderName(picked.dateStr, project) + '/' + targetName;
+    const status = (outInfo && outInfo.ready && await pathExists(outInfo.handle, relPath)) ? 'exists' : 'ready';
+    files.push({ project: project, theme: theme, sizeText: String(row['尺寸'] == null ? '' : row['尺寸']).trim(),
+      rule: cls.rule, sourceKey: cls.key, sourceName: source.name, sourceHandle: source.handle,
+      targetName: targetName, relDir: projectFolderName(picked.dateStr, project), relPath: relPath, status: status });
+  }
+
+  const now = new Date();
+  const todayStr = fmtDate(now);
+  const video = { folder: videoFolderName(todayStr), files: [], warnings: [], nameRuleText: describeRule(videoRule),
+    todayText: now.getFullYear() + '-' + String(now.getMonth() + 1).padStart(2, '0') + '-' + String(now.getDate()).padStart(2, '0') };
+  const seenName = {};
+  for (let i = 0; i < all.length; i += 1){
+    const row = all[i];
+    if (!isVideoRow(row)) continue;
+    const index = i + 2;
+    const theme = String(row['主题'] == null ? '' : row['主题']).trim();
+    let source;
+    try{ source = await findTemplate(VIDEO_SOURCE_KEY); }
+    catch (err){ video.warnings.push('第 ' + index + ' 行模板缺失：' + err.message); continue; }
+    const name = renderName(row, videoRule, now);
+    if (!name){ video.warnings.push('第 ' + index + ' 行按命名规则拼不出文件名（主题=' + (theme || '空') + '），已跳过'); continue; }
+    const targetName = name + (String(source.name).match(/\.[^.]+$/) || ['.psd'])[0];
+    if (seenName[targetName]){ video.warnings.push('第 ' + index + ' 行命名重复（' + name + '），已按一个文件处理'); continue; }
+    seenName[targetName] = true;
+    const relPath = video.folder + '/' + name + '/' + targetName;
+    const status = (outInfo && outInfo.ready && await pathExists(outInfo.handle, relPath)) ? 'exists' : 'ready';
+    video.files.push({ project: String(row['项目-名称'] == null ? '' : row['项目-名称']).trim(), theme: theme,
+      sourceName: source.name, sourceHandle: source.handle, subFolder: name, targetName: targetName,
+      relDir: video.folder + '/' + name, relPath: relPath, status: status });
+  }
+
+  return {
+    doc: currentEntry.name, latestDate: picked.dateStr, dateStr: picked.dateStr,
+    rowCount: picked.rows.length, folders: folders, files: files, warnings: warnings,
+    nameRuleText: describeRule(mainRule), videoExcluded: videoExcluded,
+    readyCount: files.filter(function (f){ return f.status === 'ready'; }).length,
+    existsCount: files.filter(function (f){ return f.status === 'exists'; }).length,
+    columns: cache.columns, video: video
+  };
+}
+
+/* ---- 执行：建目录 + 复制模板 ---- */
+async function runPlanLocal(plan, overwrite){
+  const outInfo = paths.get('output');
+  if (!outInfo || !outInfo.ready) throw new Error('未设置输出目录');
+  const outDir = outInfo.handle;
+  const result = { folders: [], files: [], skipped: [], errors: [], video: { folder: plan.video.folder, files: [], skipped: [], errors: [] } };
+  for (let i = 0; i < plan.folders.length; i += 1){
+    const name = plan.folders[i];
+    const existed = await dirExists(outDir, name);
+    await ensureRelDir(outDir, name);
+    result.folders.push({ name: name, existed: existed });
+  }
+  for (let i = 0; i < plan.files.length; i += 1){
+    const item = plan.files[i];
+    try{
+      if (item.status === 'exists' && !overwrite){ result.skipped.push({ name: item.targetName, reason: '已存在，未覆盖' }); continue; }
+      const dir = await ensureRelDir(outDir, item.relDir);
+      await LocalFS.copyFileTo(item.sourceHandle, dir, item.targetName);
+      result.files.push({ project: item.project, name: item.targetName, source: item.sourceName });
+    }catch (err){ result.errors.push({ name: item.targetName, reason: err.message }); }
+  }
+  const v = plan.video;
+  for (let i = 0; i < v.files.length; i += 1){
+    const item = v.files[i];
+    try{
+      if (item.status === 'exists' && !overwrite){ result.video.skipped.push({ name: item.targetName, reason: '已存在，未覆盖' }); continue; }
+      const dir = await ensureRelDir(outDir, item.relDir);
+      await LocalFS.copyFileTo(item.sourceHandle, dir, item.targetName);
+      result.video.files.push({ name: item.targetName, subFolder: item.subFolder, source: item.sourceName });
+    }catch (err){ result.video.errors.push({ name: item.targetName, reason: err.message }); }
+  }
+  return result;
+}
+
+function esc(s){
+  return String(s == null ? '' : s).replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+}
+function bytesText(n){
+  n = Number(n) || 0;
+  const u = ['B','KB','MB','GB']; let i = 0;
+  while (n >= 1024 && i < u.length - 1){ n /= 1024; i++; }
+  return (i === 0 ? n.toFixed(0) : n.toFixed(1)) + ' ' + u[i];
+}
+function log(html){
+  const box = $('log');
+  box.innerHTML = html;
+  box.scrollTop = box.scrollHeight;
+}
+function appendLog(cls, text){
+  const box = $('log');
+  if (box.innerHTML === '等待操作…') box.innerHTML = '';
+  const line = document.createElement('div');
+  line.className = cls;
+  line.textContent = text;
+  box.appendChild(line);
+  box.scrollTop = box.scrollHeight;
+}
+/* 注意：本页已完全本地化，不再请求任何服务端接口 */
+
+/* ---------- 表格列表（来自用户指定的「表格目录」） ---------- */
+async function loadDocs(keepSelection){
+  const info = paths.get('doc');
+  const list = $('docList');
+  if (!info || !info.ready){
+    $('docDir').textContent = '未设置';
+    $('docDirInline').textContent = '未设置';
+    list.innerHTML = '<div class="empty">还没设置「表格目录」。在页面顶部点「选择…」指定放 Excel 的文件夹，' +
+      '以后打开本页会自动列出里面的表格；也可以直接点上面的区域临时挑一个 Excel。</div>';
+    return;
+  }
+  $('docDir').textContent = info.name;
+  $('docDirInline').textContent = info.name;
+  list.innerHTML = '<div class="empty">读取中…</div>';
+  try{
+    const entries = await LocalFS.listEntries(info.handle, { want: 'file', exts: DOC_EXTS });
+    const items = [];
+    for (const entry of entries){
+      try{
+        const file = await LocalFS.getFile(entry);
+        items.push({ name: entry.name, handle: entry, bytes: file.size, mtime: file.lastModified || 0,
+          modifiedText: file.lastModified ? new Date(file.lastModified).toLocaleString('zh-CN', { hour12: false }) : '—' });
+      }catch(e){ /* 读不了就跳过 */ }
+    }
+    items.sort(function (a, b){ return b.mtime - a.mtime; });
+    docEntries = items;
+    if (!items.length){
+      currentEntry = null;
+      currentDoc = '';
+      renderPreviewEmpty('「' + info.name + '」里还没有 .xlsx / .xlsm');
+      list.innerHTML = '<div class="empty">「' + esc(info.name) + '」里还没有 Excel</div>';
+      return;
+    }
+    if (!keepSelection || !items.some(d => d.name === currentDoc)){
+      currentDoc = items[0].name;
+      currentEntry = items[0];
+    }else{
+      const hit = items.filter(d => d.name === currentDoc)[0];
+      if (hit) currentEntry = hit;
+    }
+    list.innerHTML = items.map((d, i) => `
+      <label class="doc ${d.name === currentDoc ? 'on' : ''}" data-name="${esc(d.name)}">
+        <input type="radio" name="doc" value="${esc(d.name)}" ${d.name === currentDoc ? 'checked' : ''}>
+        <div class="meta">
+          <div class="nm">${esc(d.name)}</div>
+          <div class="dt">修改 ${esc(d.modifiedText)}　·　${bytesText(d.bytes)}</div>
+        </div>
+        <span class="badge ${i === 0 ? 'new' : 'idle'}">${i === 0 ? '最新' : '历史'}</span>
+      </label>`).join('');
+    list.querySelectorAll('input[name="doc"]').forEach(radio => {
+      radio.addEventListener('change', () => {
+        currentDoc = radio.value;
+        const hit = docEntries.filter(d => d.name === currentDoc)[0];
+        if (hit) currentEntry = hit;
+        try{ localStorage.setItem(KEY_DOC, currentDoc); }catch(e){}
+        list.querySelectorAll('.doc').forEach(el => el.classList.toggle('on', el.dataset.name === currentDoc));
+        loadPreview();
+      });
+    });
+    loadPreview();
+  }catch(err){
+    list.innerHTML = '<div class="empty">' + esc(err.message) + '</div>';
+  }
+}
+
+/* ---------- 临时挑一个 Excel（不写回，只在本页生效） ---------- */
+function pickLooseFile(file){
+  if (!file) return;
+  if (!/\.(xlsx|xlsm)$/i.test(file.name)){ alert('只支持 .xlsx / .xlsm 格式'); return; }
+  currentEntry = { name: file.name, file: file, mtime: file.lastModified || 0 };
+  currentDoc = file.name;
+  appendLog('b', '已临时载入：' + file.name + '（刷新后需重选；要自动记住请在顶部设置表格目录）');
+  loadPreview();
+}
+$('drop').addEventListener('click', () => $('file').click());
+$('file').addEventListener('change', (e) => { pickLooseFile(e.target.files[0]); e.target.value = ''; });
+['dragenter','dragover'].forEach(t => $('drop').addEventListener(t, (e) => { e.preventDefault(); $('drop').classList.add('over'); }));
+['dragleave','drop'].forEach(t => $('drop').addEventListener(t, (e) => { e.preventDefault(); $('drop').classList.remove('over'); }));
+$('drop').addEventListener('drop', (e) => { pickLooseFile(e.dataTransfer.files[0]); });
+
+/* ---------- 命名规则 ---------- */
+const DATE_MODULES = [
+  {type: 'date', value: 'prod',  label: '制作日期'},
+  {type: 'date', value: 'today', label: '生成当天日期'},
+  {type: 'time', value: 'now',   label: '时间 HHMMSS'},
+];
+function isDefaultRule(key){
+  return JSON.stringify(rules[key]) === JSON.stringify(DEFAULT_RULES[key]);
+}
+function ruleStateMark(key){
+  return isDefaultRule(key) ? '默认规则' : '自定义';
+}
+function itemText(it){
+  if (it.type === 'column') return it.value;
+  if (it.type === 'text') return '「' + it.value + '」';
+  if (it.type === 'date') return '日期(' + (it.value === 'prod' ? '制作日期' : '生成当天') + ')';
+  return '时间(HHMMSS)';
+}
+function kindText(it){
+  return it.type === 'column' ? '列' : it.type === 'text' ? '文本' : it.type === 'date' ? '日期' : '时间';
+}
+function describeRule(r){
+  const parts = [];
+  if (r.datePrefix && r.datePrefix !== 'none'){
+    parts.push('日期(' + (r.datePrefix === 'prod' ? '制作日期' : '生成当天') + ')');
+  }
+  (r.items || []).forEach(it => parts.push(itemText(it)));
+  if (r.timeSuffix) parts.push('时间(HHMMSS)');
+  return parts.join(r.separator || '-') || '（空）';
+}
+function saveRules(){
+  try{ localStorage.setItem(KEY_RULES, JSON.stringify(rules)); }catch(e){}
+  const tag = $('saveTag');
+  if (tag){ tag.textContent = '已保存 ' + new Date().toLocaleTimeString('zh-CN', {hour12:false}); }
+  updateNavTip();
+  renderPresets();   // 规则一改，高亮立刻跟着变
+}
+function updateNavTip(){
+  const active = activePresetName();
+  let text;
+  if (active) text = '规则：' + (active === '默认规则' ? '默认' : '方案「' + active + '」');
+  else text = '规则：自定义（本机已保存）';
+  $('navTip').textContent = text;
+  $('navRuleDot').style.background = active === '默认规则' ? 'var(--gr)' : 'var(--pk)';
+}
+function reloadPreview(){
+  clearTimeout(previewTimer);
+  previewTimer = setTimeout(loadPreview, 250);
+}
+/* 老版本存的规则里日期是单独字段，迁移成可拖动的日期模块 */
+function migrateRule(r){
+  if (!r || !Array.isArray(r.items)) return null;
+  if (r.datePrefix && r.datePrefix !== 'none'){
+    r.items.unshift({type: 'date', value: r.datePrefix});
+    r.datePrefix = 'none';
+  }
+  if (r.timeSuffix){
+    r.items.push({type: 'time', value: 'now'});
+    r.timeSuffix = false;
+  }
+  if (r.case === undefined) r.case = 'normal';
+  if (r.spaceToSep === undefined) r.spaceToSep = false;
+  if (r.skipEmpty === undefined) r.skipEmpty = true;
+  return r;
+}
+function renderPalette(){
+  $('paletteDate').innerHTML = DATE_MODULES.map(m =>
+    `<div class="pmod special" draggable="true" data-mod='${JSON.stringify(m).replace(/'/g, "&#39;")}'>${esc(m.label)}</div>`
+  ).join('');
+
+  const keyword = ($('colSearch').value || '').trim().toLowerCase();
+  const list = docColumns.filter(c => !keyword || c.toLowerCase().indexOf(keyword) >= 0);
+  $('colCount').textContent = '（' + list.length + '/' + docColumns.length + '）';
+  $('paletteCols').innerHTML = list.length
+    ? list.map(c =>
+        `<div class="pmod" draggable="true" data-mod='${JSON.stringify({type:'column', value:c}).replace(/'/g, "&#39;")}'>${esc(c)}</div>`
+      ).join('')
+    : '<span style="color:#6b7896;font-size:12.5px">没有匹配的列</span>';
+
+  $('paletteDate').querySelectorAll('.pmod').forEach(el => bindPaletteItem(el));
+  $('paletteCols').querySelectorAll('.pmod').forEach(el => bindPaletteItem(el));
+}
+function bindPaletteItem(el){
+  el.addEventListener('dragstart', (e) => {
+    e.dataTransfer.setData('text/plain', el.dataset.mod);
+    e.dataTransfer.effectAllowed = 'copy';
+  });
+  el.addEventListener('dblclick', () => {
+    addModule(JSON.parse(el.dataset.mod), rules[ruleTab].items.length);
+  });
+}
+function addModule(mod, index){
+  const arr = rules[ruleTab].items;
+  const at = Math.max(0, Math.min(index, arr.length));
+  arr.splice(at, 0, JSON.parse(JSON.stringify(mod)));
+  saveRules(); renderRule(); reloadPreview();
+}
+function removeAt(i){
+  rules[ruleTab].items.splice(i, 1);
+  saveRules(); renderRule(); reloadPreview();
+}
+function moveItem(from, to){
+  const arr = rules[ruleTab].items;
+  if (from < 0 || from >= arr.length) return;
+  const it = arr.splice(from, 1)[0];
+  arr.splice(Math.max(0, Math.min(to, arr.length)), 0, it);
+  saveRules(); renderRule(); reloadPreview();
+}
+function renderRule(){
+  const r = rules[ruleTab];
+  const zone = $('dropzone');
+  zone.innerHTML = r.items.length
+    ? r.items.map((it, i) => `
+      <div class="zitem" draggable="true" data-i="${i}">
+        <span class="idx">${i + 1}</span>
+        <span class="kind">${kindText(it)}</span>
+        <span>${esc(itemText(it))}</span>
+        <span class="mv" data-act="up" data-i="${i}">▲</span>
+        <span class="mv" data-act="down" data-i="${i}">▼</span>
+        <span class="del" data-act="del" data-i="${i}">✕</span>
+      </div>`).join('')
+    : '<span class="empty">把左边的模块拖到这里（或双击模块直接添加）</span>';
+
+  zone.querySelectorAll('.zitem').forEach(el => {
+    el.addEventListener('dragstart', (e) => {
+      e.dataTransfer.setData('text/plain', JSON.stringify({__move: +el.dataset.i}));
+      e.dataTransfer.effectAllowed = 'move';
+      el.classList.add('drag');
+    });
+    el.addEventListener('dragend', () => el.classList.remove('drag'));
+  });
+  zone.querySelectorAll('[data-act]').forEach(el => {
+    el.addEventListener('click', () => {
+      const i = +el.dataset.i, act = el.dataset.act;
+      if (act === 'up') moveItem(i, i - 1);
+      else if (act === 'down') moveItem(i, i + 1);
+      else if (act === 'del') removeAt(i);
+    });
+  });
+
+  $('sepInput').value = r.separator;
+  $('dateFmtSel').value = r.dateFormat;
+  $('caseSel').value = r.case || 'normal';
+  $('spaceChk').checked = !!r.spaceToSep;
+  $('sanitizeChk').checked = !!r.sanitize;
+  $('skipEmptyChk').checked = !!r.skipEmpty;
+  $('ruleHint').textContent = (ruleTab === 'main' ? '投放图：' : '视频用图：')
+    + describeRule(r) + '　【' + ruleStateMark(ruleTab) + '】';
+  updateNavTip();
+}
+/* 组合区拖放：拖入 / 排序 / 拖到垃圾桶删除 */
+function bindDropZone(){
+  const zone = $('dropzone');
+  const trash = $('trashZone');
+
+  function clearGhost(){
+    zone.querySelectorAll('.ghost').forEach(g => g.remove());
+  }
+  function indexAt(x, y){
+    const chips = [...zone.querySelectorAll('.zitem:not(.ghost)')];
+    for (let i = 0; i < chips.length; i++){
+      const r = chips[i].getBoundingClientRect();
+      const cy = r.top + r.height / 2, cx = r.left + r.width / 2;
+      if (y < r.top) return i;
+      if (y <= r.bottom && x < cx) return i;
+    }
+    return chips.length;
+  }
+  zone.addEventListener('dragover', (e) => {
+    e.preventDefault();
+    zone.classList.add('over');
+    clearGhost();
+    const ghost = document.createElement('div');
+    ghost.className = 'zitem ghost';
+    const chips = [...zone.querySelectorAll('.zitem:not(.ghost)')];
+    const idx = indexAt(e.clientX, e.clientY);
+    if (idx >= chips.length) zone.appendChild(ghost);
+    else zone.insertBefore(ghost, chips[idx]);
+  });
+  zone.addEventListener('dragleave', (e) => {
+    if (!zone.contains(e.relatedTarget)){
+      zone.classList.remove('over');
+      clearGhost();
+    }
+  });
+  zone.addEventListener('drop', (e) => {
+    e.preventDefault();
+    zone.classList.remove('over');
+    const idx = indexAt(e.clientX, e.clientY);
+    clearGhost();
+    let raw = '';
+    try{ raw = e.dataTransfer.getData('text/plain') || ''; }catch(err){ raw = ''; }
+    if (!raw) return;
+    let data = null;
+    try{ data = JSON.parse(raw); }catch(err){ return; }
+    if (data && typeof data.__move === 'number'){
+      const from = data.__move;
+      moveItem(from, from < idx ? idx - 1 : idx);
+    } else if (data && data.type){
+      addModule(data, idx);
+    }
+  });
+
+  trash.addEventListener('dragover', (e) => { e.preventDefault(); trash.classList.add('over'); });
+  trash.addEventListener('dragleave', () => trash.classList.remove('over'));
+  trash.addEventListener('drop', (e) => {
+    e.preventDefault();
+    trash.classList.remove('over');
+    let raw = '';
+    try{ raw = e.dataTransfer.getData('text/plain') || ''; }catch(err){ raw = ''; }
+    if (!raw) return;
+    try{
+      const data = JSON.parse(raw);
+      if (data && typeof data.__move === 'number') removeAt(data.__move);
+    }catch(err){}
+  });
+}
+/* ---------- 方案库（命名保存 / 选择 / 重命名 / 删除） ---------- */
+let presets = [];
+function presetsLoad(){
+  try{ presets = JSON.parse(localStorage.getItem(KEY_PRESETS) || '[]') || []; }
+  catch(e){ presets = []; }
+  renderPresets();
+}
+function presetsSave(){
+  try{ localStorage.setItem(KEY_PRESETS, JSON.stringify(presets)); }catch(e){}
+}
+/* 方案存在本机浏览器里；要带到别的电脑就用「导出 / 导入」 */
+function presetsExport(){
+  const blob = new Blob([JSON.stringify(presets, null, 2)], { type: 'application/json' });
+  const a = document.createElement('a');
+  a.href = URL.createObjectURL(blob);
+  a.download = '规则方案.json';
+  a.click();
+  setTimeout(function () { URL.revokeObjectURL(a.href); }, 2000);
+}
+function presetsImport(file){
+  if (!file) return;
+  const reader = new FileReader();
+  reader.onload = function () {
+    try{
+      const list = JSON.parse(String(reader.result));
+      if (!Array.isArray(list)) throw new Error('文件内容不是方案数组');
+      const map = {};
+      presets.forEach(function (p){ map[p.name] = p; });
+      list.forEach(function (p){ if (p && p.name && p.rules) map[p.name] = p; });
+      presets = Object.keys(map).map(function (k){ return map[k]; });
+      presetsSave();
+      renderPresets();
+      alert('已导入 ' + list.length + ' 个方案，当前共 ' + presets.length + ' 个');
+    }catch(err){ alert('导入失败：' + err.message); }
+  };
+  reader.readAsText(file);
+}
+/* 规则的指纹：只有内容完全一致才算「选中」，手改过任何一项就不再高亮 */
+function normRule(r){
+  r = r || {};
+  return JSON.stringify({
+    items: (r.items || []).map(it => ({t: it.type, v: it.value})),
+    sep: r.separator, df: r.dateFormat, dp: r.datePrefix || 'none', ts: !!r.timeSuffix,
+    c: r.case || 'normal', sp: !!r.spaceToSep, sa: !!r.sanitize, sk: !!r.skipEmpty,
+  });
+}
+function activePresetName(){
+  const fpMain = normRule(rules.main), fpVideo = normRule(rules.video);
+  if (fpMain === normRule(DEFAULT_RULES.main) && fpVideo === normRule(DEFAULT_RULES.video)) return '默认规则';
+  const hit = presets.find(p => p.rules
+    && normRule(p.rules.main) === fpMain
+    && normRule(p.rules.video) === fpVideo);
+  return hit ? hit.name : '';
+}
+function presetSumm(rulesObj){
+  const m = (rulesObj && rulesObj.main) ? describeRule(migrateRule(JSON.parse(JSON.stringify(rulesObj.main)))) : '—';
+  const v = (rulesObj && rulesObj.video) ? describeRule(migrateRule(JSON.parse(JSON.stringify(rulesObj.video)))) : '—';
+  return '投放图 ' + m + '　·　视频用图 ' + v;
+}
+function renderPresets(){
+  const cur = activePresetName();
+  const rows = [];
+  const onDefault = cur === '默认规则';
+  rows.push(`<div class="prow ${onDefault ? 'on is-default' : ''}" data-id="__default__">
+      <span class="pname">默认规则</span>${onDefault ? '<span class="using plain">默认生效</span>' : ''}
+      <span class="pmeta"><div class="psum">投放图 ${esc(describeRule(DEFAULT_RULES.main))}　·　视频用图 ${esc(describeRule(DEFAULT_RULES.video))}</div>
+        <div>内置方案 · 不可删除</div></span>
+      <span class="pbtns"><button class="btn sm" data-preset="apply" data-id="__default__">应用</button></span>
+    </div>`);
+  presets.forEach(p => {
+    rows.push(`<div class="prow ${cur === p.name ? 'on' : ''}" data-id="${esc(p.id)}">
+      <span class="pname">${esc(p.name)}</span>${cur === p.name ? '<span class="using">使用中</span>' : ''}
+      <span class="pmeta"><div class="psum">${esc(presetSumm(p.rules))}</div>
+        <div>创建 ${esc(p.created || '')}　·　更新 ${esc(p.updated || '')}${p.lastUsed ? '　·　最近应用 ' + esc(p.lastUsed) : ''}</div></span>
+      <span class="pbtns">
+        <button class="btn sm" data-preset="apply" data-id="${esc(p.id)}">应用</button>
+        <button class="btn sm" data-preset="rename" data-id="${esc(p.id)}">重命名</button>
+        <button class="btn sm danger" data-preset="delete" data-id="${esc(p.id)}">删除</button>
+      </span>
+    </div>`);
+  });
+  if (!presets.length){
+    rows.push('<div style="color:#6b7896;font-size:12.5px">还没有保存过方案：在右侧「保存为方案」里自己起名，或点「系统命名」自动生成，再点保存</div>');
+  }
+  $('presetList').innerHTML = rows.join('');
+  $('presetList').querySelectorAll('[data-preset]').forEach(btn => {
+    btn.addEventListener('click', (e) => {
+      e.stopPropagation();
+      onPresetAction(btn.dataset.preset, btn.dataset.id);
+    });
+  });
+}
+async function onPresetAction(act, id){
+  try{
+    if (act === 'apply'){
+      if (id === '__default__'){
+        rules = JSON.parse(JSON.stringify(DEFAULT_RULES));
+        currentPreset = '默认规则';
+        saveRules(); renderRule(); renderPalette(); renderPresets(); reloadPreview();
+        return;
+      }
+      const hit = presets.filter(p => p.id === id)[0];
+      if (!hit) return;
+      rules = JSON.parse(JSON.stringify(hit.rules));
+      migrateRule(rules.main); migrateRule(rules.video);
+      hit.lastUsed = new Date().toLocaleString('zh-CN', { hour12: false });
+      presetsSave();
+      currentPreset = hit.name || '';
+      saveRules(); renderRule(); renderPalette(); renderPresets(); reloadPreview();
+      return;
+    }
+    if (act === 'rename'){
+      const target = presets.find(p => p.id === id);
+      const name = prompt('改成什么名字？', target ? target.name : '');
+      if (!name || !name.trim()) return;
+      if (!target) return;
+      target.name = name.trim();
+      target.updated = new Date().toLocaleString('zh-CN', { hour12: false });
+      presetsSave();
+      if (currentPreset === target.name) currentPreset = name.trim();
+      try{ localStorage.setItem(KEY_PRESET, currentPreset); }catch(e){}
+      renderPresets();
+      return;
+    }
+    if (act === 'delete'){
+      const target = presets.find(p => p.id === id);
+      if (!confirm('删除方案「' + (target ? target.name : id) + '」？')) return;
+      presets = presets.filter(p => p.id !== id);
+      presetsSave();
+      if (currentPreset === (target ? target.name : '')){
+        currentPreset = '';
+        try{ localStorage.removeItem(KEY_PRESET); }catch(e){}
+      }
+      renderPresets();
+    }
+  }catch(err){ alert(err.message); }
+}
+/* 系统命名：按当前规则的组合自动生成，例如「投放图-日期制作+项目名称+主题-1015 1542」 */
+function autoPresetName(){
+  const r = rules[ruleTab];
+  const label = ruleTab === 'main' ? '投放图' : '视频用图';
+  const parts = (r.items || []).map(it => itemText(it).replace(/[()（）「」]/g, ''));
+  const core = parts.join('+') || '空规则';
+  const d = new Date();
+  const stamp = (d.getMonth() + 1) + '-' + d.getDate() + ' '
+    + String(d.getHours()).padStart(2, '0') + String(d.getMinutes()).padStart(2, '0');
+  return (label + '-' + core).slice(0, 46) + '-' + stamp;
+}
+async function savePreset(){
+  let name = ($('presetName').value || '').trim();
+  if (!name){
+    name = autoPresetName();          // 留空 = 系统命名
+    $('presetName').value = name;
+    $('presetTip').textContent = '已用系统命名：' + name;
+  }
+  if (name === '默认规则'){ alert('「默认规则」是内置方案，换一个名字'); return; }
+  const clean = JSON.parse(JSON.stringify(rules));
+  Object.keys(clean).forEach(k => (clean[k].items || []).forEach(it => { delete it.label; }));
+  const stamp = new Date().toLocaleString('zh-CN', { hour12: false });
+  const existing = presets.filter(p => p.name === name)[0];
+  if (existing){
+    existing.rules = clean;
+    existing.updated = stamp;
+  }else{
+    presets.push({ id: String(Date.now()), name: name, rules: clean, created: stamp, updated: stamp, lastUsed: '' });
+  }
+  presetsSave();
+  currentPreset = name;
+  try{ localStorage.setItem(KEY_PRESET, currentPreset); }catch(e){}
+  $('presetName').value = '';
+  saveRules();
+  renderPresets();
+  const tag = $('saveTag');
+  if (tag) tag.textContent = '已存方案：' + currentPreset;
+}
+function switchView(view){
+  currentView = view;
+  try{ localStorage.setItem(KEY_VIEW, view); }catch(e){}
+  document.querySelectorAll('[data-view]').forEach(b => b.classList.toggle('on', b.dataset.view === view));
+  document.querySelectorAll('.workview').forEach(el => { el.hidden = view !== 'work'; });
+  $('viewRule').hidden = view !== 'rule';
+  if (view === 'rule'){ renderRule(); renderPalette(); }
+}
+function bindRuleEvents(){
+  document.querySelectorAll('[data-view]').forEach(btn => {
+    btn.addEventListener('click', () => switchView(btn.dataset.view));
+  });
+  document.querySelectorAll('[data-ruletab]').forEach(btn => {
+    btn.addEventListener('click', () => {
+      ruleTab = btn.dataset.ruletab;
+      try{ localStorage.setItem(KEY_RULE_TAB, ruleTab); }catch(e){}
+      document.querySelectorAll('[data-ruletab]').forEach(b => b.classList.toggle('on', b === btn));
+      renderRule(); renderPalette(); loadPreview();
+    });
+  });
+  $('colSearch').addEventListener('input', renderPalette);
+  $('btnAddText').addEventListener('click', () => {
+    const value = $('textInput').value.trim();
+    if (!value) return;
+    addModule({type: 'text', value}, rules[ruleTab].items.length);
+    $('textInput').value = '';
+  });
+  $('sepInput').addEventListener('input', (e) => {
+    rules[ruleTab].separator = e.target.value;
+    saveRules(); renderRule(); reloadPreview();
+  });
+  $('dateFmtSel').addEventListener('change', (e) => {
+    rules[ruleTab].dateFormat = e.target.value;
+    saveRules(); renderRule(); reloadPreview();
+  });
+  $('caseSel').addEventListener('change', (e) => {
+    rules[ruleTab].case = e.target.value;
+    saveRules(); renderRule(); reloadPreview();
+  });
+  $('spaceChk').addEventListener('change', (e) => {
+    rules[ruleTab].spaceToSep = e.target.checked;
+    saveRules(); renderRule(); reloadPreview();
+  });
+  $('sanitizeChk').addEventListener('change', (e) => {
+    rules[ruleTab].sanitize = e.target.checked;
+    saveRules(); renderRule(); reloadPreview();
+  });
+  $('skipEmptyChk').addEventListener('change', (e) => {
+    rules[ruleTab].skipEmpty = e.target.checked;
+    saveRules(); renderRule(); reloadPreview();
+  });
+  $('btnRuleReset').addEventListener('click', () => {
+    rules[ruleTab] = JSON.parse(JSON.stringify(DEFAULT_RULES[ruleTab]));
+    currentPreset = '';
+    try{ localStorage.removeItem(KEY_PRESET); }catch(e){}
+    saveRules(); renderRule(); renderPalette(); renderPresets(); reloadPreview();
+  });
+  $('btnSavePreset').addEventListener('click', savePreset);
+  $('btnAutoName').addEventListener('click', () => {
+    const name = autoPresetName();
+    $('presetName').value = name;
+    $('presetTip').textContent = '系统命名：' + name + '（可再改，或点保存）';
+  });
+  $('btnUseDefault').addEventListener('click', () => onPresetAction('apply', '__default__'));
+  bindDropZone();
+}
+function fillColumns(list){
+  if (!list || !list.length) return;
+  docColumns = list;
+  renderPalette();
+}
+
+/* ---------- 预览 ---------- */
+function renderPreviewEmpty(text){
+  $('previewDoc').textContent = '未选择文档';
+  $('stDate').textContent = '—'; $('stRows').textContent = '—';
+  $('stFolders').textContent = '—'; $('stFiles').textContent = '—';
+  $('stVideo').textContent = '—';
+  $('fileBody').innerHTML = '<tr><td colspan="6" style="text-align:center;color:#6b7896;padding:24px">' + esc(text) + '</td></tr>';
+  $('videoBody').innerHTML = '<tr><td colspan="5" style="text-align:center;color:#6b7896;padding:24px">' + esc(text) + '</td></tr>';
+  $('warnBox').innerHTML = '';
+  $('videoWarnBox').innerHTML = '';
+  $('videoFolder').textContent = '—';
+  $('videoDate').textContent = '—';
+  $('btnRun').disabled = true;
+}
+
+function renderVideo(plan){
+  const v = plan && plan.video ? plan.video : null;
+  if (!v || v.error){
+    $('videoFolder').textContent = v && v.folder ? v.folder : '—';
+    $('videoBody').innerHTML = '<tr><td colspan="5" style="text-align:center;color:#ff8f8f;padding:24px">'
+      + esc((v && v.error) || '暂无法解析视频用图') + '</td></tr>';
+    $('videoWarnBox').innerHTML = '';
+    $('stVideo').textContent = '—';
+    return;
+  }
+  $('videoFolder').textContent = v.folderPath || v.folder || '—';
+  $('videoDate').textContent = '日期 = 点击当天 ' + (v.todayText || v.today || '');
+  $('stVideo').textContent = v.existsCount ? (v.readyCount + '（' + v.existsCount + ' 已存在）') : String(v.rowCount);
+  $('videoBody').innerHTML = v.files.length ? v.files.map(f => {
+    const st = f.status === 'exists'
+      ? '<span class="pill warn">已存在</span>'
+      : '<span class="pill ok">待生成</span>';
+    return `<tr>
+      <td>${esc(f.project)}</td>
+      <td>${esc(f.theme)}</td>
+      <td>${esc(f.sourceName)}</td>
+      <td class="name">${esc(f.subFolder || '')}/${esc(f.targetName)}</td>
+      <td>${st}</td></tr>`;
+  }).join('') : '<tr><td colspan="5" style="text-align:center;color:#6b7896;padding:24px">没有「出图=视频用图」的记录</td></tr>';
+  $('videoWarnBox').innerHTML = v.warnings && v.warnings.length
+    ? '<div class="warnbox">⚠️ 视频用图有 ' + v.warnings.length + ' 条提示<ul>' + v.warnings.map(w => '<li>' + esc(w) + '</li>').join('') + '</ul></div>'
+    : '';
+}
+async function loadPreview(){
+  if (!currentDoc || !currentEntry){ renderPreviewEmpty('请先选择表格'); return; }
+  if (!paths.get('tpl').ready){ renderPreviewEmpty('请先在页面顶部设置「模板目录」'); return; }
+  $('previewDoc').textContent = currentDoc;
+  $('fileBody').innerHTML = '<tr><td colspan="6" style="text-align:center;color:#6b7896;padding:24px">解析中…</td></tr>';
+  try{
+    const plan = await buildPlanLocal();
+    fillColumns(plan.columns);
+    const mainSamples = (plan.files || []).slice(0, 3).map(f => '　' + f.targetName).join('\n');
+    const videoSamples = (plan.video && plan.video.files ? plan.video.files : []).slice(0, 2)
+      .map(f => '　' + f.subFolder + '/' + f.targetName).join('\n');
+    $('ruleSample').innerHTML =
+      '<b>投放图示例：</b>\n' + (mainSamples ? esc(mainSamples) : '　—') + '\n'
+      + '<b>视频用图示例：</b>\n' + (videoSamples ? esc(videoSamples) : '　—') + '\n'
+      + '<b>当前规则：</b>投放图 ' + esc(plan.nameRuleText || '')
+      + '（' + ruleStateMark('main') + '）　·　视频用图 ' + esc((plan.video || {}).nameRuleText || '')
+      + '（' + ruleStateMark('video') + '）　·　规则已存本机，下次打开自动恢复';
+    const mark = '　【' + ruleStateMark(ruleTab) + '】';
+    if (ruleTab === 'main' && plan.nameRuleText) $('ruleHint').textContent = '投放图：' + plan.nameRuleText + mark;
+    if (ruleTab === 'video' && plan.video && plan.video.nameRuleText) $('ruleHint').textContent = '视频用图：' + plan.video.nameRuleText + mark;
+    $('stDate').textContent = plan.latestDate || '—';
+    $('stRows').textContent = plan.rowCount;
+    $('stFolders').textContent = plan.folders.length;
+    $('stFiles').textContent = plan.readyCount + (plan.existsCount ? '（' + plan.existsCount + ' 已存在）' : '');
+    if (!plan.files.length){
+      $('fileBody').innerHTML = '<tr><td colspan="6" style="text-align:center;color:#6b7896;padding:24px">没有可生成的文件</td></tr>';
+    }else{
+      $('fileBody').innerHTML = plan.files.map(f => {
+        const st = f.status === 'exists'
+          ? '<span class="pill warn">已存在</span>'
+          : '<span class="pill ok">待生成</span>';
+        return `<tr>
+          <td>${esc(f.project)}</td>
+          <td>${esc(f.theme)}</td>
+          <td>${esc(f.rule || f.sizeText)}</td>
+          <td>${esc(f.sourceName)}</td>
+          <td class="name">${esc(f.targetName)}</td>
+          <td>${st}</td></tr>`;
+      }).join('');
+    }
+    $('warnBox').innerHTML = plan.warnings && plan.warnings.length
+      ? '<div class="warnbox">⚠️ 有 ' + plan.warnings.length + ' 条提示<ul>' + plan.warnings.map(w => '<li>' + esc(w) + '</li>').join('') + '</ul></div>'
+      : '';
+    $('btnRun').disabled = false;
+    renderVideo(plan);
+    const videoTotal = (plan.video && !plan.video.error) ? plan.video.files.length : 0;
+    if (plan.readyCount === 0 && plan.existsCount === 0 && videoTotal === 0) $('btnRun').disabled = true;
+    appendLog('b', '已解析 ' + currentDoc + '：投放图 ' + plan.readyCount + ' 个待生成'
+      + ' / 视频用图 ' + plan.video.files.length + ' 条'
+      + (plan.videoExcluded ? '（其中 ' + plan.videoExcluded + ' 条已划归视频用图）' : ''));
+  }catch(err){
+    $('fileBody').innerHTML = '<tr><td colspan="6" style="text-align:center;color:#ff8f8f;padding:24px">' + esc(err.message) + '</td></tr>';
+    $('warnBox').innerHTML = '';
+    $('btnRun').disabled = true;
+  }
+}
+
+/* ---------- 执行：全部在本机完成 ---------- */
+$('btnRun').addEventListener('click', async () => {
+  if (!currentEntry){ appendLog('r', '× 请先选择表格'); return; }
+  if (!paths.require(['tpl', 'output'], '生成 PSD 需要这两个本地目录：')) return;
+  const btn = $('btnRun');
+  btn.disabled = true;
+  btn.innerHTML = '<span class="spinner"></span>生成中…';
+  log('');
+  try{
+    const plan = await buildPlanLocal();
+    const res = await runPlanLocal(plan, $('overwrite').checked);
+    const m = res, v = res.video;
+    const outName = paths.get('output').name;
+
+    appendLog('b', '① 投放图 → ' + outName + '/');
+    m.folders.forEach(f => appendLog('b', '　目录 ' + f.name + (f.existed ? '（已存在）' : '（新建）')));
+    m.files.forEach(f => appendLog('g', '　✓ ' + f.project + ' / ' + f.name));
+    m.skipped.forEach(f => appendLog('y', '　- 跳过 ' + f.name + '：' + f.reason));
+    m.errors.forEach(f => appendLog('r', '　× 失败 ' + f.name + '：' + f.reason));
+    plan.warnings.forEach(w => appendLog('y', '　! ' + w));
+
+    appendLog('b', '② 视频用图 → ' + v.folder + '/（日期取点击当天 ' + (plan.video.todayText || '') + '）');
+    v.files.forEach(f => appendLog('g', '　✓ ' + (f.subFolder ? f.subFolder + '/' : '') + f.name));
+    v.skipped.forEach(f => appendLog('y', '　- 跳过 ' + f.name + '：' + f.reason));
+    v.errors.forEach(f => appendLog('r', '　× 失败 ' + f.name + '：' + f.reason));
+    (plan.video.warnings || []).forEach(w => appendLog('y', '　! ' + w));
+
+    appendLog('g', '✓ 全部完成：投放图 ' + m.files.length + ' 个（' + m.folders.length + ' 个目录）'
+      + '，视频用图 ' + v.files.length + ' 个，跳过 ' + (m.skipped.length + v.skipped.length)
+      + ' 个，失败 ' + (m.errors.length + v.errors.length) + ' 个');
+    loadPreview();
+    loadStatus();
+  }catch(err){
+    appendLog('r', '× 执行失败：' + err.message);
+  }finally{
+    btn.innerHTML = '开始创建 PSD（投放图 + 视频用图）';
+    btn.disabled = false;
+  }
+});
+
+/* ---------- 其它 ---------- */
+$('btnRefresh').addEventListener('click', () => loadDocs(true));
+$('btnPreview').addEventListener('click', () => loadPreview());
+$('btnPreviewVideo').addEventListener('click', () => loadPreview());
+/* 浏览器拿不到绝对路径，也无法唤起 Finder，改成把用户带到路径设置区 */
+function reveal(index){
+  const panel = $('localPaths');
+  if (!panel) return;
+  panel.scrollIntoView({ behavior: 'smooth', block: 'center' });
+  const rows = panel.querySelectorAll('.lfs-row');
+  const row = rows[index || 0];
+  if (row){
+    row.style.transition = 'box-shadow .4s';
+    row.style.boxShadow = '0 0 0 3px rgba(79,140,255,.45)';
+    setTimeout(function () { row.style.boxShadow = ''; }, 1200);
+  }
+}
+$('btnOpenDoc').addEventListener('click', () => reveal(0));
+$('btnOpenOut').addEventListener('click', () => reveal(2));
+$('btnOpenVideo').addEventListener('click', () => reveal(2));
+
+async function loadStatus(){
+  const out = paths.get('output'), tpl = paths.get('tpl');
+  $('outDir').textContent = out.ready ? out.name : '未设置';
+  let html = '';
+  if (tpl.ready){
+    const entries = await LocalFS.listEntries(tpl.handle).catch(() => []);
+    const names = entries.map(e => String(e.name).replace(/\.[^.]+$/, ''));
+    html += TEMPLATE_KEYS.map(k =>
+      `<span class="${names.indexOf(k) >= 0 ? '' : 'miss'}">${esc(k)}.psd ${names.indexOf(k) >= 0 ? '✓' : '× 缺失'}</span>`).join('');
+  }else{
+    html += '<span class="miss">模板目录未设置</span>';
+  }
+  if (out.ready){
+    const stat = await LocalFS.describeDir(out.handle).catch(() => null);
+    if (stat) html += `<span>已生成 ${stat.dirCount} 个项目 / ${stat.fileCount} 个文件</span>`;
+  }
+  $('tplBox').innerHTML = html;
+}
+
+(function init(){
+  try{ currentDoc = localStorage.getItem(KEY_DOC) || ''; }catch(e){}
+  // 覆盖开关：第一次进来默认勾选，之后记住用户的选择
+  try{
+    const saved = localStorage.getItem(KEY_OVERWRITE);
+    $('overwrite').checked = saved === null ? true : saved === '1';
+  }catch(e){ $('overwrite').checked = true; }
+  $('overwrite').addEventListener('change', () => {
+    try{ localStorage.setItem(KEY_OVERWRITE, $('overwrite').checked ? '1' : '0'); }catch(e){}
+  });
+  // 命名规则：读回上次配置（旧版本存的规则自动迁移成可拖动模块）
+  try{
+    const saved = JSON.parse(localStorage.getItem(KEY_RULES) || 'null');
+    if (saved && saved.main && saved.video){
+      migrateRule(saved.main); migrateRule(saved.video);
+      rules = saved;
+    }
+    ruleTab = localStorage.getItem(KEY_RULE_TAB) === 'video' ? 'video' : 'main';
+    currentView = localStorage.getItem(KEY_VIEW) === 'rule' ? 'rule' : 'work';
+    currentPreset = localStorage.getItem(KEY_PRESET) || '';
+  }catch(e){}
+  document.querySelectorAll('[data-ruletab]').forEach(b => b.classList.toggle('on', b.dataset.ruletab === ruleTab));
+  bindRuleEvents();
+  renderRule();
+  renderPalette();
+  switchView(currentView);
+  presetsLoad();
+  bindPresetTools();
+
+  /* 本地路径面板：表格目录 / 模板目录 / 输出目录 —— 每台电脑各设一次，之后自动沿用 */
+  paths = LocalFS.mountPanel({
+    mount: '#localPaths',
+    title: '本地路径设置',
+    subtitle: '选一次就记住：下次在同一台电脑、同一个浏览器打开本页会自动沿用（句柄只存在本机浏览器里，不会上传）。',
+    items: [
+      { key: 'doc',  label: '表格目录', kind: 'dir', hint: '放需求数据表 Excel（.xlsx / .xlsm）的文件夹，页面自动列出里面的表格', pickId: 'psd-doc' },
+      { key: 'tpl',  label: '模板目录', kind: 'dir', hint: '放 1200_1200.psd / 1200_628.psd / 4000_4000.psd 的文件夹', pickId: 'psd-tpl' },
+      { key: 'output', label: '输出目录', kind: 'dir', write: true, hint: '生成的项目文件夹写到这里（相当于原来的「小游戏项目」）', pickId: 'psd-out' }
+    ],
+    onChange: function () {
+      loadStatus();
+      loadDocs(true);
+    }
+  });
+  paths.refresh().then(function () {
+    loadStatus();
+    loadDocs(true);
+  });
+})();
+
+/* 方案导入 / 导出按钮（方案存本机，换电脑时用这两个按钮带走） */
+function bindPresetTools(){
+  const box = $('presetTools');
+  if (!box) return;
+  box.addEventListener('click', function (event) {
+    const btn = event.target.closest('[data-ptool]');
+    if (!btn) return;
+    if (btn.dataset.ptool === 'export') presetsExport();
+    else $('presetFile').click();
+  });
+  const file = $('presetFile');
+  if (file) file.addEventListener('change', function () {
+    presetsImport(file.files[0]);
+    file.value = '';
+  });
+}
+</script>
+</body>
+</html>
