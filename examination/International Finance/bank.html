@@ -528,6 +528,8 @@ body{
 .ifc .tqbtns .bad{color:var(--bad);border-color:#f3cfc9;background:var(--badbg)}
 .ifc .tqbtns .pri{background:var(--accent);color:#fff;border-color:var(--accent);font-weight:600}
 .ifc .tqbtns .pri:hover{background:#2559b8}
+.ifc .trflash{margin-bottom:12px;border-radius:10px;padding:9px 13px;font-size:13px;font-weight:600;
+  background:var(--okbg);border:1px solid #bfe3d5;color:#1c6b4f}
 .ifc .trdone{margin-top:15px;font-size:14px;color:var(--ink2);background:var(--okbg);border:1px solid #bfe3d5;
      border-radius:11px;padding:14px 16px}
 .ifc .wronglist{margin-top:4px}
@@ -900,7 +902,7 @@ body{
         <div class="wronglist" id="trWrong" style="margin-top:12px"></div>
       </div>
       <p style="font-size:12.5px;color:var(--ink3);margin-top:14px">错题本跟着「做题训练」的记录走：在旁边判一次「没答对」就自动进来，
-      答对或点「已掌握，移出错题本」就移出；点「重做这题」可直接回到训练区重答一遍。记录保存在当前浏览器里。</p>
+      连续答对 2 次的题、或点「已掌握，移出错题本」的手动操作就移出；点「重做这题」可直接回到训练区重答一遍。记录保存在当前浏览器里。</p>
     </section>
 
     
@@ -1103,9 +1105,32 @@ function findQ(sc, qid){
 }
 /* 错题库：独立于试卷作答记录（重做本卷不会清空错题本） */
 const wrongKey = (simID, qid) => 'wrong_' + simID + '_' + qid;
-/* on 为 false/undefined → 移出；否则入库（存当时选的答案，主观题存 true） */
+/* 移出规则：同一道题要「连续答对 2 次」才移出错题本 */
+const WRONG_NEED = 2;
+/* 错题记录统一读成 { ans, streak }；兼容旧格式（旧值可能就是当时选错的答案 / 主观题 true） */
+function wrongRec(simID, qid){
+  const v = store.get(wrongKey(simID, qid), null);
+  if (!v) return null;
+  if (typeof v === 'object' && !Array.isArray(v) && 'streak' in v)
+    return { ans: v.ans === undefined ? null : v.ans, streak: Math.max(0, Number(v.streak) || 0) };
+  return { ans: v === true ? null : v, streak: 0 };
+}
+/* on 为 false/undefined → 移出；否则入库（存当时选的答案，主观题存 true），连对计数清零 */
 function setWrong(simID, qid, on){
-  if (!on) store.del(wrongKey(simID, qid)); else store.set(wrongKey(simID, qid), on);
+  if (!on) store.del(wrongKey(simID, qid));
+  else store.set(wrongKey(simID, qid), { ans: on === true ? null : on, streak: 0 });
+}
+/* 答对一次：累计连对次数，满 2 次才移出。返回 { removed, streak, need, inBook } */
+function wrongHit(simID, qid){
+  const rec = wrongRec(simID, qid);
+  if (!rec) return { removed:false, streak:0, need:WRONG_NEED, inBook:false };
+  const streak = rec.streak + 1;
+  if (streak >= WRONG_NEED){
+    store.del(wrongKey(simID, qid));
+    return { removed:true, streak, need:WRONG_NEED, inBook:false };
+  }
+  store.set(wrongKey(simID, qid), { ans: rec.ans, streak });
+  return { removed:false, streak, need:WRONG_NEED, inBook:true };
 }
 function wrongList(){
   const out = [];
@@ -1225,7 +1250,7 @@ function renderExamList(){
     <p style="color:var(--tx3);font-size:12.5px;margin:14px 0 0;line-height:1.8">
       规则：单选题 / 判断题<b>点选即判分</b>，答错立刻显示正确答案与解析；多选题选好后点「提交答案」判分；
       名词解释、简答、论述、计算题按参考答案自评得分。交卷后成绩与错题自动保存，随时可重做。<br>
-      <b style="color:var(--pri)">答错的题会自动进「🔁 错题本」</b>，可在里面重做，答对即移出。
+      <b style="color:var(--pri)">答错的题会自动进「🔁 错题本」</b>，可在里面重做，<b>同一题连续答对 2 次才会移出</b>。
     </p>
   </div>`;
   $('#examRun').style.display = 'none';
@@ -1258,7 +1283,7 @@ function openPaper(simID){
       <button class="btn" onclick="go('points')">📊 看必考考点</button>
     </div>
     <div class="hint">💡 单选题 / 判断题：<b>点选即判分</b>，答错立即展开正确答案与解析（判分后本锁定，想重做点「重做本卷」）。
-      多选题：勾选后点「提交答案」判分。主观题（名词解释/概述/计算）：<b>自评「答错」也会立刻展开参考答案与解析</b>并进错题本，自评「答对」则移出。</div>
+      多选题：勾选后点「提交答案」判分。主观题（名词解释/概述/计算）：<b>自评「答错」也会立刻展开参考答案与解析</b>并进错题本，自评「答对」累计 1 次，同一题连续答对 2 次才移出。</div>
     <div class="qnav" id="qnav" style="margin-top:14px"></div>
   </div>`;
 
@@ -1389,16 +1414,18 @@ function judgeOne(sc, simID, q, ans){
   const ok = judgeOf(q, ans);
   if (ok === null) return;        // 答案数据缺失时不误判
   store.set(histKey(simID, q.id), { ok });   // 试卷判分记录
-  setWrong(simID, q.id, ok ? false : ans);   // 错题本：答错入库（并记住当时选错什么）/ 答对移出
+  /* 错题本：答错入库（并记住当时选错什么）；答对只累计 1 次，连续答对 2 次才移出 */
+  let hit = null;
+  if (ok) hit = wrongHit(simID, q.id); else setWrong(simID, q.id, ans);
   if (sc === 'w'){
     const it = DRILL.list.find(x => x.simID === simID && x.q.id === q.id);
-    if (it) it.state = ok ? 'ok' : 'no';
+    if (it){ it.state = ok ? (hit && hit.removed ? 'ok' : 'half') : 'no'; it.hit = hit; }
     if (ok){                     // 重做答对 → 同步回原卷：答案改为正确项，避免再判错
       const rk = rightKeyOf(q);
       store.set('ans_' + simID + '_' + q.id, q.type === '多选题' ? rk.split('') : rk);
     }
   }
-  lockWithResult(sc, simID, q, ok);
+  lockWithResult(sc, simID, q, ok, hit);
   if (sc === '') updateProgress(simID); else updateDrillHead();
   refreshWrongBadge();
   /* 答案已选定 + 对错已判定 → 立刻送去做云同步 */
@@ -1407,9 +1434,10 @@ function judgeOne(sc, simID, q, ans){
 function saveDraft(simID, qid, v){ store.set('draft_' + simID + '_' + qid, v); updateProgress(simID); }
 function selfMark(simID, qid, v){
   store.set('self_' + simID + '_' + qid, v);
-  if (v === 'ok' || v === 'no'){        // 自评错 → 同步进错题本；自评对 → 移出
+  let hit = null;
+  if (v === 'ok' || v === 'no'){        // 自评错 → 同步进错题本；自评对 → 累计 1 次，连对 2 次才移出
     store.set(histKey(simID, qid), { ok: v === 'ok' });
-    setWrong(simID, qid, v === 'no');
+    if (v === 'no') setWrong(simID, qid, true); else hit = wrongHit(simID, qid);
   }
   const g = $(`.self-grade[data-self="${qid}"]`);
   if (g) g.querySelectorAll('.sg-btn').forEach(b => {
@@ -1429,6 +1457,10 @@ function selfMark(simID, qid, v){
   if (ansarea && v === 'no') ansarea.classList.add('on');
   if (ah){
     if (v === 'no'){ ah.className = 'anshead on r'; ah.innerHTML = '✘ 自评答错 · 参考答案与解析如下'; }
+    else if (hit && hit.inBook){
+      ah.className = 'anshead on g';
+      ah.innerHTML = '✔ 自评答对 · 已连对 ' + hit.streak + '/' + hit.need + ' 次，再自评答对 1 次才移出错题本';
+    }
     else { ah.className = 'anshead'; ah.innerHTML = ''; }
   }
   const st = $('#st-' + simID + '-' + qid);
@@ -1513,7 +1545,7 @@ function submitPaper(){
       const s = store.get('self_' + simID + '_' + q.id, null);
       const full = FULL_SCORE[q.type] || 5;
       selfFull += full;
-      if (s === 'ok'){ self += full; store.set('hist_' + simID + '_' + q.id, { ok:true }); setWrong(simID, q.id, false); }
+      if (s === 'ok'){ self += full; store.set('hist_' + simID + '_' + q.id, { ok:true }); wrongHit(simID, q.id); }
       else if (s === 'no'){ store.set('hist_' + simID + '_' + q.id, { ok:false }); setWrong(simID, q.id, true); }
       else { store.set('hist_' + simID + '_' + q.id, { ok:null }); }
       return;
@@ -1525,7 +1557,7 @@ function submitPaper(){
     } else {
       if (ok) right++; else wrong++;
       store.set('hist_' + simID + '_' + q.id, { ok });
-      setWrong(simID, q.id, ok ? false : ans);
+      if (ok) wrongHit(simID, q.id); else setWrong(simID, q.id, ans);
     }
   });
   // 折算：客观题按题均分，主观题按自评满分归一到剩余
@@ -1560,7 +1592,7 @@ function submitPaper(){
   syncCommit('交卷 · ' + score + ' 分');
 }
 
-function lockWithResult(sc, simID, q, ok){
+function lockWithResult(sc, simID, q, ok, hit){
   sc = sc || '';
   const p = pre(sc);
   const box = $('#' + p + 'q-' + simID + '-' + q.id); if (!box) return;
@@ -1587,7 +1619,13 @@ function lockWithResult(sc, simID, q, ok){
   if (ah){
     ah.className = 'anshead on ' + (ok ? 'g' : 'r');
     ah.innerHTML = ok
-      ? (sc === 'w' ? '✔ 回答正确 · 已移出错题本' : '✔ 回答正确')
+      ? (sc === 'w'
+          ? (hit && hit.removed
+              ? '✔ 回答正确 · 已连续答对 ' + WRONG_NEED + ' 次，移出错题本'
+              : (hit && hit.inBook
+                  ? '✔ 回答正确 · 已连对 ' + hit.streak + '/' + hit.need + ' 次，再答对 1 次才移出错题本'
+                  : '✔ 回答正确'))
+          : '✔ 回答正确')
       : (ans == null ? '— 本题未作答，正确答案与解析如下' : '✘ 回答错误 · 正确答案与解析如下');
   }
   // 选项着色
@@ -1639,7 +1677,13 @@ function showWrong(simID){
     return h && h.ok === false;
   });
   if (!w.length){ alert('本卷没有错题 🎉'); return; }
-  alert('本卷错题（第几题）：' + w.map(q => q.no).join('、') + '\n\n可点击上方题号导航快速定位（红色方块为错题）。');
+  /* 错题一律直接展开正确答案与解析，不用再点 */
+  w.forEach(q => {
+    const a = $('#ans-' + simID + '-' + q.id); if (a) a.classList.add('on');
+    const h = store.get(histKey(simID, q.id), null);
+    if (h) lockWithResult('', simID, q, h.ok);
+  });
+  alert('本卷错题（第几题）：' + w.map(q => q.no).join('、') + '\n\n每道错题的正确答案与解析已直接展开，红色方块为题号导航标注。');
   w[0] && jump(simID, w[0].id);
 }
 
@@ -1676,7 +1720,7 @@ function renderWrong(){
         <span class="sub">自动收集答错的题</span></div>
       <div class="wdone"><div class="em">🎉</div><h3>错题本是空的</h3>
       <p>做真题时答错的题会自动进来（客观题点选即判分，答错直接入库；主观题自评「答错」也会进来）。<br>
-      错题本里可以「重做」，答对后自动移出。</p>
+      错题本里可以「重做」，<b>连续答对 2 次</b>才会移出，只答对 1 次仍留在本子里继续巩固。</p>
       <button class="btn pri" onclick="go('exam')">去刷真题 →</button></div></div>`;
     refreshWrongBadge();
     return;
@@ -1691,20 +1735,21 @@ function renderWrong(){
     Object.keys(groups).forEach(pn => {
       list += `<div class="wgrp">${esc(pn)}<span class="cnt">${groups[pn].length} 道</span></div>`;
       groups[pn].forEach(x => {
-        const q = x.q, wv = store.get(wrongKey(x.simID, q.id), true);
-        const ans = (wv && wv !== true) ? wv
+        const q = x.q, rec = wrongRec(x.simID, q.id) || { ans:null, streak:0 };
+        const ans = rec.ans != null ? rec.ans
           : (store.get(ansKey('', x.simID, q.id), null) || store.get(ansKey('w', x.simID, q.id), null));
         const rk = rightKeyOf(q);
         const rightTxt = q.type === '判断改错题' ? (rk === 'T' ? '√ 正确' : '× 错误') : rk;
         const rawAns = String(q.answerText || '').trim();
         const dup = q.analyze && String(q.analyze).trim() === rawAns;
-        list += `<div class="witem">
+        list += `<div class="witem on">
           <div class="wh" onclick="this.parentNode.classList.toggle('on')">
             <div class="tx">第 ${q.no} 题 · ${esc(q.title)}</div>
             <div class="mk">
               <span class="pill b">${esc(q.type)}</span>
               ${x.obj ? `<span class="pill r">我选 ${esc(mineText(q, ans))}</span><span class="pill g">正确 ${esc(rightTxt)}</span>`
                       : `<span class="pill r">自评：答错</span>`}
+              ${x.obj ? `<span class="pill">已连对 ${rec.streak}/${WRONG_NEED}</span>` : ''}
               <span class="ar">▶</span>
             </div>
           </div>
@@ -1738,7 +1783,7 @@ function renderWrong(){
       <button class="btn" onclick="clearWrong()">🗑 清空错题本</button>
     </div>
     <div class="hint" style="margin:0 0 16px">💡 做真题时答错的题会自动进错题本（点「开始刷错题」进入重做模式，
-      <b>答对即移出错题本</b>，答错继续留着重刷）；主观题自评「答错」同样入库，掌握后点「移出错题本」。
+      <b>同一题连续答对 2 次才移出错题本</b>，只答对 1 次仍留着重刷，题头会显示「已连对 x/2」）；主观题自评「答错」同样入库，掌握后点「移出错题本」。
       错题本与试卷作答记录相互独立，<b>「重做本卷」不会清空错题本</b>。</div>
     <div class="wchips">${WFILTERS.map(f =>
       `<button class="wchip${WFILTER === f.k ? ' on' : ''}" onclick="setWFilter('${f.k}')">${f.label}</button>`).join('')}</div>
@@ -1814,7 +1859,7 @@ function renderDrill(){
 function renderDrillBody(){
   const it = DRILL.list[DRILL.idx];
   $('#drillBody').innerHTML = qHTML(it.q, it.simID, 'w');
-  if (it.state) lockWithResult('w', it.simID, it.q, it.state === 'ok');
+  if (it.state) lockWithResult('w', it.simID, it.q, it.state !== 'no', it.hit);
   // 未作答：不读取试卷里旧的选择，避免提前泄露答案
 }
 function updateDrillHead(){
@@ -1824,8 +1869,9 @@ function updateDrillHead(){
   if (b) b.style.width = Math.round(100 * (i + 1) / total) + '%';
   if (s){
     const right = DRILL.list.filter(x => x.state === 'ok').length;
+    const half = DRILL.list.filter(x => x.state === 'half').length;
     const wrong = DRILL.list.filter(x => x.state === 'no').length;
-    s.textContent = `本次已移出 ${right} 道 · 仍错 ${wrong} 道 · 待做 ${total - right - wrong} 道`;
+    s.textContent = `本次已移出 ${right} 道 · 答对 1 次待再对 1 次 ${half} 道 · 仍错 ${wrong} 道 · 待做 ${total - right - half - wrong} 道`;
   }
 }
 function drillGo(d){
@@ -1838,12 +1884,13 @@ function drillGo(d){
 }
 function renderDrillDone(){
   const right = DRILL.list.filter(x => x.state === 'ok').length;
+  const half = DRILL.list.filter(x => x.state === 'half').length;
   const wrong = DRILL.list.filter(x => x.state === 'no').length;
-  const todo = DRILL.list.length - right - wrong;
+  const todo = DRILL.list.length - right - half - wrong;
   $('#wrongDrill').innerHTML = `<div class="card"><div class="wdone">
     <div class="em">✅</div>
     <h3>本轮错题刷完了</h3>
-    <p>答对 <b style="color:var(--ok)">${right}</b> 道，已移出错题本；仍错 <b style="color:var(--bad)">${wrong}</b> 道，继续留在错题本；未作答 ${todo} 道。</p>
+    <p>连续答对 2 次、已移出错题本 <b style="color:var(--ok)">${right}</b> 道；答对 1 次、还需再对 1 次 <b style="color:var(--warn)">${half}</b> 道（仍留在错题本）；仍错 <b style="color:var(--bad)">${wrong}</b> 道；未作答 ${todo} 道。</p>
     <div class="row" style="justify-content:center">
       <button class="btn pri" onclick="startDrill()">🔁 再刷一遍错题</button>
       <button class="btn" onclick="exitDrill()">← 返回错题本</button>
@@ -2609,6 +2656,11 @@ function trSave(){
   try{ if(typeof window.__ifSyncCommit === "function") window.__ifSyncCommit("计算专项进度"); }catch(e){}
 }
 let TR = trLoad();
+/* 错题移出规则与真题错题本一致：连续答对 2 次（TR.wrong[i] 存连对次数）
+   旧记录里该值只表示「在错题本」，首次读取统一清零，避免凭空算一次连对 */
+const TR_WRONG_NEED = 2;
+TR.wrong = TR.wrong || {};
+if(!TR.streakVer){ Object.keys(TR.wrong).forEach(function(k){ TR.wrong[k] = 0; }); TR.streakVer = 2; }
 function trShuffle(a){ for(let i=a.length-1;i>0;i--){ const j=Math.floor(Math.random()*(i+1)); const t=a[i];a[i]=a[j];a[j]=t; } return a; }
 function trInit(){
   if(!TR.order || TR.order.length !== TQ.length) TR.order = trShuffle(TQ.map((_,i)=>i));
@@ -2656,8 +2708,10 @@ function trRenderWrong(){
   }
   $("#trWrong").innerHTML = ks.map(function(i, n){
     const t = TQ[i];
+    const st = Math.max(0, Number(TR.wrong[i]) || 0);
     return '<div class="wi">'+
-      '<div class="wm"><span class="wno">'+(n+1)+'</span>'+t.y+' · '+t.tag+'</div>'+
+      '<div class="wm"><span class="wno">'+(n+1)+'</span>'+t.y+' · '+t.tag+
+        '<span style="margin-left:auto;font-weight:600;color:var(--ink3)">已连对 '+st+'/'+TR_WRONG_NEED+'</span></div>'+
       '<div class="wt">'+t.q+'</div>'+
       '<div class="wa"><b>参考答案</b><ol>'+t.a.map(function(x){ return '<li>'+x+'</li>'; }).join("")+'</ol>'+
         (t.w ? '<div class="why"><b>💡 为什么这么做</b><ul>'+t.w.map(function(x){ return '<li>'+x+'</li>'; }).join("")+'</ul></div>' : '')+
@@ -2686,12 +2740,16 @@ function trRender(){
   box.innerHTML = '<div class="tq"><div class="tqmeta"><span class="ytag">'+t.y+'</span><span>'+t.tag+'</span>'+
     '<a class="jump" data-go="'+t.k+'" style="margin-left:auto">看题型详解 →</a></div>'+
     '<div class="tqq">'+t.q+'</div>'+
-    '<div class="tqa" id="trAns"><b>参考答案</b><ol>'+t.a.map(function(x){return '<li>'+x+'</li>';}).join("")+'</ol>'+(t.w?'<div class="why"><b>💡 为什么这么做</b><ul>'+t.w.map(function(x){return '<li>'+x+'</li>';}).join("")+'</ul></div>':'')+'</div>'+
+    '<div class="tqa open" id="trAns"><b>参考答案</b><ol>'+t.a.map(function(x){return '<li>'+x+'</li>';}).join("")+'</ol>'+(t.w?'<div class="why"><b>💡 为什么这么做</b><ul>'+t.w.map(function(x){return '<li>'+x+'</li>';}).join("")+'</ul></div>':'')+'</div>'+
     '<div class="tqbtns">'+
-      '<button class="pri" data-tr="show">查看答案</button>'+
+      '<button data-tr="show">隐藏答案</button>'+
       '<button class="good" data-tr="ok">✔ 我答对了</button>'+
       '<button class="bad" data-tr="no">✘ 没答对</button>'+
     '</div></div>';
+  if(TR.flash){
+    box.insertAdjacentHTML('afterbegin', '<div class="trflash">'+TR.flash+'</div>');
+    TR.flash = null;
+  }
 }
 function trNext(){
   const un = TR.order.filter(function(i){ return TR.done[i]===undefined; });
@@ -2713,11 +2771,18 @@ document.addEventListener("click", function(e){
   const b = e.target.closest("[data-tr]");
   if(b){
     const act = b.dataset.tr;
-    if(act==="show"){ $("#trAns").classList.add("open"); b.style.display="none"; return; }
+    if(act==="show"){ const a=$("#trAns"); const open=a.classList.toggle("open"); b.textContent = open ? "隐藏答案" : "查看答案"; return; }
     const idx = TR.cur;
     if(idx===null||idx===undefined) return;
     TR.done[idx] = (act==="ok") ? "ok" : "no";
-    if(act==="ok"){ delete TR.wrong[idx]; } else { TR.wrong[idx] = 1; }
+    if(act==="ok"){
+      /* 答对只累计 1 次，连续答对 2 次才移出错题本 */
+      if(Object.prototype.hasOwnProperty.call(TR.wrong, idx)){
+        const s = (Number(TR.wrong[idx]) || 0) + 1;
+        if(s >= TR_WRONG_NEED){ delete TR.wrong[idx]; TR.flash = "✔ 已连续答对 " + TR_WRONG_NEED + " 次，本题已移出错题本"; }
+        else { TR.wrong[idx] = s; TR.flash = "✔ 答对 1 次（已连对 " + s + "/" + TR_WRONG_NEED + "），再答对 1 次才移出错题本"; }
+      }
+    } else { TR.wrong[idx] = 0; TR.flash = "✘ 已记入错题本，需连续答对 " + TR_WRONG_NEED + " 次才能移出"; }
     TR.cur = null; trSave(); trNext(); trSave(); return;
   }
   if(e.target.closest("#gotoWrong")){ switchTab("wrong"); return; }
