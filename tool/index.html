@@ -72,18 +72,55 @@
 
   .brand span { color: var(--a1); }
 
-  header nav { display: flex; gap: 18px; align-items: center; }
-
-  header nav a {
-    font-size: 12.5px;
-    letter-spacing: 0.08em;
-    text-transform: uppercase;
-    color: var(--dim);
-    text-decoration: none;
-    transition: color 0.2s;
+  /* 本页地址条：只露短地址 + 一键复制，头栏不再放导航链接 */
+  .addr {
+    display: flex;
+    align-items: center;
+    gap: 9px;
+    max-width: 100%;
+    padding: 6px 8px 6px 12px;
+    border-radius: 999px;
+    background: linear-gradient(90deg, rgba(56, 189, 248, 0.10), rgba(167, 139, 250, 0.07));
+    border: 1px solid rgba(56, 189, 248, 0.24);
   }
 
-  header nav a:hover { color: var(--ink); }
+  .addr .al {
+    flex: none;
+    font-size: 10px;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: var(--dim);
+  }
+
+  .addr code {
+    min-width: 0;
+    font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+    font-size: 12.5px;
+    color: #cfe0ff;
+    padding: 3px 9px;
+    border-radius: 7px;
+    background: rgba(11, 16, 32, 0.55);
+    border: 1px solid rgba(140, 170, 220, 0.18);
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+
+  .addr .cp-addr {
+    flex: none;
+    font: inherit;
+    font-size: 11.5px;
+    padding: 4px 13px;
+    cursor: pointer;
+    color: var(--a1);
+    background: rgba(56, 189, 248, 0.12);
+    border: 1px solid rgba(56, 189, 248, 0.3);
+    border-radius: 999px;
+    transition: background 0.18s, border-color 0.18s, color 0.18s;
+  }
+
+  .addr .cp-addr:hover { background: rgba(56, 189, 248, 0.2); border-color: rgba(56, 189, 248, 0.48); }
+  .addr .cp-addr.ok { color: #34d399; border-color: rgba(52, 211, 153, 0.5); background: rgba(52, 211, 153, 0.12); }
 
   main {
     position: relative;
@@ -316,6 +353,14 @@
   footer a { color: var(--dim); text-decoration: none; }
   footer a:hover { color: var(--ink); }
 
+  @media (max-width: 620px) {
+    header { flex-wrap: wrap; row-gap: 10px; }
+    .addr { width: 100%; justify-content: space-between; padding: 6px 8px 6px 11px; }
+    .addr .al { display: none; }
+    .addr code { font-size: 11.5px; flex: 1 1 auto; text-align: center; }
+    .addr .cp-addr { padding: 5px 12px; }
+  }
+
   @media (max-width: 560px) {
     .grid { grid-template-columns: repeat(2, 1fr); gap: 10px; }
     .card { min-height: 140px; padding: 14px; }
@@ -332,11 +377,11 @@
 
 <header>
   <a class="brand" href="../">IF<span>.</span></a>
-  <nav>
-    <a href="../">首页</a>
-    <a href="../examination/">Learning Course</a>
-    <a href="../links">短链导航</a>
-  </nav>
+  <div class="addr">
+    <span class="al">本页地址</span>
+    <code id="addrMain">icefocus.cn/tools</code>
+    <button class="cp-addr" id="cpMain" type="button">复制地址</button>
+  </div>
 </header>
 
 <main>
@@ -358,7 +403,7 @@
 
 <footer>
   © 2026 ICEFOCUS · designed &amp; built by hand ·
-  <a href="../examination/">Learning Course</a>
+  固定短地址 <b style="color:var(--dim);font-weight:600">icefocus.cn/tools</b>
 </footer>
 
 <script src="tools.js"></script>
@@ -438,6 +483,56 @@
   var pipHtml = '';
   for (var j = 0; j < SLOTS; j += 1) pipHtml += '<span class="pip' + (j < used ? ' on' : '') + '"></span>';
   pips.innerHTML = pipHtml;
+})();
+</script>
+<script>
+/* 本页地址条：显示并复制工具箱短地址，方便收藏 */
+(function () {
+  'use strict';
+
+  var CANON = 'https://icefocus.cn/tools';
+  var codeEl = document.getElementById('addrMain');
+  var btn = document.getElementById('cpMain');
+  if (!btn) return;
+
+  /* 静态文案写的是短域名，这里按实际域名纠偏；github.io 上照样能用短地址访问 */
+  if (location.protocol.indexOf('http') === 0) {
+    codeEl.textContent = location.host + '/tools';
+  }
+
+  function copy(text, done) {
+    if (navigator.clipboard && navigator.clipboard.writeText) {
+      navigator.clipboard.writeText(text).then(done, fallback);
+    } else {
+      fallback();
+    }
+    function fallback() {
+      var ta = document.createElement('textarea');
+      ta.value = text;
+      ta.setAttribute('readonly', '');
+      ta.style.cssText = 'position:fixed;top:-2000px;left:0;opacity:0';
+      document.body.appendChild(ta);
+      ta.select();
+      var ok = false;
+      try { ok = document.execCommand('copy'); } catch (e) { ok = false; }
+      document.body.removeChild(ta);
+      if (ok) done();
+      else { codeEl.focus && codeEl.focus(); }
+    }
+  }
+
+  btn.addEventListener('click', function () {
+    /* 复制跟随当前域名：在 github.io 打开就复制 github.io 地址 */
+    var target = location.protocol.indexOf('http') === 0 ? location.origin + '/tools' : CANON;
+    copy(target, function () {
+      btn.classList.add('ok');
+      btn.textContent = '已复制 ✓';
+      setTimeout(function () {
+        btn.classList.remove('ok');
+        btn.textContent = '复制地址';
+      }, 1400);
+    });
+  });
 })();
 </script>
 </body>

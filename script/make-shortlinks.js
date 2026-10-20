@@ -51,6 +51,7 @@ const SHORTCUTS = [
   { alias: 'tools',           url: '/tool/',                                           title: '工具箱',                group: '工具', note: '工具汇总入口' },
   { alias: 'imgcut',          url: '/tool/img-cut/',                                   title: 'AI 图片切图',           group: '工具', note: '去背景 + 自动分块导出' },
   { alias: 'psd',             url: '/tool/psd-rename/',                                title: '投放图 PSD 生成',       group: '工具' },
+  { alias: 'num',             url: '/tool/number-gen/',                                title: '数值随机生成器',        group: '工具', note: '六档 8 组 · 位数固定' },
 
   /* ---- 皮肤 ---- */
   { alias: 'skin0',           url: '/ThemedSkin/default',                              title: '首页皮肤 · 默认',       group: '皮肤' },
