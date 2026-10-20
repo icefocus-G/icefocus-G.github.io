@@ -56,69 +56,70 @@ footer b{color:var(--dim);font-weight:600}
     <div class="sub">点开即进入对应页面；每个 <code>icefocus.cn/短名</code> 都能单独收藏。</div>
   </header>
     <section><h2>学习</h2><div class="grid">
-      <a class="card" href="/examination/" data-short="https://icefocus.cn/exam">
+      <a class="card" href="/examination/" data-alias="exam">
         <span class="cn"><b>学习总入口</b><i>自动发现全部课程</i></span>
         <span class="cs">icefocus.cn/exam</span>
       </a>
-      <a class="card" href="/examination/International%20Finance/study" data-short="https://icefocus.cn/jinrong">
+      <a class="card" href="/examination/International%20Finance/study" data-alias="jinrong">
         <span class="cn"><b>国际金融 · 学习助手</b></span>
         <span class="cs">icefocus.cn/jinrong</span>
       </a>
-      <a class="card" href="/examination/International%20Finance/bank" data-short="https://icefocus.cn/jinrong-bank">
+      <a class="card" href="/examination/International%20Finance/bank" data-alias="jinrong-bank">
         <span class="cn"><b>国际金融 · 历年真题库</b></span>
         <span class="cs">icefocus.cn/jinrong-bank</span>
       </a>
-      <a class="card" href="/examination/International%20Finance/outline" data-short="https://icefocus.cn/jinrong-outline">
+      <a class="card" href="/examination/International%20Finance/outline" data-alias="jinrong-outline">
         <span class="cn"><b>国际金融 · 0基础到精通</b></span>
         <span class="cs">icefocus.cn/jinrong-outline</span>
       </a>
-      <a class="card" href="/examination/Western%20Economics/study" data-short="https://icefocus.cn/xifang">
+      <a class="card" href="/examination/Western%20Economics/study" data-alias="xifang">
         <span class="cn"><b>西方经济学 · 学习助手</b></span>
         <span class="cs">icefocus.cn/xifang</span>
       </a>
-      <a class="card" href="/examination/Western%20Economics/bank" data-short="https://icefocus.cn/xifang-bank">
+      <a class="card" href="/examination/Western%20Economics/bank" data-alias="xifang-bank">
         <span class="cn"><b>西方经济学 · 历年真题库</b></span>
         <span class="cs">icefocus.cn/xifang-bank</span>
       </a>
-      <a class="card" href="/examination/Western%20Economics/outline" data-short="https://icefocus.cn/xifang-outline">
+      <a class="card" href="/examination/Western%20Economics/outline" data-alias="xifang-outline">
         <span class="cn"><b>西方经济学 · 0基础到精通</b></span>
         <span class="cs">icefocus.cn/xifang-outline</span>
       </a>
       </div></section>
     <section><h2>工具</h2><div class="grid">
-      <a class="card" href="/tasksync/" data-short="https://icefocus.cn/task">
+      <a class="card" href="/tasksync/" data-alias="task">
         <span class="cn"><b>任务同步站</b></span>
         <span class="cs">icefocus.cn/task</span>
       </a>
-      <a class="card" href="/tool/" data-short="https://icefocus.cn/tools">
+      <a class="card" href="/tool/" data-alias="tools">
         <span class="cn"><b>工具箱</b><i>工具汇总入口</i></span>
         <span class="cs">icefocus.cn/tools</span>
       </a>
-      <a class="card" href="/tool/img-cut/" data-short="https://icefocus.cn/imgcut">
+      <a class="card" href="/tool/img-cut/" data-alias="imgcut">
         <span class="cn"><b>AI 图片切图</b><i>去背景 + 自动分块导出</i></span>
         <span class="cs">icefocus.cn/imgcut</span>
       </a>
-      <a class="card" href="/tool/psd-rename/" data-short="https://icefocus.cn/psd">
+      <a class="card" href="/tool/psd-rename/" data-alias="psd">
         <span class="cn"><b>投放图 PSD 生成</b></span>
         <span class="cs">icefocus.cn/psd</span>
       </a>
       </div></section>
     <section><h2>皮肤</h2><div class="grid">
-      <a class="card" href="/ThemedSkin/default" data-short="https://icefocus.cn/skin0">
+      <a class="card" href="/ThemedSkin/default" data-alias="skin0">
         <span class="cn"><b>首页皮肤 · 默认</b></span>
         <span class="cs">icefocus.cn/skin0</span>
       </a>
-      <a class="card" href="/ThemedSkin/ThemedSkin01" data-short="https://icefocus.cn/skin1">
+      <a class="card" href="/ThemedSkin/ThemedSkin01" data-alias="skin1">
         <span class="cn"><b>首页皮肤 · 游戏视觉</b></span>
         <span class="cs">icefocus.cn/skin1</span>
       </a>
-      <a class="card" href="/ThemedSkin/ThemedSkin02" data-short="https://icefocus.cn/skin2">
+      <a class="card" href="/ThemedSkin/ThemedSkin02" data-alias="skin2">
         <span class="cn"><b>首页皮肤 · 设计印刷</b></span>
         <span class="cs">icefocus.cn/skin2</span>
       </a>
       </div></section>
   <footer>
     <b>地址规则</b>：短名不带 <code>.html</code>；只有目录才能以 <code>/</code> 结尾。<br>
+    <b>双域名</b>：<code>icefocus.cn/短名</code> 与 <code>icefocus-G.github.io/短名</code> 等价，本页复制的是当前域名的短链。<br>
     <b>维护方式</b>：改 <code>script/make-shortlinks.js</code> 里的 <code>SHORTCUTS</code> 表，<br>
     然后运行 <code>node script/make-shortlinks.js</code> 重新生成短链页与本导航页。
   </footer>
@@ -130,7 +131,8 @@ document.querySelectorAll('.card').forEach(function (a) {
   if (!chip) return;
   chip.addEventListener('click', function (e) {
     e.preventDefault(); e.stopPropagation();
-    var s = a.getAttribute('data-short') || '';
+    /* 跟随当前域名：icefocus.cn 复制 cn 短链，github.io 复制 github.io 短链 */
+    var s = location.origin + '/' + (a.getAttribute('data-alias') || '');
     var done = function () {
       var old = chip.textContent;
       chip.textContent = '已复制 ✓';

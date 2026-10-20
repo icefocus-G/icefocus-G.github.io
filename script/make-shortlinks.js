@@ -134,7 +134,7 @@ function linksPage(items) {
 
   const cards = groups.map(g => {
     const rows = g.list.map(it => `
-      <a class="card" href="${esc(it.url)}" data-short="${esc(ORIGIN + '/' + it.alias)}">
+      <a class="card" href="${esc(it.url)}" data-alias="${esc(it.alias)}">
         <span class="cn"><b>${esc(it.title)}</b>${it.note ? `<i>${esc(it.note)}</i>` : ''}</span>
         <span class="cs">icefocus.cn/${esc(it.alias)}</span>
       </a>`).join('');
@@ -201,6 +201,7 @@ footer b{color:var(--dim);font-weight:600}
     ${cards}
   <footer>
     <b>地址规则</b>：短名不带 <code>.html</code>；只有目录才能以 <code>/</code> 结尾。<br>
+    <b>双域名</b>：<code>icefocus.cn/短名</code> 与 <code>icefocus-G.github.io/短名</code> 等价，本页复制的是当前域名的短链。<br>
     <b>维护方式</b>：改 <code>script/make-shortlinks.js</code> 里的 <code>SHORTCUTS</code> 表，<br>
     然后运行 <code>node script/make-shortlinks.js</code> 重新生成短链页与本导航页。
   </footer>
@@ -212,7 +213,8 @@ document.querySelectorAll('.card').forEach(function (a) {
   if (!chip) return;
   chip.addEventListener('click', function (e) {
     e.preventDefault(); e.stopPropagation();
-    var s = a.getAttribute('data-short') || '';
+    /* 跟随当前域名：icefocus.cn 复制 cn 短链，github.io 复制 github.io 短链 */
+    var s = location.origin + '/' + (a.getAttribute('data-alias') || '');
     var done = function () {
       var old = chip.textContent;
       chip.textContent = '已复制 ✓';
