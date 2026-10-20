@@ -153,6 +153,7 @@ function linksPage(items) {
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <meta name="theme-color" content="#0b1020">
 <meta name="description" content="ICEFOCUS 短链导航：每个地址都可以单独收藏。">
+<link rel="canonical" href="${ORIGIN}/links">
 <title>短链导航 · ICEFOCUS</title>
 <link rel="icon" href="assets/icon.svg">
 <link rel="manifest" href="manifest.webmanifest">
@@ -201,6 +202,27 @@ h2{margin:30px 0 10px;font-size:12px;letter-spacing:.22em;color:var(--dim2);font
   .acts{justify-content:space-between}
   .cn b{font-size:13.5px}
 }
+/* 本页地址条 */
+.addr{display:flex;align-items:center;gap:10px;flex-wrap:wrap;
+  margin-top:6px;padding:10px 12px;border-radius:12px;
+  background:linear-gradient(90deg,rgba(56,189,248,.10),rgba(167,139,250,.07));
+  border:1px solid rgba(56,189,248,.24)}
+.addr .al{font-size:10.5px;letter-spacing:.2em;color:var(--dim2);text-transform:uppercase;flex:none}
+.addr code{font-family:ui-monospace,SFMono-Regular,Menlo,monospace;font-size:12.5px;color:#cfe0ff;
+  background:rgba(11,16,32,.55);padding:4px 10px;border-radius:8px;
+  border:1px solid rgba(140,170,220,.18);white-space:nowrap}
+.addr .cp{margin-left:auto;font:inherit;font-size:12px;color:var(--a1);cursor:pointer;
+  background:rgba(56,189,248,.12);border:1px solid rgba(56,189,248,.3);
+  border-radius:999px;padding:5px 14px;transition:.16s;white-space:nowrap}
+.addr .cp:hover{background:rgba(56,189,248,.2)}
+.addr .cp.ok{color:var(--a3);border-color:rgba(52,211,153,.5);background:rgba(52,211,153,.12)}
+.addr .alt{flex-basis:100%;font-size:11.5px;color:var(--dim2);line-height:1.9}
+.addr .alt code{font-size:11.5px;padding:3px 8px}
+@media(max-width:520px){
+  .addr{gap:8px;padding:9px 10px}
+  .addr code{font-size:11.5px}
+  .addr .cp{margin-left:0;order:3;flex-basis:100%;text-align:center;padding:7px 14px}
+}
 footer{margin-top:34px;padding-top:16px;border-top:1px solid var(--line);
   color:var(--dim2);font-size:12px;line-height:2}
 footer b{color:var(--dim);font-weight:600}
@@ -213,6 +235,12 @@ footer b{color:var(--dim);font-weight:600}
     <div class="k">ICEFOCUS · SHORT LINKS</div>
     <h1>短链导航</h1>
     <div class="sub">点开即进入对应页面；每个 <code>icefocus.cn/短名</code> 都能单独收藏。</div>
+    <div class="addr">
+      <span class="al">本页地址</span>
+      <code id="addrMain">${ORIGIN}/links</code>
+      <button class="cp" id="cpMain" type="button">复制地址</button>
+      <div class="alt" id="addrAlt" hidden></div>
+    </div>
   </header>
     ${cards}
   <footer>
@@ -268,6 +296,28 @@ document.querySelectorAll('.card').forEach(function (a) {
     });
   }
 });
+
+/* 本页地址条：主地址固定为正式域名，若当前在别的域名下打开，补一行等价地址 */
+(function () {
+  var CANON = ${JSON.stringify(ORIGIN + '/links')};
+  var cp  = document.getElementById('cpMain');
+  var alt = document.getElementById('addrAlt');
+  if (!cp) return;
+
+  if (location.host && location.host !== ${JSON.stringify(ORIGIN.replace(/^https?:\/\//, ''))}) {
+    alt.hidden = false;
+    alt.innerHTML = '当前域名等价地址：<code>' + location.origin + '/links</code>　（当前打开的是这个，收藏它也等效）';
+  }
+
+  cp.addEventListener('click', function () {
+    copyText(CANON, function () {
+      var old = cp.textContent;
+      cp.classList.add('ok');
+      cp.textContent = '已复制 ✓';
+      setTimeout(function () { cp.classList.remove('ok'); cp.textContent = old; }, 1400);
+    });
+  });
+})();
 </script>
 </body>
 </html>
