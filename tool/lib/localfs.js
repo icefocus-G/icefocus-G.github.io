@@ -314,12 +314,23 @@
     }
 
     var rows = {};
+    var idbState = 'unknown';   // 句柄能不能存下来，取决于浏览器是不是允许 IndexedDB
+    var warnBox = null;
     items.forEach(function (item) {
       var row = document.createElement('div');
       row.className = 'lfs-row unset';
       root.appendChild(row);
       rows[item.key] = row;
     });
+
+    function showWarn(text) {
+      if (!warnBox) {
+        warnBox = document.createElement('div');
+        warnBox.className = 'lfs-warn';
+        root.appendChild(warnBox);
+      }
+      warnBox.textContent = text;
+    }
 
     function itemByKey(key) {
       for (var i = 0; i < items.length; i += 1) if (items[i].key === key) return items[i];
@@ -342,7 +353,7 @@
 
       var status = '';
       if (perm === 'granted') status = '已连接';
-      else if (perm === 'prompt') status = '需点一下授权';
+      else if (perm === 'prompt') status = '已记住 · 需确认一次';
       else if (perm === 'denied') status = '权限被拒，请重选';
       else if (perm === 'unsupported') status = '浏览器不支持';
       else if (!entry.handle && name) status = '已记住：' + name + '（需重新选择）';
@@ -360,12 +371,15 @@
         '</div>';
 
       var btns = row.querySelector('.lfs-btns');
-      var pickBtn = button(item.buttonText || (entry.handle ? '更改' : '选择…'), 'lfs-btn primary');
+      // 已有句柄但待确认时，「恢复访问」是主按钮；其余情况「选择 / 重新选择」是主按钮
+      var pickBtn = button(item.buttonText || (entry.handle ? '重新选择' : '选择…'),
+        perm === 'prompt' ? 'lfs-btn' : 'lfs-btn primary');
       pickBtn.addEventListener('click', function () { choose(key); });
       btns.appendChild(pickBtn);
 
       if (perm === 'prompt') {
-        var grantBtn = button('授权', 'lfs-btn');
+        var grantBtn = button('恢复访问', 'lfs-btn primary');
+        grantBtn.title = '浏览器安全要求：每次重新打开页面对已记住的目录都要再确认一次，点这里即可';
         grantBtn.addEventListener('click', function () { grant(key); });
         btns.appendChild(grantBtn);
       }
@@ -427,19 +441,78 @@
       items.forEach(function (item) { paintRow(item.key); });
     }
 
+    /* 批量补授权：浏览器刷新后句柄还在，但权限会退回 prompt，
+       必须在用户手势里 requestPermission 一次，这里把它做成一次点击恢复全部 */
+    function grantAll(keys) {
+      var targets = (keys && keys.length ? keys : items.map(function (item) { return item.key; }))
+        .filter(function (key) {
+          var entry = state[key];
+          return entry && entry.handle && entry.perm === 'prompt';
+        });
+      if (!targets.length) return Promise.resolve(true);
+      return targets.reduce(function (chain, key) {
+        return chain.then(function () {
+          var entry = state[key];
+          return Promise.resolve(ensurePermission(entry.handle, (itemByKey(key) || {}).write ? 'readwrite' : 'read'))
+            .then(function (perm) {
+              entry.perm = perm;
+              paintRow(key);
+              fire();
+            });
+        });
+      }, Promise.resolve()).then(function () {
+        return targets.every(function (key) { return (state[key] || {}).perm === 'granted'; });
+      });
+    }
+
+    function notReady(keys) {
+      var all = api.all();
+      return keys.filter(function (key) { return !(all[key] && all[key].ready); });
+    }
+
+    /* 执行前统一检查（异步版）：缺授权就趁这次点击顺手补上，补不到再提示 */
+    function requireReady(keys, tip) {
+      var missing = notReady(keys);
+      if (!missing.length) return Promise.resolve(true);
+      var grantable = missing.filter(function (key) {
+        var entry = state[key];
+        return entry && entry.handle && entry.perm === 'prompt';
+      });
+      return (grantable.length ? grantAll(grantable) : Promise.resolve(false)).then(function () {
+        var left = notReady(keys);
+        if (!left.length) return true;
+        var all = api.all();
+        window.alert((tip || '先把本地路径设置好再继续：') + '\n\n· ' +
+          left.map(function (key) { return (all[key] && all[key].label) || key; }).join('\n· '));
+        return false;
+      });
+    }
+
     /* 恢复：句柄从 IndexedDB 读回来，权限能查到 granted 就直接可用 */
     function restore() {
-      return Promise.all(items.map(function (item) {
-        return getHandle(item.key).then(function (handle) {
-          var meta = readMeta(item.key);
-          if (!handle) {
-            state[item.key] = meta ? { handle: null, meta: meta, perm: 'unset' } : {};
-            return;
-          }
-          var perm = queryPermission(handle, item.write ? 'readwrite' : 'read');
-          state[item.key] = { handle: handle, meta: { name: handle.name, kind: handle.kind }, perm: perm };
-        });
-      })).then(function () {
+      return openDB().then(function () { return 'ok'; }, function () { return 'fail'; }).then(function (result) {
+        idbState = result;
+        if (idbState === 'fail') {
+          showWarn('这个浏览器当前无法使用 IndexedDB（无痕模式 / 关闭了本地存储 / 存储被清理），' +
+            '所以目录选完没法记住：每次打开都需要重新选一次。');
+        }
+        return Promise.all(items.map(function (item) {
+          return getHandle(item.key).then(function (handle) {
+            var meta = readMeta(item.key);
+            if (!handle) {
+              state[item.key] = meta ? { handle: null, meta: meta, perm: 'unset' } : {};
+              return;
+            }
+            var perm = queryPermission(handle, item.write ? 'readwrite' : 'read');
+            state[item.key] = { handle: handle, meta: { name: handle.name, kind: handle.kind }, perm: perm };
+          });
+        }));
+      }).then(function () {
+        paintAll();
+        fire();
+        return api.all();
+      }).catch(function (error) {
+        if (window.console) console.warn('[localfs] 恢复已记住的目录失败：', error);
         paintAll();
         fire();
         return api.all();
@@ -478,9 +551,29 @@
         }
         return true;
       },
+      requireReady: requireReady,
+      grantAll: grantAll,
       choose: choose,
       clear: clear,
-      refresh: restore
+      refresh: restore,
+      /* 自检：句柄到底存没存下来，出问题时一眼能看出卡在哪一层 */
+      diagnostics: function () {
+        var all = api.all();
+        return {
+          supported: supported(),
+          indexedDB: idbState,
+          items: items.map(function (item) {
+            var entry = all[item.key] || {};
+            return {
+              key: item.key,
+              name: entry.name || '',
+              hasHandle: !!entry.handle,
+              permission: entry.permission || 'unset',
+              ready: !!entry.ready
+            };
+          })
+        };
+      }
     };
 
     mount.appendChild(root);

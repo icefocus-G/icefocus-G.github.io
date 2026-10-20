@@ -1673,7 +1673,7 @@ async function loadPreview(){
 /* ---------- 执行：全部在本机完成 ---------- */
 $('btnRun').addEventListener('click', async () => {
   if (!currentEntry){ appendLog('r', '× 请先选择表格'); return; }
-  if (!paths.require(['tpl', 'output'], '生成 PSD 需要这两个本地目录：')) return;
+  if (!(await paths.requireReady(['tpl', 'output'], '生成 PSD 需要这两个本地目录：'))) return;
   const btn = $('btnRun');
   btn.disabled = true;
   btn.innerHTML = '<span class="spinner"></span>生成中…';

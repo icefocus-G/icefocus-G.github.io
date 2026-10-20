@@ -474,6 +474,51 @@
 <style>
   .wrap-paths{ padding:16px 22px 0; }
   .wrap-paths .lfs-panel{ margin:0; }
+
+  /* 已记住目录、但浏览器要求再确认一次权限时的提示条 */
+  .path-banner{
+    display:flex;align-items:center;gap:12px;flex-wrap:wrap;
+    margin-top:10px;padding:10px 14px;border-radius:12px;
+    border:1px solid rgba(229,168,61,.42);background:rgba(229,168,61,.10);
+    color:#f3d49a;font-size:12.5px;line-height:1.7;
+  }
+  .path-banner .grow{ flex:1 1 260px; }
+  .path-banner button{
+    border:1px solid transparent;border-radius:9px;padding:6px 14px;
+    font-size:12.5px;font-weight:700;cursor:pointer;
+    background:linear-gradient(135deg,#38bdf8,#6366f1);color:#08101f;
+  }
+
+  /* 手动填写「切图文件夹」的绝对路径：浏览器不暴露磁盘路径，只能自己填一次 */
+  .absbox{
+    margin-top:12px;border:1px solid rgba(140,170,220,.22);background:rgba(12,18,34,.55);
+    border-radius:14px;padding:14px 16px;
+  }
+  .absbox-title{ font-size:14px;font-weight:700;display:flex;align-items:center;gap:8px; }
+  .absbox-title::before{
+    content:"";width:7px;height:7px;border-radius:50%;background:#a78bfa;
+    box-shadow:0 0 8px rgba(167,139,250,.8);
+  }
+  .absbox-sub{ font-size:12px;line-height:1.7;opacity:.68;margin-top:4px; }
+  .absbox-row{ display:flex;gap:8px;flex-wrap:wrap;margin-top:10px; }
+  .absbox-row input{
+    flex:1 1 320px;min-width:0;background:#0d1220;border:1px solid rgba(140,170,220,.24);
+    border-radius:9px;padding:8px 11px;color:inherit;font-size:12.5px;
+    font-family:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;
+  }
+  .absbox-row input:focus{ outline:none;border-color:rgba(79,140,255,.75);box-shadow:0 0 0 3px rgba(79,140,255,.18); }
+  .absbox-row button{
+    border-radius:9px;padding:7px 13px;font-size:12.5px;cursor:pointer;
+    border:1px solid rgba(140,170,220,.28);background:rgba(255,255,255,.05);color:inherit;
+  }
+  .absbox-row button:hover{ border-color:rgba(140,170,220,.55);background:rgba(255,255,255,.1); }
+  .absbox-row button.primary{
+    background:linear-gradient(135deg,#38bdf8,#6366f1);border-color:transparent;
+    color:#08101f;font-weight:700;
+  }
+  .absbox-hint{ font-size:11.5px;line-height:1.7;opacity:.72;margin-top:8px; }
+  .absbox-hint code{ background:rgba(140,170,220,.16);padding:1px 5px;border-radius:5px; }
+  .absbox-hint.warn{ color:#f3d49a;opacity:1; }
 </style>
 </head>
 <body>
@@ -498,6 +543,26 @@
 <!-- 本地路径设置：源文件目录 + 切图输出目录，选一次就记住 -->
 <div class="wrap-paths">
   <div id="localPaths"></div>
+  <div class="path-banner" id="pathBanner" hidden>
+    <span class="grow" id="pathBannerText"></span>
+    <button type="button" id="buttonRestoreAccess">恢复访问</button>
+  </div>
+
+  <div class="absbox" id="absBox">
+    <div class="absbox-title">切图文件夹的完整路径（填一次就记住）</div>
+    <div class="absbox-sub">
+      浏览器不会告诉网页真实磁盘路径，所以这里手填一次。填好之后「图片目录」会把本批切图的完整路径
+      <b>直接复制到剪贴板</b>，粘到资源管理器 / Finder 里就能一步到位。
+    </div>
+    <div class="absbox-row">
+      <input id="inputAbsPath" type="text" spellcheck="false" autocomplete="off"
+             placeholder="macOS：/Users/你的用户名/Desktop/切图文件　　　Windows：D:\设计\切图文件">
+      <button type="button" id="buttonAbsSave" class="primary">记住</button>
+      <button type="button" id="buttonAbsCopy">复制本批路径</button>
+      <button type="button" id="buttonAbsClear">清除</button>
+    </div>
+    <div class="absbox-hint" id="absHint"></div>
+  </div>
 </div>
 
 <div class="layout">
@@ -651,6 +716,7 @@
         <input type="text" id="inputPrefix" class="prefix" value="切图">
         <button id="buttonSaveAll" class="primary" disabled>全部保存到「切图文件」</button>
         <button id="buttonOpenFolder" title="打开系统文件夹窗口，直接定位到本次切图所在的批次目录">图片目录</button>
+        <button id="buttonCopyPath" title="把本批切图的完整路径复制到剪贴板（需先在页面顶部填一次绝对路径）">复制路径</button>
         <span class="grow"></span>
         <span class="field-hint" id="outputInfo"></span>
       </div>
@@ -1256,6 +1322,16 @@ const AlgorithmCore = (function () {
     batchTarget: document.getElementById('batchTarget'),
     folderPath: document.getElementById('folderPath'),
     sourceList: document.getElementById('sourceList'),
+    pathBanner: document.getElementById('pathBanner'),
+    pathBannerText: document.getElementById('pathBannerText'),
+    buttonRestoreAccess: document.getElementById('buttonRestoreAccess'),
+    absBox: document.getElementById('absBox'),
+    inputAbsPath: document.getElementById('inputAbsPath'),
+    buttonAbsSave: document.getElementById('buttonAbsSave'),
+    buttonAbsCopy: document.getElementById('buttonAbsCopy'),
+    buttonAbsClear: document.getElementById('buttonAbsClear'),
+    absHint: document.getElementById('absHint'),
+    buttonCopyPath: document.getElementById('buttonCopyPath'),
     cutDialog: document.getElementById('cutDialog'),
     cutDialogClose: document.getElementById('cutDialogClose')
   };
@@ -1893,7 +1969,8 @@ const AlgorithmCore = (function () {
   async function saveElements() {
     const list = selectedElements();
     if (list.length === 0) return;
-    if (!paths.require(['output'], '切图要写到你指定的「切图输出目录」，请先在页面顶部把它设好。')) return;
+    if (!(await paths.requireReady(['output'], '切图要写到你指定的「切图输出目录」，请先在页面顶部把它设好。'))) return;
+    renderPathBanner();
     const outDir = paths.get('output').handle;
     const prefix = (elements.inputPrefix.value.trim() || '切图').replace(/[\\/:*?"<>|]/g, '_');
     const digits = String(list.length).length < 2 ? 2 : String(list.length).length;
@@ -1939,7 +2016,9 @@ const AlgorithmCore = (function () {
   async function refreshOutputInfo() {
     const info = paths.get('output');
     if (!info || !info.ready) {
-      elements.outputPath.textContent = '输出目录：尚未设置（在页面顶部选一个文件夹）';
+      elements.outputPath.textContent = info && info.name
+        ? '输出目录：' + info.name + '（已记住，点顶部「恢复访问」后可用）'
+        : '输出目录：尚未设置（在页面顶部选一个文件夹）';
       return;
     }
     try {
@@ -1958,9 +2037,11 @@ const AlgorithmCore = (function () {
   async function refreshSourceList() {
     const info = paths.get('source');
     if (!info || !info.ready) {
-      elements.sourceList.innerHTML =
-        '<div class="source-empty">还没设置「源文件目录」。在页面顶部点「选择…」指定一个放原图的文件夹，' +
-        '以后打开本页会自动沿用。</div>';
+      elements.sourceList.innerHTML = info && info.name
+        ? '<div class="source-empty">「' + escapeHtml(info.name) + '」已记住，但浏览器要求重新确认一次访问权限：' +
+          '点页面顶部黄色的「恢复访问」（只需 1 次点击）后就会列出图片。</div>'
+        : '<div class="source-empty">还没设置「源文件目录」。在页面顶部点「选择…」指定一个放原图的文件夹，' +
+          '以后打开本页会自动沿用。</div>';
       return;
     }
     try {
@@ -2138,28 +2219,192 @@ const AlgorithmCore = (function () {
     scheduleProcessing();
   });
 
-  /* ---------- 图片目录：弹出本次切图所在的文件夹 ---------- */
+  /* ================= 图片目录 / 路径复制（Windows + macOS） =================
+   *
+   * 事实前提：浏览器不允许网页唤起 Finder / 资源管理器，也不向网页暴露磁盘绝对路径。
+   * 因此提供两条腿：
+   *   ① 「浏览文件夹」：用 showDirectoryPicker 把系统「选择文件夹」窗口定到本批目录
+   *      （Chrome 在 macOS / Windows 上都会真的弹出系统窗口，起点就是目标目录）；
+   *   ② 「复制路径」：把用户在顶部手填的绝对路径 + 本批子目录拼成完整路径复制到剪贴板，
+   *      按当前系统自动用 / 或 \，粘到资源管理器地址栏 / Finder 的 ⌘⇧G 即可一步到位。
+   * ========================================================= */
 
-  // 说明：浏览器安全模型不允许网页直接唤起 Finder / 资源管理器，也不暴露磁盘绝对路径。
-  // 能实现的最接近效果 —— 用 showDirectoryPicker 把系统「文件夹」窗口的起始位置
-  // 指到本次批次的子目录：弹出来的窗口就是这个目录，里面正是刚保存的那批 PNG。
-  // 只传 startIn、不传 id，避免浏览器记住上一次的选择而忽略本次定位。
+  const PLATFORM = (function () {
+    const nav = window.navigator || {};
+    const platform = (nav.userAgentData && nav.userAgentData.platform) || nav.platform || '';
+    const ua = nav.userAgent || '';
+    if (/win/i.test(platform) || /windows/i.test(ua)) return 'windows';
+    if (/mac/i.test(platform) || /mac os x|macintosh/i.test(ua)) return 'mac';
+    return 'other';
+  })();
+  const PATH_SEP = PLATFORM === 'windows' ? '\\' : '/';
+  const PLATFORM_LABEL = PLATFORM === 'windows' ? 'Windows' : (PLATFORM === 'mac' ? 'macOS' : '当前系统');
+  const ABS_PATH_KEY = 'outputAbsPath';
 
-  function currentTargetPath() {
-    const info = paths.get('output');
-    if (!info || !info.name) return '';
-    return state.batchFolder ? info.name + '/' + state.batchFolder : info.name;
+  // 统一成当前系统的写法：Windows 用 \，macOS 用 /；顺手去掉粘进来的引号和尾部斜杠
+  function normalizeAbsPath(raw) {
+    let value = String(raw == null ? '' : raw).trim()
+      .replace(/^["'`]+|["'`]+$/g, '')
+      .replace(/\s+$/g, '');
+    if (!value) return '';
+    if (PLATFORM === 'windows') {
+      value = value.replace(/\//g, '\\').replace(/\\{2,}/g, '\\');
+      // 保留 D:\ 这种盘符根，其余去掉结尾反斜杠
+      if (!/^[a-zA-Z]:\\?$/.test(value)) value = value.replace(/\\+$/, '');
+      if (/^[a-zA-Z]:$/.test(value)) value += '\\';
+    } else {
+      value = value.replace(/\\/g, '/').replace(/\/{2,}/g, '/');
+      if (value.length > 1) value = value.replace(/\/+$/, '');
+    }
+    return value;
   }
 
+  function joinPath(base, child) {
+    if (!base) return child || '';
+    if (!child) return base;
+    const needSep = base.slice(-1) !== '/' && base.slice(-1) !== '\\';
+    return base + (needSep ? PATH_SEP : '') + child;
+  }
+
+  function getAbsPath() {
+    return normalizeAbsPath(LocalFS.cfg.get(ABS_PATH_KEY, ''));
+  }
+
+  // 本批切图的相对位置（相对于输出目录）：切图文件 / 20261020_113000_素材
+  function currentTargetPath() {
+    const info = paths.get('output');
+    const dirName = (info && info.name) || '切图文件';
+    return state.batchFolder ? joinPath(dirName, state.batchFolder) : dirName;
+  }
+
+  // 完整路径：填了绝对路径就用它拼，没填就退回相对位置（仅用于显示）
+  function currentFullPath() {
+    const abs = getAbsPath();
+    const info = paths.get('output');
+    const dirName = (info && info.name) || '';
+    // 用户填的可能是「输出目录本身」，也可能填的是它的上一级：结尾已含目录名就不再拼一遍
+    const endsWithDirName = !!(abs && dirName && abs.slice(-dirName.length) === dirName);
+    const base = endsWithDirName ? abs : joinPath(abs, dirName);
+    return state.batchFolder ? joinPath(base, state.batchFolder) : base;
+  }
+
+  async function copyText(text) {
+    if (navigator.clipboard && navigator.clipboard.writeText) {
+      try {
+        await navigator.clipboard.writeText(text);
+        return true;
+      } catch (error) { /* 落到下面的兜底 */ }
+    }
+    const area = document.createElement('textarea');
+    area.value = text;
+    area.setAttribute('readonly', 'readonly');
+    area.style.position = 'fixed';
+    area.style.left = '-9999px';
+    document.body.appendChild(area);
+    area.select();
+    let copied = false;
+    try { copied = document.execCommand('copy'); } catch (error) { copied = false; }
+    document.body.removeChild(area);
+    return copied;
+  }
+
+  function renderAbsHint(extraClass, message) {
+    if (!elements.absHint) return;
+    const abs = getAbsPath();
+    elements.absHint.className = 'absbox-hint' + (extraClass ? ' ' + extraClass : '');
+    if (message) {
+      elements.absHint.innerHTML = message;
+      return;
+    }
+    if (!abs) {
+      elements.absHint.innerHTML = '还没填。填了之后「图片目录 / 复制路径」会给出完整路径；' +
+        '不填也能用，只是复制出来的是「' + escapeHtml(currentTargetPath()) + '」这种相对位置。';
+      return;
+    }
+    const tip = PLATFORM === 'windows'
+      ? '复制后按 <code>Win</code> + <code>E</code> 打开资源管理器，点地址栏粘进去回车即可直达。'
+      : (PLATFORM === 'mac'
+        ? '复制后打开 Finder，按 <code>⌘</code> + <code>⇧</code> + <code>G</code>，粘贴路径回车即可直达。'
+        : '复制后粘到系统的文件管理器地址栏即可直达。');
+    elements.absHint.innerHTML = '当前系统：<b>' + PLATFORM_LABEL + '</b>　分隔符 <code>' +
+      (PATH_SEP === '\\' ? '\\' : '/') + '</code>　' + tip;
+  }
+
+  // 复制本批切图的完整路径（这就是「图片地址位置」的复制入口）
+  async function copyBatchPath() {
+    const abs = getAbsPath();
+    if (!abs) {
+      renderAbsHint('warn', '还没填「切图文件夹的完整路径」，填一次才能复制完整地址（只需一次，之后一直记住）。');
+      elements.inputAbsPath.focus();
+      elements.inputAbsPath.select();
+      setStatus('请先填一次切图文件夹的完整路径', false);
+      logLine('复制失败：还没填绝对路径。在页面顶部「切图文件夹的完整路径」里填一次即可，例如 ' +
+        (PLATFORM === 'windows' ? 'D:\\设计\\切图文件' : '/Users/你/Desktop/切图文件'), 'warn');
+      return false;
+    }
+    const full = currentFullPath();
+    const ok = await copyText(full);
+    if (ok) {
+      logLine('已复制路径：' + full, 'ok');
+      setStatus('路径已复制：' + full, false);
+      renderAbsHint('', '已复制 <b>' + escapeHtml(full) + '</b>　—　' +
+        (PLATFORM === 'windows'
+          ? 'Win + E 打开资源管理器，地址栏粘贴回车即可直达。'
+          : (PLATFORM === 'mac'
+            ? 'Finder 里按 ⌘ ⇧ G，粘贴回车即可直达。'
+            : '粘到文件管理器地址栏即可直达。')));
+    } else {
+      logLine('写入剪贴板被浏览器拒绝，请手动复制：' + full, 'warn');
+      setStatus('复制失败，请手动选中下面这行路径', false);
+      elements.inputAbsPath.value = full;
+      elements.inputAbsPath.focus();
+      elements.inputAbsPath.select();
+    }
+    return ok;
+  }
+
+  function saveAbsPath() {
+    const normalized = normalizeAbsPath(elements.inputAbsPath.value);
+    if (!normalized) {
+      LocalFS.cfg.del(ABS_PATH_KEY);
+      elements.inputAbsPath.value = '';
+      renderAbsHint();
+      logLine('已清除记住的绝对路径', 'warn');
+      return;
+    }
+    LocalFS.cfg.set(ABS_PATH_KEY, normalized);
+    elements.inputAbsPath.value = normalized;
+    renderAbsHint();
+    logLine('已记住切图文件夹路径：' + normalized, 'ok');
+    syncFolderPathBar();
+    const info = paths.get('output');
+    if (info && info.name && normalized.slice(-info.name.length) !== info.name) {
+      logLine('提示：这个路径的结尾不是输出目录名「' + info.name +
+        '」，如果选错了一层，复制出来的路径会多（或少了）一级。', 'warn');
+    }
+  }
+
+  // 「图片目录」：弹出系统文件夹窗口，起点就是本批切图所在目录
   async function revealOutputFolder() {
     const info = paths.get('output');
-    if (!paths.require(['output'], '「图片目录」需要先设好切图输出目录才能打开。')) return false;
+    // 关键：showDirectoryPicker 必须紧跟点击手势，中间不能 await 别的异步动作，
+    // 否则用户手势被消耗，Chrome 会直接抛 NotAllowedError（表现为"点了没反应"）。
+    if (!info || !info.ready) {
+      const granted = await paths.requireReady(['output'], '「图片目录」需要先设好切图输出目录才能打开。');
+      renderPathBanner();
+      if (granted) {
+        logLine('目录授权已恢复，再点一次「图片目录」即可弹出文件夹窗口（浏览器要求弹窗紧跟一次点击）。', 'warn');
+        setStatus('授权已恢复，请再点一次「图片目录」', false);
+      }
+      return false;
+    }
     const targetPath = currentTargetPath();
 
-    // 1) 不支持 File System Access 的浏览器：退回高亮路径设置行
+    // 1) 不支持 File System Access 的浏览器：退回高亮路径设置行 + 提示用「复制路径」
     if (typeof window.showDirectoryPicker !== 'function') {
       locateOutputDir();
-      logLine('当前浏览器不支持唤起系统文件夹窗口，已定位到「本地路径设置」：' + targetPath, 'warn');
+      logLine('当前浏览器无法唤起系统文件夹窗口，已定位到路径设置：' + targetPath +
+        '；可改用「复制路径」手动打开', 'warn');
       return false;
     }
 
@@ -2168,31 +2413,35 @@ const AlgorithmCore = (function () {
     if (state.batchDirHandle) candidates.push(state.batchDirHandle);
     if (info.handle) candidates.push(info.handle);
     candidates.push(undefined);
+    const candidatesName = ['本批切图目录', '输出根目录', '系统默认位置'];
 
     setStatus('正在打开文件夹窗口…', true);
     for (let i = 0; i < candidates.length; i += 1) {
       try {
         await window.showDirectoryPicker({ mode: 'read', startIn: candidates[i] });
-        logLine('已打开系统文件夹窗口：' + targetPath +
-          '（窗口只用于查看 / 取走文件，选中或取消都不会改动输出目录）', 'ok');
+        logLine('已打开系统文件夹窗口（起点：' + candidatesName[i] + '）：' + targetPath +
+          '。窗口只用于查看 / 取走文件，选中或取消都不会改动输出目录。', 'ok');
         setStatus('已打开文件夹：' + targetPath, false);
         return true;
       } catch (error) {
-        if (error && error.name === 'AbortError') {   // 用户自己关掉窗口，不再重试
+        const name = (error && error.name) || 'Error';
+        if (name === 'AbortError') {   // 用户自己关掉窗口，不再重试
           setStatus('已关闭文件夹窗口', false);
           return false;
         }
-        logLine('按当前目录打开失败（' + ((error && error.name) || 'Error') + '），改用下一级目录重试…', 'warn');
+        logLine('用「' + candidatesName[i] + '」打开失败：' + name +
+          (error && error.message ? '（' + error.message + '）' : '') + '，换下一级重试…', 'warn');
       }
     }
 
     locateOutputDir();
-    logLine('仍无法唤起系统文件夹窗口，已定位到「本地路径设置」：' + targetPath, 'warn');
-    setStatus('无法打开文件夹窗口，已定位到路径设置', false);
+    logLine('系统文件夹窗口打不开（浏览器限制）。已定位到路径设置：' + targetPath +
+      '；请用「复制路径」按钮拿到完整地址后手动打开。', 'warn');
+    setStatus('无法打开系统窗口，已定位到路径设置', false);
     return false;
   }
 
-  // 把「切图落在哪个文件夹」画成一条提示条（浏览器不暴露绝对路径，只显示已选的目录名）
+  // 把「切图落在哪个文件夹」画成一条提示条
   function renderFolderPath(payload) {
     elements.folderPath.hidden = false;
     elements.folderPath.innerHTML = '';
@@ -2202,15 +2451,30 @@ const AlgorithmCore = (function () {
 
     const code = document.createElement('code');
     code.id = 'folderPathText';
-    code.textContent = payload.path;
+    code.textContent = getAbsPath() ? currentFullPath() : payload.path;
+
+    const copyButton = document.createElement('button');
+    copyButton.type = 'button';
+    copyButton.textContent = '复制路径';
+    copyButton.title = '复制完整路径（macOS 粘到 Finder 的 ⌘⇧G，Windows 粘到资源管理器地址栏）';
+    copyButton.addEventListener('click', function () { copyBatchPath(); });
 
     const openButton = document.createElement('button');
     openButton.type = 'button';
-    openButton.textContent = '打开文件夹';
+    openButton.textContent = '浏览文件夹';
     openButton.title = '在弹出的系统文件夹窗口里定位到该目录';
     openButton.addEventListener('click', function () { revealOutputFolder(); });
 
-    elements.folderPath.append(label, code, openButton);
+    elements.folderPath.append(label, code, copyButton, openButton);
+  }
+
+  // 已显示提示条时，路径变了要同步刷新文字
+  function syncFolderPathBar() {
+    const code = document.getElementById('folderPathText');
+    if (!code || elements.folderPath.hidden) return;
+    code.textContent = getAbsPath()
+      ? currentFullPath()
+      : currentTargetPath();
   }
 
   // 拿不到系统窗口时（非 Chromium 内核）把页面滚到路径设置区并高亮输出目录那一行
@@ -2228,10 +2492,11 @@ const AlgorithmCore = (function () {
 
   elements.buttonSaveAll.addEventListener('click', saveElements);
   document.getElementById('buttonOpenFolder').addEventListener('click', function () { revealOutputFolder(); });
+  document.getElementById('buttonCopyPath').addEventListener('click', function () { copyBatchPath(); });
   document.getElementById('buttonReveal').addEventListener('click', function () { revealOutputFolder(); });
   document.getElementById('buttonClear').addEventListener('click', async function () {
     const info = paths.get('output');
-    if (!paths.require(['output'], '要先设置「切图输出目录」才能清空。')) return;
+    if (!(await paths.requireReady(['output'], '要先设置「切图输出目录」才能清空。'))) return;
     if (!confirm('确定清空「' + info.name + '」目录吗？里面所有切图文件夹与文件都会被删除，此操作不可撤销。')) return;
     try {
       const counters = await LocalFS.clearDir(info.handle);
@@ -2256,8 +2521,95 @@ const AlgorithmCore = (function () {
       state.batchDirHandle = null;   // 换了输出目录，之前那次的批次句柄不再有效
       refreshSourceList();
       refreshOutputInfo();
+      renderPathBanner();
     }
   });
+
+  /* ---------- 手动填写的「切图文件夹完整路径」（用于复制，Windows / macOS 各按本地写法） ---------- */
+
+  // 注意：这一块必须放在 paths 建好之后，getAbsPath / currentTargetPath 都会用到 paths
+  elements.buttonAbsSave.addEventListener('click', saveAbsPath);
+  elements.buttonAbsCopy.addEventListener('click', function () { copyBatchPath(); });
+  elements.buttonAbsClear.addEventListener('click', function () {
+    elements.inputAbsPath.value = '';
+    LocalFS.cfg.del(ABS_PATH_KEY);
+    renderAbsHint();
+    logLine('已清除记住的绝对路径', 'warn');
+  });
+  elements.inputAbsPath.addEventListener('keydown', function (event) {
+    if (event.key === 'Enter') { event.preventDefault(); saveAbsPath(); }
+  });
+  elements.inputAbsPath.addEventListener('change', function () {
+    if (normalizeAbsPath(elements.inputAbsPath.value) !== getAbsPath()) saveAbsPath();
+  });
+
+  /* ---------- 记住的目录：恢复 + 一次性补授权 ---------- */
+
+  // 浏览器安全模型：刷新页面后句柄还在，但访问权限一定会退回 "prompt"，
+  // 必须在用户手势里 requestPermission 一次。这里把它收敛成「一个按钮 / 一次点击」。
+  function pendingKeys() {
+    return ['source', 'output'].filter(function (key) {
+      const info = paths.get(key);
+      return info && info.permission === 'prompt';
+    });
+  }
+
+  function renderPathBanner() {
+    const pending = pendingKeys();
+    if (!pending.length) {
+      elements.pathBanner.hidden = true;
+      return;
+    }
+    const names = pending.map(function (key) {
+      const info = paths.get(key);
+      return (info && info.label ? info.label : key) + '（' + ((info && info.name) || '已记住') + '）';
+    });
+    elements.pathBannerText.innerHTML = '目录已记住：' + escapeHtml(names.join('、')) +
+      '。浏览器要求每次重新打开页面再确认一次访问权限，点右边按钮即可继续（只需 1 次）。';
+    elements.pathBanner.hidden = false;
+  }
+
+  elements.buttonRestoreAccess.addEventListener('click', async function () {
+    const pending = pendingKeys();
+    if (!pending.length) { renderPathBanner(); return; }
+    setStatus('正在恢复目录访问权限…', true);
+    const granted = await paths.grantAll(pending);
+    renderPathBanner();
+    if (granted) {
+      logLine('目录访问权限已恢复：' + pending.map(function (key) {
+        const info = paths.get(key);
+        return (info && info.name) || key;
+      }).join('、'), 'ok');
+      setStatus('已恢复目录访问', false);
+      refreshSourceList();
+      refreshOutputInfo();
+    } else {
+      logLine('浏览器仍然拒绝访问：请点对应那一行的「重新选择」再选一次该目录。', 'warn');
+      setStatus('恢复失败，请重新选择目录', false);
+    }
+  });
+
+  // 启动自检：把「记住了什么 / 卡在哪一层」直接写进日志，避免出现"刷新后好像什么都没了"
+  function reportPathState() {
+    const diag = paths.diagnostics();
+    const remembered = diag.items.filter(function (item) { return item.name; });
+    if (diag.indexedDB === 'fail') {
+      logLine('本浏览器无法使用 IndexedDB，目录选择不会被记住（无痕模式 / 站点存储被禁用会导致这种情况）。', 'err');
+    }
+    if (!remembered.length) {
+      logLine('还没有记住目录：在顶部各选一次「源文件目录」和「切图输出目录」，之后打开本页会自动沿用。');
+      return;
+    }
+    logLine('已恢复上次选择的目录：' + remembered.map(function (item) {
+      const info = paths.get(item.key);
+      const stateText = item.permission === 'granted' ? '可直接使用'
+        : (item.permission === 'prompt' ? '需确认一次权限' : '需重新选择');
+      return (info && info.label ? info.label : item.key) + ' → ' + item.name + '（' + stateText + '）';
+    }).join('；'), 'ok');
+    if (diag.indexedDB === 'fail') {
+      logLine('句柄没能持久化，所以名字是从本地缓存里读回来的：刷新后需要重新选一次目录。', 'warn');
+    }
+  }
 
   if (location.protocol === 'file:' || !LocalFS.supported()) {
     document.getElementById('fileProtocolNotice').hidden = false;
@@ -2268,6 +2620,10 @@ const AlgorithmCore = (function () {
 
   // 面板初始化是异步的（要从 IndexedDB 读回上次的目录），读完再刷新一次列表
   paths.refresh().then(function () {
+    elements.inputAbsPath.value = getAbsPath();
+    renderAbsHint();
+    reportPathState();
+    renderPathBanner();
     refreshSourceList();
     refreshOutputInfo();
   });
@@ -2278,8 +2634,14 @@ const AlgorithmCore = (function () {
     processCurrentImage: processCurrentImage,
     saveElements: saveElements,
     revealOutputFolder: revealOutputFolder,
+    copyBatchPath: copyBatchPath,
+    currentFullPath: currentFullPath,
+    normalizeAbsPath: normalizeAbsPath,
+    saveAbsPath: saveAbsPath,
     refreshSourceList: refreshSourceList,
     openSourceByName: openSourceByName,
+    paths: paths,
+    platform: PLATFORM,
     judgeCuttable: judgeCuttable,
     checkSizeGuard: checkSizeGuard,
     showCutDialog: showCutDialog,
