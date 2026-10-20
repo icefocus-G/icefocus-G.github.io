@@ -5,6 +5,8 @@
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>AI 图片切图 · 去背景 + 自动分块导出</title>
 <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='7' fill='%234f8cff'/%3E%3Cpath d='M9 21l5-6 3 3 6-8' stroke='white' stroke-width='2.4' fill='none' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E">
+<link rel="manifest" href="manifest.webmanifest">
+<meta name="theme-color" content="#10131a">
 <style>
   :root {
     --page: #10131a;
@@ -538,6 +540,7 @@
     <span>去背景 · 按独立元素自动分块 · 逐张导出到「切图文件」</span>
   </div>
   <div class="topbar-actions">
+    <button id="buttonInstall" hidden title="安装成应用后，Chrome / Edge 会持久记住目录授权，不再每次询问">安装成应用</button>
     <button id="buttonReveal" title="打开系统文件夹窗口，定位到切图输出目录">定位输出目录</button>
     <button id="buttonClear" class="danger">清空切图文件</button>
   </div>
@@ -1343,6 +1346,7 @@ const AlgorithmCore = (function () {
     buttonAbsClear: document.getElementById('buttonAbsClear'),
     absHint: document.getElementById('absHint'),
     buttonCopyPath: document.getElementById('buttonCopyPath'),
+    buttonInstall: document.getElementById('buttonInstall'),
     cutDialog: document.getElementById('cutDialog'),
     cutDialogClose: document.getElementById('cutDialogClose')
   };
@@ -2556,6 +2560,39 @@ const AlgorithmCore = (function () {
     if (normalizeAbsPath(elements.inputAbsPath.value) !== getAbsPath()) saveAbsPath();
   });
 
+  /* ---------- 安装成应用：Chrome 122+ 对已安装应用自动持久化目录授权 ---------- */
+
+  let installPrompt = null;
+  window.addEventListener('beforeinstallprompt', function (event) {
+    event.preventDefault();
+    installPrompt = event;
+    elements.buttonInstall.hidden = false;
+    logLine('可安装：点右上角「安装成应用」，装好后目录授权会被浏览器持久记住，打开就不再询问。');
+  });
+  window.addEventListener('appinstalled', function () {
+    installPrompt = null;
+    elements.buttonInstall.hidden = true;
+    logLine('已安装为应用：之后打开会直接沿用目录授权（Chrome 对已安装应用自动持久授权）。', 'ok');
+  });
+  elements.buttonInstall.addEventListener('click', async function () {
+    if (!installPrompt) return;
+    installPrompt.prompt();
+    let outcome = '';
+    try { outcome = (await installPrompt.userChoice).outcome; } catch (error) { outcome = 'dismissed'; }
+    installPrompt = null;
+    elements.buttonInstall.hidden = true;
+    logLine(outcome === 'accepted' ? '已提交安装，装好后授权会被记住。' : '已取消安装',
+      outcome === 'accepted' ? 'ok' : 'warn');
+  });
+  if (window.matchMedia && window.matchMedia('(display-mode: standalone)').matches) {
+    logLine('当前以「应用」方式运行：目录授权会自动持久化，正常不会再弹确认框。', 'ok');
+  }
+  if ('serviceWorker' in navigator && location.protocol !== 'file:') {
+    navigator.serviceWorker.register('./sw.js').catch(function (error) {
+      logLine('Service Worker 注册失败（不影响使用，只是无法安装成应用）：' + error.message, 'warn');
+    });
+  }
+
   /* ---------- 记住的目录：恢复 + 一次性补授权 ---------- */
 
   // 浏览器安全模型：刷新页面后句柄还在，但访问权限一定会退回 "prompt"，
@@ -2578,8 +2615,9 @@ const AlgorithmCore = (function () {
       return (info && info.label ? info.label : key) + '（' + ((info && info.name) || '已记住') + '）';
     });
     elements.pathBannerText.innerHTML = '已记住：' + escapeHtml(names.join('、')) +
-      '。Chrome / Edge 的安全策略要求每次打开页面后由<strong>一次点击</strong>确认目录访问' +
-      '（网页无法绕过），随便点一下页面任意位置即可自动恢复，本页不会再额外弹框。';
+      '。Chrome / Edge 打开页面后需要一次确认：授权框里请选「<b>每次访问时允许</b>」' +
+      '（别选「仅允许这次」，否则每次打开都要再点）。想彻底不弹：点右上角「安装成应用」，' +
+      '已安装的应用浏览器会自动持久授权。';
     elements.pathBanner.hidden = false;
     bindAutoHeal();
   }
