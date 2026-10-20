@@ -104,20 +104,28 @@
 
   /* ---------------- 权限 ---------------- */
 
+  /* 重要：FileSystemHandle.queryPermission / requestPermission 返回的是 Promise
+     （Chrome 155 / Edge 实测），早期版本把它当同步字符串用，导致刷新后权限永远读不到、
+     ready 恒为 false —— 表现为"刷新后选过的目录就没了"。这里统一按 Promise 处理。 */
   function queryPermission(handle, mode) {
-    if (!handle || typeof handle.queryPermission !== 'function') return 'unsupported';
-    try { return handle.queryPermission({ mode: mode || 'read' }); } catch (e) { return 'unsupported'; }
+    if (!handle || typeof handle.queryPermission !== 'function') return Promise.resolve('unsupported');
+    try { return Promise.resolve(handle.queryPermission({ mode: mode || 'read' })); } catch (e) {
+      return Promise.resolve('unsupported');
+    }
   }
   function requestPermission(handle, mode) {
     if (!handle || typeof handle.requestPermission !== 'function') return Promise.resolve('unsupported');
-    try { return handle.requestPermission({ mode: mode || 'read' }); } catch (e) { return Promise.resolve('denied'); }
+    try { return Promise.resolve(handle.requestPermission({ mode: mode || 'read' })); } catch (e) {
+      return Promise.resolve('denied');
+    }
   }
   /* 能用就返回 granted；是 prompt 时只能在用户手势里补一次授权 */
   function ensurePermission(handle, mode) {
-    var state = queryPermission(handle, mode);
-    if (state === 'granted') return Promise.resolve('granted');
-    if (state === 'prompt') return requestPermission(handle, mode);
-    return Promise.resolve(state);
+    return queryPermission(handle, mode).then(function (result) {
+      if (result === 'granted') return 'granted';
+      if (result === 'prompt') return requestPermission(handle, mode);
+      return result;
+    });
   }
 
   /* ---------------- 选择与读写 ---------------- */
@@ -339,6 +347,8 @@
 
     function permOf(entry) {
       if (!entry || !entry.handle) return 'unset';
+      // 兜底：万一拿到的是 Promise / 空值，不要把它当成状态字符串往外抛
+      if (typeof entry.perm !== 'string') return 'unknown';
       if (entry.perm !== 'granted') return entry.perm || 'unknown';
       return 'granted';
     }
@@ -503,8 +513,14 @@
               state[item.key] = meta ? { handle: null, meta: meta, perm: 'unset' } : {};
               return;
             }
-            var perm = queryPermission(handle, item.write ? 'readwrite' : 'read');
-            state[item.key] = { handle: handle, meta: { name: handle.name, kind: handle.kind }, perm: perm };
+            // 权限必须 await：拿到的是 Promise<PermissionState>，不是字符串
+            return queryPermission(handle, item.write ? 'readwrite' : 'read').then(function (perm) {
+              state[item.key] = {
+                handle: handle,
+                meta: { name: handle.name, kind: handle.kind },
+                perm: typeof perm === 'string' ? perm : 'unknown'
+              };
+            });
           });
         }));
       }).then(function () {
