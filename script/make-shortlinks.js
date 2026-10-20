@@ -1,0 +1,277 @@
+#!/usr/bin/env node
+/* =========================================================================
+ * 根路径短链生成器
+ *
+ *   作用：把深层目录里的页面，映射成域名根下一层的短地址：
+ *          https://icefocus.cn/jinrong        → 国际金融 · 学习助手
+ *          https://icefocus.cn/jinrong-bank   → 国际金融 · 历年真题库
+ *
+ *        生成的产物：
+ *          · <短名>.html  —— 根目录下的跳板页（真实文件，优先生效）
+ *          · links.html   —— 一页式收藏导航，短链一览 + 一键复制
+ *
+ *   用法：
+ *          node script/make-shortlinks.js
+ *
+ *   为什么用「跳板页」而不是改 index.html 做路由：
+ *     根路径访问在任何托管配置下都会先命中真实文件，不依赖
+ *     Cloudflare 那层「未命中路径回落到首页」的兜底规则；
+ *     将来兜底规则被移除，这些短链依然有效。
+ *
+ *   注意：短链地址不带 .html（GitHub Pages 会把 /x.html 308 到 /x，
+ *        真实文件 x.html 用 /x 访问是 200 直出，不会多一跳）。
+ * ========================================================================= */
+'use strict';
+
+const fs   = require('fs');
+const path = require('path');
+
+const ROOT = path.resolve(__dirname, '..');
+const ORIGIN = 'https://icefocus.cn';
+
+/* ---------------------------------------------------------------------
+ * 短链表：唯一需要手工维护的地方
+ *   alias  根路径短名（不要带 .html）
+ *   url    目标页（相对站点根，含空格时用 %20）
+ *   title  显示名
+ *   group  导航页分组
+ * ------------------------------------------------------------------- */
+const SHORTCUTS = [
+  /* ---- 学习 ---- */
+  { alias: 'exam',            url: '/examination/',                                    title: '学习总入口',            group: '学习', note: '自动发现全部课程' },
+  { alias: 'jinrong',         url: '/examination/International%20Finance/study',       title: '国际金融 · 学习助手',    group: '学习' },
+  { alias: 'jinrong-bank',    url: '/examination/International%20Finance/bank',        title: '国际金融 · 历年真题库',  group: '学习' },
+  { alias: 'jinrong-outline', url: '/examination/International%20Finance/outline',     title: '国际金融 · 0基础到精通', group: '学习' },
+  { alias: 'xifang',          url: '/examination/Western%20Economics/study',           title: '西方经济学 · 学习助手',  group: '学习' },
+  { alias: 'xifang-bank',     url: '/examination/Western%20Economics/bank',            title: '西方经济学 · 历年真题库', group: '学习' },
+  { alias: 'xifang-outline',  url: '/examination/Western%20Economics/outline',         title: '西方经济学 · 0基础到精通', group: '学习' },
+
+  /* ---- 工具 ---- */
+  { alias: 'task',            url: '/tasksync/',                                       title: '任务同步站',            group: '工具' },
+  { alias: 'tools',           url: '/tool/',                                           title: '工具箱',                group: '工具', note: '工具汇总入口' },
+  { alias: 'imgcut',          url: '/tool/img-cut/',                                   title: 'AI 图片切图',           group: '工具', note: '去背景 + 自动分块导出' },
+  { alias: 'psd',             url: '/tool/psd-rename/',                                title: '投放图 PSD 生成',       group: '工具' },
+
+  /* ---- 皮肤 ---- */
+  { alias: 'skin0',           url: '/ThemedSkin/default',                              title: '首页皮肤 · 默认',       group: '皮肤' },
+  { alias: 'skin1',           url: '/ThemedSkin/ThemedSkin01',                         title: '首页皮肤 · 游戏视觉',   group: '皮肤' },
+  { alias: 'skin2',           url: '/ThemedSkin/ThemedSkin02',                         title: '首页皮肤 · 设计印刷',   group: '皮肤' }
+];
+
+/* 短名合法性：只允许小写字母、数字、- 和 _，避免与现有文件冲突被覆盖 */
+const SAFE = /^[a-z0-9][a-z0-9_-]*$/;
+
+function esc(s) {
+  return String(s).replace(/[&<>"']/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
+}
+
+/* 目标页是否真实存在（含空格路径直接查文件系统） */
+function targetExists(url) {
+  const rel = decodeURIComponent(url.split('?')[0].split('#')[0]);
+  const abs = path.join(ROOT, rel);
+  if (fs.existsSync(abs)) return true;
+  return fs.existsSync(abs + '.html');
+}
+
+/* ---------------- 跳板页 ---------------- */
+function jumperPage(item) {
+  const target = item.url;
+  return `<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="robots" content="noindex,follow">
+<title>正在进入 · ${esc(item.title)}</title>
+<link rel="canonical" href="${ORIGIN}${esc(target)}">
+<meta name="theme-color" content="#0b1020">
+<script>
+/* 短链跳板：由 script/make-shortlinks.js 生成，请勿手工编辑。
+   icefocus.cn/${esc(item.alias)}  →  ${esc(target)}
+   用 replace 而不是 href，避免在历史上留一层“跳转中”后退页。 */
+(function () {
+  'use strict';
+  var t = ${JSON.stringify(target)};
+  try {
+    /* 保留 ?query 与 #hash：登录凭据走 #t=… 的链接靠这一步不丢 */
+    location.replace(t + location.search + location.hash);
+  } catch (e) {
+    location.href = t;
+  }
+})();
+</script>
+<style>
+  html,body{margin:0;height:100%;background:#0b1020;color:#8b9ec2}
+  body{display:grid;place-items:center;
+    font:14px/1.9 -apple-system,BlinkMacSystemFont,"PingFang SC","Microsoft YaHei",sans-serif}
+  .b{text-align:center;padding:24px}
+  .t{color:#e8eefb;font-size:15px;font-weight:600;letter-spacing:.02em;margin-bottom:6px}
+  .bar{margin:14px auto 0;width:110px;height:2px;border-radius:2px;
+    background:linear-gradient(90deg,#38bdf8,#a78bfa);animation:p 1.1s ease-in-out infinite}
+  @keyframes p{0%{transform:scaleX(.25);opacity:.4}50%{transform:scaleX(1);opacity:1}100%{transform:scaleX(.25);opacity:.4}}
+  a{color:#38bdf8;text-decoration:none}a:hover{text-decoration:underline}
+</style>
+</head>
+<body>
+  <div class="b">
+    <div class="t">${esc(item.title)}</div>
+    <div>正在进入 <a href="${esc(target)}">${esc(target)}</a></div>
+    <div class="bar"></div>
+  </div>
+</body>
+</html>
+`;
+}
+
+/* ---------------- 收藏导航页 ---------------- */
+function linksPage(items) {
+  const groups = [];
+  items.forEach(it => {
+    let g = groups.find(x => x.name === it.group);
+    if (!g) groups.push(g = { name: it.group, list: [] });
+    g.list.push(it);
+  });
+
+  const cards = groups.map(g => {
+    const rows = g.list.map(it => `
+      <a class="card" href="${esc(it.url)}" data-short="${esc(ORIGIN + '/' + it.alias)}">
+        <span class="cn"><b>${esc(it.title)}</b>${it.note ? `<i>${esc(it.note)}</i>` : ''}</span>
+        <span class="cs">icefocus.cn/${esc(it.alias)}</span>
+      </a>`).join('');
+    return `<section><h2>${esc(g.name)}</h2><div class="grid">${rows}\n      </div></section>`;
+  }).join('\n    ');
+
+  return `<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="theme-color" content="#0b1020">
+<meta name="description" content="ICEFOCUS 短链导航：每个地址都可以单独收藏。">
+<title>短链导航 · ICEFOCUS</title>
+<link rel="icon" href="assets/icon.svg">
+<link rel="manifest" href="manifest.webmanifest">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<style>
+:root{--bg:#0b1020;--ink:#e8eefb;--dim:#8b9ec2;--dim2:#5c6d8f;
+  --a1:#38bdf8;--a2:#a78bfa;--a3:#34d399;--line:rgba(140,170,220,.16);--card:rgba(19,26,46,.66)}
+*{box-sizing:border-box}
+html,body{margin:0;min-height:100%}
+body{background:var(--bg);color:var(--ink);-webkit-font-smoothing:antialiased;
+  font:15px/1.6 -apple-system,BlinkMacSystemFont,"PingFang SC","Microsoft YaHei","Segoe UI",Inter,sans-serif;
+  padding:0 0 64px}
+.glow{position:fixed;inset:-20% -10%;z-index:0;pointer-events:none;
+  background:radial-gradient(38% 42% at 18% 18%,rgba(56,189,248,.16),transparent 62%),
+             radial-gradient(36% 40% at 84% 22%,rgba(167,139,250,.16),transparent 62%),
+             radial-gradient(46% 44% at 50% 98%,rgba(52,211,153,.09),transparent 66%);
+  filter:blur(22px)}
+.wrap{position:relative;z-index:1;max-width:900px;margin:0 auto;padding:0 18px}
+header{padding:44px 0 8px}
+.k{font-size:11.5px;letter-spacing:.34em;color:var(--dim2);text-transform:uppercase}
+h1{margin:8px 0 6px;font-size:26px;letter-spacing:.02em;font-weight:800}
+.sub{color:var(--dim);font-size:13.5px}
+.sub code{background:rgba(140,170,220,.12);color:#cfe0ff;padding:1px 6px;border-radius:5px;font-size:12.5px}
+h2{margin:30px 0 10px;font-size:12px;letter-spacing:.22em;color:var(--dim2);font-weight:600}
+.grid{display:grid;grid-template-columns:1fr;gap:8px}
+@media(min-width:620px){.grid{grid-template-columns:1fr 1fr}}
+.card{display:flex;align-items:center;justify-content:space-between;gap:12px;
+  padding:12px 14px;border-radius:12px;text-decoration:none;color:inherit;
+  background:var(--card);border:1px solid var(--line);transition:.16s;position:relative}
+.card:hover{border-color:rgba(56,189,248,.45);transform:translateY(-1px);
+  box-shadow:0 10px 26px -16px rgba(56,189,248,.6)}
+.cn{display:flex;flex-direction:column;min-width:0}
+.cn b{font-size:14px;font-weight:600;letter-spacing:.01em}
+.cn i{font-style:normal;font-size:11.5px;color:var(--dim2);margin-top:1px}
+.cs{flex:none;font-size:11.5px;color:var(--a1);font-family:ui-monospace,SFMono-Regular,Menlo,monospace;
+  background:rgba(56,189,248,.09);border:1px solid rgba(56,189,248,.22);
+  padding:3px 8px;border-radius:999px;opacity:.9}
+footer{margin-top:34px;padding-top:16px;border-top:1px solid var(--line);
+  color:var(--dim2);font-size:12px;line-height:2}
+footer b{color:var(--dim);font-weight:600}
+</style>
+</head>
+<body>
+<div class="glow"></div>
+<div class="wrap">
+  <header>
+    <div class="k">ICEFOCUS · SHORT LINKS</div>
+    <h1>短链导航</h1>
+    <div class="sub">点开即进入对应页面；每个 <code>icefocus.cn/短名</code> 都能单独收藏。</div>
+  </header>
+    ${cards}
+  <footer>
+    <b>地址规则</b>：短名不带 <code>.html</code>；只有目录才能以 <code>/</code> 结尾。<br>
+    <b>维护方式</b>：改 <code>script/make-shortlinks.js</code> 里的 <code>SHORTCUTS</code> 表，<br>
+    然后运行 <code>node script/make-shortlinks.js</code> 重新生成短链页与本导航页。
+  </footer>
+</div>
+<script>
+/* 点短名徽标 = 复制短链，不跳转 */
+document.querySelectorAll('.card').forEach(function (a) {
+  var chip = a.querySelector('.cs');
+  if (!chip) return;
+  chip.addEventListener('click', function (e) {
+    e.preventDefault(); e.stopPropagation();
+    var s = a.getAttribute('data-short') || '';
+    var done = function () {
+      var old = chip.textContent;
+      chip.textContent = '已复制 ✓';
+      setTimeout(function () { chip.textContent = old; }, 1200);
+    };
+    if (navigator.clipboard && navigator.clipboard.writeText) {
+      navigator.clipboard.writeText(s).then(done, function () {});
+    } else {
+      var ta = document.createElement('textarea');
+      ta.value = s; document.body.appendChild(ta); ta.select();
+      try { document.execCommand('copy'); done(); } catch (err) {}
+      document.body.removeChild(ta);
+    }
+  });
+});
+</script>
+</body>
+</html>
+`;
+}
+
+/* ---------------- 主流程 ---------------- */
+function main() {
+  const problems = [];
+  const seen = Object.create(null);
+  const items = [];
+
+  SHORTCUTS.forEach(it => {
+    if (!SAFE.test(it.alias)) { problems.push('短名不合法：' + it.alias); return; }
+    if (seen[it.alias]) { problems.push('短名重复：' + it.alias); return; }
+    seen[it.alias] = 1;
+    if (it.alias === 'links' || it.alias === 'index') {
+      problems.push('短名与既有页面冲突：' + it.alias); return;
+    }
+    if (!targetExists(it.url)) { problems.push('目标不存在：' + it.alias + ' → ' + it.url); return; }
+    items.push(it);
+  });
+
+  if (problems.length) {
+    console.error('中止，先修正以下问题：');
+    problems.forEach(p => console.error('  · ' + p));
+    process.exit(1);
+  }
+
+  let written = 0;
+  items.forEach(it => {
+    const out = path.join(ROOT, it.alias + '.html');
+    fs.writeFileSync(out, jumperPage(it), 'utf8');
+    written++;
+  });
+
+  const linkOut = path.join(ROOT, 'links.html');
+  fs.writeFileSync(linkOut, linksPage(items), 'utf8');
+
+  console.log('已生成 ' + written + ' 个根路径短链：');
+  items.forEach(it => console.log('  ' + (ORIGIN + '/' + it.alias).padEnd(46) + ' → ' + it.url));
+  console.log('');
+  console.log('已写入：links.html（短链导航页）');
+  console.log('提示：' + (ORIGIN + '/links') + ' 可直达导航页');
+}
+
+main();

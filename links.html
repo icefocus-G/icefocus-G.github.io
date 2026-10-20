@@ -1,0 +1,151 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="theme-color" content="#0b1020">
+<meta name="description" content="ICEFOCUS 短链导航：每个地址都可以单独收藏。">
+<title>短链导航 · ICEFOCUS</title>
+<link rel="icon" href="assets/icon.svg">
+<link rel="manifest" href="manifest.webmanifest">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<style>
+:root{--bg:#0b1020;--ink:#e8eefb;--dim:#8b9ec2;--dim2:#5c6d8f;
+  --a1:#38bdf8;--a2:#a78bfa;--a3:#34d399;--line:rgba(140,170,220,.16);--card:rgba(19,26,46,.66)}
+*{box-sizing:border-box}
+html,body{margin:0;min-height:100%}
+body{background:var(--bg);color:var(--ink);-webkit-font-smoothing:antialiased;
+  font:15px/1.6 -apple-system,BlinkMacSystemFont,"PingFang SC","Microsoft YaHei","Segoe UI",Inter,sans-serif;
+  padding:0 0 64px}
+.glow{position:fixed;inset:-20% -10%;z-index:0;pointer-events:none;
+  background:radial-gradient(38% 42% at 18% 18%,rgba(56,189,248,.16),transparent 62%),
+             radial-gradient(36% 40% at 84% 22%,rgba(167,139,250,.16),transparent 62%),
+             radial-gradient(46% 44% at 50% 98%,rgba(52,211,153,.09),transparent 66%);
+  filter:blur(22px)}
+.wrap{position:relative;z-index:1;max-width:900px;margin:0 auto;padding:0 18px}
+header{padding:44px 0 8px}
+.k{font-size:11.5px;letter-spacing:.34em;color:var(--dim2);text-transform:uppercase}
+h1{margin:8px 0 6px;font-size:26px;letter-spacing:.02em;font-weight:800}
+.sub{color:var(--dim);font-size:13.5px}
+.sub code{background:rgba(140,170,220,.12);color:#cfe0ff;padding:1px 6px;border-radius:5px;font-size:12.5px}
+h2{margin:30px 0 10px;font-size:12px;letter-spacing:.22em;color:var(--dim2);font-weight:600}
+.grid{display:grid;grid-template-columns:1fr;gap:8px}
+@media(min-width:620px){.grid{grid-template-columns:1fr 1fr}}
+.card{display:flex;align-items:center;justify-content:space-between;gap:12px;
+  padding:12px 14px;border-radius:12px;text-decoration:none;color:inherit;
+  background:var(--card);border:1px solid var(--line);transition:.16s;position:relative}
+.card:hover{border-color:rgba(56,189,248,.45);transform:translateY(-1px);
+  box-shadow:0 10px 26px -16px rgba(56,189,248,.6)}
+.cn{display:flex;flex-direction:column;min-width:0}
+.cn b{font-size:14px;font-weight:600;letter-spacing:.01em}
+.cn i{font-style:normal;font-size:11.5px;color:var(--dim2);margin-top:1px}
+.cs{flex:none;font-size:11.5px;color:var(--a1);font-family:ui-monospace,SFMono-Regular,Menlo,monospace;
+  background:rgba(56,189,248,.09);border:1px solid rgba(56,189,248,.22);
+  padding:3px 8px;border-radius:999px;opacity:.9}
+footer{margin-top:34px;padding-top:16px;border-top:1px solid var(--line);
+  color:var(--dim2);font-size:12px;line-height:2}
+footer b{color:var(--dim);font-weight:600}
+</style>
+</head>
+<body>
+<div class="glow"></div>
+<div class="wrap">
+  <header>
+    <div class="k">ICEFOCUS · SHORT LINKS</div>
+    <h1>短链导航</h1>
+    <div class="sub">点开即进入对应页面；每个 <code>icefocus.cn/短名</code> 都能单独收藏。</div>
+  </header>
+    <section><h2>学习</h2><div class="grid">
+      <a class="card" href="/examination/" data-short="https://icefocus.cn/exam">
+        <span class="cn"><b>学习总入口</b><i>自动发现全部课程</i></span>
+        <span class="cs">icefocus.cn/exam</span>
+      </a>
+      <a class="card" href="/examination/International%20Finance/study" data-short="https://icefocus.cn/jinrong">
+        <span class="cn"><b>国际金融 · 学习助手</b></span>
+        <span class="cs">icefocus.cn/jinrong</span>
+      </a>
+      <a class="card" href="/examination/International%20Finance/bank" data-short="https://icefocus.cn/jinrong-bank">
+        <span class="cn"><b>国际金融 · 历年真题库</b></span>
+        <span class="cs">icefocus.cn/jinrong-bank</span>
+      </a>
+      <a class="card" href="/examination/International%20Finance/outline" data-short="https://icefocus.cn/jinrong-outline">
+        <span class="cn"><b>国际金融 · 0基础到精通</b></span>
+        <span class="cs">icefocus.cn/jinrong-outline</span>
+      </a>
+      <a class="card" href="/examination/Western%20Economics/study" data-short="https://icefocus.cn/xifang">
+        <span class="cn"><b>西方经济学 · 学习助手</b></span>
+        <span class="cs">icefocus.cn/xifang</span>
+      </a>
+      <a class="card" href="/examination/Western%20Economics/bank" data-short="https://icefocus.cn/xifang-bank">
+        <span class="cn"><b>西方经济学 · 历年真题库</b></span>
+        <span class="cs">icefocus.cn/xifang-bank</span>
+      </a>
+      <a class="card" href="/examination/Western%20Economics/outline" data-short="https://icefocus.cn/xifang-outline">
+        <span class="cn"><b>西方经济学 · 0基础到精通</b></span>
+        <span class="cs">icefocus.cn/xifang-outline</span>
+      </a>
+      </div></section>
+    <section><h2>工具</h2><div class="grid">
+      <a class="card" href="/tasksync/" data-short="https://icefocus.cn/task">
+        <span class="cn"><b>任务同步站</b></span>
+        <span class="cs">icefocus.cn/task</span>
+      </a>
+      <a class="card" href="/tool/" data-short="https://icefocus.cn/tools">
+        <span class="cn"><b>工具箱</b><i>工具汇总入口</i></span>
+        <span class="cs">icefocus.cn/tools</span>
+      </a>
+      <a class="card" href="/tool/img-cut/" data-short="https://icefocus.cn/imgcut">
+        <span class="cn"><b>AI 图片切图</b><i>去背景 + 自动分块导出</i></span>
+        <span class="cs">icefocus.cn/imgcut</span>
+      </a>
+      <a class="card" href="/tool/psd-rename/" data-short="https://icefocus.cn/psd">
+        <span class="cn"><b>投放图 PSD 生成</b></span>
+        <span class="cs">icefocus.cn/psd</span>
+      </a>
+      </div></section>
+    <section><h2>皮肤</h2><div class="grid">
+      <a class="card" href="/ThemedSkin/default" data-short="https://icefocus.cn/skin0">
+        <span class="cn"><b>首页皮肤 · 默认</b></span>
+        <span class="cs">icefocus.cn/skin0</span>
+      </a>
+      <a class="card" href="/ThemedSkin/ThemedSkin01" data-short="https://icefocus.cn/skin1">
+        <span class="cn"><b>首页皮肤 · 游戏视觉</b></span>
+        <span class="cs">icefocus.cn/skin1</span>
+      </a>
+      <a class="card" href="/ThemedSkin/ThemedSkin02" data-short="https://icefocus.cn/skin2">
+        <span class="cn"><b>首页皮肤 · 设计印刷</b></span>
+        <span class="cs">icefocus.cn/skin2</span>
+      </a>
+      </div></section>
+  <footer>
+    <b>地址规则</b>：短名不带 <code>.html</code>；只有目录才能以 <code>/</code> 结尾。<br>
+    <b>维护方式</b>：改 <code>script/make-shortlinks.js</code> 里的 <code>SHORTCUTS</code> 表，<br>
+    然后运行 <code>node script/make-shortlinks.js</code> 重新生成短链页与本导航页。
+  </footer>
+</div>
+<script>
+/* 点短名徽标 = 复制短链，不跳转 */
+document.querySelectorAll('.card').forEach(function (a) {
+  var chip = a.querySelector('.cs');
+  if (!chip) return;
+  chip.addEventListener('click', function (e) {
+    e.preventDefault(); e.stopPropagation();
+    var s = a.getAttribute('data-short') || '';
+    var done = function () {
+      var old = chip.textContent;
+      chip.textContent = '已复制 ✓';
+      setTimeout(function () { chip.textContent = old; }, 1200);
+    };
+    if (navigator.clipboard && navigator.clipboard.writeText) {
+      navigator.clipboard.writeText(s).then(done, function () {});
+    } else {
+      var ta = document.createElement('textarea');
+      ta.value = s; document.body.appendChild(ta); ta.select();
+      try { document.execCommand('copy'); done(); } catch (err) {}
+      document.body.removeChild(ta);
+    }
+  });
+});
+</script>
+</body>
+</html>
