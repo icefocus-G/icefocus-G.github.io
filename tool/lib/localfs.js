@@ -452,20 +452,24 @@
     }
 
     /* 批量补授权：浏览器刷新后句柄还在，但权限会退回 prompt，
-       必须在用户手势里 requestPermission 一次，这里把它做成一次点击恢复全部 */
+       必须在用户手势里 requestPermission 一次，这里把它做成一次点击恢复全部。
+       注意并发：自动补授权（首次点击）和按钮点击可能同时触发，
+       共用同一个 in-flight promise，避免浏览器连弹两个授权框。 */
+    var granting = null;
     function grantAll(keys) {
+      if (granting) return granting;
       var targets = (keys && keys.length ? keys : items.map(function (item) { return item.key; }))
         .filter(function (key) {
           var entry = state[key];
           return entry && entry.handle && entry.perm === 'prompt';
         });
       if (!targets.length) return Promise.resolve(true);
-      return targets.reduce(function (chain, key) {
+      granting = targets.reduce(function (chain, key) {
         return chain.then(function () {
           var entry = state[key];
-          return Promise.resolve(ensurePermission(entry.handle, (itemByKey(key) || {}).write ? 'readwrite' : 'read'))
+          return ensurePermission(entry.handle, (itemByKey(key) || {}).write ? 'readwrite' : 'read')
             .then(function (perm) {
-              entry.perm = perm;
+              entry.perm = typeof perm === 'string' ? perm : 'unknown';
               paintRow(key);
               fire();
             });
@@ -473,6 +477,9 @@
       }, Promise.resolve()).then(function () {
         return targets.every(function (key) { return (state[key] || {}).perm === 'granted'; });
       });
+      var reset = function () { granting = null; };
+      granting.then(reset, reset);
+      return granting;
     }
 
     function notReady(keys) {

@@ -492,6 +492,11 @@
     font-size:12.5px;font-weight:700;cursor:pointer;
     background:linear-gradient(135deg,#38bdf8,#6366f1);color:#08101f;
   }
+  .path-banner button.ghost{
+    background:rgba(255,255,255,.06);border-color:rgba(229,168,61,.45);
+    color:#f3d49a;font-weight:600;
+  }
+  .path-banner button.ghost:hover{ background:rgba(255,255,255,.12); }
 
   /* 手动填写「切图文件夹」的绝对路径：浏览器不暴露磁盘路径，只能自己填一次 */
   .absbox{
@@ -550,6 +555,7 @@
   <div class="path-banner" id="pathBanner" hidden>
     <span class="grow" id="pathBannerText"></span>
     <button type="button" id="buttonRestoreAccess">恢复访问</button>
+    <button type="button" id="buttonDiagnostics" class="ghost">复制诊断</button>
   </div>
 
   <div class="absbox" id="absBox">
@@ -1288,7 +1294,7 @@ const AlgorithmCore = (function () {
 <!-- ======================================================================
      界面逻辑
      ====================================================================== -->
-<script src="../lib/localfs.js"></script>
+<script src="../lib/localfs.js?v=20261020b"></script>
 <script>
 (function () {
   'use strict';
@@ -1329,6 +1335,7 @@ const AlgorithmCore = (function () {
     pathBanner: document.getElementById('pathBanner'),
     pathBannerText: document.getElementById('pathBannerText'),
     buttonRestoreAccess: document.getElementById('buttonRestoreAccess'),
+    buttonDiagnostics: document.getElementById('buttonDiagnostics'),
     absBox: document.getElementById('absBox'),
     inputAbsPath: document.getElementById('inputAbsPath'),
     buttonAbsSave: document.getElementById('buttonAbsSave'),
@@ -2042,8 +2049,8 @@ const AlgorithmCore = (function () {
     const info = paths.get('source');
     if (!info || !info.ready) {
       elements.sourceList.innerHTML = info && info.name
-        ? '<div class="source-empty">「' + escapeHtml(info.name) + '」已记住，但浏览器要求重新确认一次访问权限：' +
-          '点页面顶部黄色的「恢复访问」（只需 1 次点击）后就会列出图片。</div>'
+        ? '<div class="source-empty">「' + escapeHtml(info.name) + '」已记住，浏览器要求确认一次访问权限：' +
+          '在页面任意位置点一下就会自动恢复（也可以点黄色条上的「恢复访问」）。</div>'
         : '<div class="source-empty">还没设置「源文件目录」。在页面顶部点「选择…」指定一个放原图的文件夹，' +
           '以后打开本页会自动沿用。</div>';
       return;
@@ -2570,9 +2577,80 @@ const AlgorithmCore = (function () {
       const info = paths.get(key);
       return (info && info.label ? info.label : key) + '（' + ((info && info.name) || '已记住') + '）';
     });
-    elements.pathBannerText.innerHTML = '目录已记住：' + escapeHtml(names.join('、')) +
-      '。浏览器要求每次重新打开页面再确认一次访问权限，点右边按钮即可继续（只需 1 次）。';
+    elements.pathBannerText.innerHTML = '已记住：' + escapeHtml(names.join('、')) +
+      '。Chrome / Edge 的安全策略要求每次打开页面后由<strong>一次点击</strong>确认目录访问' +
+      '（网页无法绕过），随便点一下页面任意位置即可自动恢复，本页不会再额外弹框。';
     elements.pathBanner.hidden = false;
+    bindAutoHeal();
+  }
+
+  /* 把「这次确认」搭在用户进入页面后的第一次点击 / 按键上：
+     不需要专门去找「恢复访问」按钮，用户在页面上做的任何第一个动作都会顺带完成授权。 */
+  let autoHealBound = false;
+  function bindAutoHeal() {
+    if (autoHealBound || !pendingKeys().length) return;
+    autoHealBound = true;
+
+    function unbind() {
+      document.removeEventListener('pointerdown', heal, true);
+      document.removeEventListener('keydown', heal, true);
+    }
+
+    async function heal(event) {
+      // 点「复制诊断」时不要顺手去要权限，免得诊断信息被授权弹框打断
+      if (event && event.target && event.target.id === 'buttonDiagnostics') return;
+      unbind();
+      const pending = pendingKeys();
+      if (!pending.length) { renderPathBanner(); return; }
+      setStatus('正在恢复目录访问权限…', true);
+      const granted = await paths.grantAll(pending);
+      renderPathBanner();
+      if (granted) {
+        logLine('目录访问权限已恢复：' + pending.map(function (key) {
+          const info = paths.get(key);
+          return (info && info.name) || key;
+        }).join('、') + '（本次会话内不会再问）', 'ok');
+        setStatus('已恢复目录访问', false);
+        refreshSourceList();
+        refreshOutputInfo();
+      } else {
+        logLine('授权没有完成（浏览器弹框被拒或未响应）：点黄色条上的「恢复访问」再试一次。', 'warn');
+        setStatus('授权未完成，点「恢复访问」重试', false);
+      }
+    }
+
+    document.addEventListener('pointerdown', heal, true);
+    document.addEventListener('keydown', heal, true);
+  }
+
+  // 一键收集现场信息，方便判断"到底是哪一层没恢复"
+  async function copyDiagnostics() {
+    const diag = paths.diagnostics();
+    const lines = [
+      'img-cut 诊断 ' + new Date().toLocaleString(),
+      '地址：' + location.href,
+      '协议：' + location.protocol,
+      '浏览器：' + navigator.userAgent,
+      '系统识别：' + PLATFORM + '（分隔符 ' + PATH_SEP + '）',
+      'File System Access：' + (typeof window.showDirectoryPicker === 'function' ? '支持' : '不支持'),
+      'IndexedDB：' + diag.indexedDB,
+      '已记住的绝对路径：' + (getAbsPath() || '（未填）'),
+      '目录状态：'
+    ].concat(diag.items.map(function (item) {
+      return '  · ' + item.key + '：name=' + (item.name || '空') +
+        ' hasHandle=' + item.hasHandle + ' permission=' + item.permission + ' ready=' + item.ready;
+    })).concat([
+      '本批批次目录：' + (state.batchFolder || '（无）'),
+      '日志最后 6 行：',
+      Array.prototype.slice.call(elements.log.children, -6).map(function (node) {
+        return '  ' + node.textContent;
+      }).join('\n')
+    ]);
+    const text = lines.join('\n');
+    const ok = await copyText(text);
+    if (ok) logLine('诊断信息已复制到剪贴板，可直接粘贴发给维护者', 'ok');
+    else logLine('诊断信息（复制失败，请手动选中）：\n' + text, 'warn');
+    return text;
   }
 
   elements.buttonRestoreAccess.addEventListener('click', async function () {
@@ -2593,6 +2671,11 @@ const AlgorithmCore = (function () {
       logLine('浏览器仍然拒绝访问：请点对应那一行的「重新选择」再选一次该目录。', 'warn');
       setStatus('恢复失败，请重新选择目录', false);
     }
+  });
+
+  elements.buttonDiagnostics.addEventListener('click', function (event) {
+    event.stopPropagation();
+    copyDiagnostics();
   });
 
   // 启动自检：把「记住了什么 / 卡在哪一层」直接写进日志，避免出现"刷新后好像什么都没了"
@@ -2641,6 +2724,7 @@ const AlgorithmCore = (function () {
     saveElements: saveElements,
     revealOutputFolder: revealOutputFolder,
     copyBatchPath: copyBatchPath,
+    copyDiagnostics: copyDiagnostics,
     currentFullPath: currentFullPath,
     normalizeAbsPath: normalizeAbsPath,
     saveAbsPath: saveAbsPath,
