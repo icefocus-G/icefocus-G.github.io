@@ -134,9 +134,14 @@ function linksPage(items) {
 
   const cards = groups.map(g => {
     const rows = g.list.map(it => `
-      <a class="card" href="${esc(it.url)}" data-alias="${esc(it.alias)}">
+      <a class="card" href="${esc(it.url)}" data-alias="${esc(it.alias)}" data-real="${esc(it.url)}">
         <span class="cn"><b>${esc(it.title)}</b>${it.note ? `<i>${esc(it.note)}</i>` : ''}</span>
-        <span class="cs">icefocus.cn/${esc(it.alias)}</span>
+        <span class="acts">
+          <span class="cs" title="复制短链">icefocus.cn/${esc(it.alias)}</span>
+          <span class="cu" title="复制真实页面地址（建书签用这个）">
+            <svg viewBox="0 0 16 16" width="11" height="11" aria-hidden="true"><rect x="5.6" y="5.6" width="7.8" height="7.8" rx="1.7" fill="none" stroke="currentColor" stroke-width="1.4"/><path d="M10.4 5.6V3.2A1.7 1.7 0 0 0 8.7 1.5H3.2A1.7 1.7 0 0 0 1.5 3.2v5.5a1.7 1.7 0 0 0 1.7 1.7h2.4" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round"/></svg>
+          </span>
+        </span>
       </a>`).join('');
     return `<section><h2>${esc(g.name)}</h2><div class="grid">${rows}\n      </div></section>`;
   }).join('\n    ');
@@ -182,9 +187,20 @@ h2{margin:30px 0 10px;font-size:12px;letter-spacing:.22em;color:var(--dim2);font
 .cn{display:flex;flex-direction:column;min-width:0}
 .cn b{font-size:14px;font-weight:600;letter-spacing:.01em}
 .cn i{font-style:normal;font-size:11.5px;color:var(--dim2);margin-top:1px}
+.acts{display:flex;align-items:center;gap:6px;flex:none}
 .cs{flex:none;font-size:11.5px;color:var(--a1);font-family:ui-monospace,SFMono-Regular,Menlo,monospace;
   background:rgba(56,189,248,.09);border:1px solid rgba(56,189,248,.22);
-  padding:3px 8px;border-radius:999px;opacity:.9}
+  padding:3px 8px;border-radius:999px;opacity:.9;white-space:nowrap;cursor:pointer}
+.cs:hover{background:rgba(56,189,248,.16)}
+.cu{flex:none;width:24px;height:22px;display:grid;place-items:center;border-radius:6px;
+  font-size:12px;color:var(--dim2);border:1px solid var(--line);cursor:pointer;transition:.16s}
+.cu:hover{color:var(--a3);border-color:rgba(52,211,153,.45);background:rgba(52,211,153,.08)}
+.cu.ok{color:var(--a3);border-color:rgba(52,211,153,.55)}
+@media(max-width:560px){
+  .card{flex-direction:column;align-items:stretch;gap:8px}
+  .acts{justify-content:space-between}
+  .cn b{font-size:13.5px}
+}
 footer{margin-top:34px;padding-top:16px;border-top:1px solid var(--line);
   color:var(--dim2);font-size:12px;line-height:2}
 footer b{color:var(--dim);font-weight:600}
@@ -201,34 +217,56 @@ footer b{color:var(--dim);font-weight:600}
     ${cards}
   <footer>
     <b>地址规则</b>：短名不带 <code>.html</code>；只有目录才能以 <code>/</code> 结尾。<br>
-    <b>双域名</b>：<code>icefocus.cn/短名</code> 与 <code>icefocus-G.github.io/短名</code> 等价，本页复制的是当前域名的短链。<br>
+    <b>怎么收藏</b>：点卡片上的 <code>⧉</code> 复制真实页面地址，用它建书签；短名徽标复制的是短链。<br>
+    <b>双域名</b>：<code>icefocus.cn/短名</code> 与 <code>icefocus-G.github.io/短名</code> 等价，本页复制的是当前域名的地址。<br>
     <b>维护方式</b>：改 <code>script/make-shortlinks.js</code> 里的 <code>SHORTCUTS</code> 表，<br>
     然后运行 <code>node script/make-shortlinks.js</code> 重新生成短链页与本导航页。
   </footer>
 </div>
 <script>
-/* 点短名徽标 = 复制短链，不跳转 */
+/* 卡片上两个小按钮：短名徽标=复制短链，⧉=复制真实页面地址。都不跳转。 */
+function copyText(s, done) {
+  if (navigator.clipboard && navigator.clipboard.writeText) {
+    navigator.clipboard.writeText(s).then(done, function () {});
+  } else {
+    var ta = document.createElement('textarea');
+    ta.value = s; document.body.appendChild(ta); ta.select();
+    try { document.execCommand('copy'); done(); } catch (err) {}
+    document.body.removeChild(ta);
+  }
+}
+
 document.querySelectorAll('.card').forEach(function (a) {
-  var chip = a.querySelector('.cs');
-  if (!chip) return;
-  chip.addEventListener('click', function (e) {
-    e.preventDefault(); e.stopPropagation();
-    /* 跟随当前域名：icefocus.cn 复制 cn 短链，github.io 复制 github.io 短链 */
-    var s = location.origin + '/' + (a.getAttribute('data-alias') || '');
-    var done = function () {
-      var old = chip.textContent;
-      chip.textContent = '已复制 ✓';
-      setTimeout(function () { chip.textContent = old; }, 1200);
-    };
-    if (navigator.clipboard && navigator.clipboard.writeText) {
-      navigator.clipboard.writeText(s).then(done, function () {});
-    } else {
-      var ta = document.createElement('textarea');
-      ta.value = s; document.body.appendChild(ta); ta.select();
-      try { document.execCommand('copy'); done(); } catch (err) {}
-      document.body.removeChild(ta);
-    }
-  });
+  /* 跟随当前域名：icefocus.cn 显示/复制 cn 地址，github.io 显示/复制 github.io 地址 */
+  var alias    = a.getAttribute('data-alias') || '';
+  var shortUrl = location.origin + '/' + alias;
+  var realUrl  = location.origin + (a.getAttribute('data-real') || '');
+
+  var cs = a.querySelector('.cs');
+  if (cs) {
+    cs.textContent = location.host + '/' + alias;   // 静态文案只写了 cn，这里按实际域名纠正
+    cs.addEventListener('click', function (e) {
+      e.preventDefault(); e.stopPropagation();
+      copyText(shortUrl, function () {
+        var old = cs.textContent;
+        cs.textContent = '已复制 ✓';
+        setTimeout(function () { cs.textContent = old; }, 1200);
+      });
+    });
+  }
+
+  var cu = a.querySelector('.cu');
+  if (cu) {
+    var html = cu.innerHTML;
+    cu.addEventListener('click', function (e) {
+      e.preventDefault(); e.stopPropagation();
+      copyText(realUrl, function () {
+        cu.classList.add('ok');
+        cu.textContent = '✓';
+        setTimeout(function () { cu.classList.remove('ok'); cu.innerHTML = html; }, 1200);
+      });
+    });
+  }
 });
 </script>
 </body>
