@@ -30,7 +30,7 @@
 
     if(data.children&&data.children.length){
       data.children.forEach(function(ch,i){
-        var cs = depth===0 ? (i%2===0?'r':'l') : side;
+        var cs = 'r';
         var cc = depth===0 ? COLORS[i%COLORS.length] : color;
         self.children.push(build(ch,self,depth+1,cc,cs));
       });
@@ -178,6 +178,14 @@
     ty=padTop-b.y*scale;
     applyTransform();
   }
+  function fitWidth(){
+    var b=bounds(), r=viewport.getBoundingClientRect();
+    var padX=60;
+    scale=Math.max(0.3, Math.min((r.width-padX*2)/Math.max(b.w,1), 1));
+    tx=r.width/2-(b.x+b.w/2)*scale;
+    ty=r.height/2-(b.y+b.h/2)*scale;
+    applyTransform();
+  }
   function centerOn(n,fixedScale){
     var r=viewport.getBoundingClientRect();
     if(fixedScale) scale=fixedScale; else scale=Math.max(scale,0.75);
@@ -225,7 +233,9 @@
 
   root=build(DATA,null,0,'#111827','r');
   setCollapseDepth(MM.defaultDepth||1);
-  centerOn(root,0.9);
+  if(MM.mode==='fit'){ fitAll(); }
+  else if(MM.mode==='width'){ fitWidth(); }
+  else { centerOn(root,0.9); }
   document.getElementById('stat').textContent='共 '+all.length+' 个节点';
   window.addEventListener('resize',fitAll);
 

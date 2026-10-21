@@ -24,16 +24,16 @@ svg#wires{position:absolute;left:0;top:0;overflow:visible;pointer-events:none}
 .card{border-radius:10px;padding:7px 12px;font-size:13px;line-height:1.5;border:1px solid rgba(15,23,42,.09);
   background:#fff;box-shadow:0 2px 6px rgba(20,30,60,.08);width:max-content;max-width:230px;
   overflow-wrap:anywhere;word-break:break-word}
-.card .t{font-weight:600;overflow-wrap:anywhere;word-break:break-word}
+.card .t{font-weight:600;overflow-wrap:anywhere;word-break:break-word;white-space:normal}
 .card .d{font-size:11.5px;color:#64748b;margin-top:3px;line-height:1.45;overflow-wrap:anywhere;word-break:break-word}
 .node.d0{z-index:5}
 .node.d0 .card{background:#111827;color:#fff;font-size:17px;font-weight:700;padding:13px 24px;border:none;
   box-shadow:0 8px 24px rgba(17,24,39,.3);max-width:280px}
 .node.d1 .card{background:#1f2937;color:#fff;font-weight:700;border:none;padding:9px 16px;font-size:14px;max-width:250px}
 .node.d1 .card .d{color:rgba(255,255,255,.8)}
-.node.d0 .card .t,.node.d1 .card .t,.node.d2 .card .t{white-space:nowrap}
+.node.d0 .card .t,.node.d1 .card .t{white-space:nowrap}
 .node.side-l .card{text-align:right}
-.node.d2 .card{font-weight:600;border-left:4px solid;max-width:240px}
+.node.d2 .card{font-weight:600;border-left:4px solid;max-width:260px}
 .node.d3 .card,.node.d4 .card{font-size:12.5px;border-left:3px solid}
 .node.d3 .card .t,.node.d4 .card .t{font-weight:500}
 .node.side-l.d2 .card,.node.side-l.d3 .card,.node.side-l.d4 .card{border-left-width:1px;border-right:4px solid}
