@@ -1,0 +1,174 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Unity 进阶之视频播放 · Unity 交互课件</title>
+<link rel="stylesheet" href="assets/style.css">
+<link rel="stylesheet" href="assets/diagram.css">
+</head>
+<body data-mid="m02">
+<header class="top">
+  <a class="brand" href="index.html"><span class="logo">U</span><b>Unity</b><i>交互课件</i></a>
+  <div class="crumb"><span>开发经验补充</span><em>/</em><strong>Unity 进阶之视频播放</strong></div>
+  <div class="top-r">
+    <span class="stat">762 字 · 1 代码 · 0 图 · 0 表</span>
+    <button class="mini" id="btnNav">目录</button>
+  </div>
+</header>
+<div class="wrap">
+  <aside class="side" id="side">
+    <div class="side-h">本篇目录</div>
+    <nav class="tocbox"><a class="toc lv3" href="#第-2-章-视频播放概述-1">第 2 章：视频播放概述</a><a class="toc lv3" href="#第-3-章-视频格式和编解码器-2">第 3 章：视频格式和编解码器</a><a class="toc lv3" href="#第-4-章-Unity-中的视频兼容性-3">第 4 章：Unity 中的视频兼容性</a><a class="toc lv3" href="#第-5-章-视频剪辑设置相关-4">第 5 章：视频剪辑设置相关</a><a class="toc lv3" href="#第-6-章-Video-Player-视频播放器-5">第 6 章：Video Player 视频播放器</a><a class="toc lv4" href="#1-VideoPlayer-视频播放器-知识点-1-6">1. VideoPlayer 视频播放器 知识点 1</a><a class="toc lv4" href="#2-VideoPlayer-视频播放器-知识点-2-7">2. VideoPlayer 视频播放器 知识点 2</a><a class="toc lv4" href="#3-VideoPlayer-视频播放器-练习题-8">3. VideoPlayer 视频播放器 练习题</a><a class="toc lv3" href="#第-7-章-全景视频-9">第 7 章：全景视频</a><a class="toc lv3" href="#第-8-章-总结-10">第 8 章：总结</a><a class="toc lv2" href="#sup-m02-api">VideoPlayer 能力边界</a><a class="toc lv3" href="#sup-m02-mode">Render Mode 三种输出方式</a><a class="toc lv2" href="#sup-m02-flow">一次可靠的播放流程</a><a class="toc lv3" href="#sup-m02-pit">五个高频坑</a></nav>
+    <div class="side-h">全部模块</div>
+    <nav class="navbox"><div class="ng"><div class="ngt">开发经验补充</div><a href="m01.html">Unity - 进阶 - 大纲</a><a href="m02.html" class="on">Unity 进阶之视频播放</a><a href="m03.html">Unity - 进阶 - C# 补充</a><a href="m04.html">Unity 网络开发基础</a><a href="m05.html">Unity 程序框架</a></div><div class="ng"><div class="ngt">游戏引擎相关</div><a href="m06.html">Unity_入门</a><a href="m07.html">Unity_入门 - 实践项目</a><a href="m08.html">Unity_基础</a><a href="m09.html">Unity 核心</a><a href="m10.html">UniTask</a></div><div class="ng"><div class="ngt">数据持久化</div><a href="m11.html">Unity 进阶之 ScriptableObject</a><a href="m12.html">Unity_数据持久化 - PlayerPrefs</a><a href="m13.html">Unity_数据持久化 - Newtonsoft-Json</a><a href="m14.html">MessagePack-CSharp - 二进制</a><a href="m26.html">Unity 数据持久化 - Binary 2 进制</a></div><div class="ng"><div class="ngt">界面 UI 相关</div><a href="m15.html">Unity-UGUI</a><a href="m16.html">Unity-UGUI - 进阶 - TextMeshPro</a><a href="m27.html">Unity_GUI 概述（编辑器用）</a></div><div class="ng"><div class="ngt">设备输入相关</div><a href="m17.html">Unity 进阶之 InputSystem</a></div><div class="ng"><div class="ngt">热更相关</div><a href="m18.html">YooAsset 资源管理 - 大游戏</a><a href="m19.html">Addressables 资源管理 - 小游戏</a><a href="m20.html">HybridCLR - 代码业务逻辑</a></div><div class="ng"><div class="ngt">性能优化相关</div><a href="m21.html">Unity 进阶之性能优化</a><a href="m22.html">Unity 背包里装 10w 个道具</a></div><div class="ng"><div class="ngt">SDK 相关</div><div class="ngempty">预留分类 · 后续补充</div></div><div class="ng"><div class="ngt">游戏打包相关</div><a href="m23.html">Unity 移动平台相关 — IOS</a><a href="m24.html">Unity 移动平台相关 — Android</a><a href="m25.html">unity_00 - 数学公式和物理公式</a></div></nav>
+  </aside>
+  <main class="main">
+    <div class="mhead">
+      <div class="kick">开发经验补充</div>
+      <h1>Unity 进阶之视频播放</h1>
+      <p class="msub">VideoPlayer 与播放器体系</p>
+      <div class="chips"><span>762 字原稿</span><span>1 段代码</span><span>0 张配图</span><span>0 个表格</span></div>
+    </div>
+    <article class="doc">
+<div class="runsec"><div class="runsec-h">本模块可运行验证<span>纯 C# · 无需 Unity · 点右下按钮真实编译执行</span></div><div class="cpair"><div class="chead"><span class="lang">C#</span><span class="csp"></span><button class="mini copy">复制</button><button class="mini run" data-run>真实运行</button></div><pre class="code" data-lang="csharp"><code>// 视频播放器状态机：只允许合法的状态转移
+var allowed = new Dictionary&lt;string, string[]&gt;
+{
+    ["Idle"]     = new[] { "Prepared" },
+    ["Prepared"] = new[] { "Playing", "Idle" },
+    ["Playing"]  = new[] { "Paused", "Stopped" },
+    ["Paused"]   = new[] { "Playing", "Stopped" },
+    ["Stopped"]  = new[] { "Prepared", "Idle" }
+};
+
+string state = "Idle";
+bool Can(string to) =&gt; allowed.TryGetValue(state, out var tos) &amp;&amp; tos.Contains(to);
+
+void Go(string to)
+{
+    if (Can(to)) { Console.WriteLine($"  {state,-9} -&gt; {to,-9}  允许"); state = to; }
+    else Console.WriteLine($"  {state,-9} -&gt; {to,-9}  拒绝（非法转移）");
+}
+
+Console.WriteLine("正常流程：Prepare -&gt; Play -&gt; Pause -&gt; Play -&gt; Stop");
+Go("Prepared"); Go("Playing"); Go("Paused"); Go("Playing"); Go("Stopped");
+Console.WriteLine();
+Console.WriteLine("常见错误流程：Idle 直接 Play、Stopped 直接 Play");
+state = "Idle"; Go("Playing");
+state = "Stopped"; Go("Playing");
+Console.WriteLine();
+Console.WriteLine($"最终状态：{state}");</code></pre><div class="cout" hidden></div></div></div><div class="demo" data-demo="video"><div class="demo-bar"><span class="dot"></span>视频播放器状态机<span class="demo-tag">交互演示</span></div><div class="demo-body"><div class="demo-loading">加载中…</div></div></div>
+<p class="tx">2 小时 15 分 18 秒</p>
+<h3 id="第-2-章-视频播放概述-1" class="hd lv3">第 2 章：视频播放概述</h3>
+<h3 id="第-3-章-视频格式和编解码器-2" class="hd lv3">第 3 章：视频格式和编解码器</h3>
+<h3 id="第-4-章-Unity-中的视频兼容性-3" class="hd lv3">第 4 章：Unity 中的视频兼容性</h3>
+<h3 id="第-5-章-视频剪辑设置相关-4" class="hd lv3">第 5 章：视频剪辑设置相关</h3>
+<h3 id="第-6-章-Video-Player-视频播放器-5" class="hd lv3">第 6 章：Video Player 视频播放器</h3>
+<h4 id="1-VideoPlayer-视频播放器-知识点-1-6" class="hd lv4">1. VideoPlayer 视频播放器 知识点 1</h4>
+<h4 id="2-VideoPlayer-视频播放器-知识点-2-7" class="hd lv4">2. VideoPlayer 视频播放器 知识点 2</h4>
+<h4 id="3-VideoPlayer-视频播放器-练习题-8" class="hd lv4">3. VideoPlayer 视频播放器 练习题</h4>
+<h3 id="第-7-章-全景视频-9" class="hd lv3">第 7 章：全景视频</h3>
+<h3 id="第-8-章-总结-10" class="hd lv3">第 8 章：总结</h3>
+<div class="cpair"><div class="chead"><span class="lang">C#</span><span class="csp"></span><button class="mini copy">复制</button></div><pre class="code" data-lang="csharp"><code>using UnityEngine;
+using UnityEngine.Video;
+
+public class Example : MonoBehaviour
+{
+    void Start()
+    {
+        // 为当前游戏对象添加 VideoPlayer 组件
+        VideoPlayer videoPlayer = gameObject.AddComponent&lt;VideoPlayer&gt;();
+
+        // 配置视频源为 URL
+        videoPlayer.source = VideoSource.Url;
+        videoPlayer.url = "https://example.com/myvideo.mp4"; // 网络视频地址[reference:14]
+
+        // 或者，配置视频源为项目中的视频剪辑
+        // videoPlayer.source = VideoSource.VideoClip;
+        // videoPlayer.clip = myVideoClip; // 在Inspector中拖拽赋值
+
+        // 开始播放
+        videoPlayer.Play();
+    }
+}</code></pre><div class="cout" hidden></div></div>
+<div class="sup">
+<div class="sup-t">原稿此篇较短 · 以下为补充整理 <i>非语雀原文</i></div>
+
+<h2 id="sup-m02-api" class="hd lv2">VideoPlayer 能力边界</h2>
+<p class="tx">Unity 自带的 <code>VideoPlayer</code> 本质是把平台解码器包了一层：Windows/macOS 走系统解码，Android 走 ExoPlayer，iOS 走 AVFoundation。所以「同一个视频在编辑器和真机表现不同」是常态，不是 bug。</p>
+<div class="tw"><table class="tb">
+<tr><td>能力</td><td>是否支持</td><td>说明</td></tr>
+<tr><td>常见封装</td><td>mp4(H.264) / webm(VP8)</td><td>H.265、AV1 在部分安卓机型直接黑屏，发布前必须真机验证</td></tr>
+<tr><td>透明视频</td><td>仅部分平台</td><td>需要带 alpha 的编码，安卓常需转成 Chroma Key 方案</td></tr>
+<tr><td>音频输出</td><td>AudioSource 模式 / 直出</td><td>要混音、要 3D 衰减就必须挂 AudioSource</td></tr>
+<tr><td>拖动定位</td><td>支持 seek</td><td>在没有关键帧的位置拖动会花屏或卡顿，需 keyframe 密集编码</td></tr>
+<tr><td>多视频同屏</td><td>受限</td><td>移动端同时解码路数有限，超过 2~3 路会掉帧</td></tr>
+</table></div>
+
+<h3 id="sup-m02-mode" class="hd lv3">Render Mode 三种输出方式</h3>
+<ul class="bl">
+<li><b>Camera Far Plane / Near Plane</b>：直接贴到相机平面，最省性能，适合全屏过场动画；缺点是无法被 UI 遮挡。</li>
+<li><b>Render Texture</b>：渲染到 RT 再挂到 RawImage 或材质上，最灵活，可做 UI 内嵌播放器；代价是多一次显存拷贝。</li>
+<li><b>Material Override</b>：直接替换某个材质的贴图，适合场景内电视屏幕、广告牌。</li>
+</ul>
+
+<h2 id="sup-m02-flow" class="hd lv2">一次可靠的播放流程</h2>
+<p class="tx">顺序错了就会出现「黑屏两秒」「有画面没声音」「循环播放每次都闪一下」。正确顺序是：先 Prepare，等 <code>prepareCompleted</code>，再 Play。</p>
+<pre class="code" data-lang="csharp"><code>using UnityEngine;
+using UnityEngine.Video;
+
+public class SimplePlayer : MonoBehaviour
+{
+    public VideoPlayer vp;
+    public string url;
+
+    void Awake()
+    {
+        vp.source = VideoSource.Url;
+        vp.url = url;
+        vp.playOnAwake = false;
+        vp.isLooping = true;
+        vp.renderMode = VideoRenderMode.RenderTexture;
+        vp.audioOutputMode = VideoAudioOutputMode.AudioSource;
+        vp.EnableAudioTrack(0, true);
+        vp.SetTargetAudioSource(0, GetComponent&lt;AudioSource&gt;());
+
+        vp.prepareCompleted += OnPrepared;
+        vp.errorReceived += (p, msg) =&gt; Debug.LogError("视频错误: " + msg);
+        vp.Prepare();          // 先准备，不要直接 Play
+    }
+
+    void OnPrepared(VideoPlayer p)
+    {
+        p.Play();
+    }
+
+    void OnDestroy()
+    {
+        vp.prepareCompleted -= OnPrepared;
+        vp.Stop();
+    }
+}</code></pre>
+
+<h3 id="sup-m02-pit" class="hd lv3">五个高频坑</h3>
+<ul class="bl">
+<li><b>切场景后视频不释放</b>：VideoPlayer 持有解码器，务必在 OnDestroy 里 Stop 并置空 targetTexture，否则来回切几次就 OOM。</li>
+<li><b>seek 之后立刻读 frame</b>：seek 是异步的，要等 <code>seekCompleted</code> 回调，否则拿到的是旧帧。</li>
+<li><b>用 RenderTexture 忘了 Release</b>：手动 new 的 RT 要自己 Release，否则显存只增不减。</li>
+<li><b>移动端 URL 用 http</b>：iOS 默认 ATS 禁止明文 http，必须 https 或在 Info.plist 里例外。</li>
+<li><b>把视频当 UI 背景还开了 Mask</b>：Mask 会产生额外 Draw Call 与 RT 切换，能不用就不用。</li>
+</ul>
+</div>
+
+    </article>
+    <footer class="pnbar"><a class="pn prev" href="m01.html"><span>上一节</span>Unity - 进阶 - 大纲</a><a class="pn next" href="m03.html"><span>下一节</span>Unity - 进阶 - C# 补充</a></footer>
+  </main>
+</div>
+<button class="totop" id="totop">↑</button>
+<script src="assets/demos.js"></script>
+<script src="assets/diagrams-data.js"></script>
+<script src="assets/diagram.js"></script>
+<script src="assets/app.js"></script>
+<script>window.__mountDiagrams && window.__mountDiagrams();</script>
+</body>
+</html>

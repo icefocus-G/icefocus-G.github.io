@@ -1,0 +1,265 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Unity 程序框架 · Unity 交互课件</title>
+<link rel="stylesheet" href="assets/style.css">
+<link rel="stylesheet" href="assets/diagram.css">
+</head>
+<body data-mid="m05">
+<header class="top">
+  <a class="brand" href="index.html"><span class="logo">U</span><b>Unity</b><i>交互课件</i></a>
+  <div class="crumb"><span>开发经验补充</span><em>/</em><strong>Unity 程序框架</strong></div>
+  <div class="top-r">
+    <span class="stat">4636 字 · 5 代码 · 0 图 · 0 表</span>
+    <button class="mini" id="btnNav">目录</button>
+  </div>
+</header>
+<div class="wrap">
+  <aside class="side" id="side">
+    <div class="side-h">本篇目录</div>
+    <nav class="tocbox"><a class="toc lv2" href="#必看-整章-第-2-章-单例模式基类-1">（🔥必看-整章）第 2 章：单例模式基类</a><a class="toc lv4" href="#1-不继承-MonoBehaviour-的单例模式基类-常用-2">1. 不继承 MonoBehaviour 的单例模式基类（常用）</a><a class="toc lv4" href="#2-继承-MonoBehaviour-的单例模式基类-常用-3">2. 继承 MonoBehaviour 的单例模式基类（常用）</a><a class="toc lv4" href="#3-安全问题-唯一性问题-构造函数-常用-4">3. 【安全问题】唯一性问题 —— 构造函数（常用）</a><a class="toc lv4" href="#4-安全问题-唯一性问题-重复挂载-常用-5">4. 【安全问题】唯一性问题 —— 重复挂载（常用）</a><a class="toc lv4" href="#5-安全问题-线程安全-是否加锁-常用-6">5. 【安全问题】线程安全 —— 是否加锁（常用）</a><a class="toc lv4" href="#6-补充-饿汉式和懒汉-单例模式-常用-7">6. 【补充】饿汉式和懒汉‑单例模式（常用）</a><a class="toc lv2" href="#必看-整章-第-3-章-公共-Mono-模块-8">（🔥必看-整章）第 3 章：公共 Mono 模块</a><a class="toc lv4" href="#1-公共-Mono-模块-公共-Mono-模块主要作用和基本原理-常用-9">1. 【公共 Mono 模块】公共 Mono 模块主要作用和基本原理（常用）</a><a class="toc lv4" href="#2-公共-Mono-模块-具体实现-常用-10">2. 【公共 Mono 模块】具体实现（常用）</a><a class="toc lv2" href="#必看-整章-第-4-章-缓存池-对象池-模块-11">（🔥必看-整章）第 4 章：缓存池 (对象池) 模块</a><a class="toc lv4" href="#1-缓存池-对象池-模块-主要作用和基本原理-必须-12">1. 【缓存池 (对象池) 模块】主要作用和基本原理（必须）</a><a class="toc lv4" href="#2-缓存池-对象池-模块-具体实现-必须-13">2. 【缓存池 (对象池) 模块】具体实现（必须）</a><a class="toc lv4" href="#3-缓存池-对象池-优化-窗口布局优化-必须-优化项-14">3. 【缓存池 (对象池) 优化】窗口布局优化（必须，优化项）</a><a class="toc lv4" href="#4-缓存池-对象池-优化-对象上限优化-必须-优化项-15">4. 【缓存池 (对象池) 优化】对象上限优化（必须，优化项）</a><a class="toc lv4" href="#5-缓存池-对象池-优化-Pool-对象报空-Bug-修改-必须-修复-16">5. 【缓存池 (对象池) 优化】Pool 对象报空，Bug 修改（必须，修复）</a><a class="toc lv4" href="#6-缓存池-对象池-优化-思考题讲解-必须-17">6. 【缓存池 (对象池) 优化】思考题讲解（必须）</a><a class="toc lv2" href="#必看-整章-第-5-章-事件中心模块-18">（🔥必看-整章）第 5 章：事件中心模块</a><a class="toc lv4" href="#1-事件中心模块-主要作用和基本原理-常用-19">1. 【事件中心模块】主要作用和基本原理（常用）</a><a class="toc lv4" href="#2-事件中心模块-具体实现-常用-20">2. 【事件中心模块】具体实现（常用）</a><a class="toc lv4" href="#3-事件中心模块优化-传递参数-常用-21">3. 【事件中心模块优化】传递参数（常用）</a><a class="toc lv4" href="#4-事件中心模块优化-参数类型自定义-常用-22">4. 【事件中心模块优化】参数类型自定义（常用）</a><a class="toc lv4" href="#5-事件中心模块优化-事件名优化-常用-23">5. 【事件中心模块优化】事件名优化（常用）</a><a class="toc lv2" href="#第-6-章-资源加载模块-24">第 6 章：资源加载模块</a><a class="toc lv4" href="#1-必看-资源加载模块-主要作用和基本原理-必须-25">1. （🔥必看）【资源加载模块】主要作用和基本原理（必须）</a><a class="toc lv4" href="#2-必看-资源加载模块-模块整合-必须-但整体建议用-Addressab-26">2. （🔥必看）资源加载模块 模块整合（必须，但整体建议用 Addressables 实现）</a><a class="toc lv4" href="#3-必看-Editor-资源加载模块-主要作用和基本原理-常用-开发期使-27">3. （🔥必看）【Editor 资源加载模块】主要作用和基本原理（常用，开发期使用）</a><a class="toc lv4" href="#4-必看-Editor-资源加载模块-具体实现-常用-28">4. （🔥必看）【Editor 资源加载模块】具体实现（常用）</a><a class="toc lv4" href="#5-必看-UnityWebRequest-知识回顾-常用-用于网络请求--29">5. （🔥必看）【UnityWebRequest】知识回顾（常用，用于网络请求，非资源加载核心）</a><a class="toc lv4" href="#6-必看-UnityWebRequest-具体实现-常用-30">6. （🔥必看）【UnityWebRequest】具体实现（常用）</a><a class="toc lv4" href="#7-Resources-资源加载模块-具体实现-过时-建议改用-Addr-31">7. ❌ 【Resources 资源加载模块】具体实现（过时，建议改用 Addressables）</a><a class="toc lv4" href="#8-Resources-资源加载模块-进阶优化-异步加载问题-上-过时-32">8. ❌ 【Resources 资源加载模块‑进阶优化】异步加载问题 上（过时）</a><a class="toc lv4" href="#9-Resources-资源加载模块-进阶优化-异步加载问题-下-过时-33">9. ❌ 【Resources 资源加载模块‑进阶优化】异步加载问题 下（过时）</a><a class="toc lv4" href="#10-Resources-资源加载模块-进阶优化-引用计数-过时-34">10. ❌ 【Resources 资源加载模块‑进阶优化】引用计数（过时）</a><a class="toc lv4" href="#11-Assetbundle-资源加载模块-知识回顾-过时-建议改用-A-35">11. ❌ 【Assetbundle 资源加载模块】知识回顾（过时，建议改用 Addressables）</a><a class="toc lv4" href="#12-Assetbundle-资源加载模块-潜在问题考虑-过时-36">12. ❌ 【Assetbundle 资源加载模块】潜在问题考虑（过时）</a><a class="toc lv4" href="#13-Assetbundle-资源加载模块-ABMgr-异步加载修改-过-37">13. ❌ 【Assetbundle 资源加载模块】ABMgr 异步加载修改（过时）</a><a class="toc lv4" href="#14-Assetbundle-资源加载模块-ABMgr-同步加载修改-过-38">14. ❌ 【Assetbundle 资源加载模块】ABMgr 同步加载修改（过时）</a><a class="toc lv3" href="#必看-整章-第-7-章-音效管理模块-39">（🔥必看-整章）第 7 章：音效管理模块</a><a class="toc lv2" href="#必看-整章-第-8-章-UI-管理模块-40">（🔥必看-整章）第 8 章：UI 管理模块</a><a class="toc lv4" href="#1-UI-管理模块-基本原理-必须-41">1. 【UI 管理模块】基本原理（必须）</a><a class="toc lv4" href="#2-UI-管理模块-UI-面板基类-必须-42">2. 【UI 管理模块】UI 面板基类（必须）</a><a class="toc lv4" href="#3-UI-管理模块-UI-管理器-层级规划-必须-43">3. 【UI 管理模块】UI 管理器 层级规划（必须）</a><a class="toc lv4" href="#4-UI-管理模块-UI-管理器-具体实现-必须-通常基于-uGUI-44">4. 【UI 管理模块】UI 管理器 具体实现（必须，通常基于 uGUI）</a><a class="toc lv4" href="#5-UI-管理模块-进阶优化-异步加载问题分析-必须-45">5. 【UI 管理模块】进阶优化‑异步加载问题分析（必须）</a><a class="toc lv4" href="#6-UI-管理模块-进阶优化-异步加载问题解决-必须-46">6. 【UI 管理模块】进阶优化‑异步加载问题解决（必须）</a><a class="toc lv4" href="#7-UI-管理模块-进阶优化-隐藏面板可选销毁-必须-47">7. 【UI 管理模块】进阶优化‑隐藏面板可选销毁（必须）</a><a class="toc lv4" href="#8-UI-管理模块-进阶优化-自定义事件添加函数-必须-48">8. 【UI 管理模块】进阶优化‑自定义事件添加函数（必须）</a><a class="toc lv2" href="#必看-整章-第-9-章-场景切换模块-49">（🔥必看-整章）第 9 章：场景切换模块</a><a class="toc lv4" href="#1-场景切换模块-基本原理-必须-50">1. 【场景切换模块】基本原理（必须）</a><a class="toc lv4" href="#2-场景切换模块-具体实现-必须-51">2. 【场景切换模块】具体实现（必须）</a><a class="toc lv2" href="#第-10-章-输入控制模块-52">第 10 章：输入控制模块</a><a class="toc lv4" href="#1-必看-输入控制模块-基本原理-必须-但建议学习新-Input-Sys-53">1. （🔥必看）【输入控制模块】基本原理（必须，但建议学习新 Input System）</a><a class="toc lv4" href="#2-输入控制模块-具体实现-过时-旧-Input-Manager-将被弃-54">2. ❌ 【输入控制模块】具体实现（过时，旧 Input Manager 将被弃用）</a><a class="toc lv4" href="#3-输入控制模块-进阶优化-改键功能-过时-55">3. ❌ 【输入控制模块】进阶优化‑改键功能（过时）</a><a class="toc lv4" href="#4-输入控制模块-进阶优化-获取输入信息-过时-56">4. ❌ 【输入控制模块】进阶优化‑获取输入信息（过时）</a><a class="toc lv2" href="#必看-整章-第-11-章-其他模块-57">（🔥必看-整章）第 11 章：其他模块</a><a class="toc lv4" href="#1-缓存池模块-数据结构类-逻辑类-优化-主要目的-必须-对象池的深化-58">1. 【缓存池模块 (数据结构类、逻辑类) 优化】主要目的（必须，对象池的深化）</a><a class="toc lv4" href="#2-缓存池模块-数据结构类-逻辑类-优化-具体实现-必须-59">2. 【缓存池模块 (数据结构类、逻辑类) 优化】具体实现（必须）</a><a class="toc lv4" href="#3-计时器模块-基本原理-常用-用于倒计时-冷却等-60">3. 【计时器模块】基本原理（常用，用于倒计时、冷却等）</a><a class="toc lv4" href="#4-计时器模块-具体实现-TimerItem-常用-61">4. 【计时器模块】具体实现‑TimerItem（常用）</a><a class="toc lv4" href="#5-计时器模块-具体实现-TimerMgr-常用-62">5. 【计时器模块】具体实现‑TimerMgr（常用）</a><a class="toc lv4" href="#6-计时器模块-进阶优化-常用-63">6. 【计时器模块】进阶优化（常用）</a><a class="toc lv2" href="#必看-整章-第-12-章-其他工具模块-64">（🔥必看-整章）第 12 章：其他工具模块</a><a class="toc lv4" href="#1-加密工具模块-主要作用和基本原理-常用-用于存档-网络-65">1. 【加密工具模块】主要作用和基本原理（常用，用于存档、网络）</a><a class="toc lv4" href="#2-加密工具模块-具体实现-常用-66">2. 【加密工具模块】具体实现（常用）</a><a class="toc lv4" href="#3-文本工具模块-主要作用和基本原理-常用-67">3. 【文本工具模块】主要作用和基本原理（常用）</a><a class="toc lv4" href="#4-文本工具模块-具体实现-字符串拆分-常用-68">4. 【文本工具模块】具体实现‑字符串拆分（常用）</a><a class="toc lv4" href="#5-文本工具模块-具体实现-数字转字符串相关-常用-69">5. 【文本工具模块】具体实现‑数字转字符串相关（常用）</a><a class="toc lv4" href="#6-文本工具模块-具体实现-秒转时分秒-常用-70">6. 【文本工具模块】具体实现‑秒转时分秒（常用）</a><a class="toc lv4" href="#7-文本工具模块-具体实现-秒转-00-00-00-常用-71">7. 【文本工具模块】具体实现‑秒转 00:00:00（常用）</a><a class="toc lv4" href="#8-文本工具模块-具体实现-大数据数值字符串-常用-72">8. 【文本工具模块】具体实现‑大数据数值字符串（常用）</a><a class="toc lv4" href="#9-数学计算工具模块-主要作用和基本原理-常用-73">9. 【数学计算工具模块】主要作用和基本原理（常用）</a><a class="toc lv4" href="#10-数学计算工具模块-角度和弧度的转换-常用-74">10. 【数学计算工具模块】角度和弧度的转换（常用）</a><a class="toc lv4" href="#11-数学计算工具模块-距离计算相关-常用-75">11. 【数学计算工具模块】距离计算相关（常用）</a><a class="toc lv4" href="#12-数学计算工具模块-屏幕外判断-常用-76">12. 【数学计算工具模块】屏幕外判断（常用）</a><a class="toc lv4" href="#13-数学计算工具模块-扇形范围判断-常用-77">13. 【数学计算工具模块】扇形范围判断（常用）</a><a class="toc lv4" href="#14-数学计算工具模块-射线检测-常用-用于点击交互-78">14. 【数学计算工具模块】射线检测（常用，用于点击交互）</a><a class="toc lv4" href="#15-数学计算工具模块-范围检测-常用-79">15. 【数学计算工具模块】范围检测（常用）</a><a class="toc lv3" href="#第-13-章-汇总打包-80">第 13 章：汇总打包</a><a class="toc lv3" href="#第-14-章-总结-81">第 14 章：总结</a></nav>
+    <div class="side-h">全部模块</div>
+    <nav class="navbox"><div class="ng"><div class="ngt">开发经验补充</div><a href="m01.html">Unity - 进阶 - 大纲</a><a href="m02.html">Unity 进阶之视频播放</a><a href="m03.html">Unity - 进阶 - C# 补充</a><a href="m04.html">Unity 网络开发基础</a><a href="m05.html" class="on">Unity 程序框架</a></div><div class="ng"><div class="ngt">游戏引擎相关</div><a href="m06.html">Unity_入门</a><a href="m07.html">Unity_入门 - 实践项目</a><a href="m08.html">Unity_基础</a><a href="m09.html">Unity 核心</a><a href="m10.html">UniTask</a></div><div class="ng"><div class="ngt">数据持久化</div><a href="m11.html">Unity 进阶之 ScriptableObject</a><a href="m12.html">Unity_数据持久化 - PlayerPrefs</a><a href="m13.html">Unity_数据持久化 - Newtonsoft-Json</a><a href="m14.html">MessagePack-CSharp - 二进制</a><a href="m26.html">Unity 数据持久化 - Binary 2 进制</a></div><div class="ng"><div class="ngt">界面 UI 相关</div><a href="m15.html">Unity-UGUI</a><a href="m16.html">Unity-UGUI - 进阶 - TextMeshPro</a><a href="m27.html">Unity_GUI 概述（编辑器用）</a></div><div class="ng"><div class="ngt">设备输入相关</div><a href="m17.html">Unity 进阶之 InputSystem</a></div><div class="ng"><div class="ngt">热更相关</div><a href="m18.html">YooAsset 资源管理 - 大游戏</a><a href="m19.html">Addressables 资源管理 - 小游戏</a><a href="m20.html">HybridCLR - 代码业务逻辑</a></div><div class="ng"><div class="ngt">性能优化相关</div><a href="m21.html">Unity 进阶之性能优化</a><a href="m22.html">Unity 背包里装 10w 个道具</a></div><div class="ng"><div class="ngt">SDK 相关</div><div class="ngempty">预留分类 · 后续补充</div></div><div class="ng"><div class="ngt">游戏打包相关</div><a href="m23.html">Unity 移动平台相关 — IOS</a><a href="m24.html">Unity 移动平台相关 — Android</a><a href="m25.html">unity_00 - 数学公式和物理公式</a></div></nav>
+  </aside>
+  <main class="main">
+    <div class="mhead">
+      <div class="kick">开发经验补充</div>
+      <h1>Unity 程序框架</h1>
+      <p class="msub">服务定位 / 流程 / UI 栈</p>
+      <div class="chips"><span>4636 字原稿</span><span>5 段代码</span><span>0 张配图</span><span>0 个表格</span></div>
+    </div>
+    <article class="doc">
+<div class="runsec"><div class="runsec-h">本模块可运行验证<span>纯 C# · 无需 Unity · 点右下按钮真实编译执行</span></div><div class="cpair"><div class="chead"><span class="lang">C#</span><span class="csp"></span><button class="mini copy">复制</button><button class="mini run" data-run>真实运行</button></div><pre class="code" data-lang="csharp"><code>// 程序框架：服务定位 + 流程状态机
+using System;
+using System.Collections.Generic;
+
+public static class Locator
+{
+    private static readonly Dictionary&lt;Type, object&gt; map = new();
+    public static void Reg&lt;T&gt;(T svc) where T : class =&gt; map[typeof(T)] = svc;
+    public static T Get&lt;T&gt;() where T : class =&gt; map.TryGetValue(typeof(T), out var o) ? (T)o : null;
+}
+
+public class AudioSvc { public void Play(string s) =&gt; Console.WriteLine($"  [Audio] {s}"); }
+public class SaveSvc { public void Save() =&gt; Console.WriteLine("  [Save] 已存档"); }
+
+public static class Program
+{
+    public static void Main()
+    {
+        Locator.Reg(new AudioSvc());
+        Locator.Reg(new SaveSvc());
+
+        Console.WriteLine("服务定位：");
+        Locator.Get&lt;AudioSvc&gt;()?.Play("bgm_main");
+        Locator.Get&lt;SaveSvc&gt;()?.Save();
+        Console.WriteLine($"取未注册的服务：{(Locator.Get&lt;object&gt;() == null ? "null（不抛异常，但要自己判空）" : "有值")}");
+
+        Console.WriteLine();
+        Console.WriteLine("流程状态机（登录 -&gt; 选角 -&gt; 战斗 -&gt; 结算）：");
+        foreach (var f in new[] { "Login", "SelectRole", "Battle", "Result" })
+        {
+            Console.WriteLine($"  进入 {f} ...");
+            if (f == "Battle") Console.WriteLine("    加载战斗场景、注册战斗服务");
+            if (f == "Result") Console.WriteLine("    战斗服务反注册、回主城");
+        }
+        Console.WriteLine("流程结束");
+    }
+}</code></pre><div class="cout" hidden></div></div></div><div class="demo" data-demo="framework"><div class="demo-bar"><span class="dot"></span>框架分层与消息流<span class="demo-tag">交互演示</span></div><div class="demo-body"><div class="demo-loading">加载中…</div></div></div>
+<p class="tx">19 时 46 分 15 秒</p>
+<h2 id="必看-整章-第-2-章-单例模式基类-1" class="hd lv2">（🔥必看-整章）第 2 章：单例模式基类</h2>
+<h4 id="1-不继承-MonoBehaviour-的单例模式基类-常用-2" class="hd lv4">1. 不继承 MonoBehaviour 的单例模式基类（常用）</h4>
+<div class="cpair"><div class="chead"><span class="lang">C#</span><span class="csp"></span><button class="mini copy">复制</button></div><pre class="code" data-lang="csharp"><code>using System.Collections;
+using System.Collections.Generic;
+using UnityEngine;
+public class Lesson1 : MonoBehaviour
+{
+    void Start()
+    {
+        本节课使用的知识点
+        //大体知识体系
+        //C#相关知识点（C#四部曲）
+        //细节知识点
+        //1.面向对象（C#四部曲C#核心中）
+        //2.静态、单例模式相关知识（C#四部曲之C#核心中）
+        //3.泛型、泛型约束相关知识点（C#四部曲之C#进阶中）
+        知识点一 为什么要写单例模式基类
+        //用面向对象的思想避免代码冗余（多余、重复）
+        知识点二 实现不继承MonoBehaviour的单例模式基类
+        知识点三 潜在的安全问题
+        //1.构造函数问题：构造函数可在外部调用 可能会破坏唯一性
+        //2.多线程问题：当多个线程同时访问管理器时，可能会出现共享资源的安全访问问题
+        总结
+        //利用泛型相关知识
+        //实现单例模式基类
+        //可能存在的安全问题
+        //我们在之后的课程中专门讲解=
+    }
+}</code></pre><div class="cout" hidden></div></div>
+<div class="cpair"><div class="chead"><span class="lang">C#</span><span class="csp"></span><button class="mini copy">复制</button></div><pre class="code" data-lang="csharp"><code>using System.Collections;
+using System.Collections.Generic;
+using UnityEngine;
+/// &lt;summary&gt;
+/// 单例模式基类 主要目的是避免代码的冗余 方便我们实现单例模式的类
+/// &lt;/summary&gt;
+/// &lt;typeparam name="T"&gt;&lt;/typeparam&gt;
+public class BaseManager&lt;T&gt; where T:class,new()
+{
+    private static T instance;
+    //属性的方式
+    public static T Instance
+    {
+        get
+        {
+            //第一次访问`TestMgr.Instance`，进入 get；发现 instance 是 null
+            //new T() 堆创建对象，把对象地址交给 instance 保存
+            if (instance == null)
+                instance = new T();
+            return instance;
+        }
+    }
+    //方法的方式
+    //public static T GetInstance()
+    //{
+    //    if (instance == null)
+    //        instance = new T();
+    //    return instance;
+    //}
+}</code></pre><div class="cout" hidden></div></div>
+<div class="cpair"><div class="chead"><span class="lang">C#</span><span class="csp"></span><button class="mini copy">复制</button></div><pre class="code" data-lang="csharp"><code>using System.Collections;
+using System.Collections.Generic;
+using UnityEngine;
+public class TestMgr:BaseManager&lt;TestMgr&gt;
+{
+    public void TestLog()
+    {
+        Debug.Log("TestMgr");
+    }
+}</code></pre><div class="cout" hidden></div></div>
+<div class="cpair"><div class="chead"><span class="lang">C#</span><span class="csp"></span><button class="mini copy">复制</button></div><pre class="code" data-lang="csharp"><code>using System.Collections;
+using System.Collections.Generic;
+using UnityEngine;
+public class TestMgr2 : BaseManager&lt;TestMgr2&gt;
+{
+    public void TestLog()
+    {
+        Debug.Log("TestMgr2");
+    }
+}</code></pre><div class="cout" hidden></div></div>
+<div class="cpair"><div class="chead"><span class="lang">C#</span><span class="csp"></span><button class="mini copy">复制</button></div><pre class="code" data-lang="csharp"><code>using System.Collections;
+using System.Collections.Generic;
+using UnityEngine;
+public class Main : MonoBehaviour
+{
+    void Start()
+    {
+        TestMgr.Instance.TestLog();
+        TestMgr2.Instance.TestLog();
+    }
+}</code></pre><div class="cout" hidden></div></div>
+<h4 id="2-继承-MonoBehaviour-的单例模式基类-常用-3" class="hd lv4">2. 继承 MonoBehaviour 的单例模式基类（常用）</h4>
+<h4 id="3-安全问题-唯一性问题-构造函数-常用-4" class="hd lv4">3. 【安全问题】唯一性问题 —— 构造函数（常用）</h4>
+<h4 id="4-安全问题-唯一性问题-重复挂载-常用-5" class="hd lv4">4. 【安全问题】唯一性问题 —— 重复挂载（常用）</h4>
+<h4 id="5-安全问题-线程安全-是否加锁-常用-6" class="hd lv4">5. 【安全问题】线程安全 —— 是否加锁（常用）</h4>
+<h4 id="6-补充-饿汉式和懒汉-单例模式-常用-7" class="hd lv4">6. 【补充】饿汉式和懒汉‑单例模式（常用）</h4>
+<p class="tx">本章全为常用项，按原顺序微调（原理→实现→安全问题→补充）即可。</p>
+<h2 id="必看-整章-第-3-章-公共-Mono-模块-8" class="hd lv2">（🔥必看-整章）第 3 章：公共 Mono 模块</h2>
+<h4 id="1-公共-Mono-模块-公共-Mono-模块主要作用和基本原理-常用-9" class="hd lv4">1. 【公共 Mono 模块】公共 Mono 模块主要作用和基本原理（常用）</h4>
+<h4 id="2-公共-Mono-模块-具体实现-常用-10" class="hd lv4">2. 【公共 Mono 模块】具体实现（常用）</h4>
+<h2 id="必看-整章-第-4-章-缓存池-对象池-模块-11" class="hd lv2">（🔥必看-整章）第 4 章：缓存池 (对象池) 模块</h2>
+<p class="tx">（全部为必须，按开发逻辑排序：原理→实现→优化→Bug修复→思考）</p>
+<h4 id="1-缓存池-对象池-模块-主要作用和基本原理-必须-12" class="hd lv4">1. 【缓存池 (对象池) 模块】主要作用和基本原理（必须）</h4>
+<h4 id="2-缓存池-对象池-模块-具体实现-必须-13" class="hd lv4">2. 【缓存池 (对象池) 模块】具体实现（必须）</h4>
+<h4 id="3-缓存池-对象池-优化-窗口布局优化-必须-优化项-14" class="hd lv4">3. 【缓存池 (对象池) 优化】窗口布局优化（必须，优化项）</h4>
+<h4 id="4-缓存池-对象池-优化-对象上限优化-必须-优化项-15" class="hd lv4">4. 【缓存池 (对象池) 优化】对象上限优化（必须，优化项）</h4>
+<h4 id="5-缓存池-对象池-优化-Pool-对象报空-Bug-修改-必须-修复-16" class="hd lv4">5. 【缓存池 (对象池) 优化】Pool 对象报空，Bug 修改（必须，修复）</h4>
+<h4 id="6-缓存池-对象池-优化-思考题讲解-必须-17" class="hd lv4">6. 【缓存池 (对象池) 优化】思考题讲解（必须）</h4>
+<h2 id="必看-整章-第-5-章-事件中心模块-18" class="hd lv2">（🔥必看-整章）第 5 章：事件中心模块</h2>
+<p class="tx">（全部为常用，排序：原理→实现→参数→类型→事件名）</p>
+<h4 id="1-事件中心模块-主要作用和基本原理-常用-19" class="hd lv4">1. 【事件中心模块】主要作用和基本原理（常用）</h4>
+<h4 id="2-事件中心模块-具体实现-常用-20" class="hd lv4">2. 【事件中心模块】具体实现（常用）</h4>
+<h4 id="3-事件中心模块优化-传递参数-常用-21" class="hd lv4">3. 【事件中心模块优化】传递参数（常用）</h4>
+<h4 id="4-事件中心模块优化-参数类型自定义-常用-22" class="hd lv4">4. 【事件中心模块优化】参数类型自定义（常用）</h4>
+<h4 id="5-事件中心模块优化-事件名优化-常用-23" class="hd lv4">5. 【事件中心模块优化】事件名优化（常用）</h4>
+<h2 id="第-6-章-资源加载模块-24" class="hd lv2">第 6 章：资源加载模块</h2>
+<p class="tx">（按重要性排：必须的放前，常用居中，过时放最后）</p>
+<h4 id="1-必看-资源加载模块-主要作用和基本原理-必须-25" class="hd lv4">1. （🔥必看）【资源加载模块】主要作用和基本原理（必须）</h4>
+<h4 id="2-必看-资源加载模块-模块整合-必须-但整体建议用-Addressab-26" class="hd lv4">2. （🔥必看）资源加载模块 模块整合（必须，但整体建议用 Addressables 实现）</h4>
+<h4 id="3-必看-Editor-资源加载模块-主要作用和基本原理-常用-开发期使-27" class="hd lv4">3. （🔥必看）【Editor 资源加载模块】主要作用和基本原理（常用，开发期使用）</h4>
+<h4 id="4-必看-Editor-资源加载模块-具体实现-常用-28" class="hd lv4">4. （🔥必看）【Editor 资源加载模块】具体实现（常用）</h4>
+<h4 id="5-必看-UnityWebRequest-知识回顾-常用-用于网络请求--29" class="hd lv4">5. （🔥必看）【UnityWebRequest】知识回顾（常用，用于网络请求，非资源加载核心）</h4>
+<h4 id="6-必看-UnityWebRequest-具体实现-常用-30" class="hd lv4">6. （🔥必看）【UnityWebRequest】具体实现（常用）</h4>
+<h4 id="7-Resources-资源加载模块-具体实现-过时-建议改用-Addr-31" class="hd lv4">7. ❌ 【Resources 资源加载模块】具体实现（过时，建议改用 Addressables）</h4>
+<h4 id="8-Resources-资源加载模块-进阶优化-异步加载问题-上-过时-32" class="hd lv4">8. ❌ 【Resources 资源加载模块‑进阶优化】异步加载问题 上（过时）</h4>
+<h4 id="9-Resources-资源加载模块-进阶优化-异步加载问题-下-过时-33" class="hd lv4">9. ❌ 【Resources 资源加载模块‑进阶优化】异步加载问题 下（过时）</h4>
+<h4 id="10-Resources-资源加载模块-进阶优化-引用计数-过时-34" class="hd lv4">10. ❌ 【Resources 资源加载模块‑进阶优化】引用计数（过时）</h4>
+<h4 id="11-Assetbundle-资源加载模块-知识回顾-过时-建议改用-A-35" class="hd lv4">11. ❌ 【Assetbundle 资源加载模块】知识回顾（过时，建议改用 Addressables）</h4>
+<h4 id="12-Assetbundle-资源加载模块-潜在问题考虑-过时-36" class="hd lv4">12. ❌ 【Assetbundle 资源加载模块】潜在问题考虑（过时）</h4>
+<h4 id="13-Assetbundle-资源加载模块-ABMgr-异步加载修改-过-37" class="hd lv4">13. ❌ 【Assetbundle 资源加载模块】ABMgr 异步加载修改（过时）</h4>
+<h4 id="14-Assetbundle-资源加载模块-ABMgr-同步加载修改-过-38" class="hd lv4">14. ❌ 【Assetbundle 资源加载模块】ABMgr 同步加载修改（过时）</h4>
+<h3 id="必看-整章-第-7-章-音效管理模块-39" class="hd lv3">（🔥必看-整章）第 7 章：音效管理模块</h3>
+<p class="tx">（全部常用，按原理→实现音乐→实现音效→优化→Bug更正）</p>
+<ul class="bl"><li>【音效管理模块】基本原理（常用）</li><li>【音效管理模块】具体实现‑音乐部分（常用）</li><li>【音效管理模块】具体实现‑音效部分（常用）</li><li>【音效管理模块】进阶优化（常用）</li><li>【音效管理模块】bug 更正（常用）</li></ul>
+<h2 id="必看-整章-第-8-章-UI-管理模块-40" class="hd lv2">（🔥必看-整章）第 8 章：UI 管理模块</h2>
+<p class="tx">（全部必须，按原理→基类→层级→具体实现→异步→隐藏→事件）</p>
+<h4 id="1-UI-管理模块-基本原理-必须-41" class="hd lv4">1. 【UI 管理模块】基本原理（必须）</h4>
+<h4 id="2-UI-管理模块-UI-面板基类-必须-42" class="hd lv4">2. 【UI 管理模块】UI 面板基类（必须）</h4>
+<h4 id="3-UI-管理模块-UI-管理器-层级规划-必须-43" class="hd lv4">3. 【UI 管理模块】UI 管理器 层级规划（必须）</h4>
+<h4 id="4-UI-管理模块-UI-管理器-具体实现-必须-通常基于-uGUI-44" class="hd lv4">4. 【UI 管理模块】UI 管理器 具体实现（必须，通常基于 uGUI）</h4>
+<h4 id="5-UI-管理模块-进阶优化-异步加载问题分析-必须-45" class="hd lv4">5. 【UI 管理模块】进阶优化‑异步加载问题分析（必须）</h4>
+<h4 id="6-UI-管理模块-进阶优化-异步加载问题解决-必须-46" class="hd lv4">6. 【UI 管理模块】进阶优化‑异步加载问题解决（必须）</h4>
+<h4 id="7-UI-管理模块-进阶优化-隐藏面板可选销毁-必须-47" class="hd lv4">7. 【UI 管理模块】进阶优化‑隐藏面板可选销毁（必须）</h4>
+<h4 id="8-UI-管理模块-进阶优化-自定义事件添加函数-必须-48" class="hd lv4">8. 【UI 管理模块】进阶优化‑自定义事件添加函数（必须）</h4>
+<h2 id="必看-整章-第-9-章-场景切换模块-49" class="hd lv2">（🔥必看-整章）第 9 章：场景切换模块</h2>
+<p class="tx">（全部必须，原理→实现）</p>
+<h4 id="1-场景切换模块-基本原理-必须-50" class="hd lv4">1. 【场景切换模块】基本原理（必须）</h4>
+<h4 id="2-场景切换模块-具体实现-必须-51" class="hd lv4">2. 【场景切换模块】具体实现（必须）</h4>
+<h2 id="第-10-章-输入控制模块-52" class="hd lv2">第 10 章：输入控制模块</h2>
+<p class="tx">（必须的原理放前，过时的实现放后）</p>
+<h4 id="1-必看-输入控制模块-基本原理-必须-但建议学习新-Input-Sys-53" class="hd lv4">1. （🔥必看）【输入控制模块】基本原理（必须，但建议学习新 Input System）</h4>
+<h4 id="2-输入控制模块-具体实现-过时-旧-Input-Manager-将被弃-54" class="hd lv4">2. ❌ 【输入控制模块】具体实现（过时，旧 Input Manager 将被弃用）</h4>
+<h4 id="3-输入控制模块-进阶优化-改键功能-过时-55" class="hd lv4">3. ❌ 【输入控制模块】进阶优化‑改键功能（过时）</h4>
+<h4 id="4-输入控制模块-进阶优化-获取输入信息-过时-56" class="hd lv4">4. ❌ 【输入控制模块】进阶优化‑获取输入信息（过时）</h4>
+<h2 id="必看-整章-第-11-章-其他模块-57" class="hd lv2">（🔥必看-整章）第 11 章：其他模块</h2>
+<p class="tx">（将必须（对象池优化）放前，常用（计时器）放后，未标注的不动）</p>
+<h4 id="1-缓存池模块-数据结构类-逻辑类-优化-主要目的-必须-对象池的深化-58" class="hd lv4">1. 【缓存池模块 (数据结构类、逻辑类) 优化】主要目的（必须，对象池的深化）</h4>
+<h4 id="2-缓存池模块-数据结构类-逻辑类-优化-具体实现-必须-59" class="hd lv4">2. 【缓存池模块 (数据结构类、逻辑类) 优化】具体实现（必须）</h4>
+<h4 id="3-计时器模块-基本原理-常用-用于倒计时-冷却等-60" class="hd lv4">3. 【计时器模块】基本原理（常用，用于倒计时、冷却等）</h4>
+<h4 id="4-计时器模块-具体实现-TimerItem-常用-61" class="hd lv4">4. 【计时器模块】具体实现‑TimerItem（常用）</h4>
+<h4 id="5-计时器模块-具体实现-TimerMgr-常用-62" class="hd lv4">5. 【计时器模块】具体实现‑TimerMgr（常用）</h4>
+<h4 id="6-计时器模块-进阶优化-常用-63" class="hd lv4">6. 【计时器模块】进阶优化（常用）</h4>
+<ul class="bl"><li>其它课程中讲解的内容（未说明，保留原位置）</li></ul>
+<h2 id="必看-整章-第-12-章-其他工具模块-64" class="hd lv2">（🔥必看-整章）第 12 章：其他工具模块</h2>
+<p class="tx">（全部为常用工具，按加密→文本→数学的逻辑顺序排列，数学内再细分）</p>
+<h4 id="1-加密工具模块-主要作用和基本原理-常用-用于存档-网络-65" class="hd lv4">1. 【加密工具模块】主要作用和基本原理（常用，用于存档、网络）</h4>
+<h4 id="2-加密工具模块-具体实现-常用-66" class="hd lv4">2. 【加密工具模块】具体实现（常用）</h4>
+<h4 id="3-文本工具模块-主要作用和基本原理-常用-67" class="hd lv4">3. 【文本工具模块】主要作用和基本原理（常用）</h4>
+<h4 id="4-文本工具模块-具体实现-字符串拆分-常用-68" class="hd lv4">4. 【文本工具模块】具体实现‑字符串拆分（常用）</h4>
+<h4 id="5-文本工具模块-具体实现-数字转字符串相关-常用-69" class="hd lv4">5. 【文本工具模块】具体实现‑数字转字符串相关（常用）</h4>
+<h4 id="6-文本工具模块-具体实现-秒转时分秒-常用-70" class="hd lv4">6. 【文本工具模块】具体实现‑秒转时分秒（常用）</h4>
+<h4 id="7-文本工具模块-具体实现-秒转-00-00-00-常用-71" class="hd lv4">7. 【文本工具模块】具体实现‑秒转 00:00:00（常用）</h4>
+<h4 id="8-文本工具模块-具体实现-大数据数值字符串-常用-72" class="hd lv4">8. 【文本工具模块】具体实现‑大数据数值字符串（常用）</h4>
+<h4 id="9-数学计算工具模块-主要作用和基本原理-常用-73" class="hd lv4">9. 【数学计算工具模块】主要作用和基本原理（常用）</h4>
+<h4 id="10-数学计算工具模块-角度和弧度的转换-常用-74" class="hd lv4">10. 【数学计算工具模块】角度和弧度的转换（常用）</h4>
+<h4 id="11-数学计算工具模块-距离计算相关-常用-75" class="hd lv4">11. 【数学计算工具模块】距离计算相关（常用）</h4>
+<h4 id="12-数学计算工具模块-屏幕外判断-常用-76" class="hd lv4">12. 【数学计算工具模块】屏幕外判断（常用）</h4>
+<h4 id="13-数学计算工具模块-扇形范围判断-常用-77" class="hd lv4">13. 【数学计算工具模块】扇形范围判断（常用）</h4>
+<h4 id="14-数学计算工具模块-射线检测-常用-用于点击交互-78" class="hd lv4">14. 【数学计算工具模块】射线检测（常用，用于点击交互）</h4>
+<h4 id="15-数学计算工具模块-范围检测-常用-79" class="hd lv4">15. 【数学计算工具模块】范围检测（常用）</h4>
+<h3 id="第-13-章-汇总打包-80" class="hd lv3">第 13 章：汇总打包</h3>
+<p class="tx">（可选，无排序必要）</p>
+<h3 id="第-14-章-总结-81" class="hd lv3">第 14 章：总结</h3>
+    </article>
+    <footer class="pnbar"><a class="pn prev" href="m04.html"><span>上一节</span>Unity 网络开发基础</a><a class="pn next" href="m06.html"><span>下一节</span>Unity_入门</a></footer>
+  </main>
+</div>
+<button class="totop" id="totop">↑</button>
+<script src="assets/demos.js"></script>
+<script src="assets/diagrams-data.js"></script>
+<script src="assets/diagram.js"></script>
+<script src="assets/app.js"></script>
+<script>window.__mountDiagrams && window.__mountDiagrams();</script>
+</body>
+</html>

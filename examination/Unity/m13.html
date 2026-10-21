@@ -1,0 +1,663 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Unity_数据持久化 - Newtonsoft-Json · Unity 交互课件</title>
+<link rel="stylesheet" href="assets/style.css">
+<link rel="stylesheet" href="assets/diagram.css">
+</head>
+<body data-mid="m13">
+<header class="top">
+  <a class="brand" href="index.html"><span class="logo">U</span><b>Unity</b><i>交互课件</i></a>
+  <div class="crumb"><span>数据持久化</span><em>/</em><strong>Unity_数据持久化 - Newtonsoft-Json</strong></div>
+  <div class="top-r">
+    <span class="stat">15042 字 · 23 代码 · 3 图 · 1 表</span>
+    <button class="mini" id="btnNav">目录</button>
+  </div>
+</header>
+<div class="wrap">
+  <aside class="side" id="side">
+    <div class="side-h">本篇目录</div>
+    <nav class="tocbox"><a class="toc lv2" href="#Json-概述-1">------Json 概述------</a><a class="toc lv4" href="#1-Json-配置规则-知识点-2">1 : Json 配置规则 知识点</a><a class="toc lv4" href="#2-Excel-转-Json-知识点-3">2 : Excel 转 Json 知识点</a><a class="toc lv2" href="#了解-unity-自带的-JSON-工具-4">（💡 了解）------unity 自带的 JSON 工具------</a><a class="toc lv4" href="#1-JsonUtlity-序列化-知识点-5">1 : JsonUtlity 序列化 知识点</a><a class="toc lv4" href="#2-JsonUtlity-反序列化-知识点-Unity-官方提供-6">2 : JsonUtlity 反序列化 知识点 Unity 官方提供</a><a class="toc lv2" href="#整章不看-第三方-LitJson-不适用-已过时-7">（❌整章不看 ）------ 第三方 LitJson 不适用，已过时------</a><a class="toc lv4" href="#1-LitJson-序列化-知识点-第三方提供的-不使用-已经没落-8">1: LitJson 序列化 知识点 第三方提供的 【不使用，已经没落】</a><a class="toc lv4" href="#2-LitJson-反序列化-知识点-9">2 : LitJson 反序列化 知识点</a><a class="toc lv4" href="#3-JsonUtlity-和-LitJson-对比-知识点-10">3 : JsonUtlity 和 LitJson 对比 知识点</a><a class="toc lv4" href="#4-实现-JsonUtlity-和-Litjson-动态选择的管理类-进-11">4 : 实现 JsonUtlity 和 Litjson 动态选择的管理类 进行 json 的存储和读取</a><a class="toc lv2" href="#必看-强烈推荐-主流的商用-Newtonsoft-Json-12">（🔥🔥 必看，强烈推荐）------主流的商用 Newtonsoft.Json----</a><a class="toc lv2" href="#Newtonsoft-Json-使用教程-13">Newtonsoft.Json 使用教程</a><a class="toc lv2" href="#一-Newtonsoft-Json-核心-API-概览-14">一、Newtonsoft.Json 核心 API 概览</a><a class="toc lv2" href="#二-设计一个-JsonManager-管理类-15">二、设计一个 JsonManager 管理类</a><a class="toc lv2" href="#三-使用示例-16">三、使用示例</a><a class="toc lv3" href="#1-简单对象的序列化与反序列化-17">1. 简单对象的序列化与反序列化</a><a class="toc lv3" href="#2-保存与加载游戏存档-18">2. 保存与加载游戏存档</a><a class="toc lv3" href="#3-动态解析-JSON-无需定义类-19">3. 动态解析 JSON（无需定义类）</a><a class="toc lv3" href="#4-使用自定义设置处理特殊需求-20">4. 使用自定义设置处理特殊需求</a><a class="toc lv2" href="#四-注意事项-21">四、注意事项</a><a class="toc lv4" href="#挖坑总结-22">: 挖坑总结</a></nav>
+    <div class="side-h">全部模块</div>
+    <nav class="navbox"><div class="ng"><div class="ngt">开发经验补充</div><a href="m01.html">Unity - 进阶 - 大纲</a><a href="m02.html">Unity 进阶之视频播放</a><a href="m03.html">Unity - 进阶 - C# 补充</a><a href="m04.html">Unity 网络开发基础</a><a href="m05.html">Unity 程序框架</a></div><div class="ng"><div class="ngt">游戏引擎相关</div><a href="m06.html">Unity_入门</a><a href="m07.html">Unity_入门 - 实践项目</a><a href="m08.html">Unity_基础</a><a href="m09.html">Unity 核心</a><a href="m10.html">UniTask</a></div><div class="ng"><div class="ngt">数据持久化</div><a href="m11.html">Unity 进阶之 ScriptableObject</a><a href="m12.html">Unity_数据持久化 - PlayerPrefs</a><a href="m13.html" class="on">Unity_数据持久化 - Newtonsoft-Json</a><a href="m14.html">MessagePack-CSharp - 二进制</a><a href="m26.html">Unity 数据持久化 - Binary 2 进制</a></div><div class="ng"><div class="ngt">界面 UI 相关</div><a href="m15.html">Unity-UGUI</a><a href="m16.html">Unity-UGUI - 进阶 - TextMeshPro</a><a href="m27.html">Unity_GUI 概述（编辑器用）</a></div><div class="ng"><div class="ngt">设备输入相关</div><a href="m17.html">Unity 进阶之 InputSystem</a></div><div class="ng"><div class="ngt">热更相关</div><a href="m18.html">YooAsset 资源管理 - 大游戏</a><a href="m19.html">Addressables 资源管理 - 小游戏</a><a href="m20.html">HybridCLR - 代码业务逻辑</a></div><div class="ng"><div class="ngt">性能优化相关</div><a href="m21.html">Unity 进阶之性能优化</a><a href="m22.html">Unity 背包里装 10w 个道具</a></div><div class="ng"><div class="ngt">SDK 相关</div><div class="ngempty">预留分类 · 后续补充</div></div><div class="ng"><div class="ngt">游戏打包相关</div><a href="m23.html">Unity 移动平台相关 — IOS</a><a href="m24.html">Unity 移动平台相关 — Android</a><a href="m25.html">unity_00 - 数学公式和物理公式</a></div></nav>
+  </aside>
+  <main class="main">
+    <div class="mhead">
+      <div class="kick">数据持久化</div>
+      <h1>Unity_数据持久化 - Newtonsoft-Json</h1>
+      <p class="msub">全功能 JSON 序列化</p>
+      <div class="chips"><span>15042 字原稿</span><span>23 段代码</span><span>3 张配图</span><span>1 个表格</span></div>
+    </div>
+    <article class="doc">
+<div class="runsec"><div class="runsec-h">本模块可运行验证<span>纯 C# · 无需 Unity · 点右下按钮真实编译执行</span></div><div class="cpair"><div class="chead"><span class="lang">C#</span><span class="csp"></span><button class="mini copy">复制</button><button class="mini run" data-run>真实运行</button></div><pre class="code" data-lang="csharp"><code>// Newtonsoft.Json：嵌套对象、字典、自定义设置
+using System;
+using System.Collections.Generic;
+using Newtonsoft.Json;
+using Newtonsoft.Json.Converters;
+
+public class Attr { public int Hp { get; set; } public int Atk { get; set; } }
+
+public class Player
+{
+    public int Id { get; set; }
+    public string Name { get; set; }
+    public Attr Attr { get; set; }
+    public Dictionary&lt;string, int&gt; Items { get; set; } = new();
+    public DateTime Created { get; set; }
+}
+
+public static class Program
+{
+    public static void Main()
+    {
+        var p = new Player
+        {
+            Id = 1001,
+            Name = "唐老狮",
+            Attr = new Attr { Hp = 100, Atk = 15 },
+            Items = new() { ["木剑"] = 1, ["药水"] = 5 },
+            Created = new DateTime(2026, 7, 10, 16, 7, 13)
+        };
+
+        var setting = new JsonSerializerSettings
+        {
+            Formatting = Formatting.Indented,
+            NullValueHandling = NullValueHandling.Ignore,
+            Converters = { new IsoDateTimeConverter { DateTimeFormat = "yyyy-MM-dd HH:mm:ss" } }
+        };
+
+        var json = JsonConvert.SerializeObject(p, setting);
+        Console.WriteLine("序列化：");
+        Console.WriteLine(json);
+
+        var back = JsonConvert.DeserializeObject&lt;Player&gt;(json);
+        Console.WriteLine();
+        Console.WriteLine($"反序列化：Id={back.Id} Name={back.Name} Hp={back.Attr.Hp} 道具数={back.Items.Count} 创建={back.Created:yyyy-MM-dd HH:mm:ss}");
+
+        Console.WriteLine();
+        Console.WriteLine("JsonUtility 做不到、Newtonsoft 可以的三件事：");
+        Console.WriteLine("  字典 Dictionary&lt;string,int&gt;  -&gt; " + (json.Contains("\"木剑\"") ? "OK" : "丢失"));
+        Console.WriteLine("  null 值控制 NullValueHandling -&gt; OK");
+        Console.WriteLine("  属性 Property（JsonUtility 只认 public 字段）-&gt; OK");
+    }
+}</code></pre><div class="cout" hidden></div></div></div><div class="demo" data-demo="json"><div class="demo-bar"><span class="dot"></span>JSON 结构映射<span class="demo-tag">交互演示</span></div><div class="demo-body"><div class="demo-loading">加载中…</div></div></div>
+<h2 id="Json-概述-1" class="hd lv2">------Json 概述------</h2>
+<div class="dgm" data-diagram="a60cb1aa1934" data-img="assets/img/a60cb1aa1934.png"><div class="dgm-head"><span class="dgm-t">语法规则 / 键值对表示：</span><span class="badge b-ocr">文字还原</span><span class="sp"></span><button class="dgm-tab">看原图</button></div></div>
+<p class="tx">用Newtonsoft‑Json</p>
+<h4 id="1-Json-配置规则-知识点-2" class="hd lv4">1 : Json 配置规则 知识点</h4>
+<p class="tx">字典 和 类 都是{}这种形式</p>
+<div class="cpair"><div class="chead"><span class="lang">C#</span><span class="csp"></span><button class="mini copy">复制</button></div><pre class="code" data-lang="csharp"><code>Json是国际通用的一种轻量级的数据交换格式
+类，对象用{}
+public class MrTang//这是一个 MrTang 类
+{
+    public string name;
+    public int age;
+    public bool sex;
+    public List&lt;int&gt; ids;
+    public List&lt;Person&gt; students;
+    public Home home;
+    public Person son;
+}
+
+public class Person
+{
+    public string name;
+    public int age;
+    public bool sex;
+}
+
+public class Home
+{
+    public string address;
+    public string street;
+}
+----------------------------转换成 JSON--------------------------------
+MrTang 类转换成 Json ↓
+
+{
+\t//冒号 代表的是 键值对的对应关系
+\t//逗号 就是分割成员变量的间隔符
+\t//Json当中的键一定要用 双引号包裹
+\t"name":"唐老狮",
+\t"age":18,
+\t"sex":true,
+\t//用于测试的 浮点类型 是支持浮点数的
+\t"testF":1.4,
+\t//中括号代表数组
+\t"ids":[1,2,3,4],
+\t"students":[{"name":"小红", "age":10, "sex":false},
+\t\t\t\t{"name":"小明", "age":8, "sex":true},
+\t\t\t\t{"name":"小强", "age":7, "sex":true}],
+\t"home":{"address":"成都", "street":"春熙路"},
+\t"son":null,
+\t//字典的话 键会变成双引号 以后转换时要注意！！！
+\t"dic":{"1":"123", "2":"234"}
+}</code></pre><div class="cout" hidden></div></div>
+<h4 id="2-Excel-转-Json-知识点-3" class="hd lv4">2 : Excel 转 Json 知识点</h4>
+<div class="dgm" data-diagram="35eae3cbea22" data-img="assets/img/35eae3cbea22.png"><div class="dgm-head"><span class="dgm-t">图内文字</span><span class="badge b-ocr">文字还原</span><span class="sp"></span><button class="dgm-tab">看原图</button></div></div>
+<p class="tx">比如网页：https://www.bejson.com/json/col2json/</p>
+<div class="cpair"><div class="chead"><span class="lang">C#</span><span class="csp"></span><button class="mini copy">复制</button></div><pre class="code" data-lang="csharp"><code>1.在Excel表中配置游戏数据-一更方便策划人员配置
+2.将Excel表中配置的数据转为Json配置—方便将数据读取到内存中</code></pre><div class="cout" hidden></div></div>
+<h2 id="了解-unity-自带的-JSON-工具-4" class="hd lv2">（💡 了解）------unity 自带的 JSON 工具------</h2>
+<h4 id="1-JsonUtlity-序列化-知识点-5" class="hd lv4">1 : JsonUtlity 序列化 知识点</h4>
+<p class="tx">不支持字典，不可以直接读取数据集合（需要用类包裹一层）</p>
+<p class="tx">JsonUtlity 是Unity自带的用于解析Json的公共类它可以</p>
+<p class="tx">1.将内存中对象序列化为Json格式的字符串 2.将Json字符串反序列化为类对象</p>
+<div class="cpair"><div class="chead"><span class="lang">C#</span><span class="csp"></span><button class="mini copy">复制</button></div><pre class="code" data-lang="csharp"><code>第一个参数 填写的是 存储的路径
+第二个参数 填写的是 存储的字符串内容
+注意：第一个参数 必须是存在的文件路径 如果没有对应文件夹 会报错
+File.WriteAllText(Application.persistentDataPath + "/Test.json", "唐老狮存储的json文件");
+print(Application.persistentDataPath);</code></pre><div class="cout" hidden></div></div>
+<div class="cpair"><div class="chead"><span class="lang">C#</span><span class="csp"></span><button class="mini copy">复制</button></div><pre class="code" data-lang="csharp"><code>2.在指定路径文件中读取字符串
+string str = File.ReadAllText(Application.persistentDataPath + "/Test.json");
+print(str);</code></pre><div class="cout" hidden></div></div>
+<p class="tx">使用JsonUtlity进行序列化，.将内存中对象序列化为Json格式的字符串</p>
+<p class="tx">dictionary 字典无法序列化， 类中的类和 受保护和私有修饰的 进行序列化需要加[System.Serializable] 特性</p>
+<div class="cpair"><div class="chead"><span class="lang">C#</span><span class="csp"></span><button class="mini copy">复制</button></div><pre class="code" data-lang="csharp"><code>[System.Serializable]
+public class Student
+{
+    public int age;
+    public string name;
+
+    public Student(int age, string name)
+    {
+        this.age = age;
+        this.name = name;
+    }
+}
+public class MrTang
+{
+    public string name;
+    public int age;
+    public bool sex;
+    public float testF;
+    public double testD;
+
+    public int[] ids;
+    public List&lt;int&gt; ids2;
+    public Dictionary&lt;int, string&gt; dic;
+    public Dictionary&lt;string, string&gt; dic2;
+
+    public Student s1;
+    public List&lt;Student&gt; s2s;
+
+    [SerializeField]
+    private int privateI = 1;
+    [SerializeField]
+    protected int protectedI = 2;
+}</code></pre><div class="cout" hidden></div></div>
+<div class="cpair"><div class="chead"><span class="lang">C#</span><span class="csp"></span><button class="mini copy">复制</button></div><pre class="code" data-lang="csharp"><code>public class Lesson1 : MonoBehaviour
+{
+    // Start is called before the first frame update
+    void Start()
+    {
+ 
+         知识点三 使用JsonUtlity进行序列化
+        //序列化：把内存中的数据 存储到硬盘上
+        //方法：
+        //JsonUtility.ToJson(对象)
+        MrTang t = new MrTang();
+        t.name = "唐老狮";
+        t.age = 18;
+        t.sex = false;
+        t.testF = 1.4f;
+        t.testD = 1.4;
+
+        t.ids = new int[] { 1, 2, 3, 4 };
+        t.ids2 = new List&lt;int&gt;() { 1, 2, 3 };
+        t.dic = new Dictionary&lt;int, string&gt;() { { 1, "123" }, { 2, "234" } };
+        t.dic2 = new Dictionary&lt;string, string&gt;() { { "1", "123" }, { "2", "234" } };
+
+        t.s1 = null;//new Student(1, "小红");
+        t.s2s = new List&lt;Student&gt;() { new Student(2, "小明"), new Student(3, "小强") };</code></pre><div class="cout" hidden></div></div>
+<div class="cpair"><div class="chead"><span class="lang">C#</span><span class="csp"></span><button class="mini copy">复制</button></div><pre class="code" data-lang="csharp"><code> Jsonutility提供了线程的方法 可以把类对象 序列化为 json字符串
+ -------------------------------------------------------------------------------
+string jsonStr = JsonUtility.ToJson(t);
+File.WriteAllText(Application.persistentDataPath + "/MrTang.json", jsonStr);
+
+注意：
+1.float序列化时看起来会有一些误差
+2.自定义类需要加上序列化特性[System.Serializable]
+3.想要序列化私有变量 需要加上特性[SerializeField]
+4.JsonUtility不支持字典
+5.JsonUtlity存储null对象不会是null 而是默认值的数据</code></pre><div class="cout" hidden></div></div>
+<h4 id="2-JsonUtlity-反序列化-知识点-Unity-官方提供-6" class="hd lv4">2 : JsonUtlity 反序列化 知识点 Unity 官方提供</h4>
+<div class="cpair"><div class="chead"><span class="lang">C#</span><span class="csp"></span><button class="mini copy">复制</button></div><pre class="code" data-lang="csharp"><code> 反序列化：把硬盘上的数据 读取到内存中
+ 方法：
+ JsonUtility.FromJson(字符串)
+ 读取文件中的 Json字符串
+ jsonStr = File.ReadAllText(Application.persistentDataPath + "/MrTang.json");
+ 使用Json字符串内容 转换成类对象
+ 01方法1
+ MrTang t2 = JsonUtility.FromJson(jsonStr, typeof(MrTang)) as MrTang;
+-------------------------------------------------------------------------------------
+ 02方法2  推荐使用
+ MrTang t3 = JsonUtility.FromJson&lt;MrTang&gt;(jsonStr);
+
+如果Json中数据少了，读取到内存中类对象中时不会报错</code></pre><div class="cout" hidden></div></div>
+<div class="cpair"><div class="chead"><span class="lang">C#</span><span class="csp"></span><button class="mini copy">复制</button></div><pre class="code" data-lang="csharp"><code> 1.JsonUtlity无法直接读取数据集合，可以类中去包裹另一个类的方式解决
+
+public class RoleData
+{
+    public List&lt;RoleInfo&gt; list;
+}
+
+[System.Serializable]
+public class RoleInfo
+{
+    public int hp;
+    public int speed;
+    public int volume;
+    public string resName;
+    public int scale;
+}</code></pre><div class="cout" hidden></div></div>
+<div class="cpair"><div class="chead"><span class="lang">C#</span><span class="csp"></span><button class="mini copy">复制</button></div><pre class="code" data-lang="csharp"><code> 
+ jsonStr = File.ReadAllText(Application.streamingAssetsPath + "/RoleInfo2.json");
+ print(jsonStr);
+---------------------------------------------------------------------------------------
+01.这里会报错，List&lt;&gt;数组存储读取的JSON内容必须是{}类包裹的格式
+ List&lt;RoleInfo&gt; roleInfoList = JsonUtility.FromJson&lt;List&lt;RoleInfo&gt;&gt;(jsonStr);
+02.可以采用下面这种就不会报错，用一个类去包裹另一个类
+RoleData data = JsonUtility.FromJson&lt;RoleData&gt;(jsonStr);
+
+ 2.文本编码格式需要时UTF-8 不然无法加载</code></pre><div class="cout" hidden></div></div>
+<h2 id="整章不看-第三方-LitJson-不适用-已过时-7" class="hd lv2">（❌整章不看 ）------ 第三方 LitJson 不适用，已过时------</h2>
+<h4 id="1-LitJson-序列化-知识点-第三方提供的-不使用-已经没落-8" class="hd lv4">1: LitJson 序列化 知识点 第三方提供的 【不使用，已经没落】</h4>
+<p class="tx">支持 dictionary 字典（键 为 string 类型才行），</p>
+<p class="tx">内部类也能存储（ 必须有无参构造函数），</p>
+<p class="tx">null 值也能存储，不能序列化私有变量，能直接读取数据集合</p>
+<div class="dgm" data-diagram="577cb013bd44" data-img="assets/img/577cb013bd44.png"><div class="dgm-head"><span class="dgm-t">&gt;litjson-0.17.0&gt;src&gt;</span><span class="badge b-ocr">文字还原</span><span class="sp"></span><button class="dgm-tab">看原图</button></div></div>
+<div class="cpair"><div class="chead"><span class="lang">C#</span><span class="csp"></span><button class="mini copy">复制</button></div><pre class="code" data-lang="csharp"><code>它是一个第三方库，用于处理Json的序列化和反序列化
+LitJson是C#编写的，体积小、速度快、易于使用
+它可以很容易的嵌入到我们的代码中
+只需要将LitJson代码拷贝到工程中即可       
+1.前往LitJson官网
+2.通过官网前往GitHub获取最新版本代码
+3.讲代码拷贝到Unity工程中 即可开始使用LitJson</code></pre><div class="cout" hidden></div></div>
+<div class="cpair"><div class="chead"><span class="lang">C#</span><span class="csp"></span><button class="mini copy">复制</button></div><pre class="code" data-lang="csharp"><code>public class Student2
+{
+    public int age;
+    public string name;
+
+    public Student2() { }
+
+    public Student2(int age, string name)
+    {
+        this.age = age;
+        this.name = name;
+    }
+}
+
+public class MrTang2
+{
+    public string name;
+    public int age;
+    public bool sex;
+    public float testF;
+    public double testD;
+
+    public int[] ids;
+    public List&lt;int&gt; ids2;
+    //public Dictionary&lt;int, string&gt; dic;
+    public Dictionary&lt;string, string&gt; dic2;
+
+    public Student2 s1;
+    public List&lt;Student2&gt; s2s;
+
+    private int privateI = 1;
+    protected int protectedI = 2;
+}
+
+public class RoleInfo2
+{
+    public int hp;
+    public int speed;
+    public int volume;
+    public string resName;
+    public int scale;
+}</code></pre><div class="cout" hidden></div></div>
+<div class="cpair"><div class="chead"><span class="lang">C#</span><span class="csp"></span><button class="mini copy">复制</button></div><pre class="code" data-lang="csharp"><code>JsonMapper.ToJson(类对象) 
+string jsonStr = JsonMapper.ToJson(t); 使用LitJson进行序列化
+print(Application.persistentDataPath); 查看运行目录
+存储 json
+File.WriteAllText(Application.persistentDataPath + "/MrTang2.json", jsonStr);</code></pre><div class="cout" hidden></div></div>
+<h4 id="2-LitJson-反序列化-知识点-9" class="hd lv4">2 : LitJson 反序列化 知识点</h4>
+<div class="cpair"><div class="chead"><span class="lang">C#</span><span class="csp"></span><button class="mini copy">复制</button></div><pre class="code" data-lang="csharp"><code>01
+JsonMapper.ToObject(字符串)
+string jsonStr = File.ReadAllText(Application.persistentDataPath + "/MrTang2.json");
+
+JsonData是LitJson提供的类对象 可以用键值对的形式去访问其中的内容
+JsonData data = JsonMapper.ToObject(jsonStr);
+print(data["name"]);
+print(data["age"]);
+--------------------------------------------------------------------
+02 通过泛型转换 更加的方便 建议使用这种方式
+
+MrTang2 t2 = JsonMapper.ToObject&lt;MrTang2&gt;(jsonStr);</code></pre><div class="cout" hidden></div></div>
+<div class="cpair"><div class="chead"><span class="lang">C#</span><span class="csp"></span><button class="mini copy">复制</button></div><pre class="code" data-lang="csharp"><code>知识点五 注意事项
+1.LitJson可以直接读取数据集合
+string jsonStr = File.ReadAllText(Application.streamingAssetsPath + "/RoleInfo.json");
+RoleInfo2[] arr = JsonMapper.ToObject&lt;RoleInfo2[]&gt;(jsonStr);
+
+List&lt;RoleInfo2&gt; list = JsonMapper.ToObject&lt;List&lt;RoleInfo2&gt;&gt;(jsonStr);
+
+jsonStr = File.ReadAllText(Application.streamingAssetsPath + "/Dic.json");
+Dictionary&lt;string, int&gt; dicTest = JsonMapper.ToObject&lt;Dictionary&lt;string, int&gt;&gt;(jsonStr);
+
+2.文本编码格式需要是UTF-8 不然无法加载</code></pre><div class="cout" hidden></div></div>
+<h4 id="3-JsonUtlity-和-LitJson-对比-知识点-10" class="hd lv4">3 : JsonUtlity 和 LitJson 对比 知识点</h4>
+<div class="cpair"><div class="chead"><span class="lang">C#</span><span class="csp"></span><button class="mini copy">复制</button></div><pre class="code" data-lang="csharp"><code>知识点一 JsonUtlity和LitJson相同点
+1.他们都是用于Json的序列化反序列化
+2.Json文档编码格式必须是UTF-8
+3.都是通过静态类进行方法调用
+
+
+知识点二 JsonUtlity和LitJson不同点
+1.JsonUtlity是Unity自带，LitJson是第三方需要引用命名空间
+2.JsonUtlity使用时自定义类需要加特性,LitJson不需要
+3.JsonUtlity支持私有变量(加特性),LitJson不支持
+4.JsonUtlity不支持字典,LitJson支持(但是键只能是字符串)
+5.JsonUtlity不能直接将数据反序列化为数据集合(数组字典),LitJson可以
+6.JsonUtlity对自定义类不要求有无参构造，LitJson需要
+7.JsonUtlity存储空对象时会存储默认值而不是null，LitJson会存null
+
+
+知识点三 如何选择两者
+根据实际需求
+建议使用LitJson
+原因：LitJson不用加特性，支持字典，支持直接反序列化为数据集合，存储null更准确</code></pre><div class="cout" hidden></div></div>
+<h4 id="4-实现-JsonUtlity-和-Litjson-动态选择的管理类-进-11" class="hd lv4">4 : 实现 JsonUtlity 和 Litjson 动态选择的管理类 进行 json 的存储和读取</h4>
+<div class="cpair"><div class="chead"><span class="lang">C#</span><span class="csp"></span><button class="mini copy">复制</button></div><pre class="code" data-lang="csharp"><code>using LitJson;
+using System.Collections;
+using System.Collections.Generic;
+using System.IO;
+using UnityEngine;
+
+/// &lt;summary&gt;
+/// 序列化和反序列化Json时  使用的是哪种方案
+/// &lt;/summary&gt;
+public enum JsonType
+{
+    JsonUtlity,
+    LitJson,
+}
+
+/// &lt;summary&gt;
+/// Json数据管理类 主要用于进行 Json的序列化存储到硬盘 和 反序列化从硬盘中读取到内存中
+/// &lt;/summary&gt;
+public class JsonMgr
+{
+    private static JsonMgr instance = new JsonMgr();
+    public static JsonMgr Instance =&gt; instance;
+
+    private JsonMgr() { }
+
+    //存储Json数据 序列化
+    public void SaveData(object data, string fileName, JsonType type = JsonType.LitJson)
+    {
+        //确定存储路径
+        string path = Application.persistentDataPath + "/" + fileName + ".json";
+        //序列化 得到Json字符串
+        string jsonStr = "";
+        switch (type)
+        {
+            case JsonType.JsonUtlity:
+                jsonStr = JsonUtility.ToJson(data);
+                break;
+            case JsonType.LitJson:
+                jsonStr = JsonMapper.ToJson(data);
+                break;
+        }
+        //把序列化的Json字符串 存储到指定路径的文件中
+        File.WriteAllText(path, jsonStr);
+    }
+
+    //读取指定文件中的 Json数据 反序列化
+    public T LoadData&lt;T&gt;(string fileName, JsonType type = JsonType.LitJson) where T : new()
+    {
+        //确定从哪个路径读取
+        //首先先判断 默认数据文件夹中是否有我们想要的数据 如果有 就从中获取
+        string path = Application.streamingAssetsPath + "/" + fileName + ".json";
+        //先判断 是否存在这个文件
+        //如果不存在默认文件 就从 读写文件夹中去寻找
+        if(!File.Exists(path))
+            path = Application.persistentDataPath + "/" + fileName + ".json";
+        //如果读写文件夹中都还没有 那就返回一个默认对象
+        if (!File.Exists(path))
+            return new T();
+
+        //进行反序列化
+        string jsonStr = File.ReadAllText(path);
+        //数据对象
+        T data = default(T);
+        switch (type)
+        {
+            case JsonType.JsonUtlity:
+                data = JsonUtility.FromJson&lt;T&gt;(jsonStr);
+                break;
+            case JsonType.LitJson:
+                data = JsonMapper.ToObject&lt;T&gt;(jsonStr);
+                break;
+        }
+
+        //把对象返回出去
+        return data;
+    }
+}</code></pre><div class="cout" hidden></div></div>
+<h2 id="必看-强烈推荐-主流的商用-Newtonsoft-Json-12" class="hd lv2">（🔥🔥 必看，强烈推荐）------主流的商用 Newtonsoft.Json----</h2>
+<p class="tx">https://github.com/jilleJr/Newtonsoft.Json-for-Unity</p>
+<h2 id="Newtonsoft-Json-使用教程-13" class="hd lv2">Newtonsoft.Json 使用教程</h2>
+<p class="tx">UnitNewtonsoft.Json（也称为 Json.NET）是 .NET 平台最流行的 JSON 序列化/反序列化库，在游戏开发中常用于存档、配置读取、网络通信等场景。下面我将介绍其核心 API，并设计一个可直接使用的管理类。</p>
+<h2 id="一-Newtonsoft-Json-核心-API-概览-14" class="hd lv2">一、Newtonsoft.Json 核心 API 概览</h2>
+<div class="tw"><table class="tb"><tr><td><td>API</td><td>说明</td></td></tr><tr><td><td>JsonConvert.SerializeObject(object value)</td><td>将对象序列化为 JSON 字符串</td></td></tr><tr><td><td>JsonConvert.DeserializeObject&lt;T&gt;(string json)</td><td>将 JSON 字符串反序列化为指定类型的对象</td></td></tr><tr><td><td>JObject / JArray / JToken</td><td>表示任意 JSON 结构，用于动态解析或构建</td></td></tr><tr><td><td>JsonSerializerSettings</td><td>配置序列化/反序列化的行为（如忽略空值、日期格式、循环引用处理等）</td></td></tr><tr><td><td>JsonConverter</td><td>自定义转换器，用于处理特殊类型或自定义序列化逻辑</td></td></tr></table></div>
+<h2 id="二-设计一个-JsonManager-管理类-15" class="hd lv2">二、设计一个 JsonManager 管理类</h2>
+<p class="tx">为了方便在游戏项目中使用，我们可以封装一个静态类 JsonManager，提供常用的序列化/反序列化方法，并支持自定义设置。</p>
+<p class="tx">csharp</p>
+<div class="cpair"><div class="chead"><span class="lang">PLAIN</span><span class="csp"></span><button class="mini copy">复制</button></div><pre class="code" data-lang="plain"><code>using System;
+using System.IO;
+using Newtonsoft.Json;
+using Newtonsoft.Json.Linq;
+
+/// &lt;summary&gt;
+/// JSON 管理器：封装 Newtonsoft.Json 的常用操作，
+/// 提供统一的序列化/反序列化接口，方便游戏逻辑直接调用。
+/// &lt;/summary&gt;
+public static class JsonManager
+{
+    // 默认序列化设置：适合大多数游戏场景
+    private static readonly JsonSerializerSettings DefaultSettings = new JsonSerializerSettings
+    {
+        // 忽略 null 值，减小存档体积
+        NullValueHandling = NullValueHandling.Ignore,
+        
+        // 忽略 JSON 中不存在的属性，防止反序列化时出错
+        MissingMemberHandling = MissingMemberHandling.Ignore,
+        
+        // 处理循环引用（如父子对象互相引用）
+        ReferenceLoopHandling = ReferenceLoopHandling.Ignore,
+        
+        // 使用缩进格式，便于阅读（调试时可开启）
+        Formatting = Formatting.Indented,
+        
+        // 日期格式统一为 ISO 8601
+        DateFormatString = "yyyy-MM-ddTHH:mm:ssZ"
+    };
+
+    /// &lt;summary&gt;
+    /// 将对象序列化为 JSON 字符串。
+    /// &lt;/summary&gt;
+    /// &lt;typeparam name="T"&gt;对象类型&lt;/typeparam&gt;
+    /// &lt;param name="obj"&gt;要序列化的对象&lt;/param&gt;
+    /// &lt;returns&gt;JSON 字符串&lt;/returns&gt;
+    public static string ToJson&lt;T&gt;(T obj)
+    {
+        return JsonConvert.SerializeObject(obj, DefaultSettings);
+    }
+
+    /// &lt;summary&gt;
+    /// 将对象序列化为紧凑格式的 JSON 字符串（无缩进，忽略 null）。
+    /// &lt;/summary&gt;
+    public static string ToJsonCompact&lt;T&gt;(T obj)
+    {
+        var settings = new JsonSerializerSettings
+        {
+            NullValueHandling = NullValueHandling.Ignore,
+            Formatting = Formatting.None
+        };
+        return JsonConvert.SerializeObject(obj, settings);
+    }
+
+    /// &lt;summary&gt;
+    /// 将 JSON 字符串反序列化为指定类型的对象。
+    /// &lt;/summary&gt;
+    /// &lt;typeparam name="T"&gt;目标类型&lt;/typeparam&gt;
+    /// &lt;param name="json"&gt;JSON 字符串&lt;/param&gt;
+    /// &lt;returns&gt;反序列化得到的对象，若失败则返回默认值&lt;/returns&gt;
+    public static T FromJson&lt;T&gt;(string json)
+    {
+        try
+        {
+            return JsonConvert.DeserializeObject&lt;T&gt;(json, DefaultSettings);
+        }
+        catch (JsonException ex)
+        {
+            // 在实际项目中可记录日志或抛出异常
+            Console.WriteLine($"JSON 反序列化失败: {ex.Message}");
+            return default(T);
+        }
+    }
+
+    /// &lt;summary&gt;
+    /// 将对象序列化并保存到文件。
+    /// &lt;/summary&gt;
+    /// &lt;typeparam name="T"&gt;对象类型&lt;/typeparam&gt;
+    /// &lt;param name="path"&gt;文件路径&lt;/param&gt;
+    /// &lt;param name="obj"&gt;要保存的对象&lt;/param&gt;
+    public static void SaveToFile&lt;T&gt;(string path, T obj)
+    {
+        string json = ToJson(obj);
+        File.WriteAllText(path, json);
+    }
+
+    /// &lt;summary&gt;
+    /// 从文件读取 JSON 并反序列化为对象。
+    /// &lt;/summary&gt;
+    /// &lt;typeparam name="T"&gt;目标类型&lt;/typeparam&gt;
+    /// &lt;param name="path"&gt;文件路径&lt;/param&gt;
+    /// &lt;returns&gt;反序列化得到的对象&lt;/returns&gt;
+    public static T LoadFromFile&lt;T&gt;(string path)
+    {
+        if (!File.Exists(path))
+            return default(T);
+
+        string json = File.ReadAllText(path);
+        return FromJson&lt;T&gt;(json);
+    }
+
+    /// &lt;summary&gt;
+    /// 解析 JSON 字符串为 JObject，用于动态读取字段（无需定义强类型类）。
+    /// &lt;/summary&gt;
+    /// &lt;param name="json"&gt;JSON 字符串&lt;/param&gt;
+    /// &lt;returns&gt;JObject 实例&lt;/returns&gt;
+    public static JObject Parse(string json)
+    {
+        return JObject.Parse(json);
+    }
+
+    /// &lt;summary&gt;
+    /// 将任意对象转换为 JToken（动态 JSON 结构）。
+    /// &lt;/summary&gt;
+    public static JToken ToJToken(object obj)
+    {
+        return JToken.FromObject(obj);
+    }
+
+    /// &lt;summary&gt;
+    /// 将 JToken 转换为指定类型的对象。
+    /// &lt;/summary&gt;
+    public static T FromJToken&lt;T&gt;(JToken token)
+    {
+        return token.ToObject&lt;T&gt;();
+    }
+}</code></pre><div class="cout" hidden></div></div>
+<h2 id="三-使用示例-16" class="hd lv2">三、使用示例</h2>
+<h3 id="1-简单对象的序列化与反序列化-17" class="hd lv3">1. 简单对象的序列化与反序列化</h3>
+<p class="tx">csharp</p>
+<div class="cpair"><div class="chead"><span class="lang">PLAIN</span><span class="csp"></span><button class="mini copy">复制</button></div><pre class="code" data-lang="plain"><code>[Serializable]
+public class PlayerData
+{
+    public string Name { get; set; }
+    public int Level { get; set; }
+    public List&lt;string&gt; Inventory { get; set; }
+}
+
+// 序列化
+var player = new PlayerData
+{
+    Name = "Hero",
+    Level = 10,
+    Inventory = new List&lt;string&gt; { "Sword", "Shield" }
+};
+string json = JsonManager.ToJson(player);
+Console.WriteLine(json);
+// 输出（带缩进）：
+// {
+//   "Name": "Hero",
+//   "Level": 10,
+//   "Inventory": ["Sword", "Shield"]
+// }
+
+// 反序列化
+PlayerData loaded = JsonManager.FromJson&lt;PlayerData&gt;(json);
+Console.WriteLine(loaded.Name);  // Hero</code></pre><div class="cout" hidden></div></div>
+<h3 id="2-保存与加载游戏存档-18" class="hd lv3">2. 保存与加载游戏存档</h3>
+<p class="tx">csharp</p>
+<div class="cpair"><div class="chead"><span class="lang">PLAIN</span><span class="csp"></span><button class="mini copy">复制</button></div><pre class="code" data-lang="plain"><code>// 保存到文件
+JsonManager.SaveToFile("savegame.json", player);
+
+// 从文件加载
+PlayerData loadedPlayer = JsonManager.LoadFromFile&lt;PlayerData&gt;("savegame.json");
+if (loadedPlayer != null)
+{
+    Console.WriteLine($"欢迎回来，{loadedPlayer.Name}！等级：{loadedPlayer.Level}");
+}</code></pre><div class="cout" hidden></div></div>
+<h3 id="3-动态解析-JSON-无需定义类-19" class="hd lv3">3. 动态解析 JSON（无需定义类）</h3>
+<p class="tx">csharp</p>
+<div class="cpair"><div class="chead"><span class="lang">PLAIN</span><span class="csp"></span><button class="mini copy">复制</button></div><pre class="code" data-lang="plain"><code>string jsonStr = @"{ ""name"": ""Boss"", ""hp"": 1500, ""skills"": [""Fireball"", ""Ice Storm""] }";
+JObject obj = JsonManager.Parse(jsonStr);
+string name = (string)obj["name"];
+int hp = (int)obj["hp"];
+JArray skills = (JArray)obj["skills"];
+foreach (var skill in skills)
+{
+    Console.WriteLine(skill);
+}</code></pre><div class="cout" hidden></div></div>
+<h3 id="4-使用自定义设置处理特殊需求-20" class="hd lv3">4. 使用自定义设置处理特殊需求</h3>
+<p class="tx">如果默认设置不满足，可以直接使用 JsonConvert 并传入自定义 JsonSerializerSettings：</p>
+<p class="tx">csharp</p>
+<div class="cpair"><div class="chead"><span class="lang">PLAIN</span><span class="csp"></span><button class="mini copy">复制</button></div><pre class="code" data-lang="plain"><code>var settings = new JsonSerializerSettings
+{
+    NullValueHandling = NullValueHandling.Include, // 包含 null 字段
+    Formatting = Formatting.None,                  // 紧凑输出
+    DateFormatString = "yyyy-MM-dd"
+};
+string customJson = JsonConvert.SerializeObject(player, settings);</code></pre><div class="cout" hidden></div></div>
+<h2 id="四-注意事项-21" class="hd lv2">四、注意事项</h2>
+<ul class="bl"><li>引用库：在 Unity 中，需通过 Package Manager 添加 com.unity.nuget.newtonsoft-json 包，或从 Asset Store 导入 Json.NET。在普通 .NET 项目中通过 NuGet 安装 Newtonsoft.Json。</li><li>性能：频繁序列化/反序列化大对象时，可考虑缓存 JsonSerializer 实例或使用 JsonConvert 的预编译代理，但对于大多数游戏场景，直接调用即可。</li><li>类型安全：反序列化时若 JSON 结构与目标类不完全匹配，默认会忽略缺失成员，但多余字段可能导致异常（可通过 MissingMemberHandling.Ignore 避免）。</li><li>特殊类型：Unity 中的 Vector3、Quaternion 等结构默认无法直接序列化，需要自定义 JsonConverter。管理类中未包含，可根据需要扩展。</li></ul>
+<p class="tx">通过这个 JsonManager，你可以在游戏项目中快速、统一地处理 JSON 数据，减少重复代码。</p>
+<h4 id="挖坑总结-22" class="hd lv4">: 挖坑总结</h4>
+<div class="cpair"><div class="chead"><span class="lang">C#</span><span class="csp"></span><button class="mini copy">复制</button></div><pre class="code" data-lang="csharp"><code>待实现功能，自动加载 Excel 文档并转换成 Jason 格式</code></pre><div class="cout" hidden></div></div>
+    </article>
+    <footer class="pnbar"><a class="pn prev" href="m12.html"><span>上一节</span>Unity_数据持久化 - PlayerPrefs</a><a class="pn next" href="m14.html"><span>下一节</span>MessagePack-CSharp - 二进制</a></footer>
+  </main>
+</div>
+<button class="totop" id="totop">↑</button>
+<script src="assets/demos.js"></script>
+<script src="assets/diagrams-data.js"></script>
+<script src="assets/diagram.js"></script>
+<script src="assets/app.js"></script>
+<script>window.__mountDiagrams && window.__mountDiagrams();</script>
+</body>
+</html>

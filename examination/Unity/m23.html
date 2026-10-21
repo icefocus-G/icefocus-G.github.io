@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Unity 移动平台相关 — IOS · Unity 交互课件</title>
+<link rel="stylesheet" href="assets/style.css">
+<link rel="stylesheet" href="assets/diagram.css">
+</head>
+<body data-mid="m23">
+<header class="top">
+  <a class="brand" href="index.html"><span class="logo">U</span><b>Unity</b><i>交互课件</i></a>
+  <div class="crumb"><span>游戏打包相关</span><em>/</em><strong>Unity 移动平台相关 — IOS</strong></div>
+  <div class="top-r">
+    <span class="stat">原稿空白 · 已补充</span>
+    <button class="mini" id="btnNav">目录</button>
+  </div>
+</header>
+<div class="wrap">
+  <aside class="side" id="side">
+    <div class="side-h">本篇目录</div>
+    <nav class="tocbox"><a class="toc lv2" href="#sup-m23-flow">从 Unity 到 App Store 的完整链路</a><a class="toc lv2" href="#sup-m23-check">八个最容易卡住的设置</a><a class="toc lv3" href="#sup-m23-pit">真机上才出现的问题</a></nav>
+    <div class="side-h">全部模块</div>
+    <nav class="navbox"><div class="ng"><div class="ngt">开发经验补充</div><a href="m01.html">Unity - 进阶 - 大纲</a><a href="m02.html">Unity 进阶之视频播放</a><a href="m03.html">Unity - 进阶 - C# 补充</a><a href="m04.html">Unity 网络开发基础</a><a href="m05.html">Unity 程序框架</a></div><div class="ng"><div class="ngt">游戏引擎相关</div><a href="m06.html">Unity_入门</a><a href="m07.html">Unity_入门 - 实践项目</a><a href="m08.html">Unity_基础</a><a href="m09.html">Unity 核心</a><a href="m10.html">UniTask</a></div><div class="ng"><div class="ngt">数据持久化</div><a href="m11.html">Unity 进阶之 ScriptableObject</a><a href="m12.html">Unity_数据持久化 - PlayerPrefs</a><a href="m13.html">Unity_数据持久化 - Newtonsoft-Json</a><a href="m14.html">MessagePack-CSharp - 二进制</a><a href="m26.html">Unity 数据持久化 - Binary 2 进制</a></div><div class="ng"><div class="ngt">界面 UI 相关</div><a href="m15.html">Unity-UGUI</a><a href="m16.html">Unity-UGUI - 进阶 - TextMeshPro</a><a href="m27.html">Unity_GUI 概述（编辑器用）</a></div><div class="ng"><div class="ngt">设备输入相关</div><a href="m17.html">Unity 进阶之 InputSystem</a></div><div class="ng"><div class="ngt">热更相关</div><a href="m18.html">YooAsset 资源管理 - 大游戏</a><a href="m19.html">Addressables 资源管理 - 小游戏</a><a href="m20.html">HybridCLR - 代码业务逻辑</a></div><div class="ng"><div class="ngt">性能优化相关</div><a href="m21.html">Unity 进阶之性能优化</a><a href="m22.html">Unity 背包里装 10w 个道具</a></div><div class="ng"><div class="ngt">SDK 相关</div><div class="ngempty">预留分类 · 后续补充</div></div><div class="ng"><div class="ngt">游戏打包相关</div><a href="m23.html" class="on">Unity 移动平台相关 — IOS</a><a href="m24.html">Unity 移动平台相关 — Android</a><a href="m25.html">unity_00 - 数学公式和物理公式</a></div></nav>
+  </aside>
+  <main class="main">
+    <div class="mhead">
+      <div class="kick">游戏打包相关</div>
+      <h1>Unity 移动平台相关 — IOS</h1>
+      <p class="msub">IL2CPP / ATS / 上架</p>
+      <div class="chips"><span class="warn">语雀原稿为空</span><span>本页内容为补充整理</span></div>
+    </div>
+    <article class="doc">
+<div class="runsec"><div class="runsec-h">本模块可运行验证<span>纯 C# · 无需 Unity · 点右下按钮真实编译执行</span></div><div class="cpair"><div class="chead"><span class="lang">C#</span><span class="csp"></span><button class="mini copy">复制</button><button class="mini run" data-run>真实运行</button></div><pre class="code" data-lang="csharp"><code>// iOS 打包：上线前必须逐项过的检查表
+var checks = new (string item, string value, Func&lt;string, bool&gt; pass, string fix)[]
+{
+    ("Scripting Backend", "IL2CPP", v =&gt; v == "IL2CPP", "iOS 不允许 Mono，必须 IL2CPP"),
+    ("Architecture", "ARM64", v =&gt; v == "ARM64", "32 位已被淘汰"),
+    ("Target minimum iOS", "12.0", v =&gt; double.Parse(v) &gt;= 12.0, "低于 12 会被新版 Xcode 拒绝"),
+    ("ATS 明文 http", "已禁用", v =&gt; v == "已禁用", "Info.plist 不能保留 NSAllowsArbitraryLoads"),
+    ("隐私描述 NSUserTracking", "已填写", v =&gt; v != "缺失", "缺失直接审核被拒"),
+    ("Signing", "自动签名", v =&gt; v.Length &gt; 0, "证书与描述文件必须匹配 Bundle ID"),
+    ("Bitcode", "关闭", v =&gt; v == "关闭", "Xcode 14 起已废弃"),
+    ("启动图 Storyboard", "已配置", v =&gt; v != "缺失", "缺失会以兼容模式上下黑边")
+};
+
+int fail = 0;
+foreach (var (item, value, pass, fix) in checks)
+{
+    bool ok = pass(value);
+    if (!ok) fail++;
+    Console.WriteLine($"  [{(ok ? "通过" : "不通过")}] {item,-24} 当前: {value}");
+    if (!ok) Console.WriteLine($"          修复: {fix}");
+}
+Console.WriteLine();
+Console.WriteLine(fail == 0 ? "全部通过，可以 Archive" : $"还有 {fail} 项不达标，先修再打包");</code></pre><div class="cout" hidden></div></div></div><div class="demo" data-demo="ios"><div class="demo-bar"><span class="dot"></span>iOS 构建链路<span class="demo-tag">交互演示</span></div><div class="demo-body"><div class="demo-loading">加载中…</div></div></div>
+<div class="sup">
+<div class="sup-t">原稿此篇为空（语雀 word_count = 0）· 以下为补充整理 <i>非语雀原文</i></div>
+
+<h2 id="sup-m23-flow" class="hd lv2">从 Unity 到 App Store 的完整链路</h2>
+<p class="tx">Unity 只能产出 Xcode 工程，最终的签名、上传、审核都在苹果那侧完成。所以「打包」从来不是点一下 Build 就结束。</p>
+<ol class="bl">
+<li>Player Settings：Bundle Identifier、版本号、图标、启动图、方向、最低系统版本。</li>
+<li>Build Settings：Scripting Backend 必须 IL2CPP，Architecture 选 ARM64。</li>
+<li>导出 Xcode 工程 → 用 Xcode 打开，配置 Team 与 Signing。</li>
+<li>Product → Archive → Distribute App → App Store Connect 上传。</li>
+<li>在 App Store Connect 填元数据、截图、隐私清单，提交审核。</li>
+</ol>
+
+<h2 id="sup-m23-check" class="hd lv2">八个最容易卡住的设置</h2>
+<div class="tw"><table class="tb">
+<tr><td>项目</td><td>要求</td><td>不做的后果</td></tr>
+<tr><td>Scripting Backend</td><td>IL2CPP</td><td>iOS 不支持 Mono，直接构建失败</td></tr>
+<tr><td>Architecture</td><td>ARM64</td><td>32 位早已被拒</td></tr>
+<tr><td>ATS（App Transport Security）</td><td>禁止明文 http</td><td>所有 http 请求静默失败</td></tr>
+<tr><td>隐私描述文案</td><td>用到的权限都要写用途</td><td>审核直接打回</td></tr>
+<tr><td>IDFA / 广告标识</td><td>不用就别声明</td><td>声明了却不用也会被拒</td></tr>
+<tr><td>启动图 Storyboard</td><td>必须配置</td><td>以兼容模式运行，上下黑边</td></tr>
+<tr><td>Bitcode</td><td>关闭（已废弃）</td><td>上传报错</td></tr>
+<tr><td>第三方 SDK</td><td>隐私清单 PrivacyInfo.xcprivacy</td><td>2024 起强制要求</td></tr>
+</table></div>
+
+<h3 id="sup-m23-pit" class="hd lv3">真机上才出现的问题</h3>
+<ul class="bl">
+<li><b>发热掉帧</b>：编辑器的性能数据完全不可参考，必须在真机用 Xcode Instruments 看。</li>
+<li><b>内存被系统杀掉</b>：iOS 没有 swap，纹理超限直接 SIGKILL，表现为「闪退但没日志」。</li>
+<li><b>首次启动白屏</b>：首包资源解压 + 热更检查都在启动阶段，用启动图遮住并给进度。</li>
+<li><b>支付/登录回调</b>：URL Scheme 与 Universal Link 要在 Info.plist 与后台同时配置。</li>
+</ul>
+</div>
+
+    </article>
+    <footer class="pnbar"><a class="pn prev" href="m22.html"><span>上一节</span>Unity 背包里装 10w 个道具</a><a class="pn next" href="m24.html"><span>下一节</span>Unity 移动平台相关 — Android</a></footer>
+  </main>
+</div>
+<button class="totop" id="totop">↑</button>
+<script src="assets/demos.js"></script>
+<script src="assets/diagrams-data.js"></script>
+<script src="assets/diagram.js"></script>
+<script src="assets/app.js"></script>
+<script>window.__mountDiagrams && window.__mountDiagrams();</script>
+</body>
+</html>

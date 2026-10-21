@@ -1,0 +1,395 @@
+
+/* ---------------- 交互图形容器 ---------------- */
+.dgm {
+  margin: 20px 0;
+  border: 1px solid var(--line);
+  border-radius: 14px;
+  background: #fff;
+  overflow: hidden;
+  box-shadow: var(--shadow);
+}
+
+.dgm-head {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 10px 14px;
+  background: linear-gradient(180deg, #fbfcff, #f4f7fd);
+  border-bottom: 1px solid var(--line);
+  font-size: 13px;
+  font-weight: 650;
+  color: #22324a;
+}
+
+.dgm-head .badge {
+  font-size: 10.5px;
+  font-weight: 700;
+  letter-spacing: .04em;
+  color: #1d6b4f;
+  background: #e6f7ef;
+  border: 1px solid #b9e6d3;
+  border-radius: 100px;
+  padding: 2px 8px;
+  white-space: nowrap;
+}
+
+.dgm-head .sp { flex: 1; }
+
+.dgm-tab {
+  font-family: var(--sans);
+  font-size: 11.5px;
+  border: 1px solid var(--line);
+  background: #fff;
+  color: var(--ink2);
+  border-radius: 6px;
+  padding: 4px 10px;
+  cursor: pointer;
+  white-space: nowrap;
+}
+
+.dgm-tab:hover { border-color: #c3d4f0; color: var(--acc); }
+
+.dg-body { padding: 6px 10px 10px; }
+.dg-body svg { display: block; width: 100%; margin: 0 auto; touch-action: none; }
+
+.dg-svg { cursor: grab; background: #fdfefe; }
+.dg-svg:active { cursor: grabbing; }
+
+.dg-node { cursor: move; }
+.dg-node:hover rect { filter: brightness(.97); }
+.dg-node.dragging rect { filter: drop-shadow(0 6px 12px rgba(43, 108, 246, .28)); }
+.dg-node text { user-select: none; pointer-events: none; }
+.dg-toggle { cursor: pointer; }
+.dg-handle { cursor: grab; }
+
+.dg-tools {
+  display: flex;
+  gap: 7px;
+  flex-wrap: wrap;
+  padding: 8px 4px 4px;
+  border-top: 1px dashed var(--line2);
+  margin-top: 6px;
+}
+
+.dg-btn {
+  font-family: var(--sans);
+  font-size: 11.5px;
+  border: 1px solid var(--line);
+  background: #fff;
+  color: var(--ink2);
+  border-radius: 6px;
+  padding: 4px 11px;
+  cursor: pointer;
+}
+
+.dg-btn:hover { border-color: #c3d4f0; color: var(--acc); background: var(--acc-soft); }
+
+.dg-vecinfo {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px 16px;
+  font-family: var(--mono);
+  font-size: 12px;
+  color: var(--ink2);
+  padding: 8px 6px 2px;
+  border-top: 1px dashed var(--line2);
+  margin-top: 4px;
+}
+
+.dg-vecinfo .k { color: var(--acc); font-weight: 700; margin-right: 4px; }
+.dg-note { color: #8b98ad; font-family: var(--sans); }
+
+/* 曲线 + 滑杆 */
+.dg-curve { display: grid; grid-template-columns: 200px minmax(0, 1fr); gap: 14px; align-items: start; }
+.dg-ctl { display: flex; flex-direction: column; gap: 12px; padding: 10px 4px; }
+
+.dg-slider { display: block; font-size: 12px; color: var(--ink2); }
+.dg-slider span { display: block; margin-bottom: 4px; }
+.dg-slider input { width: 100%; accent-color: var(--acc); }
+.dg-slider b { color: var(--acc); font-variant-numeric: tabular-nums; }
+
+/* 表格 */
+.dg-tablewrap { padding: 8px 4px 4px; overflow-x: auto; }
+
+.dg-table {
+  width: 100%;
+  border-collapse: separate;
+  border-spacing: 0;
+  font-size: 12.5px;
+  color: #2b3648;
+}
+
+.dg-table th,
+.dg-table td {
+  border: 1px solid #dfe6f0;
+  padding: 7px 9px;
+  text-align: center;
+  transition: background .12s;
+}
+
+.dg-table thead th {
+  background: #eef3fd;
+  color: #1d3f7d;
+  font-weight: 650;
+  font-size: 12px;
+}
+
+.dg-table td.rh {
+  background: #f6f9ff;
+  font-weight: 650;
+  color: #1d3f7d;
+  text-align: left;
+  white-space: nowrap;
+}
+
+.dg-table th.rh { background: #eef3fd; }
+
+.dg-table td.dim { color: #b3bdcb; }
+
+.dg-table tr.hl-r td { background: #e8f1ff; }
+.dg-table td.hl-c { background: #f0f6ff; }
+.dg-table tr.hl-r td.hl-c { background: #d8e7ff; }
+
+.dg-tablenote {
+  margin-top: 10px;
+  padding: 8px 10px;
+  font-size: 12px;
+  color: #5c687c;
+  background: #f7f9fd;
+  border: 1px dashed var(--line2);
+  border-radius: 8px;
+}
+
+/* 叉乘公式 */
+.dg-calc { padding: 10px 4px 4px; }
+
+.dg-calc-in { display: flex; gap: 22px; flex-wrap: wrap; margin-bottom: 12px; }
+
+.dg-calc-row { display: flex; align-items: center; gap: 6px; font-family: var(--mono); font-size: 13px; color: var(--ink2); }
+
+.dg-calc-row input {
+  width: 62px;
+  font-family: var(--mono);
+  font-size: 13px;
+  padding: 5px 7px;
+  border: 1px solid var(--line);
+  border-radius: 6px;
+  color: var(--ink);
+  text-align: center;
+}
+
+.dg-calc-row input:focus { outline: 2px solid var(--acc-soft); border-color: var(--acc); }
+
+.dg-calc-out .fx {
+  font-family: var(--mono);
+  font-size: 13px;
+  color: #2b3648;
+  padding: 7px 10px;
+  border-left: 3px solid #c3d7f8;
+  background: #f8fbff;
+  margin-bottom: 6px;
+  border-radius: 0 6px 6px 0;
+}
+
+.dg-calc-out .fx b { color: var(--acc); }
+.dg-calc-out .fx em { color: #17a673; font-style: normal; font-weight: 700; }
+
+.dg-calc-out .res {
+  margin-top: 10px;
+  padding: 10px 12px;
+  background: #eef3fd;
+  border-radius: 8px;
+  font-family: var(--mono);
+  font-size: 13px;
+  color: #1d3f7d;
+}
+
+/* 原图对照 */
+.dg-orig { padding: 10px; }
+.dg-orig img { max-width: 100%; border-radius: 8px; border: 1px solid var(--line); display: block; margin: 0 auto; }
+
+.dg-miss { padding: 20px; color: #b04a4a; font-size: 13px; }
+
+@media (max-width: 720px) {
+  .dg-curve { grid-template-columns: 1fr; }
+}
+
+/* ---------------- 截图文字还原 ---------------- */
+.dg-ocr { padding: 4px 0 2px; }
+
+.dg-ocr-bar {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 2px 2px 8px;
+  border-bottom: 1px dashed var(--line2);
+  margin-bottom: 8px;
+}
+
+.dg-ocr-s {
+  flex: 1;
+  min-width: 0;
+  font-family: var(--sans);
+  font-size: 12.5px;
+  color: var(--ink);
+  padding: 6px 10px;
+  border: 1px solid var(--line);
+  border-radius: 7px;
+  background: #fbfcff;
+}
+
+.dg-ocr-s:focus { outline: 2px solid var(--acc-soft); border-color: #bcd0f2; }
+
+.dg-ocr-n {
+  font-family: var(--mono);
+  font-size: 11px;
+  color: var(--ink3);
+  white-space: nowrap;
+}
+
+.dg-ocr-body { max-height: 520px; overflow: auto; padding-right: 4px; }
+
+.dg-oc-h {
+  font-size: 12.5px;
+  font-weight: 700;
+  color: #1d3f7d;
+  background: #eef3fd;
+  border-left: 3px solid var(--acc);
+  border-radius: 0 6px 6px 0;
+  padding: 5px 9px;
+  margin: 10px 0 4px;
+}
+
+.dg-oc-row {
+  display: flex;
+  align-items: baseline;
+  gap: 10px;
+  padding: 4px 8px;
+  border-radius: 6px;
+  font-size: 12.5px;
+  cursor: copy;
+}
+
+.dg-oc-row:nth-child(even) { background: #fafbfe; }
+.dg-oc-row:hover { background: var(--acc-soft); }
+.dg-oc-row .lb { color: #46536b; flex: 0 0 42%; }
+.dg-oc-row .vl { color: #22324a; font-weight: 600; font-family: var(--mono); font-size: 12px; }
+
+.dg-oc-pre { padding: 2px 0; }
+
+.dg-oc-ln {
+  font-size: 12.5px;
+  line-height: 1.75;
+  color: #2b3648;
+  padding: 1px 8px;
+  border-radius: 5px;
+  cursor: copy;
+  white-space: pre-wrap;
+  word-break: break-word;
+}
+
+.dg-oc-pre.mono .dg-oc-ln { font-family: var(--mono); font-size: 12px; background: #f7f9fd; }
+.dg-oc-ln:hover { background: var(--acc-soft); }
+.dg-oc-u.hit { background: #fff4d6; box-shadow: inset 0 0 0 1px #f0d79a; }
+.dg-oc-u.copied { background: #e3f8ee; box-shadow: inset 0 0 0 1px #a9e2c8; }
+
+@media (max-width: 720px) {
+  .dg-oc-row { flex-direction: column; gap: 2px; }
+  .dg-oc-row .lb { flex: none; }
+}
+
+.dg-ocr-cols { display: grid; gap: 16px; align-items: start; }
+.dg-ocr-col { min-width: 0; border-left: 1px dashed var(--line2); padding-left: 12px; }
+.dg-ocr-col:first-child { border-left: 0; padding-left: 0; }
+.dg-ocr-ct {
+  font-size: 11.5px; font-weight: 700; color: var(--ink3);
+  letter-spacing: .02em; margin: 2px 0 6px;
+  white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+}
+
+/* ---------------- 公式（原 __latex SVG → 真排版） ---------------- */
+.dg-fx {
+  padding: 16px 20px 20px;
+  font-family: "Times New Roman", Times, "Songti SC", STSong, "SimSun", serif;
+  font-size: 18px;
+  line-height: 2.1;
+  color: #16202e;
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
+}
+.dg-fx i { font-style: italic; font-family: "Times New Roman", Times, serif; }
+
+.dg-fx-note {
+  font-family: var(--sans);
+  font-size: 12px;
+  line-height: 1.7;
+  color: var(--ink3);
+  border-left: 2px solid var(--line2);
+  padding: 2px 0 2px 10px;
+  margin: 0 0 14px;
+  white-space: normal;
+}
+
+.dg-fx-lines { display: flex; flex-direction: column; align-items: flex-start; }
+.dg-fx-line { white-space: nowrap; padding: 2px 0; max-width: 100%; }
+.dg-fx-line + .dg-fx-line { margin-top: 3px; }
+
+.dg-fx-op { margin: 0 .34em; }
+.dg-fx-op.dg-fx-un { margin-left: 0; margin-right: .06em; }
+.dg-fx-sep { margin-right: .28em; }
+.dg-fx-fn { font-style: normal; margin-right: .12em; }
+
+/* 分式：inline-flex 的基线取「分子」的基线，直接用会让整块沉到基线下，
+   改 vertical-align: middle 让盒子中心贴到 x-height 中线 —— 分数线正好
+   落在数学轴线（基线上方约 0.25em），跟左右数字自然对齐。 */
+.dg-fx-frac {
+  display: inline-flex;
+  flex-direction: column;
+  align-items: center;
+  vertical-align: middle;
+  margin: 0 .13em;
+  font-size: .95em;
+  line-height: 1.22;
+  transform: translateY(-.06em);
+}
+.dg-fx-frac > .dg-fx-num { padding: 0 .28em .09em; }
+.dg-fx-frac > .dg-fx-den {
+  border-top: 1.30px solid currentColor;
+  padding: .09em .28em 0;
+}
+
+/* 根号：√ 字形 + 上横线（横线就是根号的 vinculum） */
+.dg-fx-sqrt { display: inline-flex; align-items: stretch; margin: 0 .06em; vertical-align: middle; }
+.dg-fx-sqrt > .dg-fx-rad {
+  font-size: 1.3em;
+  line-height: 1;
+  align-self: center;
+  transform: translateY(-.03em);
+  padding-right: .01em;
+}
+/* 注意：这里不能用 flex —— 一旦成为 flex 容器，里面的 <sup>/<sub> 就失效，
+   x² 会退化成 x2。inline-block 让上下标照常工作。 */
+.dg-fx-sqrt > .dg-fx-arg {
+  border-top: 1.15px solid currentColor;
+  padding: .14em .24em 0 .12em;
+  display: inline-block;
+  line-height: 1.12;
+  align-self: center;
+}
+
+.dg-fx sup, .dg-fx sub { font-size: .64em; line-height: 0; }
+.dg-fx sup { vertical-align: .66em; }
+.dg-fx sub { vertical-align: -.26em; }
+
+@media (max-width: 720px) {
+  .dg-fx { font-size: 16px; padding: 12px 12px 16px; }
+}
+
+/* 徽标配色：公式与其他图形区分 */
+.dgm-head .badge.b-fx { color: #5b3ea8; background: #f1ecff; border-color: #d8caf7; }
+.dgm-head .badge.b-ocr { color: #1d6b4f; background: #e6f7ef; border-color: #b9e6d3; }
+
+/* ---------------- 语义重绘（原截图 → 图元重画） ---------------- */
+.dg-pic { background: transparent; cursor: default; }
+.dg-pic text { user-select: none; pointer-events: none; }
+.dgm-head .badge.b-pic { color: #8a4b12; background: #fdf1e3; border-color: #f3d6b3; }

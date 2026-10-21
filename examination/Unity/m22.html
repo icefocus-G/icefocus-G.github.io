@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Unity 背包里装 10w 个道具 · Unity 交互课件</title>
+<link rel="stylesheet" href="assets/style.css">
+<link rel="stylesheet" href="assets/diagram.css">
+</head>
+<body data-mid="m22">
+<header class="top">
+  <a class="brand" href="index.html"><span class="logo">U</span><b>Unity</b><i>交互课件</i></a>
+  <div class="crumb"><span>性能优化相关</span><em>/</em><strong>Unity 背包里装 10w 个道具</strong></div>
+  <div class="top-r">
+    <span class="stat">原稿空白 · 已补充</span>
+    <button class="mini" id="btnNav">目录</button>
+  </div>
+</header>
+<div class="wrap">
+  <aside class="side" id="side">
+    <div class="side-h">本篇目录</div>
+    <nav class="tocbox"><a class="toc lv2" href="#sup-m22-why">10 万个格子为什么不能直接实例化</a><a class="toc lv2" href="#sup-m22-how">三个必须同时做到的点</a><a class="toc lv2" href="#sup-m22-code">核心计算</a><a class="toc lv3" href="#sup-m22-pit">卡顿的四个真凶</a></nav>
+    <div class="side-h">全部模块</div>
+    <nav class="navbox"><div class="ng"><div class="ngt">开发经验补充</div><a href="m01.html">Unity - 进阶 - 大纲</a><a href="m02.html">Unity 进阶之视频播放</a><a href="m03.html">Unity - 进阶 - C# 补充</a><a href="m04.html">Unity 网络开发基础</a><a href="m05.html">Unity 程序框架</a></div><div class="ng"><div class="ngt">游戏引擎相关</div><a href="m06.html">Unity_入门</a><a href="m07.html">Unity_入门 - 实践项目</a><a href="m08.html">Unity_基础</a><a href="m09.html">Unity 核心</a><a href="m10.html">UniTask</a></div><div class="ng"><div class="ngt">数据持久化</div><a href="m11.html">Unity 进阶之 ScriptableObject</a><a href="m12.html">Unity_数据持久化 - PlayerPrefs</a><a href="m13.html">Unity_数据持久化 - Newtonsoft-Json</a><a href="m14.html">MessagePack-CSharp - 二进制</a><a href="m26.html">Unity 数据持久化 - Binary 2 进制</a></div><div class="ng"><div class="ngt">界面 UI 相关</div><a href="m15.html">Unity-UGUI</a><a href="m16.html">Unity-UGUI - 进阶 - TextMeshPro</a><a href="m27.html">Unity_GUI 概述（编辑器用）</a></div><div class="ng"><div class="ngt">设备输入相关</div><a href="m17.html">Unity 进阶之 InputSystem</a></div><div class="ng"><div class="ngt">热更相关</div><a href="m18.html">YooAsset 资源管理 - 大游戏</a><a href="m19.html">Addressables 资源管理 - 小游戏</a><a href="m20.html">HybridCLR - 代码业务逻辑</a></div><div class="ng"><div class="ngt">性能优化相关</div><a href="m21.html">Unity 进阶之性能优化</a><a href="m22.html" class="on">Unity 背包里装 10w 个道具</a></div><div class="ng"><div class="ngt">SDK 相关</div><div class="ngempty">预留分类 · 后续补充</div></div><div class="ng"><div class="ngt">游戏打包相关</div><a href="m23.html">Unity 移动平台相关 — IOS</a><a href="m24.html">Unity 移动平台相关 — Android</a><a href="m25.html">unity_00 - 数学公式和物理公式</a></div></nav>
+  </aside>
+  <main class="main">
+    <div class="mhead">
+      <div class="kick">性能优化相关</div>
+      <h1>Unity 背包里装 10w 个道具</h1>
+      <p class="msub">虚拟列表与 UI 性能</p>
+      <div class="chips"><span class="warn">语雀原稿为空</span><span>本页内容为补充整理</span></div>
+    </div>
+    <article class="doc">
+<div class="runsec"><div class="runsec-h">本模块可运行验证<span>纯 C# · 无需 Unity · 点右下按钮真实编译执行</span></div><div class="cpair"><div class="chead"><span class="lang">C#</span><span class="csp"></span><button class="mini copy">复制</button><button class="mini run" data-run>真实运行</button></div><pre class="code" data-lang="csharp"><code>// 背包 10 万格：虚拟列表只创建屏幕内的格子
+int total = 100000;
+int viewHeight = 600, cellHeight = 120, gap = 6;
+int cols = 5, cellWidth = 140;
+int visibleRows = (int)Math.Ceiling((double)viewHeight / (cellHeight + gap));
+int poolSize = visibleRows * cols + cols;   // 多备一行，滚动时不闪
+
+Console.WriteLine($"总格数 {total}，视口高 {viewHeight}px，格子 {cellWidth}x{cellHeight}");
+Console.WriteLine($"每行 {cols} 个，屏幕内可见 {visibleRows} 行");
+Console.WriteLine($"需要实例化的格子数：{poolSize}（不是 {total}）");
+Console.WriteLine($"实例化数量减少 {(1 - (double)poolSize / total) * 100:F2}%");
+Console.WriteLine();
+
+int contentHeight = (total / cols + 1) * (cellHeight + gap);
+Console.WriteLine($"内容总高 {contentHeight}px（用占位 RectTransform 撑开，不生成 10 万个子物体）");
+Console.WriteLine();
+Console.WriteLine("滚动时只换数据、不换对象：");
+foreach (int scroll in new[] { 0, 720, 3600, 72000 })
+{
+    int firstRow = scroll / (cellHeight + gap);
+    int firstIndex = firstRow * cols;
+    int lastIndex = Math.Min(total - 1, firstIndex + poolSize - 1);
+    Console.WriteLine($"  scrollTop={scroll,6}  可见索引 {firstIndex,6} ~ {lastIndex,6}  复用 {poolSize} 个格子");
+}
+Console.WriteLine();
+Console.WriteLine("要点：格子对象池 + 只刷新数据 + 占位撑高，三者缺一个就会卡。");</code></pre><div class="cout" hidden></div></div></div><div class="demo" data-demo="inventory"><div class="demo-bar"><span class="dot"></span>10w 道具虚拟列表<span class="demo-tag">交互演示</span></div><div class="demo-body"><div class="demo-loading">加载中…</div></div></div>
+<div class="sup">
+<div class="sup-t">原稿此篇为空（语雀 word_count = 0）· 以下为补充整理 <i>非语雀原文</i></div>
+
+<h2 id="sup-m22-why" class="hd lv2">10 万个格子为什么不能直接实例化</h2>
+<p class="tx">一个 UGUI 格子至少包含 Image + Text + Button 三个组件，加上 RectTransform 与 CanvasRenderer。1 万个就会让打开背包卡死，10 万个直接内存爆掉。真正的做法是「只渲染看得到的」——虚拟列表（Virtual List）。</p>
+<div class="tw"><table class="tb">
+<tr><td>方案</td><td>实例化数量</td><td>打开背包耗时</td><td>滚动流畅度</td></tr>
+<tr><td>全部 instantiate</td><td>100000</td><td>数十秒 / 直接卡死</td><td>—</td></tr>
+<tr><td>分页（每页 50）</td><td>50</td><td>快</td><td>翻页有跳变</td></tr>
+<tr><td>虚拟列表</td><td>≈ 屏幕可见 + 1 行</td><td>毫秒级</td><td>平滑</td></tr>
+</table></div>
+
+<h2 id="sup-m22-how" class="hd lv2">三个必须同时做到的点</h2>
+<ul class="bl">
+<li><b>占位撑高</b>：ScrollRect.content 的高度 = 行数 × 行高，用一个空 RectTransform 撑开，让滚动条范围正确。</li>
+<li><b>对象池复用</b>：只创建「可见行数 + 1」个格子，滚动时把它们挪到新位置、换数据，绝不销毁重建。</li>
+<li><b>只刷新差异</b>：滚动时按索引取数据，避免整表刷新；图标用异步加载 + 占位图，防止滚动时反复 IO。</li>
+</ul>
+
+<h2 id="sup-m22-code" class="hd lv2">核心计算</h2>
+<pre class="code" data-lang="csharp"><code>int FirstVisibleIndex(float scrollTop, float rowHeight, int cols, int total)
+{
+    int row = Mathf.FloorToInt(scrollTop / rowHeight);
+    return Mathf.Clamp(row * cols, 0, Mathf.Max(0, total - 1));
+}
+
+// 每次滚动只做一次：把池里的格子重新定位 + 换数据
+void OnValueChanged(Vector2 pos)
+{
+    int first = FirstVisibleIndex(pos.y, rowH, cols, total);
+    if (first == lastFirst) return;          // 行没变就不刷新
+    lastFirst = first;
+    for (int i = 0; i &lt; pool.Count; i++)
+    {
+        int idx = first + i;
+        pool[i].SetData(idx &lt; total ? data[idx] : null);
+    }
+}</code></pre>
+
+<h3 id="sup-m22-pit" class="hd lv3">卡顿的四个真凶</h3>
+<ul class="bl">
+<li><b>Layout Rebuild</b>：格子内用了 LayoutGroup / ContentSizeFitter，每次换数据都触发重排，一次几毫秒。能手动算位置就别用自动布局。</li>
+<li><b>SetActive</b>：频繁开关比改 sizeDelta 贵得多，隐藏用 CanvasGroup.alpha 或移出视口。</li>
+<li><b>图集切换</b>：每滚动一屏就换一次图集，Draw Call 立刻飙升，按需分图集。</li>
+<li><b>同步 IO</b>：滚动时同步读图/反序列化配置，直接掉帧，改异步 + 缓存。</li>
+</ul>
+</div>
+
+    </article>
+    <footer class="pnbar"><a class="pn prev" href="m21.html"><span>上一节</span>Unity 进阶之性能优化</a><a class="pn next" href="m23.html"><span>下一节</span>Unity 移动平台相关 — IOS</a></footer>
+  </main>
+</div>
+<button class="totop" id="totop">↑</button>
+<script src="assets/demos.js"></script>
+<script src="assets/diagrams-data.js"></script>
+<script src="assets/diagram.js"></script>
+<script src="assets/app.js"></script>
+<script>window.__mountDiagrams && window.__mountDiagrams();</script>
+</body>
+</html>

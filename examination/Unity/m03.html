@@ -1,0 +1,171 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Unity - 进阶 - C# 补充 · Unity 交互课件</title>
+<link rel="stylesheet" href="assets/style.css">
+<link rel="stylesheet" href="assets/diagram.css">
+</head>
+<body data-mid="m03">
+<header class="top">
+  <a class="brand" href="index.html"><span class="logo">U</span><b>Unity</b><i>交互课件</i></a>
+  <div class="crumb"><span>开发经验补充</span><em>/</em><strong>Unity - 进阶 - C# 补充</strong></div>
+  <div class="top-r">
+    <span class="stat">886 字 · 0 代码 · 0 图 · 0 表</span>
+    <button class="mini" id="btnNav">目录</button>
+  </div>
+</header>
+<div class="wrap">
+  <aside class="side" id="side">
+    <div class="side-h">本篇目录</div>
+    <nav class="tocbox"><a class="toc lv2" href="#第1章-Unity进阶概述-1">第1章：Unity进阶概述</a><a class="toc lv3" href="#01-Unity进阶概述-2">01：💡Unity进阶概述💡</a><a class="toc lv2" href="#第2章-C-知识点补充-概述-3">第2章：C#知识点补充 概述</a><a class="toc lv3" href="#01-概述-4">01：💡概述💡</a><a class="toc lv2" href="#第3章-Unity跨平台的基本原理-5">第3章：Unity跨平台的基本原理</a><a class="toc lv3" href="#第1节-了解-Net相关知识-6">【第1节：了解.Net相关知识】</a><a class="toc lv4" href="#01-了解-Net相关知识-知识点-7">01：💡了解.Net相关知识 知识点💡</a><a class="toc lv3" href="#第2节-Unity跨平台的基本原理-Mono-9">【第2节：Unity跨平台的基本原理（Mono）】</a><a class="toc lv4" href="#02-Unity跨平台的基本原理-Mono-知识点-10">02：💡Unity跨平台的基本原理（Mono）知识点💡</a><a class="toc lv3" href="#第3节-Unity跨平台的基本原理-IL2CPP-12">【第3节：Unity跨平台的基本原理（IL2CPP）】</a><a class="toc lv4" href="#03-Unity跨平台的基本原理-IL2CPP-知识点-13">03：💡Unity跨平台的基本原理（IL2CPP）知识点💡</a><a class="toc lv3" href="#第4节-IL2CPP模式可能存在的问题处理-15">【第4节：IL2CPP模式可能存在的问题处理】</a><a class="toc lv4" href="#04-必看-IL2CPP模式可能存在的问题处理-知识点-16">04：🔥（必看）IL2CPP模式可能存在的问题处理 知识点</a><a class="toc lv2" href="#第4章-C-版本和Unity的关系-19">第4章：C#版本和Unity的关系</a><a class="toc lv3" href="#01-必看-C-版本和Unity的关系-知识点-20">01：🔥（必看）C#版本和Unity的关系 知识点</a><a class="toc lv2" href="#第5章-C-各版本新功能和语法-21">第5章：C#各版本新功能和语法</a><a class="toc lv3" href="#第1节-C-1-4功能和语法-22">【第1节：C#1~4功能和语法】</a><a class="toc lv4" href="#01-命名和可选参数-动态类型等-知识点-23">01：💡命名和可选参数、动态类型等 知识点💡</a><a class="toc lv3" href="#第2节-C-5功能和语法-25">【第2节：C#5功能和语法】</a><a class="toc lv4" href="#02-回顾线程-学习线程池-知识点-26">02：回顾线程，学习线程池 知识点</a><a class="toc lv4" href="#03-Task任务类-知识点1-27">03：Task任务类 知识点1</a><a class="toc lv4" href="#04-Task任务类-知识点2-28">04：Task任务类 知识点2</a><a class="toc lv4" href="#05-必看-异步方法async和await关键字-知识点-29">05：🔥（必看）异步方法async和await关键字 知识点🔥</a><a class="toc lv3" href="#第3节-C-6功能和语法-31">【第3节：C#6功能和语法】</a><a class="toc lv4" href="#06-静态导入-异常筛选器-nameof等-32">06：静态导入、异常筛选器、nameof等</a><a class="toc lv3" href="#第4节-C-7功能和语法-34">【第4节：C#7功能和语法】</a><a class="toc lv4" href="#07-字面值改进-out和ref新功能-本地函数等-35">07：字面值改进、out和ref新功能、本地函数等</a><a class="toc lv4" href="#08-元组-模式匹配-抛出表达式等-36">08：元组、模式匹配、抛出表达式等</a><a class="toc lv3" href="#第5节-C-8功能和语法-38">【第5节：C#8功能和语法】</a><a class="toc lv4" href="#09-Using声明-空合并赋值-静态本地函数-解构函数-39">09：💡Using声明、空合并赋值、静态本地函数、解构函数💡</a><a class="toc lv4" href="#10-模式匹配-switch表达式-属性-位置-元组模式-40">10：模式匹配：switch表达式，属性、位置、元组模式</a><a class="toc lv3" href="#第6节-C-9功能和语法-41">【第6节：C#9功能和语法】</a><a class="toc lv4" href="#11-C-9功能和语法-延后讲解说明-42">11：C#9功能和语法 延后讲解说明</a><a class="toc lv2" href="#第6章-C-其它知识点补充-43">第6章：C#其它知识点补充</a><a class="toc lv3" href="#第1节-日期和时间-44">【第1节：日期和时间】</a><a class="toc lv4" href="#01-日期和时间-知识点一-45">01：💡日期和时间 知识点一💡</a><a class="toc lv4" href="#02-日期和时间-知识点二-46">02：💡日期和时间 知识点二💡</a><a class="toc lv2" href="#第7章-总结-48">第7章：总结</a><a class="toc lv4" href="#01-知识总结-49">01：知识总结💡</a><a class="toc lv2" href="#sup-m03-delegate">委托与事件：先想清楚谁持有谁</a><a class="toc lv2" href="#sup-m03-linq">LINQ 的代价与边界</a><a class="toc lv2" href="#sup-m03-gc">GC 与分配：Unity 里最该盯的数字</a><a class="toc lv2" href="#sup-m03-feature">版本相关：哪些语法能用</a></nav>
+    <div class="side-h">全部模块</div>
+    <nav class="navbox"><div class="ng"><div class="ngt">开发经验补充</div><a href="m01.html">Unity - 进阶 - 大纲</a><a href="m02.html">Unity 进阶之视频播放</a><a href="m03.html" class="on">Unity - 进阶 - C# 补充</a><a href="m04.html">Unity 网络开发基础</a><a href="m05.html">Unity 程序框架</a></div><div class="ng"><div class="ngt">游戏引擎相关</div><a href="m06.html">Unity_入门</a><a href="m07.html">Unity_入门 - 实践项目</a><a href="m08.html">Unity_基础</a><a href="m09.html">Unity 核心</a><a href="m10.html">UniTask</a></div><div class="ng"><div class="ngt">数据持久化</div><a href="m11.html">Unity 进阶之 ScriptableObject</a><a href="m12.html">Unity_数据持久化 - PlayerPrefs</a><a href="m13.html">Unity_数据持久化 - Newtonsoft-Json</a><a href="m14.html">MessagePack-CSharp - 二进制</a><a href="m26.html">Unity 数据持久化 - Binary 2 进制</a></div><div class="ng"><div class="ngt">界面 UI 相关</div><a href="m15.html">Unity-UGUI</a><a href="m16.html">Unity-UGUI - 进阶 - TextMeshPro</a><a href="m27.html">Unity_GUI 概述（编辑器用）</a></div><div class="ng"><div class="ngt">设备输入相关</div><a href="m17.html">Unity 进阶之 InputSystem</a></div><div class="ng"><div class="ngt">热更相关</div><a href="m18.html">YooAsset 资源管理 - 大游戏</a><a href="m19.html">Addressables 资源管理 - 小游戏</a><a href="m20.html">HybridCLR - 代码业务逻辑</a></div><div class="ng"><div class="ngt">性能优化相关</div><a href="m21.html">Unity 进阶之性能优化</a><a href="m22.html">Unity 背包里装 10w 个道具</a></div><div class="ng"><div class="ngt">SDK 相关</div><div class="ngempty">预留分类 · 后续补充</div></div><div class="ng"><div class="ngt">游戏打包相关</div><a href="m23.html">Unity 移动平台相关 — IOS</a><a href="m24.html">Unity 移动平台相关 — Android</a><a href="m25.html">unity_00 - 数学公式和物理公式</a></div></nav>
+  </aside>
+  <main class="main">
+    <div class="mhead">
+      <div class="kick">开发经验补充</div>
+      <h1>Unity - 进阶 - C# 补充</h1>
+      <p class="msub">语言特性与常用类库</p>
+      <div class="chips"><span>886 字原稿</span><span>0 段代码</span><span>0 张配图</span><span>0 个表格</span></div>
+    </div>
+    <article class="doc">
+<div class="runsec"><div class="runsec-h">本模块可运行验证<span>纯 C# · 无需 Unity · 点右下按钮真实编译执行</span></div><div class="cpair"><div class="chead"><span class="lang">C#</span><span class="csp"></span><button class="mini copy">复制</button><button class="mini run" data-run>真实运行</button></div><pre class="code" data-lang="csharp"><code>// C# 补充：委托 / 事件 / LINQ 延迟执行
+using System;
+using System.Collections.Generic;
+using System.Linq;
+
+public class Bag
+{
+    public event Action&lt;string&gt; OnAdd;
+    private readonly List&lt;string&gt; items = new();
+    public void Add(string it) { items.Add(it); OnAdd?.Invoke(it); }
+    public IReadOnlyList&lt;string&gt; Items =&gt; items;
+}
+
+public static class Program
+{
+    public static void Main()
+    {
+        var bag = new Bag();
+        bag.OnAdd += n =&gt; Console.WriteLine($"  [事件] 获得 {n}");
+        bag.Add("木剑"); bag.Add("铁盾");
+        Console.WriteLine($"  背包内共 {bag.Items.Count} 件");
+
+        Console.WriteLine();
+        var nums = new[] { 1, 2, 3, 4, 5, 6, 7, 8, 9, 10 };
+        var q = nums.Where(x =&gt; x % 2 == 0).Select(x =&gt; x * x);
+        Console.WriteLine("LINQ 只是建了个查询，还没算");
+        Console.WriteLine("枚举一次：" + string.Join(",", q));
+        Console.WriteLine("再枚举一次：" + string.Join(",", q));
+
+        Console.WriteLine();
+        int count = 0;
+        var lazy = nums.Where(x =&gt; { count++; return x &gt; 5; });
+        Console.WriteLine($"过滤谓词执行次数（未枚举）：{count}");
+        _ = lazy.ToList();
+        Console.WriteLine($"过滤谓词执行次数（枚举后）：{count}  &lt;- 延迟执行，每次枚举都重算");
+    }
+}</code></pre><div class="cout" hidden></div></div></div><div class="demo" data-demo="delegate"><div class="demo-bar"><span class="dot"></span>委托与事件流<span class="demo-tag">交互演示</span></div><div class="demo-body"><div class="demo-loading">加载中…</div></div></div>
+<p class="tx">总时长：7 小时 04 分 42 秒</p>
+<p class="tx">🔥 必看 💡 了解</p>
+<h2 id="第1章-Unity进阶概述-1" class="hd lv2">第1章：Unity进阶概述</h2>
+<h3 id="01-Unity进阶概述-2" class="hd lv3">01：💡Unity进阶概述💡</h3>
+<h2 id="第2章-C-知识点补充-概述-3" class="hd lv2">第2章：C#知识点补充 概述</h2>
+<h3 id="01-概述-4" class="hd lv3">01：💡概述💡</h3>
+<h2 id="第3章-Unity跨平台的基本原理-5" class="hd lv2">第3章：Unity跨平台的基本原理</h2>
+<h3 id="第1节-了解-Net相关知识-6" class="hd lv3">【第1节：了解.Net相关知识】</h3>
+<h4 id="01-了解-Net相关知识-知识点-7" class="hd lv4">01：💡了解.Net相关知识 知识点💡</h4>
+<h5 id="练习题-8" class="hd lv5">练习题</h5>
+<h3 id="第2节-Unity跨平台的基本原理-Mono-9" class="hd lv3">【第2节：Unity跨平台的基本原理（Mono）】</h3>
+<p class="tx">对你的影响：短期内影响不大。目前 Unity 的主流 LTS 版本仍在使用 Mono。但如果你计划在一年后发布游戏或升级到 Unity 6.8+，就需要了解这个变化。好消息是，你的 C# 代码逻辑本身不需要大改，主要是底层的“引擎”换了。</p>
+<h4 id="02-Unity跨平台的基本原理-Mono-知识点-10" class="hd lv4">02：💡Unity跨平台的基本原理（Mono）知识点💡</h4>
+<h5 id="练习题-11" class="hd lv5">练习题</h5>
+<h3 id="第3节-Unity跨平台的基本原理-IL2CPP-12" class="hd lv3">【第3节：Unity跨平台的基本原理（IL2CPP）】</h3>
+<h4 id="03-Unity跨平台的基本原理-IL2CPP-知识点-13" class="hd lv4">03：💡Unity跨平台的基本原理（IL2CPP）知识点💡</h4>
+<h5 id="练习题-14" class="hd lv5">练习题</h5>
+<h3 id="第4节-IL2CPP模式可能存在的问题处理-15" class="hd lv3">【第4节：IL2CPP模式可能存在的问题处理】</h3>
+<h4 id="04-必看-IL2CPP模式可能存在的问题处理-知识点-16" class="hd lv4">04：🔥（必看）IL2CPP模式可能存在的问题处理 知识点</h4>
+<h5 id="练习题-17" class="hd lv5">练习题</h5>
+<h5 id="练习题-18" class="hd lv5">练习题</h5>
+<h2 id="第4章-C-版本和Unity的关系-19" class="hd lv2">第4章：C#版本和Unity的关系</h2>
+<h3 id="01-必看-C-版本和Unity的关系-知识点-20" class="hd lv3">01：🔥（必看）C#版本和Unity的关系 知识点</h3>
+<h2 id="第5章-C-各版本新功能和语法-21" class="hd lv2">第5章：C#各版本新功能和语法</h2>
+<h3 id="第1节-C-1-4功能和语法-22" class="hd lv3">【第1节：C#1~4功能和语法】</h3>
+<h4 id="01-命名和可选参数-动态类型等-知识点-23" class="hd lv4">01：💡命名和可选参数、动态类型等 知识点💡</h4>
+<h5 id="练习题-24" class="hd lv5">练习题</h5>
+<h3 id="第2节-C-5功能和语法-25" class="hd lv3">【第2节：C#5功能和语法】</h3>
+<h4 id="02-回顾线程-学习线程池-知识点-26" class="hd lv4">02：回顾线程，学习线程池 知识点</h4>
+<h4 id="03-Task任务类-知识点1-27" class="hd lv4">03：Task任务类 知识点1</h4>
+<h4 id="04-Task任务类-知识点2-28" class="hd lv4">04：Task任务类 知识点2</h4>
+<h4 id="05-必看-异步方法async和await关键字-知识点-29" class="hd lv4">05：🔥（必看）异步方法async和await关键字 知识点🔥</h4>
+<h5 id="练习题-30" class="hd lv5">练习题</h5>
+<h3 id="第3节-C-6功能和语法-31" class="hd lv3">【第3节：C#6功能和语法】</h3>
+<h4 id="06-静态导入-异常筛选器-nameof等-32" class="hd lv4">06：静态导入、异常筛选器、nameof等</h4>
+<h5 id="练习题-33" class="hd lv5">练习题</h5>
+<h3 id="第4节-C-7功能和语法-34" class="hd lv3">【第4节：C#7功能和语法】</h3>
+<h4 id="07-字面值改进-out和ref新功能-本地函数等-35" class="hd lv4">07：字面值改进、out和ref新功能、本地函数等</h4>
+<h4 id="08-元组-模式匹配-抛出表达式等-36" class="hd lv4">08：元组、模式匹配、抛出表达式等</h4>
+<h5 id="练习题-37" class="hd lv5">练习题</h5>
+<h3 id="第5节-C-8功能和语法-38" class="hd lv3">【第5节：C#8功能和语法】</h3>
+<h4 id="09-Using声明-空合并赋值-静态本地函数-解构函数-39" class="hd lv4">09：💡Using声明、空合并赋值、静态本地函数、解构函数💡</h4>
+<h4 id="10-模式匹配-switch表达式-属性-位置-元组模式-40" class="hd lv4">10：模式匹配：switch表达式，属性、位置、元组模式</h4>
+<h3 id="第6节-C-9功能和语法-41" class="hd lv3">【第6节：C#9功能和语法】</h3>
+<h4 id="11-C-9功能和语法-延后讲解说明-42" class="hd lv4">11：C#9功能和语法 延后讲解说明</h4>
+<h2 id="第6章-C-其它知识点补充-43" class="hd lv2">第6章：C#其它知识点补充</h2>
+<h3 id="第1节-日期和时间-44" class="hd lv3">【第1节：日期和时间】</h3>
+<h4 id="01-日期和时间-知识点一-45" class="hd lv4">01：💡日期和时间 知识点一💡</h4>
+<h4 id="02-日期和时间-知识点二-46" class="hd lv4">02：💡日期和时间 知识点二💡</h4>
+<h5 id="练习题-47" class="hd lv5">练习题</h5>
+<h2 id="第7章-总结-48" class="hd lv2">第7章：总结</h2>
+<h4 id="01-知识总结-49" class="hd lv4">01：知识总结💡</h4>
+<div class="sup">
+<div class="sup-t">原稿此篇为要点大纲（39 个小标题）· 以下为补充整理 <i>非语雀原文</i></div>
+
+<h2 id="sup-m03-delegate" class="hd lv2">委托与事件：先想清楚谁持有谁</h2>
+<p class="tx">委托是「方法的引用」，事件是「受限制的委托」——外部只能 += / -=，不能直接 Invoke，也不能把别人的订阅清空。Unity 里绝大多数内存泄漏都出在这一层：长生命周期对象持有短生命周期对象的方法引用，短对象就永远回收不掉。</p>
+<ul class="bl">
+<li>规范：谁订阅，谁负责在 OnDisable / OnDestroy 里退订。</li>
+<li>坑：用匿名 lambda 订阅后无法退订（引用已经丢了），需要先存成字段。</li>
+<li>坑：静态事件持有场景对象，切场景后回调打到已销毁对象上，报 MissingReferenceException。</li>
+</ul>
+
+<h2 id="sup-m03-linq" class="hd lv2">LINQ 的代价与边界</h2>
+<p class="tx">LINQ 是延迟执行的：写下的那一行只是构造了一个查询表达式，真正遍历时才计算，而且每遍历一次就重算一次。在 Update 里对集合做 LINQ，等于每帧都在堆上分配迭代器与闭包。</p>
+<div class="tw"><table class="tb">
+<tr><td>场景</td><td>建议</td><td>原因</td></tr>
+<tr><td>编辑器工具、初始化一次</td><td>随便用</td><td>一次性开销，可读性收益更大</td></tr>
+<tr><td>每帧执行的逻辑</td><td>改 for 循环</td><td>避免迭代器与闭包分配，避免 GC</td></tr>
+<tr><td>需要多次遍历同一结果</td><td>先 ToList()</td><td>否则每次遍历都重新过滤</td></tr>
+</table></div>
+
+<h2 id="sup-m03-gc" class="hd lv2">GC 与分配：Unity 里最该盯的数字</h2>
+<p class="tx">Unity 用的是 Boehm 垃圾回收器（非分代、会 Stop The World）。一次 GC 会让主线程停住，帧率曲线上表现为周期性尖刺。控制手段只有三条：少 new、复用、用池。</p>
+<ul class="bl">
+<li>字符串拼接是隐藏大户：<code>"a" + b</code> 每次都产生新串，日志类代码尤其致命。</li>
+<li>装箱：把 struct 当 object 传参会装箱，<code>Debug.Log(123)</code> 就发生过。</li>
+<li>闭包：lambda 捕获外部变量时会生成一个隐藏类实例。</li>
+<li>用 Profiler 的 GC Alloc 列逐帧看，目标是把常驻逻辑的每帧分配压到 0 B。</li>
+</ul>
+
+<h2 id="sup-m03-feature" class="hd lv2">版本相关：哪些语法能用</h2>
+<ul class="bl">
+<li><b>record / init / 目标类型 new()</b>：C# 9 起，Unity 2021.2+ 支持。</li>
+<li><b>文件作用域 namespace、全局 using</b>：C# 10，Unity 2022.2+ 才逐步可用。</li>
+<li><b>Hotfix 侧</b>：语法上限取决于 HybridCLR 版本与 Unity 版本，写热更代码前先确认。</li>
+</ul>
+</div>
+
+    </article>
+    <footer class="pnbar"><a class="pn prev" href="m02.html"><span>上一节</span>Unity 进阶之视频播放</a><a class="pn next" href="m04.html"><span>下一节</span>Unity 网络开发基础</a></footer>
+  </main>
+</div>
+<button class="totop" id="totop">↑</button>
+<script src="assets/demos.js"></script>
+<script src="assets/diagrams-data.js"></script>
+<script src="assets/diagram.js"></script>
+<script src="assets/app.js"></script>
+<script>window.__mountDiagrams && window.__mountDiagrams();</script>
+</body>
+</html>

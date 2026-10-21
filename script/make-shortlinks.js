@@ -45,6 +45,7 @@ const SHORTCUTS = [
   { alias: 'xifang',          url: '/examination/Western%20Economics/study',           title: '西方经济学 · 学习助手',  group: '学习' },
   { alias: 'xifang-bank',     url: '/examination/Western%20Economics/bank',            title: '西方经济学 · 历年真题库', group: '学习' },
   { alias: 'xifang-outline',  url: '/examination/Western%20Economics/outline',         title: '西方经济学 · 0基础到精通', group: '学习' },
+  { alias: 'unity',           url: '/examination/Unity/',                          title: 'Unity 引擎基础 · 交互课件', group: '学习', note: '27 模块 · 320 张图' },
 
   /* ---- 工具 ---- */
   { alias: 'task',            url: '/tasksync/',                                       title: '任务同步站',            group: '工具' },

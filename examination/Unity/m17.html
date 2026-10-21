@@ -1,0 +1,1171 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Unity 进阶之 InputSystem · Unity 交互课件</title>
+<link rel="stylesheet" href="assets/style.css">
+<link rel="stylesheet" href="assets/diagram.css">
+</head>
+<body data-mid="m17">
+<header class="top">
+  <a class="brand" href="index.html"><span class="logo">U</span><b>Unity</b><i>交互课件</i></a>
+  <div class="crumb"><span>设备输入相关</span><em>/</em><strong>Unity 进阶之 InputSystem</strong></div>
+  <div class="top-r">
+    <span class="stat">22194 字 · 54 代码 · 0 图 · 0 表</span>
+    <button class="mini" id="btnNav">目录</button>
+  </div>
+</header>
+<div class="wrap">
+  <aside class="side" id="side">
+    <div class="side-h">本篇目录</div>
+    <nav class="tocbox"><a class="toc lv4" href="#01-导入-Input-System-1">01 导入 Input System</a><a class="toc lv4" href="#02-代码检测输入-2">02 代码检测输入</a><a class="toc lv4" href="#03-Input-Action-类-8">03 Input Action 类</a><a class="toc lv4" href="#04-输入配置文件-9">04 输入配置文件</a><a class="toc lv4" href="#05-输入配置文件生成-C-代码-10">05 输入配置文件生成 C# 代码</a><a class="toc lv4" href="#06-Player-Input-11">06 Player Input</a><a class="toc lv4" href="#07-Player-Input-Manager-14">07 Player Input Manager</a><a class="toc lv4" href="#08-UGUI配合使用-15">08 UGUI配合使用</a><a class="toc lv4" href="#09-Input-Debug-16">09 Input Debug</a><a class="toc lv4" href="#10-第4章-综合练习题-17">10.第4章: 综合练习题</a></nav>
+    <div class="side-h">全部模块</div>
+    <nav class="navbox"><div class="ng"><div class="ngt">开发经验补充</div><a href="m01.html">Unity - 进阶 - 大纲</a><a href="m02.html">Unity 进阶之视频播放</a><a href="m03.html">Unity - 进阶 - C# 补充</a><a href="m04.html">Unity 网络开发基础</a><a href="m05.html">Unity 程序框架</a></div><div class="ng"><div class="ngt">游戏引擎相关</div><a href="m06.html">Unity_入门</a><a href="m07.html">Unity_入门 - 实践项目</a><a href="m08.html">Unity_基础</a><a href="m09.html">Unity 核心</a><a href="m10.html">UniTask</a></div><div class="ng"><div class="ngt">数据持久化</div><a href="m11.html">Unity 进阶之 ScriptableObject</a><a href="m12.html">Unity_数据持久化 - PlayerPrefs</a><a href="m13.html">Unity_数据持久化 - Newtonsoft-Json</a><a href="m14.html">MessagePack-CSharp - 二进制</a><a href="m26.html">Unity 数据持久化 - Binary 2 进制</a></div><div class="ng"><div class="ngt">界面 UI 相关</div><a href="m15.html">Unity-UGUI</a><a href="m16.html">Unity-UGUI - 进阶 - TextMeshPro</a><a href="m27.html">Unity_GUI 概述（编辑器用）</a></div><div class="ng"><div class="ngt">设备输入相关</div><a href="m17.html" class="on">Unity 进阶之 InputSystem</a></div><div class="ng"><div class="ngt">热更相关</div><a href="m18.html">YooAsset 资源管理 - 大游戏</a><a href="m19.html">Addressables 资源管理 - 小游戏</a><a href="m20.html">HybridCLR - 代码业务逻辑</a></div><div class="ng"><div class="ngt">性能优化相关</div><a href="m21.html">Unity 进阶之性能优化</a><a href="m22.html">Unity 背包里装 10w 个道具</a></div><div class="ng"><div class="ngt">SDK 相关</div><div class="ngempty">预留分类 · 后续补充</div></div><div class="ng"><div class="ngt">游戏打包相关</div><a href="m23.html">Unity 移动平台相关 — IOS</a><a href="m24.html">Unity 移动平台相关 — Android</a><a href="m25.html">unity_00 - 数学公式和物理公式</a></div></nav>
+  </aside>
+  <main class="main">
+    <div class="mhead">
+      <div class="kick">设备输入相关</div>
+      <h1>Unity 进阶之 InputSystem</h1>
+      <p class="msub">Action / Binding / 设备抽象</p>
+      <div class="chips"><span>22194 字原稿</span><span>54 段代码</span><span>0 张配图</span><span>0 个表格</span></div>
+    </div>
+    <article class="doc">
+<div class="runsec"><div class="runsec-h">本模块可运行验证<span>纯 C# · 无需 Unity · 点右下按钮真实编译执行</span></div><div class="cpair"><div class="chead"><span class="lang">C#</span><span class="csp"></span><button class="mini copy">复制</button><button class="mini run" data-run>真实运行</button></div><pre class="code" data-lang="csharp"><code>// InputSystem：Action / Binding / Control 的解析过程
+var actions = new Dictionary&lt;string, string[]&gt;
+{
+    ["Move"] = new[] { "&lt;Gamepad&gt;/leftStick", "&lt;Keyboard&gt;/wasd" },
+    ["Jump"] = new[] { "&lt;Keyboard&gt;/space", "&lt;Gamepad&gt;/buttonSouth" },
+    ["Fire"] = new[] { "&lt;Mouse&gt;/leftButton", "&lt;Gamepad&gt;/rightTrigger" },
+    ["Pause"] = new[] { "&lt;Keyboard&gt;/escape", "&lt;Gamepad&gt;/start" }
+};
+
+Console.WriteLine("Action -&gt; Binding 映射：");
+foreach (var kv in actions)
+    Console.WriteLine($"  {kv.Key,-7} &lt;- {string.Join("  |  ", kv.Value)}");
+
+Console.WriteLine();
+string Resolve(string device, string control)
+{
+    foreach (var kv in actions)
+        foreach (var b in kv.Value)
+        {
+            var parts = b.Trim('&lt;', '&gt;').Split('/');
+            if (parts[0].Equals(device, StringComparison.OrdinalIgnoreCase) &amp;&amp;
+                parts[1].Equals(control, StringComparison.OrdinalIgnoreCase))
+                return kv.Key;
+        }
+    return "（未绑定）";
+}
+
+Console.WriteLine("设备上报 -&gt; 解析出的 Action：");
+foreach (var (dev, ctl, who) in new[] {
+    ("Keyboard", "space", "键盘空格"),
+    ("Gamepad", "buttonSouth", "手柄 A 键"),
+    ("Mouse", "leftButton", "鼠标左键"),
+    ("Gamepad", "leftStick", "手柄左摇杆"),
+    ("Keyboard", "f1", "键盘 F1") })
+    Console.WriteLine($"  {who,-12} -&gt; {Resolve(dev, ctl)}");
+
+Console.WriteLine();
+Console.WriteLine("为什么不要再用 Input.GetKey：");
+Console.WriteLine("  1) 换设备要改代码；Binding 表里改一行就支持手柄");
+Console.WriteLine("  2) 无法做按键重映射 / 组合键 / 长按判定");
+Console.WriteLine("  3) 新旧输入系统同开会互相吞事件，必须二选一");</code></pre><div class="cout" hidden></div></div></div><div class="demo" data-demo="input"><div class="demo-bar"><span class="dot"></span>输入 Action 映射<span class="demo-tag">交互演示</span></div><div class="demo-body"><div class="demo-loading">加载中…</div></div></div>
+<p class="tx">InputSystem是Unity提供的一套更好用更方便的用于检测键盘、 鼠标、手柄、摇杆等等设备输入的系统</p>
+<p class="tx">InputManager是Unity的老输入系统（需要对手机端，PC 端，手柄，分配写检测逻辑）</p>
+<h4 id="01-导入-Input-System-1" class="hd lv4">01 导入 Input System</h4>
+<div class="cpair"><div class="chead"><span class="lang">C#</span><span class="csp"></span><button class="mini copy">复制</button></div><pre class="code" data-lang="csharp"><code>在packageManager中安装Input System   </code></pre><div class="cout" hidden></div></div>
+<div class="cpair"><div class="chead"><span class="lang">C#</span><span class="csp"></span><button class="mini copy">复制</button></div><pre class="code" data-lang="csharp"><code>选用Input System后，旧InputManager会被禁用 
+File → Build Setting → Player Setting → Other → Active Input Handling 
+可以选同时启用，也可以只启用其中一种；修改后需要重启Unity </code></pre><div class="cout" hidden></div></div>
+<h4 id="02-代码检测输入-2" class="hd lv4">02 代码检测输入</h4>
+<h5 id="键盘输入-3" class="hd lv5">键盘输入</h5>
+<div class="cpair"><div class="chead"><span class="lang">C#</span><span class="csp"></span><button class="mini copy">复制</button></div><pre class="code" data-lang="csharp"><code>using UnityEngine.InputSystem;
+--------------------------------------------------------------------------------------
+新输入系统 提供了对应的输入设备类 帮助我们对某一种设备输入进行检测
+Keyboard keyBoard = Keyboard.current;</code></pre><div class="cout" hidden></div></div>
+<div class="cpair"><div class="chead"><span class="lang">C#</span><span class="csp"></span><button class="mini copy">复制</button></div><pre class="code" data-lang="csharp"><code>        if(keyBoard.enterKey.wasPressedThisFrame)    
+        {
+            //按下  处理逻辑
+        }
+        if (Keyboard.current.spaceKey.wasPressedThisFrame)
+        {
+            print("空格键按下");//空格键 当前帧 是否按下
+        }
+        if(Keyboard.current.anyKey.wasPressedThisFrame)
+        {
+            print("任意键按下");//任意键按下了
+        }
+--------------------------------------------------------------------------------------
+        if(keyBoard.dKey.wasReleasedThisFrame)
+        {
+            //抬起  处理逻辑
+        }
+        if (Keyboard.current.dKey.wasReleasedThisFrame)
+        {
+            print("D键抬起");//判断D键是否释放
+        }
+--------------------------------------------------------------------------------------
+        if(keyBoard.spaceKey.isPressed)
+        {
+            //长按  处理逻辑
+        }
+        if (Keyboard.current.spaceKey.isPressed)
+        {
+            print("空格按下状态");//判断空格是否一直处于按下状态
+        }</code></pre><div class="cout" hidden></div></div>
+<div class="cpair"><div class="chead"><span class="lang">C#</span><span class="csp"></span><button class="mini copy">复制</button></div><pre class="code" data-lang="csharp"><code>    private void TextInput(char c)
+    {
+        print("通过函数进行事件监听" + c);
+    }
+--------------------------------------------------------------------------------------
+ 通过给keyboard对象中的 文本输入事件 添加委托函数  便可以获得每次输入的内容
+ 
+        keyBoard.onTextInput += (c) =&gt;
+        {
+            print("通过lambda表达式" + c);
+        };
+        keyBoard.onTextInput += TextInput;
+        keyBoard.onTextInput -= TextInput;</code></pre><div class="cout" hidden></div></div>
+<div class="cpair"><div class="chead"><span class="lang">C#</span><span class="csp"></span><button class="mini copy">复制</button></div><pre class="code" data-lang="csharp"><code>可以处理 任意键 按下 抬起 长按 相关的逻辑
+keyBoard.anyKey
+wasPressedThisFrame
+wasReleasedThisFrame
+isPressed</code></pre><div class="cout" hidden></div></div>
+<h5 id="鼠标输入-4" class="hd lv5">鼠标输入</h5>
+<div class="cpair"><div class="chead"><span class="lang">C#</span><span class="csp"></span><button class="mini copy">复制</button></div><pre class="code" data-lang="csharp"><code>Mouse mouse = Mouse.current;</code></pre><div class="cout" hidden></div></div>
+<div class="cpair"><div class="chead"><span class="lang">C#</span><span class="csp"></span><button class="mini copy">复制</button></div><pre class="code" data-lang="csharp"><code>鼠标左键  mouse.leftButton       鼠标右键  mouse.rightButton
+鼠标中键  mouse.middleButton     鼠标 向前向后键 mouse.forwardButton; mouse.backButton;
+
+if(mouse.leftButton.wasPressedThisFrame)
+{
+按下
+}
+if(mouse.leftButton.wasReleasedThisFrame)
+{
+抬起
+}
+if(mouse.rightButton.isPressed)
+{
+长按
+}</code></pre><div class="cout" hidden></div></div>
+<div class="cpair"><div class="chead"><span class="lang">C#</span><span class="csp"></span><button class="mini copy">复制</button></div><pre class="code" data-lang="csharp"><code>获取当前鼠标位置  mouse.position.ReadValue();
+得到鼠标两帧之间的一个偏移向量 mouse.delta.ReadValue();
+鼠标中间 滚轮的方向向量  mouse.scroll.ReadValue();
+void Update()
+{
+if (Mouse.current.leftButton.wasPressedThisFrame)
+{
+    print("鼠标左键按下");
+}
+if (Mouse.current.leftButton.wasReleasedThisFrame)
+{
+    print("鼠标左键抬起");
+}
+if (Mouse.current.rightButton.isPressed)
+{
+    print("鼠标右键长按");
+}
+
+print(Mouse.current.position.ReadValue());
+print(Mouse.current.delta.ReadValue());
+print(Mouse.current.scroll.ReadValue());
+
+}</code></pre><div class="cout" hidden></div></div>
+<h5 id="触屏输入-5" class="hd lv5">触屏输入</h5>
+<div class="cpair"><div class="chead"><span class="lang">C#</span><span class="csp"></span><button class="mini copy">复制</button></div><pre class="code" data-lang="csharp"><code> void Start()
+ {
+Touchscreen ts = Touchscreen.current;
+由于触屏相关都是在移动平台或提供触屏的设备上使用,所以在使用时最好做一次判空
+if (ts == null)
+    return;
+ }</code></pre><div class="cout" hidden></div></div>
+<div class="cpair"><div class="chead"><span class="lang">C#</span><span class="csp"></span><button class="mini copy">复制</button></div><pre class="code" data-lang="csharp"><code> void Start()
+ {
+得到触屏手指数量 print(ts.touches.Count);
+得到单个触屏手指 ts.touches[1]
+得到所有触屏手指
+foreach (var item in ts.touches)
+{   
+}</code></pre><div class="cout" hidden></div></div>
+<div class="cpair"><div class="chead"><span class="lang">C#</span><span class="csp"></span><button class="mini copy">复制</button></div><pre class="code" data-lang="csharp"><code> void Start()
+ {
+获取指定索引手指 TouchControl tc = ts.touches[0];
+
+if(tc.press.wasPressedThisFrame)
+{
+按下 抬起
+}
+if(tc.press.isPressed)
+{
+长按
+}
+if(tc.tap.isPressed)
+{
+点击手势
+}
+连续点击次数
+print(tc.tapCount);
+ }</code></pre><div class="cout" hidden></div></div>
+<div class="cpair"><div class="chead"><span class="lang">C#</span><span class="csp"></span><button class="mini copy">复制</button></div><pre class="code" data-lang="csharp"><code> void Start()
+ {
+位置 print(tc.position.ReadValue());
+第一次接触时位置 print(tc.startPosition.ReadValue());
+接触区域大小 tc.radius.ReadValue();
+偏移位置 tc.delta.ReadValue();
+
+得到当前手指的 状态（阶段）
+UnityEngine.InputSystem.TouchPhase tp = tc.phase.ReadValue();
+switch (tp)
+{
+     无
+case UnityEngine.InputSystem.TouchPhase.None:    
+break;
+    开始接触
+case UnityEngine.InputSystem.TouchPhase.Began:
+break;
+    移动
+case UnityEngine.InputSystem.TouchPhase.Moved:
+break;
+    结束
+case UnityEngine.InputSystem.TouchPhase.Ended:
+break;
+    取消
+case UnityEngine.InputSystem.TouchPhase.Canceled:
+break;
+    静止
+case UnityEngine.InputSystem.TouchPhase.Stationary:
+break;
+default:
+break;
+}
+}</code></pre><div class="cout" hidden></div></div>
+<h5 id="手柄输入-6" class="hd lv5">手柄输入</h5>
+<div class="cpair"><div class="chead"><span class="lang">C#</span><span class="csp"></span><button class="mini copy">复制</button></div><pre class="code" data-lang="csharp"><code>Gamepad gamePad = Gamepad.current;
+if (gamePad == null)
+    return;</code></pre><div class="cout" hidden></div></div>
+<div class="cpair"><div class="chead"><span class="lang">C#</span><span class="csp"></span><button class="mini copy">复制</button></div><pre class="code" data-lang="csharp"><code>摇杆方向
+左摇杆 print(gamePad.leftStick.ReadValue());
+右摇杆 print(gamePad.rightStick.ReadValue());
+
+摇杆按下
+右摇杆 按下抬起长按相关 gamePad.rightStickButton
+左摇杆
+if(gamePad.leftStickButton.wasPressedThisFrame)
+{
+
+}
+if(gamePad.leftStickButton.wasReleasedThisFrame)
+{
+
+}
+if(gamePad.leftStickButton.isPressed)
+{
+
+}</code></pre><div class="cout" hidden></div></div>
+<div class="cpair"><div class="chead"><span class="lang">C#</span><span class="csp"></span><button class="mini copy">复制</button></div><pre class="code" data-lang="csharp"><code>对应手柄上4个方向键 上下左右
+gamePad.dpad.left
+gamePad.dpad.right
+gamePad.dpad.up
+gamePad.dpad.down
+if(gamePad.dpad.left.wasPressedThisFrame)
+{
+
+}
+if(gamePad.dpad.left.wasReleasedThisFrame)
+{
+
+}
+if(gamePad.dpad.left.isPressed)
+{</code></pre><div class="cout" hidden></div></div>
+<div class="cpair"><div class="chead"><span class="lang">C#</span><span class="csp"></span><button class="mini copy">复制</button></div><pre class="code" data-lang="csharp"><code>通用
+Y、△ gamePad.buttonNorth
+A、X gamePad.buttonSouth
+X、□ gamePad.buttonWest
+B、○ gamePad.buttonEast
+
+wasPressedThisFrame
+wasReleasedThisFrame
+isPressed
+
+手柄右侧按钮 x ○ △ □ A B Y 
+○ gamePad.circleButton
+△ gamePad.triangleButton
+□ gamePad.squareButton
+X gamePad.crossButton
+x gamePad.xButton
+a gamePad.aButton
+b gamePad.bButton
+Y gamePad.yButton</code></pre><div class="cout" hidden></div></div>
+<div class="cpair"><div class="chead"><span class="lang">C#</span><span class="csp"></span><button class="mini copy">复制</button></div><pre class="code" data-lang="csharp"><code>中央键
+gamePad.startButton
+gamePad.selectButton
+
+wasPressedThisFrame
+wasReleasedThisFrame
+isPressed</code></pre><div class="cout" hidden></div></div>
+<div class="cpair"><div class="chead"><span class="lang">C#</span><span class="csp"></span><button class="mini copy">复制</button></div><pre class="code" data-lang="csharp"><code>左上右上 肩部键位
+左右前方肩部键
+gamePad.leftShoulder
+gamePad.rightShoulder
+
+左右后方触发键
+gamePad.leftTrigger
+gamePad.rightTrigger
+
+wasPressedThisFrame
+wasReleasedThisFrame
+isPressed</code></pre><div class="cout" hidden></div></div>
+<div class="cpair"><div class="chead"><span class="lang">C#</span><span class="csp"></span><button class="mini copy">复制</button></div><pre class="code" data-lang="csharp"><code>void Update()
+{
+   
+左摇杆
+print(Gamepad.current.leftStick.ReadValue());
+右摇杆
+print(gamePad.rightStick.ReadValue());
+
+if (Gamepad.current.leftStickButton.wasPressedThisFrame)
+{
+    print("左摇杆按下");
+}
+if (Gamepad.current.leftStickButton.wasReleasedThisFrame)
+{
+    print("左摇杆抬起");
+}
+if (Gamepad.current.leftStickButton.isPressed)
+{
+    print("左摇杆长按");
+}
+
+if (Gamepad.current.dpad.left.wasPressedThisFrame)
+{
+    print("左方向键按下");
+}
+if (Gamepad.current.dpad.left.wasReleasedThisFrame)
+{
+    print("左方向键抬起");
+}
+if (Gamepad.current.dpad.left.isPressed)
+{
+    print("左方向键长按");
+}
+
+if(Gamepad.current.buttonNorth.wasPressedThisFrame)
+{
+    print("上方按键 三角形键(PS)按下");
+}
+
+if(Gamepad.current.startButton.wasPressedThisFrame)
+{
+    print("开始键按下");
+}
+if (Gamepad.current.selectButton.wasPressedThisFrame)
+{
+    print("选择键按下");
+}
+
+
+if(Gamepad.current.leftShoulder.wasPressedThisFrame)
+{
+    print("左侧肩部前方键");
+}
+
+
+if (Gamepad.current.leftTrigger.wasPressedThisFrame)
+{
+    print("左侧肩部后方键");
+}
+}</code></pre><div class="cout" hidden></div></div>
+<h5 id="其它输入-7" class="hd lv5">其它输入</h5>
+<div class="cpair"><div class="chead"><span class="lang">C#</span><span class="csp"></span><button class="mini copy">复制</button></div><pre class="code" data-lang="csharp"><code>常用的
+Keyboard—键盘
+Mouse—鼠标
+Touchscreen—触屏
+Gamepad—手柄
+
+其它
+Joystick—摇杆
+Pen—电子笔
+
+Sensor（传感器）
+https://docs.unity3d.com/Packages/com.unity.inputsystem@1.2/manual/Sensors.html#accelerometer
+Gyroscope—陀螺仪
+GravitySensor—重力传感器
+加速传感器
+光照传感器
+等等</code></pre><div class="cout" hidden></div></div>
+<div class="cpair"><div class="chead"><span class="lang">C#</span><span class="csp"></span><button class="mini copy">复制</button></div><pre class="code" data-lang="csharp"><code>对于我们没有细讲的设备
+平时在开发中不是特别常用
+如果想要学习他们的使用
+最直接的方式就是看官方的文档
+或者直接进到类的内部查看具体成员
+通过查看变量名和方法名即可了解使用方式
+
+UnityEngine.InputSystem.Gyroscope g = UnityEngine.InputSystem.Gyroscope.current;
+g.angularVelocity.ReadValue()</code></pre><div class="cout" hidden></div></div>
+<div class="cpair"><div class="chead"><span class="lang">C#</span><span class="csp"></span><button class="mini copy">复制</button></div><pre class="code" data-lang="csharp"><code>新输入系统的设计初衷就是想提升开发者的开发效率
+我们不提倡写代码来处理输入逻辑
+之后我们学了配置文件相关知识后
+都是通过配置文件来设置监听（监视窃听）的输入事件类型
+我们只需要把工作重心放在输入触发后的逻辑处理
+
+所以我们目前讲解的知识都是为了之后最准备
+实际开发中使用较少</code></pre><div class="cout" hidden></div></div>
+<h4 id="03-Input-Action-类-8" class="hd lv4">03 Input Action 类</h4>
+<div class="cpair"><div class="chead"><span class="lang">C#</span><span class="csp"></span><button class="mini copy">复制</button></div><pre class="code" data-lang="csharp"><code>顾名思义，InputAction是InputSystem帮助我们封装的输入动作类
+它的主要作用，是不需要我们通过写代码的形式来处理输入
+而是直接在Inspector窗口编辑想要处理的输入类型
+当输入触发时，我们只需要把精力花在输入触发后的逻辑处理上
+
+我们在想要用于处理输入动作的类中 
+申明对应的InputAction类型的成员变量（注意：需要引用命名空间UnityEngine.InputSystem）</code></pre><div class="cout" hidden></div></div>
+<div class="cpair"><div class="chead"><span class="lang">C#</span><span class="csp"></span><button class="mini copy">复制</button></div><pre class="code" data-lang="csharp"><code>1.启用输入检测  move.Enable();
+2.操作监听相关
+
+开始操作 move.started += TestFun;
+真正触发 move.performed += (context) =&gt;{print("触发事件调用");
+    
+当前状态
+    
+没有启用 Disabled  等待 Waiting  开始 Started  触发 Performed  结束 Canceled
+    
+print(context.phase);
+
+动作行为信息  print(context.action.name);
+
+控件(设备)信息 print(context.control.name);
+
+获取值 context.ReadValue&lt;float&gt;
+
+持续时间 print(context.duration);
+
+开始时间 print(context.startTime);
+       
+结束操作 move.canceled += (context) =&gt;{print("结束事件调用");};
+
+3.关键参数 CallbackContext
+    
+当前状态
+动作行为信息 
+控件信息
+获取值
+持续时间
+开始时间
+        axis.Enable();
+        vector2D.Enable();
+        vector3D.Enable();
+        btnOne.Enable();
+        btnOne.performed += (context) =&gt;{print("组合键触发");};</code></pre><div class="cout" hidden></div></div>
+<div class="cpair"><div class="chead"><span class="lang">C#</span><span class="csp"></span><button class="mini copy">复制</button></div><pre class="code" data-lang="csharp"><code>1.Input System 基础设置（一些默认值设置）
+2.设置特殊输入规则
+    private void TestFun(InputAction.CallbackContext context)
+    {
+        print("开始事件调用");
+    }
+    void Update()
+    {
+        print(axis.ReadValue&lt;float&gt;());
+
+        print(vector2D.ReadValue&lt;Vector2&gt;());
+
+        print(vector3D.ReadValue&lt;Vector3&gt;());
+    }</code></pre><div class="cout" hidden></div></div>
+<h4 id="04-输入配置文件-9" class="hd lv4">04 输入配置文件</h4>
+<div class="cpair"><div class="chead"><span class="lang">C#</span><span class="csp"></span><button class="mini copy">复制</button></div><pre class="code" data-lang="csharp"><code>输入系统中提供了一种输入配置文件
+你可以理解它是InputAction的集合
+可以在一个文件中编辑多个InputAction的信息
+
+里面记录了想要处理的行为和动作（也就是InputAction的相关信息）
+我们可以在其中自己定义InputAction（比如：开火、移动、旋转等）
+然后为这个InputAction关联对应的输入动作
+
+之后将该配置文件和PlayerInput进行关联
+PlayerInput会自动帮助我们解析该文件
+当触发这些InputAction输入动作时会以分发事件的形式通知我们执行行为</code></pre><div class="cout" hidden></div></div>
+<div class="cpair"><div class="chead"><span class="lang">C#</span><span class="csp"></span><button class="mini copy">复制</button></div><pre class="code" data-lang="csharp"><code>1.在Project窗口右键Create创建InputActions配置文件
+2.双击创建出的文件
+3.进行配置</code></pre><div class="cout" hidden></div></div>
+<h4 id="05-输入配置文件生成-C-代码-10" class="hd lv4">05 输入配置文件生成 C# 代码</h4>
+<div class="cpair"><div class="chead"><span class="lang">C#</span><span class="csp"></span><button class="mini copy">复制</button></div><pre class="code" data-lang="csharp"><code>1.选择InputActions文件
+2.在Inspector窗口设置生成路径，类名，命名空间
+3.应用后生成代码</code></pre><div class="cout" hidden></div></div>
+<div class="cpair"><div class="chead"><span class="lang">C#</span><span class="csp"></span><button class="mini copy">复制</button></div><pre class="code" data-lang="csharp"><code>void Start()
+{
+1.创建生成的代码对象
+input = new Lesson9Input();
+2.激活输入
+input.Enable();
+3.事件监听
+input.Action1.Fire.performed += (context) =&gt;
+{
+print("开火");
+};
+
+input.Action2.Space.performed += (context) =&gt;
+{
+print("跳跃");
+};
+
+}</code></pre><div class="cout" hidden></div></div>
+<h4 id="06-Player-Input-11" class="hd lv4">06 Player Input</h4>
+<h5 id="认识-Player-Input-12" class="hd lv5">认识 Player Input</h5>
+<div class="cpair"><div class="chead"><span class="lang">C#</span><span class="csp"></span><button class="mini copy">复制</button></div><pre class="code" data-lang="csharp"><code>知识点一 PlayerInput是什么？
+PlayerInput是InputSystem提供的
+专门用于接受玩家输入来处理自定义逻辑的组件
+
+主要工作原理
+1.配置输入文件（InputActions文件）
+2.通过PlayerInput关联配置文件，它会自动解析该配置文件
+3.关联对应的响应函数，处理对应逻辑
+
+好处：
+不需要自己进行相关输入的逻辑书写
+通过配置文件即可配置想要监听的对应行为
+让我们专注于输入事件触发后的逻辑处理
+--------------------------------------------------------------------------------------
+
+知识点二 添加PlayerInput组件
+选择任意对象（一般为一个玩家对象）
+为其添加PlayerInput组件
+
+--------------------------------------------------------------------------------------
+知识点三 PlayerInput参数相关</code></pre><div class="cout" hidden></div></div>
+<h5 id="行为执行模式-13" class="hd lv5">行为执行模式</h5>
+<div class="cpair"><div class="chead"><span class="lang">C#</span><span class="csp"></span><button class="mini copy">复制</button></div><pre class="code" data-lang="csharp"><code>void Start()
+{
+在自定义脚本中
+申明名为 "On+行为名" 的函数
+没有参数 或者 参数类型为InputValue
+将该自定义脚本挂载到PlayerInput依附的对象上
+当触发对应输入时 会自动调用函数
+
+并且还有默认的3个和设备相关的函数可以调用
+设备注册(当控制器从设备丢失中恢复并再次运行时会触发)：
+OnDeviceRegained(PlayerInput input)
+设备丢失（玩家失去了分配给它的设备之一，例如，当无线设备耗尽电池时）：
+}</code></pre><div class="cout" hidden></div></div>
+<div class="cpair"><div class="chead"><span class="lang">C#</span><span class="csp"></span><button class="mini copy">复制</button></div><pre class="code" data-lang="csharp"><code>void Start()
+{
+基本和SendMessage规则一致
+唯一的区别是，自定义脚本不仅可以挂载在PlayerInput依附的对象上
+还可以挂载在其子对象下
+    
+}</code></pre><div class="cout" hidden></div></div>
+<div class="cpair"><div class="chead"><span class="lang">C#</span><span class="csp"></span><button class="mini copy">复制</button></div><pre class="code" data-lang="csharp"><code>void Start()
+{
+    该模式可以让我们在Inspector窗口上通过拖拽的形式关联响应函数
+但是注意：响应函数的参数类型 需要改为 InputAction.CallbackContext
+    
+}</code></pre><div class="cout" hidden></div></div>
+<div class="cpair"><div class="chead"><span class="lang">C#</span><span class="csp"></span><button class="mini copy">复制</button></div><pre class="code" data-lang="csharp"><code>void Start()
+{
+1.获取PlayerInput组件
+PlayerInput input = this.GetComponent&lt;PlayerInput&gt;();
+2.获取对应事件进行委托函数添加
+input.onDeviceLost += OnDeviceLost;
+input.onDeviceRegained += OnDeviceRegained;
+input.onControlsChanged += OnControlsChanged;
+input.onActionTriggered += OnActionTrigger;
+
+input.currentActionMap["Move"].ReadValue&lt;Vector2&gt;()
+3.当触发输入时会自动触发事件调用对应函数
+
+    
+}</code></pre><div class="cout" hidden></div></div>
+<div class="cpair"><div class="chead"><span class="lang">C#</span><span class="csp"></span><button class="mini copy">复制</button></div><pre class="code" data-lang="csharp"><code>InputValue 是否按下
+
+得到具体返回值 value.Get&lt;&gt;
+
+Send Message / Broadcast Messages\t
+public void OnMove(InputValue value)
+{
+print("Move");
+print(value.Get&lt;Vector2&gt;());
+}
+
+public void OnLook(InputValue value)
+{
+print("Look");
+print(value.Get&lt;Vector2&gt;());
+}
+public void OnFire(InputValue value)
+{
+print("Fire");
+if(value.isPressed)
+{
+print("按下");
+}
+}
+
+public void OnDeviceLost( PlayerInput input)
+{
+print("设备丢失");
+}
+
+public void OnDeviceRegained(PlayerInput input)
+{
+print("设备注册");
+}
+
+public void OnControlsChanged(PlayerInput input)
+{
+print("控制器切换");
+}
+
+Invoke Unity Events
+public void MyFire(InputAction.CallbackContext context)
+{
+print("开火1");
+}
+public void MyMove(InputAction.CallbackContext context)
+{
+print("移动1");
+}
+public void MyLook(InputAction.CallbackContext context)
+{
+print("Look1");
+}
+public void OnActionTrigger(InputAction.CallbackContext context)
+{
+switch (context.action.name)
+{
+case "Fire":
+输入阶段的判断 触发阶段 才去做逻辑
+if(context.phase == InputActionPhase.Performed)
+print("开火");
+break;
+case "Look":
+print("看向");
+print(context.ReadValue&lt;Vector2&gt;());
+break;
+case "Move":
+print("移动");
+print(context.ReadValue&lt;Vector2&gt;());
+break;
+}</code></pre><div class="cout" hidden></div></div>
+<h4 id="07-Player-Input-Manager-14" class="hd lv4">07 Player Input Manager</h4>
+<div class="cpair"><div class="chead"><span class="lang">C#</span><span class="csp"></span><button class="mini copy">复制</button></div><pre class="code" data-lang="csharp"><code>PlayerInputManager 组件主要是用于管理本地多人输入的输入管理器
+它主要管理玩家加入和离开</code></pre><div class="cout" hidden></div></div>
+<div class="cpair"><div class="chead"><span class="lang">C#</span><span class="csp"></span><button class="mini copy">复制</button></div><pre class="code" data-lang="csharp"><code>获取PlayerInputManager
+PlayerInputManager.instance
+玩家加入时
+PlayerInputManager.instance.onPlayerJoined += (playerInput) =&gt;
+{
+print("创建了一个玩家");
+};
+
+玩家离开时
+PlayerInputManager.instance.onPlayerLeft += (playerInput) =&gt;
+{
+print("离开了一个玩家");
+};
+------------------------------------------------------------------------------------
+void Update()
+{
+this.transform.Translate(dir * 10 * Time.deltaTime);
+}
+public void Move(InputAction.CallbackContext context)
+{
+dir = context.ReadValue&lt;Vector2&gt;();
+dir.z = dir.y;
+dir.y = 0;
+}</code></pre><div class="cout" hidden></div></div>
+<h4 id="08-UGUI配合使用-15" class="hd lv4">08 UGUI配合使用</h4>
+<div class="cpair"><div class="chead"><span class="lang">C#</span><span class="csp"></span><button class="mini copy">复制</button></div><pre class="code" data-lang="csharp"><code>1.新输入系统IputSystem不支持IMGUI（GUI）注意：编辑器代码不受影响
+如果当前激活的是IputSystem，那么OGUI中的输入判断相关内容不会被触发
+你必须要选择Both或者只激活老输入系统IputMaager才能让OGUI中内容有用
+
+2.新输入系统支持UGUI，但是需要使用新输入系统输入模块（Iput System UI Iput Module）</code></pre><div class="cout" hidden></div></div>
+<div class="cpair"><div class="chead"><span class="lang">C#</span><span class="csp"></span><button class="mini copy">复制</button></div><pre class="code" data-lang="csharp"><code>如果想在VR项目中使用新输入系统配合UGUI使用
+需要在Cavas对象上添加Tracked Device Raycaster组件</code></pre><div class="cout" hidden></div></div>
+<div class="cpair"><div class="chead"><span class="lang">C#</span><span class="csp"></span><button class="mini copy">复制</button></div><pre class="code" data-lang="csharp"><code>如果同一设备上的多人游戏，每个人想要使用自己的一套独立UI
+需要将EvetSystem中的EvetSystem组件替换为Multiplayer Evet System组件
+
+与EvetSystem组件不同，可以在场景中同时激活多个MultiplayerEvetSystem。
+这样，您可以有多个玩家，每个玩家都有自己的IputSystemUIIputModule和MultiplayerEvetSystem组件
+每个玩家都可以有自己的一组操作来驱动自己的UI实例。
+如果您正在使用PlayerIput组件，还可以设置PlayerIput以自动配置玩家的IputSystemUIIputModule以使用玩家的操作
+MultilayerEvetSystem组件的属性与事件系统中的属性相同
+此外，MultiplayerEvetSystem组件还添加了一个playerRoot属性，您可以将其设置为一个游戏对象
+该游戏对象包含此事件系统应在其层次结构中处理的所有UI可选择项</code></pre><div class="cout" hidden></div></div>
+<div class="cpair"><div class="chead"><span class="lang">C#</span><span class="csp"></span><button class="mini copy">复制</button></div><pre class="code" data-lang="csharp"><code>O-Scree组件可以模拟UI和用户操作的交互
+1.O-Scree Butto：按钮交互
+2.O-Scree Stick：摇杆交互</code></pre><div class="cout" hidden></div></div>
+<div class="cpair"><div class="chead"><span class="lang">C#</span><span class="csp"></span><button class="mini copy">复制</button></div><pre class="code" data-lang="csharp"><code>可查看官方文档了解更多新输入系统和UI配合使用的相关内容
+https:docs.uity3d.com/Packages/com.uity.iputsystem@1.2/maual/UISupport.html</code></pre><div class="cout" hidden></div></div>
+<h4 id="09-Input-Debug-16" class="hd lv4">09 Input Debug</h4>
+<div class="cpair"><div class="chead"><span class="lang">C#</span><span class="csp"></span><button class="mini copy">复制</button></div><pre class="code" data-lang="csharp"><code>InputDebug顾名思义是输入调试器的意思
+我们可以通过输入调试窗口检测输入相关信息
+当我们的输入不按预期工作时，可以通过它来排查问题</code></pre><div class="cout" hidden></div></div>
+<div class="cpair"><div class="chead"><span class="lang">C#</span><span class="csp"></span><button class="mini copy">复制</button></div><pre class="code" data-lang="csharp"><code>1.Window(窗口)-&gt;Analysis(分析)-&gt;Input Debugger(输入调试器)
+2.PlayerInput组件-&gt;Open Input Debugger</code></pre><div class="cout" hidden></div></div>
+<h4 id="10-第4章-综合练习题-17" class="hd lv4">10.第4章: 综合练习题</h4>
+<h5 id="补充知识点-18" class="hd lv5">补充知识点</h5>
+<h6 id="获取任意键输入的信息-19" class="hd lv6">获取任意键输入的信息</h6>
+<div class="cpair"><div class="chead"><span class="lang">C#</span><span class="csp"></span><button class="mini copy">复制</button></div><pre class="code" data-lang="csharp"><code>publicclassLesson15:MonoBehaviour
+{
+publicInputActioninput;
+Startiscalledbeforethefirstframeupdate
+voidStart()
+{
+知识点一回顾学过的获取任意键输入的方法
+1.键盘任意键按下
+input.Enable();
+input.performed+=(context)=&gt;
+{
+print("123");
+print(context.control.name);
+print(context.control.path);
+};
+2.键盘任意键按下字符
+Keyboard.current.onTextInput+=(c)=&gt;
+{
+print(c);
+};
+}</code></pre><div class="cout" hidden></div></div>
+<div class="cpair"><div class="chead"><span class="lang">C#</span><span class="csp"></span><button class="mini copy">复制</button></div><pre class="code" data-lang="csharp"><code>publicclassLesson15:MonoBehaviour
+{
+    如果用Call按键盘会报错但是也能正常执行
+用CallOnce只会执行一次但是不会报错
+InputSystem.onAnyButtonPress.CallOnce((control)=&gt;
+{
+print(control.path);
+print(control.name);
+});
+}
+
+Updateiscalledonceperframe
+
+}</code></pre><div class="cout" hidden></div></div>
+<h6 id="通过Json数据加载配置文件-20" class="hd lv6">通过Json数据加载配置文件</h6>
+<div class="cpair"><div class="chead"><span class="lang">C#</span><span class="csp"></span><button class="mini copy">复制</button></div><pre class="code" data-lang="csharp"><code>publicclassLesson16:MonoBehaviour
+{
+publicPlayerInputinput;
+//Startiscalledbeforethefirstframeupdate
+voidStart()
+{
+知识点二通过Json手动加载输入配置文件
+stringjson=Resources.Load&lt;TextAsset&gt;("PlayerInputTest").text;
+InputActionAssetasset=InputActionAsset.FromJson(json);
+
+input.actions=asset;
+
+input.onActionTriggered+=(context)=&gt;
+{
+if(context.phase==InputActionPhase.Performed)
+{
+switch(context.action.name)
+{
+case"Move":
+print("移动");
+break;
+case"Look":
+print("看向");
+break;
+case"Fire":
+print("开火");
+break;
+}
+}
+};
+
+}</code></pre><div class="cout" hidden></div></div>
+<h5 id="改键练习-21" class="hd lv5">改键练习</h5>
+<h6 id="改键练习1-记录改键信息-22" class="hd lv6">改键练习1——记录改键信息</h6>
+<div class="cpair"><div class="chead"><span class="lang">C#</span><span class="csp"></span><button class="mini copy">复制</button></div><pre class="code" data-lang="csharp"><code>using System.Collections;
+using System.Collections.Generic;
+using UnityEngine;
+
+public class InputInfo
+{
+    public string up = "&lt;Keyboard&gt;/w";
+    public string down = "&lt;Keyboard&gt;/s";
+    public string left = "&lt;Keyboard&gt;/a";
+    public string right = "&lt;Keyboard&gt;/d";
+
+    public string fire = "&lt;Mouse&gt;/leftButton";
+    public string jump = "&lt;Keyboard&gt;/space";
+}</code></pre><div class="cout" hidden></div></div>
+<div class="cpair"><div class="chead"><span class="lang">C#</span><span class="csp"></span><button class="mini copy">复制</button></div><pre class="code" data-lang="csharp"><code>using System.Collections;
+using System.Collections.Generic;
+using UnityEngine;
+using UnityEngine.InputSystem;
+using UnityEngine.InputSystem.Utilities;
+using UnityEngine.UI;
+
+public enum BTN_TYPE
+{
+    UP,
+    DOWN,
+    LEFT,
+    RIGHT,
+
+    FIRE,
+    JUMP, 
+}
+
+public class ChangeInputPanel : MonoBehaviour
+{
+    public Text txtUp;
+    public Text txtDown;
+    public Text txtLeft;
+    public Text txtRight;
+    public Text txtFire;
+    public Text txtJump;
+
+    public Button btnUp;
+    public Button btnDown;
+    public Button btnLeft;
+    public Button btnRight;
+    public Button btnFire;
+    public Button btnJump;
+
+    private InputInfo inputInfo;
+
+   //记录当前要修改的按键
+    private BTN_TYPE nowType;
+
+
+    void Start()
+    {
+        inputInfo = new InputInfo();
+        UpdateBtnInfo();
+
+        btnUp.onClick.AddListener(() =&gt;
+        {
+            ChangeBtn(BTN_TYPE.UP);
+        });
+        btnDown.onClick.AddListener(() =&gt;
+        {
+            ChangeBtn(BTN_TYPE.DOWN);
+        });
+        btnLeft.onClick.AddListener(() =&gt;
+        {
+            ChangeBtn(BTN_TYPE.LEFT);
+        });
+        btnRight.onClick.AddListener(() =&gt;
+        {
+            ChangeBtn(BTN_TYPE.RIGHT);
+        });
+        btnFire.onClick.AddListener(() =&gt;
+        {
+            ChangeBtn(BTN_TYPE.FIRE);
+        });
+        btnJump.onClick.AddListener(() =&gt;
+        {
+            ChangeBtn(BTN_TYPE.JUMP);
+        });
+    }
+
+    private void ChangeBtn(BTN_TYPE type)
+    {
+        nowType = type;
+        //获取一次任意按键输入
+        InputSystem.onAnyButtonPress.CallOnce(ChangeBtnReally);
+    }
+
+    private void ChangeBtnReally(InputControl control)
+    {
+        print(control.path);
+        string[] strs = control.path.Split('/');
+        string path = "&lt;" + strs[1] + "&gt;/" + strs[2];
+        switch (nowType)
+        {
+            case BTN_TYPE.UP:
+                inputInfo.up = path;
+                break;
+            case BTN_TYPE.DOWN:
+                inputInfo.down = path;
+                break;
+            case BTN_TYPE.LEFT:
+                inputInfo.left = path;
+                break;
+            case BTN_TYPE.RIGHT:
+                inputInfo.right = path;
+                break;
+            case BTN_TYPE.FIRE:
+                inputInfo.fire = path;
+                break;
+            case BTN_TYPE.JUMP:
+                inputInfo.jump = path;
+                break;
+        }
+
+        UpdateBtnInfo();
+    }
+
+     /// &lt;summary&gt;
+    /// 更新按键显示信息
+    /// &lt;/summary&gt;
+    private void UpdateBtnInfo()
+    {
+        txtUp.text = inputInfo.up;
+        txtDown.text = inputInfo.down;
+        txtLeft.text = inputInfo.left;
+        txtRight.text = inputInfo.right;
+
+        txtFire.text = inputInfo.fire;
+        txtJump.text = inputInfo.jump;
+    }
+
+    // Update is called once per frame
+    void Update()
+    {
+        
+    }
+}</code></pre><div class="cout" hidden></div></div>
+<h6 id="改键练习2-实现改键功能-23" class="hd lv6">改键练习2——实现改键功能</h6>
+<div class="cpair"><div class="chead"><span class="lang">C#</span><span class="csp"></span><button class="mini copy">复制</button></div><pre class="code" data-lang="csharp"><code>using System.Collections;
+using System.Collections.Generic;
+using UnityEngine;
+
+public class InputInfo
+{
+    public string up = "&lt;Keyboard&gt;/w";
+    public string down = "&lt;Keyboard&gt;/s";
+    public string left = "&lt;Keyboard&gt;/a";
+    public string right = "&lt;Keyboard&gt;/d";
+
+    public string fire = "&lt;Mouse&gt;/leftButton";
+    public string jump = "&lt;Keyboard&gt;/space";
+}</code></pre><div class="cout" hidden></div></div>
+<div class="cpair"><div class="chead"><span class="lang">C#</span><span class="csp"></span><button class="mini copy">复制</button></div><pre class="code" data-lang="csharp"><code>using System.Collections;
+using System.Collections.Generic;
+using UnityEngine;
+using UnityEngine.InputSystem;
+
+public class DataManager
+{
+    private static DataManager instance = new DataManager();
+
+    public static DataManager Instance =&gt; instance;
+
+    private InputInfo inputInfo;
+
+    public InputInfo InputInfo =&gt; inputInfo;
+
+    private string jsonStr;
+
+    private DataManager()
+    {
+        inputInfo = new InputInfo();
+
+        jsonStr = Resources.Load&lt;TextAsset&gt;("Lesson17").text;
+    }
+
+    public InputActionAsset GetActionAsset()
+    {
+        //上键
+        string str = jsonStr.Replace("&lt;up&gt;", inputInfo.up);
+       //下
+        str = str.Replace("&lt;down&gt;", inputInfo.down);
+        //左
+        str = str.Replace("&lt;left&gt;", inputInfo.left);
+         //右
+        str = str.Replace("&lt;right&gt;", inputInfo.right);
+       //开火
+        str = str.Replace("&lt;fire&gt;", inputInfo.fire);
+        //跳跃
+        str = str.Replace("&lt;jump&gt;", inputInfo.jump);
+
+        return InputActionAsset.FromJson(str);
+    }
+}</code></pre><div class="cout" hidden></div></div>
+<div class="cpair"><div class="chead"><span class="lang">C#</span><span class="csp"></span><button class="mini copy">复制</button></div><pre class="code" data-lang="csharp"><code>using System.Collections;
+using System.Collections.Generic;
+using UnityEngine;
+using UnityEngine.InputSystem;
+using UnityEngine.InputSystem.Utilities;
+using UnityEngine.UI;
+
+public enum BTN_TYPE
+{
+    UP,
+    DOWN,
+    LEFT,
+    RIGHT,
+
+    FIRE,
+    JUMP, 
+}
+
+public class ChangeInputPanel : MonoBehaviour
+{
+    public Text txtUp;
+    public Text txtDown;
+    public Text txtLeft;
+    public Text txtRight;
+    public Text txtFire;
+    public Text txtJump;
+
+    public Button btnUp;
+    public Button btnDown;
+    public Button btnLeft;
+    public Button btnRight;
+    public Button btnFire;
+    public Button btnJump;
+
+    private InputInfo inputInfo;
+
+   //记录当前要修改的按键
+    private BTN_TYPE nowType;
+
+    public PlayerLesson17 player;
+
+   
+    void Start()
+    {
+        inputInfo = DataManager.Instance.InputInfo;
+        UpdateBtnInfo();
+
+        btnUp.onClick.AddListener(() =&gt;
+        {
+            ChangeBtn(BTN_TYPE.UP);
+        });
+        btnDown.onClick.AddListener(() =&gt;
+        {
+            ChangeBtn(BTN_TYPE.DOWN);
+        });
+        btnLeft.onClick.AddListener(() =&gt;
+        {
+            ChangeBtn(BTN_TYPE.LEFT);
+        });
+        btnRight.onClick.AddListener(() =&gt;
+        {
+            ChangeBtn(BTN_TYPE.RIGHT);
+        });
+        btnFire.onClick.AddListener(() =&gt;
+        {
+            ChangeBtn(BTN_TYPE.FIRE);
+        });
+        btnJump.onClick.AddListener(() =&gt;
+        {
+            ChangeBtn(BTN_TYPE.JUMP);
+        });
+    }
+
+    private void ChangeBtn(BTN_TYPE type)
+    {
+        nowType = type;
+        //获取一次任意按键输入
+        InputSystem.onAnyButtonPress.CallOnce(ChangeBtnReally);
+    }
+
+    private void ChangeBtnReally(InputControl control)
+    {
+        print(control.path);
+        string[] strs = control.path.Split('/');
+        string path = "&lt;" + strs[1] + "&gt;/" + strs[2];
+        switch (nowType)
+        {
+            case BTN_TYPE.UP:
+                inputInfo.up = path;
+                break;
+            case BTN_TYPE.DOWN:
+                inputInfo.down = path;
+                break;
+            case BTN_TYPE.LEFT:
+                inputInfo.left = path;
+                break;
+            case BTN_TYPE.RIGHT:
+                inputInfo.right = path;
+                break;
+            case BTN_TYPE.FIRE:
+                inputInfo.fire = path;
+                break;
+            case BTN_TYPE.JUMP:
+                inputInfo.jump = path;
+                break;
+        }
+
+        UpdateBtnInfo();
+
+        //让玩家生成修改效果
+        player.ChangeInput();
+    }
+
+    /// &lt;summary&gt;
+    /// 更新按键显示信息
+    /// &lt;/summary&gt;
+    private void UpdateBtnInfo()
+    {
+        txtUp.text = inputInfo.up;
+        txtDown.text = inputInfo.down;
+        txtLeft.text = inputInfo.left;
+        txtRight.text = inputInfo.right;
+
+        txtFire.text = inputInfo.fire;
+        txtJump.text = inputInfo.jump;
+    }
+
+   
+    void Update()
+    {
+        
+    }
+}</code></pre><div class="cout" hidden></div></div>
+<div class="cpair"><div class="chead"><span class="lang">C#</span><span class="csp"></span><button class="mini copy">复制</button></div><pre class="code" data-lang="csharp"><code>using System.Collections;
+using System.Collections.Generic;
+using UnityEngine;
+using UnityEngine.InputSystem;
+
+public class PlayerLesson17 : MonoBehaviour
+{
+    private PlayerInput playerInput;
+    // Start is called before the first frame update
+    void Start()
+    {
+        playerInput = this.GetComponent&lt;PlayerInput&gt;();
+
+        playerInput.actions = DataManager.Instance.GetActionAsset();
+        playerInput.actions.Enable();
+
+        playerInput.onActionTriggered += (context) =&gt;
+        {
+            if(context.phase == InputActionPhase.Performed)
+            {
+                switch (context.action.name)
+                {
+                    case "Fire":
+                        print("¿ª»ð");
+                        break;
+                    case "Jump":
+                        print("ÌøÔ¾");
+                        break;
+                    case "Move":
+                        print("ÒÆ¶¯");
+                        break;
+                }
+            }
+        };
+    }
+
+    // Update is called once per frame
+    void Update()
+    {
+        
+    }
+
+   //让玩家生成修改效果
+    public void ChangeInput()
+    {
+       //修改就是改变我们PlayerInput上关联的输入配置信息文件
+        playerInput.actions = DataManager.Instance.GetActionAsset();
+        playerInput.actions.Enable();
+    }
+}</code></pre><div class="cout" hidden></div></div>
+<h5 id="InputSystem总结-24" class="hd lv5">InputSystem总结</h5>
+<p class="tx">📎Unity进阶之InputSystem——总结.pdf📎Unity进阶之InputSystem.xmind</p>
+    </article>
+    <footer class="pnbar"><a class="pn prev" href="m16.html"><span>上一节</span>Unity-UGUI - 进阶 - TextMeshPro</a><a class="pn next" href="m18.html"><span>下一节</span>YooAsset 资源管理 - 大游戏</a></footer>
+  </main>
+</div>
+<button class="totop" id="totop">↑</button>
+<script src="assets/demos.js"></script>
+<script src="assets/diagrams-data.js"></script>
+<script src="assets/diagram.js"></script>
+<script src="assets/app.js"></script>
+<script>window.__mountDiagrams && window.__mountDiagrams();</script>
+</body>
+</html>

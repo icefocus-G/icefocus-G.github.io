@@ -1,0 +1,223 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Unity 网络开发基础 · Unity 交互课件</title>
+<link rel="stylesheet" href="assets/style.css">
+<link rel="stylesheet" href="assets/diagram.css">
+</head>
+<body data-mid="m04">
+<header class="top">
+  <a class="brand" href="index.html"><span class="logo">U</span><b>Unity</b><i>交互课件</i></a>
+  <div class="crumb"><span>开发经验补充</span><em>/</em><strong>Unity 网络开发基础</strong></div>
+  <div class="top-r">
+    <span class="stat">3935 字 · 0 代码 · 0 图 · 0 表</span>
+    <button class="mini" id="btnNav">目录</button>
+  </div>
+</header>
+<div class="wrap">
+  <aside class="side" id="side">
+    <div class="side-h">本篇目录</div>
+    <nav class="tocbox"><a class="toc lv3" href="#28-小时-41-分-13-秒-第-1-章-概述-1">28 小时 41 分 13 秒 第 1 章：概述</a><a class="toc lv2" href="#第-1-章-概述-2">第 1 章：概述</a><a class="toc lv2" href="#必看-整章-第-2-章-网络开发必备理论-3">🔥（必看-整章）第 2 章：网络开发必备理论</a><a class="toc lv4" href="#1-网络基本概念-知识点-4">1. 网络基本概念 知识点</a><a class="toc lv4" href="#2-IP-端口-Mac-地址-知识点-6">2. IP、端口、Mac 地址 知识点</a><a class="toc lv4" href="#3-客户端和服务端-知识点-8">3. 客户端和服务端 知识点</a><a class="toc lv4" href="#4-数据通信模型-知识点-10">4. 数据通信模型 知识点</a><a class="toc lv3" href="#第-3-章-网络协议-12">第 3 章：网络协议</a><a class="toc lv4" href="#1-网络协议概述-知识点-13">1. 网络协议概述 知识点</a><a class="toc lv4" href="#2-OSI-模型-知识点-15">2. OSI 模型 知识点</a><a class="toc lv4" href="#3-TCP-IP-协议-知识点-17">3. TCP/IP 协议 知识点</a><a class="toc lv4" href="#4-必看-TCP-和-UDP-知识点-19">4. 🔥（必看）TCP 和 UDP 知识点</a><a class="toc lv2" href="#第-4-章-网络通信-Socket-TCP-21">第 4 章：网络通信 ——Socket——TCP</a><a class="toc lv4" href="#1-网络游戏通信方案概述-知识点-22">1. 网络游戏通信方案概述 知识点</a><a class="toc lv4" href="#2-IP-地址和端口类-知识点-24">2. IP 地址和端口类 知识点</a><a class="toc lv4" href="#3-域名解析-知识点-26">3. 域名解析 知识点</a><a class="toc lv4" href="#4-序列化和反序列化概述-知识点-28">4. 序列化和反序列化概述 知识点</a><a class="toc lv4" href="#5-字符编码-ASCII-Unicode-UTF-8-知识点-30">5. 字符编码（ASCII、Unicode、UTF‑8）知识点</a><a class="toc lv4" href="#6-序列化-知识点-32">6. 序列化 知识点</a><a class="toc lv4" href="#7-反序列化-知识点-34">7. 反序列化 知识点</a><a class="toc lv4" href="#8-Socket-重要-API-知识点-36">8. Socket 重要 API 知识点</a><a class="toc lv4" href="#9-TCP-通信概述-知识点-38">9. TCP 通信概述 知识点</a><a class="toc lv4" href="#10-TCP-通信-同步-服务端-知识点-40">10. TCP 通信 —— 同步 —— 服务端 知识点</a><a class="toc lv4" href="#11-TCP-通信-同步-客户端-知识点-43">11. TCP 通信 —— 同步 —— 客户端 知识点</a><a class="toc lv4" href="#12-TCP-通信-同步-区分消息类型-知识点-45">12. TCP 通信 —— 同步 —— 区分消息类型 知识点</a><a class="toc lv4" href="#13-必看-分包-粘包-基本概念和逻辑实现-47">13. 🔥（必看）分包、粘包 —— 基本概念和逻辑实现</a><a class="toc lv4" href="#14-必看-心跳消息-客户端主动断开连接-49">14. 🔥（必看）心跳消息 —— 客户端主动断开连接</a><a class="toc lv4" href="#15-TCP-通信-异步-异步通信常用方法-技术替换-51">15. TCP 通信 —— 异步 —— 异步通信常用方法 [ 技术替换 ]</a><a class="toc lv4" href="#17-TCP-通信-异步-服务器端-知识点-52">17. TCP 通信 —— 异步 —— 服务器端 知识点</a><a class="toc lv4" href="#18-TCP-通信-异步-客户端-知识点-54">18. TCP 通信 —— 异步 —— 客户端 知识点</a><a class="toc lv2" href="#第-5-章-网络通信-Socket-UDP-56">第 5 章：网络通信 ——Socket——UDP</a><a class="toc lv4" href="#1-UDP-通信概述-知识点-57">1. UDP 通信概述 知识点</a><a class="toc lv4" href="#2-UDP-同步编程-服务端-客户端基础逻辑-知识点-59">2. UDP 同步编程 —— 服务端、客户端基础逻辑 知识点</a><a class="toc lv4" href="#3-UDP-异步编程-异步通信常用方法-知识点-过时-62">3. UDP 异步编程 —— 异步通信常用方法 知识点 [ 过时 ]</a><a class="toc lv2" href="#第-6-章-网络通信-文件传输-FTP-65">第 6 章：网络通信 —— 文件传输 FTP</a><a class="toc lv4" href="#1-FTP-工作原理-知识点-66">1. FTP 工作原理 知识点</a><a class="toc lv4" href="#2-搭建-FTP-服务器-知识点-68">2. 搭建 FTP 服务器 知识点</a><a class="toc lv4" href="#3-FTP-关键类-知识点-过时-69">3. FTP 关键类 知识点 [ 过时 ]</a><a class="toc lv4" href="#4-FTP-上传文件-知识点-过时-70">4. FTP 上传文件 知识点 [ 过时 ]</a><a class="toc lv4" href="#5-FTP-下载文件-知识点-过时-72">5. FTP 下载文件 知识点 [ 过时 ]</a><a class="toc lv4" href="#6-FTP-的其它文件操作-知识点-74">6. FTP 的其它文件操作 知识点</a><a class="toc lv2" href="#第-7-章-网络通信-超文本传输-HTTP-75">第 7 章：网络通信 —— 超文本传输 HTTP</a><a class="toc lv4" href="#1-HTTP-的工作原理-知识点-76">1. HTTP 的工作原理 知识点</a><a class="toc lv4" href="#2-搭建-HTTP-服务器-知识点-77">2. 搭建 HTTP 服务器 知识点</a><a class="toc lv4" href="#3-HTTP-C-相关类-知识点-78">3. HTTP——C# 相关类 知识点</a><a class="toc lv4" href="#4-HTTP-C-下载数据-知识点-79">4. HTTP——C#—— 下载数据 知识点</a><a class="toc lv4" href="#5-HTTP-C-Post-简单准备-知识点-81">5. HTTP——C#——Post 简单准备 知识点</a><a class="toc lv4" href="#6-HTTP-C-上传文件-知识点-82">6. HTTP——C#—— 上传文件 知识点</a><a class="toc lv4" href="#7-HTTP-Unity-WWW-类-知识点-过时-84">7. HTTP——Unity——WWW 类 知识点[ 过时 ]</a><a class="toc lv4" href="#8-HTTP-Unity-WWWForm-类-知识点-过时-86">8. HTTP——Unity——WWWForm 类 知识点[ 过时 ]</a><a class="toc lv4" href="#9-必看-UnityWebRequest-常用操作-获取数据-88">9. 🔥（必看）UnityWebRequest—— 常用操作 —— 获取数据</a><a class="toc lv4" href="#10-必看-UnityWebRequest-常用操作-上传数据-89">10. 🔥（必看）UnityWebRequest—— 常用操作 —— 上传数据</a><a class="toc lv4" href="#11-必看-UnityWebRequest-高级操作-获取知识-91">11. 🔥（必看）UnityWebRequest—— 高级操作 —— 获取知识</a><a class="toc lv4" href="#12-必看-UnityWebRequest-高级操作-上传数据-93">12. 🔥（必看）UnityWebRequest—— 高级操作 —— 上传数据</a><a class="toc lv2" href="#第-8-章-消息处理-全过时-95">第 8 章：消息处理 [ 全过时 ]</a><a class="toc lv2" href="#第-9-章-其它网络开发相关基础-96">第 9 章：其它网络开发相关基础</a><a class="toc lv4" href="#1-大小端模式-知识点-97">1. 大小端模式 知识点</a><a class="toc lv4" href="#2-网络消息加密解密-知识点-98">2. 网络消息加密解密 知识点</a><a class="toc lv4" href="#3-知识总结-知识点-99">3. 知识总结 知识点</a><a class="toc lv2" href="#必看-第-10-章-实践练习项目-100">🔥（必看）第 10 章：实践练习项目</a><a class="toc lv4" href="#1-导入编写好的代码-知识点-101">1. 导入编写好的代码 知识点</a><a class="toc lv4" href="#2-需求分析-知识点-102">2. 需求分析 知识点</a><a class="toc lv4" href="#3-客户端编写与调试-知识点-103">3. 客户端编写与调试 知识点</a><a class="toc lv4" href="#4-服务器编写与调试-知识点-104">4. 服务器编写与调试 知识点</a></nav>
+    <div class="side-h">全部模块</div>
+    <nav class="navbox"><div class="ng"><div class="ngt">开发经验补充</div><a href="m01.html">Unity - 进阶 - 大纲</a><a href="m02.html">Unity 进阶之视频播放</a><a href="m03.html">Unity - 进阶 - C# 补充</a><a href="m04.html" class="on">Unity 网络开发基础</a><a href="m05.html">Unity 程序框架</a></div><div class="ng"><div class="ngt">游戏引擎相关</div><a href="m06.html">Unity_入门</a><a href="m07.html">Unity_入门 - 实践项目</a><a href="m08.html">Unity_基础</a><a href="m09.html">Unity 核心</a><a href="m10.html">UniTask</a></div><div class="ng"><div class="ngt">数据持久化</div><a href="m11.html">Unity 进阶之 ScriptableObject</a><a href="m12.html">Unity_数据持久化 - PlayerPrefs</a><a href="m13.html">Unity_数据持久化 - Newtonsoft-Json</a><a href="m14.html">MessagePack-CSharp - 二进制</a><a href="m26.html">Unity 数据持久化 - Binary 2 进制</a></div><div class="ng"><div class="ngt">界面 UI 相关</div><a href="m15.html">Unity-UGUI</a><a href="m16.html">Unity-UGUI - 进阶 - TextMeshPro</a><a href="m27.html">Unity_GUI 概述（编辑器用）</a></div><div class="ng"><div class="ngt">设备输入相关</div><a href="m17.html">Unity 进阶之 InputSystem</a></div><div class="ng"><div class="ngt">热更相关</div><a href="m18.html">YooAsset 资源管理 - 大游戏</a><a href="m19.html">Addressables 资源管理 - 小游戏</a><a href="m20.html">HybridCLR - 代码业务逻辑</a></div><div class="ng"><div class="ngt">性能优化相关</div><a href="m21.html">Unity 进阶之性能优化</a><a href="m22.html">Unity 背包里装 10w 个道具</a></div><div class="ng"><div class="ngt">SDK 相关</div><div class="ngempty">预留分类 · 后续补充</div></div><div class="ng"><div class="ngt">游戏打包相关</div><a href="m23.html">Unity 移动平台相关 — IOS</a><a href="m24.html">Unity 移动平台相关 — Android</a><a href="m25.html">unity_00 - 数学公式和物理公式</a></div></nav>
+  </aside>
+  <main class="main">
+    <div class="mhead">
+      <div class="kick">开发经验补充</div>
+      <h1>Unity 网络开发基础</h1>
+      <p class="msub">TCP / UDP / KCP 与协议设计</p>
+      <div class="chips"><span>3935 字原稿</span><span>0 段代码</span><span>0 张配图</span><span>0 个表格</span></div>
+    </div>
+    <article class="doc">
+<div class="runsec"><div class="runsec-h">本模块可运行验证<span>纯 C# · 无需 Unity · 点右下按钮真实编译执行</span></div><div class="cpair"><div class="chead"><span class="lang">C#</span><span class="csp"></span><button class="mini copy">复制</button><button class="mini run" data-run>真实运行</button></div><pre class="code" data-lang="csharp"><code>// 网络：长度前缀协议解决粘包 / 拆包
+var stream = new List&lt;byte&gt;();
+void Send(string msg)
+{
+    var body = System.Text.Encoding.UTF8.GetBytes(msg);
+    var head = BitConverter.GetBytes(body.Length);   // 4 字节长度前缀
+    stream.AddRange(head); stream.AddRange(body);
+}
+
+Send("login:Tom");
+Send("move:12,34");
+Send("chat:你好");   // 三次发送在 TCP 里可能粘在一起
+
+Console.WriteLine($"缓冲区共 {stream.Count} 字节，模拟一次收到全部数据：");
+var buf = stream.ToArray();
+int off = 0, packets = 0;
+while (off + 4 &lt;= buf.Length)                     // 先读长度
+{
+    int len = BitConverter.ToInt32(buf, off);
+    if (off + 4 + len &gt; buf.Length) { Console.WriteLine($"  剩余不足 {len} 字节，等下次数据（拆包）"); break; }
+    var msg = System.Text.Encoding.UTF8.GetString(buf, off + 4, len);
+    packets++;
+    Console.WriteLine($"  包 {packets}: {msg}  ({len} 字节)");
+    off += 4 + len;
+}
+Console.WriteLine($"解析出 {packets} 个完整包，剩余 {buf.Length - off} 字节待续");</code></pre><div class="cout" hidden></div></div></div><div class="demo" data-demo="packet"><div class="demo-bar"><span class="dot"></span>粘包 / 拆包字节缓冲<span class="demo-tag">交互演示</span></div><div class="demo-body"><div class="demo-loading">加载中…</div></div></div>
+<h3 id="28-小时-41-分-13-秒-第-1-章-概述-1" class="hd lv3">28 小时 41 分 13 秒 第 1 章：概述</h3>
+<h2 id="第-1-章-概述-2" class="hd lv2">第 1 章：概述</h2>
+<h2 id="必看-整章-第-2-章-网络开发必备理论-3" class="hd lv2">🔥（必看-整章）第 2 章：网络开发必备理论</h2>
+<p class="tx">这些基础概念必须掌握</p>
+<h4 id="1-网络基本概念-知识点-4" class="hd lv4">1. 网络基本概念 知识点</h4>
+<h6 id="网络基本概念-练习题-5" class="hd lv6">网络基本概念 练习题</h6>
+<h4 id="2-IP-端口-Mac-地址-知识点-6" class="hd lv4">2. IP、端口、Mac 地址 知识点</h4>
+<h6 id="IP-端口-Mac-地址-练习题-7" class="hd lv6">IP、端口、Mac 地址 练习题</h6>
+<h4 id="3-客户端和服务端-知识点-8" class="hd lv4">3. 客户端和服务端 知识点</h4>
+<h5 id="客户端和服务端-练习题-9" class="hd lv5">客户端和服务端 练习题</h5>
+<h4 id="4-数据通信模型-知识点-10" class="hd lv4">4. 数据通信模型 知识点</h4>
+<h6 id="数据通信模型-练习题-11" class="hd lv6">数据通信模型 练习题</h6>
+<h3 id="第-3-章-网络协议-12" class="hd lv3">第 3 章：网络协议</h3>
+<p class="tx">小游戏开发使用：需要理解TCP和UDP的区别，但实际开发中不直接操作原始Socket，而是使用封装好的框架。</p>
+<h4 id="1-网络协议概述-知识点-13" class="hd lv4">1. 网络协议概述 知识点</h4>
+<h6 id="网络协议概述-练习题-14" class="hd lv6">网络协议概述 练习题</h6>
+<h4 id="2-OSI-模型-知识点-15" class="hd lv4">2. OSI 模型 知识点</h4>
+<h6 id="OSI-模型-练习题-16" class="hd lv6">OSI 模型 练习题</h6>
+<h4 id="3-TCP-IP-协议-知识点-17" class="hd lv4">3. TCP/IP 协议 知识点</h4>
+<h6 id="TCP-IP-协议-练习题-18" class="hd lv6">TCP/IP 协议 练习题</h6>
+<h4 id="4-必看-TCP-和-UDP-知识点-19" class="hd lv4">4. 🔥（必看）TCP 和 UDP 知识点</h4>
+<h6 id="TCP-和-UDP-练习题-20" class="hd lv6">TCP 和 UDP 练习题</h6>
+<h2 id="第-4-章-网络通信-Socket-TCP-21" class="hd lv2">第 4 章：网络通信 ——Socket——TCP</h2>
+<p class="tx">推荐使用成熟的游戏网络框架，例如：</p>
+<p class="tx">Mirror（社区活跃，易上手，适合大多数休闲游戏）</p>
+<p class="tx">Unity Netcode for GameObjects（官方方案，长期稳定）</p>
+<p class="tx">Photon（商业方案，提供云端服务，省去服务器运维）</p>
+<p class="tx">这些框架已帮你处理好连接管理、粘包/分包、心跳、序列化等底层问题</p>
+<h4 id="1-网络游戏通信方案概述-知识点-22" class="hd lv4">1. 网络游戏通信方案概述 知识点</h4>
+<h6 id="网络游戏通信方案概述-练习题-23" class="hd lv6">网络游戏通信方案概述 练习题</h6>
+<h4 id="2-IP-地址和端口类-知识点-24" class="hd lv4">2. IP 地址和端口类 知识点</h4>
+<h6 id="IP-地址和端口类-练习题-25" class="hd lv6">IP 地址和端口类 练习题</h6>
+<h4 id="3-域名解析-知识点-26" class="hd lv4">3. 域名解析 知识点</h4>
+<h6 id="域名解析-练习题-27" class="hd lv6">域名解析 练习题</h6>
+<h4 id="4-序列化和反序列化概述-知识点-28" class="hd lv4">4. 序列化和反序列化概述 知识点</h4>
+<h6 id="序列化和反序列化概述-练习题-29" class="hd lv6">序列化和反序列化概述 练习题</h6>
+<h4 id="5-字符编码-ASCII-Unicode-UTF-8-知识点-30" class="hd lv4">5. 字符编码（ASCII、Unicode、UTF‑8）知识点</h4>
+<h6 id="字符编码-ASCII-Unicode-UTF-8-练习题-31" class="hd lv6">字符编码（ASCII、Unicode、UTF‑8）练习题</h6>
+<h4 id="6-序列化-知识点-32" class="hd lv4">6. 序列化 知识点</h4>
+<h6 id="序列化-练习题-33" class="hd lv6">序列化 练习题</h6>
+<h4 id="7-反序列化-知识点-34" class="hd lv4">7. 反序列化 知识点</h4>
+<h6 id="反序列化-练习题-35" class="hd lv6">反序列化 练习题</h6>
+<h4 id="8-Socket-重要-API-知识点-36" class="hd lv4">8. Socket 重要 API 知识点</h4>
+<h6 id="Socket-重要-API-练习题-37" class="hd lv6">Socket 重要 API 练习题</h6>
+<h4 id="9-TCP-通信概述-知识点-38" class="hd lv4">9. TCP 通信概述 知识点</h4>
+<h6 id="TCP-通信概述-练习题-39" class="hd lv6">TCP 通信概述 练习题</h6>
+<h4 id="10-TCP-通信-同步-服务端-知识点-40" class="hd lv4">10. TCP 通信 —— 同步 —— 服务端 知识点</h4>
+<h6 id="TCP-通信-同步-服务端综合练习-1-41" class="hd lv6">TCP 通信 —— 同步 —— 服务端综合练习 1</h6>
+<h6 id="TCP-通信-同步-服务端综合练习-2-42" class="hd lv6">TCP 通信 —— 同步 —— 服务端综合练习 2</h6>
+<h4 id="11-TCP-通信-同步-客户端-知识点-43" class="hd lv4">11. TCP 通信 —— 同步 —— 客户端 知识点</h4>
+<h6 id="TCP-通信-同步-客户端综合练习-44" class="hd lv6">TCP 通信 —— 同步 —— 客户端综合练习</h6>
+<h4 id="12-TCP-通信-同步-区分消息类型-知识点-45" class="hd lv4">12. TCP 通信 —— 同步 —— 区分消息类型 知识点</h4>
+<h6 id="TCP-通信-同步-区分消息类型练习题-46" class="hd lv6">TCP 通信 —— 同步 —— 区分消息类型练习题</h6>
+<h4 id="13-必看-分包-粘包-基本概念和逻辑实现-47" class="hd lv4">13. 🔥（必看）分包、粘包 —— 基本概念和逻辑实现</h4>
+<h6 id="分包-粘包-测试-练习题-48" class="hd lv6">分包、粘包 —— 测试 练习题</h6>
+<h4 id="14-必看-心跳消息-客户端主动断开连接-49" class="hd lv4">14. 🔥（必看）心跳消息 —— 客户端主动断开连接</h4>
+<h6 id="心跳消息-实现心跳消息-练习题-50" class="hd lv6">心跳消息 —— 实现心跳消息 练习题</h6>
+<h4 id="15-TCP-通信-异步-异步通信常用方法-技术替换-51" class="hd lv4">15. TCP 通信 —— 异步 —— 异步通信常用方法 [ 技术替换 ]</h4>
+<p class="tx">使用基于 Task 的 AcceptAsync、ReceiveAsync 等方法，配合 async/await 关键字（基于 TAP 模式）。</p>
+<h4 id="17-TCP-通信-异步-服务器端-知识点-52" class="hd lv4">17. TCP 通信 —— 异步 —— 服务器端 知识点</h4>
+<h6 id="TCP-通信-异步-服务器端综合练习-53" class="hd lv6">TCP 通信 —— 异步 —— 服务器端综合练习</h6>
+<h4 id="18-TCP-通信-异步-客户端-知识点-54" class="hd lv4">18. TCP 通信 —— 异步 —— 客户端 知识点</h4>
+<h6 id="TCP-通信-异步-客户端综合练习-55" class="hd lv6">TCP 通信 —— 异步 —— 客户端综合练习</h6>
+<h2 id="第-5-章-网络通信-Socket-UDP-56" class="hd lv2">第 5 章：网络通信 ——Socket——UDP</h2>
+<p class="tx">小游戏开发使用：</p>
+<p class="tx">UDP常用于实时性要求高的动作类小游戏，但同样推荐使用框架（如Mirror支持UDP传输，或使用专门的高性能UDP库如 LiteNetLib）。</p>
+<p class="tx">如果只是简单的回合制或弱联网，直接使用TCP框架即可。</p>
+<h4 id="1-UDP-通信概述-知识点-57" class="hd lv4">1. UDP 通信概述 知识点</h4>
+<h6 id="UDP-通信概述-练习题-58" class="hd lv6">UDP 通信概述 练习题</h6>
+<h4 id="2-UDP-同步编程-服务端-客户端基础逻辑-知识点-59" class="hd lv4">2. UDP 同步编程 —— 服务端、客户端基础逻辑 知识点</h4>
+<h6 id="UDP-同步编程-服务端综合练习-60" class="hd lv6">UDP 同步编程 —— 服务端综合练习</h6>
+<h6 id="UDP-同步编程-客户端综合练习-61" class="hd lv6">UDP 同步编程 —— 客户端综合练习</h6>
+<h4 id="3-UDP-异步编程-异步通信常用方法-知识点-过时-62" class="hd lv4">3. UDP 异步编程 —— 异步通信常用方法 知识点 [ 过时 ]</h4>
+<p class="tx">改用 ReceiveFromAsync / SendToAsync 等 async/await 实现。</p>
+<h6 id="UDP-异步编程-服务端综合练习-63" class="hd lv6">UDP 异步编程 —— 服务端综合练习</h6>
+<h6 id="UDP-异步编程-客户端综合练习-64" class="hd lv6">UDP 异步编程 —— 客户端综合练习</h6>
+<h2 id="第-6-章-网络通信-文件传输-FTP-65" class="hd lv2">第 6 章：网络通信 —— 文件传输 FTP</h2>
+<p class="tx">小游戏开发使用：</p>
+<p class="tx">休闲小游戏很少直接用FTP传输文件（更常见的是用HTTP下载资源或配置文件）。</p>
+<p class="tx">如果确实需要，建议使用 UnityWebRequest 配合后端HTTP服务来实现文件上传/下载，更简单可靠。</p>
+<h4 id="1-FTP-工作原理-知识点-66" class="hd lv4">1. FTP 工作原理 知识点</h4>
+<h6 id="FTP-工作原理-练习题-67" class="hd lv6">FTP 工作原理 练习题</h6>
+<h4 id="2-搭建-FTP-服务器-知识点-68" class="hd lv4">2. 搭建 FTP 服务器 知识点</h4>
+<h4 id="3-FTP-关键类-知识点-过时-69" class="hd lv4">3. FTP 关键类 知识点 [ 过时 ]</h4>
+<p class="tx">使用成熟稳定的第三方库 FluentFTP（支持.NET Standard，兼容Unity）。</p>
+<h4 id="4-FTP-上传文件-知识点-过时-70" class="hd lv4">4. FTP 上传文件 知识点 [ 过时 ]</h4>
+<p class="tx">使用成熟稳定的第三方库 FluentFTP（支持.NET Standard，兼容Unity）。</p>
+<h6 id="FTP-上传文件-练习题-71" class="hd lv6">FTP 上传文件 练习题</h6>
+<h4 id="5-FTP-下载文件-知识点-过时-72" class="hd lv4">5. FTP 下载文件 知识点 [ 过时 ]</h4>
+<p class="tx">使用成熟稳定的第三方库 FluentFTP（支持.NET Standard，兼容Unity）。</p>
+<h6 id="FTP-下载文件-练习题-73" class="hd lv6">FTP 下载文件 练习题</h6>
+<h4 id="6-FTP-的其它文件操作-知识点-74" class="hd lv4">6. FTP 的其它文件操作 知识点</h4>
+<h2 id="第-7-章-网络通信-超文本传输-HTTP-75" class="hd lv2">第 7 章：网络通信 —— 超文本传输 HTTP</h2>
+<p class="tx">小游戏开发使用：</p>
+<p class="tx">所有HTTP请求（下载资源、上传数据、调用Web API）一律使用 UnityWebRequest，配合 async/await 或协程使用。</p>
+<p class="tx">若需要更高级的HTTP客户端（如处理Cookie、自定义Header），可使用 HttpClient（.NET Standard 2.0+），但需注意Unity版本兼容性。</p>
+<h4 id="1-HTTP-的工作原理-知识点-76" class="hd lv4">1. HTTP 的工作原理 知识点</h4>
+<h4 id="2-搭建-HTTP-服务器-知识点-77" class="hd lv4">2. 搭建 HTTP 服务器 知识点</h4>
+<h4 id="3-HTTP-C-相关类-知识点-78" class="hd lv4">3. HTTP——C# 相关类 知识点</h4>
+<h4 id="4-HTTP-C-下载数据-知识点-79" class="hd lv4">4. HTTP——C#—— 下载数据 知识点</h4>
+<h6 id="HTTP-C-下载数据练习题-80" class="hd lv6">HTTP——C#—— 下载数据练习题</h6>
+<h4 id="5-HTTP-C-Post-简单准备-知识点-81" class="hd lv4">5. HTTP——C#——Post 简单准备 知识点</h4>
+<h4 id="6-HTTP-C-上传文件-知识点-82" class="hd lv4">6. HTTP——C#—— 上传文件 知识点</h4>
+<h6 id="HTTP-C-上传文件练习题-83" class="hd lv6">HTTP——C#—— 上传文件练习题</h6>
+<h4 id="7-HTTP-Unity-WWW-类-知识点-过时-84" class="hd lv4">7. HTTP——Unity——WWW 类 知识点[ 过时 ]</h4>
+<p class="tx">统一替换为 UnityWebRequest，功能更全面，性能更好，支持协程和async/await。</p>
+<h6 id="HTTP-Unity-WWW-类练习题-85" class="hd lv6">HTTP——Unity——WWW 类练习题</h6>
+<h4 id="8-HTTP-Unity-WWWForm-类-知识点-过时-86" class="hd lv4">8. HTTP——Unity——WWWForm 类 知识点[ 过时 ]</h4>
+<p class="tx">使用 UnityWebRequest 的 IMultipartFormSection 接口或 MultipartFormDataSection 来构建表单数据，更灵活。</p>
+<h6 id="HTTP-Unity-WWWForm-类练习题-87" class="hd lv6">HTTP——Unity——WWWForm 类练习题</h6>
+<h4 id="9-必看-UnityWebRequest-常用操作-获取数据-88" class="hd lv4">9. 🔥（必看）UnityWebRequest—— 常用操作 —— 获取数据</h4>
+<h4 id="10-必看-UnityWebRequest-常用操作-上传数据-89" class="hd lv4">10. 🔥（必看）UnityWebRequest—— 常用操作 —— 上传数据</h4>
+<h6 id="UnityWebRequest-常用操作-上传数据练习题-90" class="hd lv6">UnityWebRequest—— 常用操作 —— 上传数据练习题</h6>
+<h4 id="11-必看-UnityWebRequest-高级操作-获取知识-91" class="hd lv4">11. 🔥（必看）UnityWebRequest—— 高级操作 —— 获取知识</h4>
+<h6 id="UnityWebRequest-高级操作-获取数据练习题-92" class="hd lv6">UnityWebRequest—— 高级操作 —— 获取数据练习题</h6>
+<h4 id="12-必看-UnityWebRequest-高级操作-上传数据-93" class="hd lv4">12. 🔥（必看）UnityWebRequest—— 高级操作 —— 上传数据</h4>
+<h6 id="UnityWebRequest-高级操作-上传数据练习题-94" class="hd lv6">UnityWebRequest—— 高级操作 —— 上传数据练习题</h6>
+<h2 id="第-8-章-消息处理-全过时-95" class="hd lv2">第 8 章：消息处理 [ 全过时 ]</h2>
+<p class="tx">小游戏开发使用：</p>
+<p class="tx">强烈推荐使用 Protobuf 作为网络通信的消息序列化格式，跨语言、跨平台，且有成熟的工具链。</p>
+<p class="tx">如果使用Mirror或Photon等框架，它们往往内置了序列化机制（如Mirror的Weaver），但自定义消息时仍可选用Protobuf增强可维护性。</p>
+<p class="tx">1. 如何制作协议（消息）生成工具 知识点</p>
+<p class="tx">2. 协议（消息）配置 知识点 1</p>
+<p class="tx">3. 协议（消息）配置 知识点 2</p>
+<p class="tx">4. 协议（消息）生成 —— 收消息生成 知识点</p>
+<p class="tx">5. 协议（消息）生成 —— 生成数据结构类 —— 生成成员变量 知识点</p>
+<p class="tx">6. 协议（消息）生成 —— 生成数据结构类 ——GetBytes 函数 知识点</p>
+<p class="tx">7. 协议（消息）生成 —— 生成数据结构类 ——Write 函数 知识点</p>
+<p class="tx">8. 协议（消息）生成 —— 生成数据结构类 ——Read 函数 知识点</p>
+<p class="tx">9. 协议（消息）生成 —— 生成消息类 知识点</p>
+<p class="tx">1-9 使用 Protobuf（Google Protocol Buffers）作为序列化方案，配合 protobuf-net（Unity常用库）或官方 Google.Protobuf。通过 .proto 文件定义消息，使用 protoc 工具自动生成C#代码，稳定高效。</p>
+<p class="tx">10. 协议和准备 Protobuf 工具 知识点【必学】</p>
+<p class="tx">11. Protobuf 配置规则 知识点 1【必学】</p>
+<p class="tx">12. Protobuf 配置规则 知识点 2</p>
+<p class="tx">13. Protobuf 协议生成 知识点【必学】</p>
+<p class="tx">Protobuf 协议生成练习题</p>
+<p class="tx">14. Protobuf 协议相关知识 知识点【必学】</p>
+<p class="tx">Protobuf 协议练习题</p>
+<p class="tx">15. protobuf‑net 序列化和反序列化 知识点【必学】</p>
+<p class="tx">10-15 可以关注更新的高性能序列化库如 MemoryPack 或 Nino，但 protobuf-net 仍是稳定之选。</p>
+<h2 id="第-9-章-其它网络开发相关基础-96" class="hd lv2">第 9 章：其它网络开发相关基础</h2>
+<p class="tx">小游戏开发使用：</p>
+<p class="tx">大小端：通常网络传输采用大端（网络字节序），现代框架会自动处理，了解即可。</p>
+<p class="tx">加密解密：对于登录、支付等敏感数据，建议使用 HTTPS（HTTP over TLS）和 WSS（WebSocket Secure），避免自己实现加密算法；若需要对称加密，使用 AES 标准算法。</p>
+<h4 id="1-大小端模式-知识点-97" class="hd lv4">1. 大小端模式 知识点</h4>
+<h4 id="2-网络消息加密解密-知识点-98" class="hd lv4">2. 网络消息加密解密 知识点</h4>
+<h4 id="3-知识总结-知识点-99" class="hd lv4">3. 知识总结 知识点</h4>
+<h2 id="必看-第-10-章-实践练习项目-100" class="hd lv2">🔥（必看）第 10 章：实践练习项目</h2>
+<h4 id="1-导入编写好的代码-知识点-101" class="hd lv4">1. 导入编写好的代码 知识点</h4>
+<h4 id="2-需求分析-知识点-102" class="hd lv4">2. 需求分析 知识点</h4>
+<h4 id="3-客户端编写与调试-知识点-103" class="hd lv4">3. 客户端编写与调试 知识点</h4>
+<h4 id="4-服务器编写与调试-知识点-104" class="hd lv4">4. 服务器编写与调试 知识点</h4>
+    </article>
+    <footer class="pnbar"><a class="pn prev" href="m03.html"><span>上一节</span>Unity - 进阶 - C# 补充</a><a class="pn next" href="m05.html"><span>下一节</span>Unity 程序框架</a></footer>
+  </main>
+</div>
+<button class="totop" id="totop">↑</button>
+<script src="assets/demos.js"></script>
+<script src="assets/diagrams-data.js"></script>
+<script src="assets/diagram.js"></script>
+<script src="assets/app.js"></script>
+<script>window.__mountDiagrams && window.__mountDiagrams();</script>
+</body>
+</html>

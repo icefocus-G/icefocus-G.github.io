@@ -1,0 +1,1977 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Unity 数据持久化 - Binary 2 进制 · Unity 交互课件</title>
+<link rel="stylesheet" href="assets/style.css">
+<link rel="stylesheet" href="assets/diagram.css">
+</head>
+<body data-mid="m26">
+<header class="top">
+  <a class="brand" href="index.html"><span class="logo">U</span><b>Unity</b><i>交互课件</i></a>
+  <div class="crumb"><span>数据持久化</span><em>/</em><strong>Unity 数据持久化 - Binary 2 进制</strong></div>
+  <div class="top-r">
+    <span class="stat">49591 字 · 62 代码 · 5 图 · 0 表</span>
+    <button class="mini" id="btnNav">目录</button>
+  </div>
+</header>
+<div class="wrap">
+  <aside class="side" id="side">
+    <div class="side-h">本篇目录</div>
+    <nav class="tocbox"><a class="toc lv2" href="#第1章-概述-1">第1章：概述</a><a class="toc lv4" href="#01-数据持久化2进制-概述-2">01：数据持久化2进制——概述</a><a class="toc lv2" href="#第2章-基础知识-3">第2章：基础知识</a><a class="toc lv4" href="#01-各类型转字节数组-4">01：各类型转字节数组</a><a class="toc lv4" href="#02-文件操作相关-文件-5">02：文件操作相关——文件</a><a class="toc lv4" href="#03-文件操作相关-文件流-6">03：文件操作相关——文件流</a><a class="toc lv4" href="#04-文件操作相关-文件夹-7">04：文件操作相关——文件夹</a><a class="toc lv4" href="#05-C-类对象的序列化-9">05：C#类对象的序列化</a><a class="toc lv4" href="#06-C-类对象的反序列化-10">06：C#类对象的反序列化</a><a class="toc lv4" href="#07-C-类对象的2进制数据加密-11">07：C#类对象的2进制数据加密</a><a class="toc lv4" href="#08-基础知识点-总结-13">08：基础知识点——总结</a><a class="toc lv2" href="#第3章-实践小项目-14">第3章：实践小项目</a><a class="toc lv3" href="#第1节-知识补充-15">【第1节：知识补充】</a><a class="toc lv4" href="#01-知识点补充-Unity添加菜单栏按钮-16">01：知识点补充——Unity添加菜单栏按钮</a><a class="toc lv4" href="#02-知识点补充-ExcelDll包导入-17">02：知识点补充——ExcelDll包导入</a><a class="toc lv4" href="#03-知识点补充-Excel数据读取-18">03：知识点补充——Excel数据读取</a><a class="toc lv3" href="#第2节-小项目实现-19">【第2节：小项目实现】</a><a class="toc lv4" href="#04-需求分析-20">04：需求分析</a><a class="toc lv4" href="#05-Excel表自动生成相关文件-制定配表规则-21">05：Excel表自动生成相关文件——制定配表规则</a><a class="toc lv4" href="#TowerInfo-xlsx-22">TowerInfo.xlsx</a><a class="toc lv4" href="#06-Excel表自动生成相关文件-读取Excel目录下所有Excel文-23">06：Excel表自动生成相关文件——读取Excel目录下所有Excel文件</a><a class="toc lv4" href="#07-Excel表自动生成相关文件-生成数据结构类-24">07：Excel表自动生成相关文件——生成数据结构类</a><a class="toc lv4" href="#08-Excel表自动生成相关文件-生成容器类-25">08：Excel表自动生成相关文件——生成容器类</a><a class="toc lv4" href="#09-Excel表自动生成相关文件-生成2进制数据文件-26">09：Excel表自动生成相关文件——生成2进制数据文件</a><a class="toc lv4" href="#10-Excel数据文件的使用-27">10：Excel数据文件的使用</a><a class="toc lv4" href="#11-工具包导出-28">11：工具包导出</a></nav>
+    <div class="side-h">全部模块</div>
+    <nav class="navbox"><div class="ng"><div class="ngt">开发经验补充</div><a href="m01.html">Unity - 进阶 - 大纲</a><a href="m02.html">Unity 进阶之视频播放</a><a href="m03.html">Unity - 进阶 - C# 补充</a><a href="m04.html">Unity 网络开发基础</a><a href="m05.html">Unity 程序框架</a></div><div class="ng"><div class="ngt">游戏引擎相关</div><a href="m06.html">Unity_入门</a><a href="m07.html">Unity_入门 - 实践项目</a><a href="m08.html">Unity_基础</a><a href="m09.html">Unity 核心</a><a href="m10.html">UniTask</a></div><div class="ng"><div class="ngt">数据持久化</div><a href="m11.html">Unity 进阶之 ScriptableObject</a><a href="m12.html">Unity_数据持久化 - PlayerPrefs</a><a href="m13.html">Unity_数据持久化 - Newtonsoft-Json</a><a href="m14.html">MessagePack-CSharp - 二进制</a><a href="m26.html" class="on">Unity 数据持久化 - Binary 2 进制</a></div><div class="ng"><div class="ngt">界面 UI 相关</div><a href="m15.html">Unity-UGUI</a><a href="m16.html">Unity-UGUI - 进阶 - TextMeshPro</a><a href="m27.html">Unity_GUI 概述（编辑器用）</a></div><div class="ng"><div class="ngt">设备输入相关</div><a href="m17.html">Unity 进阶之 InputSystem</a></div><div class="ng"><div class="ngt">热更相关</div><a href="m18.html">YooAsset 资源管理 - 大游戏</a><a href="m19.html">Addressables 资源管理 - 小游戏</a><a href="m20.html">HybridCLR - 代码业务逻辑</a></div><div class="ng"><div class="ngt">性能优化相关</div><a href="m21.html">Unity 进阶之性能优化</a><a href="m22.html">Unity 背包里装 10w 个道具</a></div><div class="ng"><div class="ngt">SDK 相关</div><div class="ngempty">预留分类 · 后续补充</div></div><div class="ng"><div class="ngt">游戏打包相关</div><a href="m23.html">Unity 移动平台相关 — IOS</a><a href="m24.html">Unity 移动平台相关 — Android</a><a href="m25.html">unity_00 - 数学公式和物理公式</a></div></nav>
+  </aside>
+  <main class="main">
+    <div class="mhead">
+      <div class="kick">数据持久化</div>
+      <h1>Unity 数据持久化 - Binary 2 进制</h1>
+      <p class="msub">字节序、文件流与对象序列化</p>
+      <div class="chips"><span>49591 字原稿</span><span>62 段代码</span><span>5 张配图</span><span>0 个表格</span></div>
+    </div>
+    <article class="doc">
+<div class="runsec"><div class="runsec-h">本模块可运行验证<span>纯 C# · 无需 Unity · 点右下按钮真实编译执行</span></div><div class="cpair"><div class="chead"><span class="lang">C#</span><span class="csp"></span><button class="mini copy">复制</button><button class="mini run" data-run>真实运行</button></div><pre class="code" data-lang="csharp"><code>// 二进制序列化：字段顺序 + 类型 + 字节序，决定字节流长什么样
+using System;
+using System.IO;
+using System.Text;
+
+public static class Program
+{
+    public static void Main()
+    {
+        Console.WriteLine($"本机 BitConverter.IsLittleEndian = {BitConverter.IsLittleEndian}");
+        Console.WriteLine();
+
+        // 同一份数据：id(int) / name(string) / atk(short) / hp(float)
+        using var ms = new MemoryStream();
+        using (var bw = new BinaryWriter(ms, Encoding.UTF8, true))
+        {
+            bw.Write(1001);          // int     4 字节
+            bw.Write("铁剑");         // string  7 字节（长度前缀 1 + UTF-8 6）
+            bw.Write((short)18);     // short   2 字节
+            bw.Write(1.5f);          // float   4 字节
+        }
+
+        var buf = ms.ToArray();
+        Console.WriteLine($"总长度 {buf.Length} 字节");
+        Console.WriteLine();
+
+        // 按约定顺序回读：顺序错一个字段，后面全乱
+        int offset = 0;
+        void Dump(string field, int size)
+        {
+            var hex = new StringBuilder();
+            for (int i = 0; i &lt; size; i++) hex.Append(buf[offset + i].ToString("X2")).Append(' ');
+            Console.WriteLine($"  @{offset,-3} {field,-12} {hex}");
+            offset += size;
+        }
+        Dump("id (int)", 4);
+        Dump("name 头 (len)", 1);
+        Dump("name 体 (utf8)", buf[4]);
+        Dump("atk (short)", 2);
+        Dump("hp (float)", 4);
+
+        Console.WriteLine();
+        using var br = new BinaryReader(new MemoryStream(buf), Encoding.UTF8);
+        int id = br.ReadInt32();
+        string name = br.ReadString();
+        short atk = br.ReadInt16();
+        float hp = br.ReadSingle();
+        Console.WriteLine($"回读结果：id={id} name={name} atk={atk} hp={hp}");
+
+        Console.WriteLine();
+        Console.WriteLine("同一数值 1 的字节序对比：");
+        var le = BitConverter.GetBytes(1);
+        if (!BitConverter.IsLittleEndian) Array.Reverse(le);
+        var be = (byte[])le.Clone();
+        Array.Reverse(be);
+        Console.WriteLine($"  小端 {BitConverter.ToString(le)}   大端 {BitConverter.ToString(be)}");
+        Console.WriteLine();
+        Console.WriteLine("结论：协议里必须写死「字段顺序 + 类型 + 字节序」，");
+        Console.WriteLine("      否则换端（PC ↔ 手机 ↔ 服务器）读出来就是垃圾数据。");
+    }
+}</code></pre><div class="cout" hidden></div></div></div><div class="demo" data-demo="binio"><div class="demo-bar"><span class="dot"></span>二进制字节布局<span class="demo-tag">交互演示</span></div><div class="demo-body"><div class="demo-loading">加载中…</div></div></div>
+<p class="tx">6 小时 48 分 47 秒</p>
+<div class="dgm" data-diagram="af3e2ee1f2c0" data-img="assets/img/af3e2ee1f2c0.png"><div class="dgm-head"><span class="dgm-t">各类型数据转字节数据</span><span class="badge b-ocr">文字还原</span><span class="sp"></span><button class="dgm-tab">看原图</button></div></div>
+<h2 id="第1章-概述-1" class="hd lv2">第1章：概述</h2>
+<h4 id="01-数据持久化2进制-概述-2" class="hd lv4">01：数据持久化2进制——概述</h4>
+<div class="dgm" data-diagram="e54a2a0f1f4b" data-img="assets/img/e54a2a0f1f4b.png"><div class="dgm-head"><span class="dgm-t">什么是数据持久化</span><span class="badge b-ocr">文字还原</span><span class="sp"></span><button class="dgm-tab">看原图</button></div></div>
+<h2 id="第2章-基础知识-3" class="hd lv2">第2章：基础知识</h2>
+<h4 id="01-各类型转字节数组-4" class="hd lv4">01：各类型转字节数组</h4>
+<div class="cpair"><div class="chead"><span class="lang">C#</span><span class="csp"></span><button class="mini copy">复制</button></div><pre class="code" data-lang="csharp"><code>不同变量类型
+有符号 sbyte int short long
+无符号 byte uint ushort ulong
+浮点 float double decimal
+特殊 bool char string</code></pre><div class="cout" hidden></div></div>
+<div class="cpair"><div class="chead"><span class="lang">C#</span><span class="csp"></span><button class="mini copy">复制</button></div><pre class="code" data-lang="csharp"><code>变量的本质是2进制
+在内存中都以字节的形式存储着
+1byte = 8bit
+1bit(位)不是0就是1
+
+通过sizeof方法可以看到常用变量类型占用的字节空间长度
+print("有符号");
+print("sbyte" + sizeof(sbyte) + "字节");
+print("int" + sizeof(int) + "字节");
+print("short" + sizeof(short) + "字节");
+print("long" + sizeof(long) + "字节");
+print("无符号");
+print("byte" + sizeof(byte) + "字节");
+print("uint" + sizeof(uint) + "字节");
+print("ushort" + sizeof(ushort) + "字节");
+print("ulong" + sizeof(ulong) + "字节");
+print("浮点");
+print("float" + sizeof(float) + "字节");
+print("double" + sizeof(double) + "字节");
+print("decimal" + sizeof(decimal) + "字节");
+print("特殊");
+print("bool" + sizeof(bool) + "字节");
+print("char" + sizeof(char) + "字节");</code></pre><div class="cout" hidden></div></div>
+<div class="cpair"><div class="chead"><span class="lang">C#</span><span class="csp"></span><button class="mini copy">复制</button></div><pre class="code" data-lang="csharp"><code>它就是通过将各类型变量转换为字节数组
+将字节数组直接存储到文件中
+一般人是看不懂存储的数据的
+不仅可以节约存储空间，提升效率
+还可以提升安全性
+而且在网络通信中我们直接传输的数据也是字节数据（2进制数据）</code></pre><div class="cout" hidden></div></div>
+<div class="cpair"><div class="chead"><span class="lang">C#</span><span class="csp"></span><button class="mini copy">复制</button></div><pre class="code" data-lang="csharp"><code>编码是用预先规定的方法将文字、数字或其它对象编成数码，或将信息、数据转换成规定的电脉冲信号。
+为保证编码的正确性，编码要规范化、标准化，即需有标准的编码格式。
+常见的编码格式有ASCII、ANSI、GBK、GB2312、UTF - 8、GB18030和UNICODE等。
+
+ 说人话
+ 计算机中数据的本质就是2进制数据
+ 编码格式就是用对应的2进制数 对应不同的文字
+ 由于世界上有各种不同的语言，所有会有很多种不同的编码格式
+ 不同的编码格式 对应的规则是不同的
+
+ 如果在读取字符时采用了不统一的编码格式，可能会出现乱码
+
+ 游戏开发中常用编码格式 UTF-8
+ 中文相关编码格式 GBK
+ 英文相关编码格式 ASCII</code></pre><div class="cout" hidden></div></div>
+<div class="cpair"><div class="chead"><span class="lang">C#</span><span class="csp"></span><button class="mini copy">复制</button></div><pre class="code" data-lang="csharp"><code>在C#中有一个专门的编码格式类 来帮助我们将字符串和字节数组进行转换
+
+类名：Encoding
+需要引用命名空间：using System.Text;
+
+1.将字符串以指定编码格式转字节
+byte[] bytes2 = Encoding.UTF8.GetBytes("唐老狮");
+
+2.字节数组以指定编码格式转字符串
+string s = Encoding.UTF8.GetString(bytes2);
+print(s);</code></pre><div class="cout" hidden></div></div>
+<div class="cpair"><div class="chead"><span class="lang">C#</span><span class="csp"></span><button class="mini copy">复制</button></div><pre class="code" data-lang="csharp"><code>我们可以通过BitConverter和Encoding类
+将所有C#提供给我们的数据类型和字节数组之间进行相互转换了
+我们需要熟练掌握其中的API</code></pre><div class="cout" hidden></div></div>
+<h4 id="02-文件操作相关-文件-5" class="hd lv4">02：文件操作相关——文件</h4>
+<div class="cpair"><div class="chead"><span class="lang">C#</span><span class="csp"></span><button class="mini copy">复制</button></div><pre class="code" data-lang="csharp"><code>在电脑上我们可以在操作系统中创建删除修改文件,可以增删查改各种各样的文件类型
+代码中的文件操作就是通过代码来做这些事情</code></pre><div class="cout" hidden></div></div>
+<div class="cpair"><div class="chead"><span class="lang">C#</span><span class="csp"></span><button class="mini copy">复制</button></div><pre class="code" data-lang="csharp"><code>C#提供了一个名为File（文件）的公共类 ,让我们可以快捷的通过代码操作文件相关
+类名：File   命名空间： System.IO</code></pre><div class="cout" hidden></div></div>
+<p class="tx">知识点三 文件操作File类的常用内容</p>
+<div class="cpair"><div class="chead"><span class="lang">C#</span><span class="csp"></span><button class="mini copy">复制</button></div><pre class="code" data-lang="csharp"><code>if(File.Exists(Application.dataPath + "/UnityTeach.tang"))
+{
+    print("文件存在");
+}
+else
+{
+    print("文件不存在");
+}</code></pre><div class="cout" hidden></div></div>
+<div class="cpair"><div class="chead"><span class="lang">C#</span><span class="csp"></span><button class="mini copy">复制</button></div><pre class="code" data-lang="csharp"><code>FileStream fs = File.Create(Application.dataPath + "/UnityTeach.tang");</code></pre><div class="cout" hidden></div></div>
+<div class="cpair"><div class="chead"><span class="lang">C#</span><span class="csp"></span><button class="mini copy">复制</button></div><pre class="code" data-lang="csharp"><code>将指定字节数组 写入到指定路径的文件中
+byte[] bytes = BitConverter.GetBytes(999);
+File.WriteAllBytes(Application.dataPath + "/UnityTeach.tang", bytes);
+将指定的string数组内容 一行行写入到指定路径中
+string[] strs = new string[] { "123", "唐老狮", "123123kdjfsalk", "123123123125243"};
+File.WriteAllLines(Application.dataPath + "/UnityTeach2.tang", strs);
+将指定字符串写入指定路径
+File.WriteAllText(Application.dataPath + "/UnityTeach3.tang", "唐老狮哈\
+哈哈哈哈123");</code></pre><div class="cout" hidden></div></div>
+<div class="cpair"><div class="chead"><span class="lang">C#</span><span class="csp"></span><button class="mini copy">复制</button></div><pre class="code" data-lang="csharp"><code>读取字节数据
+bytes = File.ReadAllBytes(Application.dataPath + "/UnityTeach.tang");
+print(BitConverter.ToInt32(bytes, 0));
+
+读取所有行信息
+strs = File.ReadAllLines(Application.dataPath + "/UnityTeach2.tang");
+for (int i = 0; i &lt; strs.Length; i++)
+{
+    print(strs[i]);
+}
+
+读取所有文本信息
+print(File.ReadAllText(Application.dataPath + "/UnityTeach3.tang"));</code></pre><div class="cout" hidden></div></div>
+<div class="cpair"><div class="chead"><span class="lang">C#</span><span class="csp"></span><button class="mini copy">复制</button></div><pre class="code" data-lang="csharp"><code>注意 如果删除打开着的文件 会报错
+File.Delete(Application.dataPath + "/UnityTeach.tang");</code></pre><div class="cout" hidden></div></div>
+<div class="cpair"><div class="chead"><span class="lang">C#</span><span class="csp"></span><button class="mini copy">复制</button></div><pre class="code" data-lang="csharp"><code>参数一：现有文件 需要是流关闭状态
+参数二：目标文件
+File.Copy(Application.dataPath + "/UnityTeach2.tang",Application.dataPath + "/唐老狮.tanglaoshi", true);</code></pre><div class="cout" hidden></div></div>
+<div class="cpair"><div class="chead"><span class="lang">C#</span><span class="csp"></span><button class="mini copy">复制</button></div><pre class="code" data-lang="csharp"><code>参数一：用来替换的路径
+参数二：被替换的路径
+参数三：备份路径
+File.Replace(Application.dataPath + "/UnityTeach3.tang", Application.dataPath + "/唐老狮.tanglaoshi", Application.dataPath + "/唐老狮备份.tanglaoshi");</code></pre><div class="cout" hidden></div></div>
+<div class="cpair"><div class="chead"><span class="lang">C#</span><span class="csp"></span><button class="mini copy">复制</button></div><pre class="code" data-lang="csharp"><code>参数一：路径
+参数二：打开模式
+参数三：访问模式
+FileStream fs = File.Open(Application.dataPath + "/UnityTeach2.tang", FileMode.OpenOrCreate, FileAccess.ReadWrite);</code></pre><div class="cout" hidden></div></div>
+<div class="cpair"><div class="chead"><span class="lang">C#</span><span class="csp"></span><button class="mini copy">复制</button></div><pre class="code" data-lang="csharp"><code>File类提供了各种方法帮助我们进行文件的基础操作，需要记住这些关键API
+
+一般情况下想要整体读写内容 可以使用File提供的Write和Read相关功能</code></pre><div class="cout" hidden></div></div>
+<h4 id="03-文件操作相关-文件流-6" class="hd lv4">03：文件操作相关——文件流</h4>
+<div class="cpair"><div class="chead"><span class="lang">C#</span><span class="csp"></span><button class="mini copy">复制</button></div><pre class="code" data-lang="csharp"><code>在C#中提供了一个文件流类 FileStream类
+它主要作用是用于读写文件的细节
+我们之前学过的File只能整体读写文件
+而FileStream可以以读写字节的形式处理文件
+
+说人话：
+文件里面存储的数据就像是一条数据流（数组或者列表）
+我们可以通过FileStream一部分一部分的读写数据流
+比如我可以先存一个int（4个字节）再存一个bool（1个字节）再存一个string（n个字节）
+利用FileStream可以以流式逐个读写</code></pre><div class="cout" hidden></div></div>
+<div class="cpair"><div class="chead"><span class="lang">C#</span><span class="csp"></span><button class="mini copy">复制</button></div><pre class="code" data-lang="csharp"><code>类名：FileStream     需要引用命名空间：System.IO</code></pre><div class="cout" hidden></div></div>
+<div class="cpair"><div class="chead"><span class="lang">C#</span><span class="csp"></span><button class="mini copy">复制</button></div><pre class="code" data-lang="csharp"><code>01方法一：new FileStream
+参数一：路径
+参数二：打开模式
+  CreateNew:创建新文件 如果文件存在 则报错
+  Create:创建文件，如果文件存在 则覆盖
+  Open:打开文件，如果文件不存在 报错
+  OpenOrCreate:打开或者创建文件根据实际情况操作
+  Append:若存在文件，则打开并查找文件尾，或者创建一个新文件
+  Truncate:打开并清空文件内容
+参数三：访问模式
+参数四：共享权限
+  None 谢绝共享
+  Read 允许别的程序读取当前文件
+  Write 允许别的程序写入该文件
+  ReadWrite 允许别的程序读写该文件
+FileStream fs = new FileStream(Application.dataPath + "/Lesson3.tang", FileMode.Create, FileAccess.ReadWrite);
+
+02方法二：File.Create
+参数一：路径
+参数二：缓存大小
+参数三：描述如何创建或覆盖该文件（不常用）
+  Asynchronous 可用于异步读写
+  DeleteOnClose 不在使用时，自动删除
+  Encrypted 加密
+  None 不应用其它选项
+  RandomAccess 随机访问文件
+  SequentialScan 从头到尾顺序访问文件
+  WriteThrough 通过中间缓存直接写入磁盘
+FileStream fs2 = File.Create(Application.dataPath + "/Lesson3.tang");
+
+03方法三：File.Open
+参数一：路径
+参数二：打开模式
+FileStream fs3 = File.Open(Application.dataPath + "/Lesson3.tang", FileMode.Open);</code></pre><div class="cout" hidden></div></div>
+<div class="cpair"><div class="chead"><span class="lang">C#</span><span class="csp"></span><button class="mini copy">复制</button></div><pre class="code" data-lang="csharp"><code>FileStream fs = File.Open(Application.dataPath + "Lesson3.tang", FileMode.OpenOrCreate);
+文本字节长度
+print(fs.Length);
+是否可写
+if( fs.CanRead )
+{
+}
+
+是否可读
+if( fs.CanWrite )
+{
+}
+
+将字节写入文件 当写入后 一定执行一次
+fs.Flush();
+
+关闭流 当文件读写完毕后 一定执行
+fs.Close();
+
+缓存资源销毁回收
+fs.Dispose();</code></pre><div class="cout" hidden></div></div>
+<div class="cpair"><div class="chead"><span class="lang">C#</span><span class="csp"></span><button class="mini copy">复制</button></div><pre class="code" data-lang="csharp"><code>print(Application.persistentDataPath);
+using (FileStream fs = new FileStream(Application.persistentDataPath + "/Lesson3.tang", FileMode.OpenOrCreate, FileAccess.Write))
+{
+
+    byte[] bytes = BitConverter.GetBytes(999);
+    方法：Write
+    参数一：写入的字节数组
+    参数二：数组中的开始索引
+    参数三：写入多少个字节
+    fs.Write(bytes, 0, bytes.Length);
+
+    写入字符串时
+    bytes = Encoding.UTF8.GetBytes("唐老狮哈哈哈哈");
+    先写入长度
+    int length = bytes.Length;
+    fs.Write(BitConverter.GetBytes(bytes.Length), 0, 4);
+    再写入字符串具体内容
+    fs.Write(bytes, 0, bytes.Length);
+
+    避免数据丢失 一定写入后要执行的方法
+    fs.Flush();
+    销毁缓存 释放资源
+    fs.Dispose();
+}</code></pre><div class="cout" hidden></div></div>
+<div class="cpair"><div class="chead"><span class="lang">C#</span><span class="csp"></span><button class="mini copy">复制</button></div><pre class="code" data-lang="csharp"><code>01方法一：挨个读取字节数组
+
+using (FileStream fs2 = File.Open(Application.persistentDataPath + "/Lesson3.tang", FileMode.Open, FileAccess.Read))
+{
+    读取第一个整形
+    byte[] bytes2 = new byte[4];
+
+    参数一：用于存储读取的字节数组的容器
+    参数二：容器中开始的位置
+    参数三：读取多少个字节装入容器
+    返回值：当前流索引前进了几个位置
+    int index = fs2.Read(bytes2, 0, 4);
+    int i = BitConverter.ToInt32(bytes2, 0);
+    print("取出来的第一个整数" + i);//999
+    print("索引向前移动" + index + "个位置");
+
+    读取第二个字符串
+    读取字符串字节数组长度
+    index = fs2.Read(bytes2, 0, 4);
+    print("索引向前移动" + index + "个位置");
+    int length = BitConverter.ToInt32(bytes2, 0);
+    要根据我们存储的字符串字节数组的长度 来声明一个新的字节数组 用来装载读取出来的数据
+    bytes2 = new byte[length];
+    index = fs2.Read(bytes2, 0, length);
+    print("索引向前移动" + index + "个位置");
+    得到最终的字符串 打印出来
+    print(Encoding.UTF8.GetString(bytes2));
+    fs2.Dispose();
+}
+
+ 
+02方法二：一次性读取再挨个读取
+print("***************************");
+using (FileStream fs3 = File.Open(Application.persistentDataPath + "/Lesson3.tang", FileMode.Open, FileAccess.Read))
+{
+    一开始就申明一个 和文件字节数组长度一样的容器
+    byte[] bytes3 = new byte[fs3.Length];
+    fs3.Read(bytes3, 0, (int)fs3.Length);
+    fs3.Dispose();
+    读取整数
+    print(BitConverter.ToInt32(bytes3, 0));
+    得去字符串字节数组的长度
+    int length2 = BitConverter.ToInt32(bytes3, 4);
+    得到字符串
+    print(Encoding.UTF8.GetString(bytes3, 8, length2));
+}</code></pre><div class="cout" hidden></div></div>
+<div class="cpair"><div class="chead"><span class="lang">C#</span><span class="csp"></span><button class="mini copy">复制</button></div><pre class="code" data-lang="csharp"><code>using关键字重要用法
+using (申明一个引用对象)
+{
+使用对象
+}
+无论发生什么情况 当using语句块结束后 
+会自动调用该对象的销毁方法 避免忘记销毁或关闭流
+using是一种更安全的使用方法
+
+强调：
+目前我们对文件流进行操作 为了文件操作安全 都用using来进行处理最好</code></pre><div class="cout" hidden></div></div>
+<div class="cpair"><div class="chead"><span class="lang">C#</span><span class="csp"></span><button class="mini copy">复制</button></div><pre class="code" data-lang="csharp"><code>通过FIleStream读写时一定要注意
+读的规则一定是要和写是一致的
+我们存储数据的先后顺序是我们制定的规则
+只要按照规则读写就能保证数据的正确性</code></pre><div class="cout" hidden></div></div>
+<h4 id="04-文件操作相关-文件夹-7" class="hd lv4">04：文件操作相关——文件夹</h4>
+<div class="cpair"><div class="chead"><span class="lang">C#</span><span class="csp"></span><button class="mini copy">复制</button></div><pre class="code" data-lang="csharp"><code>平时我们可以在操作系统的文件管理系统中
+通过一些操作增删查改文件夹
+
+我们目前要学习的就是通过代码的形式
+来对文件夹进行增删查改的操作</code></pre><div class="cout" hidden></div></div>
+<div class="cpair"><div class="chead"><span class="lang">C#</span><span class="csp"></span><button class="mini copy">复制</button></div><pre class="code" data-lang="csharp"><code>类名:Directory
+命名空间：using System.IO
+1.判断文件夹是否存在
+if( Directory.Exists(Application.dataPath + "/数据持久化四"))
+{
+    print("存在文件夹");
+}
+else
+{
+    print("文件夹不存在");
+}
+
+2.创建文件夹
+DirectoryInfo info = Directory.CreateDirectory(Application.dataPath + "/数据持久化四");
+
+3.删除文件夹
+参数一：路径
+参数二：是否删除非空目录，如果为true，将删除整个目录，如果是false，仅当该目录为空时才可删除
+Directory.Delete(Application.dataPath + "/数据持久化四");
+
+4.查找文件夹和文件
+得到指定路径下所有文件夹名
+string[] strs = Directory.GetDirectories(Application.dataPath);
+for (int i = 0; i &lt; strs.Length; i++)
+{
+    print(strs[i]);
+}
+
+得到指定路径下所有文件名
+strs = Directory.GetFiles(Application.dataPath);
+for (int i = 0; i &lt; strs.Length; i++)
+{
+    print(strs[i]);
+}
+
+5.移动文件夹
+如果第二个参数所在的路径 已经存在了一个文件夹 那么会报错
+移动会把文件夹中的所有内容一起移到新的路径
+Directory.Move(Application.dataPath + "/数据持久化四", Application.dataPath + "/123123123");
+#endregion
+
+print("**************************");</code></pre><div class="cout" hidden></div></div>
+<div class="cpair"><div class="chead"><span class="lang">C#</span><span class="csp"></span><button class="mini copy">复制</button></div><pre class="code" data-lang="csharp"><code>DirectoryInfo目录信息类
+我们可以通过它获取文件夹的更多信息
+它主要出现在两个地方</code></pre><div class="cout" hidden></div></div>
+<div class="cpair"><div class="chead"><span class="lang">C#</span><span class="csp"></span><button class="mini copy">复制</button></div><pre class="code" data-lang="csharp"><code>DirectoryInfo dInfo = Directory.CreateDirectory(Application.dataPath + "/数据持久化123");
+全路径
+print(dInfo.FullName);
+文件名
+print(dInfo.Name);</code></pre><div class="cout" hidden></div></div>
+<div class="cpair"><div class="chead"><span class="lang">C#</span><span class="csp"></span><button class="mini copy">复制</button></div><pre class="code" data-lang="csharp"><code>dInfo = Directory.GetParent(Application.dataPath + "/数据持久化123");
+全路径
+print(dInfo.FullName);
+文件名
+print(dInfo.Name);
+
+重要方法
+得到所有子文件夹的目录信息
+DirectoryInfo[] dInfos = dInfo.GetDirectories();
+
+FileInfo文件信息类
+我们可以通过DirectoryInfo得到该文件下的所有文件信息
+FileInfo[] fInfos = dInfo.GetFiles();
+for (int i = 0; i &lt; fInfos.Length; i++)
+{
+    print("**************");
+    print(fInfos[i].Name);文件名
+    print(fInfos[i].FullName);路径
+    print(fInfos[i].Length);字节长度
+    print(fInfos[i].Extension);后缀名
+}</code></pre><div class="cout" hidden></div></div>
+<div class="cpair"><div class="chead"><span class="lang">C#</span><span class="csp"></span><button class="mini copy">复制</button></div><pre class="code" data-lang="csharp"><code>Directory提供给我们了常用的文件夹相关操作的API
+只需要熟练使用它即可
+
+DirectoryInfo和FileInfo 一般在多文件夹和多文件操作时会用到
+了解即可
+目前用的相对较少 他们的用法和Directory和File类的用法大同小异</code></pre><div class="cout" hidden></div></div>
+<h6 id="练习题-8" class="hd lv6">练习题</h6>
+<p class="tx">图的Student类实现保存和读取2进制文件的方法</p>
+<div class="dgm" data-diagram="beb23ae2a9c1" data-img="assets/img/beb23ae2a9c1.png"><div class="dgm-head"><span class="dgm-t">public class Student</span><span class="badge b-ocr">文字还原</span><span class="sp"></span><button class="dgm-tab">看原图</button></div></div>
+<div class="cpair"><div class="chead"><span class="lang">C#</span><span class="csp"></span><button class="mini copy">复制</button></div><pre class="code" data-lang="csharp"><code>using System;
+using System.Collections;
+using System.Collections.Generic;
+using System.IO;
+using System.Text;
+using UnityEngine;
+
+public class Exercises1 : MonoBehaviour
+{
+    // Start is called before the first frame update
+    void Start()
+    {
+        //Student s = new Student();
+        //s.age = 18;
+        //s.name = "唐老狮";
+        //s.number = 1;
+        //s.sex = false;
+
+        //s.Save("唐老狮");
+
+
+        Student s2 = Student.Load("唐老狮");
+    }
+
+    // Update is called once per frame
+    void Update()
+    {
+        
+    }
+}
+
+public class Student
+{
+    public int age;
+    public string name;
+    public int number;
+    public bool sex;
+
+    public void Save(string fileName)
+    {
+        Debug.Log(Application.persistentDataPath);
+        //如果不存在指定路径 则创建一个文件夹
+        if( !Directory.Exists(Application.persistentDataPath + "/Student") )
+        {
+            Directory.CreateDirectory(Application.persistentDataPath + "/Student");
+        }
+        //新建一个指定名字的文件 并且返回 文件流 进行字节的存储
+        using (FileStream fs = new FileStream(Application.persistentDataPath + "/Student/" + fileName + ".tang", FileMode.OpenOrCreate, FileAccess.Write))
+        {
+            //写age
+            byte[] bytes = BitConverter.GetBytes(age);
+            fs.Write(bytes, 0, bytes.Length);
+            //写name
+            bytes = Encoding.UTF8.GetBytes(name);
+            //存储字符串字节数组的长度
+            fs.Write(BitConverter.GetBytes(bytes.Length), 0, 4);
+            //存储字符串字节数组了
+            fs.Write(bytes, 0, bytes.Length);
+            //写number
+            bytes = BitConverter.GetBytes(number);
+            fs.Write(bytes, 0, bytes.Length);
+            //写sex
+            bytes = BitConverter.GetBytes(sex);
+            fs.Write(bytes, 0, bytes.Length);
+
+            fs.Flush();
+            fs.Close();
+        }
+    }
+
+    public static Student Load(string fileName)
+    {
+        //判断文件是否存在
+        if( !File.Exists(Application.persistentDataPath + "/Student/" + fileName + ".tang") )
+        {
+            Debug.LogWarning("没有找到对应的文件");
+            return null;
+        }
+        //申明对象
+        Student s = new Student();
+        //加载2进制文件 进行赋值
+        using (FileStream fs = File.Open(Application.persistentDataPath + "/Student/" + fileName + ".tang", FileMode.Open, FileAccess.Read))
+        {
+            //把我们文件中的字节 全部读取出来
+            byte[] bytes = new byte[fs.Length];
+            fs.Read(bytes, 0, bytes.Length);
+            fs.Close();
+
+            int index = 0;
+            //挨个读取其中的内容
+            s.age = BitConverter.ToInt32(bytes, index);
+            index += 4;
+            //字符串字节数组的长度
+            int length = BitConverter.ToInt32(bytes, index);
+            index += 4;
+            s.name = Encoding.UTF8.GetString(bytes, index, length);
+            index += length;
+            s.number = BitConverter.ToInt32(bytes, index);
+            index += 4;
+            s.sex = BitConverter.ToBoolean(bytes, index);
+            index += 1;
+        }
+
+        return s;
+    }
+}</code></pre><div class="cout" hidden></div></div>
+<h4 id="05-C-类对象的序列化-9" class="hd lv4">05：C#类对象的序列化</h4>
+<div class="cpair"><div class="chead"><span class="lang">C#</span><span class="csp"></span><button class="mini copy">复制</button></div><pre class="code" data-lang="csharp"><code>注意：如果要使用C#自带的序列化2进制方法
+申明类时需要添加[System.Serializable]特性</code></pre><div class="cout" hidden></div></div>
+<div class="cpair"><div class="chead"><span class="lang">C#</span><span class="csp"></span><button class="mini copy">复制</button></div><pre class="code" data-lang="csharp"><code>[System.Serializable]
+public class Person
+{
+public int age = 1;
+public string name = "唐老狮";
+public int[] ints = new int[] { 1, 2, 3, 4, 5 };
+public List&lt;int&gt; list = new List&lt;int&gt;() { 1, 2, 3, 4 };
+public Dictionary&lt;int, string&gt; dic = new Dictionary&lt;int, string&gt;() { { 1,"123"},{ 2,"1223"},{ 3,"435345" } };
+public StructTest st = new StructTest(2, "123");
+public ClssTest ct = new ClssTest();
+}
+
+[System.Serializable]
+public struct StructTest
+{
+public int i;
+public string s;
+
+public StructTest(int i, string s)
+{
+this.i = i;
+this.s = s;
+}
+}
+
+[System.Serializable]
+public class ClssTest
+{
+public int i = 1;
+}</code></pre><div class="cout" hidden></div></div>
+<div class="cpair"><div class="chead"><span class="lang">C#</span><span class="csp"></span><button class="mini copy">复制</button></div><pre class="code" data-lang="csharp"><code>Person p = new Person();</code></pre><div class="cout" hidden></div></div>
+<div class="cpair"><div class="chead"><span class="lang">C#</span><span class="csp"></span><button class="mini copy">复制</button></div><pre class="code" data-lang="csharp"><code>主要用于得到字节数组 可以用于网络传输
+新知识点
+1.内存流对象
+类名：MemoryStream
+命名空间：System.IO
+2.2进制格式化对象
+类名：BinaryFormatter
+命名空间：System.Runtime.Serialization.Formatters.Binary、
+主要方法：序列化方法 Serialize
+using (MemoryStream ms = new MemoryStream())
+{
+    2进制格式化程序
+    BinaryFormatter bf = new BinaryFormatter();
+    序列化对象 生成2进制字节数组 写入到内存流当中
+    bf.Serialize(ms, p);
+    得到对象的2进制字节数组
+    byte[] bytes = ms.GetBuffer();
+    存储字节
+    File.WriteAllBytes(Application.dataPath + "/Lesson5.tang", bytes);
+    关闭内存流
+    ms.Close();
+}</code></pre><div class="cout" hidden></div></div>
+<div class="cpair"><div class="chead"><span class="lang">C#</span><span class="csp"></span><button class="mini copy">复制</button></div><pre class="code" data-lang="csharp"><code>主要用于存储到文件中
+using (FileStream fs = new FileStream(Application.dataPath + "/Lesson5_2.tang", FileMode.OpenOrCreate, FileAccess.Write))
+{
+    2进制格式化程序
+    BinaryFormatter bf = new BinaryFormatter();
+    序列化对象 生成2进制字节数组 写入到内存流当中
+    bf.Serialize(fs, p);
+    fs.Flush();
+    fs.Close();
+}</code></pre><div class="cout" hidden></div></div>
+<div class="cpair"><div class="chead"><span class="lang">C#</span><span class="csp"></span><button class="mini copy">复制</button></div><pre class="code" data-lang="csharp"><code>C#提供的类对象2进制序列化主要类是 BinaryFormatter
+通过其中的序列化方法即可进行序列化生成字节数组</code></pre><div class="cout" hidden></div></div>
+<h4 id="06-C-类对象的反序列化-10" class="hd lv4">06：C#类对象的反序列化</h4>
+<div class="cpair"><div class="chead"><span class="lang">C#</span><span class="csp"></span><button class="mini copy">复制</button></div><pre class="code" data-lang="csharp"><code>主要类
+FileStream文件流类
+BinaryFormatter 2进制格式化类
+主要方法
+Deserizlize
+通过文件流打开指定的2进制数据文件
+using (FileStream fs = File.Open(Application.dataPath + "/Lesson5_2.tang", FileMode.Open, FileAccess.Read))
+{
+申明一个 2进制格式化类
+BinaryFormatter bf = new BinaryFormatter();
+反序列化
+Person p = bf.Deserialize(fs) as Person;
+
+fs.Close();
+}</code></pre><div class="cout" hidden></div></div>
+<div class="cpair"><div class="chead"><span class="lang">C#</span><span class="csp"></span><button class="mini copy">复制</button></div><pre class="code" data-lang="csharp"><code>主要类
+MemoryStream内存流类
+BinaryFormatter 2进制格式化类
+主要方法
+Deserizlize
+目前没有网络传输 我们还是直接从文件中获取
+byte[] bytes = File.ReadAllBytes(Application.dataPath + "/Lesson5_2.tang");
+申明内存流对象 一开始就把字节数组传输进去
+using (MemoryStream ms = new MemoryStream(bytes))
+{
+申明一个 2进制格式化类
+BinaryFormatter bf = new BinaryFormatter();
+反序列化
+Person p = bf.Deserialize(ms) as Person;
+
+ms.Close();
+}</code></pre><div class="cout" hidden></div></div>
+<h4 id="07-C-类对象的2进制数据加密-11" class="hd lv4">07：C#类对象的2进制数据加密</h4>
+<div class="cpair"><div class="chead"><span class="lang">C#</span><span class="csp"></span><button class="mini copy">复制</button></div><pre class="code" data-lang="csharp"><code>当我们将类对象转换为2进制数据时进行加密
+当我们将2进制数据转换为类对象时进行解密
+
+这样如果第三方获取到我们的2进制数据
+当他们不知道加密规则和解密秘钥时就无法获取正确的数据
+起到保证数据安全的作用</code></pre><div class="cout" hidden></div></div>
+<div class="cpair"><div class="chead"><span class="lang">C#</span><span class="csp"></span><button class="mini copy">复制</button></div><pre class="code" data-lang="csharp"><code>一定记住加密只是提高破解门槛，没有100%保密的数据
+通过各种尝试始终是可以破解加密规则的，只是时间问题
+加密只能起到提升一定的安全性</code></pre><div class="cout" hidden></div></div>
+<div class="cpair"><div class="chead"><span class="lang">C#</span><span class="csp"></span><button class="mini copy">复制</button></div><pre class="code" data-lang="csharp"><code>MD5算法
+SHA1算法
+HMAC算法
+AES/DES/3DES算法
+等等等
+
+有很多的别人写好的第三发加密算法库
+可以直接获取用于在程序中对数据进行加密
+这里我们不深究 感兴趣的同学可以自己去了解
+#endregion</code></pre><div class="cout" hidden></div></div>
+<div class="cpair"><div class="chead"><span class="lang">C#</span><span class="csp"></span><button class="mini copy">复制</button></div><pre class="code" data-lang="csharp"><code>Person p = new Person();
+byte key = 199;
+using (MemoryStream ms = new MemoryStream())
+{
+    BinaryFormatter bf = new BinaryFormatter();
+    bf.Serialize(ms, p);
+    byte[] bytes = ms.GetBuffer();
+    异或加密
+    for (int i = 0; i &lt; bytes.Length; i++)
+    {
+bytes[i] ^= key;
+    }
+    File.WriteAllBytes(Application.dataPath + "/Lesson7.tang", bytes);
+}
+
+解密
+byte[] bytes2 = File.ReadAllBytes(Application.dataPath + "/Lesson7.tang");
+for (int i = 0; i &lt; bytes2.Length; i++)
+{
+    bytes2[i] ^= key;
+}
+using (MemoryStream ms = new MemoryStream(bytes2))
+{
+    BinaryFormatter bf = new BinaryFormatter();
+    Person p2 = bf.Deserialize(ms) as Person;
+    ms.Close();
+}</code></pre><div class="cout" hidden></div></div>
+<h6 id="练习题-12" class="hd lv6">练习题</h6>
+<p class="tx">请实现一个管理类，用于快捷读写自定义类对象数据</p>
+<div class="cpair"><div class="chead"><span class="lang">C#</span><span class="csp"></span><button class="mini copy">复制</button></div><pre class="code" data-lang="csharp"><code>using System.Collections;
+using System.Collections.Generic;
+using System.IO;
+using System.Runtime.Serialization.Formatters.Binary;
+using UnityEngine;
+
+/// &lt;summary&gt;
+/// 2进制数据管理器
+/// &lt;/summary&gt;
+public class BinaryDataMgr
+{
+    private static BinaryDataMgr instance = new BinaryDataMgr();
+    public static BinaryDataMgr Instance =&gt; instance;
+
+    /// &lt;summary&gt;
+    /// 数据存储的位置
+    /// &lt;/summary&gt;
+    private static string SAVE_PATH = Application.persistentDataPath + "/Data/";
+
+    private BinaryDataMgr()
+    {
+
+    }
+
+
+    /// &lt;summary&gt;
+    /// 存储类对象数据
+    /// &lt;/summary&gt;
+    /// &lt;param name="obj"&gt;&lt;/param&gt;
+    /// &lt;param name="fileName"&gt;&lt;/param&gt;
+    public void Save(object obj, string fileName)
+    {
+        //先判断路径文件夹有没有
+        if (!Directory.Exists(SAVE_PATH))
+            Directory.CreateDirectory(SAVE_PATH);
+
+        using (FileStream fs = new FileStream(SAVE_PATH + fileName + ".tang", FileMode.OpenOrCreate, FileAccess.Write))
+        {
+            BinaryFormatter bf = new BinaryFormatter();
+            bf.Serialize(fs, obj);
+            fs.Close();
+        }
+    }
+
+    /// &lt;summary&gt;
+    /// 读取2进制数据转换成对象
+    /// &lt;/summary&gt;
+    /// &lt;typeparam name="T"&gt;&lt;/typeparam&gt;
+    /// &lt;param name="fileName"&gt;&lt;/param&gt;
+    /// &lt;returns&gt;&lt;/returns&gt;
+    public T Load&lt;T&gt;(string fileName) where T:class
+    {
+        //如果不存在这个文件 就直接返回泛型对象的默认值
+        if( !File.Exists(SAVE_PATH + fileName + ".tang") )
+            return default(T);
+
+        T obj;
+        using (FileStream fs = File.Open(SAVE_PATH + fileName + ".tang", FileMode.Open, FileAccess.Read))
+        {
+            BinaryFormatter bf = new BinaryFormatter();
+            obj = bf.Deserialize(fs) as T;
+            fs.Close();
+        }
+
+        return obj;
+    }
+}</code></pre><div class="cout" hidden></div></div>
+<div class="cpair"><div class="chead"><span class="lang">C#</span><span class="csp"></span><button class="mini copy">复制</button></div><pre class="code" data-lang="csharp"><code>using System.Collections;
+using System.Collections.Generic;
+using UnityEngine;
+
+public class Exercises2 : MonoBehaviour
+{
+    // Start is called before the first frame update
+    void Start()
+    {
+        #region 练习题 请实现一个管理类，用于快捷读写自定义类对象数据
+        //Test t = new Test();
+        //t.i = 987;
+        //t.str = "唐老狮欢迎你";
+
+        //print(Application.persistentDataPath);
+        //BinaryDataMgr.Instance.Save(t, "唐老狮哈哈哈");
+
+        Test t = BinaryDataMgr.Instance.Load&lt;Test&gt;("唐老狮哈哈哈");
+        #endregion
+    }
+
+    // Update is called once per frame
+    void Update()
+    {
+        
+    }
+}
+
+[System.Serializable]
+public class Test
+{
+    public int i;
+    public string str;
+}</code></pre><div class="cout" hidden></div></div>
+<h4 id="08-基础知识点-总结-13" class="hd lv4">08：基础知识点——总结</h4>
+<div class="cpair"><div class="chead"><span class="lang">C#</span><span class="csp"></span><button class="mini copy">复制</button></div><pre class="code" data-lang="csharp"><code>优点： 1.效率高  2.节约空间  3.安全性高
+缺点： 1.可读性较差 2.无法从数据文件看懂数据或修改数据
+
+网络游戏：1.可以用于存储客户端数据  2.可以用于传输信息
+单机游戏：1.用于存储游戏相关数据   2.用于配置游戏数据</code></pre><div class="cout" hidden></div></div>
+<h2 id="第3章-实践小项目-14" class="hd lv2">第3章：实践小项目</h2>
+<h3 id="第1节-知识补充-15" class="hd lv3">【第1节：知识补充】</h3>
+<h4 id="01-知识点补充-Unity添加菜单栏按钮-16" class="hd lv4">01：知识点补充——Unity添加菜单栏按钮</h4>
+<div class="cpair"><div class="chead"><span class="lang">C#</span><span class="csp"></span><button class="mini copy">复制</button></div><pre class="code" data-lang="csharp"><code>可以通过Unity提供我们的MenuItem特性在菜单栏添加选项按钮
+特性名：MenuItem
+命名空间：UnityEditor
+
+规则一：一定是静态方法
+规则二：我们这个菜单栏按钮 必须有至少一个斜杠 不然会报错 它不支持只有一个菜单栏入口 
+规则三：这个特性可以用在任意的类当中
+[MenuItem("GameTool/Test")]
+private static void Test()
+{
+Debug.Log("测试测试");</code></pre><div class="cout" hidden></div></div>
+<div class="cpair"><div class="chead"><span class="lang">C#</span><span class="csp"></span><button class="mini copy">复制</button></div><pre class="code" data-lang="csharp"><code>类名：AssetDatabase
+命名空间：UnityEditor
+方法：Refresh
+
+Directory.CreateDirectory(Application.dataPath + "/测试文件夹");
+
+AssetDatabase.Refresh();
+#endregion</code></pre><div class="cout" hidden></div></div>
+<div class="cpair"><div class="chead"><span class="lang">C#</span><span class="csp"></span><button class="mini copy">复制</button></div><pre class="code" data-lang="csharp"><code>Editor文件夹可以放在项目的任何文件夹下，可以有多个
+放在其中的内容，项目打包时不会被打包到项目中
+一般编辑器相关代码都可以放在该文件夹中</code></pre><div class="cout" hidden></div></div>
+<div class="cpair"><div class="chead"><span class="lang">C#</span><span class="csp"></span><button class="mini copy">复制</button></div><pre class="code" data-lang="csharp"><code>我们之后在学习通过Excel表生成数据的功能时
+可以在菜单栏加一个按钮
+点击后就可以自动为我们生成对应数据了</code></pre><div class="cout" hidden></div></div>
+<h4 id="02-知识点补充-ExcelDll包导入-17" class="hd lv4">02：知识点补充——ExcelDll包导入</h4>
+<div class="cpair"><div class="chead"><span class="lang">C#</span><span class="csp"></span><button class="mini copy">复制</button></div><pre class="code" data-lang="csharp"><code>Excel表本质上也是一堆数据
+只不过它有自己的存储读取规则
+如果我们想要通过代码读取它
+那么必须知道它的存储规则
+
+官网是专门提供了对应的DLL文件用来解析Excel文件的
+
+Dll文件：库文件，你可以理解为它是许多代码的集合
+将相关代码集合在库文件中可以方便迁移和使用
+有了某个DLL文件，我们就可以使用其中已经写好的代码
+
+而Excel的DLL包就是官方已经把解析Excel表的相关类和方法写好了
+方便用户直接使用</code></pre><div class="cout" hidden></div></div>
+<h4 id="03-知识点补充-Excel数据读取-18" class="hd lv4">03：知识点补充——Excel数据读取</h4>
+<div class="cpair"><div class="chead"><span class="lang">C#</span><span class="csp"></span><button class="mini copy">复制</button></div><pre class="code" data-lang="csharp"><code>主要知识点：
+1.FileStream读取文件流
+2.IExcelDataReader类，从流中读取Excel数据
+3.DataSet 数据集合类 将Excel数据转存进其中方便读取
+
+[MenuItem("GameTool/打开Excel表")]
+private static void OpenExcel()
+{
+using (FileStream fs = File.Open(Application.dataPath + "/ArtRes/Excel/PlayerInfo.xlsx", FileMode.Open, FileAccess.Read ))
+{
+通过我们的文件流获取Excel数据
+IExcelDataReader excelReader = ExcelReaderFactory.CreateOpenXmlReader(fs);
+将excel表中的数据转换为DataSet数据类型 方便我们 获取其中的内容
+DataSet result = excelReader.AsDataSet();
+得到Excel文件中的所有表信息
+for (int i = 0; i &lt; result.Tables.Count; i++)
+{
+Debug.Log("表名：" + result.Tables[i].TableName);
+Debug.Log("行数：" + result.Tables[i].Rows.Count);
+Debug.Log("列数：" + result.Tables[i].Columns.Count);
+}
+fs.Close();
+}
+}</code></pre><div class="cout" hidden></div></div>
+<div class="cpair"><div class="chead"><span class="lang">C#</span><span class="csp"></span><button class="mini copy">复制</button></div><pre class="code" data-lang="csharp"><code>主要知识点：
+1.FileStream读取文件流
+2.IExcelDataReader类，从流中读取Excel数据
+3.DataSet 数据集合类 将Excel数据转存进其中方便读取
+4.DataTable 数据表类 表示Excel文件中的一个表
+5.DataRow 数据行类 表示某张表中的一行数据
+[MenuItem("GameTool/读取Excel里的具体信息")]
+private static void ReadExcel()
+{
+using (FileStream fs = File.Open(Application.dataPath + "/ArtRes/Excel/PlayerInfo.xlsx", FileMode.Open, FileAccess.Read))
+{
+IExcelDataReader excelReader = ExcelReaderFactory.CreateOpenXmlReader(fs);
+DataSet result = excelReader.AsDataSet();
+
+for (int i = 0; i &lt; result.Tables.Count; i++)
+{
+得到其中一张表的具体数据
+DataTable table = result.Tables[i];
+得到其中一行的数据
+DataRow row = table.Rows[0];
+得到行中某一列的信息
+Debug.Log(row[1].ToString());
+DataRow row;
+for (int j = 0; j &lt; table.Rows.Count; j++)
+{
+得到每一行的信息
+row = table.Rows[j];
+Debug.Log("*********新的一行************");
+for (int k = 0; k &lt; table.Columns.Count; k++)
+{
+Debug.Log(row[k].ToString());
+}
+}
+}
+
+fs.Close();
+}
+}</code></pre><div class="cout" hidden></div></div>
+<div class="cpair"><div class="chead"><span class="lang">C#</span><span class="csp"></span><button class="mini copy">复制</button></div><pre class="code" data-lang="csharp"><code>既然我们能够获取到Excel表中的所有数据
+那么我们可以根据表中数据来动态的生成相关数据
+1.数据结构类
+2.容器类
+3.2进制数据
+
+为什么不直接读取Excel表而要把它转成2进制数据
+1.提升读取效率
+2.提升数据安全性</code></pre><div class="cout" hidden></div></div>
+<h3 id="第2节-小项目实现-19" class="hd lv3">【第2节：小项目实现】</h3>
+<h4 id="04-需求分析-20" class="hd lv4">04：需求分析</h4>
+<h4 id="05-Excel表自动生成相关文件-制定配表规则-21" class="hd lv4">05：Excel表自动生成相关文件——制定配表规则</h4>
+<p class="tx">PlayerInfo.xlsx</p>
+<div class="dgm" data-diagram="8bc35f6b4581" data-img="assets/img/8bc35f6b4581.png"><div class="dgm-head"><span class="dgm-t">图内文字</span><span class="badge b-ocr">文字还原</span><span class="sp"></span><button class="dgm-tab">看原图</button></div></div>
+<h4 id="TowerInfo-xlsx-22" class="hd lv4">TowerInfo.xlsx</h4>
+<div class="dgm" data-diagram="e3253d4c4056" data-img="assets/img/e3253d4c4056.png"><div class="dgm-head"><span class="dgm-t">A B C D E F G J</span><span class="badge b-ocr">文字还原</span><span class="sp"></span><button class="dgm-tab">看原图</button></div></div>
+<h4 id="06-Excel表自动生成相关文件-读取Excel目录下所有Excel文-23" class="hd lv4">06：Excel表自动生成相关文件——读取Excel目录下所有Excel文件</h4>
+<div class="cpair"><div class="chead"><span class="lang">C#</span><span class="csp"></span><button class="mini copy">复制</button></div><pre class="code" data-lang="csharp"><code>using Excel;
+using System.Collections;
+using System.Collections.Generic;
+using System.Data;
+using System.IO;
+using UnityEditor;
+using UnityEngine;
+
+public class ExcelTool
+{
+    /// &lt;summary&gt;
+    /// excel文件存放的路径
+    /// &lt;/summary&gt;
+    public static string EXCEL_PATH = Application.dataPath + "/ArtRes/Excel/";
+
+    [MenuItem("GameTool/GenerateExcel")]
+    private static void GenerateExcelInfo()
+    {
+        //记在指定路径中的所有Excel文件 用于生成对应的3个文件
+        DirectoryInfo dInfo = Directory.CreateDirectory(EXCEL_PATH);
+        //得到指定路径中的所有文件信息 相当于就是得到所有的Excel表
+        FileInfo[] files = dInfo.GetFiles();
+        //数据表容器
+        DataTableCollection tableConllection;
+        for (int i = 0; i &lt; files.Length; i++)
+        {
+            //如果不是excel文件就不要处理了
+            if (files[i].Extension != ".xlsx" &amp;&amp;
+                files[i].Extension != ".xls")
+                continue;
+            //打开一个Excel文件得到其中的所有表的数据
+            using (FileStream fs = files[i].Open(FileMode.Open, FileAccess.Read))
+            {
+            IExcelDataReader excelReader = ExcelReaderFactory.CreateOpenXmlReader(fs);
+            tableConllection = excelReader.AsDataSet().Tables;
+            fs.Close();
+            }
+
+            //遍历文件中的所有表的信息
+            foreach (DataTable table in tableConllection)
+            {
+                Debug.Log(table.TableName);
+                //生成数据结构类
+
+                //生成容器类
+
+                //生成2进制数据
+            }
+
+        }
+    }
+}</code></pre><div class="cout" hidden></div></div>
+<h4 id="07-Excel表自动生成相关文件-生成数据结构类-24" class="hd lv4">07：Excel表自动生成相关文件——生成数据结构类</h4>
+<div class="cpair"><div class="chead"><span class="lang">C#</span><span class="csp"></span><button class="mini copy">复制</button></div><pre class="code" data-lang="csharp"><code>using Excel;
+using System.Collections;
+using System.Collections.Generic;
+using System.Data;
+using System.IO;
+using UnityEditor;
+using UnityEngine;
+
+public class ExcelTool
+{
+    /// &lt;summary&gt;
+    /// excel文件存放的路径
+    /// &lt;/summary&gt;
+    public static string EXCEL_PATH = Application.dataPath + "/ArtRes/Excel/";
+
+    /// &lt;summary&gt;
+    /// 数据结构类脚本存储位置路径
+    /// &lt;/summary&gt;
+    public static string DATA_CLASS_PATH = Application.dataPath + "/Scripts/ExcelData/DataClass/";
+
+    [MenuItem("GameTool/GenerateExcel")]
+    private static void GenerateExcelInfo()
+    {
+        //记在指定路径中的所有Excel文件 用于生成对应的3个文件
+        DirectoryInfo dInfo = Directory.CreateDirectory(EXCEL_PATH);
+        //得到指定路径中的所有文件信息 相当于就是得到所有的Excel表
+        FileInfo[] files = dInfo.GetFiles();
+        //数据表容器
+        DataTableCollection tableConllection;
+        for (int i = 0; i &lt; files.Length; i++)
+        {
+            //如果不是excel文件就不要处理了
+            if (files[i].Extension != ".xlsx" &amp;&amp;
+                files[i].Extension != ".xls")
+                continue;
+            //打开一个Excel文件得到其中的所有表的数据
+            using (FileStream fs = files[i].Open(FileMode.Open, FileAccess.Read))
+            {
+                IExcelDataReader excelReader = ExcelReaderFactory.CreateOpenXmlReader(fs);
+                tableConllection = excelReader.AsDataSet().Tables;
+                fs.Close();
+            }
+
+            //遍历文件中的所有表的信息
+            foreach (DataTable table in tableConllection)
+            {
+                Debug.Log(table.TableName);
+                //生成数据结构类
+                GenerateExcelDataClass(table);
+                //生成容器类
+                GenerateExcelContainer(table);
+                //生成2进制数据
+            }
+
+        }
+    }
+
+    /// &lt;summary&gt;
+    /// 生成Excel表对应的数据结构类
+    /// &lt;/summary&gt;
+    /// &lt;param name="table"&gt;&lt;/param&gt;
+    private static void GenerateExcelDataClass(DataTable table)
+    {
+        //字段名行
+        DataRow rowName = GetVariableNameRow(table);
+        //字段类型行
+        DataRow rowType = GetVariableTypeRow(table);
+
+        //判断路径是否存在 没有的话 就创建文件夹
+        if (!Directory.Exists(DATA_CLASS_PATH))
+            Directory.CreateDirectory(DATA_CLASS_PATH);
+        //如果我们要生成对应的数据结构类脚本 其实就是通过代码进行字符串拼接 然后存进文件就行了
+        string str = "public class " + table.TableName + "\
+{\
+";
+
+        //变量进行字符串拼接
+        for (int i = 0; i &lt; table.Columns.Count; i++)
+        {
+            str += "    public " + rowType[i].ToString() + " " + rowName[i].ToString() + ";\
+";
+        }
+
+        str += "}";
+
+        //把拼接好的字符串存到指定文件中去
+        File.WriteAllText(DATA_CLASS_PATH + table.TableName + ".cs", str);
+
+        //刷新Project窗口
+        AssetDatabase.Refresh();
+    }
+
+
+    /// &lt;summary&gt;
+    /// 获取变量名所在行
+    /// &lt;/summary&gt;
+    /// &lt;param name="table"&gt;&lt;/param&gt;
+    /// &lt;returns&gt;&lt;/returns&gt;
+    private static DataRow GetVariableNameRow(DataTable table)
+    {
+        return table.Rows[0];
+    }
+
+    /// &lt;summary&gt;
+    /// 获取变量类型所在行
+    /// &lt;/summary&gt;
+    /// &lt;param name="table"&gt;&lt;/param&gt;
+    /// &lt;returns&gt;&lt;/returns&gt;
+    private static DataRow GetVariableTypeRow(DataTable table)
+    {
+        return table.Rows[1];
+    }
+}</code></pre><div class="cout" hidden></div></div>
+<h4 id="08-Excel表自动生成相关文件-生成容器类-25" class="hd lv4">08：Excel表自动生成相关文件——生成容器类</h4>
+<div class="cpair"><div class="chead"><span class="lang">C#</span><span class="csp"></span><button class="mini copy">复制</button></div><pre class="code" data-lang="csharp"><code>using Excel;
+using System.Collections;
+using System.Collections.Generic;
+using System.Data;
+using System.IO;
+using UnityEditor;
+using UnityEngine;
+
+public class ExcelTool
+{
+    /// &lt;summary&gt;
+    /// excel文件存放的路径
+    /// &lt;/summary&gt;
+    public static string EXCEL_PATH = Application.dataPath + "/ArtRes/Excel/";
+
+    /// &lt;summary&gt;
+    /// 数据结构类脚本存储位置路径
+    /// &lt;/summary&gt;
+    public static string DATA_CLASS_PATH = Application.dataPath + "/Scripts/ExcelData/DataClass/";
+
+    /// &lt;summary&gt;
+    /// 容器类脚本存储位置路径
+    /// &lt;/summary&gt;
+    public static string DATA_CONTAINER_PATH = Application.dataPath + "/Scripts/ExcelData/Container/";
+
+    [MenuItem("GameTool/GenerateExcel")]
+    private static void GenerateExcelInfo()
+    {
+        //记在指定路径中的所有Excel文件 用于生成对应的3个文件
+        DirectoryInfo dInfo = Directory.CreateDirectory(EXCEL_PATH);
+        //得到指定路径中的所有文件信息 相当于就是得到所有的Excel表
+        FileInfo[] files = dInfo.GetFiles();
+        //数据表容器
+        DataTableCollection tableConllection;
+        for (int i = 0; i &lt; files.Length; i++)
+        {
+            //如果不是excel文件就不要处理了
+            if (files[i].Extension != ".xlsx" &amp;&amp;
+                files[i].Extension != ".xls")
+                continue;
+            //打开一个Excel文件得到其中的所有表的数据
+            using (FileStream fs = files[i].Open(FileMode.Open, FileAccess.Read))
+            {
+                IExcelDataReader excelReader = ExcelReaderFactory.CreateOpenXmlReader(fs);
+                tableConllection = excelReader.AsDataSet().Tables;
+                fs.Close();
+            }
+
+            //遍历文件中的所有表的信息
+            foreach (DataTable table in tableConllection)
+            {
+                Debug.Log(table.TableName);
+                //生成数据结构类
+                GenerateExcelDataClass(table);
+                //生成容器类
+                GenerateExcelContainer(table);
+                //生成2进制数据
+            }
+
+        }
+    }
+
+    /// &lt;summary&gt;
+    /// 生成Excel表对应的数据结构类
+    /// &lt;/summary&gt;
+    /// &lt;param name="table"&gt;&lt;/param&gt;
+    private static void GenerateExcelDataClass(DataTable table)
+    {
+        //字段名行
+        DataRow rowName = GetVariableNameRow(table);
+        //字段类型行
+        DataRow rowType = GetVariableTypeRow(table);
+
+        //判断路径是否存在 没有的话 就创建文件夹
+        if (!Directory.Exists(DATA_CLASS_PATH))
+            Directory.CreateDirectory(DATA_CLASS_PATH);
+        //如果我们要生成对应的数据结构类脚本 其实就是通过代码进行字符串拼接 然后存进文件就行了
+        string str = "public class " + table.TableName + "\
+{\
+";
+
+        //变量进行字符串拼接
+        for (int i = 0; i &lt; table.Columns.Count; i++)
+        {
+            str += "    public " + rowType[i].ToString() + " " + rowName[i].ToString() + ";\
+";
+        }
+
+        str += "}";
+
+        //把拼接好的字符串存到指定文件中去
+        File.WriteAllText(DATA_CLASS_PATH + table.TableName + ".cs", str);
+
+        //刷新Project窗口
+        AssetDatabase.Refresh();
+    }
+
+    /// &lt;summary&gt;
+    /// 生成Excel表对应的数据容器类
+    /// &lt;/summary&gt;
+    /// &lt;param name="table"&gt;&lt;/param&gt;
+    private static void GenerateExcelContainer(DataTable table)
+    {
+        //得到主键索引
+        int keyIndex = GetKeyIndex(table);
+        //得到字段类型行
+        DataRow rowType = GetVariableTypeRow(table);
+        //没有路径创建路径
+        if (!Directory.Exists(DATA_CONTAINER_PATH))
+            Directory.CreateDirectory(DATA_CONTAINER_PATH);
+
+        string str = "using System.Collections.Generic;\
+";
+
+        str += "public class " + table.TableName + "Container" + "\
+{\
+";
+
+        str += "    ";
+        str += "public Dictionary&lt;" + rowType[keyIndex].ToString() + ", " + table.TableName + "&gt;";
+        str += "dataDic = new " + "Dictionary&lt;" + rowType[keyIndex].ToString() + ", " + table.TableName + "&gt;();\
+";
+
+        str += "}";
+
+        File.WriteAllText(DATA_CONTAINER_PATH + table.TableName + "Container.cs", str);
+
+        //刷新Project窗口
+        AssetDatabase.Refresh();
+    }
+
+    /// &lt;summary&gt;
+    /// 获取变量名所在行
+    /// &lt;/summary&gt;
+    /// &lt;param name="table"&gt;&lt;/param&gt;
+    /// &lt;returns&gt;&lt;/returns&gt;
+    private static DataRow GetVariableNameRow(DataTable table)
+    {
+        return table.Rows[0];
+    }
+
+    /// &lt;summary&gt;
+    /// 获取变量类型所在行
+    /// &lt;/summary&gt;
+    /// &lt;param name="table"&gt;&lt;/param&gt;
+    /// &lt;returns&gt;&lt;/returns&gt;
+    private static DataRow GetVariableTypeRow(DataTable table)
+    {
+        return table.Rows[1];
+    }
+
+    
+    /// &lt;summary&gt;
+    /// 获取主键索引
+    /// &lt;/summary&gt;
+    /// &lt;param name="table"&gt;&lt;/param&gt;
+    /// &lt;returns&gt;&lt;/returns&gt;
+    private static int GetKeyIndex(DataTable table)
+    {
+        DataRow row = table.Rows[2];
+        for (int i = 0; i &lt; table.Columns.Count; i++)
+        {
+            if (row[i].ToString() == "key")
+                return i;
+        }
+        return 0;
+    }
+}</code></pre><div class="cout" hidden></div></div>
+<h4 id="09-Excel表自动生成相关文件-生成2进制数据文件-26" class="hd lv4">09：Excel表自动生成相关文件——生成2进制数据文件</h4>
+<div class="cpair"><div class="chead"><span class="lang">C#</span><span class="csp"></span><button class="mini copy">复制</button></div><pre class="code" data-lang="csharp"><code>using Excel;
+using System;
+using System.Collections;
+using System.Collections.Generic;
+using System.Data;
+using System.IO;
+using System.Text;
+using UnityEditor;
+using UnityEngine;
+
+public class ExcelTool
+{
+    /// &lt;summary&gt;
+    /// excel文件存放的路径
+    /// &lt;/summary&gt;
+    public static string EXCEL_PATH = Application.dataPath + "/ArtRes/Excel/";
+
+    /// &lt;summary&gt;
+    /// 数据结构类脚本存储位置路径
+    /// &lt;/summary&gt;
+    public static string DATA_CLASS_PATH = Application.dataPath + "/Scripts/ExcelData/DataClass/";
+
+    /// &lt;summary&gt;
+    /// 容器类脚本存储位置路径
+    /// &lt;/summary&gt;
+    public static string DATA_CONTAINER_PATH = Application.dataPath + "/Scripts/ExcelData/Container/";
+
+    /// &lt;summary&gt;
+    /// 2进制数据存储位置路径
+    /// &lt;/summary&gt;
+    public static string DATA_BINARY_PATH = Application.streamingAssetsPath + "/Binary/";
+
+    /// &lt;summary&gt;
+    /// 真正内容开始的行号
+    /// &lt;/summary&gt;
+    public static int BEGIN_INDEX = 4;
+
+    [MenuItem("GameTool/GenerateExcel")]
+    private static void GenerateExcelInfo()
+    {
+        //记在指定路径中的所有Excel文件 用于生成对应的3个文件
+        DirectoryInfo dInfo = Directory.CreateDirectory(EXCEL_PATH);
+        //得到指定路径中的所有文件信息 相当于就是得到所有的Excel表
+        FileInfo[] files = dInfo.GetFiles();
+        //数据表容器
+        DataTableCollection tableConllection;
+        for (int i = 0; i &lt; files.Length; i++)
+        {
+            //如果不是excel文件就不要处理了
+            if (files[i].Extension != ".xlsx" &amp;&amp;
+                files[i].Extension != ".xls")
+                continue;
+            //打开一个Excel文件得到其中的所有表的数据
+            using (FileStream fs = files[i].Open(FileMode.Open, FileAccess.Read))
+            {
+                IExcelDataReader excelReader = ExcelReaderFactory.CreateOpenXmlReader(fs);
+                tableConllection = excelReader.AsDataSet().Tables;
+                fs.Close();
+            }
+
+            //遍历文件中的所有表的信息
+            foreach (DataTable table in tableConllection)
+            {
+                Debug.Log(table.TableName);
+                //生成数据结构类
+                GenerateExcelDataClass(table);
+                //生成容器类
+                GenerateExcelContainer(table);
+                //生成2进制数据
+                GenerateExcelBinary(table);
+            }
+
+        }
+    }
+
+    /// &lt;summary&gt;
+    /// 生成Excel表对应的数据结构类
+    /// &lt;/summary&gt;
+    /// &lt;param name="table"&gt;&lt;/param&gt;
+    private static void GenerateExcelDataClass(DataTable table)
+    {
+        //字段名行
+        DataRow rowName = GetVariableNameRow(table);
+        //字段类型行
+        DataRow rowType = GetVariableTypeRow(table);
+
+        //判断路径是否存在 没有的话 就创建文件夹
+        if (!Directory.Exists(DATA_CLASS_PATH))
+            Directory.CreateDirectory(DATA_CLASS_PATH);
+        //如果我们要生成对应的数据结构类脚本 其实就是通过代码进行字符串拼接 然后存进文件就行了
+        string str = "public class " + table.TableName + "\
+{\
+";
+
+        //变量进行字符串拼接
+        for (int i = 0; i &lt; table.Columns.Count; i++)
+        {
+            str += "    public " + rowType[i].ToString() + " " + rowName[i].ToString() + ";\
+";
+        }
+
+        str += "}";
+
+        //把拼接好的字符串存到指定文件中去
+        File.WriteAllText(DATA_CLASS_PATH + table.TableName + ".cs", str);
+
+        //刷新Project窗口
+        AssetDatabase.Refresh();
+    }
+
+    /// &lt;summary&gt;
+    /// 生成Excel表对应的数据容器类
+    /// &lt;/summary&gt;
+    /// &lt;param name="table"&gt;&lt;/param&gt;
+    private static void GenerateExcelContainer(DataTable table)
+    {
+        //得到主键索引
+        int keyIndex = GetKeyIndex(table);
+        //得到字段类型行
+        DataRow rowType = GetVariableTypeRow(table);
+        //没有路径创建路径
+        if (!Directory.Exists(DATA_CONTAINER_PATH))
+            Directory.CreateDirectory(DATA_CONTAINER_PATH);
+
+        string str = "using System.Collections.Generic;\
+";
+
+        str += "public class " + table.TableName + "Container" + "\
+{\
+";
+
+        str += "    ";
+        str += "public Dictionary&lt;" + rowType[keyIndex].ToString() + ", " + table.TableName + "&gt;";
+        str += "dataDic = new " + "Dictionary&lt;" + rowType[keyIndex].ToString() + ", " + table.TableName + "&gt;();\
+";
+
+        str += "}";
+
+        File.WriteAllText(DATA_CONTAINER_PATH + table.TableName + "Container.cs", str);
+
+        //刷新Project窗口
+        AssetDatabase.Refresh();
+    }
+
+
+    /// &lt;summary&gt;
+    /// 生成excel2进制数据
+    /// &lt;/summary&gt;
+    /// &lt;param name="table"&gt;&lt;/param&gt;
+    private static void GenerateExcelBinary(DataTable table)
+    {
+        //没有路径创建路径
+        if (!Directory.Exists(DATA_BINARY_PATH))
+            Directory.CreateDirectory(DATA_BINARY_PATH);
+
+        //创建一个2进制文件进行写入
+        using (FileStream fs = new FileStream(DATA_BINARY_PATH + table.TableName + ".tang", FileMode.OpenOrCreate, FileAccess.Write))
+        {
+            //存储具体的excel对应的2进制信息
+            //1.先要存储我们需要写多少行的数据 方便我们读取
+            //-4的原因是因为 前面4行是配置规则 并不是我们需要记录的数据内容
+            fs.Write(BitConverter.GetBytes(table.Rows.Count - 4), 0, 4);
+            //2.存储主键的变量名
+            string keyName = GetVariableNameRow(table)[GetKeyIndex(table)].ToString();
+            byte[] bytes = Encoding.UTF8.GetBytes(keyName);
+            //存储字符串字节数组的长度
+            fs.Write(BitConverter.GetBytes(bytes.Length), 0, 4);
+            //存储字符串字节数组
+            fs.Write(bytes, 0, bytes.Length);
+
+            //遍历所有内容的行 进行2进制的写入
+            DataRow row;
+            //得到类型行 根据类型来决定应该如何写入数据
+            DataRow rowType = GetVariableTypeRow(table);
+            for (int i = BEGIN_INDEX; i &lt; table.Rows.Count; i++)
+            {
+                //得到一行的数据
+                row = table.Rows[i];
+                for (int j = 0; j &lt; table.Columns.Count; j++)
+                {
+                    switch (rowType[j].ToString())
+                    {
+                        case "int":
+                            fs.Write(BitConverter.GetBytes(int.Parse(row[j].ToString())), 0, 4);
+                            break;
+                        case "float":
+                            fs.Write(BitConverter.GetBytes(float.Parse(row[j].ToString())), 0, 4);
+                            break;
+                        case "bool":
+                            fs.Write(BitConverter.GetBytes(bool.Parse(row[j].ToString())), 0, 1);
+                            break;
+                        case "string":
+                            bytes = Encoding.UTF8.GetBytes(row[j].ToString());
+                            //写入字符串字节数组的长度
+                            fs.Write(BitConverter.GetBytes(bytes.Length), 0, 4);
+                            //写入字符串字节数组
+                            fs.Write(bytes, 0, bytes.Length);
+                            break;
+                    }
+                }
+            }
+
+            fs.Close();
+        }
+
+        AssetDatabase.Refresh();
+    }
+
+    /// &lt;summary&gt;
+    /// 获取变量名所在行
+    /// &lt;/summary&gt;
+    /// &lt;param name="table"&gt;&lt;/param&gt;
+    /// &lt;returns&gt;&lt;/returns&gt;
+    private static DataRow GetVariableNameRow(DataTable table)
+    {
+        return table.Rows[0];
+    }
+
+    /// &lt;summary&gt;
+    /// 获取变量类型所在行
+    /// &lt;/summary&gt;
+    /// &lt;param name="table"&gt;&lt;/param&gt;
+    /// &lt;returns&gt;&lt;/returns&gt;
+    private static DataRow GetVariableTypeRow(DataTable table)
+    {
+        return table.Rows[1];
+    }
+
+    
+    /// &lt;summary&gt;
+    /// 获取主键索引
+    /// &lt;/summary&gt;
+    /// &lt;param name="table"&gt;&lt;/param&gt;
+    /// &lt;returns&gt;&lt;/returns&gt;
+    private static int GetKeyIndex(DataTable table)
+    {
+        DataRow row = table.Rows[2];
+        for (int i = 0; i &lt; table.Columns.Count; i++)
+        {
+            if (row[i].ToString() == "key")
+                return i;
+        }
+        return 0;
+    }
+}</code></pre><div class="cout" hidden></div></div>
+<h4 id="10-Excel数据文件的使用-27" class="hd lv4">10：Excel数据文件的使用</h4>
+<div class="cpair"><div class="chead"><span class="lang">C#</span><span class="csp"></span><button class="mini copy">复制</button></div><pre class="code" data-lang="csharp"><code>using System.Collections;
+using System.Collections.Generic;
+using UnityEngine;
+
+public class TestTest : MonoBehaviour
+{
+    // Start is called before the first frame update
+    void Start()
+    {
+        BinaryDataMgr.Instance.InitData();
+
+
+        TowerInfoContainer data = BinaryDataMgr.Instance.GetTable&lt;TowerInfoContainer&gt;();
+        print(data.dataDic[5].name);
+    }
+
+    // Update is called once per frame
+    void Update()
+    {
+        
+    }
+}</code></pre><div class="cout" hidden></div></div>
+<div class="cpair"><div class="chead"><span class="lang">C#</span><span class="csp"></span><button class="mini copy">复制</button></div><pre class="code" data-lang="csharp"><code>using System;
+using System.Collections;
+using System.Collections.Generic;
+using System.IO;
+using System.Reflection;
+using System.Runtime.Serialization.Formatters.Binary;
+using System.Text;
+using UnityEngine;
+
+/// &lt;summary&gt;
+/// 2进制数据管理器
+/// &lt;/summary&gt;
+public class BinaryDataMgr
+{
+    private static BinaryDataMgr instance = new BinaryDataMgr();
+    public static BinaryDataMgr Instance =&gt; instance;
+
+    /// &lt;summary&gt;
+    /// 2进制数据存储位置路径
+    /// &lt;/summary&gt;
+    public static string DATA_BINARY_PATH = Application.streamingAssetsPath + "/Binary/";
+
+    /// &lt;summary&gt;
+    /// 用于存储所有Excel表数据的容器
+    /// &lt;/summary&gt;
+    private Dictionary&lt;string, object&gt; tableDic = new Dictionary&lt;string, object&gt;();
+
+    /// &lt;summary&gt;
+    /// 数据存储的位置
+    /// &lt;/summary&gt;
+    private static string SAVE_PATH = Application.persistentDataPath + "/Data/";
+
+    private BinaryDataMgr()
+    {
+
+    }
+
+    public void InitData()
+    {
+        
+    }
+
+    /// &lt;summary&gt;
+    /// 加载Excel表的2进制数据到内存中 
+    /// &lt;/summary&gt;
+    /// &lt;typeparam name="T"&gt;容器类名&lt;/typeparam&gt;
+    /// &lt;typeparam name="K"&gt;数据结构类类名&lt;/typeparam&gt;
+    public void LoadTable&lt;T,K&gt;()
+    {
+        //读取 excel表对应的2进制文件 来进行解析
+        using (FileStream fs = File.Open(DATA_BINARY_PATH + typeof(K).Name + ".tang", FileMode.Open, FileAccess.Read))
+        {
+            byte[] bytes = new byte[fs.Length];
+            fs.Read(bytes, 0, bytes.Length);
+            fs.Close();
+            //用于记录当前读取了多少字节了
+            int index = 0;
+
+            //读取多少行数据
+            int count = BitConverter.ToInt32(bytes, index);
+            index += 4;
+
+            //读取主键的名字
+            int keyNameLength = BitConverter.ToInt32(bytes, index);
+            index += 4;
+            string keyName = Encoding.UTF8.GetString(bytes, index, keyNameLength);
+            index += keyNameLength;
+
+            //创建容器类对象
+            Type contaninerType = typeof(T);
+            object contaninerObj = Activator.CreateInstance(contaninerType);
+            //得到数据结构类的Type
+            Type classType = typeof(K);
+            //通过反射 得到数据结构类 所有字段的信息
+            FieldInfo[] infos = classType.GetFields();
+
+            //读取每一行的信息
+            for (int i = 0; i &lt; count; i++)
+            {
+                //实例化一个数据结构类 对象
+                object dataObj = Activator.CreateInstance(classType);
+                foreach (FieldInfo info in infos)
+                {
+                    if( info.FieldType == typeof(int) )
+                    {
+                        //相当于就是把2进制数据转为int 然后赋值给了对应的字段
+                        info.SetValue(dataObj, BitConverter.ToInt32(bytes, index));
+                        index += 4;
+                    }
+                    else if (info.FieldType == typeof(float))
+                    {
+                        info.SetValue(dataObj, BitConverter.ToSingle(bytes, index));
+                        index += 4;
+                    }
+                    else if (info.FieldType == typeof(bool))
+                    {
+                        info.SetValue(dataObj, BitConverter.ToBoolean(bytes, index));
+                        index += 1;
+                    }
+                    else if (info.FieldType == typeof(string))
+                    {
+                        //读取字符串字节数组的长度
+                        int length = BitConverter.ToInt32(bytes, index);
+                        index += 4;
+                        info.SetValue(dataObj, Encoding.UTF8.GetString(bytes, index, length));
+                        index += length;
+                    }
+                }
+
+                //读取完一行的数据了 应该把这个数据添加到容器对象中
+                //得到容器对象中的 字典对象
+                object dicObject = contaninerType.GetField("dataDic").GetValue(contaninerObj);
+                //通过字典对象得到其中的 Add方法
+                MethodInfo mInfo = dicObject.GetType().GetMethod("Add");
+                //得到数据结构类对象中 指定主键字段的值
+                object keyValue = classType.GetField(keyName).GetValue(dataObj);
+                mInfo.Invoke(dicObject, new object[] { keyValue, dataObj });
+            }
+
+            //把读取完的表记录下来
+            tableDic.Add(typeof(T).Name, contaninerObj);
+
+            fs.Close();
+        }
+    }
+
+    /// &lt;summary&gt;
+    /// 得到一张表的信息
+    /// &lt;/summary&gt;
+    /// &lt;typeparam name="T"&gt;容器类名&lt;/typeparam&gt;
+    /// &lt;returns&gt;&lt;/returns&gt;
+    public T GetTable&lt;T&gt;() where T:class
+    {
+        string tableName = typeof(T).Name;
+        if (tableDic.ContainsKey(tableName))
+            return tableDic[tableName] as T;
+        return null;
+    }
+
+    /// &lt;summary&gt;
+    /// 存储类对象数据
+    /// &lt;/summary&gt;
+    /// &lt;param name="obj"&gt;&lt;/param&gt;
+    /// &lt;param name="fileName"&gt;&lt;/param&gt;
+    public void Save(object obj, string fileName)
+    {
+        //先判断路径文件夹有没有
+        if (!Directory.Exists(SAVE_PATH))
+            Directory.CreateDirectory(SAVE_PATH);
+
+        using (FileStream fs = new FileStream(SAVE_PATH + fileName + ".tang", FileMode.OpenOrCreate, FileAccess.Write))
+        {
+            BinaryFormatter bf = new BinaryFormatter();
+            bf.Serialize(fs, obj);
+            fs.Close();
+        }
+    }
+
+    /// &lt;summary&gt;
+    /// 读取2进制数据转换成对象
+    /// &lt;/summary&gt;
+    /// &lt;typeparam name="T"&gt;&lt;/typeparam&gt;
+    /// &lt;param name="fileName"&gt;&lt;/param&gt;
+    /// &lt;returns&gt;&lt;/returns&gt;
+    public T Load&lt;T&gt;(string fileName) where T:class
+    {
+        //如果不存在这个文件 就直接返回泛型对象的默认值
+        if( !File.Exists(SAVE_PATH + fileName + ".tang") )
+            return default(T);
+
+        T obj;
+        using (FileStream fs = File.Open(SAVE_PATH + fileName + ".tang", FileMode.Open, FileAccess.Read))
+        {
+            BinaryFormatter bf = new BinaryFormatter();
+            obj = bf.Deserialize(fs) as T;
+            fs.Close();
+        }
+
+        return obj;
+    }
+}</code></pre><div class="cout" hidden></div></div>
+<div class="cpair"><div class="chead"><span class="lang">C#</span><span class="csp"></span><button class="mini copy">复制</button></div><pre class="code" data-lang="csharp"><code>using Excel;
+using System;
+using System.Collections;
+using System.Collections.Generic;
+using System.Data;
+using System.IO;
+using System.Text;
+using UnityEditor;
+using UnityEngine;
+
+public class ExcelTool
+{
+    /// &lt;summary&gt;
+    /// excel文件存放的路径
+    /// &lt;/summary&gt;
+    public static string EXCEL_PATH = Application.dataPath + "/ArtRes/Excel/";
+
+    /// &lt;summary&gt;
+    /// 数据结构类脚本存储位置路径
+    /// &lt;/summary&gt;
+    public static string DATA_CLASS_PATH = Application.dataPath + "/Scripts/ExcelData/DataClass/";
+
+    /// &lt;summary&gt;
+    /// 容器类脚本存储位置路径
+    /// &lt;/summary&gt;
+    public static string DATA_CONTAINER_PATH = Application.dataPath + "/Scripts/ExcelData/Container/";
+
+    /// &lt;summary&gt;
+    /// 真正内容开始的行号
+    /// &lt;/summary&gt;
+    public static int BEGIN_INDEX = 4;
+
+    [MenuItem("GameTool/GenerateExcel")]
+    private static void GenerateExcelInfo()
+    {
+        //记在指定路径中的所有Excel文件 用于生成对应的3个文件
+        DirectoryInfo dInfo = Directory.CreateDirectory(EXCEL_PATH);
+        //得到指定路径中的所有文件信息 相当于就是得到所有的Excel表
+        FileInfo[] files = dInfo.GetFiles();
+        //数据表容器
+        DataTableCollection tableConllection;
+        for (int i = 0; i &lt; files.Length; i++)
+        {
+            //如果不是excel文件就不要处理了
+            if (files[i].Extension != ".xlsx" &amp;&amp;
+                files[i].Extension != ".xls")
+                continue;
+            //打开一个Excel文件得到其中的所有表的数据
+            using (FileStream fs = files[i].Open(FileMode.Open, FileAccess.Read))
+            {
+                IExcelDataReader excelReader = ExcelReaderFactory.CreateOpenXmlReader(fs);
+                tableConllection = excelReader.AsDataSet().Tables;
+                fs.Close();
+            }
+
+            //遍历文件中的所有表的信息
+            foreach (DataTable table in tableConllection)
+            {
+                //生成数据结构类
+                GenerateExcelDataClass(table);
+                //生成容器类
+                GenerateExcelContainer(table);
+                //生成2进制数据
+                GenerateExcelBinary(table);
+            }
+
+        }
+    }
+
+    /// &lt;summary&gt;
+    /// 生成Excel表对应的数据结构类
+    /// &lt;/summary&gt;
+    /// &lt;param name="table"&gt;&lt;/param&gt;
+    private static void GenerateExcelDataClass(DataTable table)
+    {
+        //字段名行
+        DataRow rowName = GetVariableNameRow(table);
+        //字段类型行
+        DataRow rowType = GetVariableTypeRow(table);
+
+        //判断路径是否存在 没有的话 就创建文件夹
+        if (!Directory.Exists(DATA_CLASS_PATH))
+            Directory.CreateDirectory(DATA_CLASS_PATH);
+        //如果我们要生成对应的数据结构类脚本 其实就是通过代码进行字符串拼接 然后存进文件就行了
+        string str = "public class " + table.TableName + "\
+{\
+";
+
+        //变量进行字符串拼接
+        for (int i = 0; i &lt; table.Columns.Count; i++)
+        {
+            str += "    public " + rowType[i].ToString() + " " + rowName[i].ToString() + ";\
+";
+        }
+
+        str += "}";
+
+        //把拼接好的字符串存到指定文件中去
+        File.WriteAllText(DATA_CLASS_PATH + table.TableName + ".cs", str);
+
+        //刷新Project窗口
+        AssetDatabase.Refresh();
+    }
+
+    /// &lt;summary&gt;
+    /// 生成Excel表对应的数据容器类
+    /// &lt;/summary&gt;
+    /// &lt;param name="table"&gt;&lt;/param&gt;
+    private static void GenerateExcelContainer(DataTable table)
+    {
+        //得到主键索引
+        int keyIndex = GetKeyIndex(table);
+        //得到字段类型行
+        DataRow rowType = GetVariableTypeRow(table);
+        //没有路径创建路径
+        if (!Directory.Exists(DATA_CONTAINER_PATH))
+            Directory.CreateDirectory(DATA_CONTAINER_PATH);
+
+        string str = "using System.Collections.Generic;\
+";
+
+        str += "public class " + table.TableName + "Container" + "\
+{\
+";
+
+        str += "    ";
+        str += "public Dictionary&lt;" + rowType[keyIndex].ToString() + ", " + table.TableName + "&gt;";
+        str += "dataDic = new " + "Dictionary&lt;" + rowType[keyIndex].ToString() + ", " + table.TableName + "&gt;();\
+";
+
+        str += "}";
+
+        File.WriteAllText(DATA_CONTAINER_PATH + table.TableName + "Container.cs", str);
+
+        //刷新Project窗口
+        AssetDatabase.Refresh();
+    }
+
+
+    /// &lt;summary&gt;
+    /// 生成excel2进制数据
+    /// &lt;/summary&gt;
+    /// &lt;param name="table"&gt;&lt;/param&gt;
+    private static void GenerateExcelBinary(DataTable table)
+    {
+        //没有路径创建路径
+        if (!Directory.Exists(BinaryDataMgr.DATA_BINARY_PATH))
+            Directory.CreateDirectory(BinaryDataMgr.DATA_BINARY_PATH);
+
+        //创建一个2进制文件进行写入
+        using (FileStream fs = new FileStream(BinaryDataMgr.DATA_BINARY_PATH + table.TableName + ".tang", FileMode.OpenOrCreate, FileAccess.Write))
+        {
+            //存储具体的excel对应的2进制信息
+            //1.先要存储我们需要写多少行的数据 方便我们读取
+            //-4的原因是因为 前面4行是配置规则 并不是我们需要记录的数据内容
+            fs.Write(BitConverter.GetBytes(table.Rows.Count - 4), 0, 4);
+            //2.存储主键的变量名
+            string keyName = GetVariableNameRow(table)[GetKeyIndex(table)].ToString();
+            byte[] bytes = Encoding.UTF8.GetBytes(keyName);
+            //存储字符串字节数组的长度
+            fs.Write(BitConverter.GetBytes(bytes.Length), 0, 4);
+            //存储字符串字节数组
+            fs.Write(bytes, 0, bytes.Length);
+
+            //遍历所有内容的行 进行2进制的写入
+            DataRow row;
+            //得到类型行 根据类型来决定应该如何写入数据
+            DataRow rowType = GetVariableTypeRow(table);
+            for (int i = BEGIN_INDEX; i &lt; table.Rows.Count; i++)
+            {
+                //得到一行的数据
+                row = table.Rows[i];
+                for (int j = 0; j &lt; table.Columns.Count; j++)
+                {
+                    switch (rowType[j].ToString())
+                    {
+                        case "int":
+                            fs.Write(BitConverter.GetBytes(int.Parse(row[j].ToString())), 0, 4);
+                            break;
+                        case "float":
+                            fs.Write(BitConverter.GetBytes(float.Parse(row[j].ToString())), 0, 4);
+                            break;
+                        case "bool":
+                            fs.Write(BitConverter.GetBytes(bool.Parse(row[j].ToString())), 0, 1);
+                            break;
+                        case "string":
+                            bytes = Encoding.UTF8.GetBytes(row[j].ToString());
+                            //写入字符串字节数组的长度
+                            fs.Write(BitConverter.GetBytes(bytes.Length), 0, 4);
+                            //写入字符串字节数组
+                            fs.Write(bytes, 0, bytes.Length);
+                            break;
+                    }
+                }
+            }
+
+            fs.Close();
+        }
+
+        AssetDatabase.Refresh();
+    }
+
+    /// &lt;summary&gt;
+    /// 获取变量名所在行
+    /// &lt;/summary&gt;
+    /// &lt;param name="table"&gt;&lt;/param&gt;
+    /// &lt;returns&gt;&lt;/returns&gt;
+    private static DataRow GetVariableNameRow(DataTable table)
+    {
+        return table.Rows[0];
+    }
+
+    /// &lt;summary&gt;
+    /// 获取变量类型所在行
+    /// &lt;/summary&gt;
+    /// &lt;param name="table"&gt;&lt;/param&gt;
+    /// &lt;returns&gt;&lt;/returns&gt;
+    private static DataRow GetVariableTypeRow(DataTable table)
+    {
+        return table.Rows[1];
+    }
+
+    
+    /// &lt;summary&gt;
+    /// 获取主键索引
+    /// &lt;/summary&gt;
+    /// &lt;param name="table"&gt;&lt;/param&gt;
+    /// &lt;returns&gt;&lt;/returns&gt;
+    private static int GetKeyIndex(DataTable table)
+    {
+        DataRow row = table.Rows[2];
+        for (int i = 0; i &lt; table.Columns.Count; i++)
+        {
+            if (row[i].ToString() == "key")
+                return i;
+        }
+        return 0;
+    }
+}</code></pre><div class="cout" hidden></div></div>
+<h4 id="11-工具包导出-28" class="hd lv4">11：工具包导出</h4>
+    </article>
+    <footer class="pnbar"><a class="pn prev" href="m25.html"><span>上一节</span>unity_00 - 数学公式和物理公式</a><a class="pn next" href="m27.html"><span>下一节</span>Unity_GUI 概述（编辑器用）</a></footer>
+  </main>
+</div>
+<button class="totop" id="totop">↑</button>
+<script src="assets/demos.js"></script>
+<script src="assets/diagrams-data.js"></script>
+<script src="assets/diagram.js"></script>
+<script src="assets/app.js"></script>
+<script>window.__mountDiagrams && window.__mountDiagrams();</script>
+</body>
+</html>

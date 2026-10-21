@@ -359,11 +359,18 @@ footer a:hover{color:var(--a1)}
   function cardHTML(c) {
     var live = c.status === 'live';
     var reserved = c.status === 'reserved';
-    var pg = judgedOf(c);
+    /* 有题库（storage + total）才统计判分进度；纯阅读型课件（如 Unity）不显示
+       「已判分 0 题 · 0%」这种会让人以为内容空着的假进度。 */
+    var hasBank = !!(c.total && c.storage);
+    var pg = hasBank ? judgedOf(c) : { done: 0, pct: 0 };
     var badge = live ? '<span class="badge live">已上线</span>'
                      : (reserved ? '<span class="badge blank">空位</span>'
                                  : '<span class="badge soon">建设中</span>');
     var cg = c.theme ? 'style="--cg:radial-gradient(120% 90% at 12% 6%,' + esc(c.theme) + '33,transparent 62%)"' : '';
+    var foot = live
+      ? (hasBank ? ('已判分 ' + pg.done + ' 题 · ' + pg.pct + '%')
+                 : esc(c.note || '阅读型课程 · 无判分'))
+      : (reserved ? '待启用' : '内容筹备中');
     return '<a class="course' + (live ? '' : ' todo') + (reserved ? ' blank' : '') + '"' +
       ' href="' + esc(hrefOf(c)) + '" ' + cg +
       ' aria-label="' + esc(c.cn) + '" data-dir="' + esc(c.dir) + '">' +
@@ -378,10 +385,9 @@ footer a:hover{color:var(--a1)}
         (c.mods && c.mods.length
           ? '<div class="mods">' + c.mods.map(function (m) { return '<span class="mod">' + esc(m) + '</span>'; }).join('') + '</div>'
           : '') +
-        (live ? '<div class="meter"><i style="width:' + pg.pct + '%"></i></div>' : '') +
+        (live && hasBank ? '<div class="meter"><i style="width:' + pg.pct + '%"></i></div>' : '') +
         '<div class="foot2">' +
-          '<span>' + (live ? '已判分 ' + pg.done + ' 题 · ' + pg.pct + '%'
-                           : (reserved ? '待启用' : '内容筹备中')) + '</span>' +
+          '<span>' + foot + '</span>' +
           '<span class="sp"></span>' +
           '<span class="enter">' + (live ? '进入学习 →' : '查看占位页 →') + '</span>' +
         '</div>' +

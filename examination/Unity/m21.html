@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Unity 进阶之性能优化 · Unity 交互课件</title>
+<link rel="stylesheet" href="assets/style.css">
+<link rel="stylesheet" href="assets/diagram.css">
+</head>
+<body data-mid="m21">
+<header class="top">
+  <a class="brand" href="index.html"><span class="logo">U</span><b>Unity</b><i>交互课件</i></a>
+  <div class="crumb"><span>性能优化相关</span><em>/</em><strong>Unity 进阶之性能优化</strong></div>
+  <div class="top-r">
+    <span class="stat">原稿空白 · 已补充</span>
+    <button class="mini" id="btnNav">目录</button>
+  </div>
+</header>
+<div class="wrap">
+  <aside class="side" id="side">
+    <div class="side-h">本篇目录</div>
+    <nav class="tocbox"><a class="toc lv2" href="#sup-m21-method">先度量，再优化</a><a class="toc lv2" href="#sup-m21-batch">合批的三种机制与失效条件</a><a class="toc lv2" href="#sup-m21-gc">GC 与内存</a><a class="toc lv3" href="#sup-m21-order">优化顺序建议</a></nav>
+    <div class="side-h">全部模块</div>
+    <nav class="navbox"><div class="ng"><div class="ngt">开发经验补充</div><a href="m01.html">Unity - 进阶 - 大纲</a><a href="m02.html">Unity 进阶之视频播放</a><a href="m03.html">Unity - 进阶 - C# 补充</a><a href="m04.html">Unity 网络开发基础</a><a href="m05.html">Unity 程序框架</a></div><div class="ng"><div class="ngt">游戏引擎相关</div><a href="m06.html">Unity_入门</a><a href="m07.html">Unity_入门 - 实践项目</a><a href="m08.html">Unity_基础</a><a href="m09.html">Unity 核心</a><a href="m10.html">UniTask</a></div><div class="ng"><div class="ngt">数据持久化</div><a href="m11.html">Unity 进阶之 ScriptableObject</a><a href="m12.html">Unity_数据持久化 - PlayerPrefs</a><a href="m13.html">Unity_数据持久化 - Newtonsoft-Json</a><a href="m14.html">MessagePack-CSharp - 二进制</a><a href="m26.html">Unity 数据持久化 - Binary 2 进制</a></div><div class="ng"><div class="ngt">界面 UI 相关</div><a href="m15.html">Unity-UGUI</a><a href="m16.html">Unity-UGUI - 进阶 - TextMeshPro</a><a href="m27.html">Unity_GUI 概述（编辑器用）</a></div><div class="ng"><div class="ngt">设备输入相关</div><a href="m17.html">Unity 进阶之 InputSystem</a></div><div class="ng"><div class="ngt">热更相关</div><a href="m18.html">YooAsset 资源管理 - 大游戏</a><a href="m19.html">Addressables 资源管理 - 小游戏</a><a href="m20.html">HybridCLR - 代码业务逻辑</a></div><div class="ng"><div class="ngt">性能优化相关</div><a href="m21.html" class="on">Unity 进阶之性能优化</a><a href="m22.html">Unity 背包里装 10w 个道具</a></div><div class="ng"><div class="ngt">SDK 相关</div><div class="ngempty">预留分类 · 后续补充</div></div><div class="ng"><div class="ngt">游戏打包相关</div><a href="m23.html">Unity 移动平台相关 — IOS</a><a href="m24.html">Unity 移动平台相关 — Android</a><a href="m25.html">unity_00 - 数学公式和物理公式</a></div></nav>
+  </aside>
+  <main class="main">
+    <div class="mhead">
+      <div class="kick">性能优化相关</div>
+      <h1>Unity 进阶之性能优化</h1>
+      <p class="msub">合批 / Draw Call / 内存</p>
+      <div class="chips"><span class="warn">语雀原稿为空</span><span>本页内容为补充整理</span></div>
+    </div>
+    <article class="doc">
+<div class="runsec"><div class="runsec-h">本模块可运行验证<span>纯 C# · 无需 Unity · 点右下按钮真实编译执行</span></div><div class="cpair"><div class="chead"><span class="lang">C#</span><span class="csp"></span><button class="mini copy">复制</button><button class="mini run" data-run>真实运行</button></div><pre class="code" data-lang="csharp"><code>// 性能优化：Draw Call 与合批的量化估算
+int dcBefore = 0;
+var parts = new (string name, int count, bool sameMat, bool dynamic)[] {
+    ("敌兵身体", 60, true,  true),
+    ("敌兵武器", 60, false, true),
+    ("地面瓦片", 200, true, false),
+    ("UI 图标", 40, false, true)
+};
+
+foreach (var (name, count, sameMat, dynamic) in parts)
+{
+    int dc = sameMat &amp;&amp; dynamic ? 1 : count;   // 同材质可动态合批，否则一个物件一个 DC
+    dcBefore += dc;
+    Console.WriteLine($"{name,-10} {count,4} 个  同材质={sameMat,-5} 动态={dynamic,-5} -&gt; {dc,4} DC");
+}
+Console.WriteLine($"优化前合计 {dcBefore} DC");
+
+Console.WriteLine();
+int dcAfter = 0;
+foreach (var (name, count, sameMat, dynamic) in parts)
+{
+    if (sameMat) { dcAfter += 1; continue; }          // 合批后 1 个
+    if (name == "UI 图标") { dcAfter += 1; continue; } // 打图集后 1 个
+    dcAfter += count;                                 // 材质不同且没打图集，合不了
+}
+Console.WriteLine($"打图集 + 统一材质后：{dcAfter} DC（降 {(1 - (double)dcAfter / dcBefore) * 100:F0}%）");
+Console.WriteLine();
+Console.WriteLine("三条硬规则：");
+Console.WriteLine("  1) 同屏同类物件尽量共用一个材质/图集，否则合批无从谈起");
+Console.WriteLine("  2) SRP Batcher 要求 Shader 变体一致，用自定义 Shader 时最容易失效");
+Console.WriteLine("  3) 半透明、Mask、自定义材质会打断合批，能合并就合并");</code></pre><div class="cout" hidden></div></div></div><div class="demo" data-demo="batching"><div class="demo-bar"><span class="dot"></span>合批与 Draw Call<span class="demo-tag">交互演示</span></div><div class="demo-body"><div class="demo-loading">加载中…</div></div></div>
+<div class="sup">
+<div class="sup-t">原稿此篇为空（语雀 word_count = 0）· 以下为补充整理 <i>非语雀原文</i></div>
+
+<h2 id="sup-m21-method" class="hd lv2">先度量，再优化</h2>
+<p class="tx">没有目标值的优化都是猜。开工前先定三个指标：目标机型、目标帧率、内存上限。然后用 Profiler 抓一段真实战斗的录制，看三张图——CPU 耗时、GC Alloc、渲染（Draw Call / SetPass / Tris）。</p>
+<div class="tw"><table class="tb">
+<tr><td>指标</td><td>健康值（中端安卓）</td><td>超标先查</td></tr>
+<tr><td>Draw Call</td><td>&lt; 150</td><td>材质/图集是否统一、UI 是否打断合批</td></tr>
+<tr><td>SetPass Call</td><td>&lt; 60</td><td>Shader 变体过多、SRP Batcher 失效</td></tr>
+<tr><td>GC Alloc（每帧）</td><td>常驻逻辑 0 B</td><td>字符串拼接、闭包、装箱、LINQ</td></tr>
+<tr><td>三角形数</td><td>&lt; 15 万</td><td>LOD 缺失、模型面数</td></tr>
+</table></div>
+
+<h2 id="sup-m21-batch" class="hd lv2">合批的三种机制与失效条件</h2>
+<ul class="bl">
+<li><b>静态合批</b>：勾 Static 的物体在构建期合并成大网格。代价是包体与内存变大，且不能移动。</li>
+<li><b>动态合批</b>：运行期把小网格合成一个批次。限制严格：顶点数少、同材质、同缩放，现代管线里收益有限。</li>
+<li><b>GPU Instancing</b>：同网格同材质、参数走 MaterialPropertyBlock，一次提交画多个。适合草、子弹、成群小怪。</li>
+<li><b>SRP Batcher</b>（URP）：只要 Shader 变体一致就自动合，与物体数量无关，但换 Shader/材质参数不兼容就会打断。</li>
+</ul>
+
+<h2 id="sup-m21-gc" class="hd lv2">GC 与内存</h2>
+<ul class="bl">
+<li>用对象池复用频繁创建的对象（子弹、飘字、列表项）。</li>
+<li>纹理是内存第一大户：按需降分辨率、压缩格式选 ASTC、大图用完主动 <code>Resources.UnloadUnusedAssets</code>。</li>
+<li>音频走流式（Streaming）而不是全部 Decompress On Load。</li>
+<li>UI 的 Overdraw 用 Scene 视图的 Overdraw 模式看，半透明叠层是主要来源。</li>
+</ul>
+
+<h3 id="sup-m21-order" class="hd lv3">优化顺序建议</h3>
+<p class="tx">先降 Draw Call（收益最直接）→ 再压 GC（消除卡顿尖刺）→ 再降纹理内存（防 OOM）→ 最后才是 Shader 与后处理（画质与性能的取舍）。反过来做通常事倍功半。</p>
+</div>
+
+    </article>
+    <footer class="pnbar"><a class="pn prev" href="m20.html"><span>上一节</span>HybridCLR - 代码业务逻辑</a><a class="pn next" href="m22.html"><span>下一节</span>Unity 背包里装 10w 个道具</a></footer>
+  </main>
+</div>
+<button class="totop" id="totop">↑</button>
+<script src="assets/demos.js"></script>
+<script src="assets/diagrams-data.js"></script>
+<script src="assets/diagram.js"></script>
+<script src="assets/app.js"></script>
+<script>window.__mountDiagrams && window.__mountDiagrams();</script>
+</body>
+</html>

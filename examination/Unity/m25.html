@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>unity_00 - 数学公式和物理公式 · Unity 交互课件</title>
+<link rel="stylesheet" href="assets/style.css">
+<link rel="stylesheet" href="assets/diagram.css">
+</head>
+<body data-mid="m25">
+<header class="top">
+  <a class="brand" href="index.html"><span class="logo">U</span><b>Unity</b><i>交互课件</i></a>
+  <div class="crumb"><span>游戏打包相关</span><em>/</em><strong>unity_00 - 数学公式和物理公式</strong></div>
+  <div class="top-r">
+    <span class="stat">243 字 · 0 代码 · 3 图 · 3 表</span>
+    <button class="mini" id="btnNav">目录</button>
+  </div>
+</header>
+<div class="wrap">
+  <aside class="side" id="side">
+    <div class="side-h">本篇目录</div>
+    <nav class="tocbox"><a class="toc lv2" href="#三角形-1">三角形</a><a class="toc lv2" href="#圆-2">圆</a><a class="toc lv2" href="#矩形相交-3">矩形相交</a><a class="toc lv2" href="#物理公式-4">物理公式</a><a class="toc lv2" href="#sup-m25-vector">向量：游戏里最常用的五个运算</a><a class="toc lv2" href="#sup-m25-interp">插值：三种曲线各自适合什么</a><a class="toc lv2" href="#sup-m25-physics">运动学：三个能直接套的公式</a><a class="toc lv3" href="#sup-m25-tip">坐标系与角度</a></nav>
+    <div class="side-h">全部模块</div>
+    <nav class="navbox"><div class="ng"><div class="ngt">开发经验补充</div><a href="m01.html">Unity - 进阶 - 大纲</a><a href="m02.html">Unity 进阶之视频播放</a><a href="m03.html">Unity - 进阶 - C# 补充</a><a href="m04.html">Unity 网络开发基础</a><a href="m05.html">Unity 程序框架</a></div><div class="ng"><div class="ngt">游戏引擎相关</div><a href="m06.html">Unity_入门</a><a href="m07.html">Unity_入门 - 实践项目</a><a href="m08.html">Unity_基础</a><a href="m09.html">Unity 核心</a><a href="m10.html">UniTask</a></div><div class="ng"><div class="ngt">数据持久化</div><a href="m11.html">Unity 进阶之 ScriptableObject</a><a href="m12.html">Unity_数据持久化 - PlayerPrefs</a><a href="m13.html">Unity_数据持久化 - Newtonsoft-Json</a><a href="m14.html">MessagePack-CSharp - 二进制</a><a href="m26.html">Unity 数据持久化 - Binary 2 进制</a></div><div class="ng"><div class="ngt">界面 UI 相关</div><a href="m15.html">Unity-UGUI</a><a href="m16.html">Unity-UGUI - 进阶 - TextMeshPro</a><a href="m27.html">Unity_GUI 概述（编辑器用）</a></div><div class="ng"><div class="ngt">设备输入相关</div><a href="m17.html">Unity 进阶之 InputSystem</a></div><div class="ng"><div class="ngt">热更相关</div><a href="m18.html">YooAsset 资源管理 - 大游戏</a><a href="m19.html">Addressables 资源管理 - 小游戏</a><a href="m20.html">HybridCLR - 代码业务逻辑</a></div><div class="ng"><div class="ngt">性能优化相关</div><a href="m21.html">Unity 进阶之性能优化</a><a href="m22.html">Unity 背包里装 10w 个道具</a></div><div class="ng"><div class="ngt">SDK 相关</div><div class="ngempty">预留分类 · 后续补充</div></div><div class="ng"><div class="ngt">游戏打包相关</div><a href="m23.html">Unity 移动平台相关 — IOS</a><a href="m24.html">Unity 移动平台相关 — Android</a><a href="m25.html" class="on">unity_00 - 数学公式和物理公式</a></div></nav>
+  </aside>
+  <main class="main">
+    <div class="mhead">
+      <div class="kick">游戏打包相关</div>
+      <h1>unity_00 - 数学公式和物理公式</h1>
+      <p class="msub">向量、插值与运动学</p>
+      <div class="chips"><span>243 字原稿</span><span>0 段代码</span><span>3 张配图</span><span>3 个表格</span></div>
+    </div>
+    <article class="doc">
+<div class="runsec"><div class="runsec-h">本模块可运行验证<span>纯 C# · 无需 Unity · 点右下按钮真实编译执行</span></div><div class="cpair"><div class="chead"><span class="lang">C#</span><span class="csp"></span><button class="mini copy">复制</button><button class="mini run" data-run>真实运行</button></div><pre class="code" data-lang="csharp"><code>// 数学与物理公式：插值、抛物线、运动学
+double Lerp(double a, double b, double t) =&gt; a + (b - a) * Math.Clamp(t, 0, 1);
+double SmoothStep(double t) { t = Math.Clamp(t, 0, 1); return t * t * (3 - 2 * t); }
+double EaseOut(double t) { t = Math.Clamp(t, 0, 1); return 1 - Math.Pow(1 - t, 3); }
+
+Console.WriteLine("三种插值曲线（t: 0 -&gt; 1，值从 0 到 100）：");
+Console.WriteLine($"{"t",-6}{"Lerp",-10}{"SmoothStep",-12}{"EaseOut",-10}");
+foreach (var t in new[] { 0.0, 0.25, 0.5, 0.75, 1.0 })
+    Console.WriteLine($"{t,-6:F2}{Lerp(0, 100, t),-10:F1}{Lerp(0, 100, SmoothStep(t)),-12:F1}{Lerp(0, 100, EaseOut(t)),-10:F1}");
+Console.WriteLine("  SmoothStep 两端慢、中间快，适合镜头推进；EaseOut 起步快、收尾稳，适合弹窗弹出");
+
+Console.WriteLine();
+Console.WriteLine("抛物线弹道（初速 v0、角度 θ、重力 g，忽略空气阻力）：");
+double v0 = 12, g = 9.8;
+foreach (var deg in new[] { 15.0, 30.0, 45.0, 60.0, 75.0 })
+{
+    double rad = deg * Math.PI / 180;
+    double vx = v0 * Math.Cos(rad), vy = v0 * Math.Sin(rad);
+    double flight = 2 * vy / g;
+    double range = vx * flight;
+    double peak = vy * vy / (2 * g);
+    Console.WriteLine($"  θ={deg,4}°  水平速度={vx,5:F2}  滞空={flight,4:F2}s  射程={range,5:F2}m  最高={peak,4:F2}m");
+}
+Console.WriteLine("  45° 射程最远，这不是巧合：sin(2θ) 在 θ=45° 取最大值");
+
+Console.WriteLine();
+Console.WriteLine("帧率无关的平滑跟随（阻尼）：");
+double cur = 0, target = 100;
+foreach (var dt in new[] { 0.016, 0.033, 0.016 })
+{
+    double k = 1 - Math.Exp(-8 * dt);   // 关键：用 1-e^(-λdt) 而不是固定 lerp 系数
+    cur = cur + (target - cur) * k;
+    Console.WriteLine($"  dt={dt * 1000,5:F1}ms  -&gt;  {cur,6:F2}   （固定系数写法在低帧率下会变慢）");
+}</code></pre><div class="cout" hidden></div></div></div><div class="demo" data-demo="math"><div class="demo-bar"><span class="dot"></span>公式求解器<span class="demo-tag">交互演示</span></div><div class="demo-body"><div class="demo-loading">加载中…</div></div></div>
+<p class="tx">三角形相关</p>
+<h2 id="三角形-1" class="hd lv2">三角形</h2>
+<div class="tw"><table class="tb"><tr><td><td><img loading="lazy" class="tbi" src="assets/img/5d667a93c461.webp" alt=""></td><td><img loading="lazy" class="tbi" src="assets/img/847361158f17.webp" alt=""></td></td></tr><tr><td><td>勾股定理：a² + b² = c²</td><td></td></td></tr></table></div>
+<div class="tw"><table class="tb"><tr><td><td>三角函数公式汇总表</td></td></tr><tr><td><td>分类</td><td>公式名称</td><td>公式表达式</td></td></tr><tr><td><td>基本三角函数定义</td><td>正弦函数定义</td><td>sinA = a / c</td></td></tr><tr><td><td>余弦函数定义</td><td>cosA = b / c</td></td></tr><tr><td><td>正切函数定义</td><td>tanA = a / b</td></td></tr><tr><td><td>余切函数定义</td><td>cotA = b / a</td></td></tr><tr><td><td>正割函数定义</td><td>secA = c / b</td></td></tr><tr><td><td>余割函数定义</td><td>cscA = c / a</td></td></tr><tr><td><td>平方关系</td><td>三角函数平方关系</td><td>(singA)²+(cosA)² = 1</td></td></tr><tr><td><td>和差角公式（常用）</td><td>正弦和角公式</td><td>sin(A + B) = sinA*cosB + cosA*sinB</td></td></tr><tr><td><td>正弦差角公式</td><td>sin(A - B) = sinA*cosB - cosA*sinB</td></td></tr><tr><td><td>余弦和角公式</td><td>cos(A + B) = cosA*cosB - sinA*sinB</td></td></tr><tr><td><td>余弦差角公式</td><td>cos(A - B) = cosA*cosB + sinA*sinB</td></td></tr><tr><td><td>正切和角公式</td><td>tan(A + B) = ( tanA + tanB ) / ( 1 - tanA*tanB )</td></td></tr><tr><td><td>正切差角公式</td><td>tan(A - B) = ( tanA - tanB ) / ( 1 + tanA*tanB )</td></td></tr><tr><td><td>余切和角公式</td><td>cot(A + B) = ( cotA*cotB - 1 ) / ( cotA + cotB )</td></td></tr><tr><td><td>余切差角公式</td><td>cot(A - B) = ( cotA*cotB + 1 ) / ( cotA - cotB )</td></td></tr><tr><td><td>倍角公式</td><td>正弦倍角公式</td><td>sin2A = 2*sinA*cosA</td></td></tr><tr><td><td>余弦倍角公式</td><td>cos2A = (cosA)² - (sinA)² = 2(cosA)² - 1 = 1 - 2(sinA)²</td></td></tr><tr><td><td>正切倍角公式</td><td>tan2A = 2tanA / [ 1 - (tanA)² ];</td></td></tr><tr><td><td>积化和差（不常用）</td><td>正弦余弦积化和差</td><td>sinA*cosB=[sin(A+B)+sin(A-B)]/2</td></td></tr><tr><td><td>余弦正弦积化和差</td><td>cosA*sinB=[sin(A+B)-sin(A-B)]/2</td></td></tr><tr><td><td>余弦余弦积化和差</td><td>cosA*cosB=[cos(A+B)+cos(A-B)]/2</td></td></tr><tr><td><td>正弦正弦积化和差</td><td>sinA*sinB=[cos(A-B)-cos(A+B)]/2</td></td></tr><tr><td><td>积差化积（不常用）</td><td>正弦和化积公式</td><td>sinA+sinB=2sin[(A+B)/2]cos[(A-B)/2]</td></td></tr><tr><td><td>正弦差化积公式</td><td>sinA-sinB=2sin[(A-B)/2]cos[(A+B)/2]</td></td></tr><tr><td><td>余弦和化积公式</td><td>cosA+cosB=2cos[(A+B)/2]cos[(A-B)/2]</td></td></tr><tr><td><td>余弦差化积公式</td><td>cosA-cosB=-2sin[(A+B)/2]sin[(A-B)/2]</td></td></tr></table></div>
+<h2 id="圆-2" class="hd lv2">圆</h2>
+<div class="dgm" data-diagram="58b581235446" data-img="assets/img/58b581235446.webp"><div class="dgm-head"><span class="dgm-t">两个圆：圆心距 d 与半径 R、r 决定是否相交</span><span class="badge b-pic">语义重绘</span><span class="sp"></span><button class="dgm-tab">看原图</button></div></div>
+<p class="tx">周长：2πR</p>
+<p class="tx">面积：πR²</p>
+<p class="tx">圆相交：AB &amp;lt; R + r</p>
+<p class="tx">弧度角度转换：角度 = 弧度 * ( 180 / π )</p>
+<h2 id="矩形相交-3" class="hd lv2">矩形相交</h2>
+<div class="dgm" data-diagram="048b1ea7307f" data-img="assets/img/048b1ea7307f.webp"><div class="dgm-head"><span class="dgm-t">A（x,Y）</span><span class="badge b-ocr">文字还原</span><span class="sp"></span><button class="dgm-tab">看原图</button></div></div>
+<p class="tx">检测一个矩形的四个点是否在另外一个矩形范围内</p>
+<div class="dgm" data-diagram="ba08d58fc830" data-img="assets/img/ba08d58fc830.svg"><div class="dgm-head"><span class="dgm-t">矩形相交判定（四个点全部落在对方范围内）</span><span class="badge b-fx">公式</span><span class="sp"></span><button class="dgm-tab">看原图</button></div></div>
+<h2 id="物理公式-4" class="hd lv2">物理公式</h2>
+<div class="tw"><table class="tb"><tr><td><td>力学与运动学公式汇总表</td></td></tr><tr><td><td>分类</td><td>物理量/指标</td><td>公式</td><td>说明</td></td></tr><tr><td><td>重力相关</td><td>重力</td><td>G = m*g</td><td>地球表面附近的物体，由于地球的吸引而受到的力</td></td></tr><tr><td><td>质量</td><td>m</td><td>物体所含物质的多少，单位为千克(kg)</td></td></tr><tr><td><td>重力加速度</td><td>g</td><td>常量，地球表面附近通常取9.8N/kg</td></td></tr><tr><td><td>匀速直线运动</td><td>速度</td><td>V = S / t</td><td>匀速运动中，速度等于路程除以时间</td></td></tr><tr><td><td>路程</td><td>S = V * t</td><td>匀速运动中，路程等于速度乘以时间</td></td></tr><tr><td><td>时间</td><td>t = S / V</td><td>匀速运动中，时间等于路程除以速度</td></td></tr><tr><td><td>匀加速直线运动</td><td>平均速度</td><td>V平 = S / t</td><td>总位移除以总时间</td></td></tr><tr><td><td>中间时刻速度</td><td>V(t/2) = V平 = (V末 + V0)/2</td><td>匀变速运动中，中间时刻的瞬时速度等于平均速度</td></td></tr><tr><td><td>末速度</td><td>V末 = V0 + a*t</td><td>速度与时间的关系公式</td></td></tr><tr><td><td>加速度</td><td>a = (V末 - V0)/t</td><td>速度变化量与发生这一变化所用时间的比值</td></td></tr><tr><td><td>位移</td><td>S = V平*t = V0*t + ½*a*t² = (V末/2)*t</td><td>匀加速直线运动位移的三种等价计算方式</td></td></tr><tr><td><td>自由落体运动</td><td>下落高度</td><td>S = ½*g*t²</td><td>初速度为0的匀加速直线运动，位移计算公式</td></td></tr><tr><td><td>末速度</td><td>V = V0 + g*t</td><td>自由落体的速度公式，通常初速度V0=0</td></td></tr><tr><td><td>速度-位移推论</td><td>Vt² = 2*g*S</td><td>末速度的平方等于2倍重力加速度乘以下落高度</td></td></tr><tr><td><td>竖直上抛运动</td><td>位移</td><td>S = V0*t - ½*g*t²</td><td>竖直上抛的位移公式，向上为正方向</td></td></tr><tr><td><td>往返时间</td><td>t = 2*V0/g</td><td>从抛出到落回原位置的总时间</td></td></tr><tr><td><td>最大上升高度</td><td>Smax = V0²/(2*g)</td><td>上升到最高点时的位移，已修正原公式的计算逻辑错误</td></td></tr><tr><td><td>末速度</td><td>V = V0 - g*t</td><td>竖直上抛的速度公式，向上为正方向</td></td></tr></table></div>
+<p class="tx">Unity引擎当中有自带的物理系统，但是在实际开发中物理系统伴随着更高的性能消耗，并且有些需求我们并不需要模拟真实的物理效果，只需要部分采用物理规律，比如2D横版动作游戏当中的上抛、下落、加速运动等等。</p>
+<p class="tx">这时我们就需要利用这些物理公式自己进行逻辑处理，所以掌握基本的物理公式，在游戏开发中很重要！</p>
+<div class="sup">
+<div class="sup-t">原稿此篇以公式图片为主 · 以下为补充整理 <i>非语雀原文</i></div>
+
+<h2 id="sup-m25-vector" class="hd lv2">向量：游戏里最常用的五个运算</h2>
+<div class="tw"><table class="tb">
+<tr><td>运算</td><td>公式</td><td>典型用途</td></tr>
+<tr><td>长度</td><td>|a| = √(x²+y²+z²)</td><td>算距离（比 Distance 少一次开方可用平方距离比较）</td></tr>
+<tr><td>归一化</td><td>â = a / |a|</td><td>只要方向不要长度</td></tr>
+<tr><td>点积</td><td>a·b = |a||b|cosθ</td><td>判断前后、夹角、投影</td></tr>
+<tr><td>叉积</td><td>a×b（仅 3D）</td><td>求法线、判断左右（y 分量正负）</td></tr>
+<tr><td>投影</td><td>proj = (a·b̂)b̂</td><td>把速度分解到某方向</td></tr>
+</table></div>
+<p class="tx">实用技巧：判断「敌人在不在我前方 60° 内」，不用算角度，直接比较点积与 cos60°=0.5，省掉一次 acos。</p>
+
+<h2 id="sup-m25-interp" class="hd lv2">插值：三种曲线各自适合什么</h2>
+<ul class="bl">
+<li><b>Lerp</b>（线性）：匀速。适合位置跟随、血条数值，缺点是观感生硬。</li>
+<li><b>SmoothStep</b>（t²(3-2t)）：两端慢中间快。适合镜头推进、开门动画。</li>
+<li><b>EaseOut</b>（1-(1-t)³）：起步快收尾稳。适合弹窗弹出、飘字。</li>
+</ul>
+<p class="tx">做平滑跟随（相机、摇杆）时，千万别用固定的 <code>Lerp(a, b, 0.1f)</code>，那样帧率越高跟随越快。正确写法是 <code>1 - e^(-λ·dt)</code>，让系数随 dt 自适应，低帧率下速度才一致。</p>
+
+<h2 id="sup-m25-physics" class="hd lv2">运动学：三个能直接套的公式</h2>
+<ul class="bl">
+<li><b>匀加速位移</b>：s = v₀t + ½at²。用于跳跃高度、刹车距离。</li>
+<li><b>抛体射程</b>：R = v₀²sin(2θ)/g，45° 最远；最高点 h = v₀²sin²θ/(2g)。</li>
+<li><b>弹簧阻尼</b>：a = -k(x - x₀) - c·v。做果冻效果、UI 弹性回弹比单纯 Lerp 自然得多。</li>
+</ul>
+
+<h3 id="sup-m25-tip" class="hd lv3">坐标系与角度</h3>
+<p class="tx">Unity 的欧拉角顺序是 Z→X→Y（绕自身轴），所以直接改 eulerAngles 做旋转经常出现「万向锁」式的诡异结果；需要连续旋转时用 Quaternion 相乘，或者 <code>Quaternion.Euler</code> 一次性给出目标角度。屏幕坐标转世界坐标用 <code>Camera.ScreenToWorldPoint</code>，注意 z 要填相机到目标的距离，否则永远得到相机位置。</p>
+</div>
+
+    </article>
+    <footer class="pnbar"><a class="pn prev" href="m24.html"><span>上一节</span>Unity 移动平台相关 — Android</a><a class="pn next" href="m26.html"><span>下一节</span>Unity 数据持久化 - Binary 2 进制</a></footer>
+  </main>
+</div>
+<button class="totop" id="totop">↑</button>
+<script src="assets/demos.js"></script>
+<script src="assets/diagrams-data.js"></script>
+<script src="assets/diagram.js"></script>
+<script src="assets/app.js"></script>
+<script>window.__mountDiagrams && window.__mountDiagrams();</script>
+</body>
+</html>

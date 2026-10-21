@@ -1,0 +1,2319 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Addressables 资源管理 - 小游戏 · Unity 交互课件</title>
+<link rel="stylesheet" href="assets/style.css">
+<link rel="stylesheet" href="assets/diagram.css">
+</head>
+<body data-mid="m19">
+<header class="top">
+  <a class="brand" href="index.html"><span class="logo">U</span><b>Unity</b><i>交互课件</i></a>
+  <div class="crumb"><span>热更相关</span><em>/</em><strong>Addressables 资源管理 - 小游戏</strong></div>
+  <div class="top-r">
+    <span class="stat">61516 字 · 108 代码 · 33 图 · 0 表</span>
+    <button class="mini" id="btnNav">目录</button>
+  </div>
+</header>
+<div class="wrap">
+  <aside class="side" id="side">
+    <div class="side-h">本篇目录</div>
+    <nav class="tocbox"><a class="toc lv2" href="#Addressables-课程目录-1">Addressables 课程目录</a><a class="toc lv2" href="#第-2-章-Addressables-概述与导入-2">第 2 章：Addressables 概述与导入</a><a class="toc lv3" href="#第-1-节-概述-3">第 1 节：概述</a><a class="toc lv3" href="#第-2-节-导入-Addressables-4">第 2 节：导入 Addressables</a><a class="toc lv2" href="#必看整章-第-3-章-资源加载基础-5">（🔥 必看整章）第 3 章：资源加载基础</a><a class="toc lv3" href="#第-1-节-寻址资源设置-6">第 1 节：寻址资源设置</a><a class="toc lv3" href="#第-2-节-指定资源加载-适合小项目-7">第 2 节：指定资源加载(适合小项目)</a><a class="toc lv3" href="#第-3-节-Label-标签的作用-动态加载前置条件-8">第 3 节：Label 标签的作用（动态加载前置条件）</a><a class="toc lv3" href="#第-4-节-动态加载单个资源-主流加载方式-9">🔥第 4 节：动态加载单个资源（主流加载方式）</a><a class="toc lv3" href="#第-5-节-动态加载多个资源-主流加载方式-11">🔥第 5 节：动态加载多个资源（主流加载方式）</a><a class="toc lv2" href="#第-4-章-配置相关-13">第 4 章：配置相关</a><a class="toc lv3" href="#必看-第-1-节-Profile-概述窗口配置-14">🔥 必看-第 1 节：Profile 概述窗口配置</a><a class="toc lv3" href="#必看-第-2-节-AddressableAssetSettings-配置-15">🔥 必看-第 2 节：AddressableAssetSettings 配置</a><a class="toc lv3" href="#必看-第-3-节-Packed-Assets-打包资源配置-16">🔥 必看-第 3 节：Packed Assets 打包资源配置</a><a class="toc lv3" href="#第-4-节-Addressables-Hosting-可寻址托管窗口-17">第 4 节：Addressables Hosting 可寻址托管窗口</a><a class="toc lv2" href="#必看整章-第-5-章-资源打包-发布-加载-18">（🔥 必看整章）第 5 章：资源打包（发布）加载</a><a class="toc lv3" href="#第-1-节-资源打包加载理论-重要-19">第 1 节：资源打包加载理论（重要）</a><a class="toc lv3" href="#第-2-节-资源打包加载-重要-20">第 2 节：资源打包加载（重要）</a><a class="toc lv3" href="#第-3-节-资源更新-重要-21">第 3 节：资源更新（重要）</a><a class="toc lv2" href="#第-6-章-其它重要内容-重要-22">第 6 章：其它重要内容（重要）</a><a class="toc lv3" href="#第-1-节-资源加载相关补充知识-23">第 1 节：资源加载相关补充知识</a><a class="toc lv4" href="#01-根据资源定位信息加载资源-知识点-24">01 根据资源定位信息加载资源 知识点</a><a class="toc lv4" href="#02-异步加载的几种使用方式-知识点-重要-25">02 异步加载的几种使用方式 知识点（重要））</a><a class="toc lv4" href="#03-关于-Async-Operation-Handle-知识点-重要-26">03 关于 Async Operation Handle 知识点（重要）</a><a class="toc lv4" href="#04-自定义更新目录和下载-AB-包-知识点-重要-28">04 自定义更新目录和下载 AB 包 知识点（重要）</a><a class="toc lv4" href="#必看-05-引用计数规则-知识点-重要-29">（🔥 必看）05 引用计数规则 知识点（重要）</a><a class="toc lv3" href="#第-2-节-窗口相关-31">第 2 节：窗口相关</a><a class="toc lv4" href="#01-事件查看窗口-知识点-加密-32">01 事件查看窗口 知识点（加密）</a><a class="toc lv4" href="#02-分析窗口-知识点-加密-33">02 分析窗口 知识点（加密）</a><a class="toc lv4" href="#03-构建布局报告-知识点-加密-34">03 构建布局报告 知识点（加密）</a><a class="toc lv3" href="#必看-第-3-节-常见问题汇总-35">（🔥 必看）第 3 节：常见问题汇总</a></nav>
+    <div class="side-h">全部模块</div>
+    <nav class="navbox"><div class="ng"><div class="ngt">开发经验补充</div><a href="m01.html">Unity - 进阶 - 大纲</a><a href="m02.html">Unity 进阶之视频播放</a><a href="m03.html">Unity - 进阶 - C# 补充</a><a href="m04.html">Unity 网络开发基础</a><a href="m05.html">Unity 程序框架</a></div><div class="ng"><div class="ngt">游戏引擎相关</div><a href="m06.html">Unity_入门</a><a href="m07.html">Unity_入门 - 实践项目</a><a href="m08.html">Unity_基础</a><a href="m09.html">Unity 核心</a><a href="m10.html">UniTask</a></div><div class="ng"><div class="ngt">数据持久化</div><a href="m11.html">Unity 进阶之 ScriptableObject</a><a href="m12.html">Unity_数据持久化 - PlayerPrefs</a><a href="m13.html">Unity_数据持久化 - Newtonsoft-Json</a><a href="m14.html">MessagePack-CSharp - 二进制</a><a href="m26.html">Unity 数据持久化 - Binary 2 进制</a></div><div class="ng"><div class="ngt">界面 UI 相关</div><a href="m15.html">Unity-UGUI</a><a href="m16.html">Unity-UGUI - 进阶 - TextMeshPro</a><a href="m27.html">Unity_GUI 概述（编辑器用）</a></div><div class="ng"><div class="ngt">设备输入相关</div><a href="m17.html">Unity 进阶之 InputSystem</a></div><div class="ng"><div class="ngt">热更相关</div><a href="m18.html">YooAsset 资源管理 - 大游戏</a><a href="m19.html" class="on">Addressables 资源管理 - 小游戏</a><a href="m20.html">HybridCLR - 代码业务逻辑</a></div><div class="ng"><div class="ngt">性能优化相关</div><a href="m21.html">Unity 进阶之性能优化</a><a href="m22.html">Unity 背包里装 10w 个道具</a></div><div class="ng"><div class="ngt">SDK 相关</div><div class="ngempty">预留分类 · 后续补充</div></div><div class="ng"><div class="ngt">游戏打包相关</div><a href="m23.html">Unity 移动平台相关 — IOS</a><a href="m24.html">Unity 移动平台相关 — Android</a><a href="m25.html">unity_00 - 数学公式和物理公式</a></div></nav>
+  </aside>
+  <main class="main">
+    <div class="mhead">
+      <div class="kick">热更相关</div>
+      <h1>Addressables 资源管理 - 小游戏</h1>
+      <p class="msub">引用计数与异步加载</p>
+      <div class="chips"><span>61516 字原稿</span><span>108 段代码</span><span>33 张配图</span><span>0 个表格</span></div>
+    </div>
+    <article class="doc">
+<div class="runsec"><div class="runsec-h">本模块可运行验证<span>纯 C# · 无需 Unity · 点右下按钮真实编译执行</span></div><div class="cpair"><div class="chead"><span class="lang">C#</span><span class="csp"></span><button class="mini copy">复制</button><button class="mini run" data-run>真实运行</button></div><pre class="code" data-lang="csharp"><code>// Addressables：引用计数与卸载时机
+var refCount = new Dictionary&lt;string, int&gt;();
+var loaded = new HashSet&lt;string&gt;();
+
+void Load(string key)
+{
+    if (!refCount.ContainsKey(key)) { refCount[key] = 0; loaded.Add(key); }
+    refCount[key]++;
+    Console.WriteLine($"  Load   {key,-16} 引用数 -&gt; {refCount[key]}");
+}
+
+void Release(string key)
+{
+    if (!refCount.ContainsKey(key) || refCount[key] == 0) { Console.WriteLine($"  Release {key,-15} 警告：未加载"); return; }
+    refCount[key]--;
+    Console.WriteLine($"  Release {key,-15} 引用数 -&gt; {refCount[key]}");
+    if (refCount[key] == 0) { loaded.Remove(key); Console.WriteLine($"          -&gt; 引用归零，真正卸载 {key}"); }
+}
+
+Console.WriteLine("两个界面同时用同一张图：");
+Load("icon_sword");
+Load("icon_sword");
+Load("ui_shop");
+Console.WriteLine();
+Console.WriteLine("关闭第一个界面：");
+Release("icon_sword");
+Console.WriteLine("  此刻 icon_sword 仍在内存里，因为还有人在用");
+Release("ui_shop");
+Console.WriteLine();
+Console.WriteLine("关闭第二个界面：");
+Release("icon_sword");
+Console.WriteLine();
+Console.WriteLine($"当前仍驻留内存的资源：{(loaded.Count == 0 ? "无" : string.Join(", ", loaded))}");
+Console.WriteLine();
+Console.WriteLine("Addressables 的坑都在这里：");
+Console.WriteLine("  - Release 次数少于 Load（引用泄漏，内存只涨不降）");
+Console.WriteLine("  - Release 次数多于 Load（提前卸载，正在用的资源变紫/变白）");
+Console.WriteLine("  - 用 Resources.UnloadUnusedAssets 兜底，但它是全量扫描，会卡帧");</code></pre><div class="cout" hidden></div></div></div><div class="demo" data-demo="addr"><div class="demo-bar"><span class="dot"></span>Addressables 引用计数<span class="demo-tag">交互演示</span></div><div class="demo-body"><div class="demo-loading">加载中…</div></div></div>
+<p class="tx">9 小时 27 分 32 秒</p>
+<p class="tx">🔄 替换说明1：Resources.Load → Addressables（阶段4）。原因：Resources 文件夹已不推荐用于正式项目，加载慢、内存占用高，Addressables 是官方推荐替代。</p>
+<p class="tx">只管资源资产：图片、Prefab、UI、Json 配置、音频、TMP 字体。 ✅可以热更：</p>
+<ul class="bl"><li>新增关卡 Prefab、不同布局 UI 预制体</li><li>新增图片、皮肤、关卡 json 配置</li><li>修改 Prefab 里面 Transform 位置、组件参数</li></ul>
+<p class="tx">⚠️硬性限制：Prefab 挂载的所有 C# 脚本类，必须提前编译打进主包 APK（AOT 层）。 远程 AB 包里的 Prefab不能出现主包不存在的 C# 脚本类，加载直接报错HybridCLR。</p>
+<p class="tx">❌Addressables 做不到：</p>
+<ul class="bl"><li>修改、新增 C# 业务逻辑类、算法函数</li><li>Prefab 挂载主包没有的脚本组件</li></ul>
+<p class="tx">一句话：资源、布局、配置随便热更；脚本类不能新增修改。</p>
+<h2 id="Addressables-课程目录-1" class="hd lv2">Addressables 课程目录</h2>
+<h2 id="第-2-章-Addressables-概述与导入-2" class="hd lv2">第 2 章：Addressables 概述与导入</h2>
+<h3 id="第-1-节-概述-3" class="hd lv3">第 1 节：概述</h3>
+<p class="tx">一、Addressables 是什么
+可寻址资源管理系统，Unity 2018.2 起推出、用于替代 AssetBundle 的高阶资源管理系统；本质是基于 AssetBundle 架构做的高阶流程（自动化封装）。补充说明 AssetBundle 目前仍是主流但将逐渐被淘汰。</p>
+<p class="tx">二、Addressables 用于做什么
+与 AssetBundle 作用一致，核心三点：管理资源、热更新、减小包的体积。</p>
+<p class="tx">三、有什么优缺点</p>
+<ul class="bl"><li>优点（5 条）：自动化管理 AB 包打包/发布/加载、更方便本地与远程加载、自动处理资源关联性、内存管理更方便、迭代更方便。</li><li>缺点：原 PDF 未明确列出，仅从"学习前提"可归纳出隐性门槛——需先掌握委托事件、AssetBundle 等前置知识，学习门槛相对较高（已在文档中如实标注，未凭空编造）。</li></ul>
+<h3 id="第-2-节-导入-Addressables-4" class="hd lv3">第 2 节：导入 Addressables</h3>
+<div class="cpair"><div class="chead"><span class="lang">C#</span><span class="csp"></span><button class="mini copy">复制</button></div><pre class="code" data-lang="csharp"><code>1.打开Window——&gt;Package Manager窗口
+2.设置包为Unity Registry
+3.找到Addressables包 进行安装</code></pre><div class="cout" hidden></div></div>
+<div class="dgm" data-diagram="efc05dfc3145" data-img="assets/img/efc05dfc3145.png"><div class="dgm-head"><span class="dgm-t">Window Help</span><span class="badge b-ocr">文字还原</span><span class="sp"></span><button class="dgm-tab">看原图</button></div></div>
+<div class="dgm" data-diagram="9b6ee3826817" data-img="assets/img/9b6ee3826817.png"><div class="dgm-head"><span class="dgm-t">可 Package Manager</span><span class="badge b-ocr">文字还原</span><span class="sp"></span><button class="dgm-tab">看原图</button></div></div>
+<p class="tx">导入成功显示</p>
+<div class="dgm" data-diagram="107a5135eebc" data-img="assets/img/107a5135eebc.png"><div class="dgm-head"><span class="dgm-t">Scrat / Folder</span><span class="badge b-ocr">文字还原</span><span class="sp"></span><button class="dgm-tab">看原图</button></div></div>
+<div class="cpair"><div class="chead"><span class="lang">C#</span><span class="csp"></span><button class="mini copy">复制</button></div><pre class="code" data-lang="csharp"><code>方法一：打开资源组窗口
+1.Window——&gt;Asset Management——&gt;Addressables——&gt;Groups
+2.在窗口中点击 Create Addressables Settings按钮 创建配置文件
+
+方法二：在Inspector窗口中为资源勾选Addressable
+如果没有创建过配置相关文件，这时会自动创建相关文件</code></pre><div class="cout" hidden></div></div>
+<div class="dgm" data-diagram="6af2e27d6aba" data-img="assets/img/6af2e27d6aba.png"><div class="dgm-head"><span class="dgm-t">Window Help</span><span class="badge b-ocr">文字还原</span><span class="sp"></span><button class="dgm-tab">看原图</button></div></div>
+<div class="dgm" data-diagram="5e9eb92f227b" data-img="assets/img/5e9eb92f227b.png"><div class="dgm-head"><span class="dgm-t">N6 Addressables Groups</span><span class="badge b-ocr">文字还原</span><span class="sp"></span><button class="dgm-tab">看原图</button></div></div>
+<div class="dgm" data-diagram="d6b2406a5248" data-img="assets/img/d6b2406a5248.png"><div class="dgm-head"><span class="dgm-t">Assets</span><span class="badge b-ocr">文字还原</span><span class="sp"></span><button class="dgm-tab">看原图</button></div></div>
+<div class="dgm" data-diagram="98d482cd4ae6" data-img="assets/img/98d482cd4ae6.png"><div class="dgm-head"><span class="dgm-t">• Project / 0 Inspector</span><span class="badge b-ocr">文字还原</span><span class="sp"></span><button class="dgm-tab">看原图</button></div></div>
+<h2 id="必看整章-第-3-章-资源加载基础-5" class="hd lv2">（🔥 必看整章）第 3 章：资源加载基础</h2>
+<h3 id="第-1-节-寻址资源设置-6" class="hd lv3">第 1 节：寻址资源设置</h3>
+<p class="tx">Resources 文件夹很特殊，在下面的所有文件都会打包出去</p>
+<div class="cpair"><div class="chead"><span class="lang">C#</span><span class="csp"></span><button class="mini copy">复制</button></div><pre class="code" data-lang="csharp"><code>注意：
+1.C#代码无法作为可寻址资源
+2.Resources文件夹下资源如果变为寻址资源，会移入Resources_moved文件夹中
+  原因：Resources文件夹下资源会最终打包出去，如果变为可寻址资源意味着想通过Addressables进行管理
+  那么它就没有必要通过Resources方式去加载和打包，所以会自动迁移，避免重复打包，浪费空间</code></pre><div class="cout" hidden></div></div>
+<p class="tx">1. 只有在 Resources文件夹下资源如果变为寻址资源，会移入Resources_moved文件夹中</p>
+<p class="tx">方法一：选中资源，勾选Inspector窗口中的Addressable</p>
+<div class="dgm" data-diagram="fe450b0f85fa" data-img="assets/img/fe450b0f85fa.png"><div class="dgm-head"><span class="dgm-t">Assets</span><span class="badge b-ocr">文字还原</span><span class="sp"></span><button class="dgm-tab">看原图</button></div></div>
+<div class="dgm" data-diagram="559c43ceb040" data-img="assets/img/559c43ceb040.png"><div class="dgm-head"><span class="dgm-t">€30</span><span class="badge b-ocr">文字还原</span><span class="sp"></span><button class="dgm-tab">看原图</button></div></div>
+<p class="tx">2.直接拖进去，就变成可寻址资源</p>
+<p class="tx">方法二：选中资源，拖入Addressables Groups窗口中</p>
+<div class="dgm" data-diagram="c2dbc02df5f6" data-img="assets/img/c2dbc02df5f6.png"><div class="dgm-head"><span class="dgm-t">Version Control</span><span class="badge b-ocr">文字还原</span><span class="sp"></span><button class="dgm-tab">看原图</button></div></div>
+<div class="dgm" data-diagram="86dc277e1911" data-img="assets/img/86dc277e1911.png"><div class="dgm-head"><span class="dgm-t">56 Addressables Groups / Font&amp;Materials</span><span class="badge b-ocr">文字还原</span><span class="sp"></span><button class="dgm-tab">看原图</button></div></div>
+<p class="tx">3.资源管理窗口右键菜单</p>
+<div class="dgm" data-diagram="b6d3622be0eb" data-img="assets/img/b6d3622be0eb.png"><div class="dgm-head"><span class="dgm-t">MyDataTest</span><span class="badge b-ocr">文字还原</span><span class="sp"></span><button class="dgm-tab">看原图</button></div></div>
+<div class="cpair"><div class="chead"><span class="lang">C#</span><span class="csp"></span><button class="mini copy">复制</button></div><pre class="code" data-lang="csharp"><code>Move Addressables to Group：将该资源放入到现有的另一个组中
+Move Addressables to New Gourp：使用与当前组相同设置创建一个新租，并将该资源放入该新组中
+Rmove Addressables：移除资源，该资源会变为不可寻址资源
+Simplify Addressable Names：简化可寻址资源名，会删除名称中的路径和拓展，简化缩短名称
+Copy Address to Clipboard：将地址复制到剪贴板
+Change Address：改名
+Create New Group：创建新租</code></pre><div class="cout" hidden></div></div>
+<div class="dgm" data-diagram="305278459cd9" data-img="assets/img/305278459cd9.png"><div class="dgm-head"><span class="dgm-t">Addressables Groups</span><span class="badge b-ocr">文字还原</span><span class="sp"></span><button class="dgm-tab">看原图</button></div></div>
+<div class="cpair"><div class="chead"><span class="lang">C#</span><span class="csp"></span><button class="mini copy">复制</button></div><pre class="code" data-lang="csharp"><code>01 资源信息（关键）
+1.GroupName\\Addressable Name：分组名\\可寻址名（可重名，描述资源）
+2.Path：路径（不可重复，资源定位）
+3.Labels：标签（可重复、可用于区分资源种类，例如青铜装备、黄金装备）</code></pre><div class="cout" hidden></div></div>
+<p class="tx">----------------------------------------------------------------------------------</p>
+<div class="dgm" data-diagram="b6aadc1d6654" data-img="assets/img/b6aadc1d6654.png"><div class="dgm-head"><span class="dgm-t">Create New Group</span><span class="badge b-ocr">文字还原</span><span class="sp"></span><button class="dgm-tab">看原图</button></div></div>
+<div class="cpair"><div class="chead"><span class="lang">C#</span><span class="csp"></span><button class="mini copy">复制</button></div><pre class="code" data-lang="csharp"><code>02 创建分组相关
+Create——&gt;Group
+Packed Assets:打包资源分组
+Blank(no schema):空白（无架构）
+区别：Packed Assets默认自带默认打包加载相关设置信息，Blank没有相关信息需要自己关联
+
+组对于我们来说意义重大，之后在资源打包时，一个组可以作为一个或多个AB包
+
+关于组设置相关信息，之后详细讲解</code></pre><div class="cout" hidden></div></div>
+<p class="tx">----------------------------------------------------------------------------------</p>
+<div class="dgm" data-diagram="b3ffd59ab18b" data-img="assets/img/b3ffd59ab18b.png"><div class="dgm-head"><span class="dgm-t">Packed Assets</span><span class="badge b-ocr">文字还原</span><span class="sp"></span><button class="dgm-tab">看原图</button></div></div>
+<div class="cpair"><div class="chead"><span class="lang">C#</span><span class="csp"></span><button class="mini copy">复制</button></div><pre class="code" data-lang="csharp"><code>03 选中某一组后右键
+Remove Group(s):移除组，组中所有资源恢复为不可寻址资源
+Simplify Addressable Names:简化可寻址名称，会删除名称中的路径和拓展，简化缩短名称
+Set as Default:设置为默认组，当直接勾选资源中的Addressable时，会自动加入该组
+Inspect Group Setting:快速选中关联的组相关配置文件
+Rename:重命名
+Create New Group:创建新组</code></pre><div class="cout" hidden></div></div>
+<p class="tx">----------------------------------------------------------------------------------</p>
+<div class="dgm" data-diagram="2bb957306d16" data-img="assets/img/2bb957306d16.png"><div class="dgm-head"><span class="dgm-t">Addressables Groups</span><span class="badge b-ocr">文字还原</span><span class="sp"></span><button class="dgm-tab">看原图</button></div></div>
+<div class="dgm" data-diagram="1b8ea1afd87f" data-img="assets/img/1b8ea1afd87f.png"><div class="dgm-head"><span class="dgm-t">Addressables Profiles</span><span class="badge b-ocr">文字还原</span><span class="sp"></span><button class="dgm-tab">看原图</button></div></div>
+<div class="cpair"><div class="chead"><span class="lang">C#</span><span class="csp"></span><button class="mini copy">复制</button></div><pre class="code" data-lang="csharp"><code>04 配置概述相关
+Manage Profiles：管理配置文件
+可以配置打包目标、本地远程的打包加载路径等等信息（之后再详细讲解）</code></pre><div class="cout" hidden></div></div>
+<p class="tx">----------------------------------------------------------------------------------</p>
+<div class="dgm" data-diagram="12a235697fe2" data-img="assets/img/12a235697fe2.png"><div class="dgm-head"><span class="dgm-t">Addressables Groups / Play Mode Scriptv </span><span class="badge b-ocr">文字还原</span><span class="sp"></span><button class="dgm-tab">看原图</button></div></div>
+<div class="cpair"><div class="chead"><span class="lang">C#</span><span class="csp"></span><button class="mini copy">复制</button></div><pre class="code" data-lang="csharp"><code>05 Tools工具相关
+Inspect System Settings：检查系统设置
+Check for content Update Restrictions:检查内容更新限制
+Window：打开Addressables相关窗口
+Groups View：分组视图相关
+Show Sprite and Subobject Addressable：显示可寻址对象的精灵和子对象，一般想要看到图集资源内内容时可以勾选该选项
+Group Hierarchy with Dashes：带破折号的组层次结构</code></pre><div class="cout" hidden></div></div>
+<p class="tx">----------------------------------------------------------------------------------</p>
+<div class="dgm" data-diagram="a9399900b7f2" data-img="assets/img/a9399900b7f2.png"><div class="dgm-head"><span class="dgm-t">Addressables Groups / Addressables Group</span><span class="badge b-ocr">文字还原</span><span class="sp"></span><button class="dgm-tab">看原图</button></div></div>
+<div class="cpair"><div class="chead"><span class="lang">C#</span><span class="csp"></span><button class="mini copy">复制</button></div><pre class="code" data-lang="csharp"><code>06 Play Mode Script播放模式脚本（编辑模式下如何运行）
+确定在编辑器播放模式下运行游戏时，可寻址系统如何访问可寻址资源
+
+Use Asset Database（fastest）：
+使用资源数据库（最快的），一般在开发阶段使用，使用此选项时，您不必打包可寻址内容，它会直接使用文件夹中的资源
+在实际开发时，可以不使用这种模式，这种模式没有测试的意义
+
+Simulate Groups（advanced）：
+模拟组（后期），一般在测试阶段使用，分析布局和依赖项的内容，而不创建AB包
+通过ResourceManager从资产数据库加载资产，就像通过AB包加载一样
+通过引入时间延迟，模拟远程资产绑定的下载速度和本地绑定的文件加载速度
+在开发阶段可以使用这个模式来进行资源加载
+
+Use Existing Build（requires built groups）：
+正儿八经的从AB包加载资源
+使用现有AB包（需要构建AB包），一般在最终发布测试阶段使用
+从早期内容版本创建的AB包加载资产
+在使用此选项之前，必须使用生成脚本（如默认生成脚本）打包资源
+远程内容必须托管在用于生成内容的配置文件的RemoteLoadPath上</code></pre><div class="cout" hidden></div></div>
+<p class="tx">----------------------------------------------------------------------------------</p>
+<div class="dgm" data-diagram="f8847bc8fcab" data-img="assets/img/f8847bc8fcab.png"><div class="dgm-head"><span class="dgm-t">Addressables Groups / Addressables Group</span><span class="badge b-ocr">文字还原</span><span class="sp"></span><button class="dgm-tab">看原图</button></div></div>
+<div class="cpair"><div class="chead"><span class="lang">C#</span><span class="csp"></span><button class="mini copy">复制</button></div><pre class="code" data-lang="csharp"><code>07 Build（构建打包相关）
+New Build：构建AB包资源（相当于打包资源分组）
+Update a Previour Build：更新以前的版本
+Clean Build：清空之前的构建资源</code></pre><div class="cout" hidden></div></div>
+<div class="cpair"><div class="chead"><span class="lang">C#</span><span class="csp"></span><button class="mini copy">复制</button></div><pre class="code" data-lang="csharp"><code>1.资源路径一定不允许相同（后缀不同，名字相同可以）
+2.资源名我们可以随意修改
+3.之后在加载资源时我们可以使用名字和标签作为双标识加载指定资源</code></pre><div class="cout" hidden></div></div>
+<div class="cpair"><div class="chead"><span class="lang">C#</span><span class="csp"></span><button class="mini copy">复制</button></div><pre class="code" data-lang="csharp"><code>我们可以按规则将资源进行分组
+比如：角色、装备、怪物、UI等等</code></pre><div class="cout" hidden></div></div>
+<h3 id="第-2-节-指定资源加载-适合小项目-7" class="hd lv3">第 2 节：指定资源加载(适合小项目)</h3>
+<p class="tx">核心代码：</p>
+<div class="cpair"><div class="chead"><span class="lang">C#</span><span class="csp"></span><button class="mini copy">复制</button></div><pre class="code" data-lang="csharp"><code>public AssetReference assetReference;
+assetReference.LoadAssetAsync&lt;GameObject&gt;().Completed += (handle) =&gt;
+ {
+            
+            使用传入的参数handle（建议），判断是否加载成功
+            if (handle.Status == AsyncOperationStatus.Succeeded)
+            {
+                  Instantiate(handle.Result);//实例化该资源对象
+                  assetReference.ReleaseAsset();//释放该资源对象，必须在加载完资源后释放
+            }
+         
+}
+   </code></pre><div class="cout" hidden></div></div>
+<div class="cpair"><div class="chead"><span class="lang">C#</span><span class="csp"></span><button class="mini copy">复制</button></div><pre class="code" data-lang="csharp"><code>我们准备一些常用的各类型的资源
+1.GameObject预设体
+2.精灵图片
+3.图集
+4.贴图
+5.材质球
+6.配置文件（json、xml、txt、2进制）
+7.Lua脚本
+8.音效
+9.Animator Controller 动画状态机控制文件
+10.场景</code></pre><div class="cout" hidden></div></div>
+<div class="dgm" data-diagram="b0a9d5d1ff5b" data-img="assets/img/b0a9d5d1ff5b.png"><div class="dgm-head"><span class="dgm-t">S6 Addressables Groups</span><span class="badge b-ocr">文字还原</span><span class="sp"></span><button class="dgm-tab">看原图</button></div></div>
+<p class="tx">----------------------------------------------------------------------------------</p>
+<div class="cpair"><div class="chead"><span class="lang">C#</span><span class="csp"></span><button class="mini copy">复制</button></div><pre class="code" data-lang="csharp"><code>命名空间：using UnityEngine.AddressableAssets;
+
+AssetReference                通用资源标识类 可以用来加载任意类型资源
+AssetReferenceAtlasedSprite   图集资源标识类
+AssetReferenceGameObject      游戏对象资源标识类
+AssetReferenceSprite          精灵图片资源标识类
+AssetReferenceTexture         贴图资源标识类
+AssetReferenceTexture2D
+AssetReferenceTexture3D
+AssetReferenceT&lt;&gt;             指定类型标识类
+
+通过不同类型标识类对象的申明  我们可以在Inspector窗口中筛选关联的资源对象
+------------------------------------------------------------------------------------
+using UnityEngine;
+using System.Collections;
+using System.Collections.Generic;
+using UnityEngine.AddressableAssets;
+
+public class addressable_lesson3 : MonoBehaviour
+{
+
+public AssetReference assetReference;
+public AssetReferenceAtlasedSprite asReference;
+public AssetReferenceGameObject gameobjcetReference;
+public AssetReferenceSprite spriteReference;
+public AssetReferenceTexture textureReference;
+
+public AssetReferenceT&lt;AudioClip&gt; audioReference;
+public AssetReferenceT&lt;RuntimeAnimatorController&gt; controller;
+public AssetReferenceT&lt;TextAsset&gt; textReference;
+}</code></pre><div class="cout" hidden></div></div>
+<p class="tx">声明后就可以挂载对应类型的资源</p>
+<div class="dgm" data-diagram="bb7628e55f64" data-img="assets/img/bb7628e55f64.png"><div class="dgm-head"><span class="dgm-t">时 Hierarchy</span><span class="badge b-ocr">文字还原</span><span class="sp"></span><button class="dgm-tab">看原图</button></div></div>
+<p class="tx">----------------------------------------------------------------------------------</p>
+<div class="cpair"><div class="chead"><span class="lang">C#</span><span class="csp"></span><button class="mini copy">复制</button></div><pre class="code" data-lang="csharp"><code>注意：所有Addressables加载相关都使用异步加载
+需要引用命名空间：
+using UnityEngine.ResourceManagement.AsyncOperations;
+
+public AssetReference assetReference;
+//AssetReference   通用资源标识类 理解成泛型，传任意资源
+assetReference.LoadAssetAsync&lt;GameObject&gt;()；
+异步加载  只有等加载成功后 才能去 使用
+1.通过事件函数传入的参数判断加载是否成功 并且创建
+2.通过资源标识类对象判断 并且创建
+
+AsyncOperationHandle&lt;GameObject&gt; handle = assetReference.LoadAssetAsync&lt;GameObject&gt;();
+//用AsyncOperationHandle&lt;TObject&gt; 存储 异步加载完成后的对象，从而进行使用该对象
+------------------------------------------------------------------------------------
+
+AsyncOperationHandle&lt;TObject&gt;类中自带的事件：
+public event Action&lt;AsyncOperationHandle&lt;TObject&gt;&gt; Completed;
+public event Action&lt;AsyncOperationHandle&gt; CompletedTypeless;
+public event Action&lt;AsyncOperationHandle&gt; Destroyed;
+
+
+handle.Completed += TestFun;通过异步加载返回值 对完成 进行事件监听
+
+private void TestFun(AsyncOperationHandle&lt;GameObject&gt; handle)
+{
+
+if(handle.Status == AsyncOperationStatus.Succeeded)//判断是否加载成功
+{  
+    Instantiate(handle.Result);////加载成功后 使用加载的资源，实例化该资源
+}
+}
+
+------------------------------------------------------------------------------------
+简写：和上面 先存异步加载，然后判断是否加载成功，再执行事件中的逻辑效果一样
+一步到位
+ assetReference.LoadAssetAsync&lt;GameObject&gt;().Completed += (handle) =&gt;
+ {
+            
+            使用传入的参数handle（建议），判断是否加载成功
+            if (handle.Status == AsyncOperationStatus.Succeeded)
+            {
+                  Instantiate(handle.Result);
+            }
+         
+}
+           
+    //使用标识类创建，不使用
+   // if(assetReference.IsDone)
+   // {
+    //    Instantiate(assetReference.Asset);
+    //}
+ };
+
+通过标识类 音效（已经知道是音效） 异步加载音效
+public AssetReferenceT&lt;AudioClip&gt; audioReference;
+audioReference.LoadAssetAsync().Completed += (handle) =&gt;
+{
+    使用音效
+};</code></pre><div class="cout" hidden></div></div>
+<div class="cpair"><div class="chead"><span class="lang">C#</span><span class="csp"></span><button class="mini copy">复制</button></div><pre class="code" data-lang="csharp"><code>public AssetReference sceneReference;
+sceneReference.LoadSceneAsync();//直接切換場景
+
+sceneReference.LoadSceneAsync().Completed += (handle) =&gt;
+{
+    //切换场景  并且 处理逻辑，比如初始化场景的一些信息
+    print("场景加载结束");
+};</code></pre><div class="cout" hidden></div></div>
+<div class="cpair"><div class="chead"><span class="lang">C#</span><span class="csp"></span><button class="mini copy">复制</button></div><pre class="code" data-lang="csharp"><code>释放资源相关API ReleaseAsset 
+assetReference.ReleaseAsset();
+
+--------------------------------------------------------------------------------
+public AssetReferenceT&lt;Material&gt; materialRed;
+
+ assetReference.LoadAssetAsync&lt;GameObject&gt;().Completed += (handle) =&gt;
+ { 
+            if (handle.Status == AsyncOperationStatus.Succeeded)
+            {
+                GameObject cube = Instantiate(handle.Result);
+                
+                一定资源加载过后 使用完后 再去释放
+                assetReference.ReleaseAsset();
+
+                举例一个红色的材质球给上方的立方体改材质
+                materialRed.LoadAssetAsync().Completed += (obj) =&gt;
+                {
+                    cube.GetComponent&lt;MeshRenderer&gt;().material = obj.Result;
+
+
+                   通过AB包加载资源的时候去释放资源 
+                    这样会造成使用这个资源的对象 资源丢失
+                    materialRed.ReleaseAsset();
+
+                     
+                    print(obj.Result);//这个异步加载传入对象的资源
+                                      //AsyncOperationHandle类中的对象不为空
+                   
+                    print(materialRed.Asset); //这个是 资源标识类的资源
+                                              //资源标识类中的资源会置空
+                };
+}
+
+1.释放资源方法后,资源标识类中的资源会置空，但是AsyncOperationHandle类中的对象不为空
+2.释放资源不会影响场景中被实例化出来的对象，但是会影响使用的资源</code></pre><div class="cout" hidden></div></div>
+<div class="cpair"><div class="chead"><span class="lang">C#</span><span class="csp"></span><button class="mini copy">复制</button></div><pre class="code" data-lang="csharp"><code>只适用于 想要实例化的 对象 才会直接使用该方法 一般都是GameObject预设体
+
+gameobjcetReference.InstantiateAsync();</code></pre><div class="cout" hidden></div></div>
+<div class="cpair"><div class="chead"><span class="lang">C#</span><span class="csp"></span><button class="mini copy">复制</button></div><pre class="code" data-lang="csharp"><code>自定义类 继承AssetReferenceT&lt;Material&gt;类 即可自定义一个指定类型的标识类
+
+该功能主要用于Unity2020.1之前，因为之前的版本不能直接使用AssetReferenceT泛型字段</code></pre><div class="cout" hidden></div></div>
+<div class="cpair"><div class="chead"><span class="lang">C#</span><span class="csp"></span><button class="mini copy">复制</button></div><pre class="code" data-lang="csharp"><code>1.我们可以根据自己的需求选择合适的标识类进行资源加载
+2.资源加载和场景加载都是通过异步进行加载
+3.需要注意异步加载资源使用时必须保证资源已经被加载成功了，否则会报错</code></pre><div class="cout" hidden></div></div>
+<h3 id="第-3-节-Label-标签的作用-动态加载前置条件-8" class="hd lv3">第 3 节：Label 标签的作用（动态加载前置条件）</h3>
+<div class="cpair"><div class="chead"><span class="lang">C#</span><span class="csp"></span><button class="mini copy">复制</button></div><pre class="code" data-lang="csharp"><code>并不会经常使用，要根据实际情况
+
+我们上节课学了加载指定资源
+但是这种模式我们必须在脚本中声明各种标识类来指定加载的资源,不够灵活,做一些小项目没问题
+但是在实际商业项目开发中，很多时候加载什么资源都是根据配置文件决定的，往往都是动态加载
+所以我们需要学习根据名字或标签去加载对应的资源，这样我们就可以读表进行加载</code></pre><div class="cout" hidden></div></div>
+<div class="dgm" data-diagram="9cda0fc0de76" data-img="assets/img/9cda0fc0de76.png"><div class="dgm-head"><span class="dgm-t">Addressables Groups / 图内文字</span><span class="badge b-ocr">文字还原</span><span class="sp"></span><button class="dgm-tab">看原图</button></div></div>
+<div class="dgm" data-diagram="339edafc6c25" data-img="assets/img/339edafc6c25.png"><div class="dgm-head"><span class="dgm-t">Addressables Labels</span><span class="badge b-ocr">文字还原</span><span class="sp"></span><button class="dgm-tab">看原图</button></div></div>
+<div class="dgm" data-diagram="3f3dcbf36cf2" data-img="assets/img/3f3dcbf36cf2.png"><div class="dgm-head"><span class="dgm-t">default</span><span class="badge b-ocr">文字还原</span><span class="sp"></span><button class="dgm-tab">看原图</button></div></div>
+<div class="cpair"><div class="chead"><span class="lang">C#</span><span class="csp"></span><button class="mini copy">复制</button></div><pre class="code" data-lang="csharp"><code>首先需要强调
+我们之后学习动态加载资源时
+是可以通过名和标签来加载资源的</code></pre><div class="cout" hidden></div></div>
+<div class="cpair"><div class="chead"><span class="lang">C#</span><span class="csp"></span><button class="mini copy">复制</button></div><pre class="code" data-lang="csharp"><code>游戏装备中有一顶帽子：Hat
+但是它可以有不同的品质，比如：红、绿、白、蓝
+那么我们可以为这个帽子添加多个材质球资源（或者贴图资源）
+这些图都可以叫做：Hat_Mat（或者Hat_Tex）
+他们可以同名，我们可以通过标签Label来区分他们
+他们的Label可以是：Red、Green、White、Blue</code></pre><div class="cout" hidden></div></div>
+<div class="dgm" data-diagram="d0177fe83bf8" data-img="assets/img/d0177fe83bf8.png"><div class="dgm-head"><span class="dgm-t">T Material</span><span class="badge b-ocr">文字还原</span><span class="sp"></span><button class="dgm-tab">看原图</button></div></div>
+<div class="cpair"><div class="chead"><span class="lang">C#</span><span class="csp"></span><button class="mini copy">复制</button></div><pre class="code" data-lang="csharp"><code>游戏中我们经常根据设备好坏来选择不同质量的图片或者模型
+比如：高清、标清、超清
+不同标准下的资源会有所不同，比如模型面数更低、贴图质量更低
+但是在不同标准下，这些模型的命名应该是同样的
+比如角色1，在高清、标清、超清下它的资源名都是角色1
+它的Label可以是：HD、SD、FHD</code></pre><div class="cout" hidden></div></div>
+<div class="cpair"><div class="chead"><span class="lang">C#</span><span class="csp"></span><button class="mini copy">复制</button></div><pre class="code" data-lang="csharp"><code>游戏中我们经常在逢年过节时更换游戏中模型和UI的显示
+比如：中秋节、春节、圣诞节
+不同节日时角色或者UI等等资源看起来是不同的
+但是在不同节日下，这些资源的命名应该都是同样的规范
+比如登录面板，在中秋节、春节、圣诞节时它的资源名都是 登录面板
+它的Label可以是：MidAutumn、Spring、Christmas</code></pre><div class="cout" hidden></div></div>
+<p class="tx">总结：相同作用的不同资源（模型、贴图、材质、UI等等）,我们可以让他们的资源名相同</p>
+<p class="tx">通过标签Label区分他们来加载使用</p>
+<div class="cpair"><div class="chead"><span class="lang">C#</span><span class="csp"></span><button class="mini copy">复制</button></div><pre class="code" data-lang="csharp"><code>特性[AssetReferenceUILabelRestriction()]
+
+[AssetReferenceUILabelRestriction("SD")] //下方资源只能关联标签为SD的资源
+[AssetReferenceUILabelRestriction("SD"，"HD","FHD")]//多个标签约束
+public AssetReference assetReference;</code></pre><div class="cout" hidden></div></div>
+<div class="cpair"><div class="chead"><span class="lang">C#</span><span class="csp"></span><button class="mini copy">复制</button></div><pre class="code" data-lang="csharp"><code>相同作用的不同资源
+我们可以让他们的资源名相同
+通过标签Label区分他们来用途
+用于之后的动态加载
+
+利用名字和标签可以单独动态加载某个资源
+也可以利用它们共同决定加载哪个资源</code></pre><div class="cout" hidden></div></div>
+<h3 id="第-4-节-动态加载单个资源-主流加载方式-9" class="hd lv3">🔥第 4 节：动态加载单个资源（主流加载方式）</h3>
+<div class="cpair"><div class="chead"><span class="lang">C#</span><span class="csp"></span><button class="mini copy">复制</button></div><pre class="code" data-lang="csharp"><code>命名空间：
+UnityEngine.AddressableAssets 
+UnityEngine.ResourceManagement.AsyncOperations
+
+通过资源名 Cube加载
+AsyncOperationHandle&lt;GameObject&gt; handle=Addressables.LoadAssetAsync&lt;GameObject&gt;("Cube");
+handle.Completed += (handle) =&gt;
+{
+    判断加载成功
+    if (handle.Status == AsyncOperationStatus.Succeeded)
+    {Instantiate(handle.Result);
+
+       一定要是 加载完成后 使用完毕后 再去释放
+        不管任何资源 只要释放后 都会影响之前在使用该资源的对象
+       Addressables.Release(handle);
+    }
+};
+
+一步到位，简化写法
+通过 标签名 Red 加载
+Addressables.LoadAssetAsync&lt;GameObject&gt;("Red").Completed += (handle) =&gt;
+{
+    //判断加载成功
+    if (handle.Status == AsyncOperationStatus.Succeeded)
+    Instantiate(handle.Result);
+};
+
+注意：
+1.如果存在同名或同标签的同类型资源，无法确定加载的哪一个，它会自动加载找到的第一个满足条件的对象
+2.如果存在同名或同标签的不同类型资源，我们可以根据泛型类型来决定加载哪一个
+  Addressables.LoadAssetAsync&lt;什么类型 来 区分同名和同标签&gt;("Red")</code></pre><div class="cout" hidden></div></div>
+<div class="cpair"><div class="chead"><span class="lang">C#</span><span class="csp"></span><button class="mini copy">复制</button></div><pre class="code" data-lang="csharp"><code>需要指定要释放哪一个返回值
+
+01.在具体加载完资源后进行释放
+AsyncOperationHandle&lt;GameObject&gt; handle=Addressables.LoadAssetAsync&lt;GameObject&gt;("Cube");
+handle.Completed += (handle) =&gt;
+{
+    判断加载成功
+    if (handle.Status == AsyncOperationStatus.Succeeded)
+    {Instantiate(handle.Result);
+
+       一定要是 加载完成后 使用完毕后 再去释放
+        不管任何资源 只要释放后 都会影响之前在使用该资源的对象
+       Addressables.Release(handle);
+    }
+};
+02.把 AsyncOperationHandle&lt;GameObject&gt; handle;
+ 放到外面，然后在成员生命周期函数中，销毁对象时候调用 并 指定 释放的对象
+ private void OnDestroy()
+{
+Addressables.Release(handle);//释放 handle
+}</code></pre><div class="cout" hidden></div></div>
+<div class="cpair"><div class="chead"><span class="lang">C#</span><span class="csp"></span><button class="mini copy">复制</button></div><pre class="code" data-lang="csharp"><code>Addressables.LoadSceneAsync("SampleScene", UnityEngine.SceneManagement.LoadSceneMode.Single, true,100);
+参数一：场景名
+参数二：加载模式 （叠加还是单独,叠加Additive就是两个场景一起显示,单独Single就是只保留新加载的场景，正常情况为单独）
+参数三：场景加载是否激活，如果为false，新场景不会显示 并且  旧场景还在 。 需要自己使用返回值中的ActivateAsync方法
+参数四：场景加载的异步操作优先级
+
+Addressables.LoadSceneAsync("SampleScene");直接加载场景
+
+Addressables.LoadSceneAsync("SampleScene", UnityEngine.SceneManagement.LoadSceneMode.Single, false).Completed += (obj)=&gt; {
+    //  obj.Result.ActivateAsync() 比如说 手动激活场景 
+    //还要在场景里创建东西，再异步激活处理其他逻辑
+    obj.Result.ActivateAsync().completed += (a) =&gt;
+    {
+   //然后再去创建场景上的对象
+   //然后再去隐藏 加载界面
+   // 注意：场景资源也是可以释放的，并不会影响当前已经加载出来的场景，因为场景的本质只是配置文件
+     Addressables.Release(obj);   
+    };
+};</code></pre><div class="cout" hidden></div></div>
+<div class="cpair"><div class="chead"><span class="lang">C#</span><span class="csp"></span><button class="mini copy">复制</button></div><pre class="code" data-lang="csharp"><code>1.根据名字或标签加载单个资源相对之前的指定加载资源更加灵活
+  主要通过Addressables类中的静态方法传入资源名或标签名进行加载
+  注意：
+  1-1.如果存在同名或同标签的同类型资源，我们无法确定加载的哪一个，它会自动加载找到的第一个满足条件的对象
+  1-2.如果存在同名或同标签的不同类型资源，我们可以根据泛型类型来决定加载哪一个
+
+2.释放资源时需要传入之前记录的AsyncOperationHandle对象
+  注意：一定要保证资源使用完毕过后再释放资源
+
+3.场景异步加载可以自己手动激活加载完成的场景</code></pre><div class="cout" hidden></div></div>
+<h6 id="练习题-Addressables资源管理器-10" class="hd lv6">练习题-Addressables资源管理器</h6>
+<p class="tx">尝试自己写一个Addressables资源管理器，帮助我们通过名字加载单个资源或者场景，并管理资源相关内容</p>
+<div class="cpair"><div class="chead"><span class="lang">C#</span><span class="csp"></span><button class="mini copy">复制</button></div><pre class="code" data-lang="csharp"><code>using System;
+using System.Collections;
+using System.Collections.Generic;
+using UnityEngine;
+using UnityEngine.AddressableAssets;
+using UnityEngine.ResourceManagement.AsyncOperations;
+
+public class AddressablesMgr
+{
+private static AddressablesMgr instance = new AddressablesMgr();
+public static AddressablesMgr Instance =&gt; instance;
+//有一个容器 帮助我们存储 异步加载的返回值
+//AsyncOperationHandle&lt;GameObject&gt; 这里 GameObject 我们无法确定是什么类型的
+// AsyncOperationhandle:IEnumerator   所以用父类 ，然后用父类装子类
+public Dictionary&lt;string, IEnumerator&gt; resDic = new Dictionary&lt;string, IEnumerator&gt;();
+private AddressablesMgr(){ }
+
+//异步加载资源的方法
+public void LoadAssetAsync&lt;T&gt;(string name, Action&lt;AsyncOperationHandle&lt;T&gt;&gt; callBack)
+{
+     //Action&lt;AsyncOperationHandle&lt;T&gt;&gt; callBack  一个有参无返回值的委托
+        //由于存在同名 不同类型资源的区分加载
+        //所以我们通过名字和类型拼接作为 key
+        string keyName = name + "_" + typeof(T).Name;
+        AsyncOperationHandle&lt;T&gt; handle;
+    
+        01.如果已经加载过该资源
+        if (resDic.ContainsKey(keyName))
+        {
+            //获取异步加载返回的操作内容，把字典中存储的 异步加载返回值取出来并 强转
+            handle = (AsyncOperationHandle&lt;T&gt;)resDic[keyName];
+            //判断 这个异步加载是否结束
+            if(handle.IsDone)
+            {
+                //如果成功 就不需要异步了 直接相当于同步调用了 这个委托函数 传入对应的返回值
+                callBack(handle);//执行委托 并传入定义委托时候的方法。
+    //C#给委托调用做了语法糖：callBack(handle)在编译时会被翻译成 callBack.Invoke(handle)
+            }
+            //还没有加载完成
+            else
+            {
+                //如果这个时候 还没有异步加载完成 那么我们只需要 告诉它 完成时做什么就行了
+                handle.Completed += (obj) =&gt; {
+                    if (obj.Status == AsyncOperationStatus.Succeeded)
+                        callBack(obj);
+                };
+            }
+            return;
+        }
+        
+        02.如果没有加载过该资源
+        //直接进行异步加载 并且记录
+        handle = Addressables.LoadAssetAsync&lt;T&gt;(name);
+        handle.Completed += (obj)=&gt; {
+        if (obj.Status == AsyncOperationStatus.Succeeded)
+                callBack(obj);
+        else
+        {
+                Debug.LogWarning(keyName + "资源加载失败");
+                if(resDic.ContainsKey(keyName))
+                    resDic.Remove(keyName);
+        }
+        };
+        resDic.Add(keyName, handle);
+}
+
+//释放资源的方法 
+public void Release&lt;T&gt;(string name)
+{
+        //由于存在同名 不同类型资源的区分加载
+        //所以我们通过名字和类型拼接作为 key
+        string keyName = name + "_" + typeof(T).Name;
+        if(resDic.ContainsKey(keyName))
+        {
+            //取出对象 移除资源 并且从字典里面移除
+            AsyncOperationHandle&lt;T&gt; handle = (AsyncOperationHandle&lt;T&gt;)resDic[keyName];
+            Addressables.Release(handle);
+            resDic.Remove(keyName);
+        }
+}
+
+//清空资源
+public void Clear()
+{
+        resDic.Clear();
+        AssetBundle.UnloadAllAssetBundles(true);
+        Resources.UnloadUnusedAssets();
+        GC.Collect();
+}
+}</code></pre><div class="cout" hidden></div></div>
+<div class="cpair"><div class="chead"><span class="lang">C#</span><span class="csp"></span><button class="mini copy">复制</button></div><pre class="code" data-lang="csharp"><code>using System.Collections;
+using System.Collections.Generic;
+using UnityEngine;
+using UnityEngine.AddressableAssets;
+using UnityEngine.ResourceManagement.AsyncOperations;
+
+public class Exercises : MonoBehaviour
+{
+void Start()
+{
+Lesson5 练习题
+尝试自己写一个Addressables资源管理器
+帮助我们通过名字加载单个资源或者场景，并管理资源相关内容
+AsyncOperationHandle&lt;GameObject&gt; handle=Addressables.LoadAssetAsync&lt;GameObject&gt;("Cube");
+handle.Completed += (obj) =&gt; {
+加载成功后的逻辑处理
+Addressables.Release(obj);
+};
+分析：
+1.资源动态加载可以通过返回的对象AsyncOperationHandle&lt;&gt;
+        （异步操作句柄）添加完成监听来处理加载后的资源
+2.释放资源时也是通过释放返回的对象AsyncOperationHandle&lt;&gt;（异步操作句柄） 来进行释放
+3.如果分散在各个脚本中自己管理资源难免显得太过繁琐，所以我们可以通过一个资源管理器来管理所有的
+  异步加载返回对象AsyncOperationHandle&lt;&gt;（异步操作句柄）
+所以如果我们要自己写一个Addressables资源管理器，主要就是用来管理AsyncOperationHandle&lt;&gt;对象的
+
+//异步加载通过管理类创建对象
+AddressablesMgr.Instance.LoadAssetAsync&lt;GameObject&gt;("Cube", (obj) =&gt;
+{
+    Instantiate(obj.Result); 
+});
+
+//异步加载通过管理类创建对象 并设置对象的位置   和  释放对象
+AddressablesMgr.Instance.LoadAssetAsync&lt;GameObject&gt;("Cube", (obj) =&gt;
+{
+    Instantiate(obj.Result, Vector3.right * 5, Quaternion.identity);
+    使用完资源后 移除资源
+    AddressablesMgr.Instance.Release&lt;GameObject&gt;("Cube");
+});
+    }
+}</code></pre><div class="cout" hidden></div></div>
+<h3 id="第-5-节-动态加载多个资源-主流加载方式-11" class="hd lv3">🔥第 5 节：动态加载多个资源（主流加载方式）</h3>
+<div class="cpair"><div class="chead"><span class="lang">C#</span><span class="csp"></span><button class="mini copy">复制</button></div><pre class="code" data-lang="csharp"><code>加载资源
+参数一：资源名或标签名
+参数二：加载结束后的回调函数
+参数三：如果为true表示当资源加载失败时，会自动将已加载的资源和依赖都释放掉；
+       如果为false，需要自己手动来管理释放
+AsyncOperationHandle&lt;IList&lt;Object&gt;&gt; handle = Addressables.LoadAssetsAsync&lt;Object&gt;("Red", (obj) =&gt;
+{
+    print(obj.name);
+});
+
+-------------------------------建议 用 下面这个 ------------------------------------------------
+如果要进行资源释放管理 那么我们需要使用这种方式 要方便一些
+因为我们得到了返回值对象 就可以释放资源了
+//第一步：调用加载API，拿到真正有效的句柄
+AsyncOperationHandle&lt;IList&lt;Object&gt;&gt; handle = Addressables.LoadAssetsAsync&lt;Object&gt;("Red", null);
+//第二步：在这个有效的句柄上订阅Completed事件
+handle.Completed += (obj) =&gt;
+{
+    foreach (var item in obj.Result)
+    {
+         print(item.name);
+    }
+    释放资源
+    Addressables.Release(obj);
+};
+注意：我们还是可以通过泛型类型，来筛选资源类型</code></pre><div class="cout" hidden></div></div>
+<div class="cpair"><div class="chead"><span class="lang">C#</span><span class="csp"></span><button class="mini copy">复制</button></div><pre class="code" data-lang="csharp"><code>List&lt;string&gt; strs = new List&lt;string&gt;() { "Cube", "HD" };
+
+参数一：想要加载资源的条件列表（资源名、Lable名）
+
+(strs, (obj) =&gt;{};
+参数二：每个加载资源结束后会调用的函数，会把加载到的资源传入该函数中
+
+Addressables.MergeMode.枚举内容
+参数三：可寻址的合并模式，用于合并请求结果的选项。
+如果键（Cube，Red）映射到结果（[1,2,3]，[1,3,4]），数字代表不同的资源
+
+None：不发生合并，将使用第一组结果 结果为[1,2,3]
+UseFirst：应用第一组结果 结果为[1,2,3]
+Union：合并所有结果 结果为[1,2,3,4]
+Intersection：使用相交结果 结果为[1,3]
+
+参数四：如果为true表示当资源加载失败时，会自动将已加载的资源和依赖都释放掉
+      如果为false，需要自己手动来管理释放     
+
+Addressables.LoadAssetsAsync&lt;Object&gt;(strs, (obj) =&gt; { print(obj.name);}, Addressables.MergeMode.Intersection);
+
+注意：我们还是可以通过泛型类型，来筛选资源类型</code></pre><div class="cout" hidden></div></div>
+<div class="cpair"><div class="chead"><span class="lang">C#</span><span class="csp"></span><button class="mini copy">复制</button></div><pre class="code" data-lang="csharp"><code>1.可以根据 资源名或标签名+资源类型 来加载所有满足条件的对象
+2.可以根据 资源名+标签名+资源类型+合并模式 来加载指定的单个或者多个对象</code></pre><div class="cout" hidden></div></div>
+<h6 id="练习题-12" class="hd lv6">练习题</h6>
+<div class="cpair"><div class="chead"><span class="lang">C#</span><span class="csp"></span><button class="mini copy">复制</button></div><pre class="code" data-lang="csharp"><code>using System;
+using System.Collections;
+using System.Collections.Generic;
+using UnityEngine;
+using UnityEngine.AddressableAssets;
+using UnityEngine.ResourceManagement.AsyncOperations;
+public class AddressablesMgr
+{
+    private static AddressablesMgr instance = new AddressablesMgr();
+    public static AddressablesMgr Instance =&gt; instance;
+    //缓存加载出来的资源句柄
+    public Dictionary&lt;string, IEnumerator&gt; resDic = new Dictionary&lt;string, IEnumerator&gt;();
+    private AddressablesMgr() { }
+    //加载单个资源
+    public void LoadAssetAsync&lt;T&gt;(string name, Action&lt;AsyncOperationHandle&lt;T&gt;&gt; callBack)
+    {
+        //处理不同类型同名资源
+        //通过名称加类型作为 key
+        string keyName = name + "_" + typeof(T).Name;
+        AsyncOperationHandle&lt;T&gt; handle;
+        //判断是否有缓存
+        if (resDic.ContainsKey(keyName))
+        {
+            //取出缓存的句柄
+            handle = (AsyncOperationHandle&lt;T&gt;)resDic[keyName];
+            //判断是否加载完成
+            if(handle.IsDone)
+            {
+                //加载成功 不需要等待 直接相当于同步调用 执行回调 使用缓存的句柄
+                callBack(handle);
+            }
+            //没有完成
+            else
+            {
+                //加载中状态 没有加载完成 我们只需要 等待 不需要做其他操作
+                handle.Completed += (obj) =&gt; {
+                    if (obj.Status == AsyncOperationStatus.Succeeded)
+                        callBack(obj);
+                };
+            }
+            return;
+        }
+        
+        //没有缓存
+        //直接发起加载 请求
+        handle = Addressables.LoadAssetAsync&lt;T&gt;(name);
+        handle.Completed += (obj)=&gt; {
+            if (obj.Status == AsyncOperationStatus.Succeeded)
+                callBack(obj);
+            else
+            {
+                Debug.LogWarning(keyName + "资源加载失败");
+                if(resDic.ContainsKey(keyName))
+                    resDic.Remove(keyName);
+            }
+        };
+        resDic.Add(keyName, handle);
+    }
+    //释放单个资源 
+    public void Release&lt;T&gt;(string name)
+    {
+        //处理不同类型同名资源
+        //通过名称加类型作为 key
+        string keyName = name + "_" + typeof(T).Name;
+        if(resDic.ContainsKey(keyName))
+        {
+            //取出句柄 释放资源 删除字典数据
+            AsyncOperationHandle&lt;T&gt; handle = (AsyncOperationHandle&lt;T&gt;)resDic[keyName];
+            Addressables.Release(handle);
+            resDic.Remove(keyName);
+        }
+    }
+    //加载多个资源 回调 返回每个资源
+    public void LoadAssetAsync&lt;T&gt;(Addressables.MergeMode mode, Action&lt;T&gt; callBack, params string[] keys)
+    {
+        //1.拼接一个keyName 之后存到字典
+        List&lt;string&gt; list = new List&lt;string&gt;(keys);
+        string keyName = "";
+        foreach (string key in list)
+            keyName += key + "_";
+        keyName += typeof(T).Name;
+        //2.判断是否已经有缓存 
+        AsyncOperationHandle&lt;IList&lt;T&gt;&gt; handle;
+        if (resDic.ContainsKey(keyName))
+        {
+            handle = (AsyncOperationHandle&lt;IList&lt;T&gt;&gt;)resDic[keyName];
+            //判断是否完成
+            if(handle.IsDone)
+            {
+                foreach (T item in handle.Result)
+                    callBack(item);
+            }
+            else
+            {
+                handle.Completed += (obj) =&gt;
+                {
+                    //加载成功遍历结果回调
+                    if(obj.Status == AsyncOperationStatus.Succeeded)
+                    {
+                        foreach (T item in handle.Result)
+                            callBack(item);
+                    }
+                };
+            }
+            return;
+        }
+        //发起加载
+        handle = Addressables.LoadAssetsAsync&lt;T&gt;(list, callBack, mode);
+        handle.Completed += (obj) =&gt;
+        {
+            if(obj.Status == AsyncOperationStatus.Failed)
+            {
+                Debug.LogError("资源加载失败" + keyName);
+                if (resDic.ContainsKey(keyName))
+                    resDic.Remove(keyName);
+            }
+        };
+        resDic.Add(keyName, handle);
+    }
+    public void LoadAssetAsync&lt;T&gt;(Addressables.MergeMode mode, Action&lt;AsyncOperationHandle&lt;IList&lt;T&gt;&gt;&gt; callBack, params string[] keys)
+    {
+    }
+    public void Releas&lt;T&gt;(params string[] keys)
+    {
+        //1.拼接一个keyName 之后存到字典
+        List&lt;string&gt; list = new List&lt;string&gt;(keys);
+        string keyName = "";
+        foreach (string key in list)
+            keyName += key + "_";
+        keyName += typeof(T).Name;
+        
+        if(resDic.ContainsKey(keyName))
+        {
+            //取出对应句柄
+            AsyncOperationHandle&lt;IList&lt;T&gt;&gt; handle = (AsyncOperationHandle&lt;IList&lt;T&gt;&gt;)resDic[keyName];
+            Addressables.Release(handle);
+            resDic.Remove(keyName);
+        }
+    }
+    //清理
+    public void Clear()
+    {
+        resDic.Clear();
+        AssetBundle.UnloadAllAssetBundles(true);
+        Resources.UnloadUnusedAssets();
+        GC.Collect();
+    }
+}</code></pre><div class="cout" hidden></div></div>
+<div class="cpair"><div class="chead"><span class="lang">C#</span><span class="csp"></span><button class="mini copy">复制</button></div><pre class="code" data-lang="csharp"><code>using System.Collections;
+using System.Collections.Generic;
+using UnityEngine;
+using UnityEngine.AddressableAssets;
+using UnityEngine.ResourceManagement.AsyncOperations;
+
+public class Exercises : MonoBehaviour
+{
+    // Start is called before the first frame update
+    void Start()
+    {
+        #region Lesson5 学习
+        //需求：写一个Addressables资源管理器
+        //可以通过管理器加载资源，重复加载不会重复请求
+        //AsyncOperationHandle&lt;GameObject&gt; handle = Addressables.LoadAssetAsync&lt;GameObject&gt;("Cube");
+        //handle.Completed += (obj) =&gt; {
+        //    //加载成功之后使用
+        //    Addressables.Release(obj);
+        //};
+        //知识点
+        //1.资源异步加载返回AsyncOperationHandle&lt;&gt;，用来后续操作、释放资源
+        //2.释放的时候也是通过返回的AsyncOperationHandle&lt;&gt;进行释放
+        //3.如果重复加载同一个资源，底层会返回同一个资源，但是会重新创建AsyncOperationHandle&lt;&gt;
+        //所以我们需要写一个Addressables资源管理器，用来管理AsyncOperationHandle&lt;&gt;
+        AddressablesMgr.Instance.LoadAssetAsync&lt;GameObject&gt;("Cube", (obj) =&gt;
+        {
+            Instantiate(obj.Result);
+        });
+        AddressablesMgr.Instance.LoadAssetAsync&lt;GameObject&gt;("Cube", (obj) =&gt;
+        {
+            Instantiate(obj.Result, Vector3.right * 5, Quaternion.identity);
+            //使用完资源 释放资源
+            AddressablesMgr.Instance.Release&lt;GameObject&gt;("Cube");
+        });
+        #endregion
+
+        #region Lesson6 学习
+        //需求：写一个Addressables资源管理器
+        //实现一个批量加载的方法
+        //List&lt;string&gt; strs = new List&lt;string&gt;() { "Cube", "HD" };
+        //Addressables.LoadAssetsAsync&lt;Object&gt;(strs, (obj) =&gt; {
+        //    print(obj.name);
+        //}, Addressables.MergeMode.Intersection);
+        AddressablesMgr.Instance.LoadAssetAsync&lt;Object&gt;(Addressables.MergeMode.Intersection, (obj) =&gt;
+        {
+            print("1" + obj.name);
+        }, "Cube", "SD");
+        AddressablesMgr.Instance.LoadAssetAsync&lt;Object&gt;(Addressables.MergeMode.Intersection, (obj) =&gt;
+        {
+            print("2" + obj.name);
+        }, "Cube", "SD");
+        #endregion
+    }
+
+    // Update is called once per frame
+    void Update()
+    {
+
+    }
+}</code></pre><div class="cout" hidden></div></div>
+<h2 id="第-4-章-配置相关-13" class="hd lv2">第 4 章：配置相关</h2>
+<h3 id="必看-第-1-节-Profile-概述窗口配置-14" class="hd lv3">🔥 必看-第 1 节：Profile 概述窗口配置</h3>
+<div class="cpair"><div class="chead"><span class="lang">C#</span><span class="csp"></span><button class="mini copy">复制</button></div><pre class="code" data-lang="csharp"><code>主要用于配置Addressable打包（构建）加载AB包时使用的一些变量
+这些变量定义了
+1.在哪里保存打包（构建）的AB包
+2.运行时在哪里加载AB包
+您可以添加自定义变量，以便在打包加载时使用
+
+我们之后在设置 组中打包和加载路径相关时，都是使用这里面的变量</code></pre><div class="cout" hidden></div></div>
+<div class="cpair"><div class="chead"><span class="lang">C#</span><span class="csp"></span><button class="mini copy">复制</button></div><pre class="code" data-lang="csharp"><code>#region 
+方法一：Window &gt; Asset Management &gt; Addressables &gt; Profiles
+方法二：在AddressableAssetSettings中打开
+方法三：在Addressables Groups窗口中打开</code></pre><div class="cout" hidden></div></div>
+<div class="dgm" data-diagram="8bc8c29c1d4b" data-img="assets/img/8bc8c29c1d4b.png"><div class="dgm-head"><span class="dgm-t">Project</span><span class="badge b-ocr">文字还原</span><span class="sp"></span><button class="dgm-tab">看原图</button></div></div>
+<p class="tx">-----------------------------------------------------------------------------------------------------------------</p>
+<div class="cpair"><div class="chead"><span class="lang">C#</span><span class="csp"></span><button class="mini copy">复制</button></div><pre class="code" data-lang="csharp"><code>右侧是默认的一些路径相关
+BuildTarget：构建目标，可以在这里设置是哪个平台，默认是你激活哪个平台就是哪个平台
+LocalBuildPath：本地构建路径，默认在项目的 Library 库文件夹中
+LocalLoadPath：本地加载路径，在哪里加载本地已有的资源
+RemoteBuildPath：远程构建路径
+RemoteLoadPath：远程加载路径，在哪里下载远程内容和目录
+
+注意：
+1. 一般情况下，不要去修改本地构建和加载路径默认值
+2. 当我们针对不同平台远程分发内容时，通过多个配置文件最方便。
+如果你想要最终的发布包包含所有内容，那么一个默认配置就够了</code></pre><div class="cout" hidden></div></div>
+<div class="dgm" data-diagram="05a1fe0c2f6e" data-img="assets/img/05a1fe0c2f6e.png"><div class="dgm-head"><span class="dgm-t">56 Addressables Profiles</span><span class="badge b-ocr">文字还原</span><span class="sp"></span><button class="dgm-tab">看原图</button></div></div>
+<div class="dgm" data-diagram="31600bd3987f" data-img="assets/img/31600bd3987f.png"><div class="dgm-head"><span class="dgm-t">S6 Addressables Profiles</span><span class="badge b-ocr">文字还原</span><span class="sp"></span><button class="dgm-tab">看原图</button></div></div>
+<p class="tx">-----------------------------------------------------------------------------------------------------------------</p>
+<div class="cpair"><div class="chead"><span class="lang">C#</span><span class="csp"></span><button class="mini copy">复制</button></div><pre class="code" data-lang="csharp"><code>所有的变量类型都是string字符串类型
+你可以在其中填写一些固定的路径或值来决定路径
+还可以使用两个语法指示符让原本的静态属性变成动态属性
+
+[]:方括号，可以使用它包裹变量，在打包构建时会计算方括号包围的内容
+比如
+使用自己的变量[BuildTarget]
+使用别的脚本中变量[UnityEditor.EditorUserBuildSettings.activeBuildTarget]
+在打包构建时，会使用方括号内变量对应的字符串拼接到目录中
+
+{}:大括号，可以使用它包裹变量，在运行时会计算大括号包围的内容
+比如
+使用别的脚本中变量{UnityEngine.AddressableAssets.Addressables.RuntimePath}
+
+注意：方括号和大括号中使用的变量一定是静态变量或者属性。名称、类型、命名空间必须匹配
+比如在运行时 UnityEditor编辑器命名空间下的内容是不能使用的</code></pre><div class="cout" hidden></div></div>
+<div class="dgm" data-diagram="81b7454ce025" data-img="assets/img/81b7454ce025.png"><div class="dgm-head"><span class="dgm-t">V Local</span><span class="badge b-ocr">文字还原</span><span class="sp"></span><button class="dgm-tab">看原图</button></div></div>
+<div class="cpair"><div class="chead"><span class="lang">C#</span><span class="csp"></span><button class="mini copy">复制</button></div><pre class="code" data-lang="csharp"><code>Profiles窗口中配置的变量决定了我们之后 打包加载资源时的路径</code></pre><div class="cout" hidden></div></div>
+<h3 id="必看-第-2-节-AddressableAssetSettings-配置-15" class="hd lv3">🔥 必看-第 2 节：AddressableAssetSettings 配置</h3>
+<p class="tx">📎AddressableAssetSettings 可寻址资源数据设置 参数相关.xmind、</p>
+<div class="dgm" data-diagram="3a0a171c3d09" data-img="assets/img/3a0a171c3d09.png"><div class="dgm-head"><span class="dgm-t">AddressableAssetsData</span><span class="badge b-ocr">文字还原</span><span class="sp"></span><button class="dgm-tab">看原图</button></div></div>
+<div class="cpair"><div class="chead"><span class="lang">C#</span><span class="csp"></span><button class="mini copy">复制</button></div><pre class="code" data-lang="csharp"><code>我们在导入Addressables包之后 创建的那些就是配置文件
+AddressableAssetsData文件夹下的内容都是本质为ScriptableObject的数据配置文件
+
+我们可以在工程中对Addressables相关内容进行设置
+他们会影响我们的打包方式等等相关内容
+
+AddressableAssetsData（可寻址资源数据）
+-AssetGroups(资源组)
+--当我们创建一个组就会多一些相关数据配置文件
+
+-AssetGroupTemplates（资源组模板，主要是对资源组的一些默认设置）
+--Packed Assets:打包资源数据配置
+
+-DataBuilders（数据生成器，这些内容决定了在不同模式下，资源打包和使用的方式）
+--BuildScriptFastMode:构建脚本快速模式
+--BuildScriptPackedMode:构建脚本打包模式
+--BuildScriptPackedPlayMode:构建脚本打包播放模式
+--BuildScriptVirtualMode:构建脚本虚拟模式
+
+-AddressableAssetSettings（可寻址资源设置）
+
+-DefaultObject（默认对象）</code></pre><div class="cout" hidden></div></div>
+<div class="cpair"><div class="chead"><span class="lang">C#</span><span class="csp"></span><button class="mini copy">复制</button></div><pre class="code" data-lang="csharp"><code>AddressabAssetSettings翻译过来的意思就是 可寻址资源设置
+该配置文件可以设置一些可寻址资源的一些公共设置</code></pre><div class="cout" hidden></div></div>
+<div class="cpair"><div class="chead"><span class="lang">C#</span><span class="csp"></span><button class="mini copy">复制</button></div><pre class="code" data-lang="csharp"><code>AddressableAssetSettings 可寻址资源设置
+就是对可寻址相关功能进行设置
+对于我们来说较为重要的是
+1.概述配置——决定了路径配置相关
+2.诊断相关——决定了调试相关
+3.目录相关——决定目录后缀等内容
+4.内容更新相关——决定了更新相关方案
+5.构建和编辑器模式脚本相关——决定了测试方案
+6.资源组模板——决定了创建组时的配置模板</code></pre><div class="cout" hidden></div></div>
+<h3 id="必看-第-3-节-Packed-Assets-打包资源配置-16" class="hd lv3">🔥 必看-第 3 节：Packed Assets 打包资源配置</h3>
+<p class="tx">📎Packed Assets 打包资源数据配置.xmind</p>
+<div class="dgm" data-diagram="249ed7f9f014" data-img="assets/img/249ed7f9f014.png"><div class="dgm-head"><span class="dgm-t">U Inspector</span><span class="badge b-ocr">文字还原</span><span class="sp"></span><button class="dgm-tab">看原图</button></div></div>
+<div class="cpair"><div class="chead"><span class="lang">C#</span><span class="csp"></span><button class="mini copy">复制</button></div><pre class="code" data-lang="csharp"><code>Packed Assets 翻译过来的意思是 打包资产（资源）
+它的作用是确定如何处理组中的资源
+比如：你可以指定生成AB包的位置和包压缩相关的等等设置</code></pre><div class="cout" hidden></div></div>
+<div class="cpair"><div class="chead"><span class="lang">C#</span><span class="csp"></span><button class="mini copy">复制</button></div><pre class="code" data-lang="csharp"><code>在Project窗口右键或者点击+号
+Create(创建)——&gt;Addressables(可寻址)——&gt;Group Templates(组模板)——&gt;Blank Group Template(空白组模板)</code></pre><div class="cout" hidden></div></div>
+<div class="cpair"><div class="chead"><span class="lang">C#</span><span class="csp"></span><button class="mini copy">复制</button></div><pre class="code" data-lang="csharp"><code>对于我们来说 关于组的设置参数
+我们必须要掌握的就是可以为每一个组设置打包和加载的路径
+远程加载还是本地加载，都在组中进行设置</code></pre><div class="cout" hidden></div></div>
+<h3 id="第-4-节-Addressables-Hosting-可寻址托管窗口-17" class="hd lv3">第 4 节：Addressables Hosting 可寻址托管窗口</h3>
+<p class="tx">新版本已经删除这个</p>
+<div class="dgm" data-diagram="fe70253f5b06" data-img="assets/img/fe70253f5b06.png"><div class="dgm-head"><span class="dgm-t">File</span><span class="badge b-ocr">文字还原</span><span class="sp"></span><button class="dgm-tab">看原图</button></div></div>
+<p class="tx">📎Addressables Hosting 可寻址托管窗口配置.xmind</p>
+<div class="cpair"><div class="chead"><span class="lang">C#</span><span class="csp"></span><button class="mini copy">复制</button></div><pre class="code" data-lang="csharp"><code>一般资源服务器需要将其搭建为http服务器
+这样才能进行资源的上传和下载
+而Unity为了简化本地测试的这一过程
+提供了快捷搭建http服务器的工具
+ Addressables Hosting 窗口
+通过它我们可以将我们的本机模拟为一台远端服务器来进行远端发布加载测试
+可以帮助我们快速的进行远程打包下载的相关测试
+
+简单理解就是把本机作为一台资源服务器</code></pre><div class="cout" hidden></div></div>
+<div class="cpair"><div class="chead"><span class="lang">C#</span><span class="csp"></span><button class="mini copy">复制</button></div><pre class="code" data-lang="csharp"><code>方法一：Window &gt; Asset Management &gt; Addressables &gt; Hosting
+方法二：Addressables Groups窗口中 &gt; Tools &gt; Window &gt; Hosting Services</code></pre><div class="cout" hidden></div></div>
+<div class="cpair"><div class="chead"><span class="lang">C#</span><span class="csp"></span><button class="mini copy">复制</button></div><pre class="code" data-lang="csharp"><code>Addressable Hosting窗口创建的本地服务器有时候会失效
+可以在资料区下载第三方工具 让本机变为一个http服务器 模拟远端加载</code></pre><div class="cout" hidden></div></div>
+<div class="cpair"><div class="chead"><span class="lang">C#</span><span class="csp"></span><button class="mini copy">复制</button></div><pre class="code" data-lang="csharp"><code>如果我们要在本地模拟远端加载
+1.使用Addressable Hosting窗口 创建本地托管将本机模拟为远端服务器
+2.使用第三方的一些快捷搭建http服务器的工具 将本机作为http服务器 模拟为远端服务器</code></pre><div class="cout" hidden></div></div>
+<p class="tx">第 4 节：Addressables Hosting 可寻址托管窗口-hfs.exe 百度网盘上</p>
+<h2 id="必看整章-第-5-章-资源打包-发布-加载-18" class="hd lv2">（🔥 必看整章）第 5 章：资源打包（发布）加载</h2>
+<h3 id="第-1-节-资源打包加载理论-重要-19" class="hd lv3">第 1 节：资源打包加载理论（重要）</h3>
+<div class="cpair"><div class="chead"><span class="lang">C#</span><span class="csp"></span><button class="mini copy">复制</button></div><pre class="code" data-lang="csharp"><code>资源打包是指，将可寻址资源打包到AssetBundle资源绑定包中
+以前我们学习AssetBundle时需要我们自己写代码或者通过工具进行打包
+现在Addressable将这个过程自动化了
+可寻址资源中资源一般以组为单位进行打包
+最终的AB包数量，都是基于资源组决定的
+
+打包好的AB包，我们可以自定义如何使用它们
+1.发布游戏时所有AB包作为原始资源一起打包出去（这样做的目的仅仅是单机游戏为了减小游戏包体）
+2.将AB包放到远端服务器，发布游戏时只打包必备资源（这样做的目的是不仅可以减小包体，还可以进行热更新）</code></pre><div class="cout" hidden></div></div>
+<div class="cpair"><div class="chead"><span class="lang">C#</span><span class="csp"></span><button class="mini copy">复制</button></div><pre class="code" data-lang="csharp"><code>之前在讲解Packed Assets配置相关时
+有一个打包模式的字段Bundle Mode
+我们有三种打包的方式
+Pack Together：创建包含组中所有资产的单个包
+Pack Separately：为组中的每个类型的资源创建一个包。如精灵图片中的精灵图片被包装在一起
+Pack Together by Label：为共享相同标签组合的资产创建一个包
+
+一般情况下，我们都使用第一种模式，按组来进行打包，所以我们在整理资源时要尽量合理</code></pre><div class="cout" hidden></div></div>
+<div class="cpair"><div class="chead"><span class="lang">C#</span><span class="csp"></span><button class="mini copy">复制</button></div><pre class="code" data-lang="csharp"><code>1.场景资源始终有自己单独的包
+  当一个可寻址包中有场景资源和普通资源时，场景资源和其它资源始终会被分开打包
+  也就是说，该组会生成两个包，一个场景的，一个其它资源的
+
+2.资源依赖的注意事项
+       如果资源a和资源b都使用了资源c，但是资源a和b是可寻址资源但不在一个组中，而c不是可寻址资源
+       那么这时资源c分别会被打进a和b的包，相当于这时的c就被重复利用了，浪费了空间
+       较好的解决方案是:将c也作为可寻址资源， a-A包  b-B包  c-C包
+       这时c不会被打进A、B包，A、B包只会依赖于C，而Addressable会自动帮助我们处理依赖问题
+       注意：在使用图集时，尤为要注意这个问题，当不同包中内容使用同一个图集中图片时，
+建议大家将图集也作为可寻址资源，并且有专门的一个图集包
+让其它使用图集中图片的对象会对该图集包产生依赖
+
+3.合理安排可寻址资源分组
+同类型，同作用放一起
+比如：角色组、怪物组、武器组、衣服组、登录UI组、装备UI组、音效组、可变贴图组、图集组等等
+
+4.关于包的数量（分组的数量）
+要根据实际情况来对资源进行布局
+包(分组)过多、包(分组)过大都不太好
+要根据自己的实际情况进行组的安排</code></pre><div class="cout" hidden></div></div>
+<h3 id="第-2-节-资源打包加载-重要-20" class="hd lv3">第 2 节：资源打包加载（重要）</h3>
+<div class="cpair"><div class="chead"><span class="lang">C#</span><span class="csp"></span><button class="mini copy">复制</button></div><pre class="code" data-lang="csharp"><code>Use Asset Database（fastest）：
+使用资源数据库（最快的）
+不用打AB包，直接本地加载资源，主要用于开发功能时
+
+Simulate Groups（advanced）：
+模拟组（后期）
+不用打AB包
+通过ResourceManager从资产数据库加载资产，就像通过AB包加载一样
+通过引入时间延迟，模拟远程AB包的下载速度和本地AB包加载速度
+在开发阶段可以使用这个模式来进行资源加载
+
+Use Existing Build（requires built groups）：
+正儿八经的加载AB包资源
+必须打AB包后使用
+会从AB包中加载资源</code></pre><div class="cout" hidden></div></div>
+<div class="cpair"><div class="chead"><span class="lang">C#</span><span class="csp"></span><button class="mini copy">复制</button></div><pre class="code" data-lang="csharp"><code>Addressables.LoadAssetsAsync&lt;GameObject&gt;(new List&lt;string&gt;() { "Cube", "SD" }, (obj) =&gt;
+{
+    Instantiate(obj);
+}, Addressables.MergeMode.Intersection);
+
+本地发布
+所有组的加载和发布都选择本地路径
+LocalBuildPath-打包路径
+LocalLoadPath-加载路径
+
+注意：使用默认设置，当发布应用程序时，会自动帮我们将AB包放入StreamingAssets文件夹中
+如果修改了路径，我们需要自己将内容放入StreamingAssets文件夹中
+
+不建议大家修改 默认的本地构建和加载路径 ，因为如果你修改了 就需要自己手动的去把AB包相关内容移动到StreamingAssets文件夹中
+#endregion</code></pre><div class="cout" hidden></div></div>
+<div class="cpair"><div class="chead"><span class="lang">C#</span><span class="csp"></span><button class="mini copy">复制</button></div><pre class="code" data-lang="csharp"><code>第一步：将本机模拟为一台资源服务器，通过Unity自带工具或者第三方工具
+第二步：设置远端路径
+第三部：打包</code></pre><div class="cout" hidden></div></div>
+<div class="cpair"><div class="chead"><span class="lang">C#</span><span class="csp"></span><button class="mini copy">复制</button></div><pre class="code" data-lang="csharp"><code>在知识点三的基础上
+1.在远端的电脑上搭建Http服务器
+2.将打包出来的资源上传到对应服务器上</code></pre><div class="cout" hidden></div></div>
+<div class="cpair"><div class="chead"><span class="lang">C#</span><span class="csp"></span><button class="mini copy">复制</button></div><pre class="code" data-lang="csharp"><code>一个项目中的资源到底是本地还是远端，根据实际情况而定
+1.对于需要热更新的网络游戏
+  默认基础资源作为本地资源，大部分资源作为远端资源
+2.对于不需要热更新的单机游戏
+  所有的资源都是本地资源
+具体采用的打包策略根据实际情况来定</code></pre><div class="cout" hidden></div></div>
+<p class="tx">第 5 章-第 2 节：资源打包加载-hfs.exe 百度网盘上</p>
+<h3 id="第-3-节-资源更新-重要-21" class="hd lv3">第 3 节：资源更新（重要）</h3>
+<p class="tx">核心概念有效，但具体 API 有重大变化【需要 AI 核对】</p>
+<div class="cpair"><div class="chead"><span class="lang">C#</span><span class="csp"></span><button class="mini copy">复制</button></div><pre class="code" data-lang="csharp"><code>当项目正式发布后，对于远程加载的资源
+我们可以通过改变资源服务器上的AB包内容来达到更新游戏的目的
+Addressables会自动帮助我们判断哪些资源更新了，并加载最新的内容</code></pre><div class="cout" hidden></div></div>
+<div class="cpair"><div class="chead"><span class="lang">C#</span><span class="csp"></span><button class="mini copy">复制</button></div><pre class="code" data-lang="csharp"><code>在组设置中有一个内容更新限制的设置
+Content Update Restriction
+
+Can Change Post Release：
+可以改变发行后内容，该模式不移动任何资源，如果包中的任何资源发生了更改，则重新构建整个包
+
+Cannot Change Post Release：
+无法改变发布后内容，如果包中任何资源已经改变，
+则[检查内容更新限制]工具会将其移动到为更新创建的新组中。
+在进行更新构建时，从这个新组创建的AssetBundles中的资产将覆盖现有包中的版本。</code></pre><div class="cout" hidden></div></div>
+<div class="cpair"><div class="chead"><span class="lang">C#</span><span class="csp"></span><button class="mini copy">复制</button></div><pre class="code" data-lang="csharp"><code>组设置为 Can Change Post Release
+整包更新指，某一个分组的资源发生变化后
+我们需要将其整体进行打包
+这种方式比较适用于大范围资源更新时使用
+坏处是，玩家需要下载的内容较大，比较耗时耗流量
+Addressables.LoadAssetsAsync&lt;GameObject&gt;(new List&lt;string&gt;() { "Cube", "SD" }, (obj) =&gt;
+{
+    Instantiate(obj);
+}, Addressables.MergeMode.Intersection);
+
+注意：Unity自带的 资源服务器模拟工具有问题 有的时候明明开启了服务 但是加载不成功
+我们干脆就使用第三方工具来搭建我们的模拟本地资源服务器</code></pre><div class="cout" hidden></div></div>
+<div class="cpair"><div class="chead"><span class="lang">C#</span><span class="csp"></span><button class="mini copy">复制</button></div><pre class="code" data-lang="csharp"><code>组设置为 Cannot Change Post Release
+局部更新指，当组中有资源发生变化时
+我们可以单为发生变化的内容生成AB包
+之后使用该资源时，Addressables会自动加载最新的内容
+它相对整包更新来说，更节约时间和流量</code></pre><div class="cout" hidden></div></div>
+<div class="cpair"><div class="chead"><span class="lang">C#</span><span class="csp"></span><button class="mini copy">复制</button></div><pre class="code" data-lang="csharp"><code>远程资源包时整包更新还是局部更新
+取决于Content Update Restriction内容更新限制参数
+可以根据自己项目的实际情况选择具体使用哪种方式即可</code></pre><div class="cout" hidden></div></div>
+<h2 id="第-6-章-其它重要内容-重要-22" class="hd lv2">第 6 章：其它重要内容（重要）</h2>
+<h3 id="第-1-节-资源加载相关补充知识-23" class="hd lv3">第 1 节：资源加载相关补充知识</h3>
+<h4 id="01-根据资源定位信息加载资源-知识点-24" class="hd lv4">01 根据资源定位信息加载资源 知识点</h4>
+<p class="tx">WaitForCompletion 等同步 API 已被标记为过时。【AI 核对】</p>
+<div class="cpair"><div class="chead"><span class="lang">C#</span><span class="csp"></span><button class="mini copy">复制</button></div><pre class="code" data-lang="csharp"><code>1.通过标识类进行加载(指定资源加载) 
+2.通过资源名或标签名加载单个资源(动态加载)
+Addressables.LoadAssetAsync&lt;GameObject&gt;("Cube")
+3.通过资源名或标签名或两者组合加载多个资源(动态加载)
+Addressables.LoadAssetsAsync&lt;GameObject&gt;(new List&lt;string&gt;() { "Cube", "SD" }, (obj) =&gt; { }, Addressables.MergeMode.Intersection);</code></pre><div class="cout" hidden></div></div>
+<div class="cpair"><div class="chead"><span class="lang">C#</span><span class="csp"></span><button class="mini copy">复制</button></div><pre class="code" data-lang="csharp"><code>1.查找指定键的资源位置
+2.收集依赖项列表
+3.下载所需的所有远程AB包
+4.将AB包加载到内存中
+5.设置Result资源对象的值
+6.更新Status状态变量参数并且调用完成事件Completed
+
+如果加载成功Status状态为成功，并且可以从Result中得到内容
+
+如果加载失败除了Status状态为失败外
+如果我们启用了 Log Runtime Exceptions选项 会在Console窗口打印信息</code></pre><div class="cout" hidden></div></div>
+<div class="cpair"><div class="chead"><span class="lang">C#</span><span class="csp"></span><button class="mini copy">复制</button></div><pre class="code" data-lang="csharp"><code>参数一：资源名或者标签名
+参数二：资源类型
+AsyncOperationHandle&lt;IList&lt;IResourceLocation&gt;&gt; handle = Addressables.LoadResourceLocationsAsync("Cube", typeof(GameObject));
+handle.Completed += (obj) =&gt;
+{
+    if(obj.Status == AsyncOperationStatus.Succeeded)
+    {
+foreach (var item in obj.Result)
+{
+    我们可以利用定位信息 再去加载资源
+    print(item.PrimaryKey);
+    Addressables.LoadAssetAsync&lt;GameObject&gt;(item).Completed += (obj) =&gt;
+    {
+Instantiate(obj.Result);
+    };
+}
+    }
+    else
+    {
+Addressables.Release(handle);
+    }
+};</code></pre><div class="cout" hidden></div></div>
+<div class="cpair"><div class="chead"><span class="lang">C#</span><span class="csp"></span><button class="mini copy">复制</button></div><pre class="code" data-lang="csharp"><code>参数一：资源名和标签名的组合
+参数二：合并模式
+参数三：资源类型
+AsyncOperationHandle&lt;IList&lt;IResourceLocation&gt;&gt; handle2 = Addressables.LoadResourceLocationsAsync(new List&lt;string&gt;() { "Cube", "Sphere", "SD" }, Addressables.MergeMode.Union, typeof(Object));
+handle2.Completed += (obj) =&gt; { 
+    if(obj.Status == AsyncOperationStatus.Succeeded)
+    {
+资源定位信息加载成功
+foreach (var item in obj.Result)
+{
+    使用定位信息来加载资源
+    我们可以利用定位信息 再去加载资源
+    print("******");
+    print(item.PrimaryKey);
+    print(item.InternalId);
+    print(item.ResourceType.Name);
+
+    Addressables.LoadAssetAsync&lt;Object&gt;(item).Completed += (obj) =&gt;
+    {
+Instantiate(obj.Result);
+    };
+}
+    }
+    else
+    {
+Addressables.Release(handle);
+    }
+};</code></pre><div class="cout" hidden></div></div>
+<div class="cpair"><div class="chead"><span class="lang">C#</span><span class="csp"></span><button class="mini copy">复制</button></div><pre class="code" data-lang="csharp"><code>1.资源信息当中提供了一些额外信息
+  PrimaryKey：资源主键（资源名）
+  InternalId：资源内部ID（资源路径）
+  ResourceType：资源类型（Type可以获取资源类型名）
+  我们可以利用这些信息处理一些特殊需求
+  比如加载多个不同类型资源时 可以通过他们进行判断再分别进行处理
+
+2.根据资源定位信息加载资源并不会加大我们加载开销
+  只是分部完成加载了而已</code></pre><div class="cout" hidden></div></div>
+<h4 id="02-异步加载的几种使用方式-知识点-重要-25" class="hd lv4">02 异步加载的几种使用方式 知识点（重要））</h4>
+<div class="cpair"><div class="chead"><span class="lang">C#</span><span class="csp"></span><button class="mini copy">复制</button></div><pre class="code" data-lang="csharp"><code>AsyncOperationHandle&lt;GameObject&gt; handle;
+
+handle = Addressables.LoadAssetAsync&lt;GameObject&gt;("Cube");
+通过事件监听的方式 结束时使用资源
+handle.Completed += (obj) =&gt;
+{
+    if (handle.Status == AsyncOperationStatus.Succeeded)
+    {
+print("事件创建对象");
+Instantiate(obj.Result);
+    }
+
+};</code></pre><div class="cout" hidden></div></div>
+<div class="cpair"><div class="chead"><span class="lang">C#</span><span class="csp"></span><button class="mini copy">复制</button></div><pre class="code" data-lang="csharp"><code>1.事件监听（目前学习过的）
+2.协同程序
+3.异步函数（async和await ）</code></pre><div class="cout" hidden></div></div>
+<div class="cpair"><div class="chead"><span class="lang">C#</span><span class="csp"></span><button class="mini copy">复制</button></div><pre class="code" data-lang="csharp"><code>StartCoroutine(LoadAsset());</code></pre><div class="cout" hidden></div></div>
+<div class="cpair"><div class="chead"><span class="lang">C#</span><span class="csp"></span><button class="mini copy">复制</button></div><pre class="code" data-lang="csharp"><code>注意：WebGL平台不支持异步函数语法
+
+单任务等待
+Load();
+多任务等待
+
+
+IEnumerator LoadAsset()
+{
+handle = Addressables.LoadAssetAsync&lt;GameObject&gt;("Cube");
+一定是没有加载成功 再去 yield return
+if(!handle.IsDone)
+    yield return handle;
+
+加载成功 那么久可以使用了
+if (handle.Status == AsyncOperationStatus.Succeeded)
+{
+    print("协同程序创建对象");
+    Instantiate(handle.Result);
+}
+else
+    Addressables.Release(handle);
+}
+
+async void Load()
+{
+handle = Addressables.LoadAssetAsync&lt;GameObject&gt;("Cube");
+
+AsyncOperationHandle&lt;GameObject&gt; handle2 = Addressables.LoadAssetAsync&lt;GameObject&gt;("Sphere");
+
+单任务等待
+await handle.Task;
+
+多任务等待
+await Task.WhenAll(handle.Task, handle2.Task);
+
+print("异步函数的形式加载的资源");
+Instantiate(handle.Result);
+Instantiate(handle2.Result);
+}</code></pre><div class="cout" hidden></div></div>
+<h4 id="03-关于-Async-Operation-Handle-知识点-重要-26" class="hd lv4">03 关于 Async Operation Handle 知识点（重要）</h4>
+<div class="cpair"><div class="chead"><span class="lang">C#</span><span class="csp"></span><button class="mini copy">复制</button></div><pre class="code" data-lang="csharp"><code>StartCoroutine(LoadAsset());</code></pre><div class="cout" hidden></div></div>
+<div class="cpair"><div class="chead"><span class="lang">C#</span><span class="csp"></span><button class="mini copy">复制</button></div><pre class="code" data-lang="csharp"><code>AsyncOperationHandle&lt;Texture2D&gt; handle = Addressables.LoadAssetAsync&lt;Texture2D&gt;("Cube");
+AsyncOperationHandle temp = handle;
+把无类型句柄 转换为 有类型的泛型对象
+handle = temp.Convert&lt;Texture2D&gt;();</code></pre><div class="cout" hidden></div></div>
+<div class="cpair"><div class="chead"><span class="lang">C#</span><span class="csp"></span><button class="mini copy">复制</button></div><pre class="code" data-lang="csharp"><code>如果执行了WaitForCompletion 那么会卡主主线程 一定要当资源加载结束后
+才会继续往下执行
+print("1");
+handle.WaitForCompletion();
+print("2");
+print(handle.Result.name);
+注意：
+Unity2020.1版本或者之前，执行该句代码不仅会等待该资源
+他会等待所有没有加载完成的异步加载加载完后才会继续往下执行
+Unity2020.2版本或以上版本，在加载已经下载的资源时性能影响会好一些
+所以，总体来说不建议大家使用这种方式加载资源
+
+IEnumerator LoadAsset()
+{
+AsyncOperationHandle&lt;GameObject&gt; handle = Addressables.LoadAssetAsync&lt;GameObject&gt;("Cube");
+
+if (!handle.IsDone)
+    yield return handle;
+
+注意：如果该资源相关的AB包 已经加载过了 那么 只会打印0
+while (!handle.IsDone)
+{
+    DownloadStatus info = handle.GetDownloadStatus();
+    进度
+    print(info.Percent);
+    字节加载进度 代表 AB包 加载了多少
+    当前下载了多少内容 /  总体有多少内容 单位是字节数
+    print(info.DownloadedBytes + "/" + info.TotalBytes);
+    yield return 0;
+}
+
+if (handle.Status == AsyncOperationStatus.Succeeded)
+{
+    Instantiate(handle.Result);
+}
+else
+    Addressables.Release(handle);
+    }
+}</code></pre><div class="cout" hidden></div></div>
+<h6 id="练习题-27" class="hd lv6">练习题</h6>
+<div class="cpair"><div class="chead"><span class="lang">C#</span><span class="csp"></span><button class="mini copy">复制</button></div><pre class="code" data-lang="csharp"><code>using System;
+using System.Collections;
+using System.Collections.Generic;
+using UnityEngine;
+using UnityEngine.AddressableAssets;
+using UnityEngine.ResourceManagement.AsyncOperations;
+
+public class AddressablesMgr
+{
+    private static AddressablesMgr instance = new AddressablesMgr();
+    public static AddressablesMgr Instance =&gt; instance;
+    //有一个容器 帮助我们存储 异步加载的返回值
+    public Dictionary&lt;string, AsyncOperationHandle&gt; resDic = new Dictionary&lt;string, AsyncOperationHandle&gt;();
+    private AddressablesMgr() { }
+
+    //异步加载资源的方法
+    public void LoadAssetAsync&lt;T&gt;(string name, Action&lt;AsyncOperationHandle&lt;T&gt;&gt; callBack)
+    {
+        //由于存在同名 不同类型资源的区分加载
+        //所以我们通过名字和类型拼接作为 key
+        string keyName = name + "_" + typeof(T).Name;
+        AsyncOperationHandle&lt;T&gt; handle;
+        //如果已经加载过该资源
+        if (resDic.ContainsKey(keyName))
+        {
+            //获取异步加载返回的操作内容
+            handle = resDic[keyName].Convert&lt;T&gt;();
+            //判断 这个异步加载是否结束
+            if(handle.IsDone)
+            {
+                //如果成功 就不需要异步了 直接相当于同步调用了 这个委托函数 传入对应的返回值
+                callBack(handle);
+            }
+            //还没有加载完成
+            else
+            {
+                //如果这个时候 还没有异步加载完成 那么我们只需要 告诉它 完成时做什么就行了
+                handle.Completed += (obj) =&gt; {
+                    if (obj.Status == AsyncOperationStatus.Succeeded)
+                        callBack(obj);
+                };
+            }
+            return;
+        }
+        
+        //如果没有加载过该资源
+        //直接进行异步加载 并且记录
+        handle = Addressables.LoadAssetAsync&lt;T&gt;(name);
+        handle.Completed += (obj)=&gt; {
+            if (obj.Status == AsyncOperationStatus.Succeeded)
+                callBack(obj);
+            else
+            {
+                Debug.LogWarning(keyName + "资源加载失败");
+                if(resDic.ContainsKey(keyName))
+                    resDic.Remove(keyName);
+            }
+        };
+        resDic.Add(keyName, handle);
+    }
+
+    //释放资源的方法 
+    public void Release&lt;T&gt;(string name)
+    {
+        //由于存在同名 不同类型资源的区分加载
+        //所以我们通过名字和类型拼接作为 key
+        string keyName = name + "_" + typeof(T).Name;
+        if(resDic.ContainsKey(keyName))
+        {
+            //取出对象 移除资源 并且从字典里面移除
+            AsyncOperationHandle&lt;T&gt; handle = resDic[keyName].Convert&lt;T&gt;();
+            Addressables.Release(handle);
+            resDic.Remove(keyName);
+        }
+    }
+
+    //异步加载多个资源 或者 加载指定资源
+    public void LoadAssetAsync&lt;T&gt;(Addressables.MergeMode mode, Action&lt;T&gt; callBack, params string[] keys)
+    {
+        //1.构建一个keyName 之后用于存入到字典中
+        List&lt;string&gt; list = new List&lt;string&gt;(keys);
+        string keyName = "";
+        foreach (string key in list)
+            keyName += key + "_";
+        keyName += typeof(T).Name;
+        //2.判断是否存在已经加载过的内容 
+        //存在做什么
+        AsyncOperationHandle&lt;IList&lt;T&gt;&gt; handle;
+        if (resDic.ContainsKey(keyName))
+        {
+            handle = resDic[keyName].Convert&lt;IList&lt;T&gt;&gt;();
+            //异步加载是否结束
+            if(handle.IsDone)
+            {
+                foreach (T item in handle.Result)
+                    callBack(item);
+            }
+            else
+            {
+                handle.Completed += (obj) =&gt;
+                {
+                    //加载成功才调用外部传入的委托函数
+                    if(obj.Status == AsyncOperationStatus.Succeeded)
+                    {
+                        foreach (T item in handle.Result)
+                            callBack(item);
+                    }
+                };
+            }
+            return;
+        }
+        //不存在做什么
+        handle = Addressables.LoadAssetsAsync&lt;T&gt;(list, callBack, mode);
+        handle.Completed += (obj) =&gt;
+        {
+            if(obj.Status == AsyncOperationStatus.Failed)
+            {
+                Debug.LogError("资源加载失败" + keyName);
+                if (resDic.ContainsKey(keyName))
+                    resDic.Remove(keyName);
+            }
+        };
+        resDic.Add(keyName, handle);
+    }
+
+    public void LoadAssetAsync&lt;T&gt;(Addressables.MergeMode mode, Action&lt;AsyncOperationHandle&lt;IList&lt;T&gt;&gt;&gt; callBack, params string[] keys)
+    {
+    }
+
+    public void Releas&lt;T&gt;(params string[] keys)
+    {
+        //1.构建一个keyName 之后用于存入到字典中
+        List&lt;string&gt; list = new List&lt;string&gt;(keys);
+        string keyName = "";
+        foreach (string key in list)
+            keyName += key + "_";
+        keyName += typeof(T).Name;
+        
+        if(resDic.ContainsKey(keyName))
+        {
+            //取出字典里面的对象
+            AsyncOperationHandle&lt;IList&lt;T&gt;&gt; handle = resDic[keyName].Convert&lt;IList&lt;T&gt;&gt;();
+            Addressables.Release(handle);
+            resDic.Remove(keyName);
+        }
+    }
+
+    //清空资源
+    public void Clear()
+    {
+        foreach (var item in resDic.Values)
+        {
+            Addressables.Release(item);
+        }
+        resDic.Clear();
+        AssetBundle.UnloadAllAssetBundles(true);
+        Resources.UnloadUnusedAssets();
+        GC.Collect();
+    }
+}</code></pre><div class="cout" hidden></div></div>
+<h4 id="04-自定义更新目录和下载-AB-包-知识点-重要-28" class="hd lv4">04 自定义更新目录和下载 AB 包 知识点（重要）</h4>
+<div class="cpair"><div class="chead"><span class="lang">C#</span><span class="csp"></span><button class="mini copy">复制</button></div><pre class="code" data-lang="csharp"><code>目录文件的本质是Json文件和一个Hash文件
+其中记录的主要内容有
+Json文件中记录的是：
+1.加载AB包、图集、资源、场景、实例化对象所用的脚本（会通过反射去加载他们来使用）
+2.AB包中所有资源类型对应的类（会通过反射去加载他们来使用）
+3.AB包对应路径
+4.资源的path名
+等等
+Hash文件中记录的是：
+目录文件对应hash码（每一个文件都有一个唯一码，用来判断文件是否变化）
+更新时本地的文件hash码会和远端目录的hash码进行对比
+如果发现不一样就会更新目录文件
+
+当我们使用远端发布内容时，在资源服务器也会有一个目录文件
+Addressables会在运行时自动管理目录
+如果远端目录发生变化了(他会通过hash文件里面存储的数据判断是否是新目录)
+它会自动下载新版本并将其加载到内存中</code></pre><div class="cout" hidden></div></div>
+<div class="cpair"><div class="chead"><span class="lang">C#</span><span class="csp"></span><button class="mini copy">复制</button></div><pre class="code" data-lang="csharp"><code>1.如果要手动更新目录 建议在设置中关闭自动更新
+
+2.自动检查所有目录是否有更新，并更新目录API
+Addressables.UpdateCatalogs().Completed += (obj) =&gt;
+{
+    Addressables.Release(obj);
+};
+
+3.获取目录列表，再更新目录
+参数 bool 就是加载结束后 会不会自动释放异步加载的句柄
+Addressables.CheckForCatalogUpdates(true).Completed += (obj) =&gt;
+{
+    如果列表里面的内容大于0 证明有可以更新的目录
+    if(obj.Result.Count &gt; 0)
+    {
+根据目录列表更新目录
+Addressables.UpdateCatalogs(obj.Result, true).Completed += (handle) =&gt;
+{
+    如果更新完毕 记得释放资源
+    Addressables.Release(handle);
+    Addressables.Release(obj);
+};
+    }
+};</code></pre><div class="cout" hidden></div></div>
+<div class="cpair"><div class="chead"><span class="lang">C#</span><span class="csp"></span><button class="mini copy">复制</button></div><pre class="code" data-lang="csharp"><code>建议通过协程来加载
+StartCoroutine(LoadAsset());
+1.首先获取下载包的大小
+
+2.预加载
+
+3.加载进度</code></pre><div class="cout" hidden></div></div>
+<div class="cpair"><div class="chead"><span class="lang">C#</span><span class="csp"></span><button class="mini copy">复制</button></div><pre class="code" data-lang="csharp"><code>IEnumerator LoadAsset()
+{
+1.首先获取下载包的大小
+可以传资源名、标签名、或者两者的组合
+AsyncOperationHandle&lt;long&gt; handleSize = Addressables.GetDownloadSizeAsync(new List&lt;string&gt;() { "Cube", "Sphere", "SD" });
+yield return handleSize;
+2.预加载
+if(handleSize.Result &gt; 0)
+{
+    这样就可以异步加载 所有依赖的AB包相关内容了
+    AsyncOperationHandle handle = Addressables.DownloadDependenciesAsync(new List&lt;string&gt;() { "Cube", "Sphere", "SD" }, Addressables.MergeMode.Union);
+    while(!handle.IsDone)
+    {
+3.加载进度
+DownloadStatus info = handle.GetDownloadStatus();
+print(info.Percent);
+print(info.DownloadedBytes + "/" + info.TotalBytes);
+yield return 0;
+    }
+
+    Addressables.Release(handle);
+}
+
+}</code></pre><div class="cout" hidden></div></div>
+<div class="cpair"><div class="chead"><span class="lang">C#</span><span class="csp"></span><button class="mini copy">复制</button></div><pre class="code" data-lang="csharp"><code>一般我们会在
+刚进入游戏时 或者 切换场景时 显示一个Loading界面
+我们可以在此时提前加载包，这样之后在使用资源就不会出现明显的异步加载延迟感
+目录更新 我们一般都会放在进入游戏开始游戏之前</code></pre><div class="cout" hidden></div></div>
+<h4 id="必看-05-引用计数规则-知识点-重要-29" class="hd lv4">（🔥 必看）05 引用计数规则 知识点（重要）</h4>
+<div class="cpair"><div class="chead"><span class="lang">C#</span><span class="csp"></span><button class="mini copy">复制</button></div><pre class="code" data-lang="csharp"><code>当我们通过加载使用可寻址资源时
+Addressables会在内部帮助我们进行引用计数
+使用资源时，引用计数+1
+释放资源时，引用计数-1
+当可寻址资源的引用为0时，就可以卸载它了
+
+为了避免内存泄露（不需要使用的内容残留在内存中）
+我们要保证加载资源和卸载资源是配对使用的
+
+注意：释放的资源不一定立即从内存中卸载
+在卸载资源所属的AB包之前，不会释放资源使用的内存
+(比如自己所在的AB包 被别人使用时，这时AB包不会被卸载，所以自己还在内存中)
+我们可以使用Resources.UnloadUnusedAssets卸载资源（建议在切换场景时调用）
+
+AB包也有自己的引用计数（Addressables把它也视为可寻址资源）
+从AB包中加载资源时，引用计数+1
+从AB包中卸载资源时，引用计数-1
+当AB包引用计数为0时，意味着不再使用了，这时会从内存中卸载
+
+总结：Addressables内部会通过引用计数帮助我们管理内存
+我们只需要保证 加载和卸载资源配对使用即可</code></pre><div class="cout" hidden></div></div>
+<div class="cpair"><div class="chead"><span class="lang">C#</span><span class="csp"></span><button class="mini copy">复制</button></div><pre class="code" data-lang="csharp"><code>我们创建两个一样的资源
+然后一个一个的释放他们的资源句柄
+观察他们创建出来的对象变化
+
+注意：使用第三种模式加载资源（从AB包中加载）</code></pre><div class="cout" hidden></div></div>
+<div class="cpair"><div class="chead"><span class="lang">C#</span><span class="csp"></span><button class="mini copy">复制</button></div><pre class="code" data-lang="csharp"><code>我们之前写的资源管理器
+通过自己管理异步加载的返回句柄会让系统自带的引用计数功能不起作用
+因为我们不停的在复用一个句柄</code></pre><div class="cout" hidden></div></div>
+<div class="cpair"><div class="chead"><span class="lang">C#</span><span class="csp"></span><button class="mini copy">复制</button></div><pre class="code" data-lang="csharp"><code>private List&lt;AsyncOperationHandle&lt;GameObject&gt;&gt; list = new List&lt;AsyncOperationHandle&lt;GameObject&gt;&gt;();
+private void Update()
+{
+创建对象 记录异步操作句柄
+if(Input.GetKeyDown(KeyCode.Space))
+{
+    AsyncOperationHandle&lt;GameObject&gt; handle = Addressables.LoadAssetAsync&lt;GameObject&gt;("Cube");
+    handle.Completed += (obj) =&gt;
+    {
+        Instantiate(obj.Result);
+    };
+    list.Add(handle);
+
+    AddressablesMgr.Instance.LoadAssetAsync&lt;GameObject&gt;("Cube", (obj) =&gt;
+    {
+       Instantiate(obj.Result);
+    });
+}
+
+从创建对象中 释放异步操作句柄资源
+if (Input.GetKeyDown(KeyCode.Q))
+{
+    if(list.Count &gt; 0)
+    {
+        Addressables.Release(list[0]);
+        list.RemoveAt(0);
+    }
+
+    AddressablesMgr.Instance.Release&lt;GameObject&gt;("Cube");
+}
+    </code></pre><div class="cout" hidden></div></div>
+<h6 id="练习题-加入引用计数-管理类-30" class="hd lv6">练习题 加入引用计数 管理类</h6>
+<div class="cpair"><div class="chead"><span class="lang">C#</span><span class="csp"></span><button class="mini copy">复制</button></div><pre class="code" data-lang="csharp"><code>using System;
+using System.Collections;
+using System.Collections.Generic;
+using UnityEngine;
+using UnityEngine.AddressableAssets;
+using UnityEngine.ResourceManagement.AsyncOperations;
+
+//可寻址资源 信息
+public class AddressablesInfo
+{
+    //记录 异步操作句柄
+    public AsyncOperationHandle handle;
+    //记录 引用计数
+    public uint count;
+    public AddressablesInfo(AsyncOperationHandle handle)
+    {
+        this.handle = handle;
+        count += 1;
+    }
+}
+
+public class AddressablesMgr
+{
+    private static AddressablesMgr instance = new AddressablesMgr();
+    public static AddressablesMgr Instance =&gt; instance;
+    //有一个容器 帮助我们存储 异步加载的返回值
+    public Dictionary&lt;string, AddressablesInfo&gt; resDic = new Dictionary&lt;string, AddressablesInfo&gt;();
+    private AddressablesMgr() { }
+
+    //异步加载资源的方法
+    public void LoadAssetAsync&lt;T&gt;(string name, Action&lt;AsyncOperationHandle&lt;T&gt;&gt; callBack)
+    {
+        //由于存在同名 不同类型资源的区分加载
+        //所以我们通过名字和类型拼接作为 key
+        string keyName = name + "_" + typeof(T).Name;
+        AsyncOperationHandle&lt;T&gt; handle;
+        //如果已经加载过该资源
+        if (resDic.ContainsKey(keyName))
+        {
+            //获取异步加载返回的操作内容
+            handle = resDic[keyName].handle.Convert&lt;T&gt;();
+            //要使用资源了 那么引用计数+1
+            resDic[keyName].count += 1;
+            //判断 这个异步加载是否结束
+            if(handle.IsDone)
+            {
+                //如果成功 就不需要异步了 直接相当于同步调用了 这个委托函数 传入对应的返回值
+                callBack(handle);
+            }
+            //还没有加载完成
+            else
+            {
+                //如果这个时候 还没有异步加载完成 那么我们只需要 告诉它 完成时做什么就行了
+                handle.Completed += (obj) =&gt; {
+                    if (obj.Status == AsyncOperationStatus.Succeeded)
+                        callBack(obj);
+                };
+            }
+            return;
+        }
+        
+        //如果没有加载过该资源
+        //直接进行异步加载 并且记录
+        handle = Addressables.LoadAssetAsync&lt;T&gt;(name);
+        handle.Completed += (obj)=&gt; {
+            if (obj.Status == AsyncOperationStatus.Succeeded)
+                callBack(obj);
+            else
+            {
+                Debug.LogWarning(keyName + "资源加载失败");
+                if(resDic.ContainsKey(keyName))
+                    resDic.Remove(keyName);
+            }
+        };
+        AddressablesInfo info = new AddressablesInfo(handle);
+        resDic.Add(keyName, info);
+    }
+
+    //释放资源的方法 
+    public void Release&lt;T&gt;(string name)
+    {
+        //由于存在同名 不同类型资源的区分加载
+        //所以我们通过名字和类型拼接作为 key
+        string keyName = name + "_" + typeof(T).Name;
+        if(resDic.ContainsKey(keyName))
+        {
+            //释放时 引用计数-1
+            resDic[keyName].count -= 1;
+            //如果引用计数为0  才真正的释放
+            if(resDic[keyName].count == 0)
+            {
+                //取出对象 移除资源 并且从字典里面移除
+                AsyncOperationHandle&lt;T&gt; handle = resDic[keyName].handle.Convert&lt;T&gt;();
+                Addressables.Release(handle);
+                resDic.Remove(keyName);
+            }
+        }
+    }
+
+    //异步加载多个资源 或者 加载指定资源
+    public void LoadAssetAsync&lt;T&gt;(Addressables.MergeMode mode, Action&lt;T&gt; callBack, params string[] keys)
+    {
+        //1.构建一个keyName 之后用于存入到字典中
+        List&lt;string&gt; list = new List&lt;string&gt;(keys);
+        string keyName = "";
+        foreach (string key in list)
+            keyName += key + "_";
+        keyName += typeof(T).Name;
+        //2.判断是否存在已经加载过的内容 
+        //存在做什么
+        AsyncOperationHandle&lt;IList&lt;T&gt;&gt; handle;
+        if (resDic.ContainsKey(keyName))
+        {
+            handle = resDic[keyName].handle.Convert&lt;IList&lt;T&gt;&gt;();
+            //要使用资源了 那么引用计数+1
+            resDic[keyName].count += 1;
+            //异步加载是否结束
+            if (handle.IsDone)
+            {
+                foreach (T item in handle.Result)
+                    callBack(item);
+            }
+            else
+            {
+                handle.Completed += (obj) =&gt;
+                {
+                    //加载成功才调用外部传入的委托函数
+                    if(obj.Status == AsyncOperationStatus.Succeeded)
+                    {
+                        foreach (T item in handle.Result)
+                            callBack(item);
+                    }
+                };
+            }
+            return;
+        }
+        //不存在做什么
+        handle = Addressables.LoadAssetsAsync&lt;T&gt;(list, callBack, mode);
+        handle.Completed += (obj) =&gt;
+        {
+            if(obj.Status == AsyncOperationStatus.Failed)
+            {
+                Debug.LogError("资源加载失败" + keyName);
+                if (resDic.ContainsKey(keyName))
+                    resDic.Remove(keyName);
+            }
+        };
+        AddressablesInfo info = new AddressablesInfo(handle);
+        resDic.Add(keyName, info);
+    }
+
+    public void LoadAssetAsync&lt;T&gt;(Addressables.MergeMode mode, Action&lt;AsyncOperationHandle&lt;IList&lt;T&gt;&gt;&gt; callBack, params string[] keys)
+    {
+    }
+
+    public void Release&lt;T&gt;(params string[] keys)
+    {
+        //1.构建一个keyName 之后用于存入到字典中
+        List&lt;string&gt; list = new List&lt;string&gt;(keys);
+        string keyName = "";
+        foreach (string key in list)
+            keyName += key + "_";
+        keyName += typeof(T).Name;
+        
+        if(resDic.ContainsKey(keyName))
+        {
+            resDic[keyName].count -= 1;
+            if(resDic[keyName].count == 0)
+            {
+                //取出字典里面的对象
+                AsyncOperationHandle&lt;IList&lt;T&gt;&gt; handle = resDic[keyName].handle.Convert&lt;IList&lt;T&gt;&gt;();
+                Addressables.Release(handle);
+                resDic.Remove(keyName);
+            }
+        }
+    }
+
+    //清空资源
+    public void Clear()
+    {
+        foreach (var item in resDic.Values)
+        {
+            Addressables.Release(item.handle);
+        }
+        resDic.Clear();
+        AssetBundle.UnloadAllAssetBundles(true);
+        Resources.UnloadUnusedAssets();
+        GC.Collect();
+    }
+}</code></pre><div class="cout" hidden></div></div>
+<h3 id="第-2-节-窗口相关-31" class="hd lv3">第 2 节：窗口相关</h3>
+<h4 id="01-事件查看窗口-知识点-加密-32" class="hd lv4">01 事件查看窗口 知识点（加密）</h4>
+<div class="cpair"><div class="chead"><span class="lang">C#</span><span class="csp"></span><button class="mini copy">复制</button></div><pre class="code" data-lang="csharp"><code>使用可寻址事件查看窗口可以监视可寻址资源的资源内存管理
+该窗口
+1.显示应用程序何时加载和卸载资源
+2.显示所有可寻址系统操作的引用计数
+3.显示应用程序帧率和分配的内存总量近似图
+我们可以通过它来检查可寻址资源对性能的影响
+并检查没有释放的资源</code></pre><div class="cout" hidden></div></div>
+<div class="cpair"><div class="chead"><span class="lang">C#</span><span class="csp"></span><button class="mini copy">复制</button></div><pre class="code" data-lang="csharp"><code>注意：使用事件查看窗口的前提要打开AddressablesAssetSettings配置文件中的事件发送开关
+1.Window &gt; Asset Management &gt; Addressables &gt; Event Viewer
+2.Addressabeles Groups &gt; Window &gt; Event Viewer</code></pre><div class="cout" hidden></div></div>
+<div class="cpair"><div class="chead"><span class="lang">C#</span><span class="csp"></span><button class="mini copy">复制</button></div><pre class="code" data-lang="csharp"><code>左上角：
+Clear Event：清楚所有记录的帧，会清空窗口中所有内容
+Unhide All Hidden Events：显示你隐藏的所有事件内容（当我们右键一个内容隐藏后才会显示该选项）
+
+右上键：
+Frame：显示当前所在帧数
+左按钮和右按钮：在记录的帧中前后切换查看信息
+Current:选中当前帧
+
+中央部分：
+FPS:应用的帧率
+MonoHeap：正在使用的托管堆内存量
+Event Counts：事件计数，某一帧中发生的可寻址事件的数量
+Instantiation Counts:实例化计数，某一帧中Addressables.InstantiateAsync的调用数量
+线性图标：显示统计的什么时候加载释放资源的信息
+
+Event 相关：显示当前帧中发生的可寻址操作的事件</code></pre><div class="cout" hidden></div></div>
+<div class="cpair"><div class="chead"><span class="lang">C#</span><span class="csp"></span><button class="mini copy">复制</button></div><pre class="code" data-lang="csharp"><code>事件查看窗口对于我们来说很有用
+我们可以通过它来排查内存泄露相关的信息
+比如场景中对象都被移除了，但是事件查看窗口中还有AB引用相关的信息，那证明存在内存泄露
+可以排查加载和释放是否没有配对使用</code></pre><div class="cout" hidden></div></div>
+<div class="cpair"><div class="chead"><span class="lang">C#</span><span class="csp"></span><button class="mini copy">复制</button></div><pre class="code" data-lang="csharp"><code>private List&lt;AsyncOperationHandle&lt;GameObject&gt;&gt; list = new List&lt;AsyncOperationHandle&lt;GameObject&gt;&gt;();
+     
+void Update()
+{
+创建对象 记录异步操作句柄
+if (Input.GetKeyDown(KeyCode.Space))
+{
+    AsyncOperationHandle&lt;GameObject&gt; handle = Addressables.LoadAssetAsync&lt;GameObject&gt;("Cube");
+    handle.Completed += (obj) =&gt;
+    {
+      Instantiate(obj.Result);
+    };
+    list.Add(handle);
+}
+
+从创建对象中 释放异步操作句柄资源
+if (Input.GetKeyDown(KeyCode.Q))
+{
+    if (list.Count &gt; 0)
+    {
+      Addressables.Release(list[0]);
+      list.RemoveAt(0);
+    }
+}
+  
+}</code></pre><div class="cout" hidden></div></div>
+<h4 id="02-分析窗口-知识点-加密-33" class="hd lv4">02 分析窗口 知识点（加密）</h4>
+<div class="cpair"><div class="chead"><span class="lang">C#</span><span class="csp"></span><button class="mini copy">复制</button></div><pre class="code" data-lang="csharp"><code>分析窗口是一种收集项目可寻址布局信息的工具
+它是一种信息工具，可以让我们对可寻址文件布局做出更明智的决定</code></pre><div class="cout" hidden></div></div>
+<div class="cpair"><div class="chead"><span class="lang">C#</span><span class="csp"></span><button class="mini copy">复制</button></div><pre class="code" data-lang="csharp"><code>1.Window &gt; Asset Management &gt; Addressables &gt; Analyze
+2.Addressabeles Groups &gt; Window &gt; Analyze</code></pre><div class="cout" hidden></div></div>
+<div class="cpair"><div class="chead"><span class="lang">C#</span><span class="csp"></span><button class="mini copy">复制</button></div><pre class="code" data-lang="csharp"><code>上方的三个按钮
+1.Analyze Selected Rules:分析选定的规则
+2.Clear Selected Rules:清除选定规则
+3.Fix Selected Rules：修复选定规则
+
+下方的内容
+Analyze Rules:分析规则
+-Fixable Rules:可修复的规则（提供了分析和修复两种功能的规则出现在这里）
+--Check Duplicate Bundle Dependencies:检查重复的AB包依赖项
+主要检测处理的问题：
+比如资源a和b，都使用了材质c，a和b是可寻址资源，c不是可寻址资源
+a，b分别在两个AB包中，那么这时两个AB包中都会有资源c，这时就可以通过该规则排查出该问题
+那么这时我们可以选择自己重新处理后打包，也可以选择修复功能
+建议使用自己处理问题，因为某些特殊情况它也会认为有问题
+比如，一个FBX中有多个网格信息a，b，这时我们分别把网格a放入包A，网格b放入包B
+它也会认为A和B有重复资源，但其实他们并没有重复
+
+Unfixable Rules:不可修复的规则（对于只有分析功能，没有修复功能的规则在这里出现）
+-Check Resources to Addressable Duplicate Dependencies:检查可寻址重复依赖项的资源
+主要检测的问题:
+同时出现在可寻址资源和应用程序构建的资源中
+比如一个资源A，它是可寻址资源
+但是它同时在Resources、StreamingAssets等特殊文件夹中，最终会被打包出去
+
+
+-Check Scene to Addressable Duplicate Dependencies:检查场景到可寻址重复依赖项
+主要检测的问题：
+同时出现在可寻址资源和某一个场景中
+比如一个资源A，它是可寻址资源但是它有直接出现在某一个场景中
+这时你需要自己根据需求进行处理
+
+-Bundle Layout Preview:AB包布局预览
+
+1.当我们选中一个规则后，可以点击上方的 分析选定规则按钮 进行分析
+  分析完成后，会在下方看到对应的信息
+2.我们也可以点击清除选定的规则可以清除上一次信息
+3.对于提供了修复操作的规则，我们可以点击修复选定规则，来修复问题
+
+我们也可以自己定义分析规则
+但是这种高级方式我们不是特别常用
+你可以参考官方文档：
+https:docs.unity.cn/Packages/com.unity.addressables@1.18/manual/AnalyzeTool.html
+Extending Analyze拓展分析相关的内容
+了解即可</code></pre><div class="cout" hidden></div></div>
+<div class="cpair"><div class="chead"><span class="lang">C#</span><span class="csp"></span><button class="mini copy">复制</button></div><pre class="code" data-lang="csharp"><code>分析窗口对于我们来说也很有用
+当我们打包后，我们可以通过分析窗口工具
+分析AB包中的资源分布是否合理
+根据分析结果自己处理一些潜在问题</code></pre><div class="cout" hidden></div></div>
+<h4 id="03-构建布局报告-知识点-加密-34" class="hd lv4">03 构建布局报告 知识点（加密）</h4>
+<div class="cpair"><div class="chead"><span class="lang">C#</span><span class="csp"></span><button class="mini copy">复制</button></div><pre class="code" data-lang="csharp"><code>构建布局报告提供了有关可寻址资源的构建打包的详细信息和统计信息
+包括
+1.AB包的描述
+2.每个资源和AB包的大小
+3.解析作为依赖项隐式包含在AB包中的不可寻址资源
+4.AB包的依赖关系
+
+我们可以通过查看报告文件获取这些信息</code></pre><div class="cout" hidden></div></div>
+<div class="cpair"><div class="chead"><span class="lang">C#</span><span class="csp"></span><button class="mini copy">复制</button></div><pre class="code" data-lang="csharp"><code>1.启用调试构建布局功能
+Edit &gt; Preferences &gt; Addressables
+启用Debug Build Layout
+
+2.只要我们构建打包可寻址资源后
+就可以在Library/com.unity.addressables/文件夹中找到buildlayout.txt文件</code></pre><div class="cout" hidden></div></div>
+<div class="cpair"><div class="chead"><span class="lang">C#</span><span class="csp"></span><button class="mini copy">复制</button></div><pre class="code" data-lang="csharp"><code>内容中主要包含：
+1.摘要信息(包括AB包数量、大小等等)
+2.每组相关信息（哪些资源，几个包，包大小等等）
+3.依赖相关信息</code></pre><div class="cout" hidden></div></div>
+<h3 id="必看-第-3-节-常见问题汇总-35" class="hd lv3">（🔥 必看）第 3 节：常见问题汇总</h3>
+<div class="cpair"><div class="chead"><span class="lang">C#</span><span class="csp"></span><button class="mini copy">复制</button></div><pre class="code" data-lang="csharp"><code>1.AB包太多(太小)的问题
+  1-1:每个包都会有内存开销，如果加载过多的包可能会带来更多的内存消耗
+  1-2:并发下载的问题，如果包小而多，以为着下载包时可能需要更多的时间
+  1-3:目录文件会因为过多的包而变大，因为它要记录更多的包信息
+  1-4:复用资源的可能性更大，比如多个包使用同样一个资源，但是该资源不是寻址资源，那么在每个包中都会有该资源
+
+2.AB包太少(太大)的问题
+  1-1:过大的包如果下载失败，下次会重新下载，因为使用UnityWebRequest下载包时不会恢复失败的下载
+      比如100MB的包，下了50MB，玩家中断下载了，下次又得重新下
+  1-2:能单独加载，但是不能单独卸载，更大的包意味着包中有更多资源，比如加载了1个大包中100个资源
+      但是现在用完了99个，还剩一个再用，即使99都卸载了，但是由于引用计数这个大包也不会卸载
+      就会造成内存的浪费
+
+所以没有最好的策略，只有根据自己的项目需求合理安排分组打包
+要根据资源的使用情况来合理设置资源分组，在分组时权衡好各方面的问题</code></pre><div class="cout" hidden></div></div>
+<div class="cpair"><div class="chead"><span class="lang">C#</span><span class="csp"></span><button class="mini copy">复制</button></div><pre class="code" data-lang="csharp"><code>AB包的压缩方式：不压缩、LZ4、LZMA
+一般情况LZ4用于本地资源，LZMA用于远端资源
+主要原因是LZMA的压缩内容更小，更节约下载时间和流量
+注意：压缩不会影响加载内存的大小，只会影响包体大小，下载时间等
+
+但是也要根据实际情况
+比如：
+1.不压缩：包体并不大的单机游戏，使用不压缩最好，没有包体大小的压力，加载也是最快的，因为不用解压
+2.LZ4：它是基于块的压缩，所以提供了加载文件的能力，加载资源时不用全加载AB包，只加载使用的内容，相对LZMA来说更节约内存
+3.LZMA：不建议用它在本地内容中，因为它虽然包最小，但是加载最慢，用它只是为了节约下载时间和极限压缩包体大小
+
+综合来说，也没有最优的方式，还是要根据实际情况来选择
+个人认为LZ4压缩方式，是相对比较优秀的一种方式</code></pre><div class="cout" hidden></div></div>
+<div class="cpair"><div class="chead"><span class="lang">C#</span><span class="csp"></span><button class="mini copy">复制</button></div><pre class="code" data-lang="csharp"><code>当我们想要极限压缩包体大小时，可能希望优化目录文件的大小
+1.压缩本地目录
+  AddressableAssetSettings &gt; Catalog &gt; Compress Local Catalog
+2.禁用内置场景和资源
+  默认Addressables提供了从Resources等内置资源文件夹中加载资源以及加载内置场景
+  如果你不通过Addressables加载他们，可以禁用，这样目录文件就不会包含其中信息
+  但是我们就只能使用老方法加载同名
+  个人建议取消，因为一般我们不会通过Addressables去加载非寻址资源</code></pre><div class="cout" hidden></div></div>
+<div class="cpair"><div class="chead"><span class="lang">C#</span><span class="csp"></span><button class="mini copy">复制</button></div><pre class="code" data-lang="csharp"><code>1.关于AB包最大的限制，老版本不支持大于4G的包，虽然新版本中已经没有这个限制
+但是为了兼容性，还是建议大小控制在4G以下
+
+2.活用可寻址资源上的Groups View中的两个功能
+Show Sprite and Subobject Addresses:当窗口中内容特别多时，禁用它可以提升窗口加载的性能
+Group Hierarchy with Dashes：启用带破折号的层级结构
+     可以让我们在内容特别多时以层级结构查看分组信息</code></pre><div class="cout" hidden></div></div>
+<p class="tx">Ai 优化后的管理类</p>
+<div class="cpair"><div class="chead"><span class="lang">C#</span><span class="csp"></span><button class="mini copy">复制</button></div><pre class="code" data-lang="csharp"><code>using System;
+using System.Collections.Generic;
+using System.Linq;
+using UnityEngine;
+using UnityEngine.AddressableAssets;
+using UnityEngine.ResourceManagement.AsyncOperations;
+
+/// &lt;summary&gt;
+/// 可寻址资源管理器（单例）
+/// 支持引用计数、单个/批量异步加载、资源释放及全局清理
+/// &lt;/summary&gt;
+public class AddressablesMgr
+{
+    // ---------- 单例实现 ----------
+    private static readonly Lazy&lt;AddressablesMgr&gt; _instance = new Lazy&lt;AddressablesMgr&gt;(() =&gt; new AddressablesMgr());
+    public static AddressablesMgr Instance =&gt; _instance.Value;
+
+    // ---------- 私有成员 ----------
+    // 使用复合 Key（资源名 + 类型名）避免字符串拼接带来的开销和歧义
+    private readonly Dictionary&lt;ResourceKey, AddressablesInfo&gt; _resDic = new Dictionary&lt;ResourceKey, AddressablesInfo&gt;();
+
+    private AddressablesMgr() { }
+
+    // ---------- 公共 API ----------
+
+    /// &lt;summary&gt;
+    /// 异步加载单个资源（支持引用计数）
+    /// &lt;/summary&gt;
+    /// &lt;typeparam name="T"&gt;资源类型&lt;/typeparam&gt;
+    /// &lt;param name="name"&gt;资源地址&lt;/param&gt;
+    /// &lt;param name="callback"&gt;加载完成回调（成功时调用）&lt;/param&gt;
+    public void LoadAssetAsync&lt;T&gt;(string name, Action&lt;AsyncOperationHandle&lt;T&gt;&gt; callback)
+    {
+        var key = new ResourceKey(name, typeof(T));
+        AsyncOperationHandle&lt;T&gt; handle;
+
+        if (_resDic.TryGetValue(key, out var info))
+        {
+            // 已加载：增加引用计数
+            info.count++;
+            handle = info.handle.Convert&lt;T&gt;();
+
+            if (handle.IsDone)
+            {
+                // 若已加载完成，直接回调
+                callback?.Invoke(handle);
+            }
+            else
+            {
+                // 若未完成，注册完成回调
+                handle.Completed += op =&gt;
+                {
+                    if (op.Status == AsyncOperationStatus.Succeeded)
+                        callback?.Invoke(op);
+                    else
+                        Debug.LogWarning($"[AddressablesMgr] 资源 {key} 加载失败（已完成但状态异常）");
+                };
+            }
+            return;
+        }
+
+        // 首次加载
+        handle = Addressables.LoadAssetAsync&lt;T&gt;(name);
+        handle.Completed += op =&gt;
+        {
+            if (op.Status == AsyncOperationStatus.Succeeded)
+            {
+                callback?.Invoke(op);
+            }
+            else
+            {
+                Debug.LogError($"[AddressablesMgr] 资源 {key} 加载失败");
+                // 加载失败则移除记录（避免残留）
+                if (_resDic.ContainsKey(key))
+                    _resDic.Remove(key);
+            }
+        };
+
+        _resDic.Add(key, new AddressablesInfo(handle));
+    }
+
+    /// &lt;summary&gt;
+    /// 释放单个资源（引用计数减1，计数为0时真正释放）
+    /// &lt;/summary&gt;
+    /// &lt;typeparam name="T"&gt;资源类型&lt;/typeparam&gt;
+    /// &lt;param name="name"&gt;资源地址&lt;/param&gt;
+    public void Release&lt;T&gt;(string name)
+    {
+        var key = new ResourceKey(name, typeof(T));
+        if (!_resDic.TryGetValue(key, out var info))
+            return;
+
+        info.count--;
+        if (info.count == 0)
+        {
+            var handle = info.handle.Convert&lt;T&gt;();
+            Addressables.Release(handle);
+            _resDic.Remove(key);
+        }
+    }
+
+    /// &lt;summary&gt;
+    /// 批量加载资源（每个资源加载完成时回调）
+    /// &lt;/summary&gt;
+    /// &lt;typeparam name="T"&gt;资源类型&lt;/typeparam&gt;
+    /// &lt;param name="mode"&gt;合并模式&lt;/param&gt;
+    /// &lt;param name="onSingleLoaded"&gt;单个资源加载完成的回调&lt;/param&gt;
+    /// &lt;param name="keys"&gt;资源地址列表&lt;/param&gt;
+    public void LoadAssetsAsync&lt;T&gt;(Addressables.MergeMode mode, Action&lt;T&gt; onSingleLoaded, params string[] keys)
+    {
+        if (keys == null || keys.Length == 0)
+        {
+            Debug.LogWarning("[AddressablesMgr] 批量加载时 keys 为空");
+            return;
+        }
+
+        var key = BuildBatchKey&lt;T&gt;(keys);
+        AsyncOperationHandle&lt;IList&lt;T&gt;&gt; handle;
+
+        if (_resDic.TryGetValue(key, out var info))
+        {
+            // 已加载：增加引用计数
+            info.count++;
+            handle = info.handle.Convert&lt;IList&lt;T&gt;&gt;();
+
+            if (handle.IsDone)
+            {
+                // 已完成则直接遍历回调
+                foreach (var item in handle.Result)
+                    onSingleLoaded?.Invoke(item);
+            }
+            else
+            {
+                handle.Completed += op =&gt;
+                {
+                    if (op.Status == AsyncOperationStatus.Succeeded)
+                    {
+                        foreach (var item in op.Result)
+                            onSingleLoaded?.Invoke(item);
+                    }
+                    else
+                    {
+                        Debug.LogWarning($"[AddressablesMgr] 批量资源 {key} 加载完成但状态失败");
+                    }
+                };
+            }
+            return;
+        }
+
+        // 首次加载：注意 Addressables.LoadAssetsAsync 的第二个参数是单个资源加载回调
+        handle = Addressables.LoadAssetsAsync&lt;T&gt;(keys, onSingleLoaded, mode);
+        handle.Completed += op =&gt;
+        {
+            if (op.Status == AsyncOperationStatus.Failed)
+            {
+                Debug.LogError($"[AddressablesMgr] 批量资源 {key} 加载失败");
+                if (_resDic.ContainsKey(key))
+                    _resDic.Remove(key);
+            }
+        };
+
+        _resDic.Add(key, new AddressablesInfo(handle));
+    }
+
+    /// &lt;summary&gt;
+    /// 批量加载资源（统一回调，返回整个句柄）
+    /// &lt;/summary&gt;
+    /// &lt;typeparam name="T"&gt;资源类型&lt;/typeparam&gt;
+    /// &lt;param name="mode"&gt;合并模式&lt;/param&gt;
+    /// &lt;param name="callback"&gt;加载完成回调（整个列表）&lt;/param&gt;
+    /// &lt;param name="keys"&gt;资源地址列表&lt;/param&gt;
+    public void LoadAssetsAsync&lt;T&gt;(Addressables.MergeMode mode, Action&lt;AsyncOperationHandle&lt;IList&lt;T&gt;&gt;&gt; callback, params string[] keys)
+    {
+        if (keys == null || keys.Length == 0)
+        {
+            Debug.LogWarning("[AddressablesMgr] 批量加载时 keys 为空");
+            return;
+        }
+
+        var key = BuildBatchKey&lt;T&gt;(keys);
+        AsyncOperationHandle&lt;IList&lt;T&gt;&gt; handle;
+
+        if (_resDic.TryGetValue(key, out var info))
+        {
+            info.count++;
+            handle = info.handle.Convert&lt;IList&lt;T&gt;&gt;();
+
+            if (handle.IsDone)
+            {
+                callback?.Invoke(handle);
+            }
+            else
+            {
+                handle.Completed += op =&gt;
+                {
+                    if (op.Status == AsyncOperationStatus.Succeeded)
+                        callback?.Invoke(op);
+                    else
+                        Debug.LogWarning($"[AddressablesMgr] 批量资源 {key} 加载完成但状态失败");
+                };
+            }
+            return;
+        }
+
+        // 首次加载：此重载不关心单个加载，所以第二个参数传 null
+        handle = Addressables.LoadAssetsAsync&lt;T&gt;(keys, null, mode);
+        handle.Completed += op =&gt;
+        {
+            if (op.Status == AsyncOperationStatus.Succeeded)
+            {
+                callback?.Invoke(op);
+            }
+            else
+            {
+                Debug.LogError($"[AddressablesMgr] 批量资源 {key} 加载失败");
+                if (_resDic.ContainsKey(key))
+                    _resDic.Remove(key);
+            }
+        };
+
+        _resDic.Add(key, new AddressablesInfo(handle));
+    }
+
+    /// &lt;summary&gt;
+    /// 释放批量加载的资源（引用计数减1，计数为0时真正释放）
+    /// &lt;/summary&gt;
+    /// &lt;typeparam name="T"&gt;资源类型&lt;/typeparam&gt;
+    /// &lt;param name="keys"&gt;资源地址列表&lt;/param&gt;
+    public void Release&lt;T&gt;(params string[] keys)
+    {
+        if (keys == null || keys.Length == 0)
+            return;
+
+        var key = BuildBatchKey&lt;T&gt;(keys);
+        if (!_resDic.TryGetValue(key, out var info))
+            return;
+
+        info.count--;
+        if (info.count == 0)
+        {
+            var handle = info.handle.Convert&lt;IList&lt;T&gt;&gt;();
+            Addressables.Release(handle);
+            _resDic.Remove(key);
+        }
+    }
+
+    /// &lt;summary&gt;
+    /// 清空所有已加载资源（强制释放，谨慎使用）
+    /// &lt;/summary&gt;
+    public void Clear()
+    {
+        foreach (var kv in _resDic)
+        {
+            Addressables.Release(kv.Value.handle);
+        }
+        _resDic.Clear();
+
+        AssetBundle.UnloadAllAssetBundles(true);
+        Resources.UnloadUnusedAssets();
+        GC.Collect(); // 可考虑仅在必要时调用
+    }
+
+    // ---------- 辅助方法 ----------
+
+    /// &lt;summary&gt;
+    /// 构建单个资源的复合 Key
+    /// &lt;/summary&gt;
+    private ResourceKey BuildKey&lt;T&gt;(string name) =&gt; new ResourceKey(name, typeof(T));
+
+    /// &lt;summary&gt;
+    /// 构建批量资源的复合 Key（将多个地址和类型组合）
+    /// &lt;/summary&gt;
+    private ResourceKey BuildBatchKey&lt;T&gt;(IEnumerable&lt;string&gt; keys)
+    {
+        // 使用排序后拼接，确保相同集合得到相同 Key（顺序无关）
+        var sorted = keys.OrderBy(k =&gt; k).ToList();
+        return new ResourceKey(string.Join("_", sorted), typeof(T));
+    }
+
+    // ---------- 内部类型 ----------
+
+    /// &lt;summary&gt;
+    /// 记录异步操作句柄和引用计数
+    /// &lt;/summary&gt;
+    private class AddressablesInfo
+    {
+        public AsyncOperationHandle handle;
+        public uint count;
+
+        public AddressablesInfo(AsyncOperationHandle handle)
+        {
+            this.handle = handle;
+            count = 1; // 创建时即为首次引用
+        }
+    }
+
+    /// &lt;summary&gt;
+    /// 用作字典 Key 的结构体，避免字符串拼接歧义且提升查找效率
+    /// &lt;/summary&gt;
+    private readonly struct ResourceKey : IEquatable&lt;ResourceKey&gt;
+    {
+        private readonly string _name;
+        private readonly Type _type;
+
+        public ResourceKey(string name, Type type)
+        {
+            _name = name;
+            _type = type;
+        }
+
+        public bool Equals(ResourceKey other) =&gt;
+            string.Equals(_name, other._name) &amp;&amp; _type == other._type;
+
+        public override bool Equals(object obj) =&gt;
+            obj is ResourceKey other &amp;&amp; Equals(other);
+
+        public override int GetHashCode()
+        {
+            unchecked
+            {
+                return (_name?.GetHashCode() ?? 0) * 397 ^ (_type?.GetHashCode() ?? 0);
+            }
+        }
+
+        public override string ToString() =&gt; $"{_name}_{_type.Name}";
+    }
+}</code></pre><div class="cout" hidden></div></div>
+    </article>
+    <footer class="pnbar"><a class="pn prev" href="m18.html"><span>上一节</span>YooAsset 资源管理 - 大游戏</a><a class="pn next" href="m20.html"><span>下一节</span>HybridCLR - 代码业务逻辑</a></footer>
+  </main>
+</div>
+<button class="totop" id="totop">↑</button>
+<script src="assets/demos.js"></script>
+<script src="assets/diagrams-data.js"></script>
+<script src="assets/diagram.js"></script>
+<script src="assets/app.js"></script>
+<script>window.__mountDiagrams && window.__mountDiagrams();</script>
+</body>
+</html>

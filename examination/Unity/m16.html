@@ -1,0 +1,491 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Unity-UGUI - 进阶 - TextMeshPro · Unity 交互课件</title>
+<link rel="stylesheet" href="assets/style.css">
+<link rel="stylesheet" href="assets/diagram.css">
+</head>
+<body data-mid="m16">
+<header class="top">
+  <a class="brand" href="index.html"><span class="logo">U</span><b>Unity</b><i>交互课件</i></a>
+  <div class="crumb"><span>界面 UI 相关</span><em>/</em><strong>Unity-UGUI - 进阶 - TextMeshPro</strong></div>
+  <div class="top-r">
+    <span class="stat">8071 字 · 20 代码 · 50 图 · 0 表</span>
+    <button class="mini" id="btnNav">目录</button>
+  </div>
+</header>
+<div class="wrap">
+  <aside class="side" id="side">
+    <div class="side-h">本篇目录</div>
+    <nav class="tocbox"><a class="toc lv2" href="#第1章-Unity进阶-TextMeshPro-概述-1">第1章：Unity进阶-TextMeshPro-概述</a><a class="toc lv2" href="#第2章-概述-2">第2章：概述</a><a class="toc lv4" href="#01-课程概述-3">01：课程概述</a><a class="toc lv2" href="#第3章-基础知识点-4">第3章：基础知识点</a><a class="toc lv3" href="#第1节-导入TMP-5">【第1节：导入TMP】</a><a class="toc lv4" href="#01-导入TMP-6">01：🔥导入TMP</a><a class="toc lv3" href="#第2节-UI文本控件-7">【第2节：UI文本控件】</a><a class="toc lv4" href="#02-初识TMP-UI文本控件-8">02：🔥初识TMP UI文本控件</a><a class="toc lv4" href="#03-输入-字体相关-9">03：🔥输入、字体相关</a><a class="toc lv4" href="#04-颜色-间距-对齐相关-10">04：🔥颜色、间距、对齐相关</a><a class="toc lv4" href="#05-包裹溢出-UV映射相关-11">05：🔥包裹溢出、UV映射相关</a><a class="toc lv4" href="#06-额外设置相关-12">06：额外设置相关</a><a class="toc lv4" href="#07-脚本控制-13">07：脚本控制</a><a class="toc lv3" href="#第3节-3D文本相关-14">【第3节：3D文本相关】</a><a class="toc lv4" href="#08-3D文本相关-15">08：3D文本相关</a><a class="toc lv3" href="#第4节-字体资源相关-16">【第4节：字体资源相关】</a><a class="toc lv4" href="#09-字体资源创建基本流程-17">09：🔥字体资源创建基本流程</a><a class="toc lv4" href="#10-基本信息设置-18">10：🔥基本信息设置</a><a class="toc lv4" href="#11-生成设置-和-图集纹理-19">11：🔥生成设置 和 图集纹理</a><a class="toc lv4" href="#13-字体粗细-20">13：字体粗细</a><a class="toc lv3" href="#第5节-富文本标签-21">【第5节：富文本标签】</a><a class="toc lv4" href="#14-富文本标签-22">14：🔥富文本标签</a><a class="toc lv3" href="#第4章-进阶知识点-23">第4章：进阶知识点</a><a class="toc lv3" href="#第1节-样式表-24">【第1节：样式表】</a><a class="toc lv4" href="#01-样式表-25">01：🔥样式表</a><a class="toc lv3" href="#第2节-颜色渐变预设-26">【第2节：颜色渐变预设】</a><a class="toc lv4" href="#02-颜色渐变预设-27">02：颜色渐变预设</a><a class="toc lv3" href="#第3节-精灵图片资源-图文混排-28">【第3节：精灵图片资源(图文混排)】</a><a class="toc lv3" href="#第4节-TMP基础设置-30">【第4节：TMP基础设置】</a><a class="toc lv4" href="#04-TMP基本设置-31">04：TMP基本设置</a><a class="toc lv3" href="#第5节-材质球相关-32">【第5节：材质球相关】</a><a class="toc lv4" href="#05-SDF材质球和基础设置-Face-33">05：🔥SDF材质球和基础设置(Face)</a><a class="toc lv4" href="#06-边缘线-Outline-和阴影-Underlay-34">06：🔥边缘线(Outline)和阴影(Underlay)</a><a class="toc lv4" href="#07-照明-Lighting-35">07：照明(Lighting)</a><a class="toc lv4" href="#08-发光-Glow-和调试设置-Debug-Settings-36">08：发光(Glow) 和调试设置(Debug Settings)</a><a class="toc lv3" href="#第6节-工具类相关-37">【第6节：工具类相关】</a><a class="toc lv4" href="#09-TMP_TextEventHandler类-38">09：TMP_TextEventHandler类</a><a class="toc lv4" href="#10-TMP_TextUtilities类-39">10：TMP_TextUtilities类</a><a class="toc lv4" href="#11-其它工具类-40">11：其它工具类</a></nav>
+    <div class="side-h">全部模块</div>
+    <nav class="navbox"><div class="ng"><div class="ngt">开发经验补充</div><a href="m01.html">Unity - 进阶 - 大纲</a><a href="m02.html">Unity 进阶之视频播放</a><a href="m03.html">Unity - 进阶 - C# 补充</a><a href="m04.html">Unity 网络开发基础</a><a href="m05.html">Unity 程序框架</a></div><div class="ng"><div class="ngt">游戏引擎相关</div><a href="m06.html">Unity_入门</a><a href="m07.html">Unity_入门 - 实践项目</a><a href="m08.html">Unity_基础</a><a href="m09.html">Unity 核心</a><a href="m10.html">UniTask</a></div><div class="ng"><div class="ngt">数据持久化</div><a href="m11.html">Unity 进阶之 ScriptableObject</a><a href="m12.html">Unity_数据持久化 - PlayerPrefs</a><a href="m13.html">Unity_数据持久化 - Newtonsoft-Json</a><a href="m14.html">MessagePack-CSharp - 二进制</a><a href="m26.html">Unity 数据持久化 - Binary 2 进制</a></div><div class="ng"><div class="ngt">界面 UI 相关</div><a href="m15.html">Unity-UGUI</a><a href="m16.html" class="on">Unity-UGUI - 进阶 - TextMeshPro</a><a href="m27.html">Unity_GUI 概述（编辑器用）</a></div><div class="ng"><div class="ngt">设备输入相关</div><a href="m17.html">Unity 进阶之 InputSystem</a></div><div class="ng"><div class="ngt">热更相关</div><a href="m18.html">YooAsset 资源管理 - 大游戏</a><a href="m19.html">Addressables 资源管理 - 小游戏</a><a href="m20.html">HybridCLR - 代码业务逻辑</a></div><div class="ng"><div class="ngt">性能优化相关</div><a href="m21.html">Unity 进阶之性能优化</a><a href="m22.html">Unity 背包里装 10w 个道具</a></div><div class="ng"><div class="ngt">SDK 相关</div><div class="ngempty">预留分类 · 后续补充</div></div><div class="ng"><div class="ngt">游戏打包相关</div><a href="m23.html">Unity 移动平台相关 — IOS</a><a href="m24.html">Unity 移动平台相关 — Android</a><a href="m25.html">unity_00 - 数学公式和物理公式</a></div></nav>
+  </aside>
+  <main class="main">
+    <div class="mhead">
+      <div class="kick">界面 UI 相关</div>
+      <h1>Unity-UGUI - 进阶 - TextMeshPro</h1>
+      <p class="msub">SDF 字体与富文本</p>
+      <div class="chips"><span>8071 字原稿</span><span>20 段代码</span><span>50 张配图</span><span>0 个表格</span></div>
+    </div>
+    <article class="doc">
+<div class="runsec"><div class="runsec-h">本模块可运行验证<span>纯 C# · 无需 Unity · 点右下按钮真实编译执行</span></div><div class="cpair"><div class="chead"><span class="lang">C#</span><span class="csp"></span><button class="mini copy">复制</button><button class="mini run" data-run>真实运行</button></div><pre class="code" data-lang="csharp"><code>// TextMeshPro：SDF 字体为什么放大不糊
+double Sdf(double x, double y, double r) =&gt; r - Math.Sqrt(x * x + y * y);   // 圆的符号距离场
+
+Console.WriteLine("SDF 值 = 到边界的带符号距离（内部正、外部负）");
+foreach (var (x, label) in new[] { (0.0, "圆心"), (0.5, "半径一半"), (0.95, "接近边缘"), (1.0, "边缘上"), (1.2, "外部") })
+{
+    Console.WriteLine($"  (x={x:F2}, y=0)  SDF={Sdf(x, 0, 1):F3}  {label}");
+}
+
+Console.WriteLine();
+Console.WriteLine("边缘 = SDF 变号的位置，用 smoothstep 抗锯齿：");
+for (int i = 0; i &lt;= 10; i++)
+{
+    double sdf = -0.3 + i * 0.06;
+    double alpha = Math.Clamp((sdf + 0.05) / 0.10, 0, 1);   // 0.1 宽的过渡带
+    int bar = (int)Math.Round(alpha * 20);
+    Console.WriteLine($"  SDF={sdf,6:F2}  alpha={alpha:F2}  {new string('#', bar)}{new string('.', 20 - bar)}");
+}
+
+Console.WriteLine();
+Console.WriteLine("关键差别（对照 UGUI Text）：");
+Console.WriteLine("  Text  ：位图字体，放大 = 插值放大，边缘发虚、出锯齿");
+Console.WriteLine("  TMP   ：距离场采样，任意字号实时算边缘，永远锐利");
+Console.WriteLine("  代价  ：字形图集更大（一张 1024 图集放不下几个中文字），要按需生成字库");</code></pre><div class="cout" hidden></div></div></div><div class="demo" data-demo="tmp"><div class="demo-bar"><span class="dot"></span>SDF 字体渲染<span class="demo-tag">交互演示</span></div><div class="demo-body"><div class="demo-loading">加载中…</div></div></div>
+<p class="tx">4 小时 47 分 15 秒</p>
+<h2 id="第1章-Unity进阶-TextMeshPro-概述-1" class="hd lv2">第1章：Unity进阶-TextMeshPro-概述</h2>
+<div class="dgm" data-diagram="5615bfd03fe2" data-img="assets/img/5615bfd03fe2.png"><div class="dgm-head"><span class="dgm-t">TextMeshPro 知识结构</span><span class="badge b-mind">可交互</span><span class="sp"></span><button class="dgm-tab">看原图</button></div></div>
+<h2 id="第2章-概述-2" class="hd lv2">第2章：概述</h2>
+<h4 id="01-课程概述-3" class="hd lv4">01：课程概述</h4>
+<div class="dgm" data-diagram="dfd9d230f4f7" data-img="assets/img/dfd9d230f4f7.png"><div class="dgm-head"><span class="dgm-t">UI</span><span class="badge b-ocr">文字还原</span><span class="sp"></span><button class="dgm-tab">看原图</button></div></div>
+<div class="cpair"><div class="chead"><span class="lang">C#</span><span class="csp"></span><button class="mini copy">复制</button></div><pre class="code" data-lang="csharp"><code>Unity 2020 版本开始，UGUI默认的文本控件变成了TextMesh Pro</code></pre><div class="cout" hidden></div></div>
+<h2 id="第3章-基础知识点-4" class="hd lv2">第3章：基础知识点</h2>
+<h3 id="第1节-导入TMP-5" class="hd lv3">【第1节：导入TMP】</h3>
+<h4 id="01-导入TMP-6" class="hd lv4">01：🔥导入TMP</h4>
+<p class="tx">方式一</p>
+<div class="dgm" data-diagram="536a0fe8ae47" data-img="assets/img/536a0fe8ae47.png"><div class="dgm-head"><span class="dgm-t">Window Help</span><span class="badge b-ocr">文字还原</span><span class="sp"></span><button class="dgm-tab">看原图</button></div></div>
+<p class="tx">方式二</p>
+<div class="dgm" data-diagram="8d9e0231b2d1" data-img="assets/img/8d9e0231b2d1.png"><div class="dgm-head"><span class="dgm-t">Create Empty</span><span class="badge b-ocr">文字还原</span><span class="sp"></span><button class="dgm-tab">看原图</button></div></div>
+<div class="dgm" data-diagram="8e55c15c9104" data-img="assets/img/8e55c15c9104.png"><div class="dgm-head"><span class="dgm-t">S6 TMP Importer</span><span class="badge b-ocr">文字还原</span><span class="sp"></span><button class="dgm-tab">看原图</button></div></div>
+<div class="dgm" data-diagram="8cdef268c602" data-img="assets/img/8cdef268c602.png"><div class="dgm-head"><span class="dgm-t">Scenes</span><span class="badge b-ocr">文字还原</span><span class="sp"></span><button class="dgm-tab">看原图</button></div></div>
+<div class="cpair"><div class="chead"><span class="lang">C#</span><span class="csp"></span><button class="mini copy">复制</button></div><pre class="code" data-lang="csharp"><code>方式一：Window 菜单 &gt; TextMeshPro &gt; Import TMP Examples and Extras(导入TMP完整示例资源)
+方式二：Hierarchy面板右键创建TMP对象，在弹出的窗口中选择导入完整示例包</code></pre><div class="cout" hidden></div></div>
+<h3 id="第2节-UI文本控件-7" class="hd lv3">【第2节：UI文本控件】</h3>
+<h4 id="02-初识TMP-UI文本控件-8" class="hd lv4">02：🔥初识TMP UI文本控件</h4>
+<div class="dgm" data-diagram="0800144c5318" data-img="assets/img/0800144c5318.png"><div class="dgm-head"><span class="dgm-t">UI / Image</span><span class="badge b-ocr">文字还原</span><span class="sp"></span><button class="dgm-tab">看原图</button></div></div>
+<div class="cpair"><div class="chead"><span class="lang">C#</span><span class="csp"></span><button class="mini copy">复制</button></div><pre class="code" data-lang="csharp"><code>1.Hierarchy 右键 &gt; UI &gt; TextMeshPro‑Text
+2.GameObject 菜单 &gt; UI &gt; TextMeshPro‑Text</code></pre><div class="cout" hidden></div></div>
+<h4 id="03-输入-字体相关-9" class="hd lv4">03：🔥输入、字体相关</h4>
+<div class="dgm" data-diagram="7703c365ab1c" data-img="assets/img/7703c365ab1c.png"><div class="dgm-head"><span class="dgm-t">txeT weN</span><span class="badge b-ocr">文字还原</span><span class="sp"></span><button class="dgm-tab">看原图</button></div></div>
+<h4 id="04-颜色-间距-对齐相关-10" class="hd lv4">04：🔥颜色、间距、对齐相关</h4>
+<div class="dgm" data-diagram="8b1a354a53ad" data-img="assets/img/8b1a354a53ad.png"><div class="dgm-head"><span class="dgm-t">Vertex Color / Four Corners Gradient</span><span class="badge b-ocr">文字还原</span><span class="sp"></span><button class="dgm-tab">看原图</button></div></div>
+<h4 id="05-包裹溢出-UV映射相关-11" class="hd lv4">05：🔥包裹溢出、UV映射相关</h4>
+<div class="dgm" data-diagram="15ac84f51b00" data-img="assets/img/15ac84f51b00.png"><div class="dgm-head"><span class="dgm-t">Text Wrapping Mode</span><span class="badge b-ocr">文字还原</span><span class="sp"></span><button class="dgm-tab">看原图</button></div></div>
+<h4 id="06-额外设置相关-12" class="hd lv4">06：额外设置相关</h4>
+<div class="dgm" data-diagram="4d25a807fd7b" data-img="assets/img/4d25a807fd7b.png"><div class="dgm-head"><span class="dgm-t">Emoji Fallback Support</span><span class="badge b-ocr">文字还原</span><span class="sp"></span><button class="dgm-tab">看原图</button></div></div>
+<h4 id="07-脚本控制-13" class="hd lv4">07：脚本控制</h4>
+<div class="cpair"><div class="chead"><span class="lang">C#</span><span class="csp"></span><button class="mini copy">复制</button></div><pre class="code" data-lang="csharp"><code>using UnityEngine;
+
+public class Lesson3 : MonoBehaviour
+{
+public TextMeshProUGUI tmpUIText;
+ 
+void Start()
+{
+认识 脚本获取TMP UI组件
+1.需要引用TMP命名空间 TMPro
+2.TMP UI组件类型为 TextMeshProUGUI
+
+
+认识 TMP UI常用属性
+1.文本内容
+text;
+tmpUIText.text = "123123adfasdklf545454564654654646454564654132156465424";
+2.字体
+font
+tmpUIText.font
+3.字体大小
+fontSize
+tmpUIText.fontSize = 10;
+4.颜色
+color
+tmpUIText.color = Color.black;
+5.对齐方式
+alignment
+tmpUIText.alignment = TextAlignmentOptions.Center;
+6.行间距
+lineSpacing
+tmpUIText.lineSpacing = 50;
+7.是否开启富文本
+richText;
+tmpUIText.richText = false;
+
+
+认识 TMP UI常用方法
+1.SetText 支持格式化字符串
+SetText("&lt;color=blue&gt;Hello, World!&lt;/color&gt;");   
+tmpUIText.SetText("123123123123123");
+2.强制重建UI，不同阶段的更新时机
+  Prelayout  布局前
+  Layout 布局阶段
+  PostLayout 布局之后
+  PreRender  渲染之前
+  LatePreRender  渲染晚期
+  MaxUpdateValue 最大值
+Rebuild(UnityEngine.UI.CanvasUpdate.LatePreRender);
+tmpUIText.Rebuild(UnityEngine.UI.CanvasUpdate.Prelayout);
+3.强制更新网格，获取文本信息时动态调用
+ForceMeshUpdate();
+tmpUIText.ForceMeshUpdate();
+4.获取文本字符长度
+text.Length;
+print(tmpUIText.text.Length);
+
+
+认识 UI点击事件
+如果需要为TMP UI添加点击事件
+使用UGUI的EventTrigger组件方式
+
+
+认识 官方API文档
+https://docs.unity3d.com/Packages/com.unity.textmeshpro@4.0/api/TMPro.TextMeshProUGUI.html
+
+}
+
+ 
+public void OnClickTmpUI()
+{
+print("文本被点击了");
+}
+}</code></pre><div class="cout" hidden></div></div>
+<h3 id="第3节-3D文本相关-14" class="hd lv3">【第3节：3D文本相关】</h3>
+<h4 id="08-3D文本相关-15" class="hd lv4">08：3D文本相关</h4>
+<div class="dgm" data-diagram="71c17ee2b928" data-img="assets/img/71c17ee2b928.png"><div class="dgm-head"><span class="dgm-t">2D Object</span><span class="badge b-ocr">文字还原</span><span class="sp"></span><button class="dgm-tab">看原图</button></div></div>
+<p class="tx">当成一个 3D 组件使用即可</p>
+<div class="cpair"><div class="chead"><span class="lang">C#</span><span class="csp"></span><button class="mini copy">复制</button></div><pre class="code" data-lang="csharp"><code>1.组件类型不同
+  3D:TextMeshPro
+  UI:TextMeshProUGUI
+2.使用场景不同
+  3D:用于3D世界空间显示文本
+  UI:用于UI系统显示，放在UI画布下面
+3.渲染方式
+  3D:直接渲染物体网格
+  UI:通过UGUI Canvas系统渲染
+4.接收事件方式
+  3D:需要碰撞体，射线检测
+  UI:依托UI系统事件，可以使用EventTrigger
+总结
+如果需要3D世界内显示文字，选择3D版本TextMeshPro，挂载到3D物体上
+如果要在UI系统里面使用，选择 TextMeshProUGUI，放在UI画布下使用</code></pre><div class="cout" hidden></div></div>
+<h3 id="第4节-字体资源相关-16" class="hd lv3">【第4节：字体资源相关】</h3>
+<h4 id="09-字体资源创建基本流程-17" class="hd lv4">09：🔥字体资源创建基本流程</h4>
+<div class="dgm" data-diagram="33bf6619d258" data-img="assets/img/33bf6619d258.png"><div class="dgm-head"><span class="dgm-t">Aa Aa</span><span class="badge b-ocr">文字还原</span><span class="sp"></span><button class="dgm-tab">看原图</button></div></div>
+<div class="dgm" data-diagram="2a9b020b5b15" data-img="assets/img/2a9b020b5b15.png"><div class="dgm-head"><span class="dgm-t">Create / Blend Tree</span><span class="badge b-ocr">文字还原</span><span class="sp"></span><button class="dgm-tab">看原图</button></div></div>
+<div class="dgm" data-diagram="86e05bc14a98" data-img="assets/img/86e05bc14a98.png"><div class="dgm-head"><span class="dgm-t">JFo</span><span class="badge b-ocr">文字还原</span><span class="sp"></span><button class="dgm-tab">看原图</button></div></div>
+<p class="tx">一般移动到</p>
+<div class="dgm" data-diagram="292eafea989a" data-img="assets/img/292eafea989a.png"><div class="dgm-head"><span class="dgm-t">IMPACT SDF</span><span class="badge b-ocr">文字还原</span><span class="sp"></span><button class="dgm-tab">看原图</button></div></div>
+<h4 id="10-基本信息设置-18" class="hd lv4">10：🔥基本信息设置</h4>
+<div class="dgm" data-diagram="25b99dd23064" data-img="assets/img/25b99dd23064.png"><div class="dgm-head"><span class="dgm-t">Ascent Line</span><span class="badge b-ocr">文字还原</span><span class="sp"></span><button class="dgm-tab">看原图</button></div></div>
+<div class="dgm" data-diagram="4db09eaae47e" data-img="assets/img/4db09eaae47e.png"><div class="dgm-head"><span class="dgm-t">Window Help</span><span class="badge b-ocr">文字还原</span><span class="sp"></span><button class="dgm-tab">看原图</button></div></div>
+<p class="tx">这里是生成静态字体生成纹理，是确定好只使用什么字体，不能进行改变</p>
+<div class="dgm" data-diagram="71c61079a0e1" data-img="assets/img/71c61079a0e1.png"><div class="dgm-head"><span class="dgm-t">Font Asset Creator</span><span class="badge b-ocr">文字还原</span><span class="sp"></span><button class="dgm-tab">看原图</button></div></div>
+<p class="tx">📎基本信息设置.xmind</p>
+<h4 id="11-生成设置-和-图集纹理-19" class="hd lv4">11：🔥生成设置 和 图集纹理</h4>
+<div class="dgm" data-diagram="867260a774fb" data-img="assets/img/867260a774fb.png"><div class="dgm-head"><span class="dgm-t">IMPACT SDF</span><span class="badge b-ocr">文字还原</span><span class="sp"></span><button class="dgm-tab">看原图</button></div></div>
+<p class="tx">如果这里 Dynamic 切换成 static 那么就和上面一样生产字体纹理，然后超过这个纹理里的字体 就无法打出来</p>
+<p class="tx">static 的优点 就是 内存占用少</p>
+<p class="tx">英文用 static 字体 ， 中文 用 dynamic 字体</p>
+<div class="dgm" data-diagram="9347da533c1c" data-img="assets/img/9347da533c1c.png"><div class="dgm-head"><span class="dgm-t">Generation Settings</span><span class="badge b-ocr">文字还原</span><span class="sp"></span><button class="dgm-tab">看原图</button></div></div>
+<p class="tx">SDFAA 效果最好 ，其次 SMOOTH 处理</p>
+<h4 id="13-字体粗细-20" class="hd lv4">13：字体粗细</h4>
+<div class="dgm" data-diagram="6b19f683331e" data-img="assets/img/6b19f683331e.png"><div class="dgm-head"><span class="dgm-t">Font Weights</span><span class="badge b-ocr">文字还原</span><span class="sp"></span><button class="dgm-tab">看原图</button></div></div>
+<h3 id="第5节-富文本标签-21" class="hd lv3">【第5节：富文本标签】</h3>
+<h4 id="14-富文本标签-22" class="hd lv4">14：🔥富文本标签</h4>
+<p class="tx">在 TextInput 中 输入文字能识别以下标签</p>
+<div class="dgm" data-diagram="efada7e6a692" data-img="assets/img/efada7e6a692.png"><div class="dgm-head"><span class="dgm-t">②社：</span><span class="badge b-ocr">文字还原</span><span class="sp"></span><button class="dgm-tab">看原图</button></div></div>
+<div class="cpair"><div class="chead"><span class="lang">C#</span><span class="csp"></span><button class="mini copy">复制</button></div><pre class="code" data-lang="csharp"><code>1.换行
+  &lt;br&gt;
+2.粗体
+  &lt;b&gt;&lt;/b&gt;
+3.斜体
+  &lt;i&gt;&lt;/i&gt;
+4.下划线
+  &lt;u&gt;&lt;/u&gt;
+5.文字大小
+  &lt;size=值&gt;&lt;/size&gt;
+6.文字颜色
+  &lt;color=#RGBA 十六进制&gt;&lt;/color&gt;
+7.对齐方式
+  &lt;align=left center right justified flush&gt;&lt;/align&gt;
+8.文本背景高亮标记
+  &lt;mark=#RGBA 十六进制&gt;&lt;/mark&gt;
+9.透明度
+  &lt;alpha=#A 十六进制&gt;
+10.全部大写
+  &lt;allcaps&gt;&lt;/allcaps&gt;
+11.更换字体材质
+  &lt;font="名字" material="名字"&gt;&lt;/font&gt;
+12.上标(平方)
+  &lt;sup&gt;&lt;/sup&gt;
+13.下标(数学公式)
+  &lt;sub&gt;&lt;/sub&gt;
+14.超链接
+  &lt;link="标识"&gt;&lt;/link&gt;</code></pre><div class="cout" hidden></div></div>
+<h3 id="第4章-进阶知识点-23" class="hd lv3">第4章：进阶知识点</h3>
+<h3 id="第1节-样式表-24" class="hd lv3">【第1节：样式表】</h3>
+<h4 id="01-样式表-25" class="hd lv4">01：🔥样式表</h4>
+<p class="tx">在富文本中 局部文字使用自定义的名字为 name 的样式表</p>
+<div class="dgm" data-diagram="b2fbafd4cf3a" data-img="assets/img/b2fbafd4cf3a.png"><div class="dgm-head"><span class="dgm-t">Canvas Renderer</span><span class="badge b-ocr">文字还原</span><span class="sp"></span><button class="dgm-tab">看原图</button></div></div>
+<p class="tx">默认样式表</p>
+<div class="dgm" data-diagram="34322305e10f" data-img="assets/img/34322305e10f.png"><div class="dgm-head"><span class="dgm-t">h Project</span><span class="badge b-ocr">文字还原</span><span class="sp"></span><button class="dgm-tab">看原图</button></div></div>
+<p class="tx">和这里关联， 文字样式切换</p>
+<div class="dgm" data-diagram="a9a13e2f2aef" data-img="assets/img/a9a13e2f2aef.png"><div class="dgm-head"><span class="dgm-t">口 Project</span><span class="badge b-ocr">文字还原</span><span class="sp"></span><button class="dgm-tab">看原图</button></div></div>
+<p class="tx">自己创建样式表</p>
+<div class="dgm" data-diagram="5d45bd2215a5" data-img="assets/img/5d45bd2215a5.png"><div class="dgm-head"><span class="dgm-t">a Sprite Assets</span><span class="badge b-ocr">文字还原</span><span class="sp"></span><button class="dgm-tab">看原图</button></div></div>
+<p class="tx">使用自定义的样式表 关联自定义样式表</p>
+<div class="dgm" data-diagram="6736ef5e3251" data-img="assets/img/6736ef5e3251.png"><div class="dgm-head"><span class="dgm-t">Vertical Mapping / Character</span><span class="badge b-ocr">文字还原</span><span class="sp"></span><button class="dgm-tab">看原图</button></div></div>
+<h3 id="第2节-颜色渐变预设-26" class="hd lv3">【第2节：颜色渐变预设】</h3>
+<h4 id="02-颜色渐变预设-27" class="hd lv4">02：颜色渐变预设</h4>
+<div class="cpair"><div class="chead"><span class="lang">C#</span><span class="csp"></span><button class="mini copy">复制</button></div><pre class="code" data-lang="csharp"><code>让文本对象重复使用相同的颜色渐变
+避免每次对文本单独进行设置，提高开发效率</code></pre><div class="cout" hidden></div></div>
+<div class="dgm" data-diagram="d3694cec2517" data-img="assets/img/d3694cec2517.png"><div class="dgm-head"><span class="dgm-t">Rename</span><span class="badge b-ocr">文字还原</span><span class="sp"></span><button class="dgm-tab">看原图</button></div></div>
+<div class="dgm" data-diagram="fce6e7146ba7" data-img="assets/img/fce6e7146ba7.png"><div class="dgm-head"><span class="dgm-t">a Prolect / o Inspector</span><span class="badge b-ocr">文字还原</span><span class="sp"></span><button class="dgm-tab">看原图</button></div></div>
+<p class="tx">这里设置的颜色渐变的模式 最好 和 字体上渐变模式一致，然后直接拖入</p>
+<div class="dgm" data-diagram="3bcfb5946f9c" data-img="assets/img/3bcfb5946f9c.png"><div class="dgm-head"><span class="dgm-t">Color Mode</span><span class="badge b-ocr">文字还原</span><span class="sp"></span><button class="dgm-tab">看原图</button></div></div>
+<div class="dgm" data-diagram="a856182baab7" data-img="assets/img/a856182baab7.png"><div class="dgm-head"><span class="dgm-t">sets / Main Settings</span><span class="badge b-ocr">文字还原</span><span class="sp"></span><button class="dgm-tab">看原图</button></div></div>
+<div class="cpair"><div class="chead"><span class="lang">C#</span><span class="csp"></span><button class="mini copy">复制</button></div><pre class="code" data-lang="csharp"><code>创建：
+Project窗口右键 -&gt; TextMeshPro -&gt; Color Gradient
+创建好后，选中文件，在Inspector窗口即可开始编辑
+
+使用：
+在TMP文本中开启颜色渐变
+导入创建好的颜色渐变配置
+注意：文本中颜色模式和配置文件中模式一致</code></pre><div class="cout" hidden></div></div>
+<h3 id="第3节-精灵图片资源-图文混排-28" class="hd lv3">【第3节：精灵图片资源(图文混排)】</h3>
+<div class="cpair"><div class="chead"><span class="lang">C#</span><span class="csp"></span><button class="mini copy">复制</button></div><pre class="code" data-lang="csharp"><code>认识TMP精灵资源是什么
+TMP精灵资源是图片切片之后使用的
+可以让TMP文本显示图片，做到图文混排
+只需要引用对应的精灵资源
+就可以在文本当中显示图片</code></pre><div class="cout" hidden></div></div>
+<h5 id="03-精灵图片资源-图文混排-29" class="hd lv5">03：🔥精灵图片资源(图文混排)</h5>
+<p class="tx">先设置图集</p>
+<div class="dgm" data-diagram="ebcaa5faa259" data-img="assets/img/ebcaa5faa259.png"><div class="dgm-head"><span class="dgm-t">IMPACT SDF</span><span class="badge b-ocr">文字还原</span><span class="sp"></span><button class="dgm-tab">看原图</button></div></div>
+<p class="tx">编辑后 应用</p>
+<div class="dgm" data-diagram="171192e07495" data-img="assets/img/171192e07495.png"><div class="dgm-head"><span class="dgm-t">Go Sprite Editor*</span><span class="badge b-ocr">文字还原</span><span class="sp"></span><button class="dgm-tab">看原图</button></div></div>
+<p class="tx">然后选中图集，创建 精灵图片</p>
+<div class="dgm" data-diagram="20a77bb753d6" data-img="assets/img/20a77bb753d6.png"><div class="dgm-head"><span class="dgm-t">Snaders</span><span class="badge b-ocr">文字还原</span><span class="sp"></span><button class="dgm-tab">看原图</button></div></div>
+<div class="dgm" data-diagram="6d9cbed1b20f" data-img="assets/img/6d9cbed1b20f.png"><div class="dgm-head"><span class="dgm-t">Resources / Sprite Character Table</span><span class="badge b-ocr">文字还原</span><span class="sp"></span><button class="dgm-tab">看原图</button></div></div>
+<p class="tx">把创建好的拖入到 TMP 这里</p>
+<div class="dgm" data-diagram="3733f0f5b5f5" data-img="assets/img/3733f0f5b5f5.png"><div class="dgm-head"><span class="dgm-t">Fonts</span><span class="badge b-ocr">文字还原</span><span class="sp"></span><button class="dgm-tab">看原图</button></div></div>
+<p class="tx">在文本中输入，然后就可以显示图片了</p>
+<div class="cpair"><div class="chead"><span class="lang">C#</span><span class="csp"></span><button class="mini copy">复制</button></div><pre class="code" data-lang="csharp"><code>直接在TMP文本组件的sprite富文本标签当中使用
+(使用默认精灵资源)
+&lt;sprite index=图片ID color=#RGBA十六进制(可选)&gt;
+或者
+&lt;sprite name="图片名" color=#RGBA十六进制(可选)&gt;
+或者
+&lt;sprite=图片ID color=#RGBA十六进制(可选)&gt;
+
+(指定精灵资源来使用)
+&lt;sprite="精灵资源名" index=图片ID color=#RGBA十六进制(可选)&gt;
+或者
+&lt;sprite="精灵资源名" name="图片名" color=#RGBA十六进制(可选)&gt;</code></pre><div class="cout" hidden></div></div>
+<div class="dgm" data-diagram="065f32c28742" data-img="assets/img/065f32c28742.png"><div class="dgm-head"><span class="dgm-t">Text Input</span><span class="badge b-ocr">文字还原</span><span class="sp"></span><button class="dgm-tab">看原图</button></div></div>
+<div class="dgm" data-diagram="c62f4c8dde30" data-img="assets/img/c62f4c8dde30.png"><div class="dgm-head"><span class="dgm-t">232</span><span class="badge b-ocr">文字还原</span><span class="sp"></span><button class="dgm-tab">看原图</button></div></div>
+<p class="tx">这里效果没有对齐，需求去中去修改，拖到最下方有个全局设置，可以同一改大小</p>
+<div class="dgm" data-diagram="94611776de4d" data-img="assets/img/94611776de4d.png"><div class="dgm-head"><span class="dgm-t">clolone Audilou</span><span class="badge b-ocr">文字还原</span><span class="sp"></span><button class="dgm-tab">看原图</button></div></div>
+<div class="dgm" data-diagram="b6495b8c1c44" data-img="assets/img/b6495b8c1c44.png"><div class="dgm-head"><span class="dgm-t">ID: 0</span><span class="badge b-ocr">文字还原</span><span class="sp"></span><button class="dgm-tab">看原图</button></div></div>
+<div class="dgm" data-diagram="b0ed496842dc" data-img="assets/img/b0ed496842dc.png"><div class="dgm-head"><span class="dgm-t">1D.S</span><span class="badge b-ocr">文字还原</span><span class="sp"></span><button class="dgm-tab">看原图</button></div></div>
+<h3 id="第4节-TMP基础设置-30" class="hd lv3">【第4节：TMP基础设置】</h3>
+<h4 id="04-TMP基本设置-31" class="hd lv4">04：TMP基本设置</h4>
+<p class="tx">要设置默认字体</p>
+<div class="dgm" data-diagram="66763c9fe044" data-img="assets/img/66763c9fe044.png"><div class="dgm-head"><span class="dgm-t">G6 Project Settings / Settings</span><span class="badge b-ocr">文字还原</span><span class="sp"></span><button class="dgm-tab">看原图</button></div></div>
+<h3 id="第5节-材质球相关-32" class="hd lv3">【第5节：材质球相关】</h3>
+<h4 id="05-SDF材质球和基础设置-Face-33" class="hd lv4">05：🔥SDF材质球和基础设置(Face)</h4>
+<p class="tx">相当于 PS 中 做字体效果相关设置， texture 中放渐变，可以结合 speed 做扫光效果</p>
+<div class="dgm" data-diagram="7dbe9242b020" data-img="assets/img/7dbe9242b020.png"><div class="dgm-head"><span class="dgm-t">0 Inspector</span><span class="badge b-ocr">文字还原</span><span class="sp"></span><button class="dgm-tab">看原图</button></div></div>
+<h4 id="06-边缘线-Outline-和阴影-Underlay-34" class="hd lv4">06：🔥边缘线(Outline)和阴影(Underlay)</h4>
+<p class="tx">outline 就是外⏱️ underlay 就是投影</p>
+<div class="dgm" data-diagram="93bb6f300214" data-img="assets/img/93bb6f300214.png"><div class="dgm-head"><span class="dgm-t">Outline / - Click to collapse -</span><span class="badge b-ocr">文字还原</span><span class="sp"></span><button class="dgm-tab">看原图</button></div></div>
+<h4 id="07-照明-Lighting-35" class="hd lv4">07：照明(Lighting)</h4>
+<p class="tx">类似于 PS 中 的斜面和浮雕 ,Bevel 控制 斜面 local lighting 高光和阴影</p>
+<p class="tx">bump map 法线贴图 enviroment map 环境设置</p>
+<div class="dgm" data-diagram="f58173053cc3" data-img="assets/img/f58173053cc3.png"><div class="dgm-head"><span class="dgm-t">Lighting / - Click to collapse -</span><span class="badge b-ocr">文字还原</span><span class="sp"></span><button class="dgm-tab">看原图</button></div></div>
+<h4 id="08-发光-Glow-和调试设置-Debug-Settings-36" class="hd lv4">08：发光(Glow) 和调试设置(Debug Settings)</h4>
+<p class="tx">Glow 类似于 PS 中 内发光和外发光，唯一区别 offset 可以设置发光离文字的远近</p>
+<div class="dgm" data-diagram="c564231cd4f5" data-img="assets/img/c564231cd4f5.png"><div class="dgm-head"><span class="dgm-t">Glow / - Click to collapse -</span><span class="badge b-ocr">文字还原</span><span class="sp"></span><button class="dgm-tab">看原图</button></div></div>
+<h3 id="第6节-工具类相关-37" class="hd lv3">【第6节：工具类相关】</h3>
+<h4 id="09-TMP_TextEventHandler类-38" class="hd lv4">09：TMP_TextEventHandler类</h4>
+<div class="dgm" data-diagram="33e95fa655a5" data-img="assets/img/33e95fa655a5.png"><div class="dgm-head"><span class="dgm-t">Q event</span><span class="badge b-ocr">文字还原</span><span class="sp"></span><button class="dgm-tab">看原图</button></div></div>
+<div class="dgm" data-diagram="10a99899c41e" data-img="assets/img/10a99899c41e.png"><div class="dgm-head"><span class="dgm-t">Script.</span><span class="badge b-ocr">文字还原</span><span class="sp"></span><button class="dgm-tab">看原图</button></div></div>
+<div class="cpair"><div class="chead"><span class="lang">C#</span><span class="csp"></span><button class="mini copy">复制</button></div><pre class="code" data-lang="csharp"><code>这是 TextMeshPro 的文本事件处理组件
+需要挂载到有TMP文本组件的物体上
+可以识别TMP富文本标签中的 &lt;link&gt; 链接标签
+可以捕获鼠标交互
+鼠标划过/选中文本，以回调的形式给我们传递选中的相关信息</code></pre><div class="cout" hidden></div></div>
+<p class="tx">把文本框拖进来，然后红框中选择我们要执行的方法，方法的参数按照图上的参数类型</p>
+<div class="dgm" data-diagram="00ada4934655" data-img="assets/img/00ada4934655.png"><div class="dgm-head"><span class="dgm-t">7GSampleScene* / Font Features</span><span class="badge b-ocr">文字还原</span><span class="sp"></span><button class="dgm-tab">看原图</button></div></div>
+<div class="cpair"><div class="chead"><span class="lang">C#</span><span class="csp"></span><button class="mini copy">复制</button></div><pre class="code" data-lang="csharp"><code>/// &lt;summary&gt;
+/// link链接选中回调
+/// &lt;/summary&gt;
+/// &lt;param name="linkInfo"&gt;link标签内携带的信息&lt;/param&gt;
+/// &lt;param name="linkText"&gt;显示的文本内容&lt;/param&gt;
+/// &lt;param name="index"&gt;字符索引&lt;/param&gt;
+public void MyLinkSelectionHandler(string linkInfo, string linkText, int index)
+{
+print("**********链接选中*************");
+print(linkInfo);
+print(linkText);
+print(index);
+}
+
+/// &lt;summary&gt;
+/// 字符选中回调
+/// &lt;/summary&gt;
+public void MyCharSelectionHandler(char charInfo, int i)
+{
+print("**********字符*************");
+print(charInfo);
+print(i);
+}
+
+/// &lt;summary&gt;
+/// 精灵图标选中回调
+/// &lt;/summary&gt;
+public void MySpriteSelectionHandler(char spirteInfo, int i)
+{
+print("**********精灵图标*************");
+print(spirteInfo);
+print(i);
+}
+
+/// &lt;summary&gt;
+/// 单词选中回调
+/// &lt;/summary&gt;
+/// &lt;param name="word"&gt;单词文本&lt;/param&gt;
+/// &lt;param name="i1"&gt;起始索引&lt;/param&gt;
+/// &lt;param name="i2"&gt;结束索引&lt;/param&gt;
+public void MyWordSelectionHandler(string word, int i1, int i2)
+{
+print("**********单词*************");
+print(word);
+print(i1);
+print(i2);
+}
+
+/// &lt;summary&gt;
+/// 行选中回调
+/// &lt;/summary&gt;
+public void MyLineSelectionHandler(string lineInfo, int i1, int i2)
+{
+print("**********行*************");
+print(lineInfo);
+print(i1);
+print(i2);
+}
+}</code></pre><div class="cout" hidden></div></div>
+<div class="cpair"><div class="chead"><span class="lang">C#</span><span class="csp"></span><button class="mini copy">复制</button></div><pre class="code" data-lang="csharp"><code> 事件onLinkSelection → 鼠标选中链接时触发
+ 事件onCharacterSelection → 鼠标选中某个字符时触发
+ 事件onWordSelection → 鼠标选中某个单词时触发
+ 事件onLineSelection → 鼠标选中某一行时触发
+ 事件onSpriteSelection → 鼠标选中某个精灵图标时触发
+ 
+TMP_TextEventHandler tmpHandler = this.GetComponent&lt;TMP_TextEventHandler&gt;();
+//得到Text(TMP)自身上的 TextEventhandler
+
+tmpHandler.onLinkSelection.AddListener(MyLinkSelectionHandler);
+tmpHandler.onWordSelection.AddListener(MyWordSelectionHandler);
+tmpHandler.onLineSelection.AddListener(MyLineSelectionHandler);
+tmpHandler.onSpriteSelection.AddListener(MySpriteSelectionHandler);
+tmpHandler.onCharacterSelection.AddListener(MyCharSelectionHandler);
+#endregion</code></pre><div class="cout" hidden></div></div>
+<h4 id="10-TMP_TextUtilities类-39" class="hd lv4">10：TMP_TextUtilities类</h4>
+<p class="tx">继承IPointerClickHandler 接口</p>
+<div class="cpair"><div class="chead"><span class="lang">C#</span><span class="csp"></span><button class="mini copy">复制</button></div><pre class="code" data-lang="csharp"><code>using System.Collections;
+using System.Collections.Generic;
+using TMPro;
+using UnityEngine;
+using UnityEngine.EventSystems;
+
+public class Lesson12 : MonoBehaviour, IPointerClickHandler
+{
+    public TextMeshProUGUI tmpUIText;
+
+    public void OnPointerClick(PointerEventData eventData)
+    {
+        print("123");
+        //查找点击位置命中的link链接索引
+        int linkIndex = TMP_TextUtilities.FindIntersectingLink(tmpUIText, eventData.position, null);
+        //返回值为‑1 代表没有点击到链接
+        if(linkIndex != -1)
+        {
+            //获取链接对应的显示文本信息
+            print(tmpUIText.textInfo.linkInfo[linkIndex].GetLinkText());
+            //获取&lt;link=?&gt;标签中设置的id携带信息
+            print(tmpUIText.textInfo.linkInfo[linkIndex].GetLinkID());
+        }
+
+        //查找点击位置命中的字符索引，true = 只识别可见字符
+        int charIndex = TMP_TextUtilities.FindIntersectingCharacter(tmpUIText, eventData.position, null, true);
+        if(charIndex != -1)
+        {
+            print(tmpUIText.textInfo.characterInfo[charIndex].character);
+        }
+    }
+
+ 
+ 
+}</code></pre><div class="cout" hidden></div></div>
+<div class="cpair"><div class="chead"><span class="lang">C#</span><span class="csp"></span><button class="mini copy">复制</button></div><pre class="code" data-lang="csharp"><code>这是 TextMeshPro 提供的工具静态类
+用来根据屏幕坐标获取点击位置对应的文本信息
+做点击文本交互的时候就需要使用这套工具</code></pre><div class="cout" hidden></div></div>
+<div class="cpair"><div class="chead"><span class="lang">C#</span><span class="csp"></span><button class="mini copy">复制</button></div><pre class="code" data-lang="csharp"><code>所有查找函数返回索引值
+没有命中对应信息时返回 -1
+底层读取TMP组件的 textInfo 结构体
+linkInfo      链接信息数组
+wordInfo      单词信息数组
+characterInfo 字符信息数组
+lineInfo      行信息数组</code></pre><div class="cout" hidden></div></div>
+<div class="cpair"><div class="chead"><span class="lang">C#</span><span class="csp"></span><button class="mini copy">复制</button></div><pre class="code" data-lang="csharp"><code>获取点击位置命中的链接索引
+int FindIntersectingLink(TMP_Text text, Vector3 position, Camera camera)
+获取点击位置命中的单词索引
+int FindIntersectingWord(TMP_Text text, Vector3 position, Camera camera)
+获取点击位置命中的字符索引
+int FindIntersectingCharacter(TMP_Text text, Vector3 position, Camera camera, bool onlyVisible)
+获取点击位置命中的行索引
+int FindIntersectingLine(TMP_Text text, Vector3 position, Camera camera)</code></pre><div class="cout" hidden></div></div>
+<div class="cpair"><div class="chead"><span class="lang">C#</span><span class="csp"></span><button class="mini copy">复制</button></div><pre class="code" data-lang="csharp"><code>int FindNearestLink(TMP_Text text, Vector3 position, Camera camera)
+int FindNearestWord(TMP_Text text, Vector3 position, Camera camera)
+int FindNearestCharacterOnLine (TMP_Text text, Vector3 position, Camera camera)
+int FindNearestLine(TMP_Text text, Vector3 position, Camera camera)</code></pre><div class="cout" hidden></div></div>
+<div class="cpair"><div class="chead"><span class="lang">C#</span><span class="csp"></span><button class="mini copy">复制</button></div><pre class="code" data-lang="csharp"><code>https://docs.unity3d.com/Packages/com.unity.textmeshpro@4.0/api/TMPro.TMP_TextUtilities.html</code></pre><div class="cout" hidden></div></div>
+<h4 id="11-其它工具类-40" class="hd lv4">11：其它工具类</h4>
+<div class="cpair"><div class="chead"><span class="lang">C#</span><span class="csp"></span><button class="mini copy">复制</button></div><pre class="code" data-lang="csharp"><code>在使用TMP进行文本开发的时候
+我们已经学习过
+TMP_TextEventHandler 和 TMP_TextUtilities
+TMP包里面还有很多其他工具类
+举例
+TMP_Math: 封装了一些文本相关数学计算
+TMP_FontAssetUtilities: 字体资源相关的辅助校验工具
+TMP_TextParsingUtilities: 富文本标签解析相关工具
+
+补充
+这些工具类一般项目中很少直接手动使用
+大多是TMP内部自己调用
+只有做自定义文本功能的时候才会用到这些工具
+官方API文档：https://docs.unity3d.com/Packages/com.unity.textmeshpro@4.0/api/TMPro.htm</code></pre><div class="cout" hidden></div></div>
+    </article>
+    <footer class="pnbar"><a class="pn prev" href="m15.html"><span>上一节</span>Unity-UGUI</a><a class="pn next" href="m17.html"><span>下一节</span>Unity 进阶之 InputSystem</a></footer>
+  </main>
+</div>
+<button class="totop" id="totop">↑</button>
+<script src="assets/demos.js"></script>
+<script src="assets/diagrams-data.js"></script>
+<script src="assets/diagram.js"></script>
+<script src="assets/app.js"></script>
+<script>window.__mountDiagrams && window.__mountDiagrams();</script>
+</body>
+</html>

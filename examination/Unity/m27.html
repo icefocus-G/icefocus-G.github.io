@@ -1,0 +1,771 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Unity_GUI 概述（编辑器用） · Unity 交互课件</title>
+<link rel="stylesheet" href="assets/style.css">
+<link rel="stylesheet" href="assets/diagram.css">
+</head>
+<body data-mid="m27">
+<header class="top">
+  <a class="brand" href="index.html"><span class="logo">U</span><b>Unity</b><i>交互课件</i></a>
+  <div class="crumb"><span>界面 UI 相关</span><em>/</em><strong>Unity_GUI 概述（编辑器用）</strong></div>
+  <div class="top-r">
+    <span class="stat">18556 字 · 18 代码 · 2 图 · 0 表</span>
+    <button class="mini" id="btnNav">目录</button>
+  </div>
+</header>
+<div class="wrap">
+  <aside class="side" id="side">
+    <div class="side-h">本篇目录</div>
+    <nav class="tocbox"><a class="toc lv5" href="#01-GUI-控件绘制的共同-1">01. GUI 控件绘制的共同</a><a class="toc lv5" href="#02-文本和按钮控件-2">02 文本和按钮控件</a><a class="toc lv5" href="#03-多选框和单选框-3">03. 多选框和单选框</a><a class="toc lv5" href="#04-输入框和拖动条-4">04. 输入框和拖动条</a><a class="toc lv5" href="#05-图片绘制和框-5">05. 图片绘制和框</a><a class="toc lv5" href="#06-工具栏和选择网格-6">06. 工具栏和选择网格</a><a class="toc lv5" href="#07-滚动列表和分组-7">07. 滚动列表和分组</a><a class="toc lv5" href="#08-窗口-8">08. 窗口</a><a class="toc lv5" href="#09-自定义皮肤-9">09. 自定义皮肤</a><a class="toc lv5" href="#10-自动布局-10">10. 自动布局</a><a class="toc lv5" href="#11-GUI-的封装-11">11.GUI 的封装</a><a class="toc lv5" href="#12-GUI-封装-代码实现-12">12.GUI 封装 代码实现</a></nav>
+    <div class="side-h">全部模块</div>
+    <nav class="navbox"><div class="ng"><div class="ngt">开发经验补充</div><a href="m01.html">Unity - 进阶 - 大纲</a><a href="m02.html">Unity 进阶之视频播放</a><a href="m03.html">Unity - 进阶 - C# 补充</a><a href="m04.html">Unity 网络开发基础</a><a href="m05.html">Unity 程序框架</a></div><div class="ng"><div class="ngt">游戏引擎相关</div><a href="m06.html">Unity_入门</a><a href="m07.html">Unity_入门 - 实践项目</a><a href="m08.html">Unity_基础</a><a href="m09.html">Unity 核心</a><a href="m10.html">UniTask</a></div><div class="ng"><div class="ngt">数据持久化</div><a href="m11.html">Unity 进阶之 ScriptableObject</a><a href="m12.html">Unity_数据持久化 - PlayerPrefs</a><a href="m13.html">Unity_数据持久化 - Newtonsoft-Json</a><a href="m14.html">MessagePack-CSharp - 二进制</a><a href="m26.html">Unity 数据持久化 - Binary 2 进制</a></div><div class="ng"><div class="ngt">界面 UI 相关</div><a href="m15.html">Unity-UGUI</a><a href="m16.html">Unity-UGUI - 进阶 - TextMeshPro</a><a href="m27.html" class="on">Unity_GUI 概述（编辑器用）</a></div><div class="ng"><div class="ngt">设备输入相关</div><a href="m17.html">Unity 进阶之 InputSystem</a></div><div class="ng"><div class="ngt">热更相关</div><a href="m18.html">YooAsset 资源管理 - 大游戏</a><a href="m19.html">Addressables 资源管理 - 小游戏</a><a href="m20.html">HybridCLR - 代码业务逻辑</a></div><div class="ng"><div class="ngt">性能优化相关</div><a href="m21.html">Unity 进阶之性能优化</a><a href="m22.html">Unity 背包里装 10w 个道具</a></div><div class="ng"><div class="ngt">SDK 相关</div><div class="ngempty">预留分类 · 后续补充</div></div><div class="ng"><div class="ngt">游戏打包相关</div><a href="m23.html">Unity 移动平台相关 — IOS</a><a href="m24.html">Unity 移动平台相关 — Android</a><a href="m25.html">unity_00 - 数学公式和物理公式</a></div></nav>
+  </aside>
+  <main class="main">
+    <div class="mhead">
+      <div class="kick">界面 UI 相关</div>
+      <h1>Unity_GUI 概述（编辑器用）</h1>
+      <p class="msub">OnGUI 控件、皮肤与自动布局</p>
+      <div class="chips"><span>18556 字原稿</span><span>18 段代码</span><span>2 张配图</span><span>0 个表格</span></div>
+    </div>
+    <article class="doc">
+<div class="demo" data-demo="imgui"><div class="demo-bar"><span class="dot"></span>IMGUI 控件与自动布局<span class="demo-tag">交互演示</span></div><div class="demo-body"><div class="demo-loading">加载中…</div></div></div>
+<p class="tx">6 小时 58 分 34 秒</p>
+<p class="tx">只适合做测试工具 和编辑器 ，不适合游戏 UI</p>
+<p class="tx">缺点： 不能自适应分辨率 ，不能可见即可得</p>
+<p class="tx">该函数 在 OnDisable之前 LateUpdate之后执行</p>
+<h5 id="01-GUI-控件绘制的共同-1" class="hd lv5">01. GUI 控件绘制的共同</h5>
+<div class="cpair"><div class="chead"><span class="lang">C#</span><span class="csp"></span><button class="mini copy">复制</button></div><pre class="code" data-lang="csharp"><code>public Texture tex;           Texture 参数 图片信息
+public Rect rect;             Rect(x,y,w,h) 参数   X Y 坐标  W宽度  H高度
+public GUICotent content;     GUIContent参数  文字，图片，提示
+public GUIStyle style ；      GUIStyle参数，文字，位置，按钮 等</code></pre><div class="cout" hidden></div></div>
+<h5 id="02-文本和按钮控件-2" class="hd lv5">02 文本和按钮控件</h5>
+<div class="cpair"><div class="chead"><span class="lang">C#</span><span class="csp"></span><button class="mini copy">复制</button></div><pre class="code" data-lang="csharp"><code>void OnGUI()
+{
+        //基本使用
+        GUI.Label(new Rect(0, 0, 100, 20), "唐老狮欢迎你", style);
+        GUI.Label(rect, tex);
+        //综合使用
+        GUI.Label(rect1, content);
+        //可以获取当前鼠标或者键盘选中的GUI控件 对应的 tooltip信息
+        Debug.Log(GUI.tooltip);
+}</code></pre><div class="cout" hidden></div></div>
+<div class="cpair"><div class="chead"><span class="lang">C#</span><span class="csp"></span><button class="mini copy">复制</button></div><pre class="code" data-lang="csharp"><code>void OnGUI()
+{        
+        在按钮范围内 按下鼠标再抬起鼠标 才算一次点击 才会返回true
+        if (GUI.Button(btnRect, btnContent, btnStyle))
+        {
+            //处理我们按钮点击的逻辑
+            Debug.Log("按钮被点击");
+        }
+
+        只要在长按按钮范围内 按下鼠标 就会一直返回true
+        if( GUI.RepeatButton(btnRect, btnContent) )
+        {
+            Debug.Log("长按按钮被点击");
+        }
+}</code></pre><div class="cout" hidden></div></div>
+<h5 id="03-多选框和单选框-3" class="hd lv5">03. 多选框和单选框</h5>
+<div class="dgm" data-diagram="2fccfacf606e" data-img="assets/img/2fccfacf606e.png"><div class="dgm-head"><span class="dgm-t">三个选项（正确选项 1 / 2 / 3）的列表</span><span class="badge b-ocr">文字还原</span><span class="sp"></span><button class="dgm-tab">看原图</button></div></div>
+<div class="cpair"><div class="chead"><span class="lang">C#</span><span class="csp"></span><button class="mini copy">复制</button></div><pre class="code" data-lang="csharp"><code>public class Lesson3 : MonoBehaviour
+{
+    private bool isSel;
+    private bool isSel2;
+    public GUIStyle style;
+    private int nowSelIndex = 1;
+    private void OnGUI()
+    {
+        知识点一 多选框
+        普通样式
+        isSel = GUI.Toggle(new Rect(0, 0, 100, 30), isSel, "效果开关");
+--------------------------------------------------------------------------------  
+        自定义样式 显示问题
+        修改固定宽高 fixedWidth和fixedHeight
+        修改从GUIStyle边缘到内容起始处的空间 padding
+        isSel2 = GUI.Toggle(new Rect(0, 40, 100, 30), isSel2, "音效开关", style);
+------------------------------------------------------------------------------
+
+        知识点二 单选框
+        单选框是基于 多选框的实现
+        关键：通过一个int标识来决定是否选中 
+    
+        noWSelIndex==1 这里 外壳打勾，如果不是就不打勾，
+      
+    每帧所有 Toggle 先统一读取全局变量 nowSelIndex，刷新各自的选中外观，天然实现互斥显示
+    被用户点击的 Toggle 会返回 true，执行赋值修改全局变量 nowSelIndex 的值  
+    下一帧所有 Toggle 自动同步最新的全局状态，刷新显示，完成单选切换
+                   
+        if(GUI.Toggle(new Rect(0, 100, 100, 30), nowSelIndex == 1, "选项一"))
+        {
+            nowSelIndex = 1;
+        }
+        if(GUI.Toggle(new Rect(0, 140, 100, 30), nowSelIndex == 2, "选项二"))
+        {
+            nowSelIndex = 2;
+        }
+        if(GUI.Toggle(new Rect(0, 180, 100, 30), nowSelIndex == 3, "选项三"))
+        {
+            nowSelIndex = 3;
+        }
+    }
+}</code></pre><div class="cout" hidden></div></div>
+<h5 id="04-输入框和拖动条-4" class="hd lv5">04. 输入框和拖动条</h5>
+<div class="cpair"><div class="chead"><span class="lang">C#</span><span class="csp"></span><button class="mini copy">复制</button></div><pre class="code" data-lang="csharp"><code>public class Lesson4 : MonoBehaviour
+{
+    private string inputStr = "";
+
+    private string inputPW = "";
+
+    private float nowValue = 0.5f;
+    
+private void OnGUI()
+{
+ 知识点一 输入框
+
+普通输入
+输入框 重要参数 一个是显示内容 string
+一个是 最大输入字符串的长度
+inputStr = GUI.TextField(new Rect(0, 0, 100, 30), inputStr, 5);
+
+密码输入
+inputPW = GUI.PasswordField(new Rect(0, 50, 100, 30), inputPW, '★');
+------------------------------------------------------------------------------
+知识点二 拖动条
+
+ 水平拖动条
+ 当前的值
+ 最小值 left
+ 最大值 right
+nowValue = GUI.HorizontalSlider(new Rect(0, 100, 100, 50), nowValue, 0, 1);
+Debug.Log(nowValue);
+
+ 竖直拖动条
+nowValue = GUI.VerticalSlider(new Rect(0, 150, 50, 100), nowValue, 0, 1);
+
+}
+}</code></pre><div class="cout" hidden></div></div>
+<h5 id="05-图片绘制和框-5" class="hd lv5">05. 图片绘制和框</h5>
+<div class="cpair"><div class="chead"><span class="lang">C#</span><span class="csp"></span><button class="mini copy">复制</button></div><pre class="code" data-lang="csharp"><code>public class Lesson5 : MonoBehaviour
+{
+    public Rect texPos;
+
+    public Texture tex;
+
+    public ScaleMode mode = ScaleMode.StretchToFill;
+
+    public bool alpha = true;
+
+    public float wh = 0;
+
+private void OnGUI()
+{
+    
+ 知识点一 图片绘制
+ScaleMode
+ScaleAndCrop:也会通过宽高比来计算图片 但是 会进行裁剪
+ScaleToFit：会自动根据宽高比进行计算 不会拉变形 会一直保持图片完全显示的状态
+StretchToFill:始终填充满你传入的 Rect范围
+
+alpha 是用来 控制 图片是否开启透明通道的
+
+imageAspect ： 自定义宽高比  如果不填 默认为0 就会使用 图片原始宽高  
+GUI.DrawTexture(texPos, tex, mode, alpha, wh);
+------------------------------------------------------------------------------
+
+ 知识点二 框绘制
+GUI.Box(texPos, "");
+
+}
+    
+}</code></pre><div class="cout" hidden></div></div>
+<h5 id="06-工具栏和选择网格-6" class="hd lv5">06. 工具栏和选择网格</h5>
+<div class="cpair"><div class="chead"><span class="lang">C#</span><span class="csp"></span><button class="mini copy">复制</button></div><pre class="code" data-lang="csharp"><code>public class Lesson6 : MonoBehaviour
+{
+    private int toolbarIndex = 0;
+    private string[] toolbarInfos = new string[] { "强化", "进阶", "幻化" };
+
+    private int selGridIndex = 0;
+
+    private void OnGUI()
+    {
+        知识点一 工具栏
+        toolbarIndex = GUI.Toolbar(new Rect(0, 0, 200, 30), toolbarIndex, toolbarInfos);
+        工具栏可以帮助我们根据不同的返回索引 来处理不同的逻辑
+        switch (toolbarIndex)
+        {
+            case 0:
+                break;
+            case 1:
+                break;
+            case 2:
+                break;
+        }
+------------------------------------------------------------------------------
+
+        知识点二 选择网格
+       相对toolbar多了一个参数 xCount 代表 水平方向最多显示的按钮数量
+        selGridIndex = 
+        GUI.SelectionGrid(new Rect(0, 50, 200, 60), selGridIndex, toolbarInfos, 1);
+
+    }
+}</code></pre><div class="cout" hidden></div></div>
+<h5 id="07-滚动列表和分组-7" class="hd lv5">07. 滚动列表和分组</h5>
+<div class="cpair"><div class="chead"><span class="lang">C#</span><span class="csp"></span><button class="mini copy">复制</button></div><pre class="code" data-lang="csharp"><code>public class Lesson7 : MonoBehaviour
+{
+    public Rect groupPos;
+    public Rect scPos;
+    public Rect showPos;
+    private Vector2 nowPos;
+
+    private string[] strs = new string[] { "123", "234", "222", "111" };
+    private void OnGUI()
+    {
+        知识点一 分组
+        用于批量控制控件位置 
+        可以理解为 包裹着的控件加了一个父对象 
+        可以通过控制分组来控制包裹控件的位置
+        GUI.BeginGroup(groupPos);
+        GUI.Button(new Rect(0, 0, 100, 50), "测试按钮");
+        GUI.Label(new Rect(0, 60, 100, 20), "Label信息");
+        GUI.EndGroup();       
+------------------------------------------------------------------------------
+        
+        知识点二 滚动列表
+        nowPos = GUI.BeginScrollView(scPos, nowPos, showPos);
+        
+        scPos：Rect —— 滚动框在屏幕上的显示区域
+        nowPos：Vector2 —— 当前滚动偏移量（传入旧值，函数返回新偏移）
+        showPos：Rect —— 滚动内部全部内容的总范围
+            
+        GUI.Toolbar(new Rect(0, 0, 300, 50), 0, strs);
+        GUI.Toolbar(new Rect(0, 60, 300, 50), 0, strs);
+        GUI.Toolbar(new Rect(0, 120, 300, 50), 0, strs);
+        GUI.Toolbar(new Rect(0, 180, 300, 50), 0, strs);
+        
+        GUI.EndScrollView();
+       
+    }
+}</code></pre><div class="cout" hidden></div></div>
+<h5 id="08-窗口-8" class="hd lv5">08. 窗口</h5>
+<div class="cpair"><div class="chead"><span class="lang">C#</span><span class="csp"></span><button class="mini copy">复制</button></div><pre class="code" data-lang="csharp"><code>public class Lesson8 : MonoBehaviour
+{
+
+    private Rect dragWinPos = new Rect(400, 400, 200, 150);
+    private void OnGUI()
+    {
+        知识点一 窗口
+        第一个参数 id 是窗口的唯一ID 不要和别的窗口重复
+        委托参数 是用于 绘制窗口用的函数 传入即可
+        GUI.Window(1, new Rect(100, 100, 200, 150), DrawWindow, "测试窗口");
+        id对于我们来说 有一个重要作用 除了区分不同窗口 还可以在一个函数中去处理多个窗口
+        的逻辑通过id去区分他们
+        GUI.Window(2, new Rect(100, 350, 200, 150), DrawWindow, "测试窗口2");
+------------------------------------------------------------------------------        
+        知识点二 模态窗口(会让其他窗口不能选择)
+        模态窗口 可以让该其它控件不在有用
+        你可以理解该窗口在最上层 其它按钮都点击不到了
+        只能点击该窗口上控件
+        GUI.ModalWindow(3, new Rect(300, 100, 200, 150), DrawWindow, "模态窗口");
+------------------------------------------------------------------------------        
+        知识点三 拖动窗口
+        01拖动窗口- 步骤 1-位置赋值只是前提
+        dragWinPos = GUI.Window(4, dragWinPos, DrawWindow, "拖动窗口");        
+    }
+
+    private void DrawWindow(int id) 用于控制窗口中的内容
+    {
+        switch (id)
+        {
+            case 1:
+                GUI.Button(new Rect(0, 30, 30, 20), "1");
+                break;
+            case 2:
+                GUI.Button(new Rect(0, 30, 30, 20), "2");
+                break;
+            case 3:
+                GUI.Button(new Rect(0, 30, 30, 20), "3");
+                break;
+            case 4:
+                02 拖动窗口-步骤 2
+                该API 写在窗口函数中调用 可以让窗口被拖动
+
+                GUI.DragWindow(new Rect(0,0,1000,20));
+               传入Rect参数的重载 作用 是决定窗口中哪一部分位置 可以被拖动
+                1000 宽和 20 高 内可以拖动
+                默认不填 就是无参重载 默认窗口的所有位置都能被拖动
+                
+                break;
+        }        
+    }
+}</code></pre><div class="cout" hidden></div></div>
+<h5 id="09-自定义皮肤-9" class="hd lv5">09. 自定义皮肤</h5>
+<p class="tx">只需要设置一套，就可以用到所有的 UI 上</p>
+<div class="cpair"><div class="chead"><span class="lang">C#</span><span class="csp"></span><button class="mini copy">复制</button></div><pre class="code" data-lang="csharp"><code>public class Lesson9 : MonoBehaviour
+{
+    public GUIStyle style;
+
+    public GUISkin skin;
+    private void OnGUI()
+    {
+        知识点一 全局颜色
+        全局的着色颜色 影响背景和文本颜色
+        GUI.color = Color.red;
+
+        文本着色颜色 会和 全局颜色相乘
+        GUI.contentColor = Color.yellow;
+        GUI.Button(new Rect(0, 0, 100, 30), "测试按钮");
+        
+        背景元素着色颜色 会和 全局颜色相乘
+        GUI.backgroundColor = Color.red;
+        GUI.Label(new Rect(0, 50, 100, 30), "测试按钮");
+        GUI.color = Color.white;
+        GUI.Button(new Rect(0, 100, 100, 30), "测试按钮", style);
+
+ ------------------------------------------------------------------------------       
+
+        知识点二 整体皮肤样式
+        GUI.skin = skin;
+        虽然设置了皮肤 但是绘制时 如果使用GUIStyle参数 皮肤就没有
+        GUI.Button(new Rect(0, 0, 100, 30), "测试按钮");
+
+        GUI.skin = null;
+        GUI.Button(new Rect(0, 50, 100, 30), "测试按钮2");
+
+        它可以帮助我们整套的设置 自定义样式 
+        相对单个控件设置Style要方便一些
+        
+    }
+}</code></pre><div class="cout" hidden></div></div>
+<h5 id="10-自动布局-10" class="hd lv5">10. 自动布局</h5>
+<p class="tx">不适用于游戏 UI，unity 自动布局</p>
+<div class="cpair"><div class="chead"><span class="lang">C#</span><span class="csp"></span><button class="mini copy">复制</button></div><pre class="code" data-lang="csharp"><code>public class Lesson10 : MonoBehaviour
+{
+    private void OnGUI()
+    {
+        知识点一 GUILayout 自动布局
+        主要用于进行编辑器开发 如果用它来做游戏UI不太合适
+        GUI.BeginGroup(new Rect(100, 100, 200, 300));
+        GUILayout.BeginVertical();
+
+        GUILayout.Button("123", GUILayout.Width(200));
+        GUILayout.Button("245666656565");
+        GUILayout.Button("235", GUILayout.ExpandWidth(false));
+
+        GUILayout.EndVertical();
+        GUI.EndGroup();
+  ------------------------------------------------------------------------------      
+
+        知识点二 GUILayoutOption 布局选项
+        控件的固定宽高
+        GUILayout.Width(300);
+        GUILayout.Height(200);
+        允许控件的最小宽高
+        GUILayout.MinWidth(50);
+        GUILayout.MinHeight(50);
+        允许控件的最大宽高
+        GUILayout.MaxWidth(100);
+        GUILayout.MaxHeight(100);
+        允许或禁止水平拓展
+        GUILayout.ExpandWidth(true);允许
+        GUILayout.ExpandHeight(false);禁止
+        GUILayout.ExpandHeight(true);允许
+        GUILayout.ExpandHeight(false);禁止
+        
+    }
+}</code></pre><div class="cout" hidden></div></div>
+<h5 id="11-GUI-的封装-11" class="hd lv5">11.GUI 的封装</h5>
+<p class="tx">解决 分辨率的自适应，和可见即所得</p>
+<div class="dgm" data-diagram="60aef664ce0e" data-img="assets/img/60aef664ce0e.png"><div class="dgm-head"><span class="dgm-t">九宫格（UI）适配示意图</span><span class="badge b-ocr">文字还原</span><span class="sp"></span><button class="dgm-tab">看原图</button></div></div>
+<p class="tx">红色圆点就是相对屏幕的位置（屏幕是 0，0），</p>
+<p class="tx">中心点偏移位置是 按钮区域九宫格的位置，</p>
+<p class="tx">偏移位置是 按钮相对于红色圆点的位置</p>
+<h5 id="12-GUI-封装-代码实现-12" class="hd lv5">12.GUI 封装 代码实现</h5>
+<p class="tx">计算九宫格位置</p>
+<div class="cpair"><div class="chead"><span class="lang">C#</span><span class="csp"></span><button class="mini copy">复制</button></div><pre class="code" data-lang="csharp"><code>using System.Collections;
+using System.Collections.Generic;
+using UnityEngine;
+
+/// &lt;summary&gt;
+/// 对齐方式枚举
+/// &lt;/summary&gt;
+public enum E_Alignment_Type
+{
+    Up,
+    Down,
+    Left,
+    Right,
+    Center,
+    Left_Up,
+    Left_Down,
+    Right_Up,
+    Right_Down,
+}
+
+/// &lt;summary&gt;
+/// 该类 是用来表示位置 计算位置相关信息的 不需要继承mono
+/// &lt;/summary&gt;
+[System.Serializable]
+// 在 Inspector 面板可视化编辑
+public class CustomGUIPos
+{
+    //主要是处理 控件位置相关的内容
+    //要完成 分辨率自适应的相关计算
+
+    //该位置信息 会用来返回给外部 用于绘制控件
+    //需要对它进行 计算
+    private Rect rPos = new Rect(0, 0, 100, 100);
+
+    //屏幕九宫格对齐方式
+    public E_Alignment_Type screen_Alignment_Type = E_Alignment_Type.Center;
+    //控件中心对齐方式
+    public E_Alignment_Type control_Center_Alignment_Type = E_Alignment_Type.Center;
+    //偏移位置
+    public Vector2 pos;
+    //宽高
+    public float width = 100;
+    public float height = 50;
+
+    //用于计算的 中心点 成员变量
+    private Vector2 centerPos;
+    
+    //计算中心点偏移的方法
+    private void CalcCenterPos()
+    {
+        switch (control_Center_Alignment_Type)
+        {
+            case E_Alignment_Type.Up:
+                centerPos.x = -width / 2;
+                centerPos.y = 0;
+                break;
+            case E_Alignment_Type.Down:
+                centerPos.x = -width / 2;
+                centerPos.y = -height;
+                break;
+            case E_Alignment_Type.Left:
+                centerPos.x = 0;
+                centerPos.y = -height/2;
+                break;
+            case E_Alignment_Type.Right:
+                centerPos.x = -width;
+                centerPos.y = -height/2;
+                break;
+            case E_Alignment_Type.Center:
+                centerPos.x = -width / 2;
+                centerPos.y = -height/2;
+                break;
+            case E_Alignment_Type.Left_Up:
+                centerPos.x = 0;
+                centerPos.y = 0;
+                break;
+            case E_Alignment_Type.Left_Down:
+                centerPos.x = 0;
+                centerPos.y = -height;
+                break;
+            case E_Alignment_Type.Right_Up:
+                centerPos.x = -width;
+                centerPos.y = 0;
+                break;
+            case E_Alignment_Type.Right_Down:
+                centerPos.x = -width;
+                centerPos.y = -height;
+                break;
+        }
+    }
+
+    //计算最终相对坐标位置的方法
+    private void CalcPos()
+    {
+        switch (screen_Alignment_Type)
+        {
+            case E_Alignment_Type.Up:
+                rPos.x = Screen.width/2 + centerPos.x + pos.x;
+                rPos.y = 0 + centerPos.y + pos.y;
+                break;
+            case E_Alignment_Type.Down:
+                rPos.x = Screen.width/2 + centerPos.x + pos.x;
+                rPos.y = Screen.height + centerPos.y - pos.y;
+                break;
+            case E_Alignment_Type.Left:
+                rPos.x = centerPos.x + pos.x;
+                rPos.y = Screen.height/2 + centerPos.y + pos.y;
+                break;
+            case E_Alignment_Type.Right:
+                rPos.x = Screen.width + centerPos.x - pos.x;
+                rPos.y = Screen.height / 2 + centerPos.y + pos.y;
+                break;
+            case E_Alignment_Type.Center:
+                rPos.x = Screen.width / 2 + centerPos.x + pos.x;
+                rPos.y = Screen.height / 2 + centerPos.y + pos.y;
+                break;
+            case E_Alignment_Type.Left_Up:
+                rPos.x = centerPos.x + pos.x;
+                rPos.y = centerPos.y + pos.y;
+                break;
+            case E_Alignment_Type.Left_Down:
+                rPos.x = centerPos.x + pos.x;
+                rPos.y = Screen.height + centerPos.y - pos.y;
+                break;
+            case E_Alignment_Type.Right_Up:
+                rPos.x = Screen.width + centerPos.x - pos.x;
+                rPos.y = centerPos.y + pos.y;
+                break;
+            case E_Alignment_Type.Right_Down:
+                rPos.x = Screen.width + centerPos.x - pos.x;
+                rPos.y = Screen.height + centerPos.y - pos.y;
+                break;
+        }
+    }
+
+    /// &lt;summary&gt;
+    /// 得到 最终绘制的位置 和 宽高
+    /// &lt;/summary&gt;
+    public Rect Pos
+    {
+        get
+        {
+            //进行计算
+            //计算中心点偏移
+            CalcCenterPos();
+            //计算 相对屏幕坐标点
+            CalcPos();
+            //宽高直接赋值 返回给外部 别人直接使用来绘制控件
+            rPos.width = width;
+            rPos.height = height;
+            return rPos;
+        }
+    }
+}</code></pre><div class="cout" hidden></div></div>
+<p class="tx">一个虚类，提取控件按钮的通用信息</p>
+<div class="cpair"><div class="chead"><span class="lang">C#</span><span class="csp"></span><button class="mini copy">复制</button></div><pre class="code" data-lang="csharp"><code>using System.Collections;
+using System.Collections.Generic;
+using UnityEngine;
+
+public enum E_Style_OnOff
+{
+    On,
+    Off,
+}
+
+public class CustomGUIControl : MonoBehaviour
+{
+    //提取控件的共同表现
+    //位置信息
+    public CustomGUIPos guiPos;
+    //显示内容信息
+    public GUIContent content;
+    //自定义样式
+    public GUIStyle style;
+    //自定义样式是否启用的开关
+    public E_Style_OnOff styleOnOrOff = E_Style_OnOff.Off;
+
+    private void OnGUI()
+    {
+        switch (styleOnOrOff)
+        {
+            case E_Style_OnOff.On:
+                StyleOnDraw();
+                break;
+            case E_Style_OnOff.Off:
+                StyleOffDraw();
+                break;
+        }
+    }
+
+    protected virtual void StyleOnDraw()
+    {
+        //GUI.Button(guiPos.Pos, content, style);
+    }
+
+    protected virtual void StyleOffDraw()
+    {
+        //GUI.Button(guiPos.Pos, content);
+    }
+}</code></pre><div class="cout" hidden></div></div>
+<p class="tx">通过一个父组件 用数组存储 子组件 ，来控制子组件的显示顺序</p>
+<div class="cpair"><div class="chead"><span class="lang">C#</span><span class="csp"></span><button class="mini copy">复制</button></div><pre class="code" data-lang="csharp"><code>using System.Collections;
+using System.Collections.Generic;
+using UnityEngine;
+
+[ExecuteAlways]
+//编辑模式下持续运行
+public class CustomGUIRoot : MonoBehaviour
+{
+    //用于存储 子对象 所有GUI控件的容器
+    private CustomGUIControl[] allControls;
+
+    void Start()
+    {
+        allControls = this.GetComponentsInChildren&lt;CustomGUIControl&gt;();
+    }
+
+    //在这同一绘制子对象控件的内容
+    private void OnGUI()
+    {
+        //通过每一次绘制之前 得到所有子对象控件的 父类脚本
+        //这句代码 浪费性能 因为每次 gui都会来获取所有的 控件对应的脚本
+        //编辑状态下 才会一直执行
+        if( !Application.isPlaying )
+        {
+            allControls = this.GetComponentsInChildren&lt;CustomGUIControl&gt;();
+        }
+        //遍历每一个控件 让其 执行绘制
+        for (int i = 0; i &lt; allControls.Length; i++)
+        {
+            allControls[i].DrawGUI();
+        }
+    }
+}</code></pre><div class="cout" hidden></div></div>
+<p class="tx">按钮控件实现</p>
+<div class="cpair"><div class="chead"><span class="lang">C#</span><span class="csp"></span><button class="mini copy">复制</button></div><pre class="code" data-lang="csharp"><code>using System.Collections;
+using System.Collections.Generic;
+using UnityEngine;
+
+public class CustomGUILabel : CustomGUIControl
+{
+    protected override void StyleOffDraw()
+    {
+        GUI.Label(guiPos.Pos, content);
+    }
+
+    protected override void StyleOnDraw()
+    {
+        GUI.Label(guiPos.Pos, content, style);
+    }
+}</code></pre><div class="cout" hidden></div></div>
+<div class="cpair"><div class="chead"><span class="lang">C#</span><span class="csp"></span><button class="mini copy">复制</button></div><pre class="code" data-lang="csharp"><code>using System.Collections;
+using System.Collections.Generic;
+using UnityEngine;
+using UnityEngine.Events;
+
+public class CustomGUIButton : CustomGUIControl
+{
+    //提供给外部 用于响应 按钮点击的事件 只要在外部给予了响应函数 那就会执行
+    public event UnityAction clickEvent;
+
+    protected override void StyleOffDraw()
+    {
+        if( GUI.Button(guiPos.Pos, content ) )
+        {
+            clickEvent?.Invoke();
+        }
+    }
+
+    protected override void StyleOnDraw()
+    {
+        if (GUI.Button(guiPos.Pos, content, style))
+        {
+            clickEvent?.Invoke();
+        }
+    }
+}</code></pre><div class="cout" hidden></div></div>
+<div class="cpair"><div class="chead"><span class="lang">C#</span><span class="csp"></span><button class="mini copy">复制</button></div><pre class="code" data-lang="csharp"><code>using System.Collections;
+using System.Collections.Generic;
+using UnityEngine;
+using UnityEngine.Events;
+
+public class CustomGUIInput : CustomGUIControl
+{
+    public event UnityAction&lt;string&gt; textChange;
+
+    private string oldStr = "";
+    protected override void StyleOffDraw()
+    {
+        content.text = GUI.TextField(guiPos.Pos, content.text);
+        if(oldStr != content.text)
+        {
+            textChange?.Invoke(oldStr);
+            oldStr = content.text;
+        }
+    }
+
+    protected override void StyleOnDraw()
+    {
+        content.text = GUI.TextField(guiPos.Pos, content.text, style);
+        if (oldStr != content.text)
+        {
+            textChange?.Invoke(oldStr);
+            oldStr = content.text;
+        }
+    }
+}</code></pre><div class="cout" hidden></div></div>
+<div class="cpair"><div class="chead"><span class="lang">C#</span><span class="csp"></span><button class="mini copy">复制</button></div><pre class="code" data-lang="csharp"><code>using System.Collections;
+using System.Collections.Generic;
+using UnityEngine;
+using UnityEngine.Events;
+
+public enum E_Slider_Type
+{
+    Horizontal,
+    Vertical,
+}
+
+public class CustomGUISlider : CustomGUIControl
+{
+    //最小值
+    public float minValue = 0;
+    //最大值
+    public float maxValue = 1;
+    //当前值
+    public float nowValue = 0;
+    //水平还是竖直样式
+    public E_Slider_Type type = E_Slider_Type.Horizontal;
+    //小按钮的 style
+    public GUIStyle styleThumb;
+
+    public event UnityAction&lt;float&gt; changeValue;
+
+    private float oldValue = 0;
+
+    protected override void StyleOffDraw()
+    {
+        switch (type)
+        {
+            case E_Slider_Type.Horizontal:
+                nowValue = GUI.HorizontalSlider(guiPos.Pos, nowValue, minValue, maxValue);
+                break;
+            case E_Slider_Type.Vertical:
+                nowValue = GUI.VerticalSlider(guiPos.Pos, nowValue, minValue, maxValue);
+                break;
+        }
+
+        if(oldValue != nowValue)
+        {
+            changeValue?.Invoke(nowValue);
+            oldValue = nowValue;
+        }
+        
+    }
+
+    protected override void StyleOnDraw()
+    {
+        switch (type)
+        {
+            case E_Slider_Type.Horizontal:
+                nowValue = GUI.HorizontalSlider(guiPos.Pos, nowValue, minValue, maxValue, style, styleThumb);
+                break;
+            case E_Slider_Type.Vertical:
+                nowValue = GUI.VerticalSlider(guiPos.Pos, nowValue, minValue, maxValue, style, styleThumb);
+                break;
+        }
+
+        if (oldValue != nowValue)
+        {
+            changeValue?.Invoke(nowValue);
+            oldValue = nowValue;
+        }
+    }
+}</code></pre><div class="cout" hidden></div></div>
+    </article>
+    <footer class="pnbar"><a class="pn prev" href="m26.html"><span>上一节</span>Unity 数据持久化 - Binary 2 进制</a></footer>
+  </main>
+</div>
+<button class="totop" id="totop">↑</button>
+<script src="assets/demos.js"></script>
+<script src="assets/diagrams-data.js"></script>
+<script src="assets/diagram.js"></script>
+<script src="assets/app.js"></script>
+<script>window.__mountDiagrams && window.__mountDiagrams();</script>
+</body>
+</html>

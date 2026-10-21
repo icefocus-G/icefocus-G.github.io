@@ -1,0 +1,127 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>MessagePack-CSharp - 二进制 · Unity 交互课件</title>
+<link rel="stylesheet" href="assets/style.css">
+<link rel="stylesheet" href="assets/diagram.css">
+</head>
+<body data-mid="m14">
+<header class="top">
+  <a class="brand" href="index.html"><span class="logo">U</span><b>Unity</b><i>交互课件</i></a>
+  <div class="crumb"><span>数据持久化</span><em>/</em><strong>MessagePack-CSharp - 二进制</strong></div>
+  <div class="top-r">
+    <span class="stat">原稿空白 · 已补充</span>
+    <button class="mini" id="btnNav">目录</button>
+  </div>
+</header>
+<div class="wrap">
+  <aside class="side" id="side">
+    <div class="side-h">本篇目录</div>
+    <nav class="tocbox"><a class="toc lv2" href="#附-原稿-Protobuf-二进制-大游戏-1">附：原稿《Protobuf - 二进制 - 大游戏》</a><a class="toc lv2" href="#sup-m14-setup">接入方式</a><a class="toc lv2" href="#sup-m14-why">什么时候该用它</a><a class="toc lv3" href="#sup-m14-pit">踩坑清单</a></nav>
+    <div class="side-h">全部模块</div>
+    <nav class="navbox"><div class="ng"><div class="ngt">开发经验补充</div><a href="m01.html">Unity - 进阶 - 大纲</a><a href="m02.html">Unity 进阶之视频播放</a><a href="m03.html">Unity - 进阶 - C# 补充</a><a href="m04.html">Unity 网络开发基础</a><a href="m05.html">Unity 程序框架</a></div><div class="ng"><div class="ngt">游戏引擎相关</div><a href="m06.html">Unity_入门</a><a href="m07.html">Unity_入门 - 实践项目</a><a href="m08.html">Unity_基础</a><a href="m09.html">Unity 核心</a><a href="m10.html">UniTask</a></div><div class="ng"><div class="ngt">数据持久化</div><a href="m11.html">Unity 进阶之 ScriptableObject</a><a href="m12.html">Unity_数据持久化 - PlayerPrefs</a><a href="m13.html">Unity_数据持久化 - Newtonsoft-Json</a><a href="m14.html" class="on">MessagePack-CSharp - 二进制</a><a href="m26.html">Unity 数据持久化 - Binary 2 进制</a></div><div class="ng"><div class="ngt">界面 UI 相关</div><a href="m15.html">Unity-UGUI</a><a href="m16.html">Unity-UGUI - 进阶 - TextMeshPro</a><a href="m27.html">Unity_GUI 概述（编辑器用）</a></div><div class="ng"><div class="ngt">设备输入相关</div><a href="m17.html">Unity 进阶之 InputSystem</a></div><div class="ng"><div class="ngt">热更相关</div><a href="m18.html">YooAsset 资源管理 - 大游戏</a><a href="m19.html">Addressables 资源管理 - 小游戏</a><a href="m20.html">HybridCLR - 代码业务逻辑</a></div><div class="ng"><div class="ngt">性能优化相关</div><a href="m21.html">Unity 进阶之性能优化</a><a href="m22.html">Unity 背包里装 10w 个道具</a></div><div class="ng"><div class="ngt">SDK 相关</div><div class="ngempty">预留分类 · 后续补充</div></div><div class="ng"><div class="ngt">游戏打包相关</div><a href="m23.html">Unity 移动平台相关 — IOS</a><a href="m24.html">Unity 移动平台相关 — Android</a><a href="m25.html">unity_00 - 数学公式和物理公式</a></div></nav>
+  </aside>
+  <main class="main">
+    <div class="mhead">
+      <div class="kick">数据持久化</div>
+      <h1>MessagePack-CSharp - 二进制</h1>
+      <p class="msub">小游戏网络通信二进制方案</p>
+      <div class="chips"><span class="warn">语雀原稿为空</span><span>本页内容为补充整理</span></div>
+    </div>
+    <article class="doc">
+<div class="runsec"><div class="runsec-h">本模块可运行验证<span>纯 C# · 无需 Unity · 点右下按钮真实编译执行</span></div><div class="cpair"><div class="chead"><span class="lang">C#</span><span class="csp"></span><button class="mini copy">复制</button><button class="mini run" data-run>真实运行</button></div><pre class="code" data-lang="csharp"><code>// MessagePack：二进制体积与编码过程
+using System;
+using MessagePack;
+
+[MessagePackObject]
+public class Move
+{
+    [Key(0)] public int PlayerId { get; set; }
+    [Key(1)] public float X { get; set; }
+    [Key(2)] public float Y { get; set; }
+    [Key(3)] public string Anim { get; set; }
+}
+
+public static class Program
+{
+    public static void Main()
+    {
+        var m = new Move { PlayerId = 1001, X = 12.5f, Y = -3.25f, Anim = "run" };
+
+        var bin = MessagePackSerializer.Serialize(m);
+        var hex = BitConverter.ToString(bin).Replace("-", " ");
+        Console.WriteLine($"对象: PlayerId={m.PlayerId} X={m.X} Y={m.Y} Anim={m.Anim}");
+        Console.WriteLine($"MessagePack 体积: {bin.Length} 字节");
+        Console.WriteLine($"字节流: {hex}");
+
+        var jsonStr = $"{{\"PlayerId\":{m.PlayerId},\"X\":{m.X},\"Y\":{m.Y},\"Anim\":\"{m.Anim}\"}}";
+        var jsonLen = System.Text.Encoding.UTF8.GetByteCount(jsonStr);
+        Console.WriteLine($"等价 JSON 体积: {jsonLen} 字节   （省下 {100 - bin.Length * 100 / jsonLen}%）");
+
+        Console.WriteLine();
+        var back = MessagePackSerializer.Deserialize&lt;Move&gt;(bin);
+        Console.WriteLine($"反序列化: PlayerId={back.PlayerId} X={back.X} Y={back.Y} Anim={back.Anim}");
+
+        Console.WriteLine();
+        Console.WriteLine("为什么字段顺序要显式写 [Key(n)]：");
+        Console.WriteLine("  二进制不带字段名，只靠 Key 顺序对应。改字段名不影响，改 Key 顺序一定解析错。");
+    }
+}</code></pre><div class="cout" hidden></div></div></div><div class="demo" data-demo="msgpack"><div class="demo-bar"><span class="dot"></span>MessagePack 编码<span class="demo-tag">交互演示</span></div><div class="demo-body"><div class="demo-loading">加载中…</div></div></div>
+<p class="tx">本地存储、想替代 Json 获得更小体积和更快速度</p>
+<h2 id="附-原稿-Protobuf-二进制-大游戏-1" class="hd lv2">附：原稿《Protobuf - 二进制 - 大游戏》</h2>
+<p class="tx">网络通信、前后端、跨语言、或者 gRPC，那 Protobuf 优先学，它更“标准”，</p>
+<p class="tx">大型多人在线游戏 (MMO / MMORPG)，实时竞技游戏 (MOBA, FPS, 体育竞技等)</p>
+<p class="tx">多平台/跨语言项目 服务器间通信 (RPC)</p>
+<div class="sup">
+<div class="sup-t">原稿此篇仅一行 · 以下为补充整理 <i>非语雀原文</i></div>
+
+<h2 id="sup-m14-setup" class="hd lv2">接入方式</h2>
+<p class="tx">Unity 里通过 UPM 或 NuGetForUnity 安装 MessagePack。关键是<b>必须生成 Resolver</b>：IL2CPP 下反射被裁剪，不生成 resolver 就会出现「编辑器能跑、真机报找不到 formatter」。</p>
+<pre class="code" data-lang="csharp"><code>// 菜单：MessagePack &gt; CodeGenerator &gt; GeneratedResolver（或在 Player Settings 里开）
+// 纯手工写法：给每个需要序列化的类加 [MessagePackObject] + [Key(n)]
+
+[MessagePackObject]
+public class MoveReq
+{
+    [Key(0)] public int PlayerId { get; set; }
+    [Key(1)] public float X { get; set; }
+    [Key(2)] public float Y { get; set; }
+    [Key(3)] public string Anim { get; set; }
+}
+
+var bytes = MessagePackSerializer.Serialize(req);
+var back  = MessagePackSerializer.Deserialize&lt;MoveReq&gt;(bytes);
+// 压缩版（体积更小，CPU 略高）
+var lz4 = MessagePackSerializer.Serialize(req, MessagePackSerializerOptions.Standard.WithCompression(MessagePackCompression.Lz4Block));</code></pre>
+
+<h2 id="sup-m14-why" class="hd lv2">什么时候该用它</h2>
+<div class="tw"><table class="tb">
+<tr><td>格式</td><td>体积</td><td>可读性</td><td>适用</td></tr>
+<tr><td>JSON</td><td>大（字段名重复）</td><td>人可读，好调试</td><td>存档、配置、调试协议</td></tr>
+<tr><td>MessagePack</td><td>约为 JSON 的 40%~70%</td><td>需工具查看</td><td>网络同步、频繁上报</td></tr>
+<tr><td>Protobuf</td><td>最小</td><td>需 .proto 与代码生成</td><td>大项目、跨语言、强 schema 约束</td></tr>
+</table></div>
+
+<h3 id="sup-m14-pit" class="hd lv3">踩坑清单</h3>
+<ul class="bl">
+<li><b>Key 顺序不能乱改</b>：二进制里没有字段名，只靠 Key 对应，改顺序就是数据错位。</li>
+<li><b>版本兼容</b>：新增字段用新的 Key，客户端遇到未知 Key 应跳过而不是报错。</li>
+<li><b>不支持的类型</b>：Unity 的 Vector3、Color 需要自己写 Formatter 或转成三个 float。</li>
+<li><b>空值</b>：string 为 null 与 "" 在二进制里不同，协议层要约定死。</li>
+</ul>
+</div>
+
+    </article>
+    <footer class="pnbar"><a class="pn prev" href="m13.html"><span>上一节</span>Unity_数据持久化 - Newtonsoft-Json</a><a class="pn next" href="m15.html"><span>下一节</span>Unity-UGUI</a></footer>
+  </main>
+</div>
+<button class="totop" id="totop">↑</button>
+<script src="assets/demos.js"></script>
+<script src="assets/diagrams-data.js"></script>
+<script src="assets/diagram.js"></script>
+<script src="assets/app.js"></script>
+<script>window.__mountDiagrams && window.__mountDiagrams();</script>
+</body>
+</html>

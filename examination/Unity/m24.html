@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Unity 移动平台相关 — Android · Unity 交互课件</title>
+<link rel="stylesheet" href="assets/style.css">
+<link rel="stylesheet" href="assets/diagram.css">
+</head>
+<body data-mid="m24">
+<header class="top">
+  <a class="brand" href="index.html"><span class="logo">U</span><b>Unity</b><i>交互课件</i></a>
+  <div class="crumb"><span>游戏打包相关</span><em>/</em><strong>Unity 移动平台相关 — Android</strong></div>
+  <div class="top-r">
+    <span class="stat">原稿空白 · 已补充</span>
+    <button class="mini" id="btnNav">目录</button>
+  </div>
+</header>
+<div class="wrap">
+  <aside class="side" id="side">
+    <div class="side-h">本篇目录</div>
+    <nav class="tocbox"><a class="toc lv2" href="#sup-m24-flow">Android 打包链路</a><a class="toc lv2" href="#sup-m24-check">上线检查表</a><a class="toc lv3" href="#sup-m24-pit">真机适配高频问题</a></nav>
+    <div class="side-h">全部模块</div>
+    <nav class="navbox"><div class="ng"><div class="ngt">开发经验补充</div><a href="m01.html">Unity - 进阶 - 大纲</a><a href="m02.html">Unity 进阶之视频播放</a><a href="m03.html">Unity - 进阶 - C# 补充</a><a href="m04.html">Unity 网络开发基础</a><a href="m05.html">Unity 程序框架</a></div><div class="ng"><div class="ngt">游戏引擎相关</div><a href="m06.html">Unity_入门</a><a href="m07.html">Unity_入门 - 实践项目</a><a href="m08.html">Unity_基础</a><a href="m09.html">Unity 核心</a><a href="m10.html">UniTask</a></div><div class="ng"><div class="ngt">数据持久化</div><a href="m11.html">Unity 进阶之 ScriptableObject</a><a href="m12.html">Unity_数据持久化 - PlayerPrefs</a><a href="m13.html">Unity_数据持久化 - Newtonsoft-Json</a><a href="m14.html">MessagePack-CSharp - 二进制</a><a href="m26.html">Unity 数据持久化 - Binary 2 进制</a></div><div class="ng"><div class="ngt">界面 UI 相关</div><a href="m15.html">Unity-UGUI</a><a href="m16.html">Unity-UGUI - 进阶 - TextMeshPro</a><a href="m27.html">Unity_GUI 概述（编辑器用）</a></div><div class="ng"><div class="ngt">设备输入相关</div><a href="m17.html">Unity 进阶之 InputSystem</a></div><div class="ng"><div class="ngt">热更相关</div><a href="m18.html">YooAsset 资源管理 - 大游戏</a><a href="m19.html">Addressables 资源管理 - 小游戏</a><a href="m20.html">HybridCLR - 代码业务逻辑</a></div><div class="ng"><div class="ngt">性能优化相关</div><a href="m21.html">Unity 进阶之性能优化</a><a href="m22.html">Unity 背包里装 10w 个道具</a></div><div class="ng"><div class="ngt">SDK 相关</div><div class="ngempty">预留分类 · 后续补充</div></div><div class="ng"><div class="ngt">游戏打包相关</div><a href="m23.html">Unity 移动平台相关 — IOS</a><a href="m24.html" class="on">Unity 移动平台相关 — Android</a><a href="m25.html">unity_00 - 数学公式和物理公式</a></div></nav>
+  </aside>
+  <main class="main">
+    <div class="mhead">
+      <div class="kick">游戏打包相关</div>
+      <h1>Unity 移动平台相关 — Android</h1>
+      <p class="msub">Gradle / keystore / 分包</p>
+      <div class="chips"><span class="warn">语雀原稿为空</span><span>本页内容为补充整理</span></div>
+    </div>
+    <article class="doc">
+<div class="runsec"><div class="runsec-h">本模块可运行验证<span>纯 C# · 无需 Unity · 点右下按钮真实编译执行</span></div><div class="cpair"><div class="chead"><span class="lang">C#</span><span class="csp"></span><button class="mini copy">复制</button><button class="mini run" data-run>真实运行</button></div><pre class="code" data-lang="csharp"><code>// Android 打包：签名与目标 API 校验
+var cfg = new Dictionary&lt;string, string&gt;
+{
+    ["Scripting Backend"] = "IL2CPP",
+    ["Target Architectures"] = "ARM64",
+    ["Target API Level"] = "34",
+    ["Minimum API Level"] = "23",
+    ["Keystore"] = "release.keystore",
+    ["Keystore Pass"] = "已设置",
+    ["Build App Bundle"] = "开启",
+    ["Internet Permission"] = "有"
+};
+
+bool Ok(string k, Func&lt;string, bool&gt; f) =&gt; cfg.TryGetValue(k, out var v) &amp;&amp; f(v);
+
+var rules = new (string name, bool ok, string why)[]
+{
+    ("IL2CPP（64 位必需）", Ok("Scripting Backend", v =&gt; v == "IL2CPP"), "Mono 只能出 32 位，Google Play 已拒绝"),
+    ("ARM64 架构", Ok("Target Architectures", v =&gt; v.Contains("ARM64")), "缺 ARM64 无法上架"),
+    ("Target API ≥ 34", Ok("Target API Level", v =&gt; int.Parse(v) &gt;= 34), "每年上架门槛会抬，必须跟上"),
+    ("Release 签名", Ok("Keystore Pass", v =&gt; v == "已设置"), "用 debug 签名无法上架，且无法覆盖升级"),
+    ("AAB 格式", Ok("Build App Bundle", v =&gt; v == "开启"), "Play 商店要求 AAB，不再收 APK"),
+    ("网络权限", Ok("Internet Permission", v =&gt; v == "有"), "漏了就是「游戏连不上服务器」")
+};
+
+int bad = 0;
+foreach (var (name, ok, why) in rules)
+{
+    if (!ok) bad++;
+    Console.WriteLine($"  [{(ok ? "通过" : "不通过")}] {name,-22} {(ok ? "" : why)}");
+}
+Console.WriteLine();
+Console.WriteLine($"未通过 {bad} 项");
+Console.WriteLine();
+Console.WriteLine("签名要点：keystore 一旦丢失，就无法给已上架的应用发更新包——务必备份两处。");</code></pre><div class="cout" hidden></div></div></div><div class="demo" data-demo="android"><div class="demo-bar"><span class="dot"></span>Android 打包链路<span class="demo-tag">交互演示</span></div><div class="demo-body"><div class="demo-loading">加载中…</div></div></div>
+<div class="sup">
+<div class="sup-t">原稿此篇为空（语雀 word_count = 0）· 以下为补充整理 <i>非语雀原文</i></div>
+
+<h2 id="sup-m24-flow" class="hd lv2">Android 打包链路</h2>
+<p class="tx">Android 的坑集中在「签名」和「目标 API」两件事上：签名决定能不能上架与覆盖升级，目标 API 决定能不能通过商店的年度审核。</p>
+<ol class="bl">
+<li>Player Settings：Package Name（反写域名，上架后不可改）、版本号、图标、方向。</li>
+<li>Scripting Backend 选 IL2CPP，Target Architectures 勾 ARM64（Google Play 强制）。</li>
+<li>创建 keystore（Build → Keystore Manager），密码与别名记牢并备份。</li>
+<li>Player Settings → Publishing Settings 指定 keystore、别名、密码。</li>
+<li>Build 出 AAB（上架用）或 APK（自测 / 第三方渠道用）。</li>
+</ol>
+
+<h2 id="sup-m24-check" class="hd lv2">上线检查表</h2>
+<div class="tw"><table class="tb">
+<tr><td>项目</td><td>要求</td><td>说明</td></tr>
+<tr><td>Target API Level</td><td>跟当年要求（34+）</td><td>每年抬高，不达标无法更新</td></tr>
+<tr><td>Minimum API Level</td><td>23 左右</td><td>太低要兼容大量老设备，太高丢用户</td></tr>
+<tr><td>Architectures</td><td>ARM64 必选</td><td>只出 ARMv7 会被拒</td></tr>
+<tr><td>签名</td><td>Release keystore</td><td>debug 签名无法上架，也无法覆盖升级</td></tr>
+<tr><td>格式</td><td>AAB</td><td>Play 商店已不收 APK</td></tr>
+<tr><td>权限</td><td>按需声明</td><td>多余权限会被要求说明用途</td></tr>
+<tr><td>数据安全表单</td><td>如实填写</td><td>与实际采集不符会被下架</td></tr>
+</table></div>
+
+<h3 id="sup-m24-pit" class="hd lv3">真机适配高频问题</h3>
+<ul class="bl">
+<li><b>keystore 丢失</b>：等于永远无法给已上架应用发更新，必须两处备份（仓库外 + 密码管理）。</li>
+<li><b>刘海屏 / 挖孔屏</b>：UI 要放 Safe Area 内，尤其是顶部状态栏与底部手势区。</li>
+<li><b>返回键</b>：Android 物理返回键要映射到「关闭当前弹窗 → 返回上一级 → 二次确认退出」，别直接杀掉进程。</li>
+<li><b>后台被杀</b>：切后台超过几分钟进程可能被回收，回来必须能恢复到正确界面。</li>
+<li><b>多渠道</b>：不同渠道包用同一 keystore，靠渠道号区分，不要把逻辑写死在构建里。</li>
+</ul>
+</div>
+
+    </article>
+    <footer class="pnbar"><a class="pn prev" href="m23.html"><span>上一节</span>Unity 移动平台相关 — IOS</a><a class="pn next" href="m25.html"><span>下一节</span>unity_00 - 数学公式和物理公式</a></footer>
+  </main>
+</div>
+<button class="totop" id="totop">↑</button>
+<script src="assets/demos.js"></script>
+<script src="assets/diagrams-data.js"></script>
+<script src="assets/diagram.js"></script>
+<script src="assets/app.js"></script>
+<script>window.__mountDiagrams && window.__mountDiagrams();</script>
+</body>
+</html>

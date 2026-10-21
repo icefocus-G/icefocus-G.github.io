@@ -1,0 +1,847 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Unity 进阶之 ScriptableObject · Unity 交互课件</title>
+<link rel="stylesheet" href="assets/style.css">
+<link rel="stylesheet" href="assets/diagram.css">
+</head>
+<body data-mid="m11">
+<header class="top">
+  <a class="brand" href="index.html"><span class="logo">U</span><b>Unity</b><i>交互课件</i></a>
+  <div class="crumb"><span>数据持久化</span><em>/</em><strong>Unity 进阶之 ScriptableObject</strong></div>
+  <div class="top-r">
+    <span class="stat">18170 字 · 56 代码 · 18 图 · 2 表</span>
+    <button class="mini" id="btnNav">目录</button>
+  </div>
+</header>
+<div class="wrap">
+  <aside class="side" id="side">
+    <div class="side-h">本篇目录</div>
+    <nav class="tocbox"><a class="toc lv2" href="#附-原稿-数据持久化-分类导读-1">附：原稿《数据持久化》分类导读</a><a class="toc lv2" href="#第1章-ScriptableObject概述-2">第1章：ScriptableObject概述</a><a class="toc lv4" href="#01-ScriptableObject概述-3">01：ScriptableObject概述</a><a class="toc lv2" href="#第2章-ScriptableObject数据文件的创建-4">第2章：ScriptableObject数据文件的创建</a><a class="toc lv2" href="#第3章-ScriptableObject数据文件的使用-6">第3章：ScriptableObject数据文件的使用</a><a class="toc lv2" href="#第4章-ScriptableObject非持久数据-8">🔥第4章：ScriptableObject非持久数据</a><a class="toc lv2" href="#第5章-ScriptableObject让其真正意义的持久-10">🔥第5章：ScriptableObject让其真正意义的持久</a><a class="toc lv2" href="#第6章-ScriptableObject的应用-12">第6章：ScriptableObject的应用</a><a class="toc lv4" href="#01-配置数据-13">01：配置数据</a><a class="toc lv4" href="#02-复用数据-对于不同对象使用相同的数据-14">🔥02：复用数据（对于不同对象使用相同的数据）</a><a class="toc lv4" href="#03-数据带来的多态行为-多个数据资源文件实现不同的逻辑-17">03：数据带来的多态行为（多个数据资源文件实现不同的逻辑）</a><a class="toc lv4" href="#04-单例模式化的获取数据-制作模版-19">🔥04：单例模式化的获取数据 （制作模版 ）</a><a class="toc lv2" href="#ScriptableObject总结-20">ScriptableObject总结</a></nav>
+    <div class="side-h">全部模块</div>
+    <nav class="navbox"><div class="ng"><div class="ngt">开发经验补充</div><a href="m01.html">Unity - 进阶 - 大纲</a><a href="m02.html">Unity 进阶之视频播放</a><a href="m03.html">Unity - 进阶 - C# 补充</a><a href="m04.html">Unity 网络开发基础</a><a href="m05.html">Unity 程序框架</a></div><div class="ng"><div class="ngt">游戏引擎相关</div><a href="m06.html">Unity_入门</a><a href="m07.html">Unity_入门 - 实践项目</a><a href="m08.html">Unity_基础</a><a href="m09.html">Unity 核心</a><a href="m10.html">UniTask</a></div><div class="ng"><div class="ngt">数据持久化</div><a href="m11.html" class="on">Unity 进阶之 ScriptableObject</a><a href="m12.html">Unity_数据持久化 - PlayerPrefs</a><a href="m13.html">Unity_数据持久化 - Newtonsoft-Json</a><a href="m14.html">MessagePack-CSharp - 二进制</a><a href="m26.html">Unity 数据持久化 - Binary 2 进制</a></div><div class="ng"><div class="ngt">界面 UI 相关</div><a href="m15.html">Unity-UGUI</a><a href="m16.html">Unity-UGUI - 进阶 - TextMeshPro</a><a href="m27.html">Unity_GUI 概述（编辑器用）</a></div><div class="ng"><div class="ngt">设备输入相关</div><a href="m17.html">Unity 进阶之 InputSystem</a></div><div class="ng"><div class="ngt">热更相关</div><a href="m18.html">YooAsset 资源管理 - 大游戏</a><a href="m19.html">Addressables 资源管理 - 小游戏</a><a href="m20.html">HybridCLR - 代码业务逻辑</a></div><div class="ng"><div class="ngt">性能优化相关</div><a href="m21.html">Unity 进阶之性能优化</a><a href="m22.html">Unity 背包里装 10w 个道具</a></div><div class="ng"><div class="ngt">SDK 相关</div><div class="ngempty">预留分类 · 后续补充</div></div><div class="ng"><div class="ngt">游戏打包相关</div><a href="m23.html">Unity 移动平台相关 — IOS</a><a href="m24.html">Unity 移动平台相关 — Android</a><a href="m25.html">unity_00 - 数学公式和物理公式</a></div></nav>
+  </aside>
+  <main class="main">
+    <div class="mhead">
+      <div class="kick">数据持久化</div>
+      <h1>Unity 进阶之 ScriptableObject</h1>
+      <p class="msub">配置资产与数据结构化</p>
+      <div class="chips"><span>18170 字原稿</span><span>56 段代码</span><span>18 张配图</span><span>2 个表格</span></div>
+    </div>
+    <article class="doc">
+<div class="runsec"><div class="runsec-h">本模块可运行验证<span>纯 C# · 无需 Unity · 点右下按钮真实编译执行</span></div><div class="cpair"><div class="chead"><span class="lang">C#</span><span class="csp"></span><button class="mini copy">复制</button><button class="mini run" data-run>真实运行</button></div><pre class="code" data-lang="csharp"><code>// ScriptableObject：配置资产按 ID 索引 + 覆盖合并
+using System;
+using System.Linq;
+
+public record ItemCfg(int Id, string Name, int Atk, int Hp);
+
+public static class Program
+{
+    public static void Main()
+    {
+        var baseCfg = new[]
+        {
+            new ItemCfg(1001, "木剑", 5, 0),
+            new ItemCfg(1002, "铁剑", 12, 0),
+            new ItemCfg(2001, "皮甲", 0, 20)
+        };
+
+        // 活动版本只改两条，不动原表
+        var patch = new[]
+        {
+            new ItemCfg(1002, "铁剑+", 18, 5),
+            new ItemCfg(2002, "链甲", 0, 45)
+        };
+
+        var index = baseCfg.ToDictionary(x =&gt; x.Id);
+        foreach (var p in patch) index[p.Id] = p;   // 同 ID 覆盖，新 ID 追加
+
+        Console.WriteLine("合并后的配置表（按 ID 排序）：");
+        foreach (var kv in index.OrderBy(k =&gt; k.Key))
+        {
+            var c = kv.Value;
+            var origin = baseCfg.FirstOrDefault(b =&gt; b.Id == c.Id);
+            string tag = origin == null ? "新增" : (origin == c ? "" : "覆盖");
+            Console.WriteLine($"  {c.Id}  {c.Name,-4} 攻{c.Atk,3} 血{c.Hp,3}  {tag}");
+        }
+
+        Console.WriteLine();
+        Console.WriteLine("为什么用 SO 而不是直接读 Excel：");
+        Console.WriteLine("  1) SO 是 Unity 序列化资产，引用关系（贴图/预制体）不会断");
+        Console.WriteLine("  2) 改动走版本管理，diff 清晰");
+        Console.WriteLine("  3) 运行时零解析开销，直接反序列化成对象");
+    }
+}</code></pre><div class="cout" hidden></div></div></div><div class="demo" data-demo="so"><div class="demo-bar"><span class="dot"></span>SO 数据资产<span class="demo-tag">交互演示</span></div><div class="demo-body"><div class="demo-loading">加载中…</div></div></div>
+<h2 id="附-原稿-数据持久化-分类导读-1" class="hd lv2">附：原稿《数据持久化》分类导读</h2>
+<p class="tx">在实际项目中，通常是混用的：</p>
+<ul class="bl"><li>配置层：用 ScriptableObject 做策划的数值表格（只读）。</li><li>存档层：用 JSON（或MessagePack二进制）序列化玩家的动态进度。</li><li>偏好层：用 PlayerPrefs 存分辨率、是否首次登录。</li><li>缓存层：用 二进制 存下载的AB包解压后的临时地图数据。</li></ul>
+<div class="tw"><table class="tb"><tr><td><td>对比项</td><td>配置层</td><td>存档层</td></td></tr><tr><td><td>主要功能</td><td>策划填写的只读数值表</td><td>玩家动态进度</td></td></tr><tr><td><td>典型内容</td><td>英雄属性、技能数值、关卡配置、装备表、商店表、任务表</td><td>等级、金币、背包、解锁进度、任务完成度、队伍编成</td></td></tr><tr><td><td>数据格式</td><td>ScriptableObject（Unity资产）</td><td>JSON 或 MessagePack（二进制）</td></td></tr><tr><td><td>存储位置</td><td>游戏包内（Resources / Addressables）</td><td>persistentDataPath/Save/</td></td></tr><tr><td><td>读写时机</td><td>运行时只读加载</td><td>关卡结算、回主界面、自动保存、退出时写入</td></td></tr><tr><td><td>能否被玩家修改</td><td>否（打进包里）</td><td>是（本地存档文件可被修改，通常加密）</td></td></tr><tr><td><td>生命周期</td><td>随游戏版本更新</td><td>跟随账号/存档，删档则消失</td></td></tr><tr><td><td>是否依赖账号</td><td>不依赖</td><td>通常依赖存档槽或账号</td></td></tr><tr><td><td>丢失影响</td><td>无影响（随包存在）</td><td>进度丢失</td></td></tr></table></div>
+<div class="tw"><table class="tb"><tr><td><td>对比项</td><td>偏好层</td><td>缓存层</td></td></tr><tr><td><td>主要功能</td><td>本地设置与标记</td><td>可重新下载的临时资源</td></td></tr><tr><td><td>典型内容</td><td>分辨率、画质、音量、语言、是否首次登录、是否同意协议</td><td>AB包、分块地图、热更资源、解压后的临时地图/光照贴图</td></td></tr><tr><td><td>数据格式</td><td>PlayerPrefs（键值对）</td><td>二进制文件</td></td></tr><tr><td><td>存储位置</td><td>PlayerPrefs 系统管理（注册表/plist/xml等）</td><td>persistentDataPath/Cache/ 或 temporaryCachePath</td></td></tr><tr><td><td>读写时机</td><td>设置改动时立即写入</td><td>下载时写入，使用时读取，可定期清理</td></td></tr><tr><td><td>能否被玩家修改</td><td>是（设置界面可改）</td><td>否（可删除重新下载，不能直接改内容）</td></td></tr><tr><td><td>生命周期</td><td>跟设备/本地，卸载可能清空</td><td>临时存在，可清空不影响核心进度</td></td></tr><tr><td><td>是否依赖账号</td><td>不依赖</td><td>不依赖</td></td></tr><tr><td><td>丢失影响</td><td>设置重置为默认</td><td>需要重新下载，但不影响存档</td></td></tr></table></div>
+<p class="tx">在游戏数据持久化模块中，接口隔离的核心目的是将“存储介质”与“数据格式”解耦，使它们可以独立变化。这样，你可以轻易地从 JSON 切换到 MessagePack，或者从本地文件切换到 SQLite、远程服务器，而不影响上层业务逻辑。</p>
+<p class="tx">关卡数据用 Newtonsoft（便于调试），存档数据用 MessagePack（节省性能）。</p>
+<p class="tx">2 小时 22 分 05 秒</p>
+<p class="tx">适合用于配置文件 ，用单例模式进行管理，配置资源文件的逻辑</p>
+<p class="tx">🔥重点</p>
+<h2 id="第1章-ScriptableObject概述-2" class="hd lv2">第1章：ScriptableObject概述</h2>
+<h4 id="01-ScriptableObject概述-3" class="hd lv4">01：ScriptableObject概述</h4>
+<p class="tx">Unity 提供的一个数据存储基类 ,文件配置、数据复用、更好的处理数据带来的多态行为</p>
+<p class="tx">如果你多个物体引用同一个 ScriptableObject 资源： 所有物体拿到的是同一个 SO 实例，同一个内存地址。改 SO 里面的数据，所有物体读取全部一起变。</p>
+<p class="tx">场景里多个 GameObject，每个都挂 Lesson.cs(MonoBehaviour)：</p>
+<p class="tx">✅ 每一个对象，都是独立脚本实例，内存地址互不相同，就会加大内存开销</p>
+<p class="tx">ScriptableObject 就是自定义的数据资源</p>
+<p class="tx">ScriptableObject 的适用范围极广，本质上任何需要结构化、可编辑、可复用、可持久化的数据都可以用它来承载。它不仅用于游戏逻辑数据，也用于编辑器工具、事件通信、资源管理等，是 Unity 数据驱动架构的核心组件</p>
+<p class="tx">数据复用，编辑模式下具有数据持久化，运行模式下 ScriptableObject 不具备持久化特性（修改数据对象，并不会保存在本地）</p>
+<div class="cpair"><div class="chead"><span class="lang">PLAIN</span><span class="csp"></span><button class="mini copy">复制</button></div><pre class="code" data-lang="plain"><code>ScriptableObject的好处
+1.我们可以直接在Inspector窗口编辑配置数据，可以利用它来做配置文件
+2.处理重复数据，减少数据拷贝时造成的内存占用，可以利用它来做公共数据
+3.可以更方便的处理数据带来的多态行为</code></pre><div class="cout" hidden></div></div>
+<h2 id="第2章-ScriptableObject数据文件的创建-4" class="hd lv2">第2章：ScriptableObject数据文件的创建</h2>
+<p class="tx">创建的资源文件会占用硬盘空间，打包出去的时候也是，所有能做到编辑模式下数据持久化</p>
+<div class="cpair"><div class="chead"><span class="lang">C#</span><span class="csp"></span><button class="mini copy">复制</button></div><pre class="code" data-lang="csharp"><code>1.继承ScriptableObject类
+2.在该类中声明成员（变量、方法等）
+
+注意：声明后，我们边可以在Inspector窗口中看到变化
+     我们可以在其中进行设置，但是这些设置都是默认数据，并没有真正使用他们
+     这些关联信息都是通过脚本文件对应的Unity配置文件meta进行记录的
+     目前该数据只是一个数据容器模板
+     有了它我们之后才能根据它的信息创建对应的数据资源文件</code></pre><div class="cout" hidden></div></div>
+<div class="dgm" data-diagram="3b0cf8db4781" data-img="assets/img/3b0cf8db4781.png"><div class="dgm-head"><span class="dgm-t">0 Inspector</span><span class="badge b-ocr">文字还原</span><span class="sp"></span><button class="dgm-tab">看原图</button></div></div>
+<p class="tx">继承ScriptableObject 类可以的 C#脚本这里可以看到 自己声明的 unity 自带的类</p>
+<div class="dgm" data-diagram="ce5b727e142d" data-img="assets/img/ce5b727e142d.png"><div class="dgm-head"><span class="dgm-t">◎27</span><span class="badge b-ocr">文字还原</span><span class="sp"></span><button class="dgm-tab">看原图</button></div></div>
+<p class="tx">预设体可以直接关联过去</p>
+<div class="dgm" data-diagram="5212f5e48611" data-img="assets/img/5212f5e48611.png"><div class="dgm-head"><span class="dgm-t">2026/</span><span class="badge b-ocr">文字还原</span><span class="sp"></span><button class="dgm-tab">看原图</button></div></div>
+<p class="tx">每个脚本都有配置文件， 里面记录了关联信息</p>
+<div class="dgm" data-diagram="8a7bb6993577" data-img="assets/img/8a7bb6993577.png"><div class="dgm-head"><span class="dgm-t">fileFormatVersion: 2</span><span class="badge b-ocr">文字还原</span><span class="sp"></span><button class="dgm-tab">看原图</button></div></div>
+<p class="tx">第一步 ：继承 ScriptableObject 并声明成员，并进行关联,加入特性</p>
+<div class="cpair"><div class="chead"><span class="lang">C#</span><span class="csp"></span><button class="mini copy">复制</button></div><pre class="code" data-lang="csharp"><code>using System.Collections;
+using System.Collections.Generic;
+using UnityEngine;
+using UnityEngine.Video;
+
+[CreateAssetMenu(fileName ="MrTangData", menuName ="ScriptableObject/我的数据", order=0)]
+public class MyData : ScriptableObject
+{
+    //声明成员时需要注意
+    //我们可以声明任何类型的成员变量
+    //但是需要注意：如果希望之后在Inspector窗口中能够编辑它
+    //那你在这里声明的变量规则 要和 MonoBehavior当中public变量的规则是一样的
+
+    public int i;
+    public float f;
+    public bool b;
+
+    public GameObject obj;
+    public Material m;
+    public AudioClip audioClip;
+    public VideoClip videoClip;
+
+}</code></pre><div class="cout" hidden></div></div>
+<div class="cpair"><div class="chead"><span class="lang">C#</span><span class="csp"></span><button class="mini copy">复制</button></div><pre class="code" data-lang="csharp"><code>注意：
+该创建功能，其实就是根据自定义数据容器类创建了一个配置文件
+该文件中记录了对应的数据容器类信息，以及其中变量关联的信息
+之后我们在使用它时，本质上也是通过反射创建对象进行使用</code></pre><div class="cout" hidden></div></div>
+<p class="tx">具体的方法有两种： 用第一种方法就行了</p>
+<p class="tx">第二部 创建数据信息文件 然后就可以在 inspector 窗口进行文件配置</p>
+<p class="tx">第一种方法</p>
+<div class="cpair"><div class="chead"><span class="lang">C#</span><span class="csp"></span><button class="mini copy">复制</button></div><pre class="code" data-lang="csharp"><code>[CreateAssetMenu(fileName = "默认文件名", menuName = "在Asset/Create菜单中显示的名字", order = 在Asset/Create菜单中的位置)]
+                                                                                          (多个时可以通过它来调整顺序)</code></pre><div class="cout" hidden></div></div>
+<div class="cpair"><div class="chead"><span class="lang">C#</span><span class="csp"></span><button class="mini copy">复制</button></div><pre class="code" data-lang="csharp"><code>[CreateAssetMenu(fileName ="MrTangData", menuName =" 主菜单/我的数据", order=0)]
+public class MyData : ScriptableObject
+{
+    public GameObject obj;
+    public Material m;
+    public AudioClip audioClip;
+    public VideoClip videoClip;
+
+}</code></pre><div class="cout" hidden></div></div>
+<div class="dgm" data-diagram="dc47541f98f8" data-img="assets/img/dc47541f98f8.png"><div class="dgm-head"><span class="dgm-t">Folder / Hlas Material</span><span class="badge b-ocr">文字还原</span><span class="sp"></span><button class="dgm-tab">看原图</button></div></div>
+<p class="tx">加入该特性后，再这里菜单栏就出现了, 点击后就会产生名为 MrTangData 的数据文件资源，</p>
+<div class="dgm" data-diagram="1f1f92b963c7" data-img="assets/img/1f1f92b963c7.png"><div class="dgm-head"><span class="dgm-t">0 Inspector</span><span class="badge b-ocr">文字还原</span><span class="sp"></span><button class="dgm-tab">看原图</button></div></div>
+<p class="tx">第二种方法 - 不适用</p>
+<div class="cpair"><div class="chead"><span class="lang">C#</span><span class="csp"></span><button class="mini copy">复制</button></div><pre class="code" data-lang="csharp"><code>  然后将数据对象保存在工程目录下
+  [MenuItem("ScriptableObject/CreateMyData")]</code></pre><div class="cout" hidden></div></div>
+<p class="tx">加入这个特性后，编辑栏会出现这个</p>
+<div class="dgm" data-diagram="7bcb47dcfe53" data-img="assets/img/7bcb47dcfe53.png"><div class="dgm-head"><span class="dgm-t">File</span><span class="badge b-ocr">文字还原</span><span class="sp"></span><button class="dgm-tab">看原图</button></div></div>
+<p class="tx">点击创建后会生成 这个类</p>
+<div class="dgm" data-diagram="c59a49a2f1b4" data-img="assets/img/c59a49a2f1b4.png"><div class="dgm-head"><span class="dgm-t">◎27</span><span class="badge b-ocr">文字还原</span><span class="sp"></span><button class="dgm-tab">看原图</button></div></div>
+<p class="tx">引用 using UnityEditor; 编辑模式 需要把文件放入这个文件下，是不能打包出去的（不然打包会报错）</p>
+<div class="dgm" data-diagram="f1fb62e50030" data-img="assets/img/f1fb62e50030.png"><div class="dgm-head"><span class="dgm-t">Editor</span><span class="badge b-ocr">文字还原</span><span class="sp"></span><button class="dgm-tab">看原图</button></div></div>
+<div class="cpair"><div class="chead"><span class="lang">C#</span><span class="csp"></span><button class="mini copy">复制</button></div><pre class="code" data-lang="csharp"><code>using System.Collections;
+using System.Collections.Generic;
+using UnityEditor;
+using UnityEngine;
+
+public class ScriptableObjectTool
+{
+    [MenuItem("ScriptableObject/CreateMyData")]
+    public static void CreateMyData()
+    {
+        //书写创建数据资源文件的代码
+        MyData asset = ScriptableObject.CreateInstance&lt;MyData&gt;();
+
+        //通过编辑器API 根据数据创建一个数据资源文件
+        AssetDatabase.CreateAsset(asset, "Assets/Resources/MyDataTest.asset");
+        //保存创建的资源
+        AssetDatabase.SaveAssets();
+        //刷新界面
+        AssetDatabase.Refresh();
+    }
+}</code></pre><div class="cout" hidden></div></div>
+<div class="cpair"><div class="chead"><span class="lang">C#</span><span class="csp"></span><button class="mini copy">复制</button></div><pre class="code" data-lang="csharp"><code>1.更方便的配置数据,我们可以直接在Inspector当中配置数据
+2.项目之间的复用,我们可以拷贝继承ScriptableObject的脚本到任何工程中</code></pre><div class="cout" hidden></div></div>
+<div class="cpair"><div class="chead"><span class="lang">C#</span><span class="csp"></span><button class="mini copy">复制</button></div><pre class="code" data-lang="csharp"><code>创建ScriptableObject数据类非常简单
+1.继承它
+2.声明需要的数据变量
+3.添加对应的特性，让我们可以在Unity中真正的创建出数据资源文件</code></pre><div class="cout" hidden></div></div>
+<h6 id="练习题-5" class="hd lv6">练习题</h6>
+<div class="cpair"><div class="chead"><span class="lang">C#</span><span class="csp"></span><button class="mini copy">复制</button></div><pre class="code" data-lang="csharp"><code>using System.Collections;
+using System.Collections.Generic;
+using UnityEngine;
+[CreateAssetMenu(fileName = "SettingInfo", menuName = "ScriptableObject/音乐音效设置信息")]
+public class SettingInfo : ScriptableObject
+{
+    //音乐和音效的开关
+    public bool musicIsOpen;
+    public bool soundIsOpen;
+    //音乐和音效的 大小
+    public float musicValue;
+    public float soundValue;
+}</code></pre><div class="cout" hidden></div></div>
+<h2 id="第3章-ScriptableObject数据文件的使用-6" class="hd lv2">第3章：ScriptableObject数据文件的使用</h2>
+<p class="tx">知识点一 ScriptableObject数据文件的使用</p>
+<div class="cpair"><div class="chead"><span class="lang">C#</span><span class="csp"></span><button class="mini copy">复制</button></div><pre class="code" data-lang="csharp"><code>1-1.创建一个数据文件
+1-2.在继承MonoBehaviour类中申明数据容器类型的成员
+在Inspector窗口进行关联</code></pre><div class="cout" hidden></div></div>
+<p class="tx">继承 MonoBehaviour 类 Temp 挂载到空对象上，再空对象上拖入之前生成的资源文件到这里进行关联</p>
+<div class="dgm" data-diagram="3fefc211e728" data-img="assets/img/3fefc211e728.png"><div class="dgm-head"><span class="dgm-t">E Hierarchy / Static</span><span class="badge b-ocr">文字还原</span><span class="sp"></span><button class="dgm-tab">看原图</button></div></div>
+<p class="tx">这个时候就可以在外部就行使用了，直接修改 MyDataTest 的属性，就会改变运行结果</p>
+<div class="dgm" data-diagram="60d9eb204bb2" data-img="assets/img/60d9eb204bb2.png"><div class="dgm-head"><span class="dgm-t">archy</span><span class="badge b-ocr">文字还原</span><span class="sp"></span><button class="dgm-tab">看原图</button></div></div>
+<div class="cpair"><div class="chead"><span class="lang">C#</span><span class="csp"></span><button class="mini copy">复制</button></div><pre class="code" data-lang="csharp"><code>using UnityEngine;
+
+public class Temp : MonoBehaviour
+{
+    public MyData mydata;//把下方继承ScriptableObject的MyData类拉入
+    mydata.PrintInfo();//调用里面的方法
+}</code></pre><div class="cout" hidden></div></div>
+<div class="cpair"><div class="chead"><span class="lang">C#</span><span class="csp"></span><button class="mini copy">复制</button></div><pre class="code" data-lang="csharp"><code>using System.Collections;
+using System.Collections.Generic;
+using UnityEngine;
+using UnityEngine.Video;
+[CreateAssetMenu(fileName ="MrTangData", menuName =" 主菜单/我的数据", order=0)]
+public class MyData :ScriptableObject
+{
+    public int i;
+    public float f;
+    public bool b;
+
+    public GameObject obj;
+    public Material m;
+    public AudioClip audioClip;
+    public VideoClip videoClip; 
+   public void PrintInfo()
+    {
+        Debug.Log(i); //不继承MonoBehaviour类只能 用 Debug.Log 进行打印
+         Debug.Log(f);
+          Debug.Log(b);
+    }
+}</code></pre><div class="cout" hidden></div></div>
+<div class="cpair"><div class="chead"><span class="lang">C#</span><span class="csp"></span><button class="mini copy">复制</button></div><pre class="code" data-lang="csharp"><code>加载数据文件资源
+注意：Resources、AB包、Addressables都支持加载继承ScriptableObject的数据文件
+用对应的加载方法进行 加载
+
+public MyData mydata;
+
+data = Resources.Load&lt;MyData&gt;("MyDataTest"); 
+//&lt;MyData&gt;直接理解成我们自定义的数据资源文件
+//("MyDataTest")文件路径和名字
+
+data.PrintInfo();
+
+注意：如果多个对象关联同一个数据容器文件，他们共享的是一个对象
+     因为是引用对象，所以在其中任何地方修改后，其它地方也会发生改变</code></pre><div class="cout" hidden></div></div>
+<p class="tx">只需要拖脚本，不进行资源关联，通过资源加载的形式</p>
+<div class="dgm" data-diagram="e6494f22ac01" data-img="assets/img/e6494f22ac01.png"><div class="dgm-head"><span class="dgm-t">= Hierarchy / Static</span><span class="badge b-ocr">文字还原</span><span class="sp"></span><button class="dgm-tab">看原图</button></div></div>
+<div class="cpair"><div class="chead"><span class="lang">C#</span><span class="csp"></span><button class="mini copy">复制</button></div><pre class="code" data-lang="csharp"><code>ScriptableObject和MonoBehavior很类似
+它也存在生命周期函数
+但是生命周期函数的数量更少
+主要做了解，一般我们使用较少
+public class Custom :ScriptableObject
+{
+private void Awake(){ 数据文件创建时调用}
+
+private void OnDestroy(){对象将被销毁时调用}
+private void OnDisable(){对象销毁时、即将重新加载脚本程序集时 调用}
+private void OnEnable(){ 创建或者加载对象时调用}
+
+private void OnValidate()
+{编辑器才会调用的函数，Unity在加载脚本或者Inspector窗口中更改值时调用}
+}</code></pre><div class="cout" hidden></div></div>
+<div class="cpair"><div class="chead"><span class="lang">C#</span><span class="csp"></span><button class="mini copy">复制</button></div><pre class="code" data-lang="csharp"><code>1.编辑器中的数据持久化
+通过代码修改数据对象中内容，会影响数据文件
+相当于达到了编辑器中数据持久化的目的
+(该数据持久化 只是在编辑模式下的持久,发布运行时并不会保存数据)
+data.i = 9999;
+data.f = 5.5f;
+data.b = false;
+
+2.复用数据
+如果多个对象关联同一个数据文件
+相当于他们复用了一组数据，内存上更加节约空间</code></pre><div class="cout" hidden></div></div>
+<div class="cpair"><div class="chead"><span class="lang">C#</span><span class="csp"></span><button class="mini copy">复制</button></div><pre class="code" data-lang="csharp"><code>其实创建出来的数据资源文件，你可以把它理解成一种记录数据的资源
+它的使用方式，和我们以前使用Unity当中的其它资源规则是一样的
+比如：预设体、音频文件、视频文件、动画控制器文件、材质球等等
+只不过通过继承ScriptableObject类生成的数据资源文件，它主要是和数据相关的</code></pre><div class="cout" hidden></div></div>
+<h6 id="练习题-7" class="hd lv6">练习题</h6>
+<p class="tx">这里要注意，在编辑模式下是可以数据持久化的，改了就记录上次的改的什么，</p>
+<p class="tx">在游戏发布模式下是不会记录的，还有游戏发布模式打包</p>
+<div class="cpair"><div class="chead"><span class="lang">C#</span><span class="csp"></span><button class="mini copy">复制</button></div><pre class="code" data-lang="csharp"><code>using System.Collections;
+using System.Collections.Generic;
+using UnityEngine;
+using UnityEngine.UI;
+
+public class SettingPanel : MonoBehaviour
+{
+    public Toggle musicTog;
+    public Toggle soundTog;
+    public Slider musicSlider;
+    public Slider soundSlider;
+    public SettingInfo info;//拉入数据资源文件，然后在挂载该脚本对象上拉入对应的资源文件
+
+    void Start()
+    {
+        musicTog.isOn = info.musicIsOpen;
+        soundTog.isOn = info.soundIsOpen;
+        musicSlider.value = info.musicValue;
+        soundSlider.value = info.soundValue;
+        //当UI面板上 控件变化时 记录数据
+        musicTog.onValueChanged.AddListener((value) =&gt;
+        {
+            info.musicIsOpen = value;//改变数据资源文件里的值
+        });
+        soundTog.onValueChanged.AddListener((value) =&gt;
+        {
+            info.soundIsOpen = value;
+        });
+        musicSlider.onValueChanged.AddListener((value) =&gt;
+        {
+            info.musicValue = value;
+        });
+        soundSlidr.onValueChanged.AddListener((value) =&gt;
+        {
+            info.soundValue = value;
+        });
+    }
+}</code></pre><div class="cout" hidden></div></div>
+<h2 id="第4章-ScriptableObject非持久数据-8" class="hd lv2">🔥第4章：ScriptableObject非持久数据</h2>
+<p class="tx">指的是不管在编辑器模式还是在发布后都 不会持久化的数据</p>
+<p class="tx">只存在于内存中，不占硬盘空间，就减少了包体的大小，游戏结束后就内存释放掉，不会存在本地</p>
+<div class="cpair"><div class="chead"><span class="lang">C#</span><span class="csp"></span><button class="mini copy">复制</button></div><pre class="code" data-lang="csharp"><code>指的是不管在编辑器模式还是在发布后都 不会持久化的数据
+我们可以根据自己的需求随时创建对应数据对象进行使用
+就好像直接new一个数据结构类对象</code></pre><div class="cout" hidden></div></div>
+<div class="cpair"><div class="chead"><span class="lang">C#</span><span class="csp"></span><button class="mini copy">复制</button></div><pre class="code" data-lang="csharp"><code>利用ScriptableObject中的静态方法 CreateInstance&lt;&gt;()
+该方法可以在运行时创建出指定继承ScriptableObject的对象
+该对象只存在于内存当中，可以被GC
+调用一次就创建一次</code></pre><div class="cout" hidden></div></div>
+<div class="cpair"><div class="chead"><span class="lang">C#</span><span class="csp"></span><button class="mini copy">复制</button></div><pre class="code" data-lang="csharp"><code>public MyData Data;//拉入自定义资源文件
+
+data = ScriptableObject.CreateInstance("MyData") as MyData;//不适用
+
+data = ScriptableObject.CreateInstance&lt;MyData&gt;();//使用这个
+//在内存中分配了一个存储空间，没有存在本地，所有无法数据持久化
+
+data.PrintInfo();</code></pre><div class="cout" hidden></div></div>
+<div class="cpair"><div class="chead"><span class="lang">C#</span><span class="csp"></span><button class="mini copy">复制</button></div><pre class="code" data-lang="csharp"><code>只是希望在运行时能有一组唯一的数据可以使用
+但是这个数据又不太希望保存为数据资源文件浪费硬盘空间
+那么ScriptableObject的非持久化数据就有了存在的意义
+它的特点是
+只在运行时使用，在编辑器模式下也不会保存在本地</code></pre><div class="cout" hidden></div></div>
+<h6 id="练习题-9" class="hd lv6">练习题</h6>
+<div class="cpair"><div class="chead"><span class="lang">C#</span><span class="csp"></span><button class="mini copy">复制</button></div><pre class="code" data-lang="csharp"><code>using System.Collections;
+using System.Collections.Generic;
+using UnityEngine;
+using UnityEngine.UI;
+
+public class SettingPanel : MonoBehaviour
+{
+    public Toggle musicTog;
+    public Toggle soundTog;
+    public Slider musicSlider;
+    public Slider soundSlider;
+    public SettingInfo info;
+
+    void Start()
+    {
+        info = ScriptableObject.CreateInstance&lt;SettingInfo&gt;();
+        musicTog.isOn = info.musicIsOpen;
+        soundTog.isOn = info.soundIsOpen;
+        musicSlider.value = info.musicValue;
+        soundSlider.value = info.soundValue;
+        //当UI面板上 控件变化时 记录数据
+        musicTog.onValueChanged.AddListener((value) =&gt;
+        {
+            info.musicIsOpen = value;
+        });
+        soundTog.onValueChanged.AddListener((value) =&gt;
+        {
+            info.soundIsOpen = value;
+        });
+        musicSlider.onValueChanged.AddListener((value) =&gt;
+        {
+            info.musicValue = value;
+        });
+        soundSlider.onValueChanged.AddListener((value) =&gt;
+        {
+            info.soundValue = value;
+        });
+    }
+
+}</code></pre><div class="cout" hidden></div></div>
+<h2 id="第5章-ScriptableObject让其真正意义的持久-10" class="hd lv2">🔥第5章：ScriptableObject让其真正意义的持久</h2>
+<p class="tx">不建议做数据持久化使用，但是还是要讲怎么实现持久化</p>
+<p class="tx">就是讲 ScriptableObject 的数据 存入 JSON 和 从 JSON 中读取 从而实现数据持久化，</p>
+<div class="cpair"><div class="chead"><span class="lang">C#</span><span class="csp"></span><button class="mini copy">复制</button></div><pre class="code" data-lang="csharp"><code>MyData data = ScriptableObject.CreateInstance&lt;MyData&gt;();</code></pre><div class="cout" hidden></div></div>
+<div class="cpair"><div class="chead"><span class="lang">C#</span><span class="csp"></span><button class="mini copy">复制</button></div><pre class="code" data-lang="csharp"><code>硬盘&lt;=&gt;内存   使用数据时从硬盘中读取  ，数据改变后保存到硬盘上
+游戏退出程序关闭后，数据信息会被存储到硬盘上，达到持久化的目的
+
+我们讲授过的数据持久化相关知识  PlayerPrefs ，XML，Json，2进制
+
+ScriptableObject并不适合用来做数据持久化功能
+但是我们可以利用我们学过的数据持久化方案 让其持久化</code></pre><div class="cout" hidden></div></div>
+<div class="cpair"><div class="chead"><span class="lang">C#</span><span class="csp"></span><button class="mini copy">复制</button></div><pre class="code" data-lang="csharp"><code>data.PrintInfo();
+data.i = 9999;
+data.f = 6.6f;
+data.b = true;
+
+将数据对象 序列化为 json字符串
+string str = JsonUtility.ToJson(data);
+print(str);
+
+把数据序列化后的结果 存入指定路径当中
+File.WriteAllText(Application.persistentDataPath + "/testJson.json", str);
+print(Application.persistentDataPath);</code></pre><div class="cout" hidden></div></div>
+<div class="cpair"><div class="chead"><span class="lang">C#</span><span class="csp"></span><button class="mini copy">复制</button></div><pre class="code" data-lang="csharp"><code>从本地读取 Json字符串
+string str = File.ReadAllText(Application.persistentDataPath + "/testJson.json");
+
+根据json字符串反序列化出数据读取出来 然后 直接覆盖data中的数据
+JsonUtility.FromJsonOverwrite(str, data);
+data.PrintInfo();</code></pre><div class="cout" hidden></div></div>
+<div class="cpair"><div class="chead"><span class="lang">C#</span><span class="csp"></span><button class="mini copy">复制</button></div><pre class="code" data-lang="csharp"><code>对于ScriptableObject的数据
+由于它在游戏发布运行过程中无法被持久化
+我们可以利用 PlayerPrefs、XML、Json、2进制等等方式
+让其可以达到被真正持久化的目的
+
+但是我个人并不建议大家利用ScriptableObject来做数据持久化
+有点画蛇添足的意思了</code></pre><div class="cout" hidden></div></div>
+<h6 id="练习题-11" class="hd lv6">练习题</h6>
+<div class="cpair"><div class="chead"><span class="lang">C#</span><span class="csp"></span><button class="mini copy">复制</button></div><pre class="code" data-lang="csharp"><code>using System.Collections;
+using System.Collections.Generic;
+using UnityEngine;
+using UnityEngine.UI;
+
+public class SettingPanel : MonoBehaviour
+{
+    public Toggle musicTog;
+    public Toggle soundTog;
+    public Slider musicSlider;
+    public Slider soundSlider;
+    public SettingInfo info;
+
+    void Start()
+    {
+        musicTog.isOn = info.musicIsOpen;
+        soundTog.isOn = info.soundIsOpen;
+        musicSlider.value = info.musicValue;
+        soundSlider.value = info.soundValue;
+        //当UI面板上 控件变化时 记录数据
+        musicTog.onValueChanged.AddListener((value) =&gt;
+        {
+            info.musicIsOpen = value;
+        });
+        soundTog.onValueChanged.AddListener((value) =&gt;
+        {
+            info.soundIsOpen = value;
+        });
+        musicSlider.onValueChanged.AddListener((value) =&gt;
+        {
+            info.musicValue = value;
+        });
+        soundSlidr.onValueChanged.AddListener((value) =&gt;
+        {
+            info.soundValue = value;
+        });
+    }
+    void Update()
+    {
+        if(Input.GetKeyDown(KeyCode.Space))//测试，按空格键保存数据
+            info.Save();
+        
+    }
+}</code></pre><div class="cout" hidden></div></div>
+<div class="cpair"><div class="chead"><span class="lang">C#</span><span class="csp"></span><button class="mini copy">复制</button></div><pre class="code" data-lang="csharp"><code>using System.Collections;
+using System.Collections.Generic;
+using System.IO;
+using UnityEngine;
+
+[CreateAssetMenu(fileName = "SettingInfo", menuName = "ScriptableObject/音乐音效设置信息")]
+public class SettingInfo : ScriptableObject
+{
+    //音乐和音效的开关
+    public bool musicIsOpen;
+    public bool soundIsOpen;
+    //音乐和音效的 大小
+    public float musicValue;
+    public float soundValue;
+
+    private void Awake()
+    {
+        //判断是否存在持久化的数据文件，有就进行数据加载，没有就不处理
+        if( File.Exists(Application.persistentDataPath + "/SettingInfo.json") )
+        {
+            string str = File.ReadAllText(Application.persistentDataPath + "/SettingInfo.json");
+            JsonUtility.FromJsonOverwrite(str, this);//反序列化，读取数据 直接覆盖该数据
+        }
+    }
+
+    /// &lt;summary&gt;
+    /// 保存到本地 进行持久化
+    /// &lt;/summary&gt;
+    public void Save()
+    {
+        string str = JsonUtility.ToJson(this);
+        File.WriteAllText(Application.persistentDataPath + "/SettingInfo.json", str);
+        //序列化数据，进行写入
+    }
+}</code></pre><div class="cout" hidden></div></div>
+<h2 id="第6章-ScriptableObject的应用-12" class="hd lv2">第6章：ScriptableObject的应用</h2>
+<h4 id="01-配置数据-13" class="hd lv4">01：配置数据</h4>
+<div class="cpair"><div class="chead"><span class="lang">C#</span><span class="csp"></span><button class="mini copy">复制</button></div><pre class="code" data-lang="csharp"><code>1.配置文件的数据在游戏发布之前定规则
+2.配置文件的数据在游戏运行时只会读出来使用，不会改变内容
+3.在Unity的Inspector窗口进行配置更加的方便</code></pre><div class="cout" hidden></div></div>
+<div class="cpair"><div class="chead"><span class="lang">C#</span><span class="csp"></span><button class="mini copy">复制</button></div><pre class="code" data-lang="csharp"><code>以前我们的常规配置方式
+都是利用之前学习过的 数据持久化四部曲当中的内容进行配置的
+比如 xml配置 json配置 excel配置</code></pre><div class="cout" hidden></div></div>
+<div class="dgm" data-diagram="41598227ccac" data-img="assets/img/41598227ccac.png"><div class="dgm-head"><span class="dgm-t">A1</span><span class="badge b-ocr">文字还原</span><span class="sp"></span><button class="dgm-tab">看原图</button></div></div>
+<div class="cpair"><div class="chead"><span class="lang">C#</span><span class="csp"></span><button class="mini copy">复制</button></div><pre class="code" data-lang="csharp"><code>using UnityEngine;
+using System.Collections;
+using System.Collections.Generic;
+
+[CreateAssetMenu(fileName="RoleInfo",menuName="主菜单/角色信息")]
+public class RoleInfo:ScriptableObject
+{
+[System.Serializable] //因为自定义类无法再inspector窗口中编辑，必须加入此特性才能编辑
+public class RoleData
+{
+public int id;
+public string res;
+public int atk;
+public string tips;
+public int lockMoney;
+public int type;
+public string hitEff;
+
+}
+public void Print()//自定义一个方法打印数据，用于测试
+{
+Debug.Log(id);
+Debug.Log(res);
+Debug.Log(atk);
+Debug.Log(tips);
+Debug.Log(lockMoney);
+Debug.Log(type);
+Debug.Log(hitEff);
+}
+
+public List&lt;RoleData&gt; roleList;
+}</code></pre><div class="cout" hidden></div></div>
+<p class="tx">创建好资源文件后，就可以在这里设置 list 中的 RoleData 类的个数，然后分别设置里面的数据</p>
+<div class="dgm" data-diagram="3d43607b0de0" data-img="assets/img/3d43607b0de0.png"><div class="dgm-head"><span class="dgm-t">MrTangData</span><span class="badge b-ocr">文字还原</span><span class="sp"></span><button class="dgm-tab">看原图</button></div></div>
+<p class="tx">然后 把写一个脚本挂载在场景对象上，把该数据拖入，从而使用该数据</p>
+<div class="cpair"><div class="chead"><span class="lang">C#</span><span class="csp"></span><button class="mini copy">复制</button></div><pre class="code" data-lang="csharp"><code>public RoleInfo info;
+
+for (int i = 0; i &lt; info.roleList.Count; i++)
+{
+    info.roleList[i].Print();
+}</code></pre><div class="cout" hidden></div></div>
+<div class="cpair"><div class="chead"><span class="lang">C#</span><span class="csp"></span><button class="mini copy">复制</button></div><pre class="code" data-lang="csharp"><code>只用不改并且经常会进行配置的数据，非常适合使用ScriptableObject
+
+我们可以利用ScriptableObject数据文件 来制作编辑器相关功能
+比如：Unity内置的技能编辑器、关卡编辑器等等
+      我们不需要把编辑器生成的数据生成别的数据文件，而是直接通过ScriptableObject进行存储
+      因为内置编辑器只会在编辑模式下运行，编辑模式下ScriptableObject具备数据持久化的特性</code></pre><div class="cout" hidden></div></div>
+<h4 id="02-复用数据-对于不同对象使用相同的数据-14" class="hd lv4">🔥02：复用数据（对于不同对象使用相同的数据）</h4>
+<div class="cpair"><div class="chead"><span class="lang">C#</span><span class="csp"></span><button class="mini copy">复制</button></div><pre class="code" data-lang="csharp"><code>对于只用不变的数据，以面向对象的思想去声明对象类是可能存在内存浪费的问题的</code></pre><div class="cout" hidden></div></div>
+<h5 id="01-我们以子弹对象为例-面向对象的思想-只用不变的数据-需要废弃-15" class="hd lv5">01. 我们以子弹对象为例，面向对象的思想。只用不变的数据【需要废弃】</h5>
+<p class="tx">之前用面向对象思想进行制作的字体脚本-&gt;然后挂载对象上实现子弹的移动-&gt;然后把子弹做成预设体</p>
+<p class="tx">每次使用子弹预设体都会实例化脚本，比如 10 个子弹，就会创建 10 个脚本，内存中就是 10 个房间，增大内存消耗。</p>
+<div class="cpair"><div class="chead"><span class="lang">C#</span><span class="csp"></span><button class="mini copy">复制</button></div><pre class="code" data-lang="csharp"><code>using System.Collections;
+using System.Collections.Generic;
+using UnityEngine;
+public class Bullet:MonoBehaviour
+{
+public float speed;
+public int atk;
+void Start()
+{
+}
+void Update()
+{
+this.transform.Translate(Vector3.forward*speed*Time.deltaTime);
+}
+}</code></pre><div class="cout" hidden></div></div>
+<h5 id="02-用-scriptableobject-的方式-创建子弹-16" class="hd lv5">02.用 scriptableobject 的方式 创建子弹</h5>
+<p class="tx">创建一个子弹数据资源文件</p>
+<p class="tx">不取名，会根据类名来创建菜单</p>
+<div class="dgm" data-diagram="db793b681fd4" data-img="assets/img/db793b681fd4.png"><div class="dgm-head"><span class="dgm-t">Physics Material</span><span class="badge b-ocr">文字还原</span><span class="sp"></span><button class="dgm-tab">看原图</button></div></div>
+<div class="dgm" data-diagram="9ca976eb7c4d" data-img="assets/img/9ca976eb7c4d.png"><div class="dgm-head"><span class="dgm-t">菜单里的 Script / BulletInfo：类名决定菜单路径</span><span class="badge b-ocr">文字还原</span><span class="sp"></span><button class="dgm-tab">看原图</button></div></div>
+<div class="cpair"><div class="chead"><span class="lang">C#</span><span class="csp"></span><button class="mini copy">复制</button></div><pre class="code" data-lang="csharp"><code>using System.Collections;
+using System.Collections.Generic;
+using UnityEngine;
+
+[CreateAssetMenu()] //不取名，会自动按照规则进行设置
+public class BulletInfo : ScriptableObject
+{
+    public float speed;
+    public int atk;
+}</code></pre><div class="cout" hidden></div></div>
+<p class="tx">使用子弹资源文件</p>
+<p class="tx">对象上挂载脚本 实现子弹移动</p>
+<div class="cpair"><div class="chead"><span class="lang">C#</span><span class="csp"></span><button class="mini copy">复制</button></div><pre class="code" data-lang="csharp"><code>using System.Collections;
+using System.Collections.Generic;
+using UnityEngine;
+
+public class Bullet : MonoBehaviour
+{
+    public BulletInfo info;
+    
+    void Update()
+    {
+        this.transform.Translate(Vector3.forward * info.speed * Time.deltaTime);
+    }
+}</code></pre><div class="cout" hidden></div></div>
+<p class="tx">对象上再挂载一个脚本，用于空格增加子弹速度进行测试</p>
+<div class="cpair"><div class="chead"><span class="lang">C#</span><span class="csp"></span><button class="mini copy">复制</button></div><pre class="code" data-lang="csharp"><code>void Update()
+{
+if (Input.GetKeyDown(KeyCode.Space))
+    info.speed += 1;
+}</code></pre><div class="cout" hidden></div></div>
+<div class="cpair"><div class="chead"><span class="lang">C#</span><span class="csp"></span><button class="mini copy">复制</button></div><pre class="code" data-lang="csharp"><code>对于不同对象，使用相同数据时
+我们可以使用ScriptableObject来节约内存</code></pre><div class="cout" hidden></div></div>
+<h4 id="03-数据带来的多态行为-多个数据资源文件实现不同的逻辑-17" class="hd lv4">03：数据带来的多态行为（多个数据资源文件实现不同的逻辑）</h4>
+<div class="cpair"><div class="chead"><span class="lang">C#</span><span class="csp"></span><button class="mini copy">复制</button></div><pre class="code" data-lang="csharp"><code>某些行为的变化是因为数据的不同带来的
+我们可以利用面向对象的特性和原则，以及设计模式相关知识点
+结合ScriptableObject做出更加方便的功能
+比如随机音效，物品拾取，AI等等等等
+随机音效（里氏替换原则和依赖倒置原则）
+播放音乐时，可能会随机播放多个音效当中的一种
+物品拾取（里氏替换原则和依赖倒置原则）
+比如拾取一个物品，物品给玩家带来不同的效果
+
+AI
+不同数据带来的不同行为模式
+为了方便我们使用，我们可以利用ScriptableObject的可配置性来制作这些功能</code></pre><div class="cout" hidden></div></div>
+<div class="cpair"><div class="chead"><span class="lang">C#</span><span class="csp"></span><button class="mini copy">复制</button></div><pre class="code" data-lang="csharp"><code>audioPlay.Play(this.GetComponent&lt;AudioSource&gt;());</code></pre><div class="cout" hidden></div></div>
+<h5 id="随机音效例子-18" class="hd lv5">随机音效例子</h5>
+<p class="tx">01. 声明一个 继承 ScriptableObject 的 父类，不实现任何功能</p>
+<div class="cpair"><div class="chead"><span class="lang">C#</span><span class="csp"></span><button class="mini copy">复制</button></div><pre class="code" data-lang="csharp"><code>using System.Collections;
+using System.Collections.Generic;
+using UnityEngine;
+public abstract class AuidoPlayBase:ScriptableObject
+{
+public abstract void Play(AudioSource source);
+}</code></pre><div class="cout" hidden></div></div>
+<p class="tx">02. 声明一个继承 AudioPlayerBase 的子类，并实现随机播放音乐的方法 来 作为 资源文件</p>
+<div class="dgm" data-diagram="ff7b99fecbe8" data-img="assets/img/ff7b99fecbe8.png"><div class="dgm-head"><span class="dgm-t">sources / Open</span><span class="badge b-ocr">文字还原</span><span class="sp"></span><button class="dgm-tab">看原图</button></div></div>
+<div class="cpair"><div class="chead"><span class="lang">C#</span><span class="csp"></span><button class="mini copy">复制</button></div><pre class="code" data-lang="csharp"><code>using System.Collections;
+using System.Collections.Generic;
+using UnityEngine;
+
+[CreateAssetMenu()]
+// 随机播放音效类，继承音效播放基类AuidoPlayBase
+public class RandomPlayAudio : AuidoPlayBase
+{
+    //希望随机播放的音效文件
+    public List&lt;AudioClip&gt; clips;
+
+    //重写基类的Play播放方法
+    public override void Play(AudioSource source)
+    {
+        // 如果音效列表为空，直接退出，避免报错
+        if (clips.Count == 0)
+            return;
+
+        //设置音效切片文件：从列表随机取一个AudioClip赋值给AudioSource
+        source.clip = clips[Random.Range(0, clips.Count)];
+        // 执行播放
+        source.Play();
+    }
+}</code></pre><div class="cout" hidden></div></div>
+<p class="tx">03.创建一个拖入父类的脚本，挂载对象上，然后把子类拖入用 父类存储。从而实现数据文件的方法</p>
+<div class="dgm" data-diagram="f906291fddc1" data-img="assets/img/f906291fddc1.png"><div class="dgm-head"><span class="dgm-t">SSampleScene* / ©27</span><span class="badge b-ocr">文字还原</span><span class="sp"></span><button class="dgm-tab">看原图</button></div></div>
+<div class="cpair"><div class="chead"><span class="lang">C#</span><span class="csp"></span><button class="mini copy">复制</button></div><pre class="code" data-lang="csharp"><code>using UnityEngine;
+
+public class PlayAudio : MonoBehaviour
+{
+    public AuidoPlayBase audioSource;
+    //拖入父类
+    void Start()
+    {
+       audioSource.Play();
+      //这里表面上是执行父类的方法，其实是执行存储在父类中子类RandomPlayAudio的方法。
+    }
+
+    // Update is called once per frame
+    void Update()
+    {
+        
+    }
+}</code></pre><div class="cout" hidden></div></div>
+<p class="tx">可以在数据资源文件中写各种逻辑，比如加血，加攻击力，等，</p>
+<p class="tx">可以制作不同功能的多个数据资源文件，用到什么功能就使用对应的数据资源文件</p>
+<div class="cpair"><div class="chead"><span class="lang">C#</span><span class="csp"></span><button class="mini copy">复制</button></div><pre class="code" data-lang="csharp"><code>其实这些例子中的功能就算不用ScriptableObject也是能够使用
+面向对象的思想 结合配置文件来完成的
+但是ScriptableObject具备自己的几个优点
+1.更方便的配置
+2.共享数据节省内存
+在实现某些功能的时候，使用ScriptableObject会更加方便我们的使用</code></pre><div class="cout" hidden></div></div>
+<h4 id="04-单例模式化的获取数据-制作模版-19" class="hd lv4">🔥04：单例模式化的获取数据 （制作模版 ）</h4>
+<div class="cpair"><div class="chead"><span class="lang">C#</span><span class="csp"></span><button class="mini copy">复制</button></div><pre class="code" data-lang="csharp"><code>对于只用不变并且要复用的数据
+比如配置文件中的数据
+我们往往需要在很多地方获取他们
+如果我们直接通过在脚本中 public关联 或者 动态加载
+如果在多处使用，会存在很多重复代码，效率较低
+如果我们将此类数据通过单例模式化的去获取
+可以提升效率，减少代码量</code></pre><div class="cout" hidden></div></div>
+<div class="cpair"><div class="chead"><span class="lang">C#</span><span class="csp"></span><button class="mini copy">复制</button></div><pre class="code" data-lang="csharp"><code>知识点
+面向对象、单例模式、泛型等等
+
+我们可以实现一个ScriptableObject数据单例模式基类
+让我们只需要让子类继承该基类
+就可以直接获取到数据
+而不再需要去通过 public关联 和 资源动态加载</code></pre><div class="cout" hidden></div></div>
+<p class="tx">01 声明一个数据资源文件</p>
+<div class="cpair"><div class="chead"><span class="lang">C#</span><span class="csp"></span><button class="mini copy">复制</button></div><pre class="code" data-lang="csharp"><code>using System.Collections;
+using System.Collections.Generic;
+using UnityEngine;
+
+[CreateAssetMenu]
+public class TestData : SingleScriptableObject&lt;TestData&gt;
+{
+    public int i;
+    public bool b;
+}</code></pre><div class="cout" hidden></div></div>
+<p class="tx">01· 声明一个数据资源文件</p>
+<div class="cpair"><div class="chead"><span class="lang">C#</span><span class="csp"></span><button class="mini copy">复制</button></div><pre class="code" data-lang="csharp"><code>using System.Collections;
+using System.Collections.Generic;
+using UnityEngine;
+
+[CreateAssetMenu(fileName ="RoleInfo", menuName = "ScriptableObject/角色信息")]
+public class RoleInfo : SingleScriptableObject&lt;RoleInfo&gt;
+{
+    [System.Serializable]
+    public class RoleData
+    {
+        public int id;
+        public string res;
+        public int atk;
+        public string tips;
+        public int lockMoney;
+        public int type;
+        public string hitEff;
+
+        public void Print()
+        {
+            Debug.Log(id);
+            Debug.Log(res);
+            Debug.Log(atk);
+            Debug.Log(tips);
+            Debug.Log(lockMoney);
+            Debug.Log(type);
+            Debug.Log(hitEff);
+        }
+    }
+
+    public List&lt;RoleData&gt; roleList;
+}</code></pre><div class="cout" hidden></div></div>
+<p class="tx">02 单列模式的数据文件基类</p>
+<p class="tx">实现 通过生成的 数据资源的名字 点出的方式获取 数据资源里的信息，不用再去拖入</p>
+<div class="cpair"><div class="chead"><span class="lang">C#</span><span class="csp"></span><button class="mini copy">复制</button></div><pre class="code" data-lang="csharp"><code>using System.Collections;
+using System.Collections.Generic;
+using UnityEngine;
+
+public class SingleScriptableObject&lt;T&gt; :ScriptableObject where T:ScriptableObject
+{
+    private static T instance;
+
+    public static T Instance
+    {
+        get
+        {
+            //如果为空 首先应该去资源路劲下加载 对应的 数据资源文件
+            if (instance == null)
+            {
+                //我们定两个规则
+                //1.所有的 数据资源文件都放在 Resources文件夹下的ScriptableObject中
+                //2.需要复用的 唯一的数据资源文件名 我们定一个规则：和类名是一样的
+                instance = Resources.Load&lt;T&gt;("ScriptableObject/" + typeof(T).Name);
+            }
+            //如果没有这个文件 为了安全起见 我们可以在这直接创建一个数据
+            if(instance==null)
+            {
+                instance = CreateInstance&lt;T&gt;();
+            }
+            //甚至可以在这里 从json当中读取数据，但是我不建议用ScriptableObject来做数据持久化
+
+            return instance;
+        }
+    }
+}</code></pre><div class="cout" hidden></div></div>
+<p class="tx">03 通过资源名字 直接 使用资源里的数据</p>
+<div class="cpair"><div class="chead"><span class="lang">C#</span><span class="csp"></span><button class="mini copy">复制</button></div><pre class="code" data-lang="csharp"><code>print(RoleInfo.Instance.roleList[0].id);
+print(RoleInfo.Instance.roleList[1].tips);
+
+print(TestData.Instance.i);
+print(TestData.Instance.b);</code></pre><div class="cout" hidden></div></div>
+<div class="cpair"><div class="chead"><span class="lang">C#</span><span class="csp"></span><button class="mini copy">复制</button></div><pre class="code" data-lang="csharp"><code>这种基类比较适合 配置数据 的管理和获取
+当我们的数据是 只用不变，并且是唯一的时候，可以使用该方式提高我们的开发效率
+在此基础上你也可以根据自己的需求进行变形
+比如添加数据持久化的功能，将数据从json中读取，并提供保存数据的方法
+但是不建议大家用ScriptableObject来制作数据持久化功能
+除非你有这方面的特殊需求</code></pre><div class="cout" hidden></div></div>
+<h2 id="ScriptableObject总结-20" class="hd lv2">ScriptableObject总结</h2>
+<div class="cpair"><div class="chead"><span class="lang">C#</span><span class="csp"></span><button class="mini copy">复制</button></div><pre class="code" data-lang="csharp"><code>优点
+1.配置方便
+2.节约内存
+3.方便处理由数据带来的多态行为
+4.在编辑器模式下具备数据持久化特性
+5.
+何时使用ScriptableObject
+主要应用点：
+1.配置文件
+2.内置编辑器功能生成的数据文件（技能配置，关卡配置等等）
+次要应用点：
+其它只用不改的公共数据
+注意：
+不建议使用ScriptableObject来做数据持久化
+
+注意
+其实目前我们想要制作的所有功能
+就算不使用ScriptableObject也能够通过别的方式制作出来
+所以不要“为了用而用”
+一定要根据自己的实际情况来选择使用
+记住它的优点（配置方便、节约内存等等）
+当遇到可以利用其优点更好的完成需求时
+再使用它</code></pre><div class="cout" hidden></div></div>
+    </article>
+    <footer class="pnbar"><a class="pn prev" href="m10.html"><span>上一节</span>UniTask</a><a class="pn next" href="m12.html"><span>下一节</span>Unity_数据持久化 - PlayerPrefs</a></footer>
+  </main>
+</div>
+<button class="totop" id="totop">↑</button>
+<script src="assets/demos.js"></script>
+<script src="assets/diagrams-data.js"></script>
+<script src="assets/diagram.js"></script>
+<script src="assets/app.js"></script>
+<script>window.__mountDiagrams && window.__mountDiagrams();</script>
+</body>
+</html>

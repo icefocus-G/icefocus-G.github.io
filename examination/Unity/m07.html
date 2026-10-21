@@ -1,0 +1,359 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Unity_入门 - 实践项目 · Unity 交互课件</title>
+<link rel="stylesheet" href="assets/style.css">
+<link rel="stylesheet" href="assets/diagram.css">
+</head>
+<body data-mid="m07">
+<header class="top">
+  <a class="brand" href="index.html"><span class="logo">U</span><b>Unity</b><i>交互课件</i></a>
+  <div class="crumb"><span>游戏引擎相关</span><em>/</em><strong>Unity_入门 - 实践项目</strong></div>
+  <div class="top-r">
+    <span class="stat">6620 字 · 10 代码 · 0 图 · 0 表</span>
+    <button class="mini" id="btnNav">目录</button>
+  </div>
+</header>
+<div class="wrap">
+  <aside class="side" id="side">
+    <div class="side-h">本篇目录</div>
+    <nav class="tocbox"><a class="toc lv2" href="#Unity-前置-1">💡★★Unity 前置 ★★</a><a class="toc lv4" href="#①-场景切换和游戏退出-2">💡 ☆☆① -场景切换和游戏退出-</a><a class="toc lv4" href="#②-随机数和委托-3">💡 ☆☆② -随机数和委托-</a><a class="toc lv4" href="#②-游戏开发-4">💡 ☆☆② -游戏开发-</a></nav>
+    <div class="side-h">全部模块</div>
+    <nav class="navbox"><div class="ng"><div class="ngt">开发经验补充</div><a href="m01.html">Unity - 进阶 - 大纲</a><a href="m02.html">Unity 进阶之视频播放</a><a href="m03.html">Unity - 进阶 - C# 补充</a><a href="m04.html">Unity 网络开发基础</a><a href="m05.html">Unity 程序框架</a></div><div class="ng"><div class="ngt">游戏引擎相关</div><a href="m06.html">Unity_入门</a><a href="m07.html" class="on">Unity_入门 - 实践项目</a><a href="m08.html">Unity_基础</a><a href="m09.html">Unity 核心</a><a href="m10.html">UniTask</a></div><div class="ng"><div class="ngt">数据持久化</div><a href="m11.html">Unity 进阶之 ScriptableObject</a><a href="m12.html">Unity_数据持久化 - PlayerPrefs</a><a href="m13.html">Unity_数据持久化 - Newtonsoft-Json</a><a href="m14.html">MessagePack-CSharp - 二进制</a><a href="m26.html">Unity 数据持久化 - Binary 2 进制</a></div><div class="ng"><div class="ngt">界面 UI 相关</div><a href="m15.html">Unity-UGUI</a><a href="m16.html">Unity-UGUI - 进阶 - TextMeshPro</a><a href="m27.html">Unity_GUI 概述（编辑器用）</a></div><div class="ng"><div class="ngt">设备输入相关</div><a href="m17.html">Unity 进阶之 InputSystem</a></div><div class="ng"><div class="ngt">热更相关</div><a href="m18.html">YooAsset 资源管理 - 大游戏</a><a href="m19.html">Addressables 资源管理 - 小游戏</a><a href="m20.html">HybridCLR - 代码业务逻辑</a></div><div class="ng"><div class="ngt">性能优化相关</div><a href="m21.html">Unity 进阶之性能优化</a><a href="m22.html">Unity 背包里装 10w 个道具</a></div><div class="ng"><div class="ngt">SDK 相关</div><div class="ngempty">预留分类 · 后续补充</div></div><div class="ng"><div class="ngt">游戏打包相关</div><a href="m23.html">Unity 移动平台相关 — IOS</a><a href="m24.html">Unity 移动平台相关 — Android</a><a href="m25.html">unity_00 - 数学公式和物理公式</a></div></nav>
+  </aside>
+  <main class="main">
+    <div class="mhead">
+      <div class="kick">游戏引擎相关</div>
+      <h1>Unity_入门 - 实践项目</h1>
+      <p class="msub">从零做出的第一个完整项目</p>
+      <div class="chips"><span>6620 字原稿</span><span>10 段代码</span><span>0 张配图</span><span>0 个表格</span></div>
+    </div>
+    <article class="doc">
+<div class="runsec"><div class="runsec-h">本模块可运行验证<span>纯 C# · 无需 Unity · 点右下按钮真实编译执行</span></div><div class="cpair"><div class="chead"><span class="lang">C#</span><span class="csp"></span><button class="mini copy">复制</button><button class="mini run" data-run>真实运行</button></div><pre class="code" data-lang="csharp"><code>// 实践项目：里程碑推进与剩余工时推演
+var plan = new (string Name, int Days, string[] Deps)[]
+{
+    ("搭建工程与目录", 1, Array.Empty&lt;string&gt;()),
+    ("角色移动与相机", 2, new[] { "搭建工程与目录" }),
+    ("UI 主界面", 2, new[] { "搭建工程与目录" }),
+    ("背包系统", 3, new[] { "UI 主界面" }),
+    ("敌人生成与战斗", 4, new[] { "角色移动与相机" }),
+    ("存档与设置", 2, new[] { "背包系统" }),
+    ("打包与真机验收", 2, new[] { "敌人生成与战斗", "存档与设置" })
+};
+
+var finish = new Dictionary&lt;string, int&gt;();
+foreach (var (name, days, deps) in plan)
+{
+    int start = deps.Length == 0 ? 0 : deps.Max(d =&gt; finish[d]);
+    finish[name] = start + days;
+    Console.WriteLine($"{name,-16} 第 {start + 1,2} 天开工 -&gt; 第 {finish[name],2} 天完成  依赖: {(deps.Length == 0 ? "无" : string.Join("/", deps))}");
+}
+Console.WriteLine();
+Console.WriteLine($"关键路径总工期：{finish.Values.Max()} 天（串行相加是 {plan.Sum(p =&gt; p.Days)} 天，并行省下 {plan.Sum(p =&gt; p.Days) - finish.Values.Max()} 天）");</code></pre><div class="cout" hidden></div></div></div><div class="demo" data-demo="milestone"><div class="demo-bar"><span class="dot"></span>项目里程碑推进<span class="demo-tag">交互演示</span></div><div class="demo-body"><div class="demo-loading">加载中…</div></div></div>
+<h2 id="Unity-前置-1" class="hd lv2">💡★★Unity 前置 ★★</h2>
+<h4 id="①-场景切换和游戏退出-2" class="hd lv4">💡 ☆☆① -场景切换和游戏退出-</h4>
+<div class="cpair"><div class="chead"><span class="lang">C#</span><span class="csp"></span><button class="mini copy">复制</button></div><pre class="code" data-lang="csharp"><code> if( Input.GetKeyDown(KeyCode.Space) )//按键盘空格键
+ {
+切换到场景2
+直接 写代码 切换场景 可能会报错
+原因是没有把该场景加载到场景列表当中
+SceneManager.LoadScene("Test2");
+-----------------------------------------------------------
+用它不会报错 只会有警告 一样可以切换场景 
+老版本，现在都不用了
+Application.LoadLevel("Test2");
+ }</code></pre><div class="cout" hidden></div></div>
+<div class="cpair"><div class="chead"><span class="lang">C#</span><span class="csp"></span><button class="mini copy">复制</button></div><pre class="code" data-lang="csharp"><code>if( Input.GetKeyDown(KeyCode.Escape) )//按键盘 ESC 键
+{
+执行这句代码 就会退出游戏
+但是 在编辑模式下没有作用
+一定是发布游戏过后 才有用
+Application.Quit();
+ }</code></pre><div class="cout" hidden></div></div>
+<h4 id="②-随机数和委托-3" class="hd lv4">💡 ☆☆② -随机数和委托-</h4>
+<p class="tx">unity 中的随机数 用接口interface 里面只能定义方法签名，不能写方法体逻辑（C#8 以后可以写默认实现，但 Unity 老版本一般不用），多个类实现这个接口，在各个实现类内部写具体逻辑</p>
+<div class="cpair"><div class="chead"><span class="lang">C#</span><span class="csp"></span><button class="mini copy">复制</button></div><pre class="code" data-lang="csharp"><code>using UnityEngine;
+
+public class TestUnityRandom : MonoBehaviour
+{
+    void Start()
+    {
+        //设置种子，相同种子每次运行随机序列完全一样
+        Random.InitState(666);
+
+        int rInt = Random.Range(0, 100);
+        float rFloat = Random.Range(1f, 10f);
+        
+        Debug.Log($"整数:{rInt} 浮点数:{rFloat}");
+
+        //随机方向向量
+        Vector2 dir = Random.insideUnitCircle;
+        //随机旋转
+        Quaternion rot = Random.rotation;
+    }
+}</code></pre><div class="cout" hidden></div></div>
+<div class="cpair"><div class="chead"><span class="lang">C#</span><span class="csp"></span><button class="mini copy">复制</button></div><pre class="code" data-lang="csharp"><code>        System.Action ac = () =&gt;
+        {
+            print("123");   无参无返回委托
+        };
+
+        System.Action&lt;int, float&gt; ac2 = (i, f) =&gt;
+        {
+                             有参无返回委托
+        };
+
+        System.Func&lt;int&gt; fun1 = () =&gt;
+        {
+            return 1;        无参有返回委托
+
+        };
+
+        System.Func&lt;int,string&gt; fun2 = (i) =&gt;
+        {
+            return "123";   有参有返回委托
+
+        };
+
+    </code></pre><div class="cout" hidden></div></div>
+<p class="tx">Unity 自带只有 UnityAction / UnityAction&lt;T&gt;，全部是无返回值委托；</p>
+<p class="tx">只要需要带返回值 直接用 .NET 原生 Func 系列</p>
+<div class="cpair"><div class="chead"><span class="lang">C#</span><span class="csp"></span><button class="mini copy">复制</button></div><pre class="code" data-lang="csharp"><code>        UnityAction uac = () =&gt;
+        {
+
+                     无参无返回
+        };
+
+        UnityAction&lt;string&gt; uac1 = (s) =&gt;
+        {
+                    单参数无返回
+        };
+    </code></pre><div class="cout" hidden></div></div>
+<h4 id="②-游戏开发-4" class="hd lv4">💡 ☆☆② -游戏开发-</h4>
+<p class="tx">面板管理</p>
+<div class="cpair"><div class="chead"><span class="lang">C#</span><span class="csp"></span><button class="mini copy">复制</button></div><pre class="code" data-lang="csharp"><code>using System.Collections;
+using System.Collections.Generic;
+using UnityEngine;
+
+public class BasePanel&lt;T&gt; : MonoBehaviour where T:class //T = 类型（规定盒子能放什么东西）
+{
+
+    private static T instance; //存放东西的盒子（变量）
+
+    public static T Instance =&gt; instance;
+
+    private void Awake()
+    {
+        instance = this as T;
+        //是把当前脚本自身对象（this，也就是子类实例） 转成 T 类型，放进 instance 里存起来。
+        
+    }
+
+    public virtual void ShowMe()
+    {
+        this.gameObject.SetActive(true);
+    }
+
+    public virtual void HideMe()
+    {
+        this.gameObject.SetActive(false);
+    }
+}</code></pre><div class="cout" hidden></div></div>
+<div class="cpair"><div class="chead"><span class="lang">C#</span><span class="csp"></span><button class="mini copy">复制</button></div><pre class="code" data-lang="csharp"><code>using System.Collections;
+using System.Collections.Generic;
+using UnityEngine;
+using UnityEngine.SceneManagement;
+
+public class BeginPanel : BasePanel&lt;BeginPanel&gt;
+{
+    //首先声明公共的成员变量 来关联各个控件
+    public CustomGUIButton btnBegin;
+    public CustomGUIButton btnSetting;
+    public CustomGUIButton btnQuit;
+    public CustomGUIButton btnRank;
+
+    // Start is called before the first frame update
+    void Start()
+    {
+        //监听一次按钮点击过后要做什么
+        btnBegin.clickEvent += () =&gt;
+        {
+            //切换场景
+            SceneManager.LoadScene("GameScene");
+        };
+        btnSetting.clickEvent += () =&gt;
+        {
+            //打开设置面板
+        };
+        btnQuit.clickEvent += () =&gt;
+        {
+            //退出游戏
+            Application.Quit();
+        };
+        btnRank.clickEvent += () =&gt;
+        {
+            //打开排行榜面板
+        };
+    }
+}</code></pre><div class="cout" hidden></div></div>
+<p class="tx">音效处理</p>
+<div class="cpair"><div class="chead"><span class="lang">C#</span><span class="csp"></span><button class="mini copy">复制</button></div><pre class="code" data-lang="csharp"><code>using System.Collections;
+using System.Collections.Generic;
+using UnityEngine;
+
+/// &lt;summary&gt;
+/// 音效数据类 用于存储音乐设置相关的信息
+/// &lt;/summary&gt;
+public class MusicData
+{
+    //背景音乐是否开启
+    public bool isOpenBK;
+    //音效是否开启
+    public bool isOpenSound;
+    //背景音乐大小
+    public float bkValue;
+    //音效音量
+    public float soundValue;
+
+    //加一个是否是第一次加载数据的标识
+    public bool notFirst;
+}</code></pre><div class="cout" hidden></div></div>
+<div class="cpair"><div class="chead"><span class="lang">C#</span><span class="csp"></span><button class="mini copy">复制</button></div><pre class="code" data-lang="csharp"><code>using System.Collections;
+using System.Collections.Generic;
+using UnityEngine;
+
+public class SettingPanel : BasePanel&lt;SettingPanel&gt;
+{
+    //1声明成员变量 关联控件
+    public CustomGUISlider sliderMusic;
+    public CustomGUISlider sliderSound;
+
+    public CustomGUIToggle togMusic;
+    public CustomGUIToggle togSound;
+
+    public CustomGUIButton btnClose;
+
+    // Start is called before the first frame update
+    void Start()
+    {
+        //2监听对应的事件 处理逻辑
+        //处理音乐的变化
+        sliderMusic.changeValue += (value) =&gt; GameDataMgr.Instance.ChangeBKValue(value);
+        //处理音效的变化
+        sliderSound.changeValue += (value) =&gt; GameDataMgr.Instance.ChangeSoundValue(value);
+
+        //处理音乐开关
+        togMusic.changeValue += (value) =&gt; GameDataMgr.Instance.OpenOrCloseBKMusic(value);
+        //处理音效开关
+        togSound.changeValue += (value) =&gt; GameDataMgr.Instance.OpenOrCloseSound(value);
+
+        btnClose.clickEvent += () =&gt;
+        {
+            //隐藏自己
+            HideMe();
+            //让开始面板重新显示出来
+            BeginPanel.Instance.ShowMe();
+        };
+
+        HideMe();
+    }
+
+    //根据数据 更新面板
+    public void UpdatePanelInfo()
+    {
+        //我们面板上的信息都是根据 音效数据 更新的
+        MusicData data = GameDataMgr.Instance.musicData;
+
+        //设置面板内容
+        sliderMusic.nowValue = data.bkValue;
+        sliderSound.nowValue = data.soundValue;
+        togMusic.isSel = data.isOpenBK;
+        togSound.isSel = data.isOpenSound;
+    }
+
+    public override void ShowMe()
+    {
+        base.ShowMe();
+        //每次显示 面板时 顺便 把面板上的内容也更新了
+        UpdatePanelInfo();
+    }
+
+}</code></pre><div class="cout" hidden></div></div>
+<div class="cpair"><div class="chead"><span class="lang">C#</span><span class="csp"></span><button class="mini copy">复制</button></div><pre class="code" data-lang="csharp"><code>using System.Collections;
+using System.Collections.Generic;
+using UnityEngine;
+
+/// &lt;summary&gt;
+/// 这个是游戏数据管理类 是一个单例模式对象
+/// &lt;/summary&gt;
+public class GameDataMgr
+{
+    private static GameDataMgr instance = new GameDataMgr();
+    public static GameDataMgr Instance { get =&gt; instance; }
+
+    //音效数据对象
+    public MusicData musicData;
+
+    private GameDataMgr()
+    {
+        //可以去初始化 游戏数据
+        musicData = PlayerPrefsDataMgr.Instance.LoadData(typeof(MusicData), "Music") as MusicData;
+        //如果第一次进入游戏 没有音效数据 那么所有的数据要不是false 要不是0
+        if( !musicData.notFirst )
+        {
+            musicData.notFirst = true;
+            musicData.isOpenBK = true;
+            musicData.isOpenSound = true;
+            musicData.bkValue = 1;
+            musicData.soundValue = 1;
+            PlayerPrefsDataMgr.Instance.SaveData(musicData, "Music");
+        }
+    }
+
+    //提供一些API给外部 方便数据的改变存储
+    
+    //开启或者关闭背景音乐
+    public void OpenOrCloseBKMusic(bool isOpen)
+    {
+        musicData.isOpenBK = isOpen;
+        //存储改变后的数据
+        PlayerPrefsDataMgr.Instance.SaveData(musicData, "Music");
+    }
+
+    //开启或者关闭音效
+    public void OpenOrCloseSound(bool isOpen)
+    {
+        musicData.isOpenSound = isOpen;
+        //存储改变后的数据
+        PlayerPrefsDataMgr.Instance.SaveData(musicData, "Music");
+    }
+
+    //改变背景音乐大小
+    public void ChangeBKValue(float value)
+    {
+        musicData.bkValue = value;
+        //存储改变后的数据
+        PlayerPrefsDataMgr.Instance.SaveData(musicData, "Music");
+    }
+
+    //改变背景音乐大小
+    public void ChangeSoundValue(float value)
+    {
+        musicData.soundValue = value;
+        //存储改变后的数据
+        PlayerPrefsDataMgr.Instance.SaveData(musicData, "Music");
+    }
+}</code></pre><div class="cout" hidden></div></div>
+    </article>
+    <footer class="pnbar"><a class="pn prev" href="m06.html"><span>上一节</span>Unity_入门</a><a class="pn next" href="m08.html"><span>下一节</span>Unity_基础</a></footer>
+  </main>
+</div>
+<button class="totop" id="totop">↑</button>
+<script src="assets/demos.js"></script>
+<script src="assets/diagrams-data.js"></script>
+<script src="assets/diagram.js"></script>
+<script src="assets/app.js"></script>
+<script>window.__mountDiagrams && window.__mountDiagrams();</script>
+</body>
+</html>

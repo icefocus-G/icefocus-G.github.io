@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>HybridCLR - 代码业务逻辑 · Unity 交互课件</title>
+<link rel="stylesheet" href="assets/style.css">
+<link rel="stylesheet" href="assets/diagram.css">
+</head>
+<body data-mid="m20">
+<header class="top">
+  <a class="brand" href="index.html"><span class="logo">U</span><b>Unity</b><i>交互课件</i></a>
+  <div class="crumb"><span>热更相关</span><em>/</em><strong>HybridCLR - 代码业务逻辑</strong></div>
+  <div class="top-r">
+    <span class="stat">原稿空白 · 已补充</span>
+    <button class="mini" id="btnNav">目录</button>
+  </div>
+</header>
+<div class="wrap">
+  <aside class="side" id="side">
+    <div class="side-h">本篇目录</div>
+    <nav class="tocbox"><a class="toc lv2" href="#sup-m20-why">HybridCLR 的原理一句话</a><a class="toc lv2" href="#sup-m20-flow">接入与热更流程</a><a class="toc lv2" href="#sup-m20-aot">AOT 泛型：唯一会让人通宵的问题</a><a class="toc lv3" href="#sup-m20-pit">其它高频问题</a></nav>
+    <div class="side-h">全部模块</div>
+    <nav class="navbox"><div class="ng"><div class="ngt">开发经验补充</div><a href="m01.html">Unity - 进阶 - 大纲</a><a href="m02.html">Unity 进阶之视频播放</a><a href="m03.html">Unity - 进阶 - C# 补充</a><a href="m04.html">Unity 网络开发基础</a><a href="m05.html">Unity 程序框架</a></div><div class="ng"><div class="ngt">游戏引擎相关</div><a href="m06.html">Unity_入门</a><a href="m07.html">Unity_入门 - 实践项目</a><a href="m08.html">Unity_基础</a><a href="m09.html">Unity 核心</a><a href="m10.html">UniTask</a></div><div class="ng"><div class="ngt">数据持久化</div><a href="m11.html">Unity 进阶之 ScriptableObject</a><a href="m12.html">Unity_数据持久化 - PlayerPrefs</a><a href="m13.html">Unity_数据持久化 - Newtonsoft-Json</a><a href="m14.html">MessagePack-CSharp - 二进制</a><a href="m26.html">Unity 数据持久化 - Binary 2 进制</a></div><div class="ng"><div class="ngt">界面 UI 相关</div><a href="m15.html">Unity-UGUI</a><a href="m16.html">Unity-UGUI - 进阶 - TextMeshPro</a><a href="m27.html">Unity_GUI 概述（编辑器用）</a></div><div class="ng"><div class="ngt">设备输入相关</div><a href="m17.html">Unity 进阶之 InputSystem</a></div><div class="ng"><div class="ngt">热更相关</div><a href="m18.html">YooAsset 资源管理 - 大游戏</a><a href="m19.html">Addressables 资源管理 - 小游戏</a><a href="m20.html" class="on">HybridCLR - 代码业务逻辑</a></div><div class="ng"><div class="ngt">性能优化相关</div><a href="m21.html">Unity 进阶之性能优化</a><a href="m22.html">Unity 背包里装 10w 个道具</a></div><div class="ng"><div class="ngt">SDK 相关</div><div class="ngempty">预留分类 · 后续补充</div></div><div class="ng"><div class="ngt">游戏打包相关</div><a href="m23.html">Unity 移动平台相关 — IOS</a><a href="m24.html">Unity 移动平台相关 — Android</a><a href="m25.html">unity_00 - 数学公式和物理公式</a></div></nav>
+  </aside>
+  <main class="main">
+    <div class="mhead">
+      <div class="kick">热更相关</div>
+      <h1>HybridCLR - 代码业务逻辑</h1>
+      <p class="msub">C# 热更新的元数据补充</p>
+      <div class="chips"><span class="warn">语雀原稿为空</span><span>本页内容为补充整理</span></div>
+    </div>
+    <article class="doc">
+<div class="runsec"><div class="runsec-h">本模块可运行验证<span>纯 C# · 无需 Unity · 点右下按钮真实编译执行</span></div><div class="cpair"><div class="chead"><span class="lang">C#</span><span class="csp"></span><button class="mini copy">复制</button><button class="mini run" data-run>真实运行</button></div><pre class="code" data-lang="csharp"><code>// HybridCLR：AOT 泛型实例缺口检测
+var aotReady = new HashSet&lt;string&gt;
+{
+    "List&lt;int&gt;", "List&lt;string&gt;", "Dictionary&lt;int,int&gt;", "Dictionary&lt;string,int&gt;",
+    "List&lt;Vector3Like&gt;", "Dictionary&lt;int,string&gt;"
+};
+
+var usedInHotfix = new[]
+{
+    "List&lt;int&gt;", "List&lt;Vector3Like&gt;", "Dictionary&lt;string,int&gt;",
+    "List&lt;float&gt;", "Dictionary&lt;int,ItemCfg&gt;", "Dictionary&lt;long,List&lt;string&gt;&gt;"
+};
+
+Console.WriteLine("热更代码里实际用到的泛型实例 vs AOT 已提前生成的：");
+int miss = 0;
+foreach (var t in usedInHotfix)
+{
+    bool ok = aotReady.Contains(t);
+    if (!ok) miss++;
+    Console.WriteLine($"  {t,-28} {(ok ? "OK 已在 AOT 里" : "缺失 -&gt; 运行时 MissingMetadataException")}");
+}
+Console.WriteLine();
+Console.WriteLine($"缺口 {miss} 个，必须在 AOT 工程里补齐：");
+Console.WriteLine("  1) 在 AOT 侧写一个静态方法，把缺失的泛型实例 new 一遍；");
+Console.WriteLine("  2) 用 HybridCLR 的 AOTGenericReferences 扫描并生成补齐代码；");
+Console.WriteLine("  3) 重新出包，否则真机一定崩，编辑器里却完全正常。");
+Console.WriteLine();
+Console.WriteLine("另一类坑：反射调用被裁剪（IL2CPP 的 link.xml 要保住用到的程序集）。");</code></pre><div class="cout" hidden></div></div></div><div class="demo" data-demo="hybridclr"><div class="demo-bar"><span class="dot"></span>HybridCLR 元数据补充<span class="demo-tag">交互演示</span></div><div class="demo-body"><div class="demo-loading">加载中…</div></div></div>
+<div class="sup">
+<div class="sup-t">原稿此篇为空（语雀 word_count = 0）· 以下为补充整理 <i>非语雀原文</i></div>
+
+<h2 id="sup-m20-why" class="hd lv2">HybridCLR 的原理一句话</h2>
+<p class="tx">IL2CPP 会把 C# 编译成 C++ 再编译成机器码，运行时没有 IL，所以传统上「不能热更逻辑」。HybridCLR 做的是<b>把 IL 解释器塞进 IL2CPP 的运行时</b>：主包仍然是 AOT 编译的，新增/改动的业务代码以 DLL 形式下发，由解释器执行。两种代码在同一进程里互相调用。</p>
+
+<h2 id="sup-m20-flow" class="hd lv2">接入与热更流程</h2>
+<pre class="code" data-lang="csharp"><code>// 1) 安装：UPM 添加 HybridCLR 包 + 执行 Installer（会改 IL2CPP 源码并重新生成）
+// 2) 程序集拆分：HotUpdate 程序集不参与主包编译，作为 DLL 下发
+// 3) 主包里保留一个 AOT 的启动流程，负责加载热更 DLL
+
+// 4) 运行时加载（示意）
+var dllBytes = await LoadBytesAsync("HotUpdate.dll");
+var pdbBytes = await LoadBytesAsync("HotUpdate.pdb");   // 可选，保留堆栈行号
+
+Assembly hot = Assembly.Load(dllBytes, pdbBytes);
+hot.GetType("Game.Bootstrap")?.GetMethod("Start")?.Invoke(null, null);</code></pre>
+
+<h2 id="sup-m20-aot" class="hd lv2">AOT 泛型：唯一会让人通宵的问题</h2>
+<p class="tx">IL2CPP 在编译期就把泛型实例「特化」成具体代码。热更 DLL 里如果用了主包从未出现过的泛型组合（比如 <code>Dictionary&lt;int, MyNewClass&gt;</code>），AOT 侧没有这份代码，运行时就会抛 MissingMetadataException。</p>
+<ul class="bl">
+<li>做法一：在 AOT 工程里写一个「引用补齐」静态类，把可能用到的泛型实例都 new 一遍。</li>
+<li>做法二：用 HybridCLR 的 AOTGenericReferences 扫描热更程序集，自动生成补齐代码。</li>
+<li>做法三：反射调用的方法/属性要写进 link.xml，防止被 IL2CPP 裁剪。</li>
+</ul>
+
+<h3 id="sup-m20-pit" class="hd lv3">其它高频问题</h3>
+<ul class="bl">
+<li><b>编辑器正常、真机崩</b>：九成是 AOT 泛型缺口或裁剪，先在真机跑一轮全流程。</li>
+<li><b>热更代码引用了主包不存在的类</b>：DLL 一加载就 TypeLoadException，加载顺序要保证主包类型已就绪。</li>
+<li><b>版本错配</b>：主包与热更 DLL 必须成对发布，用版本号强校验，不匹配就回退。</li>
+<li><b>调试</b>：保留 pdb 才能看到热更代码的行号堆栈，否则只有一串 0x 地址。</li>
+</ul>
+</div>
+
+    </article>
+    <footer class="pnbar"><a class="pn prev" href="m19.html"><span>上一节</span>Addressables 资源管理 - 小游戏</a><a class="pn next" href="m21.html"><span>下一节</span>Unity 进阶之性能优化</a></footer>
+  </main>
+</div>
+<button class="totop" id="totop">↑</button>
+<script src="assets/demos.js"></script>
+<script src="assets/diagrams-data.js"></script>
+<script src="assets/diagram.js"></script>
+<script src="assets/app.js"></script>
+<script>window.__mountDiagrams && window.__mountDiagrams();</script>
+</body>
+</html>

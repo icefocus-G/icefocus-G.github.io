@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>UniTask · Unity 交互课件</title>
+<link rel="stylesheet" href="assets/style.css">
+<link rel="stylesheet" href="assets/diagram.css">
+</head>
+<body data-mid="m10">
+<header class="top">
+  <a class="brand" href="index.html"><span class="logo">U</span><b>Unity</b><i>交互课件</i></a>
+  <div class="crumb"><span>游戏引擎相关</span><em>/</em><strong>UniTask</strong></div>
+  <div class="top-r">
+    <span class="stat">278 字 · 0 代码 · 0 图 · 0 表</span>
+    <button class="mini" id="btnNav">目录</button>
+  </div>
+</header>
+<div class="wrap">
+  <aside class="side" id="side">
+    <div class="side-h">本篇目录</div>
+    <nav class="tocbox"><a class="toc lv2" href="#sup-m10-why">为什么不用原生 Task</a><a class="toc lv2" href="#sup-m10-api">最常用的几组 API</a><a class="toc lv3" href="#sup-m10-pit">四个必踩的坑</a></nav>
+    <div class="side-h">全部模块</div>
+    <nav class="navbox"><div class="ng"><div class="ngt">开发经验补充</div><a href="m01.html">Unity - 进阶 - 大纲</a><a href="m02.html">Unity 进阶之视频播放</a><a href="m03.html">Unity - 进阶 - C# 补充</a><a href="m04.html">Unity 网络开发基础</a><a href="m05.html">Unity 程序框架</a></div><div class="ng"><div class="ngt">游戏引擎相关</div><a href="m06.html">Unity_入门</a><a href="m07.html">Unity_入门 - 实践项目</a><a href="m08.html">Unity_基础</a><a href="m09.html">Unity 核心</a><a href="m10.html" class="on">UniTask</a></div><div class="ng"><div class="ngt">数据持久化</div><a href="m11.html">Unity 进阶之 ScriptableObject</a><a href="m12.html">Unity_数据持久化 - PlayerPrefs</a><a href="m13.html">Unity_数据持久化 - Newtonsoft-Json</a><a href="m14.html">MessagePack-CSharp - 二进制</a><a href="m26.html">Unity 数据持久化 - Binary 2 进制</a></div><div class="ng"><div class="ngt">界面 UI 相关</div><a href="m15.html">Unity-UGUI</a><a href="m16.html">Unity-UGUI - 进阶 - TextMeshPro</a><a href="m27.html">Unity_GUI 概述（编辑器用）</a></div><div class="ng"><div class="ngt">设备输入相关</div><a href="m17.html">Unity 进阶之 InputSystem</a></div><div class="ng"><div class="ngt">热更相关</div><a href="m18.html">YooAsset 资源管理 - 大游戏</a><a href="m19.html">Addressables 资源管理 - 小游戏</a><a href="m20.html">HybridCLR - 代码业务逻辑</a></div><div class="ng"><div class="ngt">性能优化相关</div><a href="m21.html">Unity 进阶之性能优化</a><a href="m22.html">Unity 背包里装 10w 个道具</a></div><div class="ng"><div class="ngt">SDK 相关</div><div class="ngempty">预留分类 · 后续补充</div></div><div class="ng"><div class="ngt">游戏打包相关</div><a href="m23.html">Unity 移动平台相关 — IOS</a><a href="m24.html">Unity 移动平台相关 — Android</a><a href="m25.html">unity_00 - 数学公式和物理公式</a></div></nav>
+  </aside>
+  <main class="main">
+    <div class="mhead">
+      <div class="kick">游戏引擎相关</div>
+      <h1>UniTask</h1>
+      <p class="msub">零 GC 异步与 Unity 集成</p>
+      <div class="chips"><span>278 字原稿</span><span>0 段代码</span><span>0 张配图</span><span>0 个表格</span></div>
+    </div>
+    <article class="doc">
+<div class="runsec"><div class="runsec-h">本模块可运行验证<span>纯 C# · 无需 Unity · 点右下按钮真实编译执行</span></div><div class="cpair"><div class="chead"><span class="lang">C#</span><span class="csp"></span><button class="mini copy">复制</button><button class="mini run" data-run>真实运行</button></div><pre class="code" data-lang="csharp"><code>// UniTask：串行等待与并行等待的耗时差异
+using System.Diagnostics;
+
+void Load(string name, int ms)
+{
+    Thread.Sleep(ms);
+    Console.WriteLine($"  完成 {name} ({ms}ms)");
+}
+
+var sw = Stopwatch.StartNew();
+Console.WriteLine("串行：一个等完再等下一个");
+Load("配置表", 200);
+Load("图集", 300);
+Load("场景", 250);
+sw.Stop();
+Console.WriteLine($"串行总耗时 {sw.ElapsedMilliseconds}ms");
+
+Console.WriteLine();
+sw.Restart();
+Console.WriteLine("并行：同时发起，等最慢的那个");
+var t1 = Task.Run(() =&gt; Load("配置表", 200));
+var t2 = Task.Run(() =&gt; Load("图集", 300));
+var t3 = Task.Run(() =&gt; Load("场景", 250));
+Task.WaitAll(t1, t2, t3);
+sw.Stop();
+Console.WriteLine($"并行总耗时 {sw.ElapsedMilliseconds}ms");
+Console.WriteLine();
+Console.WriteLine("结论：无依赖的加载一律并行。Unity 里换 UniTask.WhenAll，语义相同但不产生 GC 分配。");</code></pre><div class="cout" hidden></div></div></div><div class="demo" data-demo="unitask"><div class="demo-bar"><span class="dot"></span>UniTask 调度时序<span class="demo-tag">交互演示</span></div><div class="demo-body"><div class="demo-loading">加载中…</div></div></div>
+<p class="tx">替换说明2：协程（StartCoroutine）→ UniTask。原因：协程不可 await、不可 try/catch、产生 GC，UniTask 用 async/await 写法更现代、零 GC。</p>
+<p class="tx">异步语法库（UniTask），解决的是：需要等待某件事完成（加载、动画、点击、网络），但不能把游戏卡死，同时避免丑陋的回调嵌套</p>
+<p class="tx">🛠 用途：Unity 新一代 UI（USS/UXML，类 CSS 写法）——编辑器工具 UI 与未来游戏 UI 的官方方向。</p>
+<ul class="bl"><li>✅最显眼用途：过场加载、切换关卡（你印象中的）</li><li>✅隐藏用途：游戏对局内等待动画、等待玩家点击按钮、短延时流程</li></ul>
+<div class="sup">
+<div class="sup-t">原稿此篇极短 · 以下为补充整理 <i>非语雀原文</i></div>
+
+<h2 id="sup-m10-why" class="hd lv2">为什么不用原生 Task</h2>
+<p class="tx">原生 <code>Task</code> 基于线程池，await 恢复时默认回到线程池线程而不是 Unity 主线程，回来操作 Transform 就直接崩。UniTask 把「等待」挂到 Unity 的 PlayerLoop 上，全程不离开主线程，也不产生 Task 的分配开销。</p>
+<div class="tw"><table class="tb">
+<tr><td>对比项</td><td>Task</td><td>UniTask</td></tr>
+<tr><td>恢复线程</td><td>线程池</td><td>Unity 主线程（PlayerLoop）</td></tr>
+<tr><td>每帧开销</td><td>分配 Task + 上下文切换</td><td>值类型，0 GC</td></tr>
+<tr><td>与协程互操作</td><td>需要自己桥接</td><td>原生支持 ToUniTask / ToCoroutine</td></tr>
+<tr><td>取消</td><td>CancellationToken</td><td>CancellationToken，且能随 GameObject 销毁自动取消</td></tr>
+</table></div>
+
+<h2 id="sup-m10-api" class="hd lv2">最常用的几组 API</h2>
+<pre class="code" data-lang="csharp"><code>// 1) 等一帧 / 等固定帧
+await UniTask.Yield();
+await UniTask.DelayFrame(3);
+
+// 2) 等时间（受 timeScale 影响，UniTask.Delay 不受影响）
+await UniTask.Delay(TimeSpan.FromSeconds(0.5), ignoreTimeScale: false);
+
+// 3) 等条件成立
+await UniTask.WaitUntil(() =&gt; player.hp &lt;= 0);
+
+// 4) 并行等待
+await UniTask.WhenAll(LoadA(), LoadB(), LoadC());
+
+// 5) 谁先完成用谁
+var (idx, _) = await UniTask.WhenAny(LoadA(), LoadB());
+
+// 6) 绑定生命周期，物体销毁就自动取消
+await LoadAsync(destroyCancellationToken);
+
+// 7) 把协程包成 UniTask
+await someCoroutine.ToUniTask();</code></pre>
+
+<h3 id="sup-m10-pit" class="hd lv3">四个必踩的坑</h3>
+<ul class="bl">
+<li><b>忘了 CancellationToken</b>：物体已销毁、await 还在继续，回来访问已释放对象。</li>
+<li><b>async void</b>：异常会被吞掉且无法等待，除事件回调外一律用 <code>async UniTaskVoid</code> 并显式 Forget。</li>
+<li><b>在非主线程 await 后改 UI</b>：UniTask 保证主线程，但你自己 <code>Task.Run</code> 里的代码仍在后台线程。</li>
+<li><b>UniTask.Delay 与 timeScale</b>：暂停游戏时若还想让计时器走，必须 <code>ignoreTimeScale: true</code>。</li>
+</ul>
+</div>
+
+    </article>
+    <footer class="pnbar"><a class="pn prev" href="m09.html"><span>上一节</span>Unity 核心</a><a class="pn next" href="m11.html"><span>下一节</span>Unity 进阶之 ScriptableObject</a></footer>
+  </main>
+</div>
+<button class="totop" id="totop">↑</button>
+<script src="assets/demos.js"></script>
+<script src="assets/diagrams-data.js"></script>
+<script src="assets/diagram.js"></script>
+<script src="assets/app.js"></script>
+<script>window.__mountDiagrams && window.__mountDiagrams();</script>
+</body>
+</html>

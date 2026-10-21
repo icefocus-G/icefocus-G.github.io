@@ -1,0 +1,853 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Unity-UGUI · Unity 交互课件</title>
+<link rel="stylesheet" href="assets/style.css">
+<link rel="stylesheet" href="assets/diagram.css">
+</head>
+<body data-mid="m15">
+<header class="top">
+  <a class="brand" href="index.html"><span class="logo">U</span><b>Unity</b><i>交互课件</i></a>
+  <div class="crumb"><span>界面 UI 相关</span><em>/</em><strong>Unity-UGUI</strong></div>
+  <div class="top-r">
+    <span class="stat">16326 字 · 35 代码 · 19 图 · 0 表</span>
+    <button class="mini" id="btnNav">目录</button>
+  </div>
+</header>
+<div class="wrap">
+  <aside class="side" id="side">
+    <div class="side-h">本篇目录</div>
+    <nav class="tocbox"><a class="toc lv4" href="#第2章-UGUI基础-六大基础组件-1">第2章: UGUI基础——六大基础组件</a><a class="toc lv4" href="#第3章-UGUI基础-三大基础控件-7">第3章: UGUI基础——三大基础控件</a><a class="toc lv4" href="#第4章-UGUI基础-组合控件-11">第4章: UGUI基础——组合控件</a><a class="toc lv4" href="#第5章-UGUI基础-图集制作-19">第5章: UGUI基础——图集制作</a><a class="toc lv4" href="#第6章-UGUI进阶-21">第6章: UGUI进阶</a><a class="toc lv4" href="#第7章-基础知识点-总结-30">第7章: 基础知识点 总结</a><a class="toc lv4" href="#第8章-UGUI实践小项目-31">第8章: UGUI实践小项目</a></nav>
+    <div class="side-h">全部模块</div>
+    <nav class="navbox"><div class="ng"><div class="ngt">开发经验补充</div><a href="m01.html">Unity - 进阶 - 大纲</a><a href="m02.html">Unity 进阶之视频播放</a><a href="m03.html">Unity - 进阶 - C# 补充</a><a href="m04.html">Unity 网络开发基础</a><a href="m05.html">Unity 程序框架</a></div><div class="ng"><div class="ngt">游戏引擎相关</div><a href="m06.html">Unity_入门</a><a href="m07.html">Unity_入门 - 实践项目</a><a href="m08.html">Unity_基础</a><a href="m09.html">Unity 核心</a><a href="m10.html">UniTask</a></div><div class="ng"><div class="ngt">数据持久化</div><a href="m11.html">Unity 进阶之 ScriptableObject</a><a href="m12.html">Unity_数据持久化 - PlayerPrefs</a><a href="m13.html">Unity_数据持久化 - Newtonsoft-Json</a><a href="m14.html">MessagePack-CSharp - 二进制</a><a href="m26.html">Unity 数据持久化 - Binary 2 进制</a></div><div class="ng"><div class="ngt">界面 UI 相关</div><a href="m15.html" class="on">Unity-UGUI</a><a href="m16.html">Unity-UGUI - 进阶 - TextMeshPro</a><a href="m27.html">Unity_GUI 概述（编辑器用）</a></div><div class="ng"><div class="ngt">设备输入相关</div><a href="m17.html">Unity 进阶之 InputSystem</a></div><div class="ng"><div class="ngt">热更相关</div><a href="m18.html">YooAsset 资源管理 - 大游戏</a><a href="m19.html">Addressables 资源管理 - 小游戏</a><a href="m20.html">HybridCLR - 代码业务逻辑</a></div><div class="ng"><div class="ngt">性能优化相关</div><a href="m21.html">Unity 进阶之性能优化</a><a href="m22.html">Unity 背包里装 10w 个道具</a></div><div class="ng"><div class="ngt">SDK 相关</div><div class="ngempty">预留分类 · 后续补充</div></div><div class="ng"><div class="ngt">游戏打包相关</div><a href="m23.html">Unity 移动平台相关 — IOS</a><a href="m24.html">Unity 移动平台相关 — Android</a><a href="m25.html">unity_00 - 数学公式和物理公式</a></div></nav>
+  </aside>
+  <main class="main">
+    <div class="mhead">
+      <div class="kick">界面 UI 相关</div>
+      <h1>Unity-UGUI</h1>
+      <p class="msub">六大组件与布局系统</p>
+      <div class="chips"><span>16326 字原稿</span><span>35 段代码</span><span>19 张配图</span><span>0 个表格</span></div>
+    </div>
+    <article class="doc">
+<div class="runsec"><div class="runsec-h">本模块可运行验证<span>纯 C# · 无需 Unity · 点右下按钮真实编译执行</span></div><div class="cpair"><div class="chead"><span class="lang">C#</span><span class="csp"></span><button class="mini copy">复制</button><button class="mini run" data-run>真实运行</button></div><pre class="code" data-lang="csharp"><code>// UGUI：CanvasScaler 的参考分辨率与实际缩放
+(double scale, double w, double h) Calc(double sw, double sh, double rw, double rh, double match)
+{
+    double k = Math.Log(sw / rw, 2) * (1 - match) + Math.Log(sh / rh, 2) * match;
+    double scale = Math.Pow(2, k);
+    return (scale, sw / scale, sh / scale);
+}
+
+double rw = 1080, rh = 1920;
+Console.WriteLine($"参考分辨率 {rw}x{rh}");
+Console.WriteLine();
+Console.WriteLine($"{"屏幕",-14}{"Match",-8}{"缩放",-9}{"逻辑尺寸",-16}结果");
+foreach (var (sw, sh, label) in new[] { (1080.0, 1920.0, "1080x1920"), (1080.0, 2340.0, "1080x2340"), (1440.0, 2560.0, "1440x2560"), (2048.0, 1536.0, "2048x1536") })
+{
+    foreach (var match in new[] { 0.0, 0.5, 1.0 })
+    {
+        var (s, w, h) = Calc(sw, sh, rw, rh, match);
+        string tip = Math.Abs((w / h) - (rw / rh)) &gt; 0.05 ? "比例变了，需锚点适配" : "比例一致";
+        Console.WriteLine($"{label,-14}{match,-8}{s,-9:F3}{w,-7:F0}x{h,-7:F0} {tip}");
+    }
+    Console.WriteLine();
+}
+Console.WriteLine("Match=0 只按宽度缩放（竖屏游戏常用），Match=1 只按高度缩放（横屏常用）");
+Console.WriteLine("Match=0.5 两边折中，是最容易「哪边都不对」的设置，需要配合 Safe Area");</code></pre><div class="cout" hidden></div></div></div><div class="demo" data-demo="scaler"><div class="demo-bar"><span class="dot"></span>CanvasScaler 适配计算<span class="demo-tag">交互演示</span></div><div class="demo-body"><div class="demo-loading">加载中…</div></div></div>
+<p class="tx">15 小时 29 分钟 24 秒</p>
+<h4 id="第2章-UGUI基础-六大基础组件-1" class="hd lv4">第2章: UGUI基础——六大基础组件</h4>
+<h6 id="01-Canvas-画布组件-2" class="hd lv6">01-Canvas 画布组件</h6>
+<h6 id="02-CanvasScaler-画布缩放控制器组件-3" class="hd lv6">02-CanvasScaler 画布缩放控制器组件</h6>
+<h6 id="03-Graphic-Raycaster-图形射线投射器-4" class="hd lv6">03-Graphic Raycaster 图形射线投射器</h6>
+<h6 id="04-EventSystem-和-05-Standalone-Iput--5" class="hd lv6">04-EventSystem 和 05-Standalone Iput Module</h6>
+<h6 id="06-RectTransform-6" class="hd lv6">06-RectTransform</h6>
+<h4 id="第3章-UGUI基础-三大基础控件-7" class="hd lv4">第3章: UGUI基础——三大基础控件</h4>
+<h6 id="12-Image-图像控件-知识点-8" class="hd lv6">12 : Image 图像控件 知识点</h6>
+<div class="cpair"><div class="chead"><span class="lang">C#</span><span class="csp"></span><button class="mini copy">复制</button></div><pre class="code" data-lang="csharp"><code>    void Start()
+    {
+        知识点一 Image是什么？
+        //Image是图像组件
+        //是UGUI中用于显示精灵图片的关键组件
+        //除了背景图等大图，一般都使用Image来显示UI中的图片元素
+        --------------------------------------------------------------
+        Image img = this.GetComponent&lt;Image&gt;();
+        //获取当前脚本挂载物体身上的 Image 组件，存到变量 img 里，
+        //如果物体没有 Image 组件，img 会是空，后面代码会报错。
+        img.sprite = Resources.Load&lt;Sprite&gt;("ui_TY_fanhui_01");
+        //图片需要放在 Resources 文件夹
+        (transform as RectTransform).sizeDelta = new Vector2(200, 200);
+         //UGUI 对象的 transform 实际是 RectTransform，这里做类型转换修改大小
+        img.raycastTarget = false;
+        // 关闭图片的射线检测
+        img.color = Color.red;
+        //修改图片渲染颜色
+      
+    }</code></pre><div class="cout" hidden></div></div>
+<h6 id="13-Text-文本控件-知识点-9" class="hd lv6">13 : Text 文本控件 知识点</h6>
+<div class="cpair"><div class="chead"><span class="lang">C#</span><span class="csp"></span><button class="mini copy">复制</button></div><pre class="code" data-lang="csharp"><code>    void Start()
+    {
+        知识点一 Text是什么
+        //Text是文本组件
+        //是UGUI中用于显示文本的关键组件
+        知识点四 边缘线和阴影
+        //边缘线组件 outline
+        //阴影组件 Shadow
+        知识点五 代码控制
+        Text txt = this.GetComponent&lt;Text&gt;();
+        txt.text = "唐老狮 哈哈哈哈哈";        
+    }</code></pre><div class="cout" hidden></div></div>
+<h6 id="14-RawImage-原始图像控件知识点-10" class="hd lv6">14 : RawImage 原始图像控件知识点</h6>
+<p class="tx">接收 Texture、Texture2D、RenderTexture、视频纹理，不要求是 Sprite</p>
+<div class="cpair"><div class="chead"><span class="lang">C#</span><span class="csp"></span><button class="mini copy">复制</button></div><pre class="code" data-lang="csharp"><code>void Start()
+{
+ 知识点一 RawImage是什么
+//RawImage是原始图像组件
+//是UGUI中用于显示任何纹理图片的关键组件
+//它和Image的区别是 一般RawImage用于显示大图
+//(背景图，不需要打入图集的图片，网络下载的图等等)
+ 知识点三 代码控制
+RawImage raw = this.GetComponent&lt;RawImage&gt;();
+raw.texture = Resources.Load&lt;Texture&gt;("ui_TY_lvseshuzi_08");
+raw.uvRect = new Rect(0, 0, 1, 1);</code></pre><div class="cout" hidden></div></div>
+<h4 id="第4章-UGUI基础-组合控件-11" class="hd lv4">第4章: UGUI基础——组合控件</h4>
+<h6 id="15-Button-按钮控件-知识点-12" class="hd lv6">15 : Button 按钮控件 知识点</h6>
+<div class="cpair"><div class="chead"><span class="lang">C#</span><span class="csp"></span><button class="mini copy">复制</button></div><pre class="code" data-lang="csharp"><code>void Start()
+{
+知识点一 Button是什么
+//Button是按钮组件
+//是UGUI中用于处理玩家按钮相关交互的关键组件
+//默认创建的Button由2个对象组成
+//父对象——Button组件依附对象 同时挂载了一个Image组件 作为按钮背景图
+//子对象——按钮文本（可选）
+-------------------------------------------------------------
+知识点三 代码控制
+Button btn = this.GetComponent&lt;Button&gt;();
+btn.interactable = true;
+//鼠标点上控制按钮按钮鼠标悬浮、点击、禁用时的变化效果
+btn.transition = Selectable.Transition.None;
+
+Image img = this.GetComponent&lt;Image&gt;();
+-------------------------------------------------------------
+知识点四 监听点击事件的两种方式
+//点击事件 是 在按钮区域抬起按下一次 就算一次点击
+//1.拖脚本
+//2.代码添加
+btn.onClick.AddListener(ClickBtn2);
+btn.onClick.AddListener(() =&gt; {
+print("123123123");
+});
+
+btn.onClick.RemoveListener(ClickBtn2);
+btn.onClick.RemoveAllListeners();
+
+}
+
+public void ClickBtn()
+{
+print("按钮点击，通过拖代码的形式");
+}
+
+private void ClickBtn2()
+{
+print("按钮点击，通过拖代码的形式2");
+}
+}</code></pre><div class="cout" hidden></div></div>
+<h6 id="16-Toggle-开关控件-知识点-13" class="hd lv6">16 : Toggle 开关控件 知识点</h6>
+<div class="cpair"><div class="chead"><span class="lang">C#</span><span class="csp"></span><button class="mini copy">复制</button></div><pre class="code" data-lang="csharp"><code>void Start()
+{
+ 知识点一 Toggle是什么
+//Toggle是开关组件
+//是UGUI中用于处理玩家单选框多选框相关交互的关键组件
+//开关组件 默认是多选框
+//可以通过配合ToggleGroup组件制作为单选框
+//默认创建的Toggle由4个对象组成
+//父对象——Toggle组件依附
+//子对象——背景图（必备）、选中图（必备）、说明文字（可选）
+-------------------------------------------------------------
+ 知识点三 代码控制
+Toggle tog = this.GetComponent&lt;Toggle&gt;();
+tog.isOn = true;
+print(tog.isOn);
+
+ToggleGroup togGroup = this.GetComponent&lt;ToggleGroup&gt;();
+// 禁止取消全部选择，必须保留一个选中
+togGroup.allowSwitchOff = false;
+
+//可以遍历提供的迭代器 得到当前处于选中状态的 Toggle
+foreach (Toggle item in togGroup.ActiveToggles())
+{
+print(item.name + " " + item.isOn);
+}
+-------------------------------------------------------------    
+ 知识点四 监听事件的两种方式
+//1.拖脚本
+//2.代码添加
+tog.onValueChanged.AddListener(ChangeValue2);
+tog.onValueChanged.AddListener((b) =&gt;
+{
+print("代码监听 状态改变" + b);
+});
+
+}
+
+public void ChangValue(bool isOn)
+{
+print("状态改变" + isOn);
+}
+
+private void ChangeValue2(bool v)
+{
+print("代码监听 状态改变" + v);
+}</code></pre><div class="cout" hidden></div></div>
+<h6 id="17-InputField-文本输入控件-知识点-14" class="hd lv6">17 : InputField 文本输入控件 知识点</h6>
+<div class="cpair"><div class="chead"><span class="lang">C#</span><span class="csp"></span><button class="mini copy">复制</button></div><pre class="code" data-lang="csharp"><code>void Start()
+{
+ 知识点一 InputField是什么
+//InputField是输入字段组件
+//是UGUI中用于处理玩家文本输入相关交互的关键组件
+//默认创建的InputField由3个对象组成
+//父对象——InputField组件依附对象 以及 同时在其上挂载了一个Image作为背景图
+//子对象——文本显示组件（必备）、默认显示文本组件（必备）
+-------------------------------------------------------------     
+ 知识点三 代码控制
+InputField input = this.GetComponent&lt;InputField&gt;();
+print(input.text);
+input.text = "123123123123";
+-------------------------------------------------------------    
+ 知识点四 监听事件的两种方式
+//1.拖脚本
+//2.代码添加
+input.onValueChanged.AddListener((str) =&gt;
+{
+print("代码监听 改变" + str);
+});
+
+input.onEndEdit.AddListener((str) =&gt;
+{
+print("代码监听 结束输入" + str);
+});
+
+}
+
+public void ChangeInput(string str)
+{
+print("改变的输入内容" + str);
+}
+
+public void EndInput(string str)
+{
+print("结束输入时内容" + str);
+}</code></pre><div class="cout" hidden></div></div>
+<h6 id="18-Slider-滑动条控件-知识点-15" class="hd lv6">18 : Slider 滑动条控件 知识点</h6>
+<div class="dgm" data-diagram="25d43847e559" data-img="assets/img/25d43847e559.png"><div class="dgm-head"><span class="dgm-t">Slider 滑动条：滑块位置 = 当前值在 Min~Max 里的比例</span><span class="badge b-pic">语义重绘</span><span class="sp"></span><button class="dgm-tab">看原图</button></div></div>
+<div class="cpair"><div class="chead"><span class="lang">C#</span><span class="csp"></span><button class="mini copy">复制</button></div><pre class="code" data-lang="csharp"><code>void Start()
+{
+ 知识点一 Slider是什么
+//Slider是滑动条组件
+//是UGUI中用于处理滑动条相关交互的关键组件
+//默认创建的Slider由4组对象组成
+//父对象——Slider组件依附的对象
+//子对象——背景图、进度图、滑动块三组对象
+-------------------------------------------------------------
+
+ 知识点三 代码控制
+Slider s = this.GetComponent&lt;Slider&gt;();
+print(s.value);
+-------------------------------------------------------------
+ 知识点四 监听事件的两种方式
+//1.拖脚本
+//2.代码添加
+s.onValueChanged.AddListener((v) =&gt;
+{
+print("代码添加的监听" + v);
+});
+
+}
+
+public void ChangeValue(float v)
+{
+print(v);
+}</code></pre><div class="cout" hidden></div></div>
+<h6 id="19-ScrollBar-滚动条-知识点-16" class="hd lv6">19 : ScrollBar 滚动条 知识点</h6>
+<div class="dgm" data-diagram="bee0ed6c7988" data-img="assets/img/bee0ed6c7988.png"><div class="dgm-head"><span class="dgm-t">ScrollBar 滚动条：手柄长度表示可见比例，位置表示当前偏移</span><span class="badge b-pic">语义重绘</span><span class="sp"></span><button class="dgm-tab">看原图</button></div></div>
+<div class="cpair"><div class="chead"><span class="lang">C#</span><span class="csp"></span><button class="mini copy">复制</button></div><pre class="code" data-lang="csharp"><code>void Start()
+{
+   知识点一 Scrollbar是什么
+//Scrollbar是滚动条组件
+//是UGUI中用于处理滚动条相关交互的关键组件
+
+//默认创建的Scrollbar由2组对象组成
+//父对象——Scrollbar组件依附的对象
+//子对象——滚动块对象
+
+//一般情况下我们不会单独使用滚动条 
+//都是配合ScrollView滚动视图来使用
+-------------------------------------------------------------
+  知识点三 代码控制
+Scrollbar sb = this.GetComponent&lt;Scrollbar&gt;();
+print(sb.value);
+print(sb.size);
+-------------------------------------------------------------
+   知识点四 监听事件的两种方式
+//1.拖脚本
+//2.代码添加
+sb.onValueChanged.AddListener((v) =&gt; {
+print("代码监听的函数" + v);
+});
+
+}
+
+public void ChangeValue(float v)
+{
+print(v);
+}</code></pre><div class="cout" hidden></div></div>
+<h6 id="20-ScrollView-滚动视图-知识点-17" class="hd lv6">20 : ScrollView 滚动视图 知识点</h6>
+<div class="dgm" data-diagram="7f993419d319" data-img="assets/img/7f993419d319.png"><div class="dgm-head"><span class="dgm-t">ScrollView 滚动视图：Viewport 用 Mask 裁切，Content 比它高就能滚</span><span class="badge b-pic">语义重绘</span><span class="sp"></span><button class="dgm-tab">看原图</button></div></div>
+<div class="cpair"><div class="chead"><span class="lang">C#</span><span class="csp"></span><button class="mini copy">复制</button></div><pre class="code" data-lang="csharp"><code>void Start()
+{
+   知识点一 ScrollRect是什么
+//ScrollRect是滚动视图组件
+//是UGUI中用于处理滚动视图相关交互的关键组件
+
+//默认创建的ScrollRect由4组对象组成
+//父对象——ScrollRect组件依附的对象 还有一个Image组件 最为背景图
+//子对象
+//Viewport控制滚动视图可视范围和内容显示
+//Scrollbar Horizontal 水平滚动条
+//Scrollbar Vertical 垂直滚动条
+-------------------------------------------------------------
+  知识点三 代码控制
+ScrollRect sr = this.GetComponent&lt;ScrollRect&gt;();
+//改变内容的大小 具体可以拖动多少 都是根据它的尺寸来的
+//sr.content.sizeDelta = new Vector2(200, 200);
+//改变内容的大小，按照百分比来，常用
+sr.normalizedPosition = new Vector2(0, 0.5f);
+-------------------------------------------------------------
+   知识点四 监听事件的两种方式
+//1.拖脚本
+//2.代码添加
+
+sr.onValueChanged.AddListener((vec) =&gt;
+{
+print(vec);
+});
+
+}
+
+public void ChangeValue(Vector2 v)
+{
+print(v);
+}</code></pre><div class="cout" hidden></div></div>
+<h6 id="21-Dropdown-下拉列表-知识点-18" class="hd lv6">21 : Dropdown 下拉列表 知识点</h6>
+<div class="dgm" data-diagram="9696c76d9a79" data-img="assets/img/9696c76d9a79.png"><div class="dgm-head"><span class="dgm-t">Option A</span><span class="badge b-ocr">文字还原</span><span class="sp"></span><button class="dgm-tab">看原图</button></div></div>
+<div class="cpair"><div class="chead"><span class="lang">C#</span><span class="csp"></span><button class="mini copy">复制</button></div><pre class="code" data-lang="csharp"><code>void Start()
+{
+   知识点一 DropDown是什么
+//DropDown是下拉列表（下拉选单）组件
+//是UGUI中用于处理下拉列表相关交互的关键组件
+//默认创建的DropDown由4组对象组成
+//父对象
+//DropDown组件依附的对象 还有一个Image组件 作为背景图
+//子对象
+//Label是当前选项描述
+//Arrow右侧小箭头
+//Template下拉列表选单
+-------------------------------------------------------------
+   知识点三 代码控制
+Dropdown dd = this.GetComponent&lt;Dropdown&gt;();
+
+print(dd.value);
+//得到 列表中的文本信息 或者图片信息
+print(dd.options[dd.value].text);
+
+//增加 文字或者图片
+dd.options.Add(new Dropdown.OptionData("123123123"));
+-------------------------------------------------------------
+   知识点四 监听事件的两种方式
+//1.拖脚本
+//2.代码添加
+dd.onValueChanged.AddListener((index) =&gt; {
+
+print(index);
+});
+
+}
+
+// Update is called once per frame
+void Update()
+{
+
+}
+
+
+public void ChangeValue(int value)
+{
+print(value);
+}</code></pre><div class="cout" hidden></div></div>
+<h4 id="第5章-UGUI基础-图集制作-19" class="hd lv4">第5章: UGUI基础——图集制作</h4>
+<h6 id="22-图集制作-知识点第6章-UGUI进阶-20" class="hd lv6">22 : 图集制作 知识点第6章: UGUI进阶</h6>
+<p class="tx">开启 所有模式下都能打包图集</p>
+<div class="dgm" data-diagram="9d1e2d66fefa" data-img="assets/img/9d1e2d66fefa.png"><div class="dgm-head"><span class="dgm-t"># Project Settings / Editor</span><span class="badge b-ocr">文字还原</span><span class="sp"></span><button class="dgm-tab">看原图</button></div></div>
+<p class="tx">安装 2D sprite</p>
+<div class="dgm" data-diagram="bf4ec43192be" data-img="assets/img/bf4ec43192be.png"><div class="dgm-head"><span class="dgm-t">Package Manager</span><span class="badge b-ocr">文字还原</span><span class="sp"></span><button class="dgm-tab">看原图</button></div></div>
+<p class="tx">创建图集</p>
+<div class="dgm" data-diagram="91e848c9a04f" data-img="assets/img/91e848c9a04f.png"><div class="dgm-head"><span class="dgm-t">Rename</span><span class="badge b-ocr">文字还原</span><span class="sp"></span><button class="dgm-tab">看原图</button></div></div>
+<div class="dgm" data-diagram="9ba9b886aef0" data-img="assets/img/9ba9b886aef0.png"><div class="dgm-head"><span class="dgm-t">Assets</span><span class="badge b-ocr">文字还原</span><span class="sp"></span><button class="dgm-tab">看原图</button></div></div>
+<p class="tx">打 UI 图集的时候需要取消这 2 项</p>
+<p class="tx">ALLOW ROTATION 会自动旋转 UI 元素 用于紧凑拼接</p>
+<p class="tx">Tight Packing 会把 UI 中有空的位置塞入其他元素破坏 UI 的整体性（看情况去掉，会解压空间，尺寸变小）</p>
+<div class="dgm" data-diagram="f6f6aaacd1f5" data-img="assets/img/f6f6aaacd1f5.png"><div class="dgm-head"><span class="dgm-t">0 Inspector</span><span class="badge b-ocr">文字还原</span><span class="sp"></span><button class="dgm-tab">看原图</button></div></div>
+<p class="tx">这里增加需要打图集的图片</p>
+<div class="dgm" data-diagram="889b74c9f458" data-img="assets/img/889b74c9f458.png"><div class="dgm-head"><span class="dgm-t">Max Texture Size</span><span class="badge b-ocr">文字还原</span><span class="sp"></span><button class="dgm-tab">看原图</button></div></div>
+<div class="cpair"><div class="chead"><span class="lang">C#</span><span class="csp"></span><button class="mini copy">复制</button></div><pre class="code" data-lang="csharp"><code> UGUI和NGUI使用上最大的不同是 NGUI使用前就要打图集
+ UGUI可以再之后再打图集
+
+ 打图集的目的就是减少DrawCall 提高性能
+ 
+ DC就是CPU通知GPU进行一次渲染的命令
+ 如果DC次数较多会导致游戏卡顿
+ 我们可以通过打图集，将小图合并成大图，将本应n次的DC变成1次DC来提高性能
+-------------------------------------------------------------</code></pre><div class="cout" hidden></div></div>
+<div class="cpair"><div class="chead"><span class="lang">C#</span><span class="csp"></span><button class="mini copy">复制</button></div><pre class="code" data-lang="csharp"><code>//加载图集 注意：需要引用命名空间
+
+SpriteAtlas sa = Resources.Load&lt;SpriteAtlas&gt;("MyAlas");
+
+
+//从图集中加载指定名字的小图
+//可以得到图片中指定名字的一张图 ，赋值给IMG
+sa.GetSprite("bk");
+
+}
+
+// Update is called once per frame
+void Update()
+{
+
+}</code></pre><div class="cout" hidden></div></div>
+<h4 id="第6章-UGUI进阶-21" class="hd lv4">第6章: UGUI进阶</h4>
+<h6 id="23-UI事件监听接口-知识点-22" class="hd lv6">23 : UI事件监听接口 知识点</h6>
+<div class="cpair"><div class="chead"><span class="lang">C#</span><span class="csp"></span><button class="mini copy">复制</button></div><pre class="code" data-lang="csharp"><code>using System.Collections;
+using System.Collections.Generic;
+using UnityEngine;
+using UnityEngine.EventSystems;
+
+public class Lesson18 : MonoBehaviour, IPointerEnterHandler, 
+IPointerExitHandler, IPointerDownHandler, IPointerUpHandler, IDragHandler
+{
+    public void OnDrag(PointerEventData eventData)
+    {
+        print(eventData.delta);//得到鼠标移动的多少。
+    }
+
+    public void OnPointerDown(PointerEventData eventData)
+    {
+        print("鼠标（触碰）按下");
+        print(eventData.pointerId);//可以判断鼠标 左，中，右 哪个键按下的的
+
+        print(eventData.position);//当前鼠标的位置
+    }
+
+    public void OnPointerEnter(PointerEventData eventData)
+    {
+        //鼠标进入 在移动设备上 是不存在 因为不存在 进入的概念
+        print("鼠标进入");
+    }
+
+    public void OnPointerExit(PointerEventData eventData)
+    {
+        //鼠标离开 在移动设备上 是不存在 因为不存在 进入的概念
+        print("鼠标离开");
+    }
+
+    public void OnPointerUp(PointerEventData eventData)
+    {
+        print("鼠标（触碰）抬起");
+    }
+}</code></pre><div class="cout" hidden></div></div>
+<div class="cpair"><div class="chead"><span class="lang">C#</span><span class="csp"></span><button class="mini copy">复制</button></div><pre class="code" data-lang="csharp"><code> void Start()
+ {
+
+目前所有的控件都只提供了常用的事件监听列表
+如果想做一些类似长按，双击，拖拽等功能是无法制作的
+或者想让Image和Text，RawImage三大基础控件能够响应玩家输入也是无法制作的
+
+而事件接口就是用来处理类似问题
+让所有控件都能够添加更多的事件监听来处理对应的逻辑</code></pre><div class="cout" hidden></div></div>
+<div class="cpair"><div class="chead"><span class="lang">C#</span><span class="csp"></span><button class="mini copy">复制</button></div><pre class="code" data-lang="csharp"><code>IPointerEnterHandler - OnPointerEnter - 当指针进入对象时调用 （鼠标进入）
+IPointerExitHandler - OnPointerExit - 当指针退出对象时调用 （鼠标离开）
+IPointerDownHandler - OnPointerDown - 在对象上按下指针时调用 （按下）
+IPointerUpHandler - OnPointerUp - 松开指针时调用（在指针正在点击的游戏对象上调用）（抬起）
+IPointerClickHandler - OnPointerClick - 在同一对象上按下再松开指针时调用 （点击）
+IBeginDragHandler - OnBeginDrag - 即将开始拖动时在拖动对象上调用 （开始拖拽）
+IDragHandler - OnDrag - 发生拖动时在拖动对象上调用 （拖拽中）
+IEndDragHandler - OnEndDrag - 拖动完成时在拖动对象上调用 （结束拖拽）</code></pre><div class="cout" hidden></div></div>
+<div class="cpair"><div class="chead"><span class="lang">C#</span><span class="csp"></span><button class="mini copy">复制</button></div><pre class="code" data-lang="csharp"><code>IInitializePotentialDragHandler - OnInitializePotentialDrag - 
+    在找到拖动目标时调用，可用于初始化值
+    
+IDropHandler - OnDrop - 在拖动目标对象上调用
+IScrollHandler - OnScroll - 当鼠标滚轮滚动时调用
+IUpdateSelectedHandler - OnUpdateSelected - 每次勾选时在选定对象上调用
+ISelectHandler - OnSelect - 当对象成为选定对象时调用
+IDeselectHandler - OnDeselect - 取消选择选定对象时调用</code></pre><div class="cout" hidden></div></div>
+<div class="cpair"><div class="chead"><span class="lang">C#</span><span class="csp"></span><button class="mini copy">复制</button></div><pre class="code" data-lang="csharp"><code>IMoveHandler - OnMove - 发生移动事件（上、下、左、右等）时调用
+ISubmitHandler - OnSubmit - 按下 Submit 按钮时调用
+ICancelHandler - OnCancel - 按下 Cancel 按钮时调用</code></pre><div class="cout" hidden></div></div>
+<div class="cpair"><div class="chead"><span class="lang">C#</span><span class="csp"></span><button class="mini copy">复制</button></div><pre class="code" data-lang="csharp"><code>1.继承MonoBehavior的脚本继承对应的事件接口，引用命名空间
+2.实现接口中的内容
+3.将该脚本挂载到想要监听自定义事件的UI控件上</code></pre><div class="cout" hidden></div></div>
+<div class="cpair"><div class="chead"><span class="lang">C#</span><span class="csp"></span><button class="mini copy">复制</button></div><pre class="code" data-lang="csharp"><code>父类：BaseEventData
+pointerId： 鼠标左右中键点击鼠标的ID 通过它可以判断右键点击
+position：当前指针位置（屏幕坐标系）
+pressPosition：按下的时候指针的位置
+delta：指针移动增量
+clickCount：连击次数
+clickTime：点击时间
+
+pressEventCamera：最后一个OnPointerPress按下事件关联的摄像机
+enterEvetnCamera：最后一个OnPointerEnter进入事件关联的摄像机</code></pre><div class="cout" hidden></div></div>
+<div class="cpair"><div class="chead"><span class="lang">C#</span><span class="csp"></span><button class="mini copy">复制</button></div><pre class="code" data-lang="csharp"><code>好处：
+需要监听自定义事件的控件挂载继承实现了接口的脚本就可以监听到一些特殊事件
+可以通过它实现一些长按，双击拖拽等功能
+
+坏处：
+不方便管理，需要自己写脚本继承接口挂载到对应控件上，比较麻烦</code></pre><div class="cout" hidden></div></div>
+<h6 id="24-EventTrigger-事件触发器-知识点-23" class="hd lv6">24 : EventTrigger 事件触发器 知识点</h6>
+<p class="tx">是 : UI事件监听接口 的封装，unity 写好的，不用我们再去写具体的代码和继承多个接口</p>
+<div class="cpair"><div class="chead"><span class="lang">C#</span><span class="csp"></span><button class="mini copy">复制</button></div><pre class="code" data-lang="csharp"><code>public class Lesson19 : MonoBehaviour
+{
+public EventTrigger et;
+
+// Start is called before the first frame update
+void Start()
+{
+知识点一 事件触发器是什么
+//事件触发器是EventTrigger组件
+//它是一个集成了上节课中学习的所有事件接口的脚本
+//它可以让我们更方便的为控件添加事件监听
+-------------------------------------------------------------</code></pre><div class="cout" hidden></div></div>
+<div class="cpair"><div class="chead"><span class="lang">C#</span><span class="csp"></span><button class="mini copy">复制</button></div><pre class="code" data-lang="csharp"><code>通过代码实现 抬起监听
+//申明一个希望监听的事件对象
+EventTrigger.Entry entry = new EventTrigger.Entry();
+//申明 事件的类型
+entry.eventID = EventTriggerType.PointerUP;
+//监听函数关联
+entry.callback.AddListener((data) =&gt;
+{
+print("抬起");
+});
+//把申明好的 事件对象 加入到 EventTrigger当中
+et.triggers.Add(entry);
+----------------------------------------------------------------------------------------
+拖动监听
+    
+entry = new EventTrigger.Entry();
+//申明 事件的类型
+entry.eventID = EventTriggerType.BeginDrag; //这里改事件的类型
+//监听函数关联
+entry.callback.AddListener((data) =&gt;
+{
+print("拖动");
+});
+et.triggers.Add(entry);
+
+------------------------------------------------------------------------------------
+开始拖动监听
+
+entry = new EventTrigger.Entry();
+//申明 事件的类型
+entry.eventID = EventTriggerType.BeginDrag;
+//监听函数关联
+entry.callback.AddListener((data) =&gt;
+{
+print("开始拖动");
+});
+et.triggers.Add(entry);
+
+总结
+//EventTrigger可以让我们写更少的代码
+//可以在面板类中处理面板控件的事件逻辑，更加的面向对象，便于管理
+
+}</code></pre><div class="cout" hidden></div></div>
+<div class="cpair"><div class="chead"><span class="lang">C#</span><span class="csp"></span><button class="mini copy">复制</button></div><pre class="code" data-lang="csharp"><code>public void TestPointerEnter( BaseEventData data )
+{
+ BaseEventData父类转换成PointerEventData子类后，就可以使用子类里面的一些方法了
+PointerEventData eventData = data as PointerEventData;
+
+print("鼠标进入 " + eventData.position);
+}</code></pre><div class="cout" hidden></div></div>
+<h6 id="25-屏幕坐标转UI相对坐标-知识点-24" class="hd lv6">25 : 屏幕坐标转UI相对坐标 知识点</h6>
+<div class="dgm" data-diagram="9de803be0f92" data-img="assets/img/9de803be0f92.png"><div class="dgm-head"><span class="dgm-t">屏幕坐标转 UI 相对坐标：屏幕点 → UI 矩形内的局部点</span><span class="badge b-pic">语义重绘</span><span class="sp"></span><button class="dgm-tab">看原图</button></div></div>
+<p class="tx">用于 遥感 和装备拖拽。</p>
+<div class="cpair"><div class="chead"><span class="lang">C#</span><span class="csp"></span><button class="mini copy">复制</button></div><pre class="code" data-lang="csharp"><code>public class Lesson20 : MonoBehaviour,IDragHandler
+{
+public RectTransform parent;
+
+// Start is called before the first frame update
+void Start()
+{
+   知识点一 RectTransformUtility类
+//RectTransformUtility 公共类是一个RectTransform的辅助类
+//主要用于进行一些 坐标的转换等等操作
+//其中对于我们目前来说 最重要的函数是 将屏幕空间上的点，转换成UI本地坐标下的点
+
+}
+-------------------------------------------------------------
+public void OnDrag(PointerEventData eventData)
+{
+   知识点二 将屏幕坐标转换为UI本地坐标系下的点
+//方法：
+//RectTransformUtility.ScreenPointToLocalPointInRectangle
+////参数一：相对父对象
+////参数二：屏幕点
+////参数三：摄像机
+////参数四：最终得到的点
+////一般配合拖拽事件使用
+Vector2 nowPos;
+RectTransformUtility.ScreenPointToLocalPointInRectangle(
+parent,
+eventData.position,
+eventData.enterEventCamera,
+out nowPos );
+
+this.transform.localPosition = nowPos;
+
+//this.transform.position += new Vector3(eventData.delta.x, eventData.delta.y, 0);
+
+}</code></pre><div class="cout" hidden></div></div>
+<h6 id="26-Mask遮罩-知识点-25" class="hd lv6">26 : Mask遮罩 知识点</h6>
+<div class="cpair"><div class="chead"><span class="lang">C#</span><span class="csp"></span><button class="mini copy">复制</button></div><pre class="code" data-lang="csharp"><code>public class Lesson21 : MonoBehaviour
+{
+// Start is called before the first frame update
+void Start()
+{
+   知识点一 遮罩是什么
+//在不改变图片的情况下
+//让图片在游戏中只显示其中的一部分
+-------------------------------------------------------------
+   知识点二 遮罩如何使用
+//实现遮罩效果的关键组件时Mask组件
+//通过在父对象上添加Mask组件即可遮罩其子对象
+
+//注意：
+//1.想要被遮罩的Image需要勾选Maskable
+//2.只要父对象添加了Mask组件，那么所有的UI子对象都会被遮罩
+//3.遮罩父对象图片的制作，不透明的地方显示，透明的地方被遮罩
+
+}
+
+// Update is called once per frame</code></pre><div class="cout" hidden></div></div>
+<h6 id="27-模型和粒子显示在UI之前-知识点-26" class="hd lv6">27 : 模型和粒子显示在UI之前 知识点</h6>
+<div class="cpair"><div class="chead"><span class="lang">C#</span><span class="csp"></span><button class="mini copy">复制</button></div><pre class="code" data-lang="csharp"><code>public class Lesson22 : MonoBehaviour
+{
+// Start is called before the first frame update
+void Start()
+{
+   知识点一 模型显示在UI之前
+
+   方法一：直接用摄像机渲染3D物体
+//Canvas的渲染模式要不是覆盖模式
+//摄像机模式 和 世界(3D)模式都可以让模型显示在UI之前（Z轴在UI元素之前即可）
+
+//注意：
+//1.摄像机模式时建议用专门的摄像机渲染UI相关
+//2.面板上的3D物体建议也用UI摄像机进行渲染
+
+
+   方法二：将3D物体渲染在图片上，通过图片显示
+//专门使用一个摄像机渲染3D模型，将其渲染内容输出到Render Texture上
+//类似小地图的制作方式
+//再将渲染的图显示在UI上
+
+//该方式 不管Canvas的渲染模式是哪种都可以使用
+-------------------------------------------------------------
+
+   知识点二 粒子特效显示在UI之前
+
+//粒子特效的显示和3D物体类似
+
+//注意点：
+//在摄像机模式下时
+//可以在粒子组件的Renderer相关参数中改变排序层 让粒子特效始终显示在其之前不受Z轴影响
+
+}
+
+// Update is called once per frame</code></pre><div class="cout" hidden></div></div>
+<h6 id="28-异形按钮-知识点-27" class="hd lv6">28 : 异形按钮 知识点</h6>
+<div class="dgm" data-diagram="d13ce13a512a" data-img="assets/img/d13ce13a512a.png"><div class="dgm-head"><span class="dgm-t">异形按钮：按钮外观是图片，但点击范围由 Raycast 判定</span><span class="badge b-pic">语义重绘</span><span class="sp"></span><button class="dgm-tab">看原图</button></div></div>
+<p class="tx">透明区域不能点击，</p>
+<div class="cpair"><div class="chead"><span class="lang">C#</span><span class="csp"></span><button class="mini copy">复制</button></div><pre class="code" data-lang="csharp"><code>public class Lesson23 : MonoBehaviour
+{
+public Image img;
+// Start is called before the first frame update
+void Start()
+{
+   知识点一 什么是异形按钮
+//图片形状不是传统矩形的按钮
+-------------------------------------------------------------
+   知识点二 如何让异形按钮能够准确点击
+
+   方法一 通过添加子对象的形式
+//按钮之所以能够响应点击，主要是根据图片矩形范围进行判断的
+//它的范围判断是自下而上的，意思是如果有子对象图片，子对象图片的范围也会算为可点击范围
+//那么我们就可以用多个透明图拼凑不规则图形作为按钮子对象用于进行射线检测
+
+
+ </code></pre><div class="cout" hidden></div></div>
+<div class="cpair"><div class="chead"><span class="lang">C#</span><span class="csp"></span><button class="mini copy">复制</button></div><pre class="code" data-lang="csharp"><code>   
+//1.第一步：修改图片参数 开启Read/Write Enabled开关
+//2.第二步：通过代码修改图片的响应阈值
+
+//该参数含义：指定一个像素必须具有的最小alpha值，以变能够认为射线命中了图片
+
+       
+//说人话：当像素点alpha值小于了 该值 就不会被射线检测了
+
+       
+img.alphaHitTestMinimumThreshold = 0.1f;
+
+更消耗内存性能</code></pre><div class="cout" hidden></div></div>
+<h6 id="29-自动布局组件-知识点-28" class="hd lv6">29 : 自动布局组件 知识点</h6>
+<div class="cpair"><div class="chead"><span class="lang">C#</span><span class="csp"></span><button class="mini copy">复制</button></div><pre class="code" data-lang="csharp"><code>//虽然UGUI的RectTransform已经非常方便的可以帮助我们快速布局
+//但UGUI中还提供了很多可以帮助我们对UI控件进行自动布局的组件
+//他们可以帮助我们自动的设置UI控件的位置和大小等
+
+//自动布局的工作方式一般是
+//自动布局控制组件 + 布局元素 = 自动布局
+
+//自动布局控制组件：Unity提供了很多用于自动布局的管理性质的组件用于布局
+//布局元素：具备布局属性的对象们，这里主要是指具备RectTransform的UI组件
+
+   知识点一 问题：如何整体控制一个面板的淡入淡出等
+//如果我们想要整体控制一个面板的淡入淡出 或者 整体禁用
+//使用目前学习的知识点 是无法方便快捷的设置的
+ </code></pre><div class="cout" hidden></div></div>
+<div class="dgm" data-diagram="6373625ddb0d" data-img="assets/img/6373625ddb0d.png"><div class="dgm-head"><span class="dgm-t">Imagev</span><span class="badge b-ocr">文字还原</span><span class="sp"></span><button class="dgm-tab">看原图</button></div></div>
+<div class="dgm" data-diagram="fbb96406a041" data-img="assets/img/fbb96406a041.png"><div class="dgm-head"><span class="dgm-t">Layout Properties</span><span class="badge b-ocr">文字还原</span><span class="sp"></span><button class="dgm-tab">看原图</button></div></div>
+<div class="cpair"><div class="chead"><span class="lang">C#</span><span class="csp"></span><button class="mini copy">复制</button></div><pre class="code" data-lang="csharp"><code>//要参与自动布局的布局元素必须包含布局属性
+//布局属性主要有以下几条
+//Minmum width：该布局元素应具有的最小宽度
+//Minmum height：该布局元素应具有的最小高度
+
+//Preferred width：在分配额外可用宽度之前，此布局元素应具有的宽度
+//Preferred height：在分配额外可用高度之前，此布局元素应具有的高度。
+
+//Flexible width：此布局元素应相对于其同级而填充的额外可用宽度的相对量
+//Flexible height：此布局元素应相对于其同级而填充的额外可用宽度的相对量
+
+//在进行自动布局时 都会通过计算布局元素中的这6个属性得到控件的大小位置
+
+//在布局时，布局元素大小设置的基本规则是
+//1.首先分配最小大小Minmum width和Minmum height
+//2.如果父类容器中有足够的可用空间，则分配Preferred width和Preferred height
+//3.如果上面两条分配完成后还有额外空间，则分配Flexible width和Flexible height
+
+//一般情况下布局元素的这些属性都是0
+//但是特定的UI组件依附的对象布局属性会被改变，比如Image和Text
+
+//一般情况下我们不会去手动修改他们，但是如果你有这些需求
+//可以手动添加一个LayoutElement组件 可以修改这些布局属性
+=====================================================================================
+   知识点二 解决方案：Canvas Group
+//为面板父对象添加 CanvasGroup组件 即可整体控制
+
+//参数相关：
+//Alpha：整体透明度控制
+//Interactable:整体启用禁用设置
+//Blocks Raycasts：整体射线检测设置
+//Ignore Parent Groups：是否忽略父级CanvasGroup的作用</code></pre><div class="cout" hidden></div></div>
+<div class="dgm" data-diagram="4cda72feeb82" data-img="assets/img/4cda72feeb82.png"><div class="dgm-head"><span class="dgm-t">Umage</span><span class="badge b-ocr">文字还原</span><span class="sp"></span><button class="dgm-tab">看原图</button></div></div>
+<div class="dgm" data-diagram="0077f5b57da0" data-img="assets/img/0077f5b57da0.png"><div class="dgm-head"><span class="dgm-t">Materlal</span><span class="badge b-ocr">文字还原</span><span class="sp"></span><button class="dgm-tab">看原图</button></div></div>
+<div class="dgm" data-diagram="73b45fbac48f" data-img="assets/img/73b45fbac48f.png"><div class="dgm-head"><span class="dgm-t">Source Image</span><span class="badge b-ocr">文字还原</span><span class="sp"></span><button class="dgm-tab">看原图</button></div></div>
+<div class="cpair"><div class="chead"><span class="lang">C#</span><span class="csp"></span><button class="mini copy">复制</button></div><pre class="code" data-lang="csharp"><code> 
+   
+//水平垂直布局组件
+//将子对象并排或者竖直的放在一起
+
+//组件名：Horizontal Layout Group 和 Vertical Layout Group
+//参数相关：
+//Padding：左右上下边缘偏移位置
+//Spacing:子对象之间的间距
+
+//ChildAlignment:九宫格对其方式
+//Control Child Size：是否控制子对象的宽高
+//Use Child Scale：在设置子对象大小和布局时，是否考虑子对象的缩放
+//Child Force Expand：是否强制子对象拓展以填充额外可用空间
+ </code></pre><div class="cout" hidden></div></div>
+<div class="dgm" data-diagram="cfa3d6c84307" data-img="assets/img/cfa3d6c84307.png"><div class="dgm-head"><span class="dgm-t">w PayS</span><span class="badge b-ocr">文字还原</span><span class="sp"></span><button class="dgm-tab">看原图</button></div></div>
+<div class="cpair"><div class="chead"><span class="lang">C#</span><span class="csp"></span><button class="mini copy">复制</button></div><pre class="code" data-lang="csharp"><code>//网格布局组件
+//将子对象当成一个个的格子设置他们的大小和位置
+
+//组件名：Grid Layout Group
+//参数相关：
+//Padding：左右上下边缘偏移位置
+//Cell Size：每个格子的大小
+//Spacing：格子间隔
+//Start Corner:第一个元素所在位置（4个角）
+//Start Axis：沿哪个轴放置元素；Horizontal水平放置满换行，Vertical竖直放置满换列
+//Child Alignment：格子对其方式（9宫格）
+//Constraint：行列约束
+//  Flexible：灵活模式，根据容器大小自动适应
+//  Fixed Column Count：固定列数
+//  Fixed Row Count：固定行数</code></pre><div class="cout" hidden></div></div>
+<div class="dgm" data-diagram="95b8e04f7f4f" data-img="assets/img/95b8e04f7f4f.png"><div class="dgm-head"><span class="dgm-t">• Info</span><span class="badge b-ocr">文字还原</span><span class="sp"></span><button class="dgm-tab">看原图</button></div></div>
+<div class="cpair"><div class="chead"><span class="lang">C#</span><span class="csp"></span><button class="mini copy">复制</button></div><pre class="code" data-lang="csharp"><code>   
+//内容大小适配器
+//它可以自动的调整RectTransform的长宽来让组件自动设置大小
+//一般在Text上使用 或者 配合其它布局组件一起使用
+
+//组件名：Content Size Fitter
+//参数相关
+//Horizontal Fit：如何控制宽度
+//Vertical Fit:如何控制高度
+
+//Unconstrained：不根据布局元素伸展
+//Min Size：根据布局元素的最小宽高度来伸展
+//Preferred Size：根据布局元素的偏好宽度来伸展宽度。</code></pre><div class="cout" hidden></div></div>
+<div class="cpair"><div class="chead"><span class="lang">C#</span><span class="csp"></span><button class="mini copy">复制</button></div><pre class="code" data-lang="csharp"><code>   
+//宽高比适配器
+//1.让布局元素按照一定比例来调整自己的大小
+//2.使布局元素在父对象内部根据父对象大小进行适配
+
+//组件名：Aspect Ratio Fitter
+//参数相关：
+//Aspect Mode：适配模式，如果调整矩形大小来实施宽高比
+//  None：不让矩形适应宽高比
+//  Width Controls Height：根据宽度自动调整高度
+//  Height Controls Width：根据高度自动调整宽度
+//  Fit In Parent：自动调整宽度、高度、位置和锚点，使矩形适应父项的矩形，同时保持宽高比，会出现“黑边”
+//  Envelope Parent：自动调整宽度、高度、位置和锚点，使矩形覆盖父项的整个区域，同时保持宽高比，会出现“裁剪”
+
+//Aspect Ratio：宽高比；宽除以高的比值</code></pre><div class="cout" hidden></div></div>
+<h6 id="30-Canvas-Group-知识点-29" class="hd lv6">30 : Canvas Group 知识点</h6>
+<div class="cpair"><div class="chead"><span class="lang">C#</span><span class="csp"></span><button class="mini copy">复制</button></div><pre class="code" data-lang="csharp"><code>voidStart()
+{
+知识点一问题：如何整体控制一个面板的淡入淡出等
+如果我们想要整体控制一个面板的淡入淡出或者整体禁用
+使用目前学习的知识点是无法方便快捷的设置的
+
+
+知识点二解决方案：CanvasGroup
+为面板父对象添加CanvasGroup组件即可整体控制
+
+参数相关：
+Alpha：整体透明度控制
+Interactable:整体启用禁用设置
+BlocksRaycasts：整体射线检测设置
+IgnoreParentGroups：是否忽略父级CanvasGroup的作用
+
+}</code></pre><div class="cout" hidden></div></div>
+<h4 id="第7章-基础知识点-总结-30" class="hd lv4">第7章: 基础知识点 总结</h4>
+<h4 id="第8章-UGUI实践小项目-31" class="hd lv4">第8章: UGUI实践小项目</h4>
+    </article>
+    <footer class="pnbar"><a class="pn prev" href="m14.html"><span>上一节</span>MessagePack-CSharp - 二进制</a><a class="pn next" href="m16.html"><span>下一节</span>Unity-UGUI - 进阶 - TextMeshPro</a></footer>
+  </main>
+</div>
+<button class="totop" id="totop">↑</button>
+<script src="assets/demos.js"></script>
+<script src="assets/diagrams-data.js"></script>
+<script src="assets/diagram.js"></script>
+<script src="assets/app.js"></script>
+<script>window.__mountDiagrams && window.__mountDiagrams();</script>
+</body>
+</html>

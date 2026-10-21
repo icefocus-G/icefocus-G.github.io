@@ -1,0 +1,24 @@
+{
+  "cn": "Unity 引擎基础",
+  "en": "Unity Engine",
+  "code": "UNITY",
+  "ico": "🎮",
+  "order": 3,
+  "status": "live",
+  "theme": "#7c3aed",
+  "desc": "语雀《Unity》笔记还原成 27 个模块的交互课件：371 张配图全部重做过——可拖动结构图 / 真排版公式 / 语义重绘 / 截图 OCR 文字还原，代码框可高亮复制。",
+  "mods": [
+    "27 模块",
+    "320 张图",
+    "11 条公式",
+    "816 代码框"
+  ],
+  "entry": "index.html",
+  "note": "阅读型课件，无判分题库",
+  "_说明": [
+    "entry 相对本课程目录，直接指向课件首页 index.html（不走 shell/study.html 通用壳）。",
+    "本课程没有题库，故不填 storage / total —— 课程中心会按「阅读型」显示，不出现「已判分 0 题」。",
+    "内页 m01.html ~ m27.html 与 index.html 同级，另有 assets/ 存放样式、脚本、371 张原图。",
+    "start.command / runner.js 是本地真实运行 C# 用的；线上静态托管跑不了编译，页面上会提示降级说明。"
+  ]
+}

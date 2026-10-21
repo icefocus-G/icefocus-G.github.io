@@ -1,0 +1,140 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>YooAsset 资源管理 - 大游戏 · Unity 交互课件</title>
+<link rel="stylesheet" href="assets/style.css">
+<link rel="stylesheet" href="assets/diagram.css">
+</head>
+<body data-mid="m18">
+<header class="top">
+  <a class="brand" href="index.html"><span class="logo">U</span><b>Unity</b><i>交互课件</i></a>
+  <div class="crumb"><span>热更相关</span><em>/</em><strong>YooAsset 资源管理 - 大游戏</strong></div>
+  <div class="top-r">
+    <span class="stat">原稿空白 · 已补充</span>
+    <button class="mini" id="btnNav">目录</button>
+  </div>
+</header>
+<div class="wrap">
+  <aside class="side" id="side">
+    <div class="side-h">本篇目录</div>
+    <nav class="tocbox"><a class="toc lv2" href="#sup-m18-arch">YooAsset 解决什么问题</a><a class="toc lv2" href="#sup-m18-init">启动六步</a><a class="toc lv3" href="#sup-m18-pit">五个关键坑</a></nav>
+    <div class="side-h">全部模块</div>
+    <nav class="navbox"><div class="ng"><div class="ngt">开发经验补充</div><a href="m01.html">Unity - 进阶 - 大纲</a><a href="m02.html">Unity 进阶之视频播放</a><a href="m03.html">Unity - 进阶 - C# 补充</a><a href="m04.html">Unity 网络开发基础</a><a href="m05.html">Unity 程序框架</a></div><div class="ng"><div class="ngt">游戏引擎相关</div><a href="m06.html">Unity_入门</a><a href="m07.html">Unity_入门 - 实践项目</a><a href="m08.html">Unity_基础</a><a href="m09.html">Unity 核心</a><a href="m10.html">UniTask</a></div><div class="ng"><div class="ngt">数据持久化</div><a href="m11.html">Unity 进阶之 ScriptableObject</a><a href="m12.html">Unity_数据持久化 - PlayerPrefs</a><a href="m13.html">Unity_数据持久化 - Newtonsoft-Json</a><a href="m14.html">MessagePack-CSharp - 二进制</a><a href="m26.html">Unity 数据持久化 - Binary 2 进制</a></div><div class="ng"><div class="ngt">界面 UI 相关</div><a href="m15.html">Unity-UGUI</a><a href="m16.html">Unity-UGUI - 进阶 - TextMeshPro</a><a href="m27.html">Unity_GUI 概述（编辑器用）</a></div><div class="ng"><div class="ngt">设备输入相关</div><a href="m17.html">Unity 进阶之 InputSystem</a></div><div class="ng"><div class="ngt">热更相关</div><a href="m18.html" class="on">YooAsset 资源管理 - 大游戏</a><a href="m19.html">Addressables 资源管理 - 小游戏</a><a href="m20.html">HybridCLR - 代码业务逻辑</a></div><div class="ng"><div class="ngt">性能优化相关</div><a href="m21.html">Unity 进阶之性能优化</a><a href="m22.html">Unity 背包里装 10w 个道具</a></div><div class="ng"><div class="ngt">SDK 相关</div><div class="ngempty">预留分类 · 后续补充</div></div><div class="ng"><div class="ngt">游戏打包相关</div><a href="m23.html">Unity 移动平台相关 — IOS</a><a href="m24.html">Unity 移动平台相关 — Android</a><a href="m25.html">unity_00 - 数学公式和物理公式</a></div></nav>
+  </aside>
+  <main class="main">
+    <div class="mhead">
+      <div class="kick">热更相关</div>
+      <h1>YooAsset 资源管理 - 大游戏</h1>
+      <p class="msub">可寻址资源与热更新管线</p>
+      <div class="chips"><span class="warn">语雀原稿为空</span><span>本页内容为补充整理</span></div>
+    </div>
+    <article class="doc">
+<div class="runsec"><div class="runsec-h">本模块可运行验证<span>纯 C# · 无需 Unity · 点右下按钮真实编译执行</span></div><div class="cpair"><div class="chead"><span class="lang">C#</span><span class="csp"></span><button class="mini copy">复制</button><button class="mini run" data-run>真实运行</button></div><pre class="code" data-lang="csharp"><code>// YooAsset：构建补丁清单（哈希比对生成增量包）
+var local = new Dictionary&lt;string, (string hash, int size)&gt;
+{
+    ["ui/login.prefab"] = ("a1b2", 2048),
+    ["ui/main.prefab"] = ("c3d4", 4096),
+    ["audio/bgm.ogg"] = ("e5f6", 1048576),
+    ["scene/battle.unity"] = ("1122", 524288)
+};
+
+var remote = new Dictionary&lt;string, (string hash, int size)&gt;
+{
+    ["ui/login.prefab"] = ("a1b2", 2048),          // 没变
+    ["ui/main.prefab"] = ("9988", 4608),           // 改了
+    ["audio/bgm.ogg"] = ("e5f6", 1048576),         // 没变
+    ["scene/battle.unity"] = ("1122", 524288),     // 没变
+    ["scene/boss.unity"] = ("3344", 655360),       // 新增
+    ["ui/shop.prefab"] = ("5566", 3072)            // 新增
+};
+
+var add = remote.Keys.Where(k =&gt; !local.ContainsKey(k)).ToList();
+var update = remote.Keys.Where(k =&gt; local.ContainsKey(k) &amp;&amp; local[k].hash != remote[k].hash).ToList();
+var del = local.Keys.Where(k =&gt; !remote.ContainsKey(k)).ToList();
+var keep = remote.Keys.Except(add).Except(update).ToList();
+
+int Sum(IEnumerable&lt;string&gt; ks) =&gt; ks.Sum(k =&gt; remote.TryGetValue(k, out var v) ? v.size : 0);
+
+Console.WriteLine($"总资源 {remote.Count} 个，清单比对结果：");
+Console.WriteLine($"  新增 {add.Count,2} 个：{string.Join(", ", add)}");
+Console.WriteLine($"  变更 {update.Count,2} 个：{string.Join(", ", update)}");
+Console.WriteLine($"  删除 {del.Count,2} 个：{(del.Count == 0 ? "无" : string.Join(", ", del))}");
+Console.WriteLine($"  未变 {keep.Count,2} 个");
+Console.WriteLine();
+Console.WriteLine($"本次需下载 {Sum(add) + Sum(update)} 字节（{((Sum(add) + Sum(update)) / 1024.0):F1} KB）");
+Console.WriteLine($"全量包需下载 {Sum(remote.Keys)} 字节（{(Sum(remote.Keys) / 1024.0):F1} KB）");
+Console.WriteLine();
+Console.WriteLine("结论：增量包只传「哈希变了」的文件，这就是热更省流量的核心；");
+Console.WriteLine("      清单文件本身也要带版本号，否则客户端不知道去哪拿新清单。");</code></pre><div class="cout" hidden></div></div></div><div class="demo" data-demo="yooasset"><div class="demo-bar"><span class="dot"></span>YooAsset 启动六步<span class="demo-tag">交互演示</span></div><div class="demo-body"><div class="demo-loading">加载中…</div></div></div>
+<div class="sup">
+<div class="sup-t">原稿此篇为空（语雀 word_count = 0）· 以下为补充整理 <i>非语雀原文</i></div>
+
+<h2 id="sup-m18-arch" class="hd lv2">YooAsset 解决什么问题</h2>
+<p class="tx">Resources 目录不可热更、不能按需卸载；AssetBundle 原生 API 又要自己管依赖、引用计数、版本号、下载队列。YooAsset 把这一整套收口成「资源包 + 清单 + 下载器」三层，你只面对「加载」和「更新」两个动作，适合包体大、要长期热更的项目。</p>
+<div class="tw"><table class="tb">
+<tr><td>模块</td><td>职责</td></tr>
+<tr><td>资源收集</td><td>按规则把资源划进 Bundle（按目录 / 按标签 / 单文件）</td></tr>
+<tr><td>构建管线</td><td>打 Bundle、生成清单、计算哈希、输出补丁包</td></tr>
+<tr><td>运行模式</td><td>Editor 模拟 / 单机内置 / 联机联机热更</td></tr>
+<tr><td>下载器</td><td>并发下载、断点续传、失败重试、进度回调</td></tr>
+</table></div>
+
+<h2 id="sup-m18-init" class="hd lv2">启动六步</h2>
+<pre class="code" data-lang="csharp"><code>// 1) 创建 Package
+var package = YooAssets.CreatePackage("DefaultPackage");
+
+// 2) 初始化参数（运行模式决定资源从哪来）
+var initParams = new EditorSimulateModeParameters { SimulateManifestFilePath = EditorSimulateModeHelper.SimulateBuild("DefaultPackage") };
+// 联机模式用 HostPlayModeParameters，需指定远端地址与内置地址
+
+var initOp = package.InitializeAsync(initParams);
+await initOp.ToUniTask();
+
+// 3) 请求版本（拿到最新清单的版本号）
+var versionOp = package.UpdatePackageVersionAsync();
+await versionOp.ToUniTask();
+
+// 4) 更新清单
+var manifestOp = package.UpdatePackageManifestAsync(versionOp.PackageVersion);
+await manifestOp.ToUniTask();
+
+// 5) 创建下载器并下载（只在需要热更时）
+var downloader = package.CreateResourceDownloader(10, 3);
+if (downloader.TotalDownloadCount &gt; 0)
+{
+    downloader.DownloadProgressChanged += (total, current) =&gt; { /* 进度条 */ };
+    downloader.BeginDownload();
+    await downloader.ToUniTask();
+}
+
+// 6) 正常加载
+var handle = package.LoadAssetAsync&lt;GameObject&gt;("Assets/Res/UI/Login.prefab");
+await handle.ToUniTask();
+var prefab = handle.AssetObject as GameObject;
+// 用完必须释放
+handle.Release();</code></pre>
+
+<h3 id="sup-m18-pit" class="hd lv3">五个关键坑</h3>
+<ul class="bl">
+<li><b>资源收集规则</b>：把经常一起用的资源放同一个 Bundle，否则一个界面加载会拉起十几个包。</li>
+<li><b>清单版本号</b>：远端清单和本地清单版本不一致时必须先更新清单再加载，否则哈希对不上。</li>
+<li><b>句柄不释放</b>：<code>Release()</code> 才是引用计数减一，忘记释放内存只涨不降。</li>
+<li><b>异步加载的 Task 泄漏</b>：用 <code>await handle.ToUniTask()</code> 时要带 CancellationToken。</li>
+<li><b>主包内置资源</b>：首屏必须能打开的资源要放内置（StreamingAssets），否则没网就进不去游戏。</li>
+</ul>
+</div>
+
+    </article>
+    <footer class="pnbar"><a class="pn prev" href="m17.html"><span>上一节</span>Unity 进阶之 InputSystem</a><a class="pn next" href="m19.html"><span>下一节</span>Addressables 资源管理 - 小游戏</a></footer>
+  </main>
+</div>
+<button class="totop" id="totop">↑</button>
+<script src="assets/demos.js"></script>
+<script src="assets/diagrams-data.js"></script>
+<script src="assets/diagram.js"></script>
+<script src="assets/app.js"></script>
+<script>window.__mountDiagrams && window.__mountDiagrams();</script>
+</body>
+</html>
