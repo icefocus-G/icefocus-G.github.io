@@ -1,0 +1,23 @@
+{
+  "cn": "Unity 基础小框架 · 图解教科书",
+  "en": "Unity Mini Framework Book",
+  "code": "UNITYBOOK",
+  "ico": "📘",
+  "order": 4,
+  "status": "live",
+  "theme": "#0ea5e9",
+  "desc": "基于 75 个课时源码整理的图解教科书：从零搭建一套可复用的 Unity 基础框架，章节式阅读、全文搜索、图示讲解，单文件离线可读。",
+  "mods": [
+    "图解教科书",
+    "全文搜索",
+    "章节导航",
+    "离线可读"
+  ],
+  "entry": "index.html",
+  "note": "阅读型课件，无判分题库",
+  "_说明": [
+    "entry 指向本目录里的单文件教科书 index.html，不走 shell/study.html 通用壳。",
+    "整本书自包含（样式、数据、图片全部内联），无外部依赖，离线双击也能读。",
+    "左上角「课程中心」可随时返回 /examination/。"
+  ]
+}
