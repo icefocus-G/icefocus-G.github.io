@@ -200,7 +200,7 @@ body{
 .qnav a.done{opacity:.45}
 
 /* 名词解释 / 概述 / 计算 卡 */
-.tlist{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}
+.tlist{display:grid;grid-template-columns:1fr;gap:10px}
 /* 计算题：每行只显示一个题目（单列纵向排列） */
 .clist{display:flex;flex-direction:column;gap:13px}
 .clist .titem .th .tx{font-size:14.5px}
@@ -869,9 +869,13 @@ body{
 #ifDock .ffreehint{margin-top:10px;padding:9px 11px;font-size:11.5px;line-height:1.85}
 #ifDock .ffreehint kbd,#ifDock .ffreehint code{font-size:11px;padding:0 5px}
 
-/* ===== 两列题目卡片：点中的那条整行展开 + 蓝色选中态 ===== */
+/* ===== 两列独立纵向列表：左列展开不影响右列 ===== */
+.tlist.t2{display:flex;align-items:flex-start;gap:12px}
+.tlist.t2 > .tcol{flex:1 1 0;min-width:0;display:flex;flex-direction:column;gap:10px}
+@media(max-width:1000px){
+  .tlist.t2{flex-direction:column}
+}
 .tlist .titem{position:relative}
-.tlist .titem.on{grid-column:1/-1}
 .titem.on{
   border-color:var(--pri,#3b6ef0);
   background:linear-gradient(180deg,#eff5ff,#fff);
@@ -2136,8 +2140,8 @@ function renderMust(){
 
   const boxO = (list, cls) => {
     if (!list.length) return '';
-    let h = `<div class="tlist">`;
-    list.forEach(o => {
+    const cards = [];
+    list.forEach((o, i) => {
       const tags = [];
       if (o.freq >= 1) tags.push(`<span class="freqb f${cls}">真题 ${o.freq} 次</span>`);
       else if (o.hot) tags.push(`<span class="freqb f${cls}">2026 预测热点</span>`);
@@ -2145,7 +2149,7 @@ function renderMust(){
       if (o.chtag) tags.push(`<span class="chip">${esc(o.chtag)}</span>`);
       if (o.score != null) tags.push(`<span class="chip sc">${o.score} 分</span>`);
       const dim = o.dim ? `真题 ${o.dim['真题']} ＋ 考纲 ${o.dim['考纲']} ＋ 大纲核心 ${o.dim['大纲']} ＋ 考点权重 ${o.dim['考点']} ＋ 网考情 ${o.dim['网考情']}` : '';
-      h += `<div class="titem ${o.hit || ''}">
+      cards.push(`<div class="titem ${o.hit || ''}" style="order:${i}">
         <div class="th" onclick="toggleCard(this)">
           <span class="tx">${esc(o.q)}</span>${tags.join('')}<span class="ar">▶</span>
         </div>
@@ -2157,9 +2161,9 @@ function renderMust(){
           ${dim ? `<div class="dimb"><b>评分依据</b>${esc(dim)}</div>` : ''}
           ${dateLine(o)}
           <div class="src"><span class="pill b">来源</span><span>${esc(o.from || '')}</span></div>
-        </div></div>`;
+        </div></div>`);
     });
-    return h + `</div>`;
+    return twoCols(cards);
   };
   const boxT = (list, cls) => `<div class="tgrid">` + list.map(t => {
     const dim = t.dim ? `考纲 ${t.dim['考纲']} ＋ 大纲核心 ${t.dim['大纲']} ＋ 考点权重 ${t.dim['考点']} ＋ 网考情 ${t.dim['网考情']}` : '';
@@ -2382,6 +2386,23 @@ let TERMS = DB.terms.slice();
 let termFlt = 'all';
 const HIT_LABEL = {hot: '必背', warm: '重点', low: '了解', real: '真题'};
 function hitCls(o){ return o.hit || ''; }
+/* 两列各自独立成列：点左列某条只在左列下方展开，右列标题位置纹丝不动 */
+function twoCols(cards){
+  if (window.innerWidth <= 1000) return `<div class="tlist">${cards.join('')}</div>`;   // 窄屏单列，顺序不乱
+  const L = [], R = [];
+  cards.forEach((c, i) => (i % 2 ? R : L).push(c));
+  return `<div class="tlist t2"><div class="tcol">${L.join('')}</div><div class="tcol">${R.join('')}</div></div>`;
+}
+/* 窗口跨过 1000px 断点时重排一次，两列/单列即时切换 */
+window.addEventListener('resize', () => {
+  const wide = window.innerWidth > 1000;
+  if (wide === twoCols.wide) return;
+  twoCols.wide = wide;
+  clearTimeout(twoCols.t);
+  twoCols.t = setTimeout(() => {
+    try { filterTerms(); filterOvers(); renderMust(); renderOutline(); } catch (e) {}
+  }, 220);
+});
 /* 点题目：切换展开 + 选中高亮；卡片被顶出视口时自动拉回可见 */
 function toggleCard(th){
   const it = th.parentNode;
@@ -2455,8 +2476,8 @@ function renderTerms(list){
   const note = (termFlt === 'all')
     ? `<div class="mustnote">🏷️ <b>真题 N 次</b>＝该词在 9 套卷的名词解释题里出现几次（该题型只在 26.04 / 25.10 / 25.04 / 24.10 四套出现，另 5 套考的是判断改错）；<b>必背</b>＝命中率 ≥ 50%，逐字背；<b>重点</b>＝25%–50%，记定义句 ＋ 3 个关键词；<b>真题·已考</b>＝真题原题，本身即重点。列表<b>按最近考试时间从新到旧</b>排列，没考过的排最后。</div>`
     : '';
-  $('#termList').innerHTML = note + list.map((t, i) => `
-    <div class="titem ${hitCls(t)}" data-i="${i}">
+  $('#termList').innerHTML = note + twoCols(list.map((t, i) => `
+    <div class="titem ${hitCls(t)}" data-i="${i}" style="order:${i}">
       <div class="th" onclick="toggleCard(this)">
         <span class="tx">${esc(t.term)}</span>${t.tm ? `<span class="tmb">⏱ ${esc(t.tm)}</span>` : ''}${hitBadge(t)}${freqB(t)}${dateB(t)}<span class="ar">▶</span>
       </div>
@@ -2466,7 +2487,7 @@ function renderTerms(list){
         ${dateLine(t)}
         <div class="src"><span class="pill b">来源</span><span>${esc(t.from || '')}</span></div>
       </div>
-    </div>`).join('');
+    </div>`));
 }
 function setTermFlt(f){
   termFlt = f;
@@ -2537,7 +2558,7 @@ function renderOvers(list){
   let h = (overFlt === 'all')
     ? `<div class="mustnote">🏷️ <b>真题 N 次</b>＝该考点在近 9 套卷主观题里出现的次数（同一考点不同问法合并计数），<b>≥2 次即列必背</b>；<b>真题·已考</b>为真题原题；命中率为考前估计，非命题信息。</div>`
     : '';
-  const CARD = (o, k) => `<div class="titem ${hitCls(o)}" data-k="${k}">
+  const CARD = (o, k, i) => `<div class="titem ${hitCls(o)}" data-k="${k}" style="order:${i}">
         <div class="th" onclick="toggleCard(this)">
           <span class="tx">${esc(o.q)}</span>${overSort === 'time' ? kindB(o) : ''}${o.tm ? `<span class="tmb">⏱ ${esc(o.tm)}</span>` : ''}${hitBadge(o)}${freqB(o)}${dateB(o)}<span class="ar">▶</span>
         </div>
@@ -2554,9 +2575,8 @@ function renderOvers(list){
        ['📐 论述题', list.filter(o => o.kind === '论述题').slice().sort(byExamTime)]];
   GROUPS.forEach(([title, g]) => {
     if (!g.length) return;
-    h += `<div class="grp-h">${title}<span class="cnt">${g.length}</span></div><div class="tlist">`;
-    g.forEach(o => { h += CARD(o, o.kind); });
-    h += `</div>`;
+    h += `<div class="grp-h">${title}<span class="cnt">${g.length}</span></div>`;
+    h += twoCols(g.map((o, i) => CARD(o, o.kind, i)));
   });
   $('#overWrap').innerHTML = h;
 }
@@ -2691,19 +2711,20 @@ function renderOTerms(list){
   let h = '';
   OUT.chapters.forEach(c => {
     const g = byCh[c.id]; if (!g || !g.length) return;
-    h += `<div class="grp-h">第 ${c.n} 章 · ${esc(c.t)}<span class="cnt">${g.length}</span></div><div class="tlist">`;
+    h += `<div class="grp-h">第 ${c.n} 章 · ${esc(c.t)}<span class="cnt">${g.length}</span></div>`;
+    const cards = [];
     g.forEach((t, i) => {
       const ktag = t.kind === '口诀' ? '<span class="pill y" style="margin-left:6px">口诀</span>' : '';
-      h += `<div class="titem" data-i="${i}">
+      cards.push(`<div class="titem" data-i="${i}" style="order:${i}">
         <div class="th" onclick="toggleCard(this)">
           <span class="tx">${esc(t.term)}${ktag}</span><span class="ar">▶</span></div>
         <div class="tb">
           <div class="lb">背诵要点</div>
           <div class="ct">${esc(t.ans)}</div>
           <div class="src"><span class="pill b">第 ${esc(t.chn)} 章</span><span>${esc(t.cht)}</span></div>
-        </div></div>`;
+        </div></div>`);
     });
-    h += `</div>`;
+    h += twoCols(cards);
   });
   $('#otermList').innerHTML = h;
 }
@@ -2720,10 +2741,11 @@ function renderOOvers(list){
   let h = '';
   OUT.chapters.forEach(c => {
     const g = byCh[c.id]; if (!g || !g.length) return;
-    h += `<div class="grp-h">第 ${c.n} 章 · ${esc(c.t)}<span class="cnt">${g.length}</span></div><div class="tlist">`;
+    h += `<div class="grp-h">第 ${c.n} 章 · ${esc(c.t)}<span class="cnt">${g.length}</span></div>`;
+    const cards = [];
     g.forEach((o, i) => {
       const star = o.lv === 'core' ? '<span class="pill r" style="margin-right:6px">⭐必背</span>' : '';
-      h += `<div class="titem" data-i="${i}">
+      cards.push(`<div class="titem" data-i="${i}" style="order:${i}">
         <div class="th" onclick="toggleCard(this)">
           <span class="tx">${star}${esc(o.q)}</span><span class="ar">▶</span></div>
         <div class="tb">
@@ -2731,9 +2753,9 @@ function renderOOvers(list){
           ${o.kw && o.kw.length ? `<div class="ct" style="color:var(--pri);font-size:12.8px;margin-bottom:8px">🔑 ${o.kw.map(k=>esc(k)).join(' ｜ ')}</div>` : ''}
           <div class="ct">${(o.ans || []).map(x => esc(x)).join('\n')}</div>
           <div class="src"><span class="pill b">第 ${esc(o.chn)} 章</span><span>${esc(o.cht)}</span></div>
-        </div></div>`;
+        </div></div>`);
     });
-    h += `</div>`;
+    h += twoCols(cards);
   });
   $('#ooverList').innerHTML = h;
 }
