@@ -889,40 +889,38 @@ body{
 /* 说明条／空状态在列表里也占满整行，不要挤成半列 */
 .tlist > .mustnote,.tlist > .empty,.tlist > .grp-h{grid-column:1/-1}
 @media(max-width:1000px){ .tlist{grid-template-columns:1fr} }
-/* ===== 移动端：题干独占一行，类型/考次/次数等标签另起一行 ===== */
-@media(max-width:760px){
-  .titem .th{
-    display:flex; flex-wrap:wrap; align-items:flex-start;
-    row-gap:8px; column-gap:6px;
-    padding:12px 34px 11px 13px; position:relative;
-  }
-  .titem .th .tx{
-    flex:0 0 100%; width:100%; margin:0;
-    font-size:14.5px; line-height:1.62; font-weight:600;
-  }
-  .titem .th .ar{position:absolute; right:12px; top:14px; margin:0; transform:none}
-  .titem.on .th .ar{transform:rotate(90deg)}
-  /* 标签行：类型、题量、考次次数、考卷徽标统一小一号、紧凑排列 */
-  .titem .th .kindb,
-  .titem .th .tmb,
-  .titem .th .hbtn,
-  .titem .th .freqb,
-  .titem .th .dtb{flex:0 0 auto; margin:0; font-size:10.5px; padding:2px 7px; line-height:1.5}
-  .titem .th .tx + span{margin-left:0}
-  /* 必备清单原本给箭头留 36px 且箭头垂直居中，这里统一成右上角 */
-  #mustWrap .tlist .th{padding-right:34px; row-gap:8px}
-  #mustWrap .tlist .th .tx{flex:0 0 100%}
-  #mustWrap .tlist .th .ar{top:14px; transform:none}
-  #mustWrap .titem.on .th .ar{transform:rotate(90deg)}
-  /* 答案区在手机上窄，正文略收一点、行高放开 */
+/* ===== 题目卡：题干独占一行，类型/考次/次数等标签另起一行（全宽度统一，任何窗口都不会错位） ===== */
+.titem .th{
+  display:flex; flex-wrap:wrap; align-items:flex-start;
+  row-gap:7px; column-gap:6px;
+  padding:12px 34px 12px 13px; position:relative;
+}
+.titem .th .tx{flex:0 0 100%; width:100%; margin:0; line-height:1.62}
+.titem .th .ar{position:absolute; right:12px; top:14px; margin:0; transform:none}
+.titem.on .th .ar{transform:rotate(90deg)}
+/* 标签行：类型、时长、真题·已考、真题 N 次、考卷徽标统一小一号、紧凑横排 */
+.titem .th .kindb,
+.titem .th .tmb,
+.titem .th .hbtn,
+.titem .th .freqb,
+.titem .th .dtb{flex:0 0 auto; margin:0; font-size:10.5px; padding:2px 7px; line-height:1.5}
+.titem .th .tx + span{margin-left:0}
+/* 必备清单原本给箭头留 36px 且箭头垂直居中，这里统一成右上角 */
+#mustWrap .tlist .th{padding-right:34px; row-gap:7px}
+#mustWrap .tlist .th .tx{flex:0 0 100%}
+#mustWrap .tlist .th .ar{top:14px; transform:none}
+#mustWrap .titem.on .th .ar{transform:rotate(90deg)}
+
+/* 窄屏：字号与内边距再收一点，答案区更贴合手机 */
+@media(max-width:1000px){
   .titem .tb{padding:11px 13px 13px}
   .titem .tb .ct{font-size:13.6px; line-height:1.85}
   .titem .tb .dl{gap:5px}
   .dchip{font-size:10.5px}
-  /* 小节标题：标题独占一行，统计说明另起一行，避免标题被挤成竖排 */
-  .sec-h{flex-wrap:wrap;row-gap:3px;align-items:flex-start;font-size:15.5px;line-height:1.5}
+  /* 小节标题：标题一行 + 统计说明一行 */
+  .sec-h{flex-wrap:wrap; row-gap:3px; align-items:flex-start; font-size:15.5px; line-height:1.5}
   .sec-h .dot{margin-top:3px}
-  .sec-h .sub{flex:1 0 100%;margin-left:0;font-size:12px;line-height:1.6}
+  .sec-h .sub{flex:1 0 100%; margin-left:0; font-size:12px; line-height:1.6}
 }
 @media(max-width:390px){
   .titem .th{padding-left:12px}
