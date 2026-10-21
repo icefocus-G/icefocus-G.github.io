@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>C# · 文件 思维导图</title>
+<link rel="stylesheet" href="assets/mm.css">
+</head>
+<body>
+<div id="toolbar">
+  <span class="title">C# · 文件</span>
+  <select id="navSel" title="切换到其他分册"></select>
+  <a href="/examination/" title="返回课程中心">课程中心</a>
+  <div class="sep"></div>
+  <button id="btnZoomOut" title="缩小">−</button>
+  <button id="btnZoomIn" title="放大">＋</button>
+  <button id="btnFit">全览</button>
+  <button id="btnExpand">全部展开</button>
+  <button id="btnCollapse">收起到一级</button>
+  <button id="btnReset">复位</button>
+</div>
+<div id="viewport"><div id="canvas"><svg id="wires"></svg><div id="nodes"></div></div></div>
+<div id="hint">拖动节点移动 · 拖空白处平移 · 滚轮缩放 · 点 ● 折叠展开 · 双击分支进入分册 / 双击节点居中</div>
+<div id="stat"></div>
+<script>window.MM = {
+  title: "C# · 文件 思维导图",
+  current: "b10.html",
+  defaultDepth: 2,
+  nav: [{"href": "index.html", "label": "① 总览 · C# 全图"}, {"href": "b01.html", "label": "01 · 基本框架"}, {"href": "b02.html", "label": "02 · 语法"}, {"href": "b03.html", "label": "03 · 面向对象"}, {"href": "b04.html", "label": "04 · 常用类库"}, {"href": "b05.html", "label": "05 · 枚举"}, {"href": "b06.html", "label": "06 · 数组"}, {"href": "b07.html", "label": "07 · 泛型"}, {"href": "b08.html", "label": "08 · 字符串"}, {"href": "b09.html", "label": "09 · 委托与事件"}, {"href": "b10.html", "label": "10 · 文件"}, {"href": "b11.html", "label": "11 · 异常"}, {"href": "b12.html", "label": "12 · 测试"}, {"href": "b13.html", "label": "13 · 线程"}, {"href": "b14.html", "label": "14 · 反射"}, {"href": "b15.html", "label": "15 · 网络"}, {"href": "b16.html", "label": "16 · 绘图"}, {"href": "b17.html", "label": "17 · Windows"}, {"href": "b18.html", "label": "18 · 数据"}, {"href": "b19.html", "label": "19 · 跨平台"}, {"href": "b20.html", "label": "20 · 处理"}],
+  links: {"基本框架": "b01.html", "语法": "b02.html", "面向对象": "b03.html", "常用类库": "b04.html", "枚举": "b05.html", "数组": "b06.html", "泛型": "b07.html", "字符串": "b08.html", "委托与事件": "b09.html", "文件": "b10.html", "异常": "b11.html", "测试": "b12.html", "线程": "b13.html", "反射": "b14.html", "网络": "b15.html", "绘图": "b16.html", "Windows": "b17.html", "数据": "b18.html", "跨平台": "b19.html", "处理": "b20.html"},
+  data: {"text": "文件", "desc": "《文件》分册", "children": [{"text": "System.IO.Stream 抽象类", "children": [{"text": "主要功能", "children": [{"text": "读取 CanRead、写入 CanWrite、查找 CanSeek、Length 属性"}, {"text": "读写方法", "desc": "Read、Write、ReadByte、WriteByte"}, {"text": "Flush、Close、CopyTo、Dispose"}]}, {"text": "主要派生类", "children": [{"text": "FileStream 文件流", "desc": "以字节流方式读写文件，支持同步/异步"}, {"text": "MemoryStream 内存流", "desc": "内存中读写"}, {"text": "BufferedStream 缓冲流", "desc": "提高读写性能"}, {"text": "GZipStream", "desc": "压缩与解压缩流"}, {"text": "NetworkStream", "desc": "网络流"}]}, {"text": "流操作封装", "children": [{"text": "BinaryReader / BinaryWriter", "desc": "二进制读写"}, {"text": "TextReader / TextWriter 抽象类", "desc": "字符流"}, {"text": "StreamReader / StreamWriter", "desc": "按行读写文本文件，支持编码"}, {"text": "XmlTextReader / XmlTextWriter", "desc": "XML 读写"}]}]}, {"text": "序列化", "desc": "把对象转换为可存储/传输的格式"}, {"text": "文件操作", "children": [{"text": "File 类（静态）", "desc": "对文件整体操作：Copy、Delete、Exists、Move、Open"}, {"text": "Directory 类（静态）", "desc": "文件夹操作"}, {"text": "FileInfo / DirectoryInfo", "desc": "实例方式操作文件/文件夹"}, {"text": "FileSystemInfo 抽象基类", "desc": "FileSystemInfo 引用文件或文件夹"}]}, {"text": "特殊文件夹路径", "desc": "System.Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments 等)"}, {"text": "注册表", "children": [{"text": "概念", "desc": "Windows 系统配置数据库，存储系统与应用程序设置"}, {"text": "树状结构", "children": [{"text": "五大根键 HKEY", "children": [{"text": "HKEY_CLASSES_ROOT", "desc": "文件类型与 COM 信息"}, {"text": "HKEY_CURRENT_USER", "desc": "当前登录用户配置"}, {"text": "HKEY_LOCAL_MACHINE", "desc": "本机硬件与系统配置"}, {"text": "HKEY_USERS / HKEY_CURRENT_CONFIG / HKEY_PERFORMANCE_DATA"}]}, {"text": "键值对", "desc": "名称+数据（REG_SZ 字符串、REG_DWORD 等）"}]}, {"text": "操作类", "desc": "Registry / RegistryKey 类；OpenSubKey、CreateSubKey、GetValue、SetValue、DeleteSubKeyTree、GetSubKeyNames"}]}, {"text": "XML 操作", "children": [{"text": "概念", "desc": "可扩展标记语言，用于不同系统间交换数据；W3C 标准"}, {"text": "文档对象模型 DOM", "desc": "把 XML 加载为内存中的树结构"}, {"text": "主要类型", "desc": "XmlDocument / XmlNode / XmlElement / XmlAttribute"}, {"text": "LINQ to XML", "desc": "XDocument、XElement，更简洁的 XML 操作方式"}, {"text": "SAX", "desc": "Simple API for XML，事件驱动的顺序解析"}, {"text": "读写类", "desc": "XmlNodeReader / XmlTextWriter"}]}, {"text": "JSON 解析", "children": [{"text": "概念", "desc": "JavaScript Object Notation，轻量级数据交换格式"}, {"text": "常用库", "desc": "Newtonsoft.Json"}]}]}
+};</script>
+<script src="assets/mm.js"></script>
+</body>
+</html>

@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>C# · 线程 思维导图</title>
+<link rel="stylesheet" href="assets/mm.css">
+</head>
+<body>
+<div id="toolbar">
+  <span class="title">C# · 线程</span>
+  <select id="navSel" title="切换到其他分册"></select>
+  <a href="/examination/" title="返回课程中心">课程中心</a>
+  <div class="sep"></div>
+  <button id="btnZoomOut" title="缩小">−</button>
+  <button id="btnZoomIn" title="放大">＋</button>
+  <button id="btnFit">全览</button>
+  <button id="btnExpand">全部展开</button>
+  <button id="btnCollapse">收起到一级</button>
+  <button id="btnReset">复位</button>
+</div>
+<div id="viewport"><div id="canvas"><svg id="wires"></svg><div id="nodes"></div></div></div>
+<div id="hint">拖动节点移动 · 拖空白处平移 · 滚轮缩放 · 点 ● 折叠展开 · 双击分支进入分册 / 双击节点居中</div>
+<div id="stat"></div>
+<script>window.MM = {
+  title: "C# · 线程 思维导图",
+  current: "b13.html",
+  defaultDepth: 2,
+  nav: [{"href": "index.html", "label": "① 总览 · C# 全图"}, {"href": "b01.html", "label": "01 · 基本框架"}, {"href": "b02.html", "label": "02 · 语法"}, {"href": "b03.html", "label": "03 · 面向对象"}, {"href": "b04.html", "label": "04 · 常用类库"}, {"href": "b05.html", "label": "05 · 枚举"}, {"href": "b06.html", "label": "06 · 数组"}, {"href": "b07.html", "label": "07 · 泛型"}, {"href": "b08.html", "label": "08 · 字符串"}, {"href": "b09.html", "label": "09 · 委托与事件"}, {"href": "b10.html", "label": "10 · 文件"}, {"href": "b11.html", "label": "11 · 异常"}, {"href": "b12.html", "label": "12 · 测试"}, {"href": "b13.html", "label": "13 · 线程"}, {"href": "b14.html", "label": "14 · 反射"}, {"href": "b15.html", "label": "15 · 网络"}, {"href": "b16.html", "label": "16 · 绘图"}, {"href": "b17.html", "label": "17 · Windows"}, {"href": "b18.html", "label": "18 · 数据"}, {"href": "b19.html", "label": "19 · 跨平台"}, {"href": "b20.html", "label": "20 · 处理"}],
+  links: {"基本框架": "b01.html", "语法": "b02.html", "面向对象": "b03.html", "常用类库": "b04.html", "枚举": "b05.html", "数组": "b06.html", "泛型": "b07.html", "字符串": "b08.html", "委托与事件": "b09.html", "文件": "b10.html", "异常": "b11.html", "测试": "b12.html", "线程": "b13.html", "反射": "b14.html", "网络": "b15.html", "绘图": "b16.html", "Windows": "b17.html", "数据": "b18.html", "跨平台": "b19.html", "处理": "b20.html"},
+  data: {"text": "线程", "desc": "《线程》分册", "children": [{"text": "System.Threading 命名空间", "desc": "Thread 类"}, {"text": "Thread 类", "children": [{"text": "定义线程", "desc": "Thread tr = new Thread(new ThreadStart(方法名))"}, {"text": "传参数", "desc": "ParameterizedThreadStart，object 参数"}, {"text": "前台/后台线程", "desc": "IsBackground = true 后台线程，主线程结束即终止"}, {"text": "线程池 ThreadPool", "desc": "QueueUserWorkItem 复用线程"}, {"text": "线程休眠 Sleep", "desc": "Thread.Sleep(毫秒)"}, {"text": "挂起/恢复/终止", "desc": "Suspend / Resume / Abort（不建议强制终止）"}, {"text": "Join", "desc": "等待线程结束再继续"}]}, {"text": "lock 锁和 Monitor 锁", "children": [{"text": "线程安全", "desc": "多线程同时访问共享数据可能导致错误"}, {"text": "lock 语句语法", "desc": "private static object o = new Object(); lock(o){ 临界区 }"}, {"text": "Monitor.Enter / Exit", "desc": "lock 是 Monitor 的语法糖"}]}, {"text": "线程同步", "desc": "InterLocked 原子操作，避免竞态条件"}, {"text": "异步编程", "children": [{"text": "async / await", "desc": "异步方法用 async 修饰，返回 Task 或 Task<T>"}, {"text": "await 等待异步操作完成", "desc": "不阻塞线程"}, {"text": "异步方法执行过程", "desc": "方法开始同步执行，遇到 await 让出线程"}, {"text": "异步 Lambda 表达式"}, {"text": "BeginInvoke / EndInvoke", "desc": "基于委托的异步调用（APM 模式）"}]}, {"text": "基于事件的异步模式 EAP", "children": [{"text": "BackgroundWorker 组件", "children": [{"text": "DoWork", "desc": "后台执行的工作"}, {"text": "ProgressChanged", "desc": "进度报告 ReportProgress"}, {"text": "RunWorkerCompleted", "desc": "完成后回调"}, {"text": "CancellationPending", "desc": "取消检测，CancelAsync 取消"}]}]}, {"text": "任务并行库 TPL", "children": [{"text": "Task 类", "children": [{"text": "创建", "desc": "Task t = new Task(方法); t.Start()；Task.Run / Task.Factory.StartNew"}, {"text": "等待任务完成", "desc": "Wait / WaitAll / WaitAny"}, {"text": "任务延续", "desc": "Task.ContinueWith；Task<T>.Result 获取结果"}, {"text": "取消任务", "desc": "CancellationTokenSource / Token"}]}, {"text": "并行", "desc": "Parallel.For / ForEach / Invoke；ParallelLoopState 控制循环"}, {"text": "PLINQ", "desc": "list.AsParallel().Where(...) 并行查询"}]}]}
+};</script>
+<script src="assets/mm.js"></script>
+</body>
+</html>
