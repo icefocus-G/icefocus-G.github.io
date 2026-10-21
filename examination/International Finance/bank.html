@@ -200,7 +200,7 @@ body{
 .qnav a.done{opacity:.45}
 
 /* 名词解释 / 概述 / 计算 卡 */
-.tlist{display:grid;grid-template-columns:1fr;gap:10px}
+.tlist{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}
 /* 计算题：每行只显示一个题目（单列纵向排列） */
 .clist{display:flex;flex-direction:column;gap:13px}
 .clist .titem .th .tx{font-size:14.5px}
@@ -869,6 +869,23 @@ body{
 #ifDock .ffreehint{margin-top:10px;padding:9px 11px;font-size:11.5px;line-height:1.85}
 #ifDock .ffreehint kbd,#ifDock .ffreehint code{font-size:11px;padding:0 5px}
 
+/* ===== 两列题目卡片：点中的那条整行展开 + 蓝色选中态 ===== */
+.tlist .titem{position:relative}
+.tlist .titem.on{grid-column:1/-1}
+.titem.on{
+  border-color:var(--pri,#3b6ef0);
+  background:linear-gradient(180deg,#eff5ff,#fff);
+  box-shadow:0 0 0 2px rgba(59,110,240,.16),0 12px 30px -18px rgba(30,64,175,.55);
+}
+.titem.on::before{content:'';position:absolute;left:0;top:0;bottom:0;width:3px;
+  background:var(--pri,#3b6ef0);border-radius:3px 0 0 3px}
+.titem.on .th{background:#e8f1ff}
+.titem.on .th .tx{color:#1746b8}
+.titem.on .th .ar{color:var(--pri,#3b6ef0)}
+/* 说明条／空状态在列表里也占满整行，不要挤成半列 */
+.tlist > .mustnote,.tlist > .empty,.tlist > .grp-h{grid-column:1/-1}
+@media(max-width:1000px){ .tlist{grid-template-columns:1fr} }
+@media(max-width:640px){ .tlist{grid-template-columns:1fr} }
 </style>
 <link rel="icon" href="../../assets/icon.svg">
 </head>
@@ -1948,7 +1965,7 @@ function renderWrong(){
         const rawAns = String(q.answerText || '').trim();
         const dup = q.analyze && String(q.analyze).trim() === rawAns;
         list += `<div class="witem on">
-          <div class="wh" onclick="this.parentNode.classList.toggle('on')">
+          <div class="wh" onclick="toggleCard(this)">
             <div class="tx">第 ${q.no} 题 · ${esc(q.title)}</div>
             <div class="mk">
               <span class="pill b">${esc(q.type)}</span>
@@ -2129,7 +2146,7 @@ function renderMust(){
       if (o.score != null) tags.push(`<span class="chip sc">${o.score} 分</span>`);
       const dim = o.dim ? `真题 ${o.dim['真题']} ＋ 考纲 ${o.dim['考纲']} ＋ 大纲核心 ${o.dim['大纲']} ＋ 考点权重 ${o.dim['考点']} ＋ 网考情 ${o.dim['网考情']}` : '';
       h += `<div class="titem ${o.hit || ''}">
-        <div class="th" onclick="this.parentNode.classList.toggle('on')">
+        <div class="th" onclick="toggleCard(this)">
           <span class="tx">${esc(o.q)}</span>${tags.join('')}<span class="ar">▶</span>
         </div>
         <div class="tb">
@@ -2147,7 +2164,7 @@ function renderMust(){
   const boxT = (list, cls) => `<div class="tgrid">` + list.map(t => {
     const dim = t.dim ? `考纲 ${t.dim['考纲']} ＋ 大纲核心 ${t.dim['大纲']} ＋ 考点权重 ${t.dim['考点']} ＋ 网考情 ${t.dim['网考情']}` : '';
     return `<div class="titem">
-      <div class="th" onclick="this.parentNode.classList.toggle('on')">
+      <div class="th" onclick="toggleCard(this)">
         <span class="tx">${esc(t.term)}</span>
         ${(t.freq || 0) ? `<span class="freqb f${cls}">真题 ${t.freq} 次</span>` : ''}${dateB(t)}<span class="ar">▶</span>
       </div>
@@ -2219,7 +2236,7 @@ function renderMust(){
         <div class="tlist" style="margin-top:9px">`;
       g.forEach(c => {
         out += `<div class="titem">
-          <div class="th" onclick="this.parentNode.classList.toggle('on')">
+          <div class="th" onclick="toggleCard(this)">
             <span class="tx">${esc(c.q)}</span><span class="chip">${esc(c.examDate || '')}</span><span class="ar">▶</span>
           </div>
           <div class="tb">
@@ -2365,6 +2382,14 @@ let TERMS = DB.terms.slice();
 let termFlt = 'all';
 const HIT_LABEL = {hot: '必背', warm: '重点', low: '了解', real: '真题'};
 function hitCls(o){ return o.hit || ''; }
+/* 点题目：切换展开 + 选中高亮；卡片被顶出视口时自动拉回可见 */
+function toggleCard(th){
+  const it = th.parentNode;
+  const on = it.classList.toggle('on');
+  if (!on) return;
+  const r = it.getBoundingClientRect();
+  if (r.top < 56) window.scrollTo({ top: window.scrollY + r.top - 84, behavior: 'smooth' });
+}
 function hitBadge(o){
   const h = hitCls(o);
   if (!h) return '';
@@ -2432,7 +2457,7 @@ function renderTerms(list){
     : '';
   $('#termList').innerHTML = note + list.map((t, i) => `
     <div class="titem ${hitCls(t)}" data-i="${i}">
-      <div class="th" onclick="this.parentNode.classList.toggle('on')">
+      <div class="th" onclick="toggleCard(this)">
         <span class="tx">${esc(t.term)}</span>${t.tm ? `<span class="tmb">⏱ ${esc(t.tm)}</span>` : ''}${hitBadge(t)}${freqB(t)}${dateB(t)}<span class="ar">▶</span>
       </div>
       <div class="tb">
@@ -2513,7 +2538,7 @@ function renderOvers(list){
     ? `<div class="mustnote">🏷️ <b>真题 N 次</b>＝该考点在近 9 套卷主观题里出现的次数（同一考点不同问法合并计数），<b>≥2 次即列必背</b>；<b>真题·已考</b>为真题原题；命中率为考前估计，非命题信息。</div>`
     : '';
   const CARD = (o, k) => `<div class="titem ${hitCls(o)}" data-k="${k}">
-        <div class="th" onclick="this.parentNode.classList.toggle('on')">
+        <div class="th" onclick="toggleCard(this)">
           <span class="tx">${esc(o.q)}</span>${overSort === 'time' ? kindB(o) : ''}${o.tm ? `<span class="tmb">⏱ ${esc(o.tm)}</span>` : ''}${hitBadge(o)}${freqB(o)}${dateB(o)}<span class="ar">▶</span>
         </div>
         <div class="tb">
@@ -2553,7 +2578,7 @@ function renderCalcs(){
   $('#calcSub').textContent = DB.calcs.length + ' 道 · 含完整解题步骤';
   $('#calcList').innerHTML = DB.calcs.map((c, i) => `
     <div class="titem">
-      <div class="th" onclick="this.parentNode.classList.toggle('on')">
+      <div class="th" onclick="toggleCard(this)">
         <span class="tx">【第 ${i + 1} 题】${esc(c.q)}</span><span class="ar">▶</span>
       </div>
       <div class="tb">
@@ -2670,7 +2695,7 @@ function renderOTerms(list){
     g.forEach((t, i) => {
       const ktag = t.kind === '口诀' ? '<span class="pill y" style="margin-left:6px">口诀</span>' : '';
       h += `<div class="titem" data-i="${i}">
-        <div class="th" onclick="this.parentNode.classList.toggle('on')">
+        <div class="th" onclick="toggleCard(this)">
           <span class="tx">${esc(t.term)}${ktag}</span><span class="ar">▶</span></div>
         <div class="tb">
           <div class="lb">背诵要点</div>
@@ -2699,7 +2724,7 @@ function renderOOvers(list){
     g.forEach((o, i) => {
       const star = o.lv === 'core' ? '<span class="pill r" style="margin-right:6px">⭐必背</span>' : '';
       h += `<div class="titem" data-i="${i}">
-        <div class="th" onclick="this.parentNode.classList.toggle('on')">
+        <div class="th" onclick="toggleCard(this)">
           <span class="tx">${star}${esc(o.q)}</span><span class="ar">▶</span></div>
         <div class="tb">
           <div class="lb">背诵答案${o.kw && o.kw.length ? ' · 记忆锚点' : ''}</div>
@@ -2719,7 +2744,7 @@ function filterOOvers(){
 function renderOCalcs(list){
   $('#ocalcList').innerHTML = list.map((c, i) => `
     <div class="titem">
-      <div class="th" onclick="this.parentNode.classList.toggle('on')">
+      <div class="th" onclick="toggleCard(this)">
         <span class="tx">【第 ${i + 1} 条】${esc(c.name)}${c.f ? '　' + esc(c.f) : ''}</span><span class="ar">▶</span>
       </div>
       <div class="tb">
