@@ -17,6 +17,7 @@
   ],
   "_reserved": "这些目录名不会被当成课程（通用壳 / 模板 / 工具等）。自己命名课程目录时避开它们即可。",
   "fallback": [
+    "CSharp-Map",
     "Course-03",
     "Course-04",
     "Course-05",
@@ -27,7 +28,7 @@
     "Course-10",
     "Course-11",
     "Course-12",
-    "CSharp-Map",
+    "Financial Management",
     "International Finance",
     "Unity",
     "Unity-Book",

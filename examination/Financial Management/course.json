@@ -1,0 +1,25 @@
+{
+  "cn": "财务管理学",
+  "en": "Financial Management",
+  "code": "",
+  "ico": "📐",
+  "order": 6,
+  "status": "live",
+  "theme": "#b8452f",
+  "desc": "公式汇总整理成的 LaTeX 公式手册：8 章 39 节 152 条公式，章节导航 + 全文搜索，公式可一键复制源码，单文件离线可读。",
+  "mods": [
+    "公式手册",
+    "152 条公式",
+    "LaTeX",
+    "可打印"
+  ],
+  "entry": "index.html",
+  "note": "阅读型手册，无判分题库",
+  "_说明": [
+    "entry 指向本目录里的单文件手册 index.html，不走 shell/study.html 通用壳。",
+    "整页自包含：KaTeX 样式与 woff2 字体全部内联，无外部依赖，离线双击也能读。",
+    "公式以 KaTeX 预渲染成静态 HTML（不是运行时 JS 渲染），断网、禁用脚本也不会掉版。",
+    "左上角「课程中心」可随时返回 /examination/。",
+    "本课程没有题库，故不填 storage / total —— 课程中心按「阅读型」显示，不出现「已判分 0 题」。"
+  ]
+}
