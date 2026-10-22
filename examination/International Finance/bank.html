@@ -304,6 +304,23 @@ body{
 .ddnote{font-size:10.5px;color:var(--tx3)}
 .depbtn{font-size:11.5px}
 .depbtn.on{background:#f2f3f5;color:#5f6673;box-shadow:inset 0 0 0 1px #dcdee2}
+/* ---- 🚩「记不住」标记：卡片右侧小旗，点一下标红紫，再点取消 ---- */
+.mkb{flex:0 0 auto;width:26px;height:26px;padding:0;margin-top:-1px;border:1px solid var(--line);
+  background:#fff;border-radius:8px;font-size:13px;line-height:1;color:#fff;cursor:pointer;
+  display:inline-flex;align-items:center;justify-content:center;
+  transition:.15s;filter:grayscale(1);opacity:.4;-webkit-tap-highlight-color:transparent}
+.mkb:hover{opacity:1;filter:none;border-color:#c9b8f5;background:#faf7ff}
+.mkb:active{transform:scale(.92)}
+.mkb.on{opacity:1;filter:none;border-color:#c0abf7;background:#f3eefe;
+  box-shadow:0 0 0 1px rgba(124,58,237,.16)}
+.titem.mk{border-color:#d7c9fb;box-shadow:inset 3px 0 0 #7c3aed}
+.titem.mk:hover{border-color:#bfa6f8;box-shadow:inset 3px 0 0 #7c3aed,0 8px 22px -12px rgba(88,28,135,.32)}
+.tgb.mkchip{color:#6b46c1;border-color:#ddd0fb}
+.tgb.mkchip:hover{color:#5b21b6;border-color:#bfa6f8}
+.tgb.mkchip.on{background:#7c3aed;border-color:transparent;color:#fff;
+  box-shadow:0 6px 16px -8px rgba(124,58,237,.75)}
+.tgb.mkchip .n{font-weight:800;margin-left:2px}
+.tgb.mkchip:not(.on) .n{color:#7c3aed}
 .verbar{display:flex;gap:10px;align-items:flex-start;background:linear-gradient(135deg,#f6f8fc,#fdfaf3);border:1px solid #e6e9f0;border-radius:12px;
   padding:11px 14px;margin:14px 0 4px;font-size:12.5px;line-height:1.75;color:var(--tx2)}
 .verbar b{color:var(--tx1)}
@@ -933,7 +950,7 @@ body{
 
 <div class="hero">
   <h1>国际金融 00076 · 历年真题库</h1>
-  <p>2024 版教材范围 · 历年真题 · 错题本刷题 · 名词解释 · 概述题 · 计算题 · 必考考点</p>
+  <p>2024 版教材范围 · 历年真题 · 错题本刷题 · 名词解释 · 概述题 · 计算题 · 必考考点 · 🚩 记不住标记</p>
   <div class="kpis" id="kpis"></div>
 </div>
 
@@ -978,6 +995,7 @@ body{
         <button class="tgb" data-f="warm" onclick="setTermFlt('warm')">重点</button>
         <button class="tgb" data-f="low" onclick="setTermFlt('low')">了解</button>
         <button class="tgb" data-f="real" onclick="setTermFlt('real')">真题·已考</button>
+        <button class="tgb mkchip" data-mkf="terms" onclick="toggleMkOnly('terms')" title="只看你标记为「记不住」的名词">🚩 只看记不住<span class="n" id="termMkChip">0</span></button>
       </div>
       <div class="verbar"><span class="vb">2024 版</span><div id="verNoteT"></div></div>
       <div class="row" style="margin-bottom:12px">
@@ -1003,6 +1021,7 @@ body{
         <button class="tgb" data-f="warm" onclick="setOverFlt('warm')">重点</button>
         <button class="tgb" data-f="low" onclick="setOverFlt('low')">了解</button>
         <button class="tgb" data-f="real" onclick="setOverFlt('real')">真题·已考</button>
+        <button class="tgb mkchip" data-mkf="overs" onclick="toggleMkOnly('overs')" title="只看你标记为「记不住」的概述题">🚩 只看记不住<span class="n" id="overMkChip">0</span></button>
       </div>
       <div class="tagbar" id="overSortBar">
         <span class="tb-l">排序</span>
@@ -1238,6 +1257,7 @@ body{
         <div class="row" style="margin-bottom:12px">
           <button class="btn" onclick="expandAll('oterms',true)">全部展开</button>
           <button class="btn" onclick="expandAll('oterms',false)">全部收起</button>
+          <button class="tgb mkchip" data-mkf="oterms" onclick="toggleMkOnly('oterms')" title="只看你标记为「记不住」的名词">🚩 只看记不住<span class="n" id="otMkChip">0</span></button>
           <span style="margin-left:auto"></span>
           <input id="otermQ" class="btn" style="cursor:text;min-width:150px" placeholder="🔍 搜索名词…" oninput="filterOTerms()">
         </div>
@@ -1249,6 +1269,7 @@ body{
         <div class="row" style="margin-bottom:12px">
           <button class="btn" onclick="expandAll('oovers',true)">全部展开</button>
           <button class="btn" onclick="expandAll('oovers',false)">全部收起</button>
+          <button class="tgb mkchip" data-mkf="oovers" onclick="toggleMkOnly('oovers')" title="只看你标记为「记不住」的大纲概述题">🚩 只看记不住<span class="n" id="ooMkChip">0</span></button>
           <span style="margin-left:auto"></span>
           <input id="ooverQ" class="btn" style="cursor:text;min-width:150px" placeholder="🔍 搜索题目…" oninput="filterOOvers()">
         </div>
@@ -2500,6 +2521,81 @@ const VER_NOTE = '本页按 <b>2024 版教材</b>（聂利君·人大社，2025 
 ['verNoteT','verNoteO'].forEach(id => { const e = document.getElementById(id); if (e) e.innerHTML = VER_NOTE; });
 $$('.depbtn').forEach(b => { b.textContent = '👁 显示旧版已删（' + (DB.meta.depTotal || 0) + '）'; });
 
+/* ================= 🚩「记不住」标记 =================
+   名词解释 / 概述题的每张卡片右侧有一面小旗：点一下＝记不住（旗标变紫、卡片左侧出现紫条），
+   再点取消。只存一个键 if00076_exam_mark（字符串数组），和其它学习记录同属 IF76 数据包，
+   会被云同步一起提交到 GitHub，换设备也在。
+   键名规则：t|名词 / o|题干 / ot|大纲名词 / oo|大纲题干 —— 四个视图互不影响。 */
+const MK_KEY = 'mark';
+var MK = new Set((store.get(MK_KEY, []) || []).filter(x => typeof x === 'string'));
+var mkOnly = { terms:false, overs:false, oterms:false, oovers:false };
+function mkHas(id){ return MK.has(id); }
+function mkSave(){ store.set(MK_KEY, Array.from(MK)); }
+function mkBtn(id){
+  const on = mkHas(id);
+  return `<button type="button" class="mkb${on ? ' on' : ''}" data-mk="${esc(id)}"`
+    + ` title="记不住？点一下标记，再点取消" aria-label="标记记不住" aria-pressed="${on ? 'true' : 'false'}">🚩</button>`;
+}
+function toggleMark(b){
+  const id = b.dataset.mk;
+  const on = !mkHas(id);
+  if (on) MK.add(id); else MK.delete(id);
+  mkSave();
+  b.classList.toggle('on', on);
+  b.setAttribute('aria-pressed', on ? 'true' : 'false');
+  const it = b.closest && b.closest('.titem');
+  if (it) it.classList.toggle('mk', on);
+  mkRefresh();
+  /* 标记也走云同步：commit() 自带 600ms 防抖，连点不会连推 */
+  try { syncCommit(on ? '标记记不住' : '取消标记'); } catch (e) {}
+  /* 若正开着「只看记不住」，取消标记后这张卡要立即退出列表 */
+  if (mkOnly.terms && it && it.closest('#termList')) filterTerms();
+  else if (mkOnly.overs && it && it.closest('#overWrap')) filterOvers();
+  else if (mkOnly.oterms && it && it.closest('#otermList')) filterOTerms();
+  else if (mkOnly.oovers && it && it.closest('#ooverList')) filterOOvers();
+}
+function mkCount(prefix, arr, keyFn){
+  let n = 0;
+  arr.forEach(x => { if (mkHas(prefix + keyFn(x))) n++; });
+  return n;
+}
+/* 刷新四处的计数徽标 + chip 的选中态（渲染后调用一次即可） */
+function mkRefresh(){
+  try {
+    const chips = [
+      ['termMkChip', 't|',  TERMS,        x => x.term],
+      ['overMkChip', 'o|',  DB.overs,     x => x.q],
+      ['otMkChip',   'ot|', OUT.terms,    x => x.term],
+      ['ooMkChip',   'oo|', OUT.overs,    x => x.q]
+    ];
+    chips.forEach(([id, p, arr, k]) => {
+      const el = document.getElementById(id);
+      if (el && arr) el.textContent = mkCount(p, arr, k);
+    });
+    Object.keys(mkOnly).forEach(v => {
+      const b = document.querySelector('.mkchip[data-mkf="' + v + '"]');
+      if (b) b.classList.toggle('on', !!mkOnly[v]);
+    });
+  } catch (e) { /* OUT 尚未定义等情形，忽略 */ }
+}
+function toggleMkOnly(v){
+  mkOnly[v] = !mkOnly[v];
+  mkRefresh();
+  if (v === 'terms') filterTerms();
+  else if (v === 'overs') filterOvers();
+  else if (v === 'oterms') filterOTerms();
+  else if (v === 'oovers') filterOOvers();
+}
+/* 旗标点击走捕获阶段：先于 .th 的 onclick 拦下，避免点旗标把卡片一起展开 */
+document.addEventListener('click', function (e){
+  const t = e.target;
+  const b = (t && t.closest) ? t.closest('.mkb') : null;
+  if (!b) return;
+  e.preventDefault();
+  e.stopPropagation();
+  toggleMark(b);
+}, true);
+
 function renderTerms(list){
   const all = TERMS;
   const fr = all.filter(t => (t.freq || 0) > 0).length;
@@ -2508,14 +2604,19 @@ function renderTerms(list){
   $('#termSub').textContent = `${all.length} 个名词 · 名词解释真题考过 ${fr} 个`
     + (mx > 0 ? `（最高 ${mx} 次：${top}）` : '')
     + ` · 其余 ${all.length - fr} 个未在真题中出现`;
-  if (!list.length){ $('#termList').innerHTML = '<div class="empty">没有匹配的名词</div>'; return; }
+  if (!list.length){
+    $('#termList').innerHTML = mkOnly.terms
+      ? '<div class="empty">还没有标记任何名词。关掉「只看记不住」，点卡片右侧的 🚩 就能标记。</div>'
+      : '<div class="empty">没有匹配的名词</div>';
+    mkRefresh(); return;
+  }
   const note = (termFlt === 'all')
-    ? `<div class="mustnote">🏷️ <b>真题 N 次</b>＝该词在 9 套卷的名词解释题里出现几次（该题型只在 26.04 / 25.10 / 25.04 / 24.10 四套出现，另 5 套考的是判断改错）；<b>必背</b>＝命中率 ≥ 50%，逐字背；<b>重点</b>＝25%–50%，记定义句 ＋ 3 个关键词；<b>真题·已考</b>＝真题原题，本身即重点。列表<b>按最近考试时间从新到旧</b>排列，没考过的排最后。</div>`
+    ? `<div class="mustnote">🏷️ <b>真题 N 次</b>＝该词在 9 套卷的名词解释题里出现几次（该题型只在 26.04 / 25.10 / 25.04 / 24.10 四套出现，另 5 套考的是判断改错）；<b>必背</b>＝命中率 ≥ 50%，逐字背；<b>重点</b>＝25%–50%，记定义句 ＋ 3 个关键词；<b>真题·已考</b>＝真题原题，本身即重点。列表<b>按最近考试时间从新到旧</b>排列，没考过的排最后。<br>🚩 <b>记不住就点卡片右侧的小旗</b>（旗标变紫、卡片左边出紫条），再点一次取消；点上面的「只看记不住」就只剩标过的，适合考前集中攻。</div>`
     : '';
   $('#termList').innerHTML = note + twoCols(list.map((t, i) => `
-    <div class="titem ${hitCls(t)}" data-i="${i}" style="order:${i}">
+    <div class="titem ${hitCls(t)}${mkHas('t|' + t.term) ? ' mk' : ''}" data-i="${i}" style="order:${i}">
       <div class="th" onclick="toggleCard(this)">
-        <span class="tx">${esc(t.term)}</span>${t.tm ? `<span class="tmb">⏱ ${esc(t.tm)}</span>` : ''}${hitBadge(t)}${freqB(t)}${dateB(t)}<span class="ar">▶</span>
+        <span class="tx">${esc(t.term)}</span>${t.tm ? `<span class="tmb">⏱ ${esc(t.tm)}</span>` : ''}${hitBadge(t)}${freqB(t)}${dateB(t)}${mkBtn('t|' + t.term)}<span class="ar">▶</span>
       </div>
       <div class="tb">
         <div class="lb">参考答案${t.point ? '（课件 ' + esc(t.point) + '）' : ''}</div>
@@ -2524,15 +2625,17 @@ function renderTerms(list){
         <div class="src"><span class="pill b">来源</span><span>${esc(t.from || '')}</span></div>
       </div>
     </div>`));
+  mkRefresh();
 }
 function setTermFlt(f){
   termFlt = f;
-  $$('#termFlt .tgb').forEach(b => b.classList.toggle('on', b.dataset.f === f));
+  $$('#termFlt .tgb:not(.mkchip)').forEach(b => b.classList.toggle('on', b.dataset.f === f));
   filterTerms();
 }
 function filterTerms(){
   const kw = $('#termQ').value.trim();
   let list = TERMS.filter(t => showDep || !t.dep);
+  if (mkOnly.terms) list = list.filter(t => mkHas('t|' + t.term));
   if (termFlt !== 'all') list = list.filter(t => hitCls(t) === termFlt);
   if (kw) list = list.filter(t => (t.term + t.ans).indexOf(kw) >= 0);
   list = list.slice().sort((a, b) => {       // 名词：按最近一次出现从新到旧，没考过的排最后
@@ -2590,13 +2693,18 @@ function renderOvers(list){
   const real = DB.overs.filter(o => hitCls(o) === 'real').length;
   const rn = list.filter(o => (o.freq || 0) > 0).length;
   $('#overSub').textContent = `共 ${list.length} 题（简答 ${s} / 论述 ${l}）· 真题考过 ${rn} 题 · 其中重复 2 次以上 ${list.filter(o => (o.freq || 0) >= 2).length} 题`;
-  if (!list.length){ $('#overWrap').innerHTML = '<div class="empty">没有匹配的题目</div>'; return; }
+  if (!list.length){
+    $('#overWrap').innerHTML = mkOnly.overs
+      ? '<div class="empty">还没有标记任何概述题。关掉「只看记不住」，点卡片右侧的 🚩 就能标记。</div>'
+      : '<div class="empty">没有匹配的题目</div>';
+    mkRefresh(); return;
+  }
   let h = (overFlt === 'all')
-    ? `<div class="mustnote">🏷️ <b>真题 N 次</b>＝该考点在近 9 套卷主观题里出现的次数（同一考点不同问法合并计数），<b>≥2 次即列必背</b>；<b>真题·已考</b>为真题原题；命中率为考前估计，非命题信息。</div>`
+    ? `<div class="mustnote">🏷️ <b>真题 N 次</b>＝该考点在近 9 套卷主观题里出现的次数（同一考点不同问法合并计数），<b>≥2 次即列必背</b>；<b>真题·已考</b>为真题原题；命中率为考前估计，非命题信息。<br>🚩 <b>背不下来就点卡片右侧的小旗</b>（旗标变紫、卡片左边出紫条），再点一次取消；点「只看记不住」只留标过的题，考前专攻这些。</div>`
     : '';
-  const CARD = (o, k, i) => `<div class="titem ${hitCls(o)}" data-k="${k}" style="order:${i}">
+  const CARD = (o, k, i) => `<div class="titem ${hitCls(o)}${mkHas('o|' + o.q) ? ' mk' : ''}" data-k="${k}" style="order:${i}">
         <div class="th" onclick="toggleCard(this)">
-          <span class="tx">${esc(o.q)}</span>${overSort === 'time' ? kindB(o) : ''}${o.tm ? `<span class="tmb">⏱ ${esc(o.tm)}</span>` : ''}${hitBadge(o)}${freqB(o)}${dateB(o)}<span class="ar">▶</span>
+          <span class="tx">${esc(o.q)}</span>${overSort === 'time' ? kindB(o) : ''}${o.tm ? `<span class="tmb">⏱ ${esc(o.tm)}</span>` : ''}${hitBadge(o)}${freqB(o)}${dateB(o)}${mkBtn('o|' + o.q)}<span class="ar">▶</span>
         </div>
         <div class="tb">
           <div class="lb">参考答案${o.point ? '（课件 ' + esc(o.point) + '）' : ''}</div>
@@ -2615,15 +2723,17 @@ function renderOvers(list){
     h += twoCols(g.map((o, i) => CARD(o, o.kind, i)));
   });
   $('#overWrap').innerHTML = h;
+  mkRefresh();
 }
 function setOverFlt(f){
   overFlt = f;
-  $$('#overFlt .tgb').forEach(b => b.classList.toggle('on', b.dataset.f === f));
+  $$('#overFlt .tgb:not(.mkchip)').forEach(b => b.classList.toggle('on', b.dataset.f === f));
   filterOvers();
 }
 function filterOvers(){
   const kw = $('#overQ').value.trim();
   let list = OVERS.filter(o => showDep || !o.dep);
+  if (mkOnly.overs) list = list.filter(o => mkHas('o|' + o.q));
   if (overFlt !== 'all') list = list.filter(o => hitCls(o) === overFlt);
   if (kw) list = list.filter(o => (o.q + o.ans).indexOf(kw) >= 0);
   renderOvers(list);
@@ -2736,12 +2846,17 @@ function renderOutline(){
   $$('#osubTabs .ob')[0].innerHTML = `📖 名词解释<span class="n"></span>`;
   $$('#osubTabs .ob')[1].innerHTML = `🧾 概述题<span class="n"></span>`;
   $$('#osubTabs .ob')[2].innerHTML = `🧮 计算题<span class="n"></span>`;
-  renderOTerms(LIVE(OUT.terms));
-  renderOOvers(LIVE(OUT.overs));
+  filterOTerms();
+  filterOOvers();
   renderOCalcs(LIVE(OUT.calcs));
 }
 function renderOTerms(list){
-  if (!list.length){ $('#otermList').innerHTML = '<div class="empty">没有匹配的名词</div>'; return; }
+  if (!list.length){
+    $('#otermList').innerHTML = mkOnly.oterms
+      ? '<div class="empty">还没有标记任何大纲名词。关掉「只看记不住」，点卡片右侧的 🚩 就能标记。</div>'
+      : '<div class="empty">没有匹配的名词</div>';
+    mkRefresh(); return;
+  }
   const byCh = {};
   list.forEach(t => { (byCh[t.ch] = byCh[t.ch] || []).push(t); });
   let h = '';
@@ -2751,9 +2866,9 @@ function renderOTerms(list){
     const cards = [];
     g.forEach((t, i) => {
       const ktag = t.kind === '口诀' ? '<span class="pill y" style="margin-left:6px">口诀</span>' : '';
-      cards.push(`<div class="titem" data-i="${i}" style="order:${i}">
+      cards.push(`<div class="titem${mkHas('ot|' + t.term) ? ' mk' : ''}" data-i="${i}" style="order:${i}">
         <div class="th" onclick="toggleCard(this)">
-          <span class="tx">${esc(t.term)}${ktag}</span><span class="ar">▶</span></div>
+          <span class="tx">${esc(t.term)}${ktag}</span>${mkBtn('ot|' + t.term)}<span class="ar">▶</span></div>
         <div class="tb">
           <div class="lb">背诵要点</div>
           <div class="ct">${esc(t.ans)}</div>
@@ -2763,15 +2878,21 @@ function renderOTerms(list){
     h += twoCols(cards);
   });
   $('#otermList').innerHTML = h;
+  mkRefresh();
 }
 function filterOTerms(){
   const kw = $('#otermQ').value.trim();
-  const src = OUT.terms.filter(t => !t.dep);
+  let src = OUT.terms.filter(t => !t.dep);
+  if (mkOnly.oterms) src = src.filter(t => mkHas('ot|' + t.term));
   renderOTerms(kw ? src.filter(t => (t.term + t.ans).indexOf(kw) >= 0) : src);
 }
 function renderOOvers(list){
-  const s = list.filter(o => o.lv === 'core').length;
-  if (!list.length){ $('#ooverList').innerHTML = '<div class="empty">没有匹配的题目</div>'; return; }
+  if (!list.length){
+    $('#ooverList').innerHTML = mkOnly.oovers
+      ? '<div class="empty">还没有标记任何大纲概述题。关掉「只看记不住」，点卡片右侧的 🚩 就能标记。</div>'
+      : '<div class="empty">没有匹配的题目</div>';
+    mkRefresh(); return;
+  }
   const byCh = {};
   list.forEach(o => { (byCh[o.ch] = byCh[o.ch] || []).push(o); });
   let h = '';
@@ -2781,9 +2902,9 @@ function renderOOvers(list){
     const cards = [];
     g.forEach((o, i) => {
       const star = o.lv === 'core' ? '<span class="pill r" style="margin-right:6px">⭐必背</span>' : '';
-      cards.push(`<div class="titem" data-i="${i}" style="order:${i}">
+      cards.push(`<div class="titem${mkHas('oo|' + o.q) ? ' mk' : ''}" data-i="${i}" style="order:${i}">
         <div class="th" onclick="toggleCard(this)">
-          <span class="tx">${star}${esc(o.q)}</span><span class="ar">▶</span></div>
+          <span class="tx">${star}${esc(o.q)}</span>${mkBtn('oo|' + o.q)}<span class="ar">▶</span></div>
         <div class="tb">
           <div class="lb">背诵答案${o.kw && o.kw.length ? ' · 记忆锚点' : ''}</div>
           ${o.kw && o.kw.length ? `<div class="ct" style="color:var(--pri);font-size:12.8px;margin-bottom:8px">🔑 ${o.kw.map(k=>esc(k)).join(' ｜ ')}</div>` : ''}
@@ -2794,10 +2915,13 @@ function renderOOvers(list){
     h += twoCols(cards);
   });
   $('#ooverList').innerHTML = h;
+  mkRefresh();
 }
 function filterOOvers(){
   const kw = $('#ooverQ').value.trim();
-  renderOOvers(kw ? OUT.overs.filter(o => (o.q + (o.ans||[]).join('')).indexOf(kw) >= 0) : OUT.overs);
+  let src = OUT.overs.filter(o => !o.dep);
+  if (mkOnly.oovers) src = src.filter(o => mkHas('oo|' + o.q));
+  renderOOvers(kw ? src.filter(o => (o.q + (o.ans||[]).join('')).indexOf(kw) >= 0) : src);
 }
 function renderOCalcs(list){
   $('#ocalcList').innerHTML = list.map((c, i) => `
