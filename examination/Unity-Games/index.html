@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Unity 小游戏开发实战 · 课程首页</title>
+<link rel="stylesheet" href="assets/style.css">
+</head>
+<body>
+
+<header class="ug-top">
+  <div class="ug-brand">
+    <span class="ug-logo">U</span><b>Unity 小游戏开发实战</b><i>13 课 · 逐句拆解</i>
+  </div>
+  <div class="ug-top-r">
+    <a class="ug-back" href="../index.html">← 返回课程中心</a>
+    <a class="ug-back" href="bank.html">✎ 练习题</a>
+  </div>
+</header>
+
+<main class="ug-main" id="ugHome" style="max-width:1180px;margin:0 auto;padding-top:24px">
+
+  <div class="ug-hero">
+    <h1>Unity 小游戏开发实战</h1>
+    <p>把 13 个经典小游戏的 Unity C# 源码一行一行拆开讲：上方是可以直接上手玩的浏览器复刻版，
+       中间是原始源码 + 「为什么这么写」，底部实时打印运行结果和关键变量。
+       目标不是背代码，而是<b>建立"拿到一个游戏想法，怎么一步步做出来"的思维</b>。</p>
+    <div class="stats">
+      <span>13 个可玩游戏</span>
+      <span>80 个 C# 脚本</span>
+      <span>7814 行源码</span>
+      <span>逐句中文注释</span>
+      <span>无需安装 Unity</span>
+    </div>
+  </div>
+
+  <!-- ============ 思维总纲 ============ -->
+  <section class="ug-sec">
+    <h2>🧭 游戏开发思维总纲 · 七步法<small>拿到任何游戏想法，都按这个顺序走</small></h2>
+    <div class="seven">
+      <div class="si"><b>1 · 定规则</b><span>用一句话写清楚：玩家做什么、什么叫赢、什么叫输。写不出来就说明设计还没想清楚。</span></div>
+      <div class="si"><b>2 · 搭世界</b><span>确定坐标系与边界：是格子（网格）还是连续空间？屏幕多大？摄像机跟不跟随？</span></div>
+      <div class="si"><b>3 · 造角色</b><span>列出所有实体（玩家/敌人/道具），并定义各自的"状态"：位置、速度、朝向、生命、当前行为。</span></div>
+      <div class="si"><b>4 · 建循环</b><span>游戏 = 每帧重复：读输入 → 更新状态 → 检测碰撞 → 重新绘制。这一圈就是游戏的心跳。</span></div>
+      <div class="si"><b>5 · 定交互</b><span>碰撞之后发生什么：加分、掉血、反弹、消灭、切换状态。规则在这里落地。</span></div>
+      <div class="si"><b>6 · 调手感</b><span>速度、加速度、延迟、音效、震屏、粒子。数值微调决定"好玩"和"能玩"的差别。</span></div>
+      <div class="si"><b>7 · 做流程</b><span>开始界面、暂停、失败、重开、关卡推进。把散落的逻辑串成完整体验。</span></div>
+    </div>
+  </section>
+
+  <!-- ============ 自查清单 ============ -->
+  <section class="ug-sec">
+    <h2>✅ 五个通用自查问题<small>开工前先答一遍，能少走很多弯路</small></h2>
+    <ul class="chk">
+      <li><b>状态</b> —— 这个游戏一共有哪几种状态？（待开始 / 进行中 / 暂停 / 胜利 / 失败）</li>
+      <li><b>事件</b> —— 什么会让状态改变？玩家输入、时间到、还是碰撞触发？</li>
+      <li><b>数据</b> —— 游戏数据存成什么结构？一维数组、二维网格、还是对象列表？</li>
+      <li><b>判定</b> —— 胜负条件具体落在哪一行判断？边界情况（同时发生）怎么处理？</li>
+      <li><b>重置</b> —— 一键重来时要清空哪些东西？漏掉哪个就会出现"玄学 bug"。</li>
+    </ul>
+  </section>
+
+  <!-- ============ 课时目录 ============ -->
+  <section class="ug-sec">
+    <h2>🎮 课时目录<small id="homeStat"></small></h2>
+    <div class="cards" id="homeCards"></div>
+  </section>
+
+  <section class="ug-sec">
+    <h2>📖 怎么读这一门课</h2>
+    <ul class="chk">
+      <li><b>先玩再读</b> —— 每个课时先在上方画面里玩两分钟，建立直觉，才知道代码在解决什么问题。</li>
+      <li><b>带着问题读代码</b> —— 紫色左边线的行有「为什么这么写」，优先看这些行。</li>
+      <li><b>看底部输出</b> —— 运行时控制台会打印关键状态变化，对照代码理解执行时机。</li>
+      <li><b>按难度顺序走</b> —— 目录顺序就是推荐顺序，后面的游戏会复用前面的模式。</li>
+      <li><b>学完做练习</b> —— 每课的「练习题」检验是否真的理解了背后的设计决策。</li>
+    </ul>
+  </section>
+
+</main>
+
+<script src="lessons/loader.js"></script>
+<script src="assets/app.js"></script>
+</body>
+</html>

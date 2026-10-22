@@ -1,0 +1,137 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>交互课时 · Unity 小游戏开发实战</title>
+<link rel="stylesheet" href="assets/style.css">
+</head>
+<body>
+
+<header class="ug-top">
+  <div class="ug-brand">
+    <a href="index.html" style="display:flex;align-items:center;gap:9px;color:inherit;text-decoration:none">
+      <span class="ug-logo">U</span><b>Unity 小游戏开发实战</b><i id="gCrumb">交互课时</i>
+    </a>
+  </div>
+  <div class="ug-top-r">
+    <a class="ug-back" href="../index.html">← 课程中心</a>
+    <a class="ug-back" href="index.html">☰ 目录</a>
+    <a class="ug-back" href="bank.html">✎ 练习题</a>
+  </div>
+</header>
+
+<div class="ug-body">
+
+  <aside class="ug-side">
+    <h4>课时目录</h4>
+    <div id="ugSideNav"></div>
+  </aside>
+
+  <main class="ug-main" id="ugLesson">
+
+    <!-- ================= 课时头 ================= -->
+    <div class="ug-head">
+      <h1 id="gTitle">载入中…</h1>
+      <p class="sub" id="gOne"></p>
+      <div class="ug-meta" id="gTags"></div>
+      <div class="ug-keys" id="gKeys"></div>
+    </div>
+
+    <!-- ================= 思维导读（可折叠） ================= -->
+    <details class="ug-sec" id="gThinkWrap">
+      <summary style="cursor:pointer;font-weight:700;font-size:15px">
+        🧠 本课思维 · 从零做出来的步骤<span style="font-weight:500;color:var(--ink3);font-size:12.5px;margin-left:8px">点击展开</span>
+      </summary>
+      <div id="gThink" style="margin-top:14px"></div>
+    </details>
+
+    <!-- ================= ① 图形化演示区 ================= -->
+    <section class="ug-pane">
+      <div class="ug-pane-h">
+        <span class="num">1</span><h3>图形化演示区</h3>
+        <span class="hint">可直接操作 · 键盘 / 鼠标 / 触屏</span>
+      </div>
+      <div class="ug-pane-b">
+        <div class="gwrap">
+          <div>
+            <div class="gstage" id="gstage">
+              <canvas id="gcv"></canvas>
+              <div class="govl hide" id="govl">
+                <div>
+                  <div class="big">已暂停</div>
+                  <div>点击画面或按 P 继续 · 按 R 重置</div>
+                </div>
+              </div>
+            </div>
+            <div class="gctl">
+              <button class="btn pri" id="bPause">暂停</button>
+              <button class="btn" id="bReset">重置</button>
+              <span class="muted" id="mFps">— FPS</span>
+            </div>
+          </div>
+          <div class="gside">
+            <div class="gbox">
+              <h5>怎么玩</h5>
+              <p class="note" id="gPlay">—</p>
+            </div>
+            <div class="gbox">
+              <h5>快捷键</h5>
+              <div class="kv"><span>暂停 / 继续</span><span>P</span></div>
+              <div class="kv"><span>重置本局</span><span>R</span></div>
+              <div class="kv"><span>上一课 / 下一课</span><span>[ ]</span></div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ================= ② 源码逐句分析 ================= -->
+    <section class="ug-pane">
+      <div class="ug-pane-h">
+        <span class="num">2</span><h3>源码逐句分析</h3>
+        <span class="hint">Unity 原始 C# · 点击任意行展开讲解</span>
+      </div>
+      <div class="ug-pane-b">
+        <div class="ctabs" id="ctabs"></div>
+        <div class="cbar">
+          <span class="frole" id="crole"></span>
+          <span class="sp"></span>
+          <button class="btn" id="bAnn">收起讲解</button>
+          <span class="muted" id="ccount"></span>
+        </div>
+        <div class="ccode" id="ccode"></div>
+      </div>
+    </section>
+
+    <!-- ================= ③ 运行结果 ================= -->
+    <section class="ug-pane">
+      <div class="ug-pane-h">
+        <span class="num">3</span><h3>运行结果</h3>
+        <span class="hint">实时打印状态变化</span>
+      </div>
+      <div class="ug-pane-b">
+        <div class="owrap">
+          <div>
+            <div class="olog" id="olog"></div>
+            <div class="gctl">
+              <button class="btn" id="bClear">清空输出</button>
+            </div>
+          </div>
+          <div class="ovars" id="ovars"></div>
+        </div>
+      </div>
+    </section>
+
+    <div class="gctl" style="margin-top:4px">
+      <button class="btn" id="bPrev">← 上一课</button>
+      <button class="btn" id="bNext">下一课 →</button>
+    </div>
+
+  </main>
+</div>
+
+<script src="lessons/loader.js"></script>
+<script src="assets/app.js"></script>
+</body>
+</html>

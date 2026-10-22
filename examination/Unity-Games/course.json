@@ -1,0 +1,26 @@
+{
+  "cn": "Unity 小游戏开发实战",
+  "en": "Unity Mini-Game Workshop",
+  "code": "UGAME",
+  "ico": "🕹️",
+  "order": 4,
+  "status": "live",
+  "theme": "#7c3aed",
+  "desc": "13 个经典小游戏源码逐句拆解：上方直接玩浏览器复刻版，中部对照 Unity C# 原文逐句讲解「为什么这么写」，底部实时打印运行结果与关键变量。配套「游戏开发思维七步法」总纲与练习题。",
+  "mods": [
+    "13 个游戏",
+    "80 个脚本",
+    "逐句注释",
+    "可玩演示"
+  ],
+  "entry": "index.html",
+  "note": "交互课件 + 练习题，无需 Unity 即可学习",
+  "_说明": [
+    "entry 指向本课程目录的 index.html（不走 _shell/study.html 通用壳）。",
+    "outline.html 为交互课时页，用 ?g=<id> 指定游戏，例如 outline.html?g=pong。",
+    "lessons/<id>.js —— 可玩实现 + 教学文案 + 逐句注释映射（人工维护）。",
+    "lessons/<id>.code.js —— 原始 C# 源码行数据，由 tools/build_code.py 从 源码/ 自动生成，不要手改。",
+    "bank.html —— 游戏开发思维练习题。",
+    "页面布局严格遵循：① 图形化演示区（上）→ ② 源码逐句分析（中）→ ③ 运行结果（下）。"
+  ]
+}
