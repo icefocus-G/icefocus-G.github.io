@@ -1,0 +1,24 @@
+{
+  "cn": "C# 语言基础",
+  "en": "C# Programming",
+  "code": "CSHARP",
+  "ico": "🧩",
+  "order": 6,
+  "status": "live",
+  "theme": "#68217a",
+  "desc": "语雀《编程基础》8 篇原稿还原成 8 个模块的交互课件：97,878 字、292 段代码、21 张配图全部本地化，代码可高亮复制，配图可点击放大。",
+  "mods": [
+    "8 模块",
+    "97,878 字",
+    "292 代码框",
+    "21 张图"
+  ],
+  "entry": "index.html",
+  "note": "阅读型课件，无判分题库",
+  "_说明": [
+    "entry 相对本课程目录，直接指向课件首页 index.html（不走 shell/study.html 通用壳）。",
+    "本课程没有题库，故不填 storage / total —— 课程中心会按「阅读型」显示。",
+    "内页 m01.html ~ m08.html 与 index.html 同级，assets/ 存放样式、脚本与全部配图。",
+    "内容由 build.py 从 原稿/*.md 渲染，改原稿后重跑即可，不用手改 HTML。"
+  ]
+}

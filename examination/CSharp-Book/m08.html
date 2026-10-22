@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>算法 · C# 交互课件</title>
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='14' fill='%2368217a'/%3E%3Ctext x='32' y='45' font-size='36' font-family='monospace' font-weight='700' fill='%23fff' text-anchor='middle'%3E%23%3C/text%3E%3C/svg%3E">
+<link rel="stylesheet" href="assets/style.css">
+</head>
+<body data-mid="m08">
+<header class="top">
+  <a class="brand" href="index.html"><span class="logo">C#</span><b>C#</b><i>交互课件</i></a>
+  <div class="crumb"><span>算法与数据结构</span><em>/</em><strong>算法</strong></div>
+  <div class="top-r">
+    <span class="stat">917 字 · 4 代码 · 0 图 · 0 表</span>
+    <button class="mini" id="btnNav">目录</button>
+  </div>
+</header>
+<div class="wrap">
+  <aside class="side" id="side">
+    <div class="side-h">本篇目录</div>
+    <nav class="tocbox"><a class="toc lv2" href="#10-进制转-2-进制">💡10 进制转 2 进制</a><a class="toc lv2" href="#单例模式">💡单例模式</a></nav>
+    <div class="side-h">全部模块</div>
+    <nav class="navbox"><div class="ng"><div class="ngt">语言地基</div><a href="m01.html">C# 入门</a><a href="m02.html">C# 基础</a></div><div class="ng"><div class="ngt">面向对象</div><a href="m03.html">C# 核心</a><a href="m07.html">C# 面向对象思想</a></div><div class="ng"><div class="ngt">语言进阶</div><a href="m04.html">C# 进阶</a></div><div class="ng"><div class="ngt">算法与数据结构</div><a href="m05.html">排序算法</a><a href="m08.html" class="on">算法</a></div><div class="ng"><div class="ngt">实战补充</div><a href="m06.html">C# 控制台小游戏知识补充</a></div></nav>
+  </aside>
+  <main class="main">
+    <div class="mhead">
+      <div class="kick">算法与数据结构 · 模块 08</div>
+      <h1>算法</h1>
+      <p class="msub">进制转换、递归与单例模式</p>
+      <div class="chips"><span>917 字原稿</span><span>4 段代码</span><span>0 张配图</span><span>0 个表格</span></div>
+    </div>
+    <article class="doc">
+<h2 id="10-进制转-2-进制" class="hd lv2">💡10 进制转 2 进制</h2>
+<div class="cpair"><div class="chead"><span class="lang">C#</span><span class="csp"></span><button class="mini copy">复制</button></div><pre class="code" data-lang="csharp"><code>        static void Calc(uint num)
+        {
+            Console.Write("{0}的二进制是：", num);
+            Stack stack = new Stack();
+            while(true)
+            {
+                stack.Push(num % 2);
+                num /= 2;
+                if (num == 1)
+                {
+                    stack.Push(num);
+                    break;
+                }
+            }
+            //循环弹栈
+            while(stack.Count &gt; 0)
+            {
+                Console.Write(stack.Pop());
+            }
+            Console.WriteLine();
+
+            ////10
+            //num = 10;
+            //stack.Push(num % 2);//0
+            //num /= 2;//5
+            //stack.Push(num % 2);//1
+            //num /= 2;//2
+            //stack.Push(num % 2);//0
+            //num /= 2;//1
+            //if( num == 1 )
+            //{
+            //    stack.Push(num);//1
+            //}
+        }</code></pre><div class="cout" hidden></div></div>
+<h2 id="单例模式" class="hd lv2">💡单例模式</h2>
+<p class="tx">单例模式</p>
+<p class="tx">不能在外部进行实例化，直接 通过类名就能够得到唯一对象</p>
+<div class="cpair"><div class="chead"><span class="lang">C#</span><span class="csp"></span><button class="mini copy">复制</button></div><pre class="code" data-lang="csharp"><code>Class Test
+{
+   //实例化 静态的对象（唯一的对象）
+   //可以通过 此静态实例t.(里面的成员)
+   private static Test t= new Test();
+
+   //属性防止 外部 Test t=null 赋值进行更改
+   //静态属性 让外面可以得到（因为无法通过new 得到实例）
+   publice static Test T
+   {
+       get{ return t};
+       
+   }
+   pirvate Test()
+   {
+       
+   }
+
+    
+}</code></pre><div class="cout" hidden></div></div>
+<div class="cpair"><div class="chead"><span class="lang">C#</span><span class="csp"></span><button class="mini copy">复制</button></div><pre class="code" data-lang="csharp"><code>int a=80,b=90;
+a=a+b; a= 80+90
+b=a-b; b= 80+90-90=80   这里b=80;
+a=a-b; a= 80+90-80=90;</code></pre><div class="cout" hidden></div></div>
+<div class="cpair"><div class="chead"><span class="lang">C#</span><span class="csp"></span><button class="mini copy">复制</button></div><pre class="code" data-lang="csharp"><code>int oneDay=60*60*24;
+int oneHours=60*60;
+int oneMinute=60;
+
+int day=933944/oneDay; // 总时间除以一天多少秒 就是多少天；
+int hours= 933944%oneDay/onehour;// 除开天数外的余下的小时数为要求的小时；
+int minute=933944%onehour/oneMinute// 除开小时外的余下的分钟数为要求的分钟；
+int second=933944%oneMinute//进行分钟取余，剩下的就是秒</code></pre><div class="cout" hidden></div></div>
+    </article>
+    <footer class="pnbar"><a class="pn prev" href="m07.html"><span>上一节</span>C# 面向对象思想</a></footer>
+  </main>
+</div>
+<button class="totop" id="totop">↑</button>
+<script src="assets/app.js"></script>
+</body>
+</html>

@@ -47,6 +47,9 @@ const SHORTCUTS = [
   { alias: 'xifang-outline',  url: '/examination/Western%20Economics/outline',         title: '西方经济学 · 0基础到精通', group: '学习' },
   { alias: 'unity',           url: '/examination/Unity/',                          title: 'Unity 引擎基础 · 交互课件', group: '学习', note: '27 模块 · 320 张图' },
   { alias: 'caiwu',           url: '/examination/Financial%20Management/',          title: '财务管理学 · 公式手册',  group: '学习', note: '8 章 · 152 条 LaTeX 公式' },
+  { alias: 'unity-book',      url: '/examination/Unity-Book/',                     title: 'Unity 基础小框架 · 图解教科书', group: '学习', note: '75 课时 · 章节式阅读' },
+  { alias: 'csharp-map',      url: '/examination/CSharp-Map/',                     title: 'C# 知识体系 · 交互思维导图', group: '学习', note: '总览 + 20 张分册' },
+  { alias: 'csharp-book',     url: '/examination/CSharp-Book/',                    title: 'C# 语言基础 · 交互课件', group: '学习', note: '8 模块 · 292 代码框' },
 
   /* ---- 工具 ---- */
   { alias: 'task',            url: '/tasksync/',                                       title: '任务同步站',            group: '工具' },
