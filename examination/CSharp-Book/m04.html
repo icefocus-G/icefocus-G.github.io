@@ -6,13 +6,14 @@
 <title>C# 进阶 · C# 交互课件</title>
 <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='14' fill='%2368217a'/%3E%3Ctext x='32' y='45' font-size='36' font-family='monospace' font-weight='700' fill='%23fff' text-anchor='middle'%3E%23%3C/text%3E%3C/svg%3E">
 <link rel="stylesheet" href="assets/style.css">
+<link rel="stylesheet" href="assets/anim.css">
 </head>
 <body data-mid="m04">
 <header class="top">
   <a class="brand" href="index.html"><span class="logo">C#</span><b>C#</b><i>交互课件</i></a>
   <div class="crumb"><span>语言进阶</span><em>/</em><strong>C# 进阶</strong></div>
   <div class="top-r">
-    <span class="stat">50758 字 · 180 代码 · 7 图 · 1 表</span>
+    <span class="stat">51278 字 · 180 代码 · 7 图 · 1 表</span>
     <button class="mini" id="btnNav">目录</button>
   </div>
 </header>
@@ -21,16 +22,18 @@
     <div class="side-h">本篇目录</div>
     <nav class="tocbox"><a class="toc lv2" href="#①简单的数据结构类">①简单的数据结构类</a><a class="toc lv3" href="#arraylist">💡ArrayList</a><a class="toc lv3" href="#stack-栈">💡Stack 栈</a><a class="toc lv3" href="#queue-队列">💡Queue 队列</a><a class="toc lv3" href="#hashtable">💡HashTable</a><a class="toc lv2" href="#②泛型">②泛型</a><a class="toc lv3" href="#泛型">💡泛型</a><a class="toc lv3" href="#泛型约束">💡泛型约束</a><a class="toc lv2" href="#③常用的泛型数据结构类">③常用的泛型数据结构类</a><a class="toc lv3" href="#list">💡 list</a><a class="toc lv3" href="#dictionary">💡Dictionary</a><a class="toc lv3" href="#顺序存储和链式存储">💡顺序存储和链式存储</a><a class="toc lv3" href="#linkedlist">💡 Linkedlist</a><a class="toc lv3" href="#泛型栈和队列">💡泛型栈和队列</a><a class="toc lv2" href="#④委托和事件">④委托和事件</a><a class="toc lv3" href="#委托">💡 委托</a><a class="toc lv3" href="#事件">💡事件</a><a class="toc lv3" href="#匿名函数">💡匿名函数</a><a class="toc lv3" href="#lambad表达式">💡 Lambad表达式</a><a class="toc lv2" href="#⑤list排序">⑤List排序</a><a class="toc lv3" href="#list-自带的排序方法">💡List 自带的排序方法</a><a class="toc lv3" href="#自定义-的排序">💡自定义 的排序</a><a class="toc lv3" href="#通过委托函数进行排序">💡通过委托函数进行排序</a><a class="toc lv3" href="#list-排序总结">💡List 排序总结</a><a class="toc lv2" href="#⑥协变逆变">⑥协变逆变</a><a class="toc lv3" href="#协变-out-返回值和逆变-in-参数">💡协变 out 返回值和逆变 in 参数</a><a class="toc lv3" href="#协变和逆变结合里氏替换原则">💡协变和逆变结合里氏替换原则</a><a class="toc lv2" href="#⑦多线程">⑦多线程</a><a class="toc lv3" href="#理论知识">💡理论知识</a><a class="toc lv3" href="#线程类-thread">💡线程类 Thread</a><a class="toc lv3" href="#线程之间的共享数据-lock-锁">💡线程之间的共享数据 Lock 锁</a><a class="toc lv3" href="#多线程的意义">💡多线程的意义</a><a class="toc lv2" href="#⑧预处理器指令">⑧预处理器指令</a><a class="toc lv3" href="#什么是编译器">💡什么是编译器</a><a class="toc lv3" href="#什么是预处理器指令">💡什么是预处理器指令</a><a class="toc lv3" href="#常见的预处理器指令">💡常见的预处理器指令</a><a class="toc lv2" href="#⑨反射和特性">⑨反射和特性</a><a class="toc lv3" href="#什么是程序集-和-元数据">💡什么是程序集 和 元数据</a><a class="toc lv3" href="#反射的概念-和作用">💡反射的概念 和作用</a><a class="toc lv3" href="#反射的语法">💡反射的语法</a><a class="toc lv3" href="#自定义特性">💡自定义特性</a><a class="toc lv3" href="#系统自带的特性">💡系统自带的特性</a><a class="toc lv2" href="#⑩迭代器">⑩迭代器</a><a class="toc lv3" href="#迭代器是什么">💡迭代器是什么</a><a class="toc lv3" href="#用yield-return-语法糖实现迭代器-系统实现">💡用yield return 语法糖实现迭代器（系统实现）</a><a class="toc lv3" href="#用yield-return-语法糖为泛型类实现迭代器-系统实现">💡用yield return 语法糖为泛型类实现迭代器（系统实现）</a><a class="toc lv2" href="#⑪特殊语法">⑪特殊语法</a><a class="toc lv3" href="#var隐式类型">💡var隐式类型</a><a class="toc lv3" href="#设置对象初始值">💡设置对象初始值</a><a class="toc lv3" href="#设置集合初始值">💡设置集合初始值</a><a class="toc lv3" href="#匿名类型">💡匿名类型</a><a class="toc lv3" href="#可空类型">💡可空类型</a><a class="toc lv3" href="#空合并操作符">💡空合并操作符</a><a class="toc lv3" href="#内插字符串">💡内插字符串</a><a class="toc lv3" href="#单句逻辑简略写法">💡单句逻辑简略写法</a><a class="toc lv2" href="#⑫值类型和引用类型2">⑫值类型和引用类型2</a><a class="toc lv3" href="#如何判断-值类型和引用类型">💡如何判断 值类型和引用类型</a><a class="toc lv3" href="#语句块">💡语句块</a><a class="toc lv3" href="#变量的生命周期">💡变量的生命周期</a><a class="toc lv3" href="#结构体中的值和引用">💡结构体中的值和引用</a><a class="toc lv3" href="#类中的值和引用">💡类中的值和引用</a><a class="toc lv3" href="#数组中的存储规则">💡数组中的存储规则</a><a class="toc lv3" href="#结构体继承接口">💡结构体继承接口</a><a class="toc lv2" href="#⑬排序进阶">⑬排序进阶</a><a class="toc lv3" href="#插入排序-https-www-yuque-com-yuqueyonghutueuys-c_sharp-os2l369ymp2wpxtx"><a href="https://www.yuque.com/yuqueyonghutueuys/c_sharp/os2l369ymp2wpxtx" target="_blank" rel="noopener">💡插入排序</a></a><a class="toc lv3" href="#希尔排序-https-www-yuque-com-yuqueyonghutueuys-c_sharp-os2l369ymp2wpxtx">💡<a href="https://www.yuque.com/yuqueyonghutueuys/c_sharp/os2l369ymp2wpxtx" target="_blank" rel="noopener">希尔排序</a></a><a class="toc lv3" href="#归并排序-https-www-yuque-com-yuqueyonghutueuys-c_sharp-os2l369ymp2wpxtx">💡<a href="https://www.yuque.com/yuqueyonghutueuys/c_sharp/os2l369ymp2wpxtx" target="_blank" rel="noopener">归并排序</a></a><a class="toc lv3" href="#快速排序-https-www-yuque-com-yuqueyonghutueuys-c_sharp-os2l369ymp2wpxtx">💡<a href="https://www.yuque.com/yuqueyonghutueuys/c_sharp/os2l369ymp2wpxtx" target="_blank" rel="noopener">快速排序</a></a><a class="toc lv3" href="#堆排序-https-www-yuque-com-yuqueyonghutueuys-c_sharp-os2l369ymp2wpxtx">💡<a href="https://www.yuque.com/yuqueyonghutueuys/c_sharp/os2l369ymp2wpxtx" target="_blank" rel="noopener">堆排序</a></a></nav>
     <div class="side-h">全部模块</div>
-    <nav class="navbox"><div class="ng"><div class="ngt">语言地基</div><a href="m01.html">C# 入门</a><a href="m02.html">C# 基础</a></div><div class="ng"><div class="ngt">面向对象</div><a href="m03.html">C# 核心</a><a href="m07.html">C# 面向对象思想</a></div><div class="ng"><div class="ngt">语言进阶</div><a href="m04.html" class="on">C# 进阶</a></div><div class="ng"><div class="ngt">算法与数据结构</div><a href="m05.html">排序算法</a><a href="m08.html">算法</a></div><div class="ng"><div class="ngt">实战补充</div><a href="m06.html">C# 控制台小游戏知识补充</a></div></nav>
+    <nav class="navbox"><div class="ng"><div class="ngt">语言地基</div><a href="m01.html">C# 入门</a><a href="m02.html">C# 基础</a></div><div class="ng"><div class="ngt">面向对象</div><a href="m03.html">C# 核心</a><a href="m07.html">C# 面向对象思想</a></div><div class="ng"><div class="ngt">语言进阶</div><a href="m04.html" class="on">C# 进阶</a></div><div class="ng"><div class="ngt">算法与数据结构</div><a href="m05.html">排序算法</a><a href="m08.html">算法</a></div><div class="ng"><div class="ngt">实战补充</div><a href="m06.html">C# 控制台小游戏知识补充</a><a href="m11.html">练习题</a></div><div class="ng"><div class="ngt">速查参考</div><a href="m09.html">C# 中英文对照表</a><a href="m10.html">C# 语法简写</a></div></nav>
   </aside>
   <main class="main">
     <div class="mhead">
       <div class="kick">语言进阶 · 模块 04</div>
       <h1>C# 进阶</h1>
       <p class="msub">委托事件、泛型、反射、特性与多线程</p>
-      <div class="chips"><span>50758 字原稿</span><span>180 段代码</span><span>7 张配图</span><span>1 个表格</span></div>
+      <div class="chips"><span>51278 字原稿</span><span>180 段代码</span><span>7 张配图</span><span>1 个表格</span></div>
     </div>
+<section class="zone"><div class="zone-h"><span>图形演示 · 1 个</span><h2>先动手，再读文字</h2><p>下面的图都能点、能拖、能播放。先看它动，再回去读原稿，理解会快很多。</p></div><div data-demo="dele"></div></section>
     <article class="doc">
+<p class="tx">####</p>
 <h2 id="①简单的数据结构类" class="hd lv2">①简单的数据结构类</h2>
 <p class="tx">存储数据的容器</p>
 <h3 id="arraylist" class="hd lv3">💡ArrayList</h3>
@@ -38,7 +41,8 @@
 <p class="tx">02ArrayList 类帮助我们实现了很多方法，比如数组的增删查改</p>
 <p class="tx">03ArrayList 使用需要引用 using System.Collections;命名空间</p>
 <p class="tx"><b>💡💡💡💡💡💡💡💡💡💡💡💡💡💡💡💡💡💡💡💡💡💡💡💡💡💡💡💡💡💡💡💡💡💡💡💡💡💡💡💡💡💡💡💡💡💡💡💡💡💡💡💡</b></p>
-<div class="tw"><table class="tb"><tr><td><b>特性</b></td><td><b>Array（数组）</b></td><td><b>ArrayList（集合）</b></td></tr><tr><td><b>长度</b></td><td><b>固定不变</b><b>，创建后不能改</b></td><td><b>动态可变</b><b>，自动扩容</b></td></tr><tr><td><b>存储类型</b></td><td><b>只能存同一种类型</b><b>（如 int [] 只能存数字）</b></td><td><b>任意类型混存</b><b>（int/string/ 对象都能塞）</b></td></tr><tr><td><b>性能</b></td><td><b>最高</b><b>，无任何损耗</b></td><td><b>低</b><b>，有装箱拆箱（浪费性能）</b></td></tr><tr><td><b>类型安全</b></td><td><b>安全，不会报错</b></td><td><b>不安全，容易类型转换错误</b></td></tr><tr><td><b>现代推荐</b></td><td>✅ <b>常用（存储固定数据）</b></td><td>❌ <b>淘汰</b><b>，用</b> <code>**List&lt;T&gt;**</code><br><br><b>代替</b></td></tr></table></div>
+<div class="tw"><table class="tb"><tr><td><b>特性</b></td><td><b>Array（数组）</b></td><td><b>ArrayList（集合）</b></td></tr><tr><td><b>长度</b></td><td><b>固定不变</b><b>，创建后不能改</b></td><td><b>动态可变</b><b>，自动扩容</b></td></tr><tr><td><b>存储类型</b></td><td><b>只能存同一种类型</b><b>（如 int [] 只能存数字）</b></td><td><b>任意类型混存</b><b>（int/string/ 对象都能塞）</b></td></tr><tr><td><b>性能</b></td><td><b>最高</b><b>，无任何损耗</b></td><td><b>低</b><b>，有装箱拆箱（浪费性能）</b></td></tr><tr><td><b>类型安全</b></td><td><b>安全，不会报错</b></td><td><b>不安全，容易类型转换错误</b></td></tr><tr><td><b>现代推荐</b></td><td>✅<b> 常用（存储固定数据）</b></td><td>❌<b> </b><b>淘汰</b><b>，用 </b><code>**List&lt;T&gt;**</code></td></tr></table></div>
+<p class="tx"><b> 代替</b> |</p>
 <h4 id="01-增加" class="hd lv4">01 增加</h4>
 <p class="tx">单个增加 arrayList.Add(); 可以增加任何元素</p>
 <p class="tx">范围增加arrayList.AddRange(arraylist1) 将其他数组内容加在 当前数组后面，进行拼接</p>
@@ -58,13 +62,13 @@ arrayList1.Add(123);
 //将arrayList2 里的内容增加到arraylist后面，进行拼接
 arrayList.AddRange(arrayList1);
 //插入
-arrayList.Insert(0, "2342");//从0位插入 
+arrayList.Insert(0, "2342");//从0位插入
 
 #endregion</code></pre><div class="cout" hidden></div></div>
 <h4 id="02-删除" class="hd lv4">02 删除</h4>
 <div class="cpair"><div class="chead"><span class="lang">C#</span><span class="csp"></span><button class="mini copy">复制</button></div><pre class="code" data-lang="csharp"><code>移除指定元素从头找，找到就删（重复元素删第一个） arrayList.Remove(value);</code></pre><div class="cout" hidden></div></div>
 <p class="tx">移除指定位置的元素 arrayList.rRemoveAt(index);数组索引</p>
-<div class="cpair"><div class="chead"><span class="lang">C#</span><span class="csp"></span><button class="mini copy">复制</button></div><pre class="code" data-lang="csharp"><code>移除所有元素 清空 arrayList.Clear();</code></pre><div class="cout" hidden></div></div>
+<div class="cpair"><div class="chead"><span class="lang">C#</span><span class="csp"></span><button class="mini copy">复制</button></div><pre class="code" data-lang="csharp"><code>移除所有元素  清空   arrayList.Clear();</code></pre><div class="cout" hidden></div></div>
 <div class="cpair"><div class="chead"><span class="lang">C#</span><span class="csp"></span><button class="mini copy">复制</button></div><pre class="code" data-lang="csharp"><code>#region 删
 //移除指定元素从头找，找到删（有重复的就删第一个）
 arrayList.Remove(1);
@@ -74,9 +78,9 @@ arrayList.RemoveAt(0);
 //arrayList.Clear();
 #endregion</code></pre><div class="cout" hidden></div></div>
 <h4 id="03-查找" class="hd lv4">03 查找</h4>
-<p class="tx">查找元素是否存在 arrayList.Contains("123") 存在返回 true，不存在返回 false</p>
-<p class="tx">正向查找元素 arrayList.IndexOf(value)找到返回 从 0 开始找到对应项的索引值，找不到返回-1（重复元素，找到第一个返回）</p>
-<p class="tx">反向查找元素 arrayList.LastIndexOf(value) 找到则返回最后一个匹配项的【从零开始的索引】， 找不到返回-1</p>
+<p class="tx">查找元素是否存在  arrayList.Contains("123") 存在返回 true，不存在返回 false</p>
+<p class="tx">正向查找元素  arrayList.IndexOf(value)找到返回 从 0 开始找到对应项的索引值，找不到返回-1（重复元素，找到第一个返回）</p>
+<p class="tx">反向查找元素  arrayList.LastIndexOf(value) 找到则返回最后一个匹配项的【从零开始的索引】， 找不到返回-1</p>
 <h4 id="04-更改" class="hd lv4">04 更改</h4>
 <div class="cpair"><div class="chead"><span class="lang">C#</span><span class="csp"></span><button class="mini copy">复制</button></div><pre class="code" data-lang="csharp"><code>#region 改
 //改
@@ -84,7 +88,7 @@ arrayList[0] = "999";</code></pre><div class="cout" hidden></div></div>
 <h4 id="05-遍历数组" class="hd lv4">05 遍历数组</h4>
 <div class="cpair"><div class="chead"><span class="lang">TEXT</span><span class="csp"></span><button class="mini copy">复制</button></div><pre class="code" data-lang="text"><code>for 循环遍历，Count 位存储元素长度，Capacity 位容量大小</code></pre><div class="cout" hidden></div></div>
 <p class="tx">迭代器遍历，必须先实现迭代器，才能使用 foreach 循环</p>
-<div class="cpair"><div class="chead"><span class="lang">C#</span><span class="csp"></span><button class="mini copy">复制</button></div><pre class="code" data-lang="csharp"><code>//Count 数组中存储元素的长度   
+<div class="cpair"><div class="chead"><span class="lang">C#</span><span class="csp"></span><button class="mini copy">复制</button></div><pre class="code" data-lang="csharp"><code>//Count 数组中存储元素的长度
 Console.WriteLine(arrayList.Count);
 //Capacity 数组容量  避免产生过多的垃圾
 Console.WriteLine(arrayList.Capacity);
@@ -96,7 +100,6 @@ for (int i = 0; i &lt; arrayList.Count; i++) {
 //迭代器遍历 ,必须先实现了迭代器 才能用foreach
 foreach (object item in arrayList)
 {
-
 
     Console.WriteLine(item);
 }</code></pre><div class="cout" hidden></div></div>
@@ -140,14 +143,14 @@ foreach (object item in arrayList)
 for(int i=0;i&lt;array.Length;i++)
 {
   Console.WriteLine(array[i]);
-    
+
 }</code></pre><div class="cout" hidden></div></div>
 <p class="tx">循环弹栈 while</p>
 <div class="cpair"><div class="chead"><span class="lang">C#</span><span class="csp"></span><button class="mini copy">复制</button></div><pre class="code" data-lang="csharp"><code>while(stack.Count&gt;0)
 {
    object o=stack.Pop();
     Console.WriteLine(o);
-    
+
 }</code></pre><div class="cout" hidden></div></div>
 <h4 id="06-装箱拆箱-2" class="hd lv4">06 装箱拆箱</h4>
 <p class="tx">由于用了万物之父来存储数据，自然存在装箱拆箱</p>
@@ -180,16 +183,14 @@ if(queue.Contains(1.5f))
 实在要改 只有清除,然后再增加元素
 queue.Clear();
 
-
 queue.Enqueue(1.4f);</code></pre><div class="cout" hidden></div></div>
 <h4 id="05-遍历-2" class="hd lv4">05 遍历</h4>
 <p class="tx">用foreach遍历</p>
 <div class="cpair"><div class="chead"><span class="lang">C#</span><span class="csp"></span><button class="mini copy">复制</button></div><pre class="code" data-lang="csharp"><code>foreach (object item in queue)
 {
    Console.WriteLine(item);
-}
-        </code></pre><div class="cout" hidden></div></div>
-<p class="tx">将队列转换为object数组 再 For 循环</p>
+}</code></pre><div class="cout" hidden></div></div>
+<p class="tx">将队列转换为object数组  再 For 循环</p>
 <div class="cpair"><div class="chead"><span class="lang">C#</span><span class="csp"></span><button class="mini copy">复制</button></div><pre class="code" data-lang="csharp"><code>object[] array = queue.ToArray();
 for (int i = 0; i &lt; array.Length; i++)
 {
@@ -246,7 +247,7 @@ if( hashtable.ContainsKey(2) )
 {
                 Console.WriteLine("存在键为2的键值对");
 }
-  
+
 根据值检测
 if( hashtable.ContainsValue(12) )
 {
@@ -259,8 +260,7 @@ hashtable[1] = 100.5f;
 Console.WriteLine(hashtable[1]);</code></pre><div class="cout" hidden></div></div>
 <h4 id="05-遍历-3" class="hd lv4">05 遍历</h4>
 <p class="tx">01 得到键值对 对数</p>
-<div class="cpair"><div class="chead"><span class="lang">C#</span><span class="csp"></span><button class="mini copy">复制</button></div><pre class="code" data-lang="csharp"><code>Console.WriteLine(hashtable.Count);
-        </code></pre><div class="cout" hidden></div></div>
+<div class="cpair"><div class="chead"><span class="lang">C#</span><span class="csp"></span><button class="mini copy">复制</button></div><pre class="code" data-lang="csharp"><code>Console.WriteLine(hashtable.Count);</code></pre><div class="cout" hidden></div></div>
 <p class="tx">02 遍历所有键</p>
 <div class="cpair"><div class="chead"><span class="lang">C#</span><span class="csp"></span><button class="mini copy">复制</button></div><pre class="code" data-lang="csharp"><code>foreach (object item in hashtable.Keys)
 {
@@ -310,7 +310,7 @@ interface 接口名&lt;泛型占位字母&gt;
 <div class="cpair"><div class="chead"><span class="lang">C#</span><span class="csp"></span><button class="mini copy">复制</button></div><pre class="code" data-lang="csharp"><code>class TestClass&lt;T&gt;
 {
        public T value;
-}    
+}
 
 class TestClass2&lt;T1,T2,K,M,LL,Key,Value&gt;
     多个泛型占位符用，号隔开
@@ -335,16 +335,16 @@ interface TestInterface&lt;T&gt;
 //继承的时候 因为要使用他，所以需要填具体类型
 class Test : TestInterface&lt;int&gt;
 {
-        public int Value 
-        { 
-            get; 
+        public int Value
+        {
+            get;
             set;
         }
 }</code></pre><div class="cout" hidden></div></div>
 <h4 id="03-普通类中的泛型方法" class="hd lv4">03 普通类中的泛型方法</h4>
 <div class="cpair"><div class="chead"><span class="lang">C#</span><span class="csp"></span><button class="mini copy">复制</button></div><pre class="code" data-lang="csharp"><code>    class Test2
     {
-        
+
         public void TestFun&lt;T&gt;( T value)
         {
             Console.WriteLine(value);
@@ -378,26 +378,25 @@ class Test : TestInterface&lt;int&gt;
 <div class="cpair"><div class="chead"><span class="lang">C#</span><span class="csp"></span><button class="mini copy">复制</button></div><pre class="code" data-lang="csharp"><code>class Test2
 {
 
-    
 }
 
 //泛型类 和Test2同名，但是是2个不同的类
 class Test2&lt;T&gt;
  {
-     
+
         public Test2()
         {
             泛型类构造函数可以不加&lt;T&gt;占位符，默认调用
         }
         public T value;
-    
+
         //泛型方法中&lt;占位符&gt;和类中&lt;占位符&gt;需要 不同
         public void TestFun&lt;K&gt;(K k)
         {
             Console.WriteLine(k);
         }
 
-        //这个不叫泛型方法 因为 T是泛型类申明的时候 就指定 在使用这个函数的时候 
+        //这个不叫泛型方法 因为 T是泛型类申明的时候 就指定 在使用这个函数的时候
         //我们不能再去动态的变化了
         public void TestFun(T t)
         {
@@ -405,7 +404,7 @@ class Test2&lt;T&gt;
         }
 }</code></pre><div class="cout" hidden></div></div>
 <p class="tx"><b>05 总结</b></p>
-<div class="cpair"><div class="chead"><span class="lang">TEXT</span><span class="csp"></span><button class="mini copy">复制</button></div><pre class="code" data-lang="text"><code>1.申明泛型时 它只是一个类型的占位符
+<div class="cpair"><div class="chead"><span class="lang">C#</span><span class="csp"></span><button class="mini copy">复制</button></div><pre class="code" data-lang="csharp"><code>1.申明泛型时 它只是一个类型的占位符
 2.泛型真正起作用的时候 是在使用它的时候
 3.泛型占位字母可以有n个用逗号分开
 4.泛型占位字母一般是大写字母
@@ -451,7 +450,7 @@ class Test2&lt;T&gt;
 
         }
     }
-    
+
     class Test1
     {
         public Test1()
@@ -459,7 +458,7 @@ class Test2&lt;T&gt;
 
         }
     }
-   
+
     class Test2
     {
         public Test2(int a)
@@ -468,7 +467,7 @@ class Test2&lt;T&gt;
         }
     }
    //Test1作为泛型类型传入，不会报错
-   Test3&lt;Test1&gt; test=new Test3&lt;Test1&gt;(); 
+   Test3&lt;Test1&gt; test=new Test3&lt;Test1&gt;();
    //Test2作为泛型类传入，会报错，因为 Test3泛型 写了公共无参构造约束
     Test3&lt;Test2&gt; test1=new Test3&lt;Test2&gt;(3);
 
@@ -487,7 +486,7 @@ class Test2&lt;T&gt;
     {
 
     }</code></pre><div class="cout" hidden></div></div>
-<div class="cpair"><div class="chead"><span class="lang">C#</span><span class="csp"></span><button class="mini copy">复制</button></div><pre class="code" data-lang="csharp"><code>某个接口的派生类型 
+<div class="cpair"><div class="chead"><span class="lang">C#</span><span class="csp"></span><button class="mini copy">复制</button></div><pre class="code" data-lang="csharp"><code>某个接口的派生类型
 
     interface IFly
     {
@@ -684,7 +683,7 @@ List&lt;bool&gt; list3 = new List&lt;bool&gt;();</code></pre><div class="cout" h
 <h3 id="顺序存储和链式存储" class="hd lv3">💡顺序存储和链式存储</h3>
 <h4 id="01-数据结构" class="hd lv4">01.数据结构</h4>
 <figure class="fig"><img loading="lazy" src="assets/img/d95266b2a26e.png" alt=""></figure>
-<div class="cpair"><div class="chead"><span class="lang">TEXT</span><span class="csp"></span><button class="mini copy">复制</button></div><pre class="code" data-lang="text"><code>//数据结构
+<div class="cpair"><div class="chead"><span class="lang">C#</span><span class="csp"></span><button class="mini copy">复制</button></div><pre class="code" data-lang="csharp"><code>//数据结构
             //数据结构是计算机存储、组织数据的方式（规则）
             //数据结构是指相互之间存在一种或多种特定关系的数据元素的集合
             //比如自定义的一个 类 也可以称为一种数据结构 自己定义的数据组合规则
@@ -695,11 +694,11 @@ List&lt;bool&gt; list3 = new List&lt;bool&gt;();</code></pre><div class="cout" h
             //常用的数据结构（前辈总结和制定的一些经典规则）
             //数组、栈、队列、链表、树、图、堆、散列表</code></pre><div class="cout" hidden></div></div>
 <h4 id="02-线性表" class="hd lv4">02.线性表</h4>
-<div class="cpair"><div class="chead"><span class="lang">TEXT</span><span class="csp"></span><button class="mini copy">复制</button></div><pre class="code" data-lang="text"><code>            //线性表是一种数据结构，是由n个具有相同特性的数据元素的有限序列
+<div class="cpair"><div class="chead"><span class="lang">C#</span><span class="csp"></span><button class="mini copy">复制</button></div><pre class="code" data-lang="csharp"><code>            //线性表是一种数据结构，是由n个具有相同特性的数据元素的有限序列
             //比如数组、ArrayList、Stack、Queue、链表等等</code></pre><div class="cout" hidden></div></div>
 <p class="tx">顺序存储和链式存储 是数据结构中两种 存储结构</p>
 <h4 id="03-顺序存储" class="hd lv4">03.顺序存储</h4>
-<div class="cpair"><div class="chead"><span class="lang">TEXT</span><span class="csp"></span><button class="mini copy">复制</button></div><pre class="code" data-lang="text"><code>            //数组、Stack、Queue、List、ArrayList —— 顺序存储
+<div class="cpair"><div class="chead"><span class="lang">C#</span><span class="csp"></span><button class="mini copy">复制</button></div><pre class="code" data-lang="csharp"><code>            //数组、Stack、Queue、List、ArrayList —— 顺序存储
             //只是 数组、Stack、Queue的 组织规则不同而已
             //顺序存储：
             //用一组地址连续的存储单元依次存储线性表的各个数据元素</code></pre><div class="cout" hidden></div></div>
@@ -758,10 +757,9 @@ while (node != null)
 //Main函数下
 LinkedNOde&lt;int&gt; node1=newLinkedNode(4)
 LinkedNOde&lt;int&gt; node2=newLinkedNode(7)
- node1.nextNode=node2 
+ node1.nextNode=node2
 //通过 下一个元素进行关联（因为只有2个实例关联，node2为空，那么node2就是最后一个）
 -------------------------------------------------------------------------------
-
 
 单向链表类 管理 节点 管理 添加等等
 
@@ -783,7 +781,7 @@ LinkedNOde&lt;int&gt; node2=newLinkedNode(7)
             }
             else
             {
-                last.nextNode = node; 
+                last.nextNode = node;
                 //增加的节点都设置成最后一个节点
                 last = node; 将node指向地址赋给last
             }
@@ -799,10 +797,10 @@ LinkedNOde&lt;int&gt; node2=newLinkedNode(7)
             }
             if( head.value.Equals(value) )查找头节点中的Value
             {
-                
+
                 head = head.nextNode; 移除头节点，把下一个节点作为头节点
-                
-                //如果头节点 被移除 发现头节点（尾节点变头节点）变空 
+
+                //如果头节点 被移除 发现头节点（尾节点变头节点）变空
                 //证明只有一个节点 那尾也要清空
                 if( head == null )
                 {
@@ -815,12 +813,12 @@ LinkedNOde&lt;int&gt; node2=newLinkedNode(7)
             将移除节点的上一个节点 和移除节点的下一个节点链接起来
     --------------------------------------------------------------------------------
             LinkedNode&lt;T&gt; node = head; 申明一个 指向 头部节点
-             
+
             while(node.nextNode != null)头节点下一个节点不为空
             {
                 if( node.nextNode.value.Equals(value) )
                 {
-                   
+
                     //让当前找到的这个元素的 上一个节点
                     //指向 这个元素的下一个节点
                     node.nextNode = node.nextNode.nextNode;
@@ -945,7 +943,7 @@ LinkedNOde&lt;int&gt; node2=newLinkedNode(7)
                 node = node.nextNode;
             }</code></pre><div class="cout" hidden></div></div>
 <h4 id="07-顺序存储和链式存储总结" class="hd lv4">07.顺序存储和链式存储总结</h4>
-<div class="cpair"><div class="chead"><span class="lang">TEXT</span><span class="csp"></span><button class="mini copy">复制</button></div><pre class="code" data-lang="text"><code>从增删查改的角度去思考
+<div class="cpair"><div class="chead"><span class="lang">C#</span><span class="csp"></span><button class="mini copy">复制</button></div><pre class="code" data-lang="csharp"><code>从增删查改的角度去思考
 增：链式存储 计算上 优于顺序存储 （中间插入时链式不用像顺序一样去移动位置）
 删：链式存储 计算上 优于顺序存储 （中间删除时链式不用像顺序一样去移动位置）
 查：顺序存储 使用上 优于链式存储 （数组可以直接通过下标得到元素，链式需要遍历）
@@ -958,7 +956,6 @@ LinkedNOde&lt;int&gt; node2=newLinkedNode(7)
             //using System.Collections.Generic
             LinkedList&lt;int&gt; linkedList = new LinkedList&lt;int&gt;();
             LinkedList&lt;string&gt; linkedList2 = new LinkedList&lt;string&gt;();
-
 
             //链表对象 需要掌握两个类
             //一个是链表本身 一个是链表节点类LinkedListNode</code></pre><div class="cout" hidden></div></div>
@@ -1044,9 +1041,9 @@ LinkedNOde&lt;int&gt; node2=newLinkedNode(7)
 有符号 sbyte short int long
 浮点数 float double decimal
 特殊   char bool string</code></pre><div class="cout" hidden></div></div>
-<div class="cpair"><div class="chead"><span class="lang">C#</span><span class="csp"></span><button class="mini copy">复制</button></div><pre class="code" data-lang="csharp"><code>枚举 enum  
-结构体 struct  
-数组（一维、二维、交错） []  [,]  [][]  
+<div class="cpair"><div class="chead"><span class="lang">C#</span><span class="csp"></span><button class="mini copy">复制</button></div><pre class="code" data-lang="csharp"><code>枚举 enum
+结构体 struct
+数组（一维、二维、交错） []  [,]  [][]
 类 class</code></pre><div class="cout" hidden></div></div>
 <div class="cpair"><div class="chead"><span class="lang">C#</span><span class="csp"></span><button class="mini copy">复制</button></div><pre class="code" data-lang="csharp"><code>using System.Collections;
 ArrayList  object数据列表
@@ -1056,7 +1053,7 @@ Hashtable   哈希表  键值对</code></pre><div class="cout" hidden></div></di
 <div class="cpair"><div class="chead"><span class="lang">C#</span><span class="csp"></span><button class="mini copy">复制</button></div><pre class="code" data-lang="csharp"><code>using System.Collections.Generic;
 List  列表  泛型列表
 Dictionary 字典  泛型哈希表
-LinkedList 双向链表 
+LinkedList 双向链表
 Statck 泛型栈
 Queue 泛型队列</code></pre><div class="cout" hidden></div></div>
 <h4 id="02-泛型栈和队列" class="hd lv4">02.泛型栈和队列</h4>
@@ -1065,7 +1062,7 @@ Queue 泛型队列</code></pre><div class="cout" hidden></div></div>
 Stack&lt;int&gt; stack = new Stack&lt;int&gt;();
 Queue&lt;object&gt; queue = new Queue&lt;object&gt;();</code></pre><div class="cout" hidden></div></div>
 <h4 id="03-普通线性表" class="hd lv4">03.普通线性表</h4>
-<div class="cpair"><div class="chead"><span class="lang">TEXT</span><span class="csp"></span><button class="mini copy">复制</button></div><pre class="code" data-lang="text"><code>数组，List，LinkedList
+<div class="cpair"><div class="chead"><span class="lang">C#</span><span class="csp"></span><button class="mini copy">复制</button></div><pre class="code" data-lang="csharp"><code>数组，List，LinkedList
 数组：固定的不变的一组数据
 List: 经常改变，经常通过下标查找
 LinkedList：不确定长度的，经常临时插入改变，查找不多
@@ -1085,8 +1082,7 @@ Dictionary
 需要频繁查找的，有对应关系的数据
 比如一些数据存储  id对应数据内容
 道具ID ——&gt; 道具信息
-怪物ID ——&gt; 怪物对象
-          </code></pre><div class="cout" hidden></div></div>
+怪物ID ——&gt; 怪物对象</code></pre><div class="cout" hidden></div></div>
 <h2 id="④委托和事件" class="hd lv2">④委托和事件</h2>
 <h3 id="委托" class="hd lv3">💡 委托</h3>
 <h4 id="01-delegate-委托-是什么" class="hd lv4">01.delegate 委托 是什么</h4>
@@ -1101,13 +1097,12 @@ Dictionary
 <div class="cpair"><div class="chead"><span class="lang">C#</span><span class="csp"></span><button class="mini copy">复制</button></div><pre class="code" data-lang="csharp"><code>namespace System
 {
    public delegate void Action();
-    
+
 }</code></pre><div class="cout" hidden></div></div>
 <div class="cpair"><div class="chead"><span class="lang">C#</span><span class="csp"></span><button class="mini copy">复制</button></div><pre class="code" data-lang="csharp"><code>class Monster
 {
     public Action&lt;Monster&gt; action;
     //申明一个系统 有参（泛型）无返回值的的委托，将Monster作为参数传出去
-
 
     public int money = 10;//怪物金额
     public void Monster_Dead()
@@ -1123,7 +1118,7 @@ Dictionary
 }</code></pre><div class="cout" hidden></div></div>
 <h4 id="03-delegate-委托-类型" class="hd lv4">03.delegate 委托 类型</h4>
 <p class="tx">访问修饰默认不写 为public 在别的命名空间中也能使用</p>
-<div class="cpair"><div class="chead"><span class="lang">C#</span><span class="csp"></span><button class="mini copy">复制</button></div><pre class="code" data-lang="csharp"><code>private 其它命名空间就不能用了，一般使用public</code></pre><div class="cout" hidden></div></div>
+<div class="cpair"><div class="chead"><span class="lang">C#</span><span class="csp"></span><button class="mini copy">复制</button></div><pre class="code" data-lang="csharp"><code> private 其它命名空间就不能用了，一般使用public</code></pre><div class="cout" hidden></div></div>
 <div class="cpair"><div class="chead"><span class="lang">C#</span><span class="csp"></span><button class="mini copy">复制</button></div><pre class="code" data-lang="csharp"><code>    申明了一个可以用来存储无参无返回值函数的容器
     这里只是定义了规则 并没有使用
     delegate void MyFun();
@@ -1140,7 +1135,6 @@ delegate T MyFun3&lt;T, K&gt;(T v, K k);</code></pre><div class="cout" hidden></
 
         public Action action;//系统自定义的无参无返回值委托
 
-     
         public void TestFun( MyFun fun, MyFun2 fun2 )
         {
             //先处理一些别的逻辑 当这些逻辑处理完了 再执行传入的函数
@@ -1158,8 +1152,7 @@ delegate T MyFun3&lt;T, K&gt;(T v, K k);</code></pre><div class="cout" hidden></
         {
             this.fun += fun;
             this.fun2 += fun2;
-        }
-    </code></pre><div class="cout" hidden></div></div>
+        }</code></pre><div class="cout" hidden></div></div>
 <h4 id="06-delegate-委托-的删除" class="hd lv4">06.delegate 委托 的删除</h4>
 <div class="cpair"><div class="chead"><span class="lang">C#</span><span class="csp"></span><button class="mini copy">复制</button></div><pre class="code" data-lang="csharp"><code>        public void RemoveFun(MyFun fun, MyFun2 fun2)
         {
@@ -1169,25 +1162,24 @@ delegate T MyFun3&lt;T, K&gt;(T v, K k);</code></pre><div class="cout" hidden></
         }</code></pre><div class="cout" hidden></div></div>
 <h4 id="07-delegate-委托-多播" class="hd lv4">07.delegate 委托（多播）</h4>
 <p class="tx">委托变量可以存储多个函数（多播委托）</p>
-<div class="cpair"><div class="chead"><span class="lang">C#</span><span class="csp"></span><button class="mini copy">复制</button></div><pre class="code" data-lang="csharp"><code>    
-        static void Main(string[] args)
+<div class="cpair"><div class="chead"><span class="lang">C#</span><span class="csp"></span><button class="mini copy">复制</button></div><pre class="code" data-lang="csharp"><code>        static void Main(string[] args)
         {
-       
+
             MyFun f = new MyFun(Fun);
            // MyFun自定义的无参无返回值委托，传入Fun()无参无返回值函数 的名字Fun
            //理解成委托容器 f 装在了Fun函数
--------------------------------------------------------------------------------------- 
+--------------------------------------------------------------------------------------
            委托调用方法 1
             f.Invoke();
             委托中的Invoke()方法可以执行这个Fun函数
-                
- --------------------------------------------------------------------------------------                
+
+ --------------------------------------------------------------------------------------
             委托调用方法2
             MyFun f2 = Fun;
             //把函数Fun存储到委托f2里面
             f2();
             使用函数调用的方式进行调用
---------------------------------------------------------------------------------------           
+--------------------------------------------------------------------------------------
             MyFun2 f3 = Fun2;
             Console.WriteLine(f3(1));
 
@@ -1199,25 +1191,24 @@ delegate T MyFun3&lt;T, K&gt;(T v, K k);</code></pre><div class="cout" hidden></
 
             t.TestFun(Fun, Fun2);
             使用方法2进行调用
-     
 
         }
---------------------------------------------------------------------------------------            
+--------------------------------------------------------------------------------------
             置空委托
-            
-            MyFun ff = null;  
- -------------------------------------------------------------------------------------- 
+
+            MyFun ff = null;
+ --------------------------------------------------------------------------------------
             存储函数
             ff += Fun;
             ff += Fun3;
             ff();
--------------------------------------------------------------------------------------- 
+--------------------------------------------------------------------------------------
             从容器中移除指定的函数
             ff -= Fun;
             //多减 不会报错 无非就是不处理而已
             ff -= Fun;
             ff();
--------------------------------------------------------------------------------------- 
+--------------------------------------------------------------------------------------
             //清空容器
             ff = null;
             if( ff != null )
@@ -1225,8 +1216,6 @@ delegate T MyFun3&lt;T, K&gt;(T v, K k);</code></pre><div class="cout" hidden></
                 ff();
             }
 
-
-            
         }
 --------------------------------------------------------------------------------------
         2个方法
@@ -1239,7 +1228,7 @@ delegate T MyFun3&lt;T, K&gt;(T v, K k);</code></pre><div class="cout" hidden></
             Console.WriteLine("李四做什么");
         }
 --------------------------------------------------------------------------------------
-       无参返回 
+       无参返回
         static string Fun4()
         {
             return "";
@@ -1256,7 +1245,7 @@ delegate T MyFun3&lt;T, K&gt;(T v, K k);</code></pre><div class="cout" hidden></
 
         }
 --------------------------------------------------------------------------------------
-        有参有返回  
+        有参有返回
         static int Fun2(int value)
         {
             return value;
@@ -1294,7 +1283,7 @@ Console.WriteLine(funTest());
 然后迭代器遍历获取到每一个函数的 单独执行 单独获取
 foreach(Func&lt;string&gt; del in funTest.GetInvocationList())
 {
-Console.WriteLine(del());    
+Console.WriteLine(del());
 }</code></pre><div class="cout" hidden></div></div>
 <h4 id="11-delegate-委托总结" class="hd lv4">11.delegate 委托总结</h4>
 <p class="tx">简单理解 委托 就是装载、传递函数的容器而已</p>
@@ -1309,11 +1298,10 @@ Console.WriteLine(del());
 {
     public evetn delegate void Method();
     访问修饰符 event 委托类类型 事件名
-    Mthod method;//申明一个method事件变量   
+    Mthod method;//申明一个method事件变量
 
     public  event Action method; //Action是C#封装好的无参数无返回值的委托
 
-    
       mthod=null //事件置空
 }</code></pre><div class="cout" hidden></div></div>
 <h4 id="01-事件的使用" class="hd lv4">01. 事件的使用：</h4>
@@ -1323,7 +1311,7 @@ Console.WriteLine(del());
 <p class="tx">（在外部 可以进行 加减 去增添移除记录的函数 ，只能用复合运算符 += -=， 【= 就是在赋值不能使用】）</p>
 <p class="tx">事件不能再类外部进行调用（只能通过类中封装一个方法 执行事件，通过外部实例化类.函数 的方式使用）</p>
 <p class="tx">事件是一种特殊的变量类型</p>
-<p class="tx">事件只能作为成员存在于 类 接口 结构体 中（事件是不能作为临时变量再函数中使用的）</p>
+<p class="tx">事件只能作为成员存在于 类  接口  结构体 中（事件是不能作为临时变量再函数中使用的）</p>
 <h3 id="匿名函数" class="hd lv3">💡匿名函数</h3>
 <h4 id="01-匿名函数的声明" class="hd lv4">01.匿名函数的声明</h4>
 <p class="tx">没有名字的函数，主要配合委托和事件使用，脱离委托和事件，是不会使用匿名函数的</p>
@@ -1331,7 +1319,7 @@ Console.WriteLine(del());
 <div class="cpair"><div class="chead"><span class="lang">C#</span><span class="csp"></span><button class="mini copy">复制</button></div><pre class="code" data-lang="csharp"><code>delegate(参数列表) //没有名字的函数
 {
 
-  //函数逻辑  
+  //函数逻辑
 };</code></pre><div class="cout" hidden></div></div>
 <p class="tx">申明匿名函数 只是在申明函数而已，还没有进行调用</p>
 <p class="tx">调用委托容器的时候，才会调用这个匿名函数</p>
@@ -1340,7 +1328,7 @@ Console.WriteLine(del());
 //Action 是系统封装的无参数无返回值的委托变量
 Action a= delegate()声明一个委托变量a 进行存储 匿名函数
 {
-  //匿名函数内容  
+  //匿名函数内容
 };
 
 a();//使用委托中的  无参匿名函数
@@ -1357,7 +1345,7 @@ Action&lt;string&gt; c=delegate()
 {
 只需要在内部进行返回 任意类型（需要和委托的数据类型 一致），不需要在函数名前申明
     return "123";
-    
+
 };</code></pre><div class="cout" hidden></div></div>
 <h4 id="03-匿名函数作为参数和返回值" class="hd lv4">03.匿名函数作为参数和返回值</h4>
 <div class="cpair"><div class="chead"><span class="lang">C#</span><span class="csp"></span><button class="mini copy">复制</button></div><pre class="code" data-lang="csharp"><code>Class Test
@@ -1374,7 +1362,7 @@ public  void Do(int a,Aciton fun)
 
     执行逻辑
 }
-}  
+}
 -------------------------------------
 Test t=new Test();
 07作为返回值的使用
@@ -1396,8 +1384,7 @@ static Func&lt;int,int&gt;TestFun(int i)
 }
 ----------------------------------------------------------------------------------------
 Func&lt;int ,int&gt;fun=TestFun(2);
-Console.WriteLine(fun(3));
-    </code></pre><div class="cout" hidden></div></div>
+Console.WriteLine(fun(3));</code></pre><div class="cout" hidden></div></div>
 <h4 id="04-匿名函数的缺点" class="hd lv4">04.匿名函数的缺点</h4>
 <p class="tx">匿名函数增加（因为匿名函数没有名字）到委托或者事件容器后，没法记录，无法单独删除</p>
 <p class="tx">无法指定删除某一个匿名函数（新申明的匿名函数就是一个新的匿名函数（就算里面逻辑一模一样））</p>
@@ -1455,51 +1442,79 @@ a();//调用lambad表达式</code></pre><div class="cout" hidden></div></div>
 <p class="tx">内层的函数可以引用包含在它外层的函数的变量</p>
 <p class="tx">即使外层函数的执行已经终止</p>
 <p class="tx">注意：该变量提供的值并非变量创建时的值，而是在父函数范围内的最终值。</p>
-<div class="cpair"><div class="chead"><span class="lang">C#</span><span class="csp"></span><button class="mini copy">复制</button></div><pre class="code" data-lang="csharp"><code>class Test
+<div class="cpair"><div class="chead"><span class="lang">C#</span><span class="csp"></span><button class="mini copy">复制</button></div><pre class="code" data-lang="csharp"><code>#region 带详细注释完整代码
+using System;
+
+class Test
+{
+    // 定义Action委托事件，可绑定多个lambda回调
+    public event Action action;
+
+    public Test()
     {
-        public event Action action;
+        // 构造函数内的局部变量，正常情况下构造函数执行完毕，栈上value就应该被回收
+        int value = 10;
 
-        public Test()
+        // 给事件赋值lambda表达式，lambda捕获了当前方法的局部变量value
+        // ✅形成闭包：编译器会生成闭包类，把栈上的value提升到堆上的闭包类的字段中
+        // 哪怕构造函数执行结束，栈帧销毁，事件还持有这个lambda委托，value就不会被GC回收
+        action = () =&gt;
         {
-            int value = 10;
-            //构造函数中申明的变量 只执行一次，执行后会被GC
-            //这里就形成了闭包
-            //因为 当构造函数执行完毕时  其中申明的临时变量value的声明周期被改变了
-            action = () =&gt;
+            Console.WriteLine(value);
+        };
+
+        // for循环，i是for循环的迭代变量，整个循环生命周期只创建这一个i变量
+        for (int i = 0; i &lt; 10; i++)
+        {
+            // 在循环体内定义局部变量index，每一轮循环，都会在栈上生成全新的index副本
+            int index = i;
+
+            // += 事件多订阅，每一轮循环都新增一个lambda绑定到事件
+            action += () =&gt;
             {
-                Console.WriteLine(value);
+        // ✔捕获循环内部的局部变量index：每一个lambda对应一轮循环新建的index，保存当时i的快照
+        // 执行的时候，可以打印出每一轮循环当时i的值：0,1,2...9
+                Console.WriteLine(index);
+
+        // ❗这里直接捕获for循环的迭代变量i，注意：整个for循环就只有这一个i变量
+        // 所有lambda捕获的是同一个i变量的引用，不是捕获当时i的值
+        // 等循环全部跑完，i最终变成10；后续调用action()触发全部lambda时，读取的都是i最终值
+        // 所以这里全部打印输出：10，不会输出0~9
+                Console.WriteLine(i);
             };
-
-            for (int i = 0; i &lt; 10; i++)
-            {
-               
-                //此index 非彼index
-                int index = i;
-                //每次进入循环就会声明一个新的index变量存储i  
-                action += () =&gt;
-                {
-                    Console.WriteLine(index);
-       这里可以打印每次循环中i的值
-                     Console.WriteLine(i);
-         
-        lambad表达式对它外层函数的变量i进行了引用，i的值会变成10次循环后最终的值打印出来会全部是10
-                  
-                };
-            }
-        }
-
-        public void DoSomthing()
-        {
-            action();
         }
     }
 
-    #endregion</code></pre><div class="cout" hidden></div></div>
+    public void DoSomthing()
+    {
+        // 触发事件，执行所有绑定的lambda闭包
+        action?.Invoke();
+    }
+}
+
+// 调用测试
+/*
+Test t = new Test();
+t.DoSomthing();
+
+输出顺序：
+10      //第一个闭包打印value
+0
+10
+1
+10
+2
+10
+......
+9
+10
+*/
+#endregion</code></pre><div class="cout" hidden></div></div>
 <h4 id="03lambad-总结" class="hd lv4">03Lambad 总结</h4>
 <p class="tx">匿名函数的特殊写法 就是 lambad表达式</p>
 <div class="cpair"><div class="chead"><span class="lang">TEXT</span><span class="csp"></span><button class="mini copy">复制</button></div><pre class="code" data-lang="text"><code>固定写法 就是 (参数列表)=&gt;{}</code></pre><div class="cout" hidden></div></div>
 <p class="tx">数列表 可以直接省略参数类型</p>
-<p class="tx">主要在 委托传递和存储时 为了方便可以直接使用匿名函数或者lambad表达式</p>
+<p class="tx">主要在 委托传递和存储时  为了方便可以直接使用匿名函数或者lambad表达式</p>
 <p class="tx">缺点：无法指定移除</p>
 <h2 id="⑤list排序" class="hd lv2">⑤List排序</h2>
 <h3 id="list-自带的排序方法" class="hd lv3">💡List 自带的排序方法</h3>
@@ -1520,7 +1535,7 @@ for (int i = 0; i &lt; list.Count; i++)
 }
 //ArrayList中也有Sort排序方法</code></pre><div class="cout" hidden></div></div>
 <h3 id="自定义-的排序" class="hd lv3">💡自定义 的排序</h3>
-<p class="tx">&lt;0 前面（左边）=0 不变（中间） &gt;0 后面（右边）</p>
+<p class="tx">&lt;0 前面（左边）=0 不变（中间）  &gt;0 后面（右边）</p>
 <figure class="fig"><img loading="lazy" src="assets/img/b9fbb83e3efe.png" alt=""></figure>
 <div class="cpair"><div class="chead"><span class="lang">C#</span><span class="csp"></span><button class="mini copy">复制</button></div><pre class="code" data-lang="csharp"><code>class Item : IComparable&lt;Item&gt;
 {
@@ -1561,7 +1576,7 @@ for (int i = 0; i &lt; list.Count; i++)
     }</code></pre><div class="cout" hidden></div></div>
 <div class="cpair"><div class="chead"><span class="lang">C#</span><span class="csp"></span><button class="mini copy">复制</button></div><pre class="code" data-lang="csharp"><code>List&lt;Item&gt; itemList = new List&lt;Item&gt;();
 -------------------------------------------------------------------------------------
- 增加 自定义类到list中   
+ 增加 自定义类到list中
 itemList.Add(new Item(45));
 itemList.Add(new Item(10));
 itemList.Add(new Item(99));
@@ -1598,14 +1613,12 @@ for (int i = 0; i &lt; itemList.Count; i++)
            Sort方法中有3个重载，其中一个就是传递委托
            public delegate int Comparison&lt;T&gt;(T x, T y);
 -------------------------------------------------------------------------------------
-         
 
             for (int i = 0; i &lt; shopItems.Count; i++)
             {
                 Console.WriteLine(shopItems[i].id);
             }
 -------------------------------------------------------------------------------------
-
 
 这里的方法和Sort委托一致，就可以当成参数传入
 static int SortShopItem( ShopItem a, ShopItem b )
@@ -1644,12 +1657,12 @@ static int SortShopItem( ShopItem a, ShopItem b )
 <h2 id="⑥协变逆变" class="hd lv2">⑥协变逆变</h2>
 <p class="tx">协变：和谐的变化，自然的变化，因为里氏替换原则 父类可以装子类，所有子类变父类，比如 string 变 object 感受是和谐的.</p>
 <p class="tx">逆变: 逆常规的变化，不正常的变化，因为里氏替换原则 父类可以装子类，但是子类不能装父类，所以父类变子类</p>
-<p class="tx">比如 object 变 string 感受是不和谐的</p>
+<p class="tx">比如 object 变 string  感受是不和谐的</p>
 <p class="tx">协变和逆变是用来修饰泛型的</p>
-<p class="tx">协变:out 逆变 in 用于在泛型中 修饰 泛型字母的，</p>
+<p class="tx">协变:out   逆变 in   用于在泛型中 修饰 泛型字母的，</p>
 <p class="tx">只有泛型接口 和 泛型委托能使用</p>
 <h3 id="协变-out-返回值和逆变-in-参数" class="hd lv3">💡协变 out 返回值和逆变 in 参数</h3>
-<p class="tx">系统自定义的 Action&lt;in T&gt; 实际是一个逆变委托 Func&lt;out T&gt;协变委托</p>
+<p class="tx">系统自定义的 Action&lt;in T&gt; 实际是一个逆变委托  Func&lt;out T&gt;协变委托</p>
 <div class="cpair"><div class="chead"><span class="lang">C#</span><span class="csp"></span><button class="mini copy">复制</button></div><pre class="code" data-lang="csharp"><code>用OUT修饰的泛型 只能作为返回值
 delegate T TestOut&lt;out T&gt;(参数);这里的参数不能用泛型，因为用了OUT
 
@@ -1668,10 +1681,10 @@ class Father{}
 class Son:Father()
 ----------------------------------------------------------------------------------------
  TestOut&lt;Son&gt;os=()=&gt;
- { 
+ {
     申明了一个泛型委托（Son类作为泛型参数），装载了一个lambad表达式
     return new Son(); 因为OUT 是有返回值的 所以返回一个Son;
- };   
+ };
 
 TestOut&lt;Father&gt;of= os;
 -----------------------------------------------------------------------------------------
@@ -1688,9 +1701,9 @@ class Father{}
 class Son:Father()
 ----------------------------------------------------------------------------------------
  TestIn&lt;Father&gt; inF=(value)=&gt;
- { 
-  
- };       
+ {
+
+ };
 TestIn&lt;Son&gt; inS=inF;
 申明了一个子类参数 委托 装载 父类参数委托，
 -----------------------------------------------------------------------------------------
@@ -1705,7 +1718,7 @@ inS(new Son());
 
 //1.out修饰的泛型类型 只能作为返回值类型 协变
 
-// in修饰的泛型类型 只能作为参数类型 逆变
+// in修饰的泛型类型 只能作为参数类型   逆变
 
 //2.遵循里氏替换原则 用out和in修饰的泛型委托 如果类型是父子关系 那么可以相互装载
 
@@ -1717,20 +1730,20 @@ inS(new Son());
 <h4 id="01-进程" class="hd lv4">01 进程</h4>
 <figure class="fig"><img loading="lazy" src="assets/img/0ee9fbf9cd0b.png" alt=""></figure>
 <figure class="fig"><img loading="lazy" src="assets/img/4baf858dbbcb.png" alt=""></figure>
-<div class="cpair"><div class="chead"><span class="lang">TEXT</span><span class="csp"></span><button class="mini copy">复制</button></div><pre class="code" data-lang="text"><code>             //进程（Process）是计算机中的程序关于某数据集合上的一次运行活动
+<div class="cpair"><div class="chead"><span class="lang">C#</span><span class="csp"></span><button class="mini copy">复制</button></div><pre class="code" data-lang="csharp"><code>             //进程（Process）是计算机中的程序关于某数据集合上的一次运行活动
             //是系统进行资源分配和调度的基本单位，是操作系统结构的基础
             //说人话：打开一个应用程序就是在操作系统上开启了一个进程
             //进程之间可以相互独立运行，互不干扰
             //进程之间也可以相互访问、操作</code></pre><div class="cout" hidden></div></div>
 <h4 id="02-线程" class="hd lv4">02 线程</h4>
-<div class="cpair"><div class="chead"><span class="lang">TEXT</span><span class="csp"></span><button class="mini copy">复制</button></div><pre class="code" data-lang="text"><code>            //操作系统能够进行运算调度的最小单位。
+<div class="cpair"><div class="chead"><span class="lang">C#</span><span class="csp"></span><button class="mini copy">复制</button></div><pre class="code" data-lang="csharp"><code>            //操作系统能够进行运算调度的最小单位。
             //它被包含在进程之中，是进程中的实际运作单位
             //一条线程指的是进程中一个单一顺序的控制流，一个进程中可以并发多个线程
             //我们目前写的程序 都在主线程中
             //简单理解线程：
             //就是代码从上到下运行的一条“管道”</code></pre><div class="cout" hidden></div></div>
 <h4 id="03-多线程" class="hd lv4">03 多线程</h4>
-<div class="cpair"><div class="chead"><span class="lang">TEXT</span><span class="csp"></span><button class="mini copy">复制</button></div><pre class="code" data-lang="text"><code>            //我们可以通过代码 开启新的线程
+<div class="cpair"><div class="chead"><span class="lang">C#</span><span class="csp"></span><button class="mini copy">复制</button></div><pre class="code" data-lang="csharp"><code>            //我们可以通过代码 开启新的线程
             //可以同时运行代码的多条“管道” 就叫多线程</code></pre><div class="cout" hidden></div></div>
 <h3 id="线程类-thread" class="hd lv3">💡线程类 Thread</h3>
 <div class="cpair"><div class="chead"><span class="lang">C#</span><span class="csp"></span><button class="mini copy">复制</button></div><pre class="code" data-lang="csharp"><code>需要引用命名空间 using System.Threading;</code></pre><div class="cout" hidden></div></div>
@@ -1743,7 +1756,7 @@ inS(new Son());
 F12  可以查看 ThreadStart这个参数
 public delegate void ThreadStart(); 一个无参无返回值的委托</code></pre><div class="cout" hidden></div></div>
 <h4 id="02-线程启动" class="hd lv4">02.线程启动</h4>
-<div class="cpair"><div class="chead"><span class="lang">TEXT</span><span class="csp"></span><button class="mini copy">复制</button></div><pre class="code" data-lang="text"><code>t.Start(); 启动线程</code></pre><div class="cout" hidden></div></div>
+<div class="cpair"><div class="chead"><span class="lang">C#</span><span class="csp"></span><button class="mini copy">复制</button></div><pre class="code" data-lang="csharp"><code>t.Start(); 启动线程</code></pre><div class="cout" hidden></div></div>
 <h4 id="03-线程关闭" class="hd lv4">03. 线程关闭</h4>
 <div class="cpair"><div class="chead"><span class="lang">C#</span><span class="csp"></span><button class="mini copy">复制</button></div><pre class="code" data-lang="csharp"><code>可以增加一个标识（比如控制while循环终止）
 static bool isRuning = false;
@@ -1777,10 +1790,10 @@ catch
             }
 }</code></pre><div class="cout" hidden></div></div>
 <h4 id="04-线程休眠" class="hd lv4">04. 线程休眠</h4>
-<div class="cpair"><div class="chead"><span class="lang">TEXT</span><span class="csp"></span><button class="mini copy">复制</button></div><pre class="code" data-lang="text"><code>线程休眠，在哪个线程里执行就休眠哪个线程  
+<div class="cpair"><div class="chead"><span class="lang">C#</span><span class="csp"></span><button class="mini copy">复制</button></div><pre class="code" data-lang="csharp"><code>线程休眠，在哪个线程里执行就休眠哪个线程
 Thread.Sleep(); 传的是毫秒数 1秒=1000毫秒，</code></pre><div class="cout" hidden></div></div>
 <h4 id="05-设置为后台线程" class="hd lv4">05.设置为后台线程</h4>
-<div class="cpair"><div class="chead"><span class="lang">TEXT</span><span class="csp"></span><button class="mini copy">复制</button></div><pre class="code" data-lang="text"><code>当前台线程都结束了的时候,整个程序也就结束了,即使还有后台线程正在运行
+<div class="cpair"><div class="chead"><span class="lang">C#</span><span class="csp"></span><button class="mini copy">复制</button></div><pre class="code" data-lang="csharp"><code>当前台线程都结束了的时候,整个程序也就结束了,即使还有后台线程正在运行
 后台线程不会防止应用程序的进程被终止掉
 如果不设置为后台线程 可能导致进程无法正常关闭（比如新开的线程里面是个死循环）
 
@@ -1815,23 +1828,23 @@ Thread.Sleep(); 传的是毫秒数 1秒=1000毫秒，</code></pre><div class="co
 <h2 id="⑧预处理器指令" class="hd lv2">⑧预处理器指令</h2>
 <p class="tx">用于平台判断</p>
 <h3 id="什么是编译器" class="hd lv3">💡什么是编译器</h3>
-<div class="cpair"><div class="chead"><span class="lang">TEXT</span><span class="csp"></span><button class="mini copy">复制</button></div><pre class="code" data-lang="text"><code>//编译器是一种翻译程序
+<div class="cpair"><div class="chead"><span class="lang">TEXT</span><span class="csp"></span><button class="mini copy">复制</button></div><pre class="code" data-lang="text"><code>            //编译器是一种翻译程序
 
-//它用于将源语言程序翻译为目标语言程序
+            //它用于将源语言程序翻译为目标语言程序
 
-//源语言程序：某种程序设计语言写成的,比如C#、C、C++、Java等语言写的程序
+            //源语言程序：某种程序设计语言写成的,比如C#、C、C++、Java等语言写的程序
 
-//目标语言程序:二进制数表示的伪机器代码写的程序</code></pre><div class="cout" hidden></div></div>
+            //目标语言程序:二进制数表示的伪机器代码写的程序</code></pre><div class="cout" hidden></div></div>
 <h3 id="什么是预处理器指令" class="hd lv3">💡什么是预处理器指令</h3>
-<div class="cpair"><div class="chead"><span class="lang">TEXT</span><span class="csp"></span><button class="mini copy">复制</button></div><pre class="code" data-lang="text"><code>//预处理器指令 指导编译器 在实际编译开始之前对信息进行预处理
+<div class="cpair"><div class="chead"><span class="lang">TEXT</span><span class="csp"></span><button class="mini copy">复制</button></div><pre class="code" data-lang="text"><code>            //预处理器指令 指导编译器 在实际编译开始之前对信息进行预处理
 
-//预处理器指令 都是以#开始
+            //预处理器指令 都是以#开始
 
-//预处理器指令不是语句，所以它们不以分号;结束
+            //预处理器指令不是语句，所以它们不以分号;结束
 
-//目前我们经常用到的 折叠代码块 就是预处理器指令</code></pre><div class="cout" hidden></div></div>
+            //目前我们经常用到的 折叠代码块 就是预处理器指令</code></pre><div class="cout" hidden></div></div>
 <h3 id="常见的预处理器指令" class="hd lv3">💡常见的预处理器指令</h3>
-<div class="cpair"><div class="chead"><span class="lang">TEXT</span><span class="csp"></span><button class="mini copy">复制</button></div><pre class="code" data-lang="text"><code>#define
+<div class="cpair"><div class="chead"><span class="lang">C#</span><span class="csp"></span><button class="mini copy">复制</button></div><pre class="code" data-lang="csharp"><code>#define
 定义一个符号，类似一个没有值的变量
 #undef
 取消define定义的符号，让其失效
@@ -1857,7 +1870,7 @@ Thread.Sleep(); 传的是毫秒数 1秒=1000毫秒，</code></pre><div class="co
 #else
             Console.WriteLine("其它版本");
 #endif</code></pre><div class="cout" hidden></div></div>
-<div class="cpair"><div class="chead"><span class="lang">TEXT</span><span class="csp"></span><button class="mini copy">复制</button></div><pre class="code" data-lang="text"><code>#warning  警告
+<div class="cpair"><div class="chead"><span class="lang">C#</span><span class="csp"></span><button class="mini copy">复制</button></div><pre class="code" data-lang="csharp"><code>#warning  警告
 #error  报错
 告诉编译器
 是报警告还是报错误
@@ -1867,27 +1880,28 @@ Thread.Sleep(); 传的是毫秒数 1秒=1000毫秒，</code></pre><div class="co
          #warning 这个版本 不合法
           #error 这个版本不准执行
 #endif</code></pre><div class="cout" hidden></div></div>
+<p class="tx">#####</p>
 <h2 id="⑨反射和特性" class="hd lv2">⑨反射和特性</h2>
 <p class="tx"><b>反射相关</b></p>
 <h3 id="什么是程序集-和-元数据" class="hd lv3">💡什么是程序集 和 元数据</h3>
-<div class="cpair"><div class="chead"><span class="lang">TEXT</span><span class="csp"></span><button class="mini copy">复制</button></div><pre class="code" data-lang="text"><code>程序集是经由编译器编译得到的，供进一步编译执行的那个中间产物
+<div class="cpair"><div class="chead"><span class="lang">C#</span><span class="csp"></span><button class="mini copy">复制</button></div><pre class="code" data-lang="csharp"><code>程序集是经由编译器编译得到的，供进一步编译执行的那个中间产物
 在WINDOWS系统中，它一般表现为后缀为·dll（库文件）或者是·exe（可执行文件）的格式
 
 程序集就是我们写的一个代码集合，我们现在写的所有代码
 最终都会被编译器翻译为一个程序集供别人使用
 比如一个代码库文件（dll）或者一个可执行文件(exe)</code></pre><div class="cout" hidden></div></div>
-<div class="cpair"><div class="chead"><span class="lang">TEXT</span><span class="csp"></span><button class="mini copy">复制</button></div><pre class="code" data-lang="text"><code>元数据就是用来描述数据的数据
+<div class="cpair"><div class="chead"><span class="lang">C#</span><span class="csp"></span><button class="mini copy">复制</button></div><pre class="code" data-lang="csharp"><code>元数据就是用来描述数据的数据
 这个概念不仅仅用于程序上，在别的领域也有元数据
 
 程序中的类，类中的函数、变量等等信息就是 程序的 元数据
 有关程序以及类型的数据被称为 元数据，它们保存在程序集中</code></pre><div class="cout" hidden></div></div>
 <h3 id="反射的概念-和作用" class="hd lv3">💡反射的概念 和作用</h3>
-<div class="cpair"><div class="chead"><span class="lang">TEXT</span><span class="csp"></span><button class="mini copy">复制</button></div><pre class="code" data-lang="text"><code>程序正在运行时，可以查看其它程序集或者自身的元数据。
+<div class="cpair"><div class="chead"><span class="lang">C#</span><span class="csp"></span><button class="mini copy">复制</button></div><pre class="code" data-lang="csharp"><code>程序正在运行时，可以查看其它程序集或者自身的元数据。
 一个运行的程序查看本身或者其它程序的元数据的行为就叫做反射
 
 在程序运行时，通过反射可以得到其它程序集或者自己程序集代码的各种信息
 类，函数，变量，对象等等，实例化它们，执行它们，操作它们</code></pre><div class="cout" hidden></div></div>
-<div class="cpair"><div class="chead"><span class="lang">TEXT</span><span class="csp"></span><button class="mini copy">复制</button></div><pre class="code" data-lang="text"><code>因为反射可以在程序编译后获得信息，所以它提高了程序的拓展性和灵活性
+<div class="cpair"><div class="chead"><span class="lang">C#</span><span class="csp"></span><button class="mini copy">复制</button></div><pre class="code" data-lang="csharp"><code>因为反射可以在程序编译后获得信息，所以它提高了程序的拓展性和灵活性
 1.程序运行时得到所有元数据，包括元数据的特性
 2.程序运行时，实例化对象，操作对象
 3.程序运行时创建新对象，用这些对象执行任务</code></pre><div class="cout" hidden></div></div>
@@ -1922,7 +1936,7 @@ Type type3 = Type.GetType("System.Int32");
 Console.WriteLine(type3);
 --------------------------------------------------------------------------------------
 type ,type2,type3 指向堆里是同一个地址
-（通过GetType 去得到（Int32数据类型） Int32元数据类只有一份信息）    
+（通过GetType 去得到（Int32数据类型） Int32元数据类只有一份信息）
 --------------------------------------------------------------------------------------
 得到类的程序集信息
 
@@ -1963,7 +1977,7 @@ for (int i = 0; i &lt; ctors.Length; i++)
 想拿 private 的，必须额外加配置。
 
 通过反射去调用对象
-    
+
 2.获取其中一个构造函数 并执行
 得构造函数传入 Type数组 数组中内容按顺序是参数类型
 执行构造函数传入  object数组 表示按顺序传入的参数
@@ -1995,7 +2009,7 @@ new Type[0] 就是一个长度为 0 的 Type 类型数组，
 
 执行无参构造  info.Invoke(传参)因为是无参构造直接传null，返回一个object对象
 //无参下  Invoke(null)
-Test obj = info.Invoke(null) as Test; 里氏替换原则 
+Test obj = info.Invoke(null) as Test; 里氏替换原则
 
 Console.WriteLine(obj.j);
 --------------------------------------------------------------------------------------
@@ -2053,7 +2067,7 @@ string str = "Hello,World!";
 object result = subStr.Invoke(str, new object[] { 7, 5 });
 得到的substring方法会返回一个新的地址，需要用一个object变量去存储
 Console.WriteLine(result);</code></pre><div class="cout" hidden></div></div>
-<div class="cpair"><div class="chead"><span class="lang">TEXT</span><span class="csp"></span><button class="mini copy">复制</button></div><pre class="code" data-lang="text"><code>Type;得枚举 GetEnumName  GetEnumNames
+<div class="cpair"><div class="chead"><span class="lang">C#</span><span class="csp"></span><button class="mini copy">复制</button></div><pre class="code" data-lang="csharp"><code>Type;得枚举 GetEnumName  GetEnumNames
 得事件GetEvent  GetEvents
 得接口GetInterface GetInterfaces
 得属性GetProperty  GetPropertys
@@ -2089,7 +2103,7 @@ Console.WriteLine(testObj.j);</code></pre><div class="cout" hidden></div></div>
 <div class="cpair"><div class="chead"><span class="lang">C#</span><span class="csp"></span><button class="mini copy">复制</button></div><pre class="code" data-lang="csharp"><code>主要用来加载其它程序集，加载后
 才能用Type来使用其它程序集中的信息
 如果想要使用不是自己程序集中的内容 需要先加载程序集
-比如 dll文件(库文件) 
+比如 dll文件(库文件)
 简单的把库文件看成一种代码仓库，它提供给使用者一些可以直接拿来用的变量、函数或类
 --------------------------------------------------------------------------------------
 三种加载程序集的函数
@@ -2141,7 +2155,7 @@ while(true)
                 draw.Invoke(iconObj, null);
 }</code></pre><div class="cout" hidden></div></div>
 <h4 id="04-反射总结" class="hd lv4">04.反射总结</h4>
-<div class="cpair"><div class="chead"><span class="lang">TEXT</span><span class="csp"></span><button class="mini copy">复制</button></div><pre class="code" data-lang="text"><code>反射
+<div class="cpair"><div class="chead"><span class="lang">C#</span><span class="csp"></span><button class="mini copy">复制</button></div><pre class="code" data-lang="csharp"><code>反射
 在程序运行时，通过反射可以得到其他程序集或者自己的程序集代码的各种信息
 类、函数、变量、对象等等，实例化他们，执行他们，操作他们
 
@@ -2201,7 +2215,7 @@ Unity引起的基本工作机制 就是建立在反射的基础上</code></pre><
     本质上 就是在调用特性类的构造函数
     写在哪里？
     类、函数、变量上一行，表示他们具有该特性信息
-    
+
     就是为 成员，函数 等 添加额外信息，可以通过发射来获取这些额外信息
 ----------------------------------------------------------------------------------
     [MyCustom("这个是我自己写的一个用于计算的类")]  调用特性类的构造函数
@@ -2256,11 +2270,11 @@ Unity引起的基本工作机制 就是建立在反射的基础上</code></pre><
 <h4 id="04-限制自定义特性的使用范围" class="hd lv4">04.限制自定义特性的使用范围</h4>
 <div class="cpair"><div class="chead"><span class="lang">C#</span><span class="csp"></span><button class="mini copy">复制</button></div><pre class="code" data-lang="csharp"><code>通过为特性类 加特性 限制其使用范围
 [AttributeUsage(
-            AttributeTargets.Class | AttributeTargets.Struct, 
+            AttributeTargets.Class | AttributeTargets.Struct,
     参数 1   用在类上面或者 参数1使用在结构体上面
             // AttributeTargets —— 特性能够用在哪些地方，
             //系统枚举类型（里面有成员，属性，方法 等等）
-            AllowMultiple = true, 
+            AllowMultiple = true,
     参数 2   是否可以在类或结构体上再加特性
             //AllowMultiple —— 是否允许多个特性实例用在同一个目标上
             Inherited = true
@@ -2268,8 +2282,8 @@ Unity引起的基本工作机制 就是建立在反射的基础上</code></pre><
             //Inherited —— 特性是否能被派生类和重写成员继承
  )]
 ----------------------------------------------------------------------------------
-   
-[MyCustom("这个是我自己写的一个用于计算的类")] 参数 2 多加特性的使用 2个特性 
+
+[MyCustom("这个是我自己写的一个用于计算的类")] 参数 2 多加特性的使用 2个特性
 [MyCustom("这个是我自己写的一个用于计算的类")] 参数 1 的使用在类上面加特性
 public class MyCustom2Attribute : Attribute  自定义特性类
 {
@@ -2278,23 +2292,22 @@ public class MyCustom2Attribute : Attribute  自定义特性类
 参数 3 的使用
 public class NewMyCutsom:MyCustom2Attribute  继承自定义特性类
 {
-    
+
 }</code></pre><div class="cout" hidden></div></div>
 <h3 id="系统自带的特性" class="hd lv3">💡系统自带的特性</h3>
 <h4 id="01-过时特性" class="hd lv4">01.过时特性</h4>
 <div class="cpair"><div class="chead"><span class="lang">C#</span><span class="csp"></span><button class="mini copy">复制</button></div><pre class="code" data-lang="csharp"><code>   用于提示用户 使用的方法等成员已经过时 建议使用新方法
    一般加在函数前的特性
-----------------------------------------------------------------------------------   
-   
+----------------------------------------------------------------------------------
 
     class TestClass
     {
        参数一：调用过时方法时 提示的内容
        参数二：true使用该方法时会报错  false使用该方法时直接警告
-        完全不想其他人使用此老方法，可以直接true   
+        完全不想其他人使用此老方法，可以直接true
         这个方法还能用，可以false
         [Obsolete("OldSpeak方法已经过时了，请使用Speak方法", false)]
-        写过时特性，防止历史代码（为了不使用，用新方法）误删，程序出错，进行提示  
+        写过时特性，防止历史代码（为了不使用，用新方法）误删，程序出错，进行提示
         public void OldSpeak(string str)
         {
             Console.WriteLine(str);
@@ -2304,44 +2317,44 @@ public class NewMyCutsom:MyCustom2Attribute  继承自定义特性类
         {
 
         }
-    } 
----------------------------------------------------------------------------------- 
+    }
+----------------------------------------------------------------------------------
 TestClass tc = new TestClass();
 tc.OldSpeak("123");因为 过时特性参数2 false 这里会波浪线警告
 tc.Speak();</code></pre><div class="cout" hidden></div></div>
 <h4 id="02-调用者信息特性" class="hd lv4">02.调用者信息特性</h4>
 <div class="cpair"><div class="chead"><span class="lang">C#</span><span class="csp"></span><button class="mini copy">复制</button></div><pre class="code" data-lang="csharp"><code>需要引用命名空间 using System.Runtime.CompilerServices;
 一般作为函数参数的特性
----------------------------------------------------------------------------------- 
+----------------------------------------------------------------------------------
 哪个文件调用？        哪一行调用？               哪个函数调用？
 CallerFilePath特性   CallerLineNumber特性      CallerMemberName特性
----------------------------------------------------------------------------------- 
+----------------------------------------------------------------------------------
 class TestClass
 {
      public void SpeakCaller(
-                 string str, 
+                 string str,
          参数 1  传递的内容
-                 [CallerFilePath]string fileName = "", 
+                 [CallerFilePath]string fileName = "",
          参数 2  哪个文件调用特性 用string 存储
-                 [CallerLineNumber]int line = 0, 
+                 [CallerLineNumber]int line = 0,
          参数 3  哪一行调用特性   用int 存储
                  [CallerMemberName]string target = "")
          参数 4  哪个函数嗲用特性 用string 存储
      {
-      这里函数中使用了带哦用着信息特性的参数 
+      这里函数中使用了带哦用着信息特性的参数
       需要给默认值（如果不给，就需要传参数，就失去了特性的意义）
       给默认值后 会根据特性自动去传参数
-         
+
             Console.WriteLine(str);
             Console.WriteLine(fileName);
             Console.WriteLine(line);
             Console.WriteLine(target);
      }
-    
-} 
----------------------------------------------------------------------------------- 
+
+}
+----------------------------------------------------------------------------------
   TestClass tc = new TestClass();
- 
+
   tc.SpeakCaller("123123123123123");
 
   比如配合try catch使用（用在catch里）， 报错 就可以知道  哪个文件，哪一行，哪个函数 出错</code></pre><div class="cout" hidden></div></div>
@@ -2349,7 +2362,7 @@ class TestClass
 <div class="cpair"><div class="chead"><span class="lang">C#</span><span class="csp"></span><button class="mini copy">复制</button></div><pre class="code" data-lang="csharp"><code>Conditional
 它会和预处理指令 #define配合使用
 主要可以用在一些调试代码上,有时想执行有时不想执行的代码
----------------------------------------------------------------------------------- 
+----------------------------------------------------------------------------------
 #define Fun
 
 [Conditional("Fun")] 指定需要有#define Fun 才可以执行 特性下方的 函数
@@ -2372,8 +2385,7 @@ Fun();</code></pre><div class="cout" hidden></div></div>
 
 举例：引用了DLL包中的一个加法方法（这个方法和DLL包中的方法名和返回类型 要一模一样）
      相当于直接讲C或者C++中的这个方法映射到C#中，C#中使用此方法，就是直接调用C或者C++中的方法
-public static extern int Add(int a, int b);
-    </code></pre><div class="cout" hidden></div></div>
+public static extern int Add(int a, int b);</code></pre><div class="cout" hidden></div></div>
 <h2 id="⑩迭代器" class="hd lv2">⑩迭代器</h2>
 <h3 id="迭代器是什么" class="hd lv3">💡迭代器是什么</h3>
 <p class="tx">迭代器（iterator）有时又称光标（cursor），是程序设计的软件设计模式</p>
@@ -2386,9 +2398,9 @@ public static extern int Add(int a, int b);
 <p class="tx">2.用语法糖 yield return 去返回内容 只需要继承一个接口即可</p>
 <p class="tx">----------------------------------------------------------------------------------</p>
 <p class="tx">💡标准迭代器的实现方法(自己实现)</p>
-<div class="cpair"><div class="chead"><span class="lang">C#</span><span class="csp"></span><button class="mini copy">复制</button></div><pre class="code" data-lang="csharp"><code>关键接口：IEnumerator,IEnumerable 命名空间：using System.Collections;</code></pre><div class="cout" hidden></div></div>
+<div class="cpair"><div class="chead"><span class="lang">C#</span><span class="csp"></span><button class="mini copy">复制</button></div><pre class="code" data-lang="csharp"><code>关键接口：IEnumerator,IEnumerable   命名空间：using System.Collections;</code></pre><div class="cout" hidden></div></div>
 <p class="tx">可以通过同时继承IEnumerable和IEnumerator实现其中的方法</p>
-<div class="cpair"><div class="chead"><span class="lang">C#</span><span class="csp"></span><button class="mini copy">复制</button></div><pre class="code" data-lang="csharp"><code>foreach本质 
+<div class="cpair"><div class="chead"><span class="lang">C#</span><span class="csp"></span><button class="mini copy">复制</button></div><pre class="code" data-lang="csharp"><code>foreach本质
 1.先获取in后面这个对象的 IEnumerator会调用对象其中的GetEnumerator方法 来获取
 2.要通过foreach进行遍历，就必须实现GetEnumerator方法（可以不继承IEnumerable接口）
 3.执行得到这个IEnumerator对象中的 MoveNext方法
@@ -2397,7 +2409,7 @@ foreach (int item in list)
 {
     Console.WriteLine(item);
 }</code></pre><div class="cout" hidden></div></div>
-<div class="cpair"><div class="chead"><span class="lang">TEXT</span><span class="csp"></span><button class="mini copy">复制</button></div><pre class="code" data-lang="text"><code>1.首先调用 IEnumerable 中的 GetEnumerator()方法 得到IEnumerator对象
+<div class="cpair"><div class="chead"><span class="lang">C#</span><span class="csp"></span><button class="mini copy">复制</button></div><pre class="code" data-lang="csharp"><code>1.首先调用 IEnumerable 中的 GetEnumerator()方法 得到IEnumerator对象
 2.然后执行 IEnumerator中 Reset()方法 重置光标位置，清掉上次foreach循环后光标位置的最终值
 3.然后执行 IEnumerator中 MoveNext()方法，进行光标移动
 4.然后执行 Curerent属性 得到 对应元素</code></pre><div class="cout" hidden></div></div>
@@ -2412,24 +2424,22 @@ namespace System.Collections
 
     }
 }
-------------------------------------------------------------------------------------    
+------------------------------------------------------------------------------------
 class CustomList : IEnumerable, IEnumerator 继承接口
 {
         public CustomList()
         {
             list = new int[] { 1, 2, 3, 4, 5, 6, 7, 8 };
         }
-    
+
 }
         public IEnumerator GetEnumerator()返回IEnumerator 类型的方法
         只要实现IEnumerable接口（可以不继承此接口）中的方法，foreach就不会报错
         {
-            
-            
-                
+
              Reset()； 得到IEnumerator对象的时候调用，用于重置光标
-                
-             return this;  
+
+             return this;
              因为当前类继承了IEnumerator ，当前类就是个 IEnumerator 对象
              直接将当前类返回出去
         }
@@ -2438,10 +2448,10 @@ class CustomList : IEnumerable, IEnumerator 继承接口
 <h4 id="02-ienumerator接口" class="hd lv4">02.IEnumerator接口</h4>
 <div class="cpair"><div class="chead"><span class="lang">C#</span><span class="csp"></span><button class="mini copy">复制</button></div><pre class="code" data-lang="csharp"><code>C#系统IEnumerator接口的成员
 namespace System.Collections
-{    
+{
     public interface IEnumerator
-    {   
-        object Current { get; } 
+    {
+        object Current { get; }
         01 得到当前元素的属性
         bool MoveNext();
         02 移动光标到下一个位置
@@ -2452,18 +2462,18 @@ namespace System.Collections
 ------------------------------------------------------------------------------------
 class CustomList : IEnumerable, IEnumerator
 {
-  
-------------------------------------------------------------------------------------            
+
+------------------------------------------------------------------------------------
         private int[] list;
         从-1开始（每次第一次执行就会执行MoveNext函数）的光标 用于表示 数据得到了哪个位置
         private int position = -1; 申明一个光标
------------------------------------------------------------------------------------- 
+------------------------------------------------------------------------------------
         public CustomList() 构造函数 ，数组初始化
         {
             list = new int[] { 1, 2, 3, 4, 5, 6, 7, 8 };
             数组光标从-1开始（因为调用MoveNext函数就变成0）
         }
- ------------------------------------------------------------------------------------ 
+ ------------------------------------------------------------------------------------
 每次foreach 循环 先执行MoveNext 得到光标的位置，然后通过 Curerent属性 得到 对应元素
         public object Current 01得到当前元素
         {
@@ -2474,7 +2484,7 @@ class CustomList : IEnumerable, IEnumerator
         }
         public bool MoveNext()02移动光标函数
         {
-            
+
             ++position; 每次进来光标+1
             是否溢出 溢出就不合法
             return position &lt; list.Length;  只要光标&lt;数据的长度就合法返回true
@@ -2483,7 +2493,7 @@ class CustomList : IEnumerable, IEnumerator
         reset是重置光标位置 一般写在获取 IEnumerator对象这个函数中
         用于第一次重置光标位置
         public void Reset()
-        重置光标位置是为了foreach循环后，再执行foreah循环可以重新开始。    
+        重置光标位置是为了foreach循环后，再执行foreah循环可以重新开始。
         {
             position = -1;
         }
@@ -2493,6 +2503,7 @@ foreach (int item in list)
 {
     Console.WriteLine(item);
 }</code></pre><div class="cout" hidden></div></div>
+<p class="tx">######</p>
 <h3 id="用yield-return-语法糖实现迭代器-系统实现" class="hd lv3">💡用yield return 语法糖实现迭代器（系统实现）</h3>
 <div class="cpair"><div class="chead"><span class="lang">C#</span><span class="csp"></span><button class="mini copy">复制</button></div><pre class="code" data-lang="csharp"><code>yield return 是C#提供给我们的语法糖</code></pre><div class="cout" hidden></div></div>
 <p class="tx">所谓语法糖，也称糖衣语法，主要作用就是将复杂逻辑简单化，可以增加程序的可读性</p>
@@ -2508,7 +2519,7 @@ foreach (int item in list)
             list = new int[] { 1, 2, 3, 4, 5, 6, 7, 8 };
         }
 ------------------------------------------------------------------------------------
-  
+
 public IEnumerator GetEnumerator()
 {
  ------------------------------------------------------------------------------------
@@ -2518,14 +2529,14 @@ public IEnumerator GetEnumerator()
                1 yield关键字 配合迭代器使用
                2 可以理解为 暂时返回 保留当前的状态
                3一会还会在回来
-                   
+
                 C#的语法糖
                 yield return list[i];
                4.本质检测到 yield return 关键字
-               C#把标准迭代器实现的方法进行了封装，自动去实现 
+               C#把标准迭代器实现的方法进行了封装，自动去实现
             }
 ------------------------------------------------------------------------------------
-    2第二种方法 用yield return 语法糖实现迭代器 
+    2第二种方法 用yield return 语法糖实现迭代器
             yield return list[0];
             yield return list[1];
             yield return list[2];
@@ -2541,7 +2552,7 @@ public IEnumerator GetEnumerator()
  foreach(int item in list2)
  {
       Console.WriteLine(item);
-     
+
  }</code></pre><div class="cout" hidden></div></div>
 <h3 id="用yield-return-语法糖为泛型类实现迭代器-系统实现" class="hd lv3">💡用yield return 语法糖为泛型类实现迭代器（系统实现）</h3>
 <div class="cpair"><div class="chead"><span class="lang">C#</span><span class="csp"></span><button class="mini copy">复制</button></div><pre class="code" data-lang="csharp"><code>    class CustomList&lt;T&gt; : IEnumerable
@@ -2568,7 +2579,7 @@ foreach (string item in list2)
      Console.WriteLine(item);
 }</code></pre><div class="cout" hidden></div></div>
 <h2 id="⑪特殊语法" class="hd lv2">⑪特殊语法</h2>
-<div class="cpair"><div class="chead"><span class="lang">C#</span><span class="csp"></span><button class="mini copy">复制</button></div><pre class="code" data-lang="csharp"><code>class Person{ 
+<div class="cpair"><div class="chead"><span class="lang">C#</span><span class="csp"></span><button class="mini copy">复制</button></div><pre class="code" data-lang="csharp"><code>class Person{
     private int money;public bool sex;
     public string Name { get =&gt; "唐老狮"; set =&gt; sex = true; }
     public int Age { get; set;  }
@@ -2589,7 +2600,7 @@ foreach (string item in list2)
             var array = new int[] { 1, 2, 3, 4 };
             var list = new List&lt;int&gt;();</code></pre><div class="cout" hidden></div></div>
 <h3 id="设置对象初始值" class="hd lv3">💡设置对象初始值</h3>
-<div class="cpair"><div class="chead"><span class="lang">C#</span><span class="csp"></span><button class="mini copy">复制</button></div><pre class="code" data-lang="csharp"><code>//申明对象时 
+<div class="cpair"><div class="chead"><span class="lang">C#</span><span class="csp"></span><button class="mini copy">复制</button></div><pre class="code" data-lang="csharp"><code>//申明对象时
             //可以通过直接写大括号的形式初始化公共成员变量和属性
             会先执行无参构造中的方法，括号里面相当于是补充内容
             Person p = new Person(100) { sex = true, Age = 18, Name = "唐老狮" };
@@ -2602,7 +2613,7 @@ foreach (string item in list2)
 
             List&lt;int&gt; listInt = new List&lt;int&gt;() { 1, 2, 3, 4, 5, 6 };
             泛型List集合写法
-            
+
             List&lt;Person&gt; listPerson = new List&lt;Person&gt;() {
             泛型List类的集合写法
                 new Person(200),
@@ -2622,14 +2633,13 @@ foreach (string item in list2)
             Console.WriteLine(v.name);
             #endregion</code></pre><div class="cout" hidden></div></div>
 <h3 id="可空类型" class="hd lv3">💡可空类型</h3>
-<div class="cpair"><div class="chead"><span class="lang">C#</span><span class="csp"></span><button class="mini copy">复制</button></div><pre class="code" data-lang="csharp"><code>            
-           1.值类型是不能赋值为 空的
+<div class="cpair"><div class="chead"><span class="lang">C#</span><span class="csp"></span><button class="mini copy">复制</button></div><pre class="code" data-lang="csharp"><code>           1.值类型是不能赋值为 空的
             //int c = null;
 
             2.申明时 在值类型后面加? 可以赋值为空
              相当于在栈内存上分配了房间，什么都么有放，只申明了，没有值
               int?c=null
----------------------------------------------------------------------------------------             
+---------------------------------------------------------------------------------------
             值类型的可空类型
                int? c = 3;
             3.判断是否为空
@@ -2638,7 +2648,7 @@ foreach (string item in list2)
                 Console.WriteLine(c);
                 Console.WriteLine(c.Value);
             }
---------------------------------------------------------------------------------------- 
+---------------------------------------------------------------------------------------
             4.安全获取可空类型值
             int? value = null;
 
@@ -2650,10 +2660,8 @@ foreach (string item in list2)
 
             float? f = null;  值类型的可空类型
             double? d = null;  值类型的可空类型
---------------------------------------------------------------------------------------- 
-           
+---------------------------------------------------------------------------------------
 
-    
             object o = null; 引用类型的 可空类型
             if( o != null )
             {
@@ -2751,5 +2759,6 @@ foreach (string item in list2)
 </div>
 <button class="totop" id="totop">↑</button>
 <script src="assets/app.js"></script>
+<script src="assets/anim.js"></script>
 </body>
 </html>

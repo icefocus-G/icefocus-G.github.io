@@ -6,6 +6,7 @@
 <title>C# 入门 · C# 交互课件</title>
 <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='14' fill='%2368217a'/%3E%3Ctext x='32' y='45' font-size='36' font-family='monospace' font-weight='700' fill='%23fff' text-anchor='middle'%3E%23%3C/text%3E%3C/svg%3E">
 <link rel="stylesheet" href="assets/style.css">
+<link rel="stylesheet" href="assets/anim.css">
 </head>
 <body data-mid="m01">
 <header class="top">
@@ -21,7 +22,7 @@
     <div class="side-h">本篇目录</div>
     <nav class="tocbox"><a class="toc lv2" href="#01变量">💡01变量</a><a class="toc lv2" href="#02变量的本质">💡02变量的本质</a><a class="toc lv2" href="#03变量的命名规范">💡03变量的命名规范</a><a class="toc lv2" href="#04常量">💡04常量</a><a class="toc lv2" href="#05转义字符">💡05转义字符</a><a class="toc lv2" href="#06类型转换">💡06类型转换</a><a class="toc lv2" href="#隐式转换">隐式转换</a><a class="toc lv2" href="#07异常捕获">💡07异常捕获</a><a class="toc lv2" href="#08运算符">💡08运算符</a><a class="toc lv2" href="#09条件分支语句">💡09条件分支语句</a><a class="toc lv2" href="#10循环语句">💡10循环语句</a><a class="toc lv2" href="#驼峰命名-camelcap">驼峰命名 camelCap</a><a class="toc lv2" href="#帕斯卡命名-mystory">帕斯卡命名 MyStory</a></nav>
     <div class="side-h">全部模块</div>
-    <nav class="navbox"><div class="ng"><div class="ngt">语言地基</div><a href="m01.html" class="on">C# 入门</a><a href="m02.html">C# 基础</a></div><div class="ng"><div class="ngt">面向对象</div><a href="m03.html">C# 核心</a><a href="m07.html">C# 面向对象思想</a></div><div class="ng"><div class="ngt">语言进阶</div><a href="m04.html">C# 进阶</a></div><div class="ng"><div class="ngt">算法与数据结构</div><a href="m05.html">排序算法</a><a href="m08.html">算法</a></div><div class="ng"><div class="ngt">实战补充</div><a href="m06.html">C# 控制台小游戏知识补充</a></div></nav>
+    <nav class="navbox"><div class="ng"><div class="ngt">语言地基</div><a href="m01.html" class="on">C# 入门</a><a href="m02.html">C# 基础</a></div><div class="ng"><div class="ngt">面向对象</div><a href="m03.html">C# 核心</a><a href="m07.html">C# 面向对象思想</a></div><div class="ng"><div class="ngt">语言进阶</div><a href="m04.html">C# 进阶</a></div><div class="ng"><div class="ngt">算法与数据结构</div><a href="m05.html">排序算法</a><a href="m08.html">算法</a></div><div class="ng"><div class="ngt">实战补充</div><a href="m06.html">C# 控制台小游戏知识补充</a><a href="m11.html">练习题</a></div><div class="ng"><div class="ngt">速查参考</div><a href="m09.html">C# 中英文对照表</a><a href="m10.html">C# 语法简写</a></div></nav>
   </aside>
   <main class="main">
     <div class="mhead">
@@ -30,6 +31,7 @@
       <p class="msub">变量、类型转换、运算符与流程控制</p>
       <div class="chips"><span>4890 字原稿</span><span>12 段代码</span><span>4 张配图</span><span>0 个表格</span></div>
     </div>
+<section class="zone"><div class="zone-h"><span>图形演示 · 1 个</span><h2>先动手，再读文字</h2><p>下面的图都能点、能拖、能播放。先看它动，再回去读原稿，理解会快很多。</p></div><div data-demo="num"></div></section>
     <article class="doc">
 <p class="tx">💡 根据 <a href="https://baike.baidu.com/item/%E9%81%97%E5%BF%98%E6%9B%B2%E7%BA%BF/7278665?fr=aladdin" target="_blank" rel="noopener">遗忘曲线</a>：如果没有记录和回顾，6天后便会忘记75%的内容</p>
 <p class="tx">读书笔记正是帮助你记录和回顾的工具，不必拘泥于形式，其核心是：记录、翻看、思考</p>
@@ -286,5 +288,6 @@ foreach(int var in array)
 </div>
 <button class="totop" id="totop">↑</button>
 <script src="assets/app.js"></script>
+<script src="assets/anim.js"></script>
 </body>
 </html>

@@ -6,6 +6,7 @@
 <title>C# 控制台小游戏知识补充 · C# 交互课件</title>
 <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='14' fill='%2368217a'/%3E%3Ctext x='32' y='45' font-size='36' font-family='monospace' font-weight='700' fill='%23fff' text-anchor='middle'%3E%23%3C/text%3E%3C/svg%3E">
 <link rel="stylesheet" href="assets/style.css">
+<link rel="stylesheet" href="assets/anim.css">
 </head>
 <body data-mid="m06">
 <header class="top">
@@ -21,7 +22,7 @@
     <div class="side-h">本篇目录</div>
     <div style="padding:0 14px 12px;font-size:12.5px;line-height:1.7;color:#8a96a8">本篇原稿没有分级标题，按正文顺序阅读。</div>
     <div class="side-h">全部模块</div>
-    <nav class="navbox"><div class="ng"><div class="ngt">语言地基</div><a href="m01.html">C# 入门</a><a href="m02.html">C# 基础</a></div><div class="ng"><div class="ngt">面向对象</div><a href="m03.html">C# 核心</a><a href="m07.html">C# 面向对象思想</a></div><div class="ng"><div class="ngt">语言进阶</div><a href="m04.html">C# 进阶</a></div><div class="ng"><div class="ngt">算法与数据结构</div><a href="m05.html">排序算法</a><a href="m08.html">算法</a></div><div class="ng"><div class="ngt">实战补充</div><a href="m06.html" class="on">C# 控制台小游戏知识补充</a></div></nav>
+    <nav class="navbox"><div class="ng"><div class="ngt">语言地基</div><a href="m01.html">C# 入门</a><a href="m02.html">C# 基础</a></div><div class="ng"><div class="ngt">面向对象</div><a href="m03.html">C# 核心</a><a href="m07.html">C# 面向对象思想</a></div><div class="ng"><div class="ngt">语言进阶</div><a href="m04.html">C# 进阶</a></div><div class="ng"><div class="ngt">算法与数据结构</div><a href="m05.html">排序算法</a><a href="m08.html">算法</a></div><div class="ng"><div class="ngt">实战补充</div><a href="m06.html" class="on">C# 控制台小游戏知识补充</a><a href="m11.html">练习题</a></div><div class="ng"><div class="ngt">速查参考</div><a href="m09.html">C# 中英文对照表</a><a href="m10.html">C# 语法简写</a></div></nav>
   </aside>
   <main class="main">
     <div class="mhead">
@@ -30,6 +31,7 @@
       <p class="msub">控制台交互、异步等待等零碎补丁</p>
       <div class="chips"><span>1215 字原稿</span><span>6 段代码</span><span>1 张配图</span><span>1 个表格</span></div>
     </div>
+<section class="zone"><div class="zone-h"><span>图形演示 · 1 个</span><h2>先动手，再读文字</h2><p>下面的图都能点、能拖、能播放。先看它动，再回去读原稿，理解会快很多。</p></div><div data-demo="game"></div></section>
     <article class="doc">
 <div class="cpair"><div class="chead"><span class="lang">C#</span><span class="csp"></span><button class="mini copy">复制</button></div><pre class="code" data-lang="csharp"><code>字符串拼接写的写法 Console.WriteLine($"你返回的是{typeof(int)} 字节数为{sizeof(int)}");
 
@@ -110,5 +112,6 @@ Console.SetBufferSize(1000, 1000);
 </div>
 <button class="totop" id="totop">↑</button>
 <script src="assets/app.js"></script>
+<script src="assets/anim.js"></script>
 </body>
 </html>

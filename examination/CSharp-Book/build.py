@@ -16,9 +16,55 @@ MODS = [
     (6, "C# 控制台小游戏知识补充", "控制台交互、异步等待等零碎补丁", "实战补充", "🎮", "编程基础_06-C#控制台 小游戏知识补充.md"),
     (7, "C# 面向对象思想", "六大设计原则：SRP / OCP / LSP / DIP / LOP / ISP", "面向对象", "🧠", "编程基础_08-C# 面向对象思想.md"),
     (8, "算法", "进制转换、递归与单例模式", "算法与数据结构", "🧮", "编程基础_09-算法.md"),
+    (9, "C# 中英文对照表", "48 个关键字的字面含义，翻卡速记", "速查参考", "🔤", "编程基础_07-C# 中英文对照表.md"),
+    (10, "C# 语法简写", "完整写法 ↔ 语法糖，一行一行对着看", "速查参考", "✂️", "编程基础_10-C# 语法简写.md"),
+    (11, "练习题", "入门到核心的自测题集", "实战补充", "📝", "编程基础_10-练习题.md"),
 ]
 
-CAT_ORDER = ["语言地基", "面向对象", "语言进阶", "算法与数据结构", "实战补充"]
+CAT_ORDER = ["语言地基", "面向对象", "语言进阶", "算法与数据结构", "实战补充", "速查参考"]
+
+# 每个模块挂哪些图形演示（id 对应 assets/anim.js 里注册的 key）
+DEMO_NAME = {
+    "num": "二进制点灯", "flow": "循环单步", "valueref": "值类型 vs 引用", "coll": "动态数组",
+    "poly": "多态分派", "dele": "委托广播", "sort": "八大排序", "game": "贪吃蛇",
+    "solid": "职责拆分", "bs": "二分查找", "recurse": "递归调用栈", "vocab": "关键字翻卡",
+    "short": "语法糖对照",
+}
+DEMOS = {
+    1: ["num"],
+    2: ["flow", "valueref"],
+    3: ["coll", "poly"],
+    4: ["dele"],
+    5: ["sort"],
+    6: ["game"],
+    7: ["solid"],
+    8: ["bs", "recurse"],
+    9: ["vocab"],
+    10: ["short"],
+    11: [],
+}
+
+try:
+    PAIRS = json.load(open(os.path.join(r"E:/学习内容/C#学习", "pairs.json"), encoding="utf-8"))
+except Exception:
+    PAIRS = []
+
+
+def demo_zone(no):
+    ids = DEMOS.get(no) or []
+    if not ids:
+        return ""
+    inner = []
+    for did in ids:
+        extra = ""
+        if did == "vocab" and PAIRS:
+            extra = ' data-pairs="%s"' % html.escape(
+                json.dumps(PAIRS, ensure_ascii=False, separators=(",", ":")), quote=True)
+        inner.append('<div data-demo="%s"%s></div>' % (did, extra))
+    return ('<section class="zone">'
+            '<div class="zone-h"><span>图形演示 · %d 个</span><h2>先动手，再读文字</h2>'
+            '<p>下面的图都能点、能拖、能播放。先看它动，再回去读原稿，理解会快很多。</p></div>'
+            '%s</section>') % (len(ids), "".join(inner))
 
 
 # ---------------- 工具 ----------------
@@ -335,6 +381,7 @@ HEAD = """<!DOCTYPE html>
 <title>{title} · C# 交互课件</title>
 <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='14' fill='%2368217a'/%3E%3Ctext x='32' y='45' font-size='36' font-family='monospace' font-weight='700' fill='%23fff' text-anchor='middle'%3E%23%3C/text%3E%3C/svg%3E">
 <link rel="stylesheet" href="assets/style.css">
+<link rel="stylesheet" href="assets/anim.css">
 </head>
 <body data-mid="m{no:02d}">
 <header class="top">
@@ -359,6 +406,7 @@ HEAD = """<!DOCTYPE html>
       <p class="msub">{sub}</p>
       <div class="chips"><span>{chars} 字原稿</span><span>{code} 段代码</span><span>{img} 张配图</span><span>{tbl} 个表格</span></div>
     </div>
+{demos}
     <article class="doc">
 {body}
     </article>
@@ -367,6 +415,7 @@ HEAD = """<!DOCTYPE html>
 </div>
 <button class="totop" id="totop">↑</button>
 <script src="assets/app.js"></script>
+<script src="assets/anim.js"></script>
 </body>
 </html>
 """
@@ -406,7 +455,7 @@ def build():
         htmltxt = HEAD.format(
             title=title, sub=sub, cat=cat, no=no, toc=r["toc"], toc_side=toc_side, nav=nav_html(no),
             chars=f'{r["chars"]:,}'.replace(",", ""), code=r["code"], img=r["img"], tbl=r["tbl"],
-            body=r["body"], prev=prev, next=nxt)
+            demos=demo_zone(no), body=r["body"], prev=prev, next=nxt)
         open(os.path.join(SRC, "m%02d.html" % no), "w", encoding="utf-8").write(htmltxt)
 
     # 总览
@@ -428,8 +477,9 @@ def build():
             cards.append(
                 '<a class="card" href="m%02d.html"><div class="card-t">%s %s</div>'
                 '<div class="card-s">%s</div>'
-                '<div class="card-m"><b>%d</b> 字 · %d 代码 · %d 图</div></a>'
-                % (no, ico, title, sub, r["chars"], r["code"], r["img"]))
+                '<div class="card-m"><b>%d</b> 字 · %d 代码 · %d 图%s</div></a>'
+                % (no, ico, title, sub, r["chars"], r["code"], r["img"],
+                   (' · <b>%d</b> 演示' % len(DEMOS[no])) if DEMOS.get(no) else ""))
         cats.append('<section class="cat"><h2><i></i>%s</h2><div class="grid">%s</div></section>'
                     % (cat, "".join(cards)))
 
@@ -438,7 +488,8 @@ def build():
 <head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
 <title>C# 交互课件 · 总目录</title>
 <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='14' fill='%2368217a'/%3E%3Ctext x='32' y='45' font-size='36' font-family='monospace' font-weight='700' fill='%23fff' text-anchor='middle'%3E%23%3C/text%3E%3C/svg%3E">
-<link rel="stylesheet" href="assets/style.css"></head>
+<link rel="stylesheet" href="assets/style.css">
+<link rel="stylesheet" href="assets/anim.css"></head>
 <body class="home">
 <header class="top">
   <a class="brand" href="index.html"><span class="logo">C#</span><b>C#</b><i>交互课件</i></a>
@@ -447,23 +498,30 @@ def build():
 </header>
 <main class="homewrap">
   <div class="hero">
-    <div class="kick">语雀原稿 1:1 还原</div>
+    <div class="kick">图形化 · 可操作 · 有动画</div>
     <h1>C# 交互课件</h1>
-    <p>内容来自语雀《编程基础》系列 8 篇原稿，按语言地基 / 面向对象 / 语言进阶 / 算法与数据结构 / 实战补充 五个分类重排成 {n} 个模块。
-    {chars} 字、{code} 段代码、{img} 张配图、{tbl} 个表格，逐块渲染，不删不改写。</p>
-    <p>配图已全部本地化到 <code>assets/img/</code>，不再依赖语雀外链；代码块支持高亮与一键复制，长代码自动折叠。</p>
+    <p>内容来自语雀《C# 学习》知识库 {n} 篇原稿，按语言地基 / 面向对象 / 语言进阶 / 算法与数据结构 / 实战补充 / 速查参考 六个分类重排。
+    每个模块都配了可以直接上手动的图形演示：进制点灯、循环单步、值类型与引用类型、动态数组增删、多态分派、委托广播、八大排序动画、可玩的贪吃蛇、二分查找、递归调用栈。</p>
+    <p>正文仍然是语雀原稿逐块还原，一字未改；演示是额外的「先看懂再读」层。{chars} 字、{code} 段代码、{img} 张配图全部本地化，不依赖外链。</p>
     <div class="hero-stat">
       <div><b>{chars}</b><span>正文字数</span></div>
       <div><b>{code}</b><span>代码段</span></div>
       <div><b>{img}</b><span>配图</span></div>
       <div><b>{n}</b><span>个模块</span></div>
+      <div><b>13</b><span>个互动演示</span></div>
     </div>
   </div>
+  <section class="zone home">
+    <div class="zone-h"><span>先玩一下</span><h2>排序算法 · 一步一步看</h2>
+      <p>选算法、点播放，看得见每一次比较和交换。五个分类里都有这样的演示。</p></div>
+    <div data-demo="sort"></div>
+  </section>
 {cats}
-  <div class="foot">原稿文件名前缀均为「编程基础_」，编号 07 在原稿中缺失。</div>
+  <div class="foot">原稿 07（中英文对照表）、10（语法简写 / 练习题）本次已从语雀补全。</div>
 </main>
+<script src="assets/anim.js"></script>
 </body></html>
-""".format(chars=tot_chars, code=tot_code, img=tot_img, tbl=tot_tbl,
+""".format(chars="{:,}".format(tot_chars), code=tot_code, img=tot_img, tbl=tot_tbl,
            n=len(MODS), cats="\n".join(cats))
     open(os.path.join(SRC, "index.html"), "w", encoding="utf-8").write(index)
 
@@ -476,11 +534,11 @@ def build():
         "order": 6,
         "status": "live",
         "theme": "#68217a",
-        "desc": "语雀《编程基础》8 篇原稿还原成 %d 个模块的交互课件：%s 字、%d 段代码、%d 张配图全部本地化，代码可高亮复制，配图可点击放大。" % (
+        "desc": "语雀《C# 学习》11 篇原稿还原成 %d 个模块的交互课件：%s 字、%d 段代码、%d 张配图全部本地化，另有 13 个可直接上手的图形演示（含八大排序动画、贪吃蛇、二分查找、递归调用栈）。" % (
             len(MODS), format(tot_chars, ","), tot_code, tot_img),
-        "mods": ["%d 模块" % len(MODS), "{:,} 字".format(tot_chars), "%d 代码框" % tot_code, "%d 张图" % tot_img],
+        "mods": ["%d 模块" % len(MODS), "{:,} 字".format(tot_chars), "13 个交互演示", "%d 张图" % tot_img],
         "entry": "index.html",
-        "note": "阅读型课件，无判分题库",
+        "note": "阅读型课件 + 图形演示，无判分题库",
         "_说明": [
             "entry 相对本课程目录，直接指向课件首页 index.html（不走 shell/study.html 通用壳）。",
             "本课程没有题库，故不填 storage / total —— 课程中心会按「阅读型」显示。",
@@ -492,47 +550,69 @@ def build():
         json.dumps(cj, ensure_ascii=False, indent=2) + "\n")
 
     # README
-    rows = "\n".join("| m%02d | %s | %s | %s 字 · %d 代码 · %d 图 |"
-                     % (no, t, c, format(rendered[no]["chars"], ","), rendered[no]["code"], rendered[no]["img"])
+    rows = "\n".join("| m%02d | %s | %s | %s 字 · %d 代码 · %d 图 | %s |"
+                     % (no, t, c, format(rendered[no]["chars"], ","), rendered[no]["code"], rendered[no]["img"],
+                        "、".join(DEMO_NAME.get(d, d) for d in DEMOS.get(no, [])) or "—")
                      for no, t, s, c, i, f in MODS)
     readme = """# C# 交互课件
 
-语雀《编程基础》系列 8 篇原稿 → 按 5 个分类 / {n} 个模块重组的交互课件。
+语雀《C# 学习》知识库 11 篇原稿 → 按 6 个分类 / {n} 个模块重组，并给每个模块挂上可直接操作的图形演示。
 
 ## 怎么打开
 
-双击 `index.html`，或用任意静态服务器打开本目录。左侧目录随滚动高亮，代码块可一键复制、超长自动折叠，配图点击放大、Esc 关闭。
+双击 `index.html`，或用任意静态服务器打开本目录。首页顶部就能玩排序动画；各模块页在正文之前是「图形演示」区。
 
 ## 目录结构
 
 ```
 C#学习/
-├── index.html           总目录
+├── index.html           总目录 + 排序演示
 ├── m01.html … m{n:02d}.html   {n} 个模块页
 ├── assets/
 │   ├── style.css        版式（与 Unity 课件同一套）
+│   ├── anim.css         图形演示层样式
+│   ├── anim.js          13 个交互演示（rAF 驱动，Canvas / SVG / DOM）
 │   ├── app.js           代码高亮 / 复制 / 目录高亮 / 图片放大
 │   └── img/             {img} 张配图（已从语雀 CDN 本地化）
 ├── build.py             重新生成整套课件（改完 原稿/*.md 跑一次即可）
+├── pairs.json           07 对照表抽出的 48 组词条，供翻卡演示使用
 ├── course.json          课程中心配置（order 6，theme #68217a）
 ├── README.md
-└── 原稿/                8 篇语雀 md 原件，未改动
+└── 原稿/                11 篇语雀 md 原件
 ```
 
-## 模块
+## 模块与演示
 
-| 页 | 模块 | 分类 | 体量 |
-|---|---|---|---|
+| 页 | 模块 | 分类 | 体量 | 演示 |
+|---|---|---|---|---|
 {rows}
 
-合计 {chars} 字、{code} 段代码、{img} 张配图、{tbl} 个表格。
+合计 {chars} 字、{code} 段代码、{img} 张配图、{tbl} 个表格、13 个交互演示。
+
+## 交互演示清单
+
+| 演示 | 位置 | 类型 |
+|---|---|---|
+| 二进制点灯 | m01 | 点击位开关，实时换算 2/8/16 进制，可看除 2 取余 |
+| for 循环单步 | m02 | 代码高亮跟帧执行，i / sum / 条件同步变化 |
+| 值类型 vs 引用类型 | m02 | SVG + 补间动画，看复制的是数据还是地址 |
+| 动态数组增删 | m03 | 元素平移 + 扩容，count / capacity 实时变 |
+| 多态分派 | m03 | 脉冲沿调用链跑到真实类型的方法 |
+| 委托与事件 | m04 | 订阅 / 退订，按注册顺序逐个回调 |
+| 八大排序 | m05 | Canvas 逐帧演示冒泡/选择/插入/希尔/快排/归并/堆/计数 |
+| 贪吃蛇 | m06 | 可玩，键盘 + 触屏方向键 |
+| 职责拆分 | m07 | 上帝类按 SRP 拆成三类，再演示 OCP 扩展 |
+| 二分查找 | m08 | 区间收缩 + mid 指针，逐步排除 |
+| 递归调用栈 | m08 | 栈帧压入弹出，返回值回代 |
+| 关键字翻卡 | m09 | 48 组词条点击翻面 |
+| 语法糖对照 | m10 | 完整写法 ↔ 简写切换 |
 
 ## 说明
 
-- 只做了版式与图片本地化，正文一字未删改；`#region` 之类裸露在围栏外的代码按上下文重建成代码块。
-- 原稿编号 07 缺失（01、02、03、04、05、06、08、09），所以只有 8 个模块。
-- 改完 `原稿/` 里的 md，执行 `python build.py` 即可整站重建（会覆盖 m01~m08.html、index.html、course.json、README.md）。
-- 首页 `course.json` 的 `order` 为 6，接在 Unity(3) / Unity-Book(4) / CSharp-Map(5) 之后；要上线到 examination/ 直接丢整个目录进去即可。
+- 正文是语雀原稿逐块还原，一字未删改；`#region` 之类裸露在围栏外的代码按上下文重建成代码块。
+- 07 / 10 两篇（中英文对照表、语法简写、练习题）是通过扫码登录语雀后补抓的，此前本地导出缺失。
+- 改完 `原稿/` 里的 md，执行 `python build.py` 即可整站重建。
+- 首页 `course.json` 的 `order` 为 6，接在 Unity(3) / Unity-Book(4) / CSharp-Map(5) 之后。
 """.format(n=len(MODS), img=tot_img, rows=rows, chars=format(tot_chars, ","), code=tot_code, tbl=tot_tbl)
     open(os.path.join(SRC, "README.md"), "w", encoding="utf-8").write(readme)
 

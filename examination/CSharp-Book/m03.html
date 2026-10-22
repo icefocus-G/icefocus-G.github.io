@@ -6,6 +6,7 @@
 <title>C# 核心 · C# 交互课件</title>
 <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='14' fill='%2368217a'/%3E%3Ctext x='32' y='45' font-size='36' font-family='monospace' font-weight='700' fill='%23fff' text-anchor='middle'%3E%23%3C/text%3E%3C/svg%3E">
 <link rel="stylesheet" href="assets/style.css">
+<link rel="stylesheet" href="assets/anim.css">
 </head>
 <body data-mid="m03">
 <header class="top">
@@ -21,7 +22,7 @@
     <div class="side-h">本篇目录</div>
     <nav class="tocbox"><a class="toc lv2" href="#面向对象">面向对象</a><a class="toc lv2" href="#①-封装">① 封装</a><a class="toc lv3" href="#01类和对象">💡01类和对象</a><a class="toc lv3" href="#02成员变量和访问修饰方符">💡02成员变量和访问修饰方符</a><a class="toc lv3" href="#03成员方法">💡03成员方法</a><a class="toc lv3" href="#04构造函数-析构函数-垃圾回收">💡04构造函数，析构函数,垃圾回收</a><a class="toc lv3" href="#05成员属性">💡05成员属性</a><a class="toc lv3" href="#06索引器">💡06索引器</a><a class="toc lv4" href="#01-索引器的基本用法">01 索引器的基本用法</a><a class="toc lv4" href="#02-索引器-结合-数组-的使用-数组进行自动扩容-和-删除元素">02 索引器 结合 数组 的使用（数组进行自动扩容 和 删除元素）</a><a class="toc lv3" href="#07静态成员">💡07静态成员</a><a class="toc lv3" href="#08-静态类和静态构造函数">💡08 静态类和静态构造函数</a><a class="toc lv3" href="#09-拓展方法">💡09 拓展方法</a><a class="toc lv3" href="#10-运算符重载">💡10 运算符重载</a><a class="toc lv3" href="#11-内部类和分部类">💡11 内部类和分部类</a><a class="toc lv2" href="#②-继承">② 继承</a><a class="toc lv3" href="#01继承的基本规则">💡01继承的基本规则</a><a class="toc lv3" href="#02里氏替换原则">💡02里氏替换原则</a><a class="toc lv3" href="#03继承中的构造函数">💡03继承中的构造函数</a><a class="toc lv3" href="#04万物之父object-和装箱-拆箱">💡04万物之父object 和装箱 ,拆箱</a><a class="toc lv3" href="#05密封类">05密封类</a><a class="toc lv2" href="#③-多态">③ 多态</a><a class="toc lv3" href="#01virtual-override-base">💡01virtual override base</a><a class="toc lv3" href="#02抽象类和抽象方法-抽象方法和虚方法可以在子类-子类的子类-等等-无限的重写">💡02抽象类和抽象方法 （抽象方法和虚方法可以在子类-&gt;子类的子类-&gt;等等，无限的重写）</a><a class="toc lv3" href="#03接口-interface">💡03接口 interface</a><a class="toc lv3" href="#04密封方法">04密封方法</a><a class="toc lv2" href="#④-面向对象关联知识点">④ 面向对象关联知识点</a><a class="toc lv3" href="#01命名空间">💡01命名空间</a><a class="toc lv3" href="#02万物之父object-所有对象的基类-默认都是继承的-中的系统定义方法">💡02万物之父object（所有对象的基类，默认都是继承的）中的系统定义方法</a><a class="toc lv4" href="#静态方法equals-x-y">静态方法Equals(x,y)</a><a class="toc lv4" href="#静态方法referenceequals-x-y">静态方法ReferenceEquals(x,y)</a><a class="toc lv4" href="#成员方法gettype">成员方法GetType();</a><a class="toc lv4" href="#成员方法memberwiseclone">成员方法MemberwiseClone();</a><a class="toc lv4" href="#虚方法-equals-x-y">虚方法 Equals(x,y);</a><a class="toc lv4" href="#虚方法-gethashcode">虚方法 GetHashCode();</a><a class="toc lv4" href="#虚方法-tostring">虚方法 ToString();</a><a class="toc lv3" href="#03string-知识点">💡03string 知识点</a><a class="toc lv4" href="#01string-是个密封类-不能被继承">01string 是个密封类，不能被继承，</a><a class="toc lv4" href="#02-字符串拼接">02 字符串拼接</a><a class="toc lv4" href="#03-正向查找字符的位置">03 正向查找字符的位置</a><a class="toc lv4" href="#04-反向查找字符的位置">04 反向查找字符的位置</a><a class="toc lv4" href="#05-移除指定位置后的字符">05 移除指定位置后的字符</a><a class="toc lv4" href="#06-替换指定字符串">06 替换指定字符串</a><a class="toc lv4" href="#07-大小写转换">07 大小写转换</a><a class="toc lv4" href="#08-字符串截取">08 字符串截取</a><a class="toc lv4" href="#09-字符串切割">09 字符串切割</a><a class="toc lv3" href="#04string-builder-解决-string-缺陷">💡04string builder 解决 string 缺陷</a><a class="toc lv3" href="#05string和stringbuilder的区别">💡05string和stringbuilder的区别</a><a class="toc lv3" href="#06-结构体和类的区别">💡06 结构体和类的区别</a><a class="toc lv3" href="#07-抽象类和接口的区别">💡07 抽象类和接口的区别</a></nav>
     <div class="side-h">全部模块</div>
-    <nav class="navbox"><div class="ng"><div class="ngt">语言地基</div><a href="m01.html">C# 入门</a><a href="m02.html">C# 基础</a></div><div class="ng"><div class="ngt">面向对象</div><a href="m03.html" class="on">C# 核心</a><a href="m07.html">C# 面向对象思想</a></div><div class="ng"><div class="ngt">语言进阶</div><a href="m04.html">C# 进阶</a></div><div class="ng"><div class="ngt">算法与数据结构</div><a href="m05.html">排序算法</a><a href="m08.html">算法</a></div><div class="ng"><div class="ngt">实战补充</div><a href="m06.html">C# 控制台小游戏知识补充</a></div></nav>
+    <nav class="navbox"><div class="ng"><div class="ngt">语言地基</div><a href="m01.html">C# 入门</a><a href="m02.html">C# 基础</a></div><div class="ng"><div class="ngt">面向对象</div><a href="m03.html" class="on">C# 核心</a><a href="m07.html">C# 面向对象思想</a></div><div class="ng"><div class="ngt">语言进阶</div><a href="m04.html">C# 进阶</a></div><div class="ng"><div class="ngt">算法与数据结构</div><a href="m05.html">排序算法</a><a href="m08.html">算法</a></div><div class="ng"><div class="ngt">实战补充</div><a href="m06.html">C# 控制台小游戏知识补充</a><a href="m11.html">练习题</a></div><div class="ng"><div class="ngt">速查参考</div><a href="m09.html">C# 中英文对照表</a><a href="m10.html">C# 语法简写</a></div></nav>
   </aside>
   <main class="main">
     <div class="mhead">
@@ -30,6 +31,7 @@
       <p class="msub">封装继承多态、集合与常用类库</p>
       <div class="chips"><span>19997 字原稿</span><span>70 段代码</span><span>0 张配图</span><span>0 个表格</span></div>
     </div>
+<section class="zone"><div class="zone-h"><span>图形演示 · 2 个</span><h2>先动手，再读文字</h2><p>下面的图都能点、能拖、能播放。先看它动，再回去读原稿，理解会快很多。</p></div><div data-demo="coll"></div><div data-demo="poly"></div></section>
     <article class="doc">
 <h2 id="面向对象" class="hd lv2">面向对象</h2>
 <h2 id="①-封装" class="hd lv2">① 封装</h2>
@@ -1339,5 +1341,6 @@ if(str2=="2342424")
 </div>
 <button class="totop" id="totop">↑</button>
 <script src="assets/app.js"></script>
+<script src="assets/anim.js"></script>
 </body>
 </html>
