@@ -33,6 +33,7 @@
     "International Finance",
     "Unity",
     "Unity-Book",
+    "Unity-Games",
     "Western Economics"
   ],
   "_fallback": "离线 / 拉不到 API 时的课程目录清单。由 _tools/scan.py 自动生成，也可以手工维护。",
