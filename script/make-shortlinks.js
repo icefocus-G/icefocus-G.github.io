@@ -51,6 +51,7 @@ const SHORTCUTS = [
   { alias: 'csharp-map',      url: '/examination/CSharp-Map/',                     title: 'C# 知识体系 · 交互思维导图', group: '学习', note: '总览 + 20 张分册' },
   { alias: 'csharp-book',     url: '/examination/CSharp-Book/',                    title: 'C# 语言基础 · 交互课件', group: '学习', note: '8 模块 · 292 代码框' },
   { alias: 'linalg',          url: '/examination/Linear-Algebra-Strang/',           title: '线性代数 · Strang 第6版', group: '学习', note: '438 页原书页 + 34 个交互实验' },
+  { alias: 'linalg-ty',       url: '/examination/Linear-Algebra-Strang/retype/%E9%98%85%E8%AF%BB.html', title: '线性代数 · 文字重排版', group: '学习', note: '原书文字重排 · 不用扫描图' },
   { alias: 'linalg-tu',       url: '/examination/Linear-Algebra-Strang/%E5%9B%BE%E8%A7%A3%E7%89%88', title: '线性代数 · 图解精讲', group: '学习', note: '186 个知识点 · 可全文搜索' },
 
   /* ---- 工具 ---- */

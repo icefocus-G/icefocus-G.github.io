@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>线性代数 · 原书第6版 · p.28</title>
+<link rel="stylesheet" href="../assets/katex/katex.min.css">
+<link rel="stylesheet" href="page.css">
+</head>
+<body>
+<div class="page">
+
+  <header class="rh even">
+    <span class="pn">28</span><span class="tri l"></span><span class="bar"></span>
+    <span class="ttl">线性代数（原书第 6 版 · 中文版）</span>
+  </header>
+
+  <main>
+
+    <p class="exh"><span class="n">22.</span> 下面的 3 阶方阵 <i class="m">A</i> 的行向量线性相关，那么线性代数的理论告诉我们它的列向量也线性相关.
+      请找一个非零向量 <i class="m">x</i> 使之符合方程 <i class="m">Ax</i> = 0：</p>
+
+    <div class="matrow">
+      <span class="mx" data-tex="A=\begin{bmatrix}1&amp;2&amp;3\\3&amp;5&amp;6\\4&amp;7&amp;8\end{bmatrix}"></span>
+      <span class="ann">
+        <span class="l1">第 1 行 + 第 2 行 = 第 3 行</span>
+        <span class="l1"><i class="m">A</i> 只有两个线性无关的行向量</span>
+        <span class="l1">因此只有两个线性无关的列向量</span>
+      </span>
+    </div>
+
+    <p class="exh"><span class="n">23.</span> 求 <i class="v">c</i> 使得下列矩阵的列向量线性相关；进而把零向量表示成它们列向量的一个非平凡的线性组合.</p>
+
+    <div class="mats">
+      <span data-tex="\begin{bmatrix}1&amp;1&amp;0\\3&amp;2&amp;1\\7&amp;4&amp;c\end{bmatrix}"></span>
+      <span data-tex="\begin{bmatrix}1&amp;0&amp;c\\1&amp;1&amp;0\\0&amp;1&amp;1\end{bmatrix}"></span>
+      <span data-tex="\begin{bmatrix}c&amp;c&amp;c\\2&amp;1&amp;5\\3&amp;3&amp;6\end{bmatrix}"></span>
+      <span data-tex="\begin{bmatrix}c&amp;1\\4&amp;c\end{bmatrix}"></span>
+    </div>
+
+    <p class="exh"><span class="n">24.</span> 设 <span class="inlmx" data-tex="A=\begin{bmatrix}a_1&amp;a_2&amp;a_3\end{bmatrix}=\begin{bmatrix}r_1\\r_2\\r_3\end{bmatrix}"></span>，
+      若它的列向量的一个非平凡线性组合是零向量：<span class="nowrap"><i class="m">Ax</i> = 0，</span></p>
+    <p class="exh">那么 <i class="m">A</i> 的每一行和 <i class="m">x</i> 的点积都是 0：</p>
+
+    <div class="eqc">
+      <span data-tex="\text{若}\ \begin{bmatrix}a_1&amp;a_2&amp;a_3\end{bmatrix}\begin{bmatrix}x_1\\x_2\\x_3\end{bmatrix}=\begin{bmatrix}0\\0\\0\end{bmatrix}\quad\text{则}\quad\begin{bmatrix}r_1\cdot x\\r_2\cdot x\\r_3\cdot x\end{bmatrix}=\begin{bmatrix}0\\0\\0\end{bmatrix}"></span>
+    </div>
+
+    <p class="exh"><i class="m">A</i> 的三个行向量在同一个平面内：为什么这个平面和 <i class="m">x</i> 垂直？</p>
+
+    <h2 class="sec"><span class="num">1.4</span>矩阵乘法 <span class="en">AB</span> 和 <span class="en">CR</span></h2>
+
+    <div class="box-blue">
+      <p>（1）矩阵 <i class="m">A</i> 和 <i class="m">B</i> 可以相乘的前提是矩阵 <i class="m">A</i> 的列数等于矩阵 <i class="m">B</i> 的行数.</p>
+      <p>（2）矩阵 <span class="nowrap"><i class="m">AB</i></span> 的第 <i class="v">i</i> 行、第 <i class="v">j</i> 列元素是（<i class="m">A</i> 的第 <i class="v">i</i> 行）·（<i class="m">B</i> 的第 <i class="v">j</i> 列）.</p>
+      <p>（3）按列来看，<span class="nowrap"><i class="m">AB</i></span> 的第 <i class="v">j</i> 列为 <i class="m">A</i> 乘以 <i class="m">B</i> 的第 <i class="v">j</i> 列.</p>
+      <p>（4）通常来说，<span class="nowrap"><i class="m">AB</i> ≠ <i class="m">BA</i></span>，但始终有 <span class="nowrap">(<i class="m">AB</i>)<i class="m">C</i> = <i class="m">A</i>(<i class="m">BC</i>)</span>.</p>
+      <p>（5）若 <i class="m">A</i> 恰好有 <i class="v">r</i> 个线性无关的列向量，它们组成 <span class="nowrap"><i class="v">m</i> × <i class="v">r</i></span> 矩阵 <i class="m">C</i>，那么存在 <span class="nowrap"><i class="v">r</i> × <i class="v">n</i></span> 矩阵 <i class="m">R</i>
+        使得 <i class="m">A</i> = <i class="m">CR</i>.</p>
+    </div>
+
+    <p class="ind">在前面的章节中，我们已经知道如何做矩阵 <i class="m">A</i> 和列向量 <i class="m">x</i> 或者 <i class="m">b</i> 的乘积. 本节中考虑矩阵与矩阵的乘积：矩阵 <i class="m">A</i> 乘以矩阵 <i class="m">B</i>. 这个新的运算基于矩阵与向量的乘积：将 <i class="m">A</i> 乘以 <i class="m">B</i> 的每一列就得到了 <span class="nowrap"><i class="m">AB</i></span> 的每一列；因此若 <i class="m">B</i> 有 <i class="v">p</i> 列，则 <span class="nowrap"><i class="m">AB</i></span> 也有 <i class="v">p</i> 列</p>
+
+    <div class="eqbox">
+      <div class="ln"><span data-tex="AB\ \text{的第}\ j\ \text{列等于}\ A\ \text{乘以}\ B\ \text{的第}\ j\ \text{列}"></span></div>
+      <div class="ln"><span data-tex="\text{若}\ B=\begin{bmatrix}b_1&amp;\cdots&amp;b_p\end{bmatrix},\ \text{则}\ AB=\begin{bmatrix}Ab_1&amp;\cdots&amp;Ab_p\end{bmatrix}"></span></div>
+      <span class="no">(1.13)</span>
+    </div>
+
+  </main>
+
+  <div class="foot"><span>重排版 · 印刷页 28</span><span>对照扫描原图 p0052</span></div>
+</div>
+
+<script src="../assets/katex/katex.min.js"></script>
+<script src="katex-auto.js"></script>
+</body>
+</html>

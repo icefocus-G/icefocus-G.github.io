@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>线性代数 · 原书第6版 · p.70</title>
+<link rel="stylesheet" href="../assets/katex/katex.min.css">
+<link rel="stylesheet" href="page.css">
+</head>
+<body>
+<div class="page">
+
+  <header class="rh even">
+    <span class="pn">70</span><span class="tri l"></span><span class="bar"></span>
+    <span class="ttl">线性代数（原书第 6 版 · 中文版）</span>
+  </header>
+
+  <main>
+
+    <div class="trio">
+      <span class="lb">力学上</span>
+      <span class="ct">功 =(位移)(力)= <span data-tex="\boldsymbol{x}^{\mathbf{T}}\boldsymbol{f}"></span></span>
+      <span class="lb">电路上</span>
+      <span class="ct">热损失 =(电压差)(电流) = <span data-tex="\boldsymbol{e}^{\mathbf{T}}\boldsymbol{y}"></span></span>
+      <span class="lb">经济学上</span>
+      <span class="ct">营收 =(数量)(价格) = <span data-tex="\boldsymbol{q}^{\mathbf{T}}\boldsymbol{p}"></span></span>
+    </div>
+
+    <p class="ind">我们已经很接近应用数学的核心了，还有一点需要强调：内积和 <i class="m">A</i> 的转置有更深刻的联系.</p>
+
+    <p class="ind">我们把 <span data-tex="A^{\mathbf{T}}"></span> 定义成 <i class="m">A</i> 沿着主对角线“翻转”了一下，这很不数学. 更好的定义是：<span data-tex="A^{\mathbf{T}}"></span> 是满足如下关于内积等式的矩阵<span class="ref">①</span>：对任意 <i class="m">x</i>、<i class="m">y</i></p>
+
+    <div class="eql">
+      <span data-tex="(A\boldsymbol{x})^{\mathbf{T}}\boldsymbol{y}=\boldsymbol{x}^{\mathbf{T}}(A^{\mathbf{T}}\boldsymbol{y})"></span>
+      <span><span data-tex="A\boldsymbol{x}"></span> 和 <i class="m">y</i> 的内积 = <i class="m">x</i> 和 <span data-tex="A^{\mathbf{T}}\boldsymbol{y}"></span> 的内积.</span>
+    </div>
+
+    <p class="exh"><span class="n">例 2.6</span>　以 <span class="inlmx" data-tex="A=\begin{bmatrix}-1&amp;1&amp;0\\0&amp;-1&amp;1\end{bmatrix}"></span> 为例，<span class="inlmx" data-tex="\boldsymbol{x}=\begin{bmatrix}x_1\\x_2\\x_3\end{bmatrix},\ \boldsymbol{y}=\begin{bmatrix}y_1\\y_2\end{bmatrix}"></span>.
+      <span data-tex="A\boldsymbol{x}"></span> 和 <i class="m">y</i> 的内积等于 <span data-tex="(x_2-x_1)y_1+(x_3-x_2)y_2"></span>，也等于 <span data-tex="x_1(-y_1)+x_2(y_1-y_2)+x_3(y_2)"></span>.
+      现在将 <i class="m">x</i> 与 <span data-tex="A^{\mathbf{T}}\boldsymbol{y}"></span> 作内积.</p>
+
+    <div class="eql">
+      <span data-tex="A^{\mathbf{T}}\boldsymbol{y}=\begin{bmatrix}-1&amp;0\\1&amp;-1\\0&amp;1\end{bmatrix}\begin{bmatrix}y_1\\y_2\end{bmatrix}=\begin{bmatrix}-y_1\\y_1-y_2\\y_2\end{bmatrix}"></span>
+      <span><span data-tex="(A\boldsymbol{x})^{\mathbf{T}}\boldsymbol{y}=\boldsymbol{x}^{\mathbf{T}}(A^{\mathbf{T}}\boldsymbol{y})"></span> 就很明显了.</span>
+    </div>
+
+    <p class="exh"><span class="n">例 2.7</span>　我们是否可以考虑一点点微积分？当然还是从线性代数角度出发.（这是关于函数的线性代数.）将矩阵变为求导：<span class="inlf" data-tex="A=\dfrac{\mathrm{d}}{\mathrm{d}t}"></span>，<span class="inlf" data-tex="\dfrac{\mathrm{d}}{\mathrm{d}t}"></span> 的转置可以通过 <span data-tex="(A\boldsymbol{x})^{\mathbf{T}}\boldsymbol{y}=\boldsymbol{x}^{\mathbf{T}}(A^{\mathbf{T}}\boldsymbol{y})"></span> 来定义.</p>
+
+    <p class="ind">那么首先就要明确此时点积是什么. 点积 <span data-tex="\boldsymbol{x}^{\mathbf{T}}\boldsymbol{y}"></span> 由求和 <span data-tex="x_1y_1+x_2y_2+\cdots+x_ny_n"></span> 变为了 <i class="m">x</i>(<i class="v">t</i>)<i class="m">y</i>(<i class="v">t</i>) 的积分.</p>
+
+    <div class="twocol">
+      <span class="lft">函数 <i class="m">x</i>(<i class="v">t</i>) 和 <i class="m">y</i>(<i class="v">t</i>) 的内积的定义</span>
+      <span class="rgt">
+        <span data-tex="\boldsymbol{x}^{\mathbf{T}}\boldsymbol{y}:=\int_{-\infty}^{+\infty}x(t)y(t)\,\mathrm{d}t"></span>
+        <span class="num">(2.32)</span>
+      </span>
+    </div>
+
+    <div class="twocol">
+      <span class="lft">转置的运算法则 <span data-tex="(A\boldsymbol{x})^{\mathbf{T}}\boldsymbol{y}=\boldsymbol{x}^{\mathbf{T}}(A^{\mathbf{T}}\boldsymbol{y})"></span></span>
+      <span class="rgt">
+        <span data-tex="\int_{-\infty}^{+\infty}\frac{\mathrm{d}x}{\mathrm{d}t}\,y(t)\,\mathrm{d}t=\int_{-\infty}^{+\infty}x(t)\left(-\frac{\mathrm{d}y}{\mathrm{d}t}\right)\mathrm{d}t"></span>
+        <span class="num">(2.33)</span>
+      </span>
+    </div>
+
+    <p class="ind">我想你应该认出了“分部积分”. 求导运算 <i class="m">A</i> 的对象从第一个函数 <i class="m">x</i>(<i class="v">t</i>) 转移到了第二个函数 <i class="m">y</i>(<i class="v">t</i>)，在这个过程中出现了一个负号. 这告诉我们 <span class="inlf" data-tex="A=\dfrac{\mathrm{d}}{\mathrm{d}t}"></span> 的转置为 <span class="inlf" data-tex="A^{\mathbf{T}}=-A=-\dfrac{\mathrm{d}}{\mathrm{d}t}"></span>.</p>
+
+    <p class="ind">求导运算是反对称的. 对称矩阵满足 <span data-tex="A^{\mathbf{T}}=A"></span>，而反对称矩阵满足 <span data-tex="A^{\mathbf{T}}=-A"></span>. 某种意义上，例 2.6 中的 2 × 3 差分矩阵 <i class="m">A</i> 也有类似的性质，3 × 2 矩阵 <span data-tex="A^{\mathbf{T}}"></span> 可以看作负的差分矩阵. <span data-tex="A^{\mathbf{T}}\boldsymbol{y}"></span> 中间的元素是 <span data-tex="y_1-y_2"></span> 而不是 <span data-tex="y_2-y_1"></span>.</p>
+
+    <p class="ind">分部积分法不是花里胡哨的奇技淫巧，而是非常重要的方法. 在这里，我们假设 <i class="m">x</i>(−∞) 和 <i class="m">x</i>(+∞) 为零来忽略边界条件.</p>
+
+    <h3 class="sub"><span class="num">2.4.8</span>对称矩阵</h3>
+
+    <p class="ind">所谓对称矩阵，是指 <i class="m">A</i> 和 <span data-tex="A^{\mathbf{T}}"></span> 相等的矩阵：<span data-tex="A^{\mathbf{T}}=A"></span>. <i class="m">A</i> 的 (<i class="v">j</i>, <i class="v">i</i>) 元素与关于主对角线对称位置的 (<i class="v">i</i>, <i class="v">j</i>) 元素相同. 鄙人愚见，对称矩阵大概是最重要的矩阵. 我们用 <i class="m">S</i> 来记对称矩阵.</p>
+
+  </main>
+
+  <div class="fn">
+    <div class="f"><span class="k">①</span><span>译者注：凡事都有代价. 这种定义方式虽然更数学，但是隐式的，或者间接的，首先无法直接看出 <span data-tex="A^{\mathbf{T}}"></span> 是什么，其次也需要花篇幅说明其存在性和唯一性.</span></div>
+  </div>
+
+  <div class="foot"><span>重排版 · 印刷页 70</span><span>对照扫描原图 p0094</span></div>
+</div>
+
+<script src="../assets/katex/katex.min.js"></script>
+<script src="katex-auto.js"></script>
+</body>
+</html>

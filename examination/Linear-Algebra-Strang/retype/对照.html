@@ -1,0 +1,131 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>重排版对照 · 线性代数 Strang 第6版</title>
+<style>
+  :root{
+    --ink:#16202c; --ink2:#485566; --ink3:#8b99a8; --line:#e3e9f0;
+    --blue:#1a5cb8; --paper:#f7f9fb;
+  }
+  *{box-sizing:border-box}
+  body{
+    margin:0; background:var(--paper); color:var(--ink);
+    font:15px/1.7 -apple-system,"PingFang SC","Microsoft YaHei",sans-serif;
+    padding:0 0 80px;
+  }
+  header.top{
+    padding:34px 28px 22px; border-bottom:1px solid var(--line); background:#fff;
+  }
+  .wrap{max-width:1160px;margin:0 auto;padding:0 20px}
+  h1{margin:0 0 6px; font-size:22px; letter-spacing:.01em}
+  h1 small{font-weight:400;color:var(--ink3);font-size:13px;margin-left:8px}
+  .sub{color:var(--ink2);font-size:13.5px;margin:0}
+  .kv{display:flex;gap:10px;flex-wrap:wrap;margin-top:14px}
+  .kv span{font-size:12px;color:var(--ink2);background:#eef3f9;border:1px solid #dde7f2;
+    padding:3px 10px;border-radius:999px}
+
+  section.pg{max-width:1160px;margin:34px auto 0;padding:0 20px}
+  .pghead{display:flex;align-items:baseline;gap:12px;margin-bottom:4px}
+  .pghead h2{margin:0;font-size:17px;color:var(--blue)}
+  .pghead .tag{font-size:12px;color:var(--ink3)}
+  .pgnote{margin:0 0 14px;font-size:13.5px;color:var(--ink2)}
+  .pgnote b{color:var(--ink);font-weight:600}
+
+  .pair{display:grid;grid-template-columns:1fr 1fr;gap:22px;align-items:start}
+  @media(max-width:900px){.pair{grid-template-columns:1fr}}
+  figure{margin:0;background:#fff;border:1px solid var(--line);border-radius:10px;
+    overflow:hidden;box-shadow:0 1px 3px rgba(16,32,56,.05)}
+  figure .cap{display:flex;align-items:center;gap:7px;padding:9px 13px;
+    font-size:12px;color:var(--ink2);border-bottom:1px solid var(--line);background:#fafcfe}
+  figure .cap .dot{width:7px;height:7px;border-radius:50%;background:#c2ccd8}
+  figure.orig .cap .dot{background:#b0b8c4}
+  figure.new .cap .dot{background:#2f9e6f}
+  figure .cap b{color:var(--ink);font-weight:600}
+  figure .body{background:#fff;line-height:0}
+  figure img{width:100%;height:auto;display:block;cursor:zoom-in}
+
+  .diffs{max-width:1160px;margin:16px auto 0;padding:0 20px}
+  .diffs ul{margin:6px 0 0;padding-left:18px;color:var(--ink2);font-size:13.5px}
+  .diffs li{margin:4px 0}
+  .diffs code{background:#eef3f9;border-radius:4px;padding:1px 5px;font-size:12.5px}
+
+  /* 放大查看 */
+  .lb{position:fixed;inset:0;background:rgba(12,20,32,.86);display:none;
+    align-items:center;justify-content:center;z-index:99;padding:24px;cursor:zoom-out}
+  .lb.on{display:flex}
+  .lb img{max-width:100%;max-height:100%;background:#fff;border-radius:6px}
+</style>
+</head>
+<body>
+
+<header class="top">
+  <div class="wrap">
+    <h1>原书扫描 vs 文字重排版 <small>线性代数（Strang 第 6 版 · 中文版）</small></h1>
+    <p class="sub">左边是原书扫描页，右边是把同一页的<strong>文字全部重新录入</strong>、用 CSS 排出来、公式用 KaTeX 排的结果 —— 没有使用任何扫描图。</p>
+    <div class="kv">
+      <span>版心比例 74.7%</span>
+      <span>行距 1.68em</span>
+      <span>每行约 45 字</span>
+      <span>矩阵/向量 粗斜体</span>
+      <span>标量 普通斜体</span>
+      <span>1 页 ≈ 0 张图片</span>
+    </div>
+  </div>
+</header>
+
+<section class="pg">
+  <div class="pghead"><h2>印刷第 28 页</h2><span class="tag">习题 22–24 + 1.4 节开头</span></div>
+  <p class="pgnote">主要考验：<b>蓝底色块与块内 5 条文字</b>、右侧三行注释的矩阵、一排 4 个矩阵、带编号的蓝框公式 (1.13)。</p>
+  <div class="pair">
+    <figure class="orig">
+      <div class="cap"><span class="dot"></span><b>原书扫描</b>　assets/pages/p0052.webp</div>
+      <div class="body"><img src="../assets/pages/p0052.webp" alt="原书第28页"></div>
+    </figure>
+    <figure class="new">
+      <div class="cap"><span class="dot"></span><b>文字重排版</b>　retype/p0028.html</div>
+      <div class="body"><img src="shots/p0028.png" alt="重排版第28页"></div>
+    </figure>
+  </div>
+</section>
+
+<section class="pg">
+  <div class="pghead"><h2>印刷第 70 页</h2><span class="tag">2.4.7 转置 · 积分 · 2.4.8 对称矩阵</span></div>
+  <p class="pgnote">这一页是全书中排版最难的几种混在一起：<b>三行对照表</b>、<b>带圈脚注 ①</b>、<b>左标题＋右式子</b>的两栏、<b>两个编号公式 (2.32)(2.33)</b>、行内分式 <code>d/dt</code>、页脚译者注。</p>
+  <div class="pair">
+    <figure class="orig">
+      <div class="cap"><span class="dot"></span><b>原书扫描</b>　assets/pages/p0094.webp</div>
+      <div class="body"><img src="../assets/pages/p0094.webp" alt="原书第70页"></div>
+    </figure>
+    <figure class="new">
+      <div class="cap"><span class="dot"></span><b>文字重排版</b>　retype/p0070.html</div>
+      <div class="body"><img src="shots/p0070.png" alt="重排版第70页"></div>
+    </figure>
+  </div>
+</section>
+
+<div class="diffs">
+  <p style="font-size:13.5px;color:#485566;margin:0">两页都还存在的细微差异（如实说明）：</p>
+  <ul>
+    <li><b>断行位置</b>偶尔差 1–2 个字。原书用的是方正书宋，网页用宋体，同一字号下字宽略有出入；已把版心、字号、行距按原书比例校准到每行 45 字。</li>
+    <li><b>行内矩阵</b>（如例 2.6 的 2×3 矩阵）比原书略宽，导致该行提前折行。</li>
+    <li>原书页眉的三角与竖线、脚注圈号 ① 都是 CSS 画的，不是图。</li>
+  </ul>
+</div>
+
+<div class="lb" id="lb"><img id="lbi" alt=""></div>
+
+<script>
+document.querySelectorAll('figure img').forEach(function(img){
+  img.addEventListener('click', function(){
+    document.getElementById('lbi').src = img.src;
+    document.getElementById('lb').classList.add('on');
+  });
+});
+document.getElementById('lb').addEventListener('click', function(){
+  this.classList.remove('on');
+});
+</script>
+</body>
+</html>

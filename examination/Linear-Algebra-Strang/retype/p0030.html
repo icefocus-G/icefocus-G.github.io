@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>线性代数 · 原书第6版 · p.30</title>
+<link rel="stylesheet" href="../assets/katex/katex.min.css">
+<link rel="stylesheet" href="page.css">
+</head>
+<body>
+<div class="page">
+
+  <header class="rh even">
+    <span class="pn">30</span><span class="tri l"></span><span class="bar"></span>
+    <span class="ttl">线性代数（原书第 6 版 · 中文版）</span>
+  </header>
+
+  <main>
+
+    <p class="ind">至此，我们已经讨论了从 (行)·(列) (点积) 以及 (矩阵)·(列) 两个角度来理解 <i class="m">AB</i>. 另外还有两种方法 (行)·(矩阵) 以及 (列)·(行). 这四种方法也都需要 <i class="v">mnp</i> 次乘法运算，只是运算次序不同. 如果 <i class="m">A</i> 和 <i class="m">B</i> 都为 2 × 2 矩阵，那么需要 <i class="v">n</i><sup>3</sup> = 8 次运算来得到 <i class="m">AB</i>.<span class="ref">①</span></p>
+
+    <h3 class="sub"><span class="num">1.4.1</span>通常来说 <span class="en">AB</span> ≠ <span class="en">BA</span></h3>
+
+    <p class="ind">对 <span class="inlmx" data-tex="\boldsymbol{B}=\begin{bmatrix}0&amp;1\\1&amp;0\end{bmatrix}"></span>，<i class="m">AB</i> 为互换 <i class="m">A</i> 的两列得到的矩阵，而 <i class="m">BA</i> 是互换了 <i class="m">A</i> 的两行得到的矩阵！</p>
+
+    <div class="eq2">
+      <span class="eq">
+        <span data-tex="\boldsymbol{AB}=\begin{bmatrix}2&amp;1\\4&amp;3\end{bmatrix}\qquad\qquad\boldsymbol{BA}=\begin{bmatrix}0&amp;1\\1&amp;0\end{bmatrix}\begin{bmatrix}1&amp;2\\3&amp;4\end{bmatrix}=\begin{bmatrix}3&amp;4\\1&amp;2\end{bmatrix}"></span>
+      </span>
+      <span class="no">(1.18)</span>
+    </div>
+
+    <p class="ind">这个简单的例子就说明了，通常矩阵的乘积运算不是可交换的：<i class="m">BA</i> ≠ <i class="m">AB</i>. 在 <i class="m">A</i> 的左边乘 <i class="m">B</i> 是对 <i class="m">A</i> 的行进行操作，而在右边乘 <i class="m">B</i> 是对 <i class="m">A</i> 的列进行操作.</p>
+
+    <p class="ind"><b>问题.</b> 为什么将对换矩阵平方得到单位矩阵：<span data-tex="\boldsymbol{B}^2=\begin{bmatrix}0&amp;1\\1&amp;0\end{bmatrix}\begin{bmatrix}0&amp;1\\1&amp;0\end{bmatrix}=\boldsymbol{I}"></span>？</p>
+
+    <h3 class="sub"><span class="num">1.4.2</span><span class="en">(AB)C = A(BC)</span></h3>
+
+    <p class="ind">矩阵乘法的结合律成立. 结合律非常有用，若非万不得已，我们都希望保留这个运算规则. 我们可以先计算 <i class="m">AB</i>，也可以先计算 <i class="m">BC</i>.</p>
+
+    <p class="ind">这里 <i class="m">A</i>、<i class="m">B</i>、<i class="m">C</i> 的顺序是保持不变的，所以它们的大小应该满足矩阵乘法的运算要求：</p>
+
+    <p class="ind bt"><i class="m">A</i> 为 <i class="v">m</i>×<i class="v">n</i> 矩阵，<i class="m">B</i> 为 <i class="v">n</i>×<i class="v">p</i> 矩阵，<i class="m">C</i> 为 <i class="v">p</i>×<i class="v">q</i> 矩阵，<i class="m">AB</i> 为 <i class="v">m</i>×<i class="v">p</i> 矩阵，<i class="m">(AB)C</i> 为 <i class="v">m</i>×<i class="v">q</i> 矩阵.</p>
+
+    <p class="ind">我们可以用对换矩阵 <i class="m">B</i> 对矩阵 <i class="m">A</i> 的行和列的影响来检验结合律：</p>
+
+    <div class="eqc">
+      <span data-tex="\boldsymbol{(BA)B}=\left(\begin{bmatrix}0&amp;1\\1&amp;0\end{bmatrix}\begin{bmatrix}1&amp;2\\3&amp;4\end{bmatrix}\right)\begin{bmatrix}0&amp;1\\1&amp;0\end{bmatrix}=\begin{bmatrix}3&amp;4\\1&amp;2\end{bmatrix}\begin{bmatrix}0&amp;1\\1&amp;0\end{bmatrix}=\begin{bmatrix}4&amp;3\\2&amp;1\end{bmatrix}"></span>
+    </div>
+
+    <div class="eqc">
+      <span data-tex="\boldsymbol{B(AB)}=\begin{bmatrix}0&amp;1\\1&amp;0\end{bmatrix}\left(\begin{bmatrix}1&amp;2\\3&amp;4\end{bmatrix}\begin{bmatrix}0&amp;1\\1&amp;0\end{bmatrix}\right)=\begin{bmatrix}0&amp;1\\1&amp;0\end{bmatrix}\begin{bmatrix}2&amp;1\\4&amp;3\end{bmatrix}=\begin{bmatrix}4&amp;3\\2&amp;1\end{bmatrix}"></span>
+    </div>
+
+    <p class="ind">这就是说，对 <i class="m">A</i>，无论是先作行变换再作列变换，还是先作列变换再作行变换，结果是不变的.</p>
+
+    <p class="ind">特别需要说明，当 <i class="m">C</i> 仅仅是一个列向量 <i class="m">x</i> 时，<i class="m">(AB)C</i> = <i class="m">A(BC)</i> 的意义. 如果 <i class="m">x</i> 只在第 <i class="v">j</i> 个分量是 1，其他分量是 0，根据结合律有 <i class="m">(AB)x</i> = <i class="m">A(Bx)</i>. 这就告诉了我们应该如何计算矩阵的乘法：等式左边为 <i class="m">AB</i> 的第 <i class="v">j</i> 列，等式右边为 <i class="m">A</i> 乘以 <i class="m">B</i> 的第 <i class="v">j</i> 列. 所以这一等式正是前面式(1.13)给出的矩阵乘法的定义.</p>
+
+    <p class="ind">现在，我们总结关于 <i class="m">ABC</i> 以及 <i class="m">A</i> 乘以 <i class="m">B</i> + <i class="m">C</i> 的重要的运算规则：</p>
+
+    <div class="eq2">
+      <span class="eq">
+        <span data-tex="\text{结合律}\quad\boldsymbol{(AB)C}=\boldsymbol{A(BC)}\qquad\qquad\text{分配律}\quad\boldsymbol{A(B+C)}=\boldsymbol{AB}+\boldsymbol{AC}"></span>
+      </span>
+      <span class="no">(1.19)</span>
+    </div>
+
+  </main>
+
+  <div class="fn">
+    <div class="f"><span class="k">①</span><span>作者注：Strassen 发现对于 2 × 2 矩阵的情况，<span class="bt">7 次乘法运算</span>就已经足够得到 <i class="m">AB</i>，代价是额外的 1 次加法. 对于 <i class="v">n</i> × <i class="v">n</i> 矩阵，乘法的计算量为 <span data-tex="n^c"></span>，其中 <span data-tex="c=\log_2 7"></span>，而不是通常认为的 <span data-tex="c=\log_2 8=3"></span>. 现在 <i class="v">c</i> 可以降得更低. 当然 <i class="v">c</i> 不可能小于 2，因为 <i class="m">A</i> 和 <i class="m">B</i> 都有 <span data-tex="n^2"></span> 个元素. 寻找最小的 <i class="v">c</i> 仍然是一个非常难的公开问题.</span></div>
+  </div>
+
+  <div class="foot"><span>重排版 · 印刷页 30</span><span>对照扫描原图 p0054</span></div>
+</div>
+
+<script src="../assets/katex/katex.min.js"></script>
+<script src="katex-auto.js"></script>
+</body>
+</html>

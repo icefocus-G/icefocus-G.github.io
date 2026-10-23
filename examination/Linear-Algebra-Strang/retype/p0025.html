@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>线性代数 · 原书第6版 · p.25</title>
+<link rel="stylesheet" href="../assets/katex/katex.min.css">
+<link rel="stylesheet" href="page.css">
+</head>
+<body>
+<div class="page">
+
+  <header class="rh odd">
+    <span class="ch">第 <i>1</i> 章<i>向量和矩阵</i></span><span class="bar"></span><span class="tri r"></span>
+    <span class="pn">25</span>
+  </header>
+
+  <main>
+
+    <p>2 × 2 矩阵的情形已经完整解决了，接下来看一下 3 × 3 矩阵的情形. 设 <i class="v">a</i> ≠ 0，</p>
+
+    <div class="fwrap">
+      <div class="fbox">
+        <div class="matrow">
+          <span data-tex="\boldsymbol{A}=\begin{bmatrix}a&amp;ma&amp;pa\\b&amp;mb&amp;pb\\c&amp;mc&amp;pc\end{bmatrix}"></span>
+          <span class="ann tight">
+            <span class="l1">第 2 列 =<i class="v">m</i>× 第 1 列</span>
+            <span class="l1">第 3 列 =<i class="v">p</i>× 第 1 列</span>
+            <span class="l1">第 2(3) 行 =<span data-tex="\dfrac{b}{a}\left(\dfrac{c}{a}\right)"></span>× 第 1 行</span>
+          </span>
+        </div>
+      </div>
+    </div>
+
+    <p>这个矩阵只有一个线性无关的列向量. <i class="m">A</i> 的行向量呢，它的第 2 行是否为第 1 行的倍数呢？是的！它的第 3 行是否为第 1 行的倍数呢？是的！因此列秩是 1 则行秩也是 1 的规律对于 3 × 3 矩阵也成立.</p>
+
+    <p class="ind">从秩 1 矩阵推广至一般矩阵，我们可以进行这样的猜测：对任意矩阵，行秩都等于列秩. 若 <i class="m">A</i> 有 <i class="v">r</i> 个线性无关的列向量，那么它就有 <i class="v">r</i> 个线性无关的行向量. 这是多么精妙！</p>
+
+    <p class="ind">我坚信，这是线性代数中第一个重大的定理. 但是限于知识储备，目前我们只知道这对于秩 1 矩阵是成立的. 在 1.4 节中，我们将要学习矩阵乘法，并且最终把我们引向光明的彼岸：理解对任意矩阵都有“行秩 = 列秩”.</p>
+
+    <h2 class="ex">习题 1.3</h2>
+
+    <p class="ind">本节我们学习了列空间，但是我们还没有涉及如何系统地计算一组列向量的线性相关性或者线性无关性. 所以本节的习题中所有矩阵都是分量为具体数字的低阶矩阵.</p>
+
+    <p class="exh"><span class="n">1.</span> 描述下列矩阵的列空间：它是整个 <i class="m">R</i><sup>3</sup>，还是其中的一个平面、一条直线或者单点？</p>
+
+    <div class="mats">
+      <span data-tex="\boldsymbol{A}_1=\begin{bmatrix}2&amp;2\\1&amp;1\\5&amp;6\end{bmatrix}"></span>
+      <span data-tex="\boldsymbol{A}_2=\begin{bmatrix}1&amp;0&amp;0\\1&amp;1&amp;0\\1&amp;1&amp;1\end{bmatrix}"></span>
+      <span data-tex="\boldsymbol{A}_3=\begin{bmatrix}1&amp;5\\2&amp;10\\1&amp;5\end{bmatrix}"></span>
+      <span data-tex="\boldsymbol{A}_4=\begin{bmatrix}0&amp;0\\0&amp;0\\0&amp;0\end{bmatrix}"></span>
+    </div>
+
+    <p class="exh"><span class="n">2.</span> 用下列矩阵的列向量线性组合出 <span class="inlmx" data-tex="\begin{bmatrix}0&amp;0&amp;0\end{bmatrix}^{\mathbf{T}}"></span>，并说明它们的列空间是一个平面. 注意：平凡的线性组合（线性组合的系数都是 0）是不允许的.</p>
+
+    <div class="matrow">
+      <span class="ann tight">
+        <span class="l1">哪一列是它</span>
+        <span class="l1">前面列的</span>
+        <span class="l1">线性组合？</span>
+      </span>
+      <span data-tex="\boldsymbol{A}_1=\begin{bmatrix}1&amp;2&amp;3\\4&amp;5&amp;6\\7&amp;8&amp;9\end{bmatrix}"></span>
+      <span data-tex="\boldsymbol{A}_2=\begin{bmatrix}1&amp;4&amp;7\\2&amp;5&amp;8\\3&amp;6&amp;9\end{bmatrix}"></span>
+    </div>
+
+    <p class="exh"><span class="n">3.</span> 描述矩阵 <i class="m">B</i>、<i class="m">C</i> 的列空间.</p>
+
+    <div class="mats">
+      <span data-tex="\boldsymbol{B}=\begin{bmatrix}1&amp;2\\2&amp;1\\3&amp;3\end{bmatrix}"></span>
+      <span data-tex="\boldsymbol{C}=\begin{bmatrix}\boldsymbol{B}&amp;-\boldsymbol{B}\end{bmatrix}\ (3\ \text{行}\ 4\ \text{列})"></span>
+    </div>
+
+    <p class="exh"><span class="n">4.</span> 用点积（例如 <i class="m">A</i> 的行向量 · <i class="m">x</i>）来计算 <i class="m">Ax</i>、<i class="m">By</i>、<i class="m">Cz</i>：</p>
+
+    <div class="mats">
+      <span data-tex="\boldsymbol{Ax}=\begin{bmatrix}2&amp;1&amp;2\\4&amp;2&amp;4\\0&amp;1&amp;1\end{bmatrix}\begin{bmatrix}1\\2\\5\end{bmatrix}"></span>
+      <span data-tex="\boldsymbol{By}=\begin{bmatrix}1&amp;0&amp;0\\1&amp;1&amp;0\\1&amp;1&amp;1\end{bmatrix}\begin{bmatrix}4\\4\\10\end{bmatrix}"></span>
+      <span data-tex="\boldsymbol{Cz}=\begin{bmatrix}1&amp;0&amp;0\\0&amp;1&amp;0\\0&amp;0&amp;1\end{bmatrix}\begin{bmatrix}z_1\\z_2\\z_3\end{bmatrix}"></span>
+    </div>
+
+  </main>
+
+  <div class="foot"><span>重排版 · 印刷页 25</span><span>对照扫描原图 p0049</span></div>
+</div>
+
+<script src="../assets/katex/katex.min.js"></script>
+<script src="katex-auto.js"></script>
+</body>
+</html>
