@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>线性代数 · 原书第6版 · p.27</title>
+<link rel="stylesheet" href="../../assets/katex/katex.min.css">
+<link rel="stylesheet" href="../page.css">
+</head>
+<body>
+<div class="page">
+
+  <header class="rh odd">
+    <span class="ch">第 <i>1</i> 章<i>向量和矩阵</i></span><span class="bar"></span><span class="tri r"></span>
+    <span class="pn">27</span>
+  </header>
+
+  <main>
+
+    <p class="exh"><span class="n">15.</span> 假设 <i class="m">Ax</i> = <i class="m">b</i>，如果我们把 <i class="m">b</i> 添加到 <i class="m">A</i> 的右边得到新的矩阵 <i class="m">B</i>，请说明为什么 <i class="m">B</i> 的秩 <i class="v">r</i>（线性无关的列向量的个数）和 <i class="m">A</i> 的秩相同.</p>
+
+    <p class="exh"><span class="n">16.</span> 判断正误，正确请简述理由，错误请举出反例.</p>
+    <p class="sub-item">（1）若两个 5 × 2 矩阵 <i class="m">A</i>、<i class="m">B</i> 的列向量分别都线性无关，则 <i class="m">A</i> + <i class="m">B</i> 的列向量也线性无关.</p>
+    <p class="sub-item">（2）若一个 <i class="v">m</i> × <i class="v">n</i> 矩阵有 <i class="v">n</i> 个线性无关的列向量，那么 <span data-tex="m\geqslant n"></span>.</p>
+    <p class="sub-item">（3）随机的 3 × 3 矩阵几乎一定有 3 个线性无关的列向量.<span class="ref">①</span></p>
+
+    <p class="exh"><span class="n">17.</span> 若 <i class="m">A</i>、<i class="m">B</i> 都是秩 1 矩阵，那么 <i class="m">A</i> + <i class="m">B</i> 的秩有哪几种可能？对每种可能的情形分别举一例. <i class="m">A</i> + <i class="m">B</i> 的秩可能是 4 吗？</p>
+
+    <p class="exh"><span class="n">18.</span> 我们把列向量 <span class="inlmx" data-tex="\boldsymbol{s}_1=\begin{bmatrix}1\\1\\1\end{bmatrix}"></span>、<span class="inlmx" data-tex="\boldsymbol{s}_2=\begin{bmatrix}0\\1\\1\end{bmatrix}"></span>、<span class="inlmx" data-tex="\boldsymbol{s}_3=\begin{bmatrix}0\\0\\1\end{bmatrix}"></span> 排在一起构成矩阵 <i class="m">S</i>. 设 <span data-tex="3\boldsymbol{s}_1+4\boldsymbol{s}_2+5\boldsymbol{s}_3="></span>
+      <i class="m">b</i>. 那么我们可以把 <i class="m">b</i> 写成矩阵和列向量的乘法：<i class="m">b</i> = <i class="m">Sx</i>，其中 <span class="inlmx" data-tex="\boldsymbol{x}=\begin{bmatrix}3\\4\\5\end{bmatrix}"></span>. 请计算 <i class="m">S</i> 的行向量和 <i class="m">x</i> 的点积.</p>
+
+    <p class="exh"><span class="n">19.</span> 若 <i class="v">a</i>、<i class="v">b</i>、<i class="v">c</i>、<i class="v">d</i> 是 4 个非零实数，且向量 <span class="inlmx" data-tex="\begin{bmatrix}a&amp;b\end{bmatrix}^{\mathbf{T}}"></span> 是 <span class="inlmx" data-tex="\begin{bmatrix}c&amp;d\end{bmatrix}^{\mathbf{T}}"></span> 的倍数，证明：<span class="inlmx" data-tex="\begin{bmatrix}a&amp;c\end{bmatrix}^{\mathbf{T}}"></span> 是 <span class="inlmx" data-tex="\begin{bmatrix}b&amp;d\end{bmatrix}^{\mathbf{T}}"></span> 的倍数.</p>
+
+    <p class="ind">这也是令人吃惊的事实：两个列向量共线. 我们也可以先用具体的数字举例观察，来看一下 <i class="v">a</i>、<i class="v">b</i>、<i class="v">c</i>、<i class="v">d</i> 是怎么联系起来的. 这个题目说明了如下事实</p>
+
+    <div class="eqc">
+      <span data-tex="\text{若}\ \begin{bmatrix}a&amp;b\\c&amp;d\end{bmatrix}\ \text{的行向量线性相关，那么它的列向量也线性相关}"></span>
+    </div>
+
+    <p class="exh"><span class="n">20.</span> 设 <i class="m">S</i> 是 3 阶求和矩阵<span class="ref">②</span>，解下列方程 <i class="m">Sy</i> = <i class="m">b</i>：</p>
+
+    <div class="mats">
+      <span data-tex="\begin{bmatrix}1&amp;0&amp;0\\1&amp;1&amp;0\\1&amp;1&amp;1\end{bmatrix}\begin{bmatrix}y_1\\y_2\\y_3\end{bmatrix}=\begin{bmatrix}1\\1\\1\end{bmatrix}"></span>
+      <span>和</span>
+      <span data-tex="\begin{bmatrix}1&amp;0&amp;0\\1&amp;1&amp;0\\1&amp;1&amp;1\end{bmatrix}\begin{bmatrix}y_1\\y_2\\y_3\end{bmatrix}=\begin{bmatrix}1\\4\\9\end{bmatrix}"></span>
+    </div>
+
+    <p class="exh">前 3 个奇数的和是<span class="blank"></span>，前 10 个奇数的和是<span class="blank"></span>.</p>
+
+    <p class="exh"><span class="n">21.</span> <i class="m">S</i> 是求和矩阵，解线性方程组 <i class="m">Sy</i> = <i class="m">c</i>，即用 <i class="v">c</i><sub>1</sub>、<i class="v">c</i><sub>2</sub>、<i class="v">c</i><sub>3</sub> 来表示 <i class="v">y</i><sub>1</sub>、<i class="v">y</i><sub>2</sub>、<i class="v">y</i><sub>3</sub>：</p>
+
+    <div class="mats">
+      <span data-tex="\boldsymbol{Sy}=\boldsymbol{c}"></span>
+      <span data-tex="\begin{bmatrix}1&amp;0&amp;0\\1&amp;1&amp;0\\1&amp;1&amp;1\end{bmatrix}\begin{bmatrix}y_1\\y_2\\y_3\end{bmatrix}=\begin{bmatrix}c_1\\c_2\\c_3\end{bmatrix}"></span>
+    </div>
+
+    <p class="exh">我们把 <i class="m">y</i> 写成矩阵 <i class="m">A</i> 和向量 <i class="m">c</i> 相乘：那么 <i class="m">A</i> 是 <i class="m">S</i> 的“逆矩阵”<span class="inlmx" data-tex="S^{-1}"></span>. <i class="m">S</i> 的列向量是线性相关的还是无关的？</p>
+
+  </main>
+
+  <div class="fn">
+    <div class="f"><span class="k">①</span><span>译者注：“几乎一定”的意思是“以概率 1 成立”.</span></div>
+    <div class="f"><span class="k">②</span><span>译者注：<i class="v">n</i> 阶求和矩阵 <i class="m">S</i> 是指下三角元素全是 1 的下三角矩阵；它之所以被称作“求和矩阵”是因为 <i class="m">Sx</i> 的第 <i class="v">k</i> 个分量是 <i class="m">x</i> 的前 <i class="v">k</i> 个分量之和.</span></div>
+  </div>
+
+  <div class="foot"><span>重排版 · 印刷页 27</span><span>对照扫描原图 p0051</span></div>
+</div>
+
+<script src="../../assets/katex/katex.min.js"></script>
+<script src="../katex-auto.js"></script>
+</body>
+</html>
