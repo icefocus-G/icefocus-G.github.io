@@ -67,5 +67,8 @@ jobs:
           git config user.name  'github-actions[bot]'
           git config user.email 'github-actions[bot]@users.noreply.github.com'
           git add "$OUT"
-          git commit -m "chore(csharp-book): 重新预跑示例输出 [skip ci]"
-          git push
+          # 不要写 [skip ci]：那会连 Pages 部署一起跳过，站点就不更新了。
+          # 防自触发靠的是上面的 paths 白名单（不含 run-output.json）。
+          git commit -m "chore(csharp-book): 重新预跑示例输出"
+          # checkout 在 push 事件下是 detached HEAD，显式推回 main
+          git push origin HEAD:main
