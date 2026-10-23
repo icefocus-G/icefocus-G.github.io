@@ -47,6 +47,9 @@ CSPROJ = """<Project Sdk="Microsoft.NET.Sdk">
 """
 
 
+GLOBAL_JSON = '{\n  "sdk": {\n    "version": "9.0.0",\n    "rollForward": "latestFeature"\n  }\n}\n'
+
+
 def modules():
     out = []
     for f in sorted(os.listdir(HERE)):
@@ -91,6 +94,8 @@ def wrap(code, kind, mode):
 
 
 def build(root, kind):
+    with io.open(os.path.join(root, 'global.json'), 'w', encoding='utf-8') as f:
+        f.write(GLOBAL_JSON)
     with io.open(os.path.join(root, 'ex.csproj'), 'w', encoding='utf-8') as f:
         f.write(CSPROJ.format(kind=kind))
     p = subprocess.run(['dotnet', 'build', '-v', 'q', '--nologo', '-c', 'Release'],
@@ -141,7 +146,11 @@ def run():
     root = tempfile.mkdtemp(prefix='csbook-run-')
     data = {'generated': time.strftime('%Y-%m-%d %H:%M:%S'), 'runtime': '', 'items': {}}
     try:
-        v = subprocess.run(['dotnet', '--version'], capture_output=True, text=True,
+        # 固定到 9.0：CI runner 自带更新的 SDK（实测 10.0.401），不锁的话
+        # 页面显示的版本号会跟着 runner 变，和 README 写的 dotnet 9 对不上。
+        with io.open(os.path.join(root, 'global.json'), 'w', encoding='utf-8') as f:
+            f.write(GLOBAL_JSON)
+        v = subprocess.run(['dotnet', '--version'], cwd=root, capture_output=True, text=True,
                            errors='replace').stdout.strip()
         data['runtime'] = 'dotnet ' + v
 

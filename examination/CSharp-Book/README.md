@@ -46,6 +46,10 @@ python3 tools/run_examples.py           # 全量，约 4~5 分钟
 python3 tools/run_examples.py --limit 20  # 只跑前 20 段调试
 ```
 
+> `global.json` 把 SDK 锁在 9.0.x。GitHub runner 自带更新的 SDK（实测会用 10.0.401），
+> 不锁的话页面显示的版本号会跟着 runner 变，也和这里的说明对不上。
+> 脚本还会把同一份 `global.json` 写进临时编译目录，保证 CI 与本机行为一致。
+
 > `run-output.json` 里每段都带 `n`（源码字符数）。页面会用当前代码长度和它比对，
 > 差超过 12 字符就提示「代码已更新、这份输出可能过期」，避免展示错位的旧输出。
 
