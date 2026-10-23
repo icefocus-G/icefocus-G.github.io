@@ -37,14 +37,18 @@ h2{margin:30px 0 10px;font-size:12px;letter-spacing:.22em;color:var(--dim2);font
   background:var(--card);border:1px solid var(--line);transition:.16s;position:relative}
 .card:hover{border-color:rgba(56,189,248,.45);transform:translateY(-1px);
   box-shadow:0 10px 26px -16px rgba(56,189,248,.6)}
+/* 整卡可点的透明覆盖层：放在内容之下、按钮之上 */
+.card .hit{position:absolute;inset:0;border-radius:inherit;z-index:1}
+.card .hit:focus-visible{outline:2px solid var(--a1);outline-offset:2px}
 .cn{display:flex;flex-direction:column;min-width:0}
 .cn b{font-size:14px;font-weight:600;letter-spacing:.01em}
 .cn i{font-style:normal;font-size:11.5px;color:var(--dim2);margin-top:1px}
-.acts{display:flex;align-items:center;gap:6px;flex:none}
+.acts{display:flex;align-items:center;gap:6px;flex:none;position:relative;z-index:2}
 .cs{flex:none;font-size:11.5px;color:var(--a1);font-family:ui-monospace,SFMono-Regular,Menlo,monospace;
   background:rgba(56,189,248,.09);border:1px solid rgba(56,189,248,.22);
-  padding:3px 8px;border-radius:999px;opacity:.9;white-space:nowrap;cursor:pointer}
-.cs:hover{background:rgba(56,189,248,.16)}
+  padding:3px 8px;border-radius:999px;opacity:.9;white-space:nowrap;cursor:pointer;
+  text-decoration:none;display:inline-block}
+.cs:hover{background:rgba(56,189,248,.18);border-color:rgba(56,189,248,.5);opacity:1}
 .cu{flex:none;width:24px;height:22px;display:grid;place-items:center;border-radius:6px;
   font-size:12px;color:var(--dim2);border:1px solid var(--line);cursor:pointer;transition:.16s}
 .cu:hover{color:var(--a3);border-color:rgba(52,211,153,.45);background:rgba(52,211,153,.08)}
@@ -95,219 +99,255 @@ footer b{color:var(--dim);font-weight:600}
     </div>
   </header>
     <section><h2>学习</h2><div class="grid">
-      <a class="card" href="/examination/" data-alias="exam" data-real="/examination/">
+      <div class="card" data-alias="exam" data-real="/examination/">
+        <a class="hit" href="/examination/" aria-label="学习总入口（进入对应页面）"></a>
         <span class="cn"><b>学习总入口</b><i>自动发现全部课程</i></span>
         <span class="acts">
-          <span class="cs" title="复制短链">icefocus.cn/exam</span>
+          <a class="cs" href="/exam" title="点击进入 /exam（按住 ⌘/Ctrl 再点是复制短链）">icefocus.cn/exam</a>
           <span class="cu" title="复制真实页面地址（建书签用这个）">
             <svg viewBox="0 0 16 16" width="11" height="11" aria-hidden="true"><rect x="5.6" y="5.6" width="7.8" height="7.8" rx="1.7" fill="none" stroke="currentColor" stroke-width="1.4"/><path d="M10.4 5.6V3.2A1.7 1.7 0 0 0 8.7 1.5H3.2A1.7 1.7 0 0 0 1.5 3.2v5.5a1.7 1.7 0 0 0 1.7 1.7h2.4" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round"/></svg>
           </span>
         </span>
-      </a>
-      <a class="card" href="/examination/International%20Finance/study" data-alias="jinrong" data-real="/examination/International%20Finance/study">
+      </div>
+      <div class="card" data-alias="jinrong" data-real="/examination/International%20Finance/study">
+        <a class="hit" href="/examination/International%20Finance/study" aria-label="国际金融 · 学习助手（进入对应页面）"></a>
         <span class="cn"><b>国际金融 · 学习助手</b></span>
         <span class="acts">
-          <span class="cs" title="复制短链">icefocus.cn/jinrong</span>
+          <a class="cs" href="/jinrong" title="点击进入 /jinrong（按住 ⌘/Ctrl 再点是复制短链）">icefocus.cn/jinrong</a>
           <span class="cu" title="复制真实页面地址（建书签用这个）">
             <svg viewBox="0 0 16 16" width="11" height="11" aria-hidden="true"><rect x="5.6" y="5.6" width="7.8" height="7.8" rx="1.7" fill="none" stroke="currentColor" stroke-width="1.4"/><path d="M10.4 5.6V3.2A1.7 1.7 0 0 0 8.7 1.5H3.2A1.7 1.7 0 0 0 1.5 3.2v5.5a1.7 1.7 0 0 0 1.7 1.7h2.4" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round"/></svg>
           </span>
         </span>
-      </a>
-      <a class="card" href="/examination/International%20Finance/bank" data-alias="jinrong-bank" data-real="/examination/International%20Finance/bank">
+      </div>
+      <div class="card" data-alias="jinrong-bank" data-real="/examination/International%20Finance/bank">
+        <a class="hit" href="/examination/International%20Finance/bank" aria-label="国际金融 · 历年真题库（进入对应页面）"></a>
         <span class="cn"><b>国际金融 · 历年真题库</b></span>
         <span class="acts">
-          <span class="cs" title="复制短链">icefocus.cn/jinrong-bank</span>
+          <a class="cs" href="/jinrong-bank" title="点击进入 /jinrong-bank（按住 ⌘/Ctrl 再点是复制短链）">icefocus.cn/jinrong-bank</a>
           <span class="cu" title="复制真实页面地址（建书签用这个）">
             <svg viewBox="0 0 16 16" width="11" height="11" aria-hidden="true"><rect x="5.6" y="5.6" width="7.8" height="7.8" rx="1.7" fill="none" stroke="currentColor" stroke-width="1.4"/><path d="M10.4 5.6V3.2A1.7 1.7 0 0 0 8.7 1.5H3.2A1.7 1.7 0 0 0 1.5 3.2v5.5a1.7 1.7 0 0 0 1.7 1.7h2.4" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round"/></svg>
           </span>
         </span>
-      </a>
-      <a class="card" href="/examination/International%20Finance/outline" data-alias="jinrong-outline" data-real="/examination/International%20Finance/outline">
+      </div>
+      <div class="card" data-alias="jinrong-outline" data-real="/examination/International%20Finance/outline">
+        <a class="hit" href="/examination/International%20Finance/outline" aria-label="国际金融 · 0基础到精通（进入对应页面）"></a>
         <span class="cn"><b>国际金融 · 0基础到精通</b></span>
         <span class="acts">
-          <span class="cs" title="复制短链">icefocus.cn/jinrong-outline</span>
+          <a class="cs" href="/jinrong-outline" title="点击进入 /jinrong-outline（按住 ⌘/Ctrl 再点是复制短链）">icefocus.cn/jinrong-outline</a>
           <span class="cu" title="复制真实页面地址（建书签用这个）">
             <svg viewBox="0 0 16 16" width="11" height="11" aria-hidden="true"><rect x="5.6" y="5.6" width="7.8" height="7.8" rx="1.7" fill="none" stroke="currentColor" stroke-width="1.4"/><path d="M10.4 5.6V3.2A1.7 1.7 0 0 0 8.7 1.5H3.2A1.7 1.7 0 0 0 1.5 3.2v5.5a1.7 1.7 0 0 0 1.7 1.7h2.4" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round"/></svg>
           </span>
         </span>
-      </a>
-      <a class="card" href="/examination/Western%20Economics/study" data-alias="xifang" data-real="/examination/Western%20Economics/study">
+      </div>
+      <div class="card" data-alias="xifang" data-real="/examination/Western%20Economics/study">
+        <a class="hit" href="/examination/Western%20Economics/study" aria-label="西方经济学 · 学习助手（进入对应页面）"></a>
         <span class="cn"><b>西方经济学 · 学习助手</b></span>
         <span class="acts">
-          <span class="cs" title="复制短链">icefocus.cn/xifang</span>
+          <a class="cs" href="/xifang" title="点击进入 /xifang（按住 ⌘/Ctrl 再点是复制短链）">icefocus.cn/xifang</a>
           <span class="cu" title="复制真实页面地址（建书签用这个）">
             <svg viewBox="0 0 16 16" width="11" height="11" aria-hidden="true"><rect x="5.6" y="5.6" width="7.8" height="7.8" rx="1.7" fill="none" stroke="currentColor" stroke-width="1.4"/><path d="M10.4 5.6V3.2A1.7 1.7 0 0 0 8.7 1.5H3.2A1.7 1.7 0 0 0 1.5 3.2v5.5a1.7 1.7 0 0 0 1.7 1.7h2.4" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round"/></svg>
           </span>
         </span>
-      </a>
-      <a class="card" href="/examination/Western%20Economics/bank" data-alias="xifang-bank" data-real="/examination/Western%20Economics/bank">
+      </div>
+      <div class="card" data-alias="xifang-bank" data-real="/examination/Western%20Economics/bank">
+        <a class="hit" href="/examination/Western%20Economics/bank" aria-label="西方经济学 · 历年真题库（进入对应页面）"></a>
         <span class="cn"><b>西方经济学 · 历年真题库</b></span>
         <span class="acts">
-          <span class="cs" title="复制短链">icefocus.cn/xifang-bank</span>
+          <a class="cs" href="/xifang-bank" title="点击进入 /xifang-bank（按住 ⌘/Ctrl 再点是复制短链）">icefocus.cn/xifang-bank</a>
           <span class="cu" title="复制真实页面地址（建书签用这个）">
             <svg viewBox="0 0 16 16" width="11" height="11" aria-hidden="true"><rect x="5.6" y="5.6" width="7.8" height="7.8" rx="1.7" fill="none" stroke="currentColor" stroke-width="1.4"/><path d="M10.4 5.6V3.2A1.7 1.7 0 0 0 8.7 1.5H3.2A1.7 1.7 0 0 0 1.5 3.2v5.5a1.7 1.7 0 0 0 1.7 1.7h2.4" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round"/></svg>
           </span>
         </span>
-      </a>
-      <a class="card" href="/examination/Western%20Economics/outline" data-alias="xifang-outline" data-real="/examination/Western%20Economics/outline">
+      </div>
+      <div class="card" data-alias="xifang-outline" data-real="/examination/Western%20Economics/outline">
+        <a class="hit" href="/examination/Western%20Economics/outline" aria-label="西方经济学 · 0基础到精通（进入对应页面）"></a>
         <span class="cn"><b>西方经济学 · 0基础到精通</b></span>
         <span class="acts">
-          <span class="cs" title="复制短链">icefocus.cn/xifang-outline</span>
+          <a class="cs" href="/xifang-outline" title="点击进入 /xifang-outline（按住 ⌘/Ctrl 再点是复制短链）">icefocus.cn/xifang-outline</a>
           <span class="cu" title="复制真实页面地址（建书签用这个）">
             <svg viewBox="0 0 16 16" width="11" height="11" aria-hidden="true"><rect x="5.6" y="5.6" width="7.8" height="7.8" rx="1.7" fill="none" stroke="currentColor" stroke-width="1.4"/><path d="M10.4 5.6V3.2A1.7 1.7 0 0 0 8.7 1.5H3.2A1.7 1.7 0 0 0 1.5 3.2v5.5a1.7 1.7 0 0 0 1.7 1.7h2.4" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round"/></svg>
           </span>
         </span>
-      </a>
-      <a class="card" href="/examination/Unity/" data-alias="unity" data-real="/examination/Unity/">
+      </div>
+      <div class="card" data-alias="unity" data-real="/examination/Unity/">
+        <a class="hit" href="/examination/Unity/" aria-label="Unity 引擎基础 · 交互课件（进入对应页面）"></a>
         <span class="cn"><b>Unity 引擎基础 · 交互课件</b><i>27 模块 · 320 张图</i></span>
         <span class="acts">
-          <span class="cs" title="复制短链">icefocus.cn/unity</span>
+          <a class="cs" href="/unity" title="点击进入 /unity（按住 ⌘/Ctrl 再点是复制短链）">icefocus.cn/unity</a>
           <span class="cu" title="复制真实页面地址（建书签用这个）">
             <svg viewBox="0 0 16 16" width="11" height="11" aria-hidden="true"><rect x="5.6" y="5.6" width="7.8" height="7.8" rx="1.7" fill="none" stroke="currentColor" stroke-width="1.4"/><path d="M10.4 5.6V3.2A1.7 1.7 0 0 0 8.7 1.5H3.2A1.7 1.7 0 0 0 1.5 3.2v5.5a1.7 1.7 0 0 0 1.7 1.7h2.4" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round"/></svg>
           </span>
         </span>
-      </a>
-      <a class="card" href="/examination/Financial%20Management/" data-alias="caiwu" data-real="/examination/Financial%20Management/">
+      </div>
+      <div class="card" data-alias="caiwu" data-real="/examination/Financial%20Management/">
+        <a class="hit" href="/examination/Financial%20Management/" aria-label="财务管理学 · 公式手册（进入对应页面）"></a>
         <span class="cn"><b>财务管理学 · 公式手册</b><i>8 章 · 152 条 LaTeX 公式</i></span>
         <span class="acts">
-          <span class="cs" title="复制短链">icefocus.cn/caiwu</span>
+          <a class="cs" href="/caiwu" title="点击进入 /caiwu（按住 ⌘/Ctrl 再点是复制短链）">icefocus.cn/caiwu</a>
           <span class="cu" title="复制真实页面地址（建书签用这个）">
             <svg viewBox="0 0 16 16" width="11" height="11" aria-hidden="true"><rect x="5.6" y="5.6" width="7.8" height="7.8" rx="1.7" fill="none" stroke="currentColor" stroke-width="1.4"/><path d="M10.4 5.6V3.2A1.7 1.7 0 0 0 8.7 1.5H3.2A1.7 1.7 0 0 0 1.5 3.2v5.5a1.7 1.7 0 0 0 1.7 1.7h2.4" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round"/></svg>
           </span>
         </span>
-      </a>
-      <a class="card" href="/examination/Unity-Book/" data-alias="unity-book" data-real="/examination/Unity-Book/">
+      </div>
+      <div class="card" data-alias="unity-book" data-real="/examination/Unity-Book/">
+        <a class="hit" href="/examination/Unity-Book/" aria-label="Unity 基础小框架 · 图解教科书（进入对应页面）"></a>
         <span class="cn"><b>Unity 基础小框架 · 图解教科书</b><i>75 课时 · 章节式阅读</i></span>
         <span class="acts">
-          <span class="cs" title="复制短链">icefocus.cn/unity-book</span>
+          <a class="cs" href="/unity-book" title="点击进入 /unity-book（按住 ⌘/Ctrl 再点是复制短链）">icefocus.cn/unity-book</a>
           <span class="cu" title="复制真实页面地址（建书签用这个）">
             <svg viewBox="0 0 16 16" width="11" height="11" aria-hidden="true"><rect x="5.6" y="5.6" width="7.8" height="7.8" rx="1.7" fill="none" stroke="currentColor" stroke-width="1.4"/><path d="M10.4 5.6V3.2A1.7 1.7 0 0 0 8.7 1.5H3.2A1.7 1.7 0 0 0 1.5 3.2v5.5a1.7 1.7 0 0 0 1.7 1.7h2.4" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round"/></svg>
           </span>
         </span>
-      </a>
-      <a class="card" href="/examination/CSharp-Map/" data-alias="csharp-map" data-real="/examination/CSharp-Map/">
+      </div>
+      <div class="card" data-alias="csharp-map" data-real="/examination/CSharp-Map/">
+        <a class="hit" href="/examination/CSharp-Map/" aria-label="C# 知识体系 · 交互思维导图（进入对应页面）"></a>
         <span class="cn"><b>C# 知识体系 · 交互思维导图</b><i>总览 + 20 张分册</i></span>
         <span class="acts">
-          <span class="cs" title="复制短链">icefocus.cn/csharp-map</span>
+          <a class="cs" href="/csharp-map" title="点击进入 /csharp-map（按住 ⌘/Ctrl 再点是复制短链）">icefocus.cn/csharp-map</a>
           <span class="cu" title="复制真实页面地址（建书签用这个）">
             <svg viewBox="0 0 16 16" width="11" height="11" aria-hidden="true"><rect x="5.6" y="5.6" width="7.8" height="7.8" rx="1.7" fill="none" stroke="currentColor" stroke-width="1.4"/><path d="M10.4 5.6V3.2A1.7 1.7 0 0 0 8.7 1.5H3.2A1.7 1.7 0 0 0 1.5 3.2v5.5a1.7 1.7 0 0 0 1.7 1.7h2.4" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round"/></svg>
           </span>
         </span>
-      </a>
-      <a class="card" href="/examination/CSharp-Book/" data-alias="csharp-book" data-real="/examination/CSharp-Book/">
+      </div>
+      <div class="card" data-alias="csharp-book" data-real="/examination/CSharp-Book/">
+        <a class="hit" href="/examination/CSharp-Book/" aria-label="C# 语言基础 · 交互课件（进入对应页面）"></a>
         <span class="cn"><b>C# 语言基础 · 交互课件</b><i>8 模块 · 292 代码框</i></span>
         <span class="acts">
-          <span class="cs" title="复制短链">icefocus.cn/csharp-book</span>
+          <a class="cs" href="/csharp-book" title="点击进入 /csharp-book（按住 ⌘/Ctrl 再点是复制短链）">icefocus.cn/csharp-book</a>
           <span class="cu" title="复制真实页面地址（建书签用这个）">
             <svg viewBox="0 0 16 16" width="11" height="11" aria-hidden="true"><rect x="5.6" y="5.6" width="7.8" height="7.8" rx="1.7" fill="none" stroke="currentColor" stroke-width="1.4"/><path d="M10.4 5.6V3.2A1.7 1.7 0 0 0 8.7 1.5H3.2A1.7 1.7 0 0 0 1.5 3.2v5.5a1.7 1.7 0 0 0 1.7 1.7h2.4" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round"/></svg>
           </span>
         </span>
-      </a>
-      <a class="card" href="/examination/Linear-Algebra-Strang/" data-alias="linalg" data-real="/examination/Linear-Algebra-Strang/">
+      </div>
+      <div class="card" data-alias="linalg" data-real="/examination/Linear-Algebra-Strang/">
+        <a class="hit" href="/examination/Linear-Algebra-Strang/" aria-label="线性代数 · Strang 第6版（进入对应页面）"></a>
         <span class="cn"><b>线性代数 · Strang 第6版</b><i>438 页原书页 + 34 个交互实验</i></span>
         <span class="acts">
-          <span class="cs" title="复制短链">icefocus.cn/linalg</span>
+          <a class="cs" href="/linalg" title="点击进入 /linalg（按住 ⌘/Ctrl 再点是复制短链）">icefocus.cn/linalg</a>
           <span class="cu" title="复制真实页面地址（建书签用这个）">
             <svg viewBox="0 0 16 16" width="11" height="11" aria-hidden="true"><rect x="5.6" y="5.6" width="7.8" height="7.8" rx="1.7" fill="none" stroke="currentColor" stroke-width="1.4"/><path d="M10.4 5.6V3.2A1.7 1.7 0 0 0 8.7 1.5H3.2A1.7 1.7 0 0 0 1.5 3.2v5.5a1.7 1.7 0 0 0 1.7 1.7h2.4" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round"/></svg>
           </span>
         </span>
-      </a>
-      <a class="card" href="/examination/Linear-Algebra-Strang/%E5%9B%BE%E8%A7%A3%E7%89%88" data-alias="linalg-tu" data-real="/examination/Linear-Algebra-Strang/%E5%9B%BE%E8%A7%A3%E7%89%88">
+      </div>
+      <div class="card" data-alias="linalg-ty" data-real="/examination/Linear-Algebra-Strang/retype/%E9%98%85%E8%AF%BB.html">
+        <a class="hit" href="/examination/Linear-Algebra-Strang/retype/%E9%98%85%E8%AF%BB.html" aria-label="线性代数 · 文字重排版（进入对应页面）"></a>
+        <span class="cn"><b>线性代数 · 文字重排版</b><i>原书文字重排 · 不用扫描图</i></span>
+        <span class="acts">
+          <a class="cs" href="/linalg-ty" title="点击进入 /linalg-ty（按住 ⌘/Ctrl 再点是复制短链）">icefocus.cn/linalg-ty</a>
+          <span class="cu" title="复制真实页面地址（建书签用这个）">
+            <svg viewBox="0 0 16 16" width="11" height="11" aria-hidden="true"><rect x="5.6" y="5.6" width="7.8" height="7.8" rx="1.7" fill="none" stroke="currentColor" stroke-width="1.4"/><path d="M10.4 5.6V3.2A1.7 1.7 0 0 0 8.7 1.5H3.2A1.7 1.7 0 0 0 1.5 3.2v5.5a1.7 1.7 0 0 0 1.7 1.7h2.4" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round"/></svg>
+          </span>
+        </span>
+      </div>
+      <div class="card" data-alias="linalg-tu" data-real="/examination/Linear-Algebra-Strang/%E5%9B%BE%E8%A7%A3%E7%89%88">
+        <a class="hit" href="/examination/Linear-Algebra-Strang/%E5%9B%BE%E8%A7%A3%E7%89%88" aria-label="线性代数 · 图解精讲（进入对应页面）"></a>
         <span class="cn"><b>线性代数 · 图解精讲</b><i>186 个知识点 · 可全文搜索</i></span>
         <span class="acts">
-          <span class="cs" title="复制短链">icefocus.cn/linalg-tu</span>
+          <a class="cs" href="/linalg-tu" title="点击进入 /linalg-tu（按住 ⌘/Ctrl 再点是复制短链）">icefocus.cn/linalg-tu</a>
           <span class="cu" title="复制真实页面地址（建书签用这个）">
             <svg viewBox="0 0 16 16" width="11" height="11" aria-hidden="true"><rect x="5.6" y="5.6" width="7.8" height="7.8" rx="1.7" fill="none" stroke="currentColor" stroke-width="1.4"/><path d="M10.4 5.6V3.2A1.7 1.7 0 0 0 8.7 1.5H3.2A1.7 1.7 0 0 0 1.5 3.2v5.5a1.7 1.7 0 0 0 1.7 1.7h2.4" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round"/></svg>
           </span>
         </span>
-      </a>
+      </div>
       </div></section>
     <section><h2>工具</h2><div class="grid">
-      <a class="card" href="/tasksync/" data-alias="task" data-real="/tasksync/">
+      <div class="card" data-alias="task" data-real="/tasksync/">
+        <a class="hit" href="/tasksync/" aria-label="任务同步站（进入对应页面）"></a>
         <span class="cn"><b>任务同步站</b></span>
         <span class="acts">
-          <span class="cs" title="复制短链">icefocus.cn/task</span>
+          <a class="cs" href="/task" title="点击进入 /task（按住 ⌘/Ctrl 再点是复制短链）">icefocus.cn/task</a>
           <span class="cu" title="复制真实页面地址（建书签用这个）">
             <svg viewBox="0 0 16 16" width="11" height="11" aria-hidden="true"><rect x="5.6" y="5.6" width="7.8" height="7.8" rx="1.7" fill="none" stroke="currentColor" stroke-width="1.4"/><path d="M10.4 5.6V3.2A1.7 1.7 0 0 0 8.7 1.5H3.2A1.7 1.7 0 0 0 1.5 3.2v5.5a1.7 1.7 0 0 0 1.7 1.7h2.4" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round"/></svg>
           </span>
         </span>
-      </a>
-      <a class="card" href="/tool/" data-alias="tools" data-real="/tool/">
+      </div>
+      <div class="card" data-alias="tools" data-real="/tool/">
+        <a class="hit" href="/tool/" aria-label="工具箱（进入对应页面）"></a>
         <span class="cn"><b>工具箱</b><i>工具汇总入口</i></span>
         <span class="acts">
-          <span class="cs" title="复制短链">icefocus.cn/tools</span>
+          <a class="cs" href="/tools" title="点击进入 /tools（按住 ⌘/Ctrl 再点是复制短链）">icefocus.cn/tools</a>
           <span class="cu" title="复制真实页面地址（建书签用这个）">
             <svg viewBox="0 0 16 16" width="11" height="11" aria-hidden="true"><rect x="5.6" y="5.6" width="7.8" height="7.8" rx="1.7" fill="none" stroke="currentColor" stroke-width="1.4"/><path d="M10.4 5.6V3.2A1.7 1.7 0 0 0 8.7 1.5H3.2A1.7 1.7 0 0 0 1.5 3.2v5.5a1.7 1.7 0 0 0 1.7 1.7h2.4" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round"/></svg>
           </span>
         </span>
-      </a>
-      <a class="card" href="/tool/img-cut/" data-alias="imgcut" data-real="/tool/img-cut/">
+      </div>
+      <div class="card" data-alias="imgcut" data-real="/tool/img-cut/">
+        <a class="hit" href="/tool/img-cut/" aria-label="AI 图片切图（进入对应页面）"></a>
         <span class="cn"><b>AI 图片切图</b><i>去背景 + 自动分块导出</i></span>
         <span class="acts">
-          <span class="cs" title="复制短链">icefocus.cn/imgcut</span>
+          <a class="cs" href="/imgcut" title="点击进入 /imgcut（按住 ⌘/Ctrl 再点是复制短链）">icefocus.cn/imgcut</a>
           <span class="cu" title="复制真实页面地址（建书签用这个）">
             <svg viewBox="0 0 16 16" width="11" height="11" aria-hidden="true"><rect x="5.6" y="5.6" width="7.8" height="7.8" rx="1.7" fill="none" stroke="currentColor" stroke-width="1.4"/><path d="M10.4 5.6V3.2A1.7 1.7 0 0 0 8.7 1.5H3.2A1.7 1.7 0 0 0 1.5 3.2v5.5a1.7 1.7 0 0 0 1.7 1.7h2.4" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round"/></svg>
           </span>
         </span>
-      </a>
-      <a class="card" href="/tool/psd-rename/" data-alias="psd" data-real="/tool/psd-rename/">
+      </div>
+      <div class="card" data-alias="psd" data-real="/tool/psd-rename/">
+        <a class="hit" href="/tool/psd-rename/" aria-label="投放图 PSD 生成（进入对应页面）"></a>
         <span class="cn"><b>投放图 PSD 生成</b></span>
         <span class="acts">
-          <span class="cs" title="复制短链">icefocus.cn/psd</span>
+          <a class="cs" href="/psd" title="点击进入 /psd（按住 ⌘/Ctrl 再点是复制短链）">icefocus.cn/psd</a>
           <span class="cu" title="复制真实页面地址（建书签用这个）">
             <svg viewBox="0 0 16 16" width="11" height="11" aria-hidden="true"><rect x="5.6" y="5.6" width="7.8" height="7.8" rx="1.7" fill="none" stroke="currentColor" stroke-width="1.4"/><path d="M10.4 5.6V3.2A1.7 1.7 0 0 0 8.7 1.5H3.2A1.7 1.7 0 0 0 1.5 3.2v5.5a1.7 1.7 0 0 0 1.7 1.7h2.4" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round"/></svg>
           </span>
         </span>
-      </a>
-      <a class="card" href="/tool/number-gen/" data-alias="num" data-real="/tool/number-gen/">
+      </div>
+      <div class="card" data-alias="num" data-real="/tool/number-gen/">
+        <a class="hit" href="/tool/number-gen/" aria-label="数值随机生成器（进入对应页面）"></a>
         <span class="cn"><b>数值随机生成器</b><i>六档 8 组 · 位数固定</i></span>
         <span class="acts">
-          <span class="cs" title="复制短链">icefocus.cn/num</span>
+          <a class="cs" href="/num" title="点击进入 /num（按住 ⌘/Ctrl 再点是复制短链）">icefocus.cn/num</a>
           <span class="cu" title="复制真实页面地址（建书签用这个）">
             <svg viewBox="0 0 16 16" width="11" height="11" aria-hidden="true"><rect x="5.6" y="5.6" width="7.8" height="7.8" rx="1.7" fill="none" stroke="currentColor" stroke-width="1.4"/><path d="M10.4 5.6V3.2A1.7 1.7 0 0 0 8.7 1.5H3.2A1.7 1.7 0 0 0 1.5 3.2v5.5a1.7 1.7 0 0 0 1.7 1.7h2.4" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round"/></svg>
           </span>
         </span>
-      </a>
+      </div>
       </div></section>
     <section><h2>皮肤</h2><div class="grid">
-      <a class="card" href="/ThemedSkin/default" data-alias="skin0" data-real="/ThemedSkin/default">
+      <div class="card" data-alias="skin0" data-real="/ThemedSkin/default">
+        <a class="hit" href="/ThemedSkin/default" aria-label="首页皮肤 · 默认（进入对应页面）"></a>
         <span class="cn"><b>首页皮肤 · 默认</b></span>
         <span class="acts">
-          <span class="cs" title="复制短链">icefocus.cn/skin0</span>
+          <a class="cs" href="/skin0" title="点击进入 /skin0（按住 ⌘/Ctrl 再点是复制短链）">icefocus.cn/skin0</a>
           <span class="cu" title="复制真实页面地址（建书签用这个）">
             <svg viewBox="0 0 16 16" width="11" height="11" aria-hidden="true"><rect x="5.6" y="5.6" width="7.8" height="7.8" rx="1.7" fill="none" stroke="currentColor" stroke-width="1.4"/><path d="M10.4 5.6V3.2A1.7 1.7 0 0 0 8.7 1.5H3.2A1.7 1.7 0 0 0 1.5 3.2v5.5a1.7 1.7 0 0 0 1.7 1.7h2.4" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round"/></svg>
           </span>
         </span>
-      </a>
-      <a class="card" href="/ThemedSkin/ThemedSkin01" data-alias="skin1" data-real="/ThemedSkin/ThemedSkin01">
+      </div>
+      <div class="card" data-alias="skin1" data-real="/ThemedSkin/ThemedSkin01">
+        <a class="hit" href="/ThemedSkin/ThemedSkin01" aria-label="首页皮肤 · 游戏视觉（进入对应页面）"></a>
         <span class="cn"><b>首页皮肤 · 游戏视觉</b></span>
         <span class="acts">
-          <span class="cs" title="复制短链">icefocus.cn/skin1</span>
+          <a class="cs" href="/skin1" title="点击进入 /skin1（按住 ⌘/Ctrl 再点是复制短链）">icefocus.cn/skin1</a>
           <span class="cu" title="复制真实页面地址（建书签用这个）">
             <svg viewBox="0 0 16 16" width="11" height="11" aria-hidden="true"><rect x="5.6" y="5.6" width="7.8" height="7.8" rx="1.7" fill="none" stroke="currentColor" stroke-width="1.4"/><path d="M10.4 5.6V3.2A1.7 1.7 0 0 0 8.7 1.5H3.2A1.7 1.7 0 0 0 1.5 3.2v5.5a1.7 1.7 0 0 0 1.7 1.7h2.4" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round"/></svg>
           </span>
         </span>
-      </a>
-      <a class="card" href="/ThemedSkin/ThemedSkin02" data-alias="skin2" data-real="/ThemedSkin/ThemedSkin02">
+      </div>
+      <div class="card" data-alias="skin2" data-real="/ThemedSkin/ThemedSkin02">
+        <a class="hit" href="/ThemedSkin/ThemedSkin02" aria-label="首页皮肤 · 设计印刷（进入对应页面）"></a>
         <span class="cn"><b>首页皮肤 · 设计印刷</b></span>
         <span class="acts">
-          <span class="cs" title="复制短链">icefocus.cn/skin2</span>
+          <a class="cs" href="/skin2" title="点击进入 /skin2（按住 ⌘/Ctrl 再点是复制短链）">icefocus.cn/skin2</a>
           <span class="cu" title="复制真实页面地址（建书签用这个）">
             <svg viewBox="0 0 16 16" width="11" height="11" aria-hidden="true"><rect x="5.6" y="5.6" width="7.8" height="7.8" rx="1.7" fill="none" stroke="currentColor" stroke-width="1.4"/><path d="M10.4 5.6V3.2A1.7 1.7 0 0 0 8.7 1.5H3.2A1.7 1.7 0 0 0 1.5 3.2v5.5a1.7 1.7 0 0 0 1.7 1.7h2.4" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round"/></svg>
           </span>
         </span>
-      </a>
+      </div>
       </div></section>
   <footer>
     <b>地址规则</b>：短名不带 <code>.html</code>；只有目录才能以 <code>/</code> 结尾。<br>
-    <b>怎么收藏</b>：点卡片上的 <code>⧉</code> 复制真实页面地址，用它建书签；短名徽标复制的是短链。<br>
+    <b>怎么用</b>：点卡片任意处，或点右侧短名徽标，都会进入对应页面；<br>
+    短名徽标上按住 <code>⌘/Ctrl</code> 再点是复制短链，<code>⧉</code> 复制真实页面地址（建书签用这个）。<br>
     <b>双域名</b>：<code>icefocus.cn/短名</code> 与 <code>icefocus-G.github.io/短名</code> 等价，本页复制的是当前域名的地址。<br>
     <b>维护方式</b>：改 <code>script/make-shortlinks.js</code> 里的 <code>SHORTCUTS</code> 表，<br>
     然后运行 <code>node script/make-shortlinks.js</code> 重新生成短链页与本导航页。
   </footer>
 </div>
 <script>
-/* 卡片上两个小按钮：短名徽标=复制短链，⧉=复制真实页面地址。都不跳转。 */
+/* 卡片交互：
+   · 整卡由透明覆盖层 .hit 负责「进入对应页面」（可中键新标签打开）
+   · 短名徽标本身是 <a href="/短名">，点一下直接进短链；按住 ⌘/Ctrl 再点才是复制短链
+   · ⧉ 复制真实页面地址 */
 function copyText(s, done) {
   if (navigator.clipboard && navigator.clipboard.writeText) {
     navigator.clipboard.writeText(s).then(done, function () {});
@@ -319,17 +359,19 @@ function copyText(s, done) {
   }
 }
 
-document.querySelectorAll('.card').forEach(function (a) {
+document.querySelectorAll('.card').forEach(function (card) {
   /* 跟随当前域名：icefocus.cn 显示/复制 cn 地址，github.io 显示/复制 github.io 地址 */
-  var alias    = a.getAttribute('data-alias') || '';
+  var alias    = card.getAttribute('data-alias') || '';
   var shortUrl = location.origin + '/' + alias;
-  var realUrl  = location.origin + (a.getAttribute('data-real') || '');
+  var realUrl  = location.origin + (card.getAttribute('data-real') || '');
 
-  var cs = a.querySelector('.cs');
+  var cs = card.querySelector('.cs');
   if (cs) {
     cs.textContent = location.host + '/' + alias;   // 静态文案只写了 cn，这里按实际域名纠正
     cs.addEventListener('click', function (e) {
-      e.preventDefault(); e.stopPropagation();
+      /* 不拦默认行为＝跳转；只有按住修饰键时才改成复制短链 */
+      if (!(e.metaKey || e.ctrlKey || e.altKey)) return;
+      e.preventDefault();
       copyText(shortUrl, function () {
         var old = cs.textContent;
         cs.textContent = '已复制 ✓';
@@ -338,7 +380,7 @@ document.querySelectorAll('.card').forEach(function (a) {
     });
   }
 
-  var cu = a.querySelector('.cu');
+  var cu = card.querySelector('.cu');
   if (cu) {
     var html = cu.innerHTML;
     cu.addEventListener('click', function (e) {

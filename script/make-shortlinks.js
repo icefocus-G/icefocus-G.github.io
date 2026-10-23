@@ -8,7 +8,7 @@
  *
  *        生成的产物：
  *          · <短名>.html  —— 根目录下的跳板页（真实文件，优先生效）
- *          · links.html   —— 一页式收藏导航，短链一览 + 一键复制
+ *          · links.html   —— 一页式收藏导航，短链一览 + 点击直达 + 一键复制
  *
  *   用法：
  *          node script/make-shortlinks.js
@@ -142,16 +142,19 @@ function linksPage(items) {
   });
 
   const cards = groups.map(g => {
+    /* 卡片用「覆盖层链接」而不是外层 <a>：徽标本身也是 <a>，两个 <a> 嵌套会被
+       HTML 解析器拆开，导致卡片布局塌掉。覆盖层还能保留中键新标签页打开。 */
     const rows = g.list.map(it => `
-      <a class="card" href="${esc(it.url)}" data-alias="${esc(it.alias)}" data-real="${esc(it.url)}">
+      <div class="card" data-alias="${esc(it.alias)}" data-real="${esc(it.url)}">
+        <a class="hit" href="${esc(it.url)}" aria-label="${esc(it.title)}（进入对应页面）"></a>
         <span class="cn"><b>${esc(it.title)}</b>${it.note ? `<i>${esc(it.note)}</i>` : ''}</span>
         <span class="acts">
-          <span class="cs" title="复制短链">icefocus.cn/${esc(it.alias)}</span>
+          <a class="cs" href="/${esc(it.alias)}" title="点击进入 /${esc(it.alias)}（按住 ⌘/Ctrl 再点是复制短链）">icefocus.cn/${esc(it.alias)}</a>
           <span class="cu" title="复制真实页面地址（建书签用这个）">
             <svg viewBox="0 0 16 16" width="11" height="11" aria-hidden="true"><rect x="5.6" y="5.6" width="7.8" height="7.8" rx="1.7" fill="none" stroke="currentColor" stroke-width="1.4"/><path d="M10.4 5.6V3.2A1.7 1.7 0 0 0 8.7 1.5H3.2A1.7 1.7 0 0 0 1.5 3.2v5.5a1.7 1.7 0 0 0 1.7 1.7h2.4" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round"/></svg>
           </span>
         </span>
-      </a>`).join('');
+      </div>`).join('');
     return `<section><h2>${esc(g.name)}</h2><div class="grid">${rows}\n      </div></section>`;
   }).join('\n    ');
 
@@ -194,14 +197,18 @@ h2{margin:30px 0 10px;font-size:12px;letter-spacing:.22em;color:var(--dim2);font
   background:var(--card);border:1px solid var(--line);transition:.16s;position:relative}
 .card:hover{border-color:rgba(56,189,248,.45);transform:translateY(-1px);
   box-shadow:0 10px 26px -16px rgba(56,189,248,.6)}
+/* 整卡可点的透明覆盖层：放在内容之下、按钮之上 */
+.card .hit{position:absolute;inset:0;border-radius:inherit;z-index:1}
+.card .hit:focus-visible{outline:2px solid var(--a1);outline-offset:2px}
 .cn{display:flex;flex-direction:column;min-width:0}
 .cn b{font-size:14px;font-weight:600;letter-spacing:.01em}
 .cn i{font-style:normal;font-size:11.5px;color:var(--dim2);margin-top:1px}
-.acts{display:flex;align-items:center;gap:6px;flex:none}
+.acts{display:flex;align-items:center;gap:6px;flex:none;position:relative;z-index:2}
 .cs{flex:none;font-size:11.5px;color:var(--a1);font-family:ui-monospace,SFMono-Regular,Menlo,monospace;
   background:rgba(56,189,248,.09);border:1px solid rgba(56,189,248,.22);
-  padding:3px 8px;border-radius:999px;opacity:.9;white-space:nowrap;cursor:pointer}
-.cs:hover{background:rgba(56,189,248,.16)}
+  padding:3px 8px;border-radius:999px;opacity:.9;white-space:nowrap;cursor:pointer;
+  text-decoration:none;display:inline-block}
+.cs:hover{background:rgba(56,189,248,.18);border-color:rgba(56,189,248,.5);opacity:1}
 .cu{flex:none;width:24px;height:22px;display:grid;place-items:center;border-radius:6px;
   font-size:12px;color:var(--dim2);border:1px solid var(--line);cursor:pointer;transition:.16s}
 .cu:hover{color:var(--a3);border-color:rgba(52,211,153,.45);background:rgba(52,211,153,.08)}
@@ -254,14 +261,18 @@ footer b{color:var(--dim);font-weight:600}
     ${cards}
   <footer>
     <b>地址规则</b>：短名不带 <code>.html</code>；只有目录才能以 <code>/</code> 结尾。<br>
-    <b>怎么收藏</b>：点卡片上的 <code>⧉</code> 复制真实页面地址，用它建书签；短名徽标复制的是短链。<br>
+    <b>怎么用</b>：点卡片任意处，或点右侧短名徽标，都会进入对应页面；<br>
+    短名徽标上按住 <code>⌘/Ctrl</code> 再点是复制短链，<code>⧉</code> 复制真实页面地址（建书签用这个）。<br>
     <b>双域名</b>：<code>icefocus.cn/短名</code> 与 <code>icefocus-G.github.io/短名</code> 等价，本页复制的是当前域名的地址。<br>
     <b>维护方式</b>：改 <code>script/make-shortlinks.js</code> 里的 <code>SHORTCUTS</code> 表，<br>
     然后运行 <code>node script/make-shortlinks.js</code> 重新生成短链页与本导航页。
   </footer>
 </div>
 <script>
-/* 卡片上两个小按钮：短名徽标=复制短链，⧉=复制真实页面地址。都不跳转。 */
+/* 卡片交互：
+   · 整卡由透明覆盖层 .hit 负责「进入对应页面」（可中键新标签打开）
+   · 短名徽标本身是 <a href="/短名">，点一下直接进短链；按住 ⌘/Ctrl 再点才是复制短链
+   · ⧉ 复制真实页面地址 */
 function copyText(s, done) {
   if (navigator.clipboard && navigator.clipboard.writeText) {
     navigator.clipboard.writeText(s).then(done, function () {});
@@ -273,17 +284,19 @@ function copyText(s, done) {
   }
 }
 
-document.querySelectorAll('.card').forEach(function (a) {
+document.querySelectorAll('.card').forEach(function (card) {
   /* 跟随当前域名：icefocus.cn 显示/复制 cn 地址，github.io 显示/复制 github.io 地址 */
-  var alias    = a.getAttribute('data-alias') || '';
+  var alias    = card.getAttribute('data-alias') || '';
   var shortUrl = location.origin + '/' + alias;
-  var realUrl  = location.origin + (a.getAttribute('data-real') || '');
+  var realUrl  = location.origin + (card.getAttribute('data-real') || '');
 
-  var cs = a.querySelector('.cs');
+  var cs = card.querySelector('.cs');
   if (cs) {
     cs.textContent = location.host + '/' + alias;   // 静态文案只写了 cn，这里按实际域名纠正
     cs.addEventListener('click', function (e) {
-      e.preventDefault(); e.stopPropagation();
+      /* 不拦默认行为＝跳转；只有按住修饰键时才改成复制短链 */
+      if (!(e.metaKey || e.ctrlKey || e.altKey)) return;
+      e.preventDefault();
       copyText(shortUrl, function () {
         var old = cs.textContent;
         cs.textContent = '已复制 ✓';
@@ -292,7 +305,7 @@ document.querySelectorAll('.card').forEach(function (a) {
     });
   }
 
-  var cu = a.querySelector('.cu');
+  var cu = card.querySelector('.cu');
   if (cu) {
     var html = cu.innerHTML;
     cu.addEventListener('click', function (e) {
