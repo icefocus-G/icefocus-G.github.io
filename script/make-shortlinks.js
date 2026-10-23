@@ -50,6 +50,8 @@ const SHORTCUTS = [
   { alias: 'unity-book',      url: '/examination/Unity-Book/',                     title: 'Unity 基础小框架 · 图解教科书', group: '学习', note: '75 课时 · 章节式阅读' },
   { alias: 'csharp-map',      url: '/examination/CSharp-Map/',                     title: 'C# 知识体系 · 交互思维导图', group: '学习', note: '总览 + 20 张分册' },
   { alias: 'csharp-book',     url: '/examination/CSharp-Book/',                    title: 'C# 语言基础 · 交互课件', group: '学习', note: '8 模块 · 292 代码框' },
+  { alias: 'linalg',          url: '/examination/Linear-Algebra-Strang/',           title: '线性代数 · Strang 第6版', group: '学习', note: '438 页原书页 + 34 个交互实验' },
+  { alias: 'linalg-tu',       url: '/examination/Linear-Algebra-Strang/%E5%9B%BE%E8%A7%A3%E7%89%88', title: '线性代数 · 图解精讲', group: '学习', note: '186 个知识点 · 可全文搜索' },
 
   /* ---- 工具 ---- */
   { alias: 'task',            url: '/tasksync/',                                       title: '任务同步站',            group: '工具' },
