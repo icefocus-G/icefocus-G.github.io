@@ -1,25 +1,26 @@
 {
-  "cn": "Unity 小游戏开发实战",
-  "en": "Unity Mini-Game Workshop",
+  "cn": "Unity 小游戏源码图谱",
+  "en": "Unity Mini-Game Source Atlas",
   "code": "UGAME",
   "ico": "🕹️",
   "order": 4,
   "status": "live",
   "theme": "#7c3aed",
-  "desc": "13 个经典小游戏源码逐句拆解：每课四节（可玩演示 → 源码逐句 → 运行结果 → 闯关测验）。左侧课时目录带完成度，标记完成与测验记录本地留存；上方直接玩浏览器复刻版，无需安装 Unity。",
+  "desc": "14 个 Unity 小游戏工程的架构剖析：每个游戏 9 个页签（概览 / 架构 / 类图 / 技术替换 / 演示 / 从0到运行 / 机制精讲 / 重构实战 / 手游化），配 5 篇横向指南（共性骨架、技术替换矩阵、手游化框架、实施路线图）。附 13 课可玩复刻与闯关测验，进度存本机。",
   "mods": [
-    "13 课",
-    "80 个脚本",
-    "29 道测验",
-    "可玩演示"
+    "14 个工程",
+    "9 页签/工程",
+    "85+ 脚本",
+    "13 课可玩复刻"
   ],
   "entry": "index.html",
-  "note": "课程式：课时目录 + 分节卡片 + 闯关测验 + 学习进度",
+  "note": "图谱式：14 工程 × 9 页签 + 5 篇指南；可玩复刻另开 course.html",
   "_说明": [
-    "entry 指向本课程目录的 index.html（课程首页，不走 _shell/study.html 通用壳）。",
-    "outline.html 为课时页，用 ?g=<id> 指定游戏，例如 outline.html?g=pong。",
-    "lessons/<id>.js —— 可玩实现 + 教学文案 + 逐句注释映射（人工维护）。",
-    "lessons/<id>.code.js —— 原始 C# 源码行数据，由 tools/build_code.py 自动生成，不要手改。",
-    "assets/course.css + course.js —— 课程外壳（进度 / 测验 / 翻页）；assets/quiz.js 由 bank.html 题库抽出。"
+    "entry 指向本课程目录的 index.html —— 单文件图谱（约 1.8MB，样式与脚本全部内联，无外链资源）。",
+    "index.html 里导航是 JS 渲染的：GUIDES 定义 5 篇指南，HUB_GAMES 定义 14 个游戏（按 group 分组），TABS 定义每个游戏的 9 个页签。",
+    "course.html 是原来的课程式首页（13 课），由侧栏「🎮 可玩复刻 · 13 课逐句精讲」进入；outline.html?g=<id> 为课时页。",
+    "图谱的进度/笔记原先靠 server.py 的 /api/load、/api/save 读写 data/progress.json；这两个接口在静态托管下会失败，代码自动降级为 localStorage（侧栏底部显示「本机保存」），所以无需后端即可在 Pages 上运行。",
+    "index.html 由 01-小游戏源码图谱 的 deliverables 原样迁入，只做了三处改动：注入侧栏入口样式与链接、把「离线模式」改成「本机保存」。正文与数据一个字没动。",
+    "lessons/<id>.js 为可玩实现 + 教学文案；lessons/<id>.code.js 为原始 C# 源码行数据（由 tools/build_code.py 生成，勿手改）。"
   ]
 }
