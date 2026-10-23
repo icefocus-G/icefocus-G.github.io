@@ -649,6 +649,28 @@
     if (fromStatic) {
       Object.keys(local).forEach(function (k) { merged[k] = local[k]; });
     }
+
+    /* ====== 本机删除必须能传到云端 ======
+       典型场景：错题本里「连续答对 2 次」→ 本机把 wrong_<卷>_<题> 这个键删掉。
+       合并结果 merged 是以云端全量键为种子的，本机删掉的键压根不出现在 local 里，
+       于是云端那份旧数据会原封不动留在 merged 中，再被 applyValues 写回本机 ——
+       用户看到的就是「明明答对了，错题本里它又冒出来了」，而且永远移不出去。
+       所以这里要把「本机主动删除」的键从 merged 里剔掉，让删除也参与同步。
+       判据刻意收得很紧，四条同时成立才认定为删除，宁可少删也不误删：
+         ① 来源是真云端（静态快照只做补齐，不参与删除传播）；
+         ② 不是「首次以云端为准」那一轮（新设备本机本来就是空的，不能当删除）；
+         ③ 云端有、且本机上次同步的快照里也有（本机确实曾经拥有过这个键）；
+         ④ 本机这一次的快照里已经没有它了。 */
+    var deletedHere = [];
+    if (remote && !remoteWins && !fromStatic) {
+      Object.keys(remote).forEach(function (k) {
+        if (isSkip(k) || !isRecord(k)) return;
+        if (base[k] === undefined) return;      // 本机从没同步过它 → 不是删除
+        if (local[k] !== undefined) return;     // 本机还在 → 不是删除
+        delete merged[k];
+        deletedHere.push(k);
+      });
+    }
     if (remote) {
       Object.keys(merged).forEach(function (k) {
         if (remote[k] !== undefined && remote[k] !== local[k]) fromCloud.push(k);
@@ -677,6 +699,7 @@
           var bk2 = bks[bm];
           if (!isRecord(bk2) || isSkip(bk2)) continue;
           if (bk2 in merged) continue;
+          if (deletedHere.indexOf(bk2) >= 0) continue;   /* 本机刚删掉的，别从备份里又捞回来 */
           merged[bk2] = bo[bk2];
           restored.push(bk2);
         }
@@ -703,9 +726,12 @@
        另外两种放行：① pushOnChange 打开（旧行为）；
                      ② 首次同步 + 云端还没有数据文件 + 本机确有数据（把文件建出来）。 */
     var firstCreate = !cfg.syncedOnce && notFound && !!(local && Object.keys(local).length);
-    var wantPush = mine2 || fromCloud.length > 0 || notFound || restored.length > 0;
+    /* 只有删除、没有改值时 mine2 为 false，这里补上，否则删除推不上去，
+       云端那份旧数据下一轮又会把键送回来。 */
+    var wantPush = mine2 || fromCloud.length > 0 || notFound || restored.length > 0 ||
+                   deletedHere.length > 0;
     var needPush = (commitPending || cfg.pushOnChange || firstCreate) ? wantPush : false;
-    var pendingCount = changedKeys().length;
+    var pendingCount = changedKeys().length + deletedHere.length;
 
     /* ====== 安全闸：本机一个数据键都没有 → 绝不上传 ======
        这是最致命的一种数据丢失：新设备 / 刚清过缓存的浏览器第一次打开时，
@@ -777,7 +803,7 @@
       log('从云端合并 ' + fromCloud.length + ' 项');
     }
     renderRecords();
-    return { merged: merged, fromCloud: fromCloud, notFound: notFound };
+    return { merged: merged, fromCloud: fromCloud, notFound: notFound, deletedHere: deletedHere };
   }
 
   async function syncRound(opts) {

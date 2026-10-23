@@ -1335,7 +1335,7 @@ function syncCommit(why){
     t.src = '../../script/gh-token.js';
     const next = function () {
       const s = document.createElement('script');
-      s.src = '../../script/cloud.js?v=6';
+      s.src = '../../script/cloud.js?v=7';
       s.async = true;
       document.head.appendChild(s);
     };
@@ -1393,17 +1393,22 @@ function findQ(sc, qid){
 const wrongKey = (simID, qid) => 'wrong_' + simID + '_' + qid;
 /* 移出规则：同一道题要「连续答对 2 次」才移出错题本 */
 const WRONG_NEED = 2;
+/* 「已移出」墓碑 { out:1, t:时间戳 }
+   为什么移出时不直接删键：云同步合并时，本机删掉的键会被云端那份旧数据原样写回，
+   结果就是「明明连续答对 2 次了，错题本里它又冒出来」。写一个墓碑值，
+   本机这份值就稳定压过云端旧值，等云端同步一致后再回收（见 gcWrongOut）。 */
+const isWrongOut = v => !!v && typeof v === 'object' && !Array.isArray(v) && v.out === 1;
 /* 错题记录统一读成 { ans, streak }；兼容旧格式（旧值可能就是当时选错的答案 / 主观题 true） */
 function wrongRec(simID, qid){
   const v = store.get(wrongKey(simID, qid), null);
-  if (!v) return null;
+  if (!v || isWrongOut(v)) return null;      // 没有记录 / 已移出 → 都不算在错题本里
   if (typeof v === 'object' && !Array.isArray(v) && 'streak' in v)
     return { ans: v.ans === undefined ? null : v.ans, streak: Math.max(0, Number(v.streak) || 0) };
   return { ans: v === true ? null : v, streak: 0 };
 }
-/* on 为 false/undefined → 移出；否则入库（存当时选的答案，主观题存 true），连对计数清零 */
+/* on 为 false/undefined → 移出（写墓碑）；否则入库（存当时选的答案，主观题存 true），连对计数清零 */
 function setWrong(simID, qid, on){
-  if (!on) store.del(wrongKey(simID, qid));
+  if (!on) store.set(wrongKey(simID, qid), { out:1, t: Date.now() });
   else store.set(wrongKey(simID, qid), { ans: on === true ? null : on, streak: 0 });
 }
 /* 答对一次：累计连对次数，满 2 次才移出。返回 { removed, streak, need, inBook } */
@@ -1412,7 +1417,7 @@ function wrongHit(simID, qid){
   if (!rec) return { removed:false, streak:0, need:WRONG_NEED, inBook:false };
   const streak = rec.streak + 1;
   if (streak >= WRONG_NEED){
-    store.del(wrongKey(simID, qid));
+    setWrong(simID, qid, false);            // 写墓碑而不是删键，理由见 isWrongOut
     return { removed:true, streak, need:WRONG_NEED, inBook:false };
   }
   store.set(wrongKey(simID, qid), { ans: rec.ans, streak });
@@ -1421,10 +1426,21 @@ function wrongHit(simID, qid){
 function wrongList(){
   const out = [];
   DB.papers.forEach(p => p.questions.forEach(q => {
-    if (store.get(wrongKey(p.simID, q.id), null)) out.push({ simID: p.simID, q, paper: p.name, obj: isObjQ(q) });
+    const v = store.get(wrongKey(p.simID, q.id), null);
+    if (v && !isWrongOut(v)) out.push({ simID: p.simID, q, paper: p.name, obj: isObjQ(q) });
   }));
   return out;
 }
+/* 墓碑回收：移出记录保留 30 天后真正删除。此时云端早已同步成墓碑 / 已删除，
+   删掉也不会再被云端旧数据复活，避免键无限堆积。 */
+function gcWrongOut(){
+  const now = Date.now(), KEEP = 30 * 24 * 3600 * 1000;
+  DB.papers.forEach(p => p.questions.forEach(q => {
+    const v = store.get(wrongKey(p.simID, q.id), null);
+    if (isWrongOut(v) && (now - (Number(v.t) || 0)) > KEEP) store.del(wrongKey(p.simID, q.id));
+  }));
+}
+gcWrongOut();
 function refreshWrongBadge(){
   const n = document.querySelector('#tabs .tab[data-v="wrong"] .n');
   if (n) n.textContent = wrongList().length;
@@ -1432,6 +1448,8 @@ function refreshWrongBadge(){
 /* 一次性迁移：把升级前基于 hist 的「答错」记录搬进错题本 */
 if (!store.get('wrongMigrated', false)){
   DB.papers.forEach(p => p.questions.forEach(q => {
+    const cur = store.get(wrongKey(p.simID, q.id), null);
+    if (isWrongOut(cur)) return;               // 已移出的不要被旧判分记录重新塞回去
     const h = store.get(histKey(p.simID, q.id), null);
     if (h && h.ok === false) store.set(wrongKey(p.simID, q.id), true);
   }));

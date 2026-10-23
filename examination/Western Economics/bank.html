@@ -492,7 +492,7 @@ function syncCommit(why){
     t.src = '../../script/gh-token.js';
     const next = function () {
       const s = document.createElement('script');
-      s.src = '../../script/cloud.js?v=6';
+      s.src = '../../script/cloud.js?v=7';
       s.async = true;
       document.head.appendChild(s);
     };
@@ -548,17 +548,33 @@ function findQ(sc, qid){
 }
 /* 错题库：独立于试卷作答记录（重做本卷不会清空错题本） */
 const wrongKey = (simID, qid) => 'wrong_' + simID + '_' + qid;
-/* on 为 false/undefined → 移出；否则入库（存当时选的答案，主观题存 true） */
+/* 「已移出」墓碑 { out:1, t:时间戳 }
+   移出时不能直接删键：云同步合并会以云端全量键为底，本机删掉的键会被云端那份
+   旧数据原样写回，表现就是「明明答对了，错题本里它又冒出来」。写墓碑值，
+   本机这份值稳定压过云端旧值，等云端同步一致后再回收（见 gcWrongOut）。 */
+const isWrongOut = v => !!v && typeof v === 'object' && !Array.isArray(v) && v.out === 1;
+/* on 为 false/undefined → 移出（写墓碑）；否则入库（存当时选的答案，主观题存 true） */
 function setWrong(simID, qid, on){
-  if (!on) store.del(wrongKey(simID, qid)); else store.set(wrongKey(simID, qid), on);
+  if (!on) store.set(wrongKey(simID, qid), { out:1, t: Date.now() });
+  else store.set(wrongKey(simID, qid), on);
 }
 function wrongList(){
   const out = [];
   DB.papers.forEach(p => p.questions.forEach(q => {
-    if (store.get(wrongKey(p.simID, q.id), null)) out.push({ simID: p.simID, q, paper: p.name, obj: isObjQ(q) });
+    const v = store.get(wrongKey(p.simID, q.id), null);
+    if (v && !isWrongOut(v)) out.push({ simID: p.simID, q, paper: p.name, obj: isObjQ(q) });
   }));
   return out;
 }
+/* 墓碑回收：移出记录保留 30 天后真正删除（此时云端早已同步一致，不会再被复活） */
+function gcWrongOut(){
+  const now = Date.now(), KEEP = 30 * 24 * 3600 * 1000;
+  DB.papers.forEach(p => p.questions.forEach(q => {
+    const v = store.get(wrongKey(p.simID, q.id), null);
+    if (isWrongOut(v) && (now - (Number(v.t) || 0)) > KEEP) store.del(wrongKey(p.simID, q.id));
+  }));
+}
+gcWrongOut();
 function refreshWrongBadge(){
   const n = document.querySelector('#tabs .tab[data-v="wrong"] .n');
   if (n) n.textContent = wrongList().length;
@@ -566,6 +582,8 @@ function refreshWrongBadge(){
 /* 一次性迁移：把升级前基于 hist 的「答错」记录搬进错题本 */
 if (!store.get('wrongMigrated', false)){
   DB.papers.forEach(p => p.questions.forEach(q => {
+    const cur = store.get(wrongKey(p.simID, q.id), null);
+    if (isWrongOut(cur)) return;               // 已移出的不要被旧判分记录重新塞回去
     const h = store.get(histKey(p.simID, q.id), null);
     if (h && h.ok === false) store.set(wrongKey(p.simID, q.id), true);
   }));
