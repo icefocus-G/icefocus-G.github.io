@@ -214,7 +214,9 @@
     return '这段在原稿里不是可独立运行的程序';
   }
 
-  /* 首屏就把按钮分好档，用户一眼能看出哪几段真能跑 */
+  /* 首屏就把按钮分好档，用户一眼能看出哪几段真能跑。
+     代码页是清单，编译不过的段留一个「片段」标记，方便扫出可跑的那几段；
+     正文精读页是连续阅读，169 个标记会盖过正文，所以只去掉按钮、改用悬停提示。 */
   function markButtons() {
     if (!RUNDATA) return;
     $$('.btn-run').forEach(function (b) {
@@ -222,10 +224,17 @@
       if (!box) return;
       var rec = RUNDATA.items[box.getAttribute('data-key')];
       if (!rec || rec.s !== 'fail') return;
+      var why = hintOf(rec.e);
+      if (box.classList.contains('cpair')) {
+        b.parentNode.removeChild(b);
+        var head = box.querySelector('.chead');
+        if (head) { head.title = '原稿这里的代码块：' + why; }
+        return;
+      }
       var tag = document.createElement('span');
       tag.className = 'seg-tag';
       tag.textContent = '片段';
-      tag.title = hintOf(rec.e);
+      tag.title = why;
       b.parentNode.replaceChild(tag, b);
     });
   }
