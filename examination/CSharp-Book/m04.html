@@ -3,36 +3,65 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
-<title>C# 进阶 · C# 交互课件</title>
-<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='14' fill='%2368217a'/%3E%3Ctext x='32' y='45' font-size='36' font-family='monospace' font-weight='700' fill='%23fff' text-anchor='middle'%3E%23%3C/text%3E%3C/svg%3E">
-<link rel="stylesheet" href="assets/style.css">
+<title>C# 进阶 · C# 语言图谱</title>
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='14' fill='%236366f1'/%3E%3Ctext x='32' y='44' font-size='34' font-family='monospace' font-weight='700' fill='%23fff' text-anchor='middle'%3E%23%3C/text%3E%3C/svg%3E">
+<link rel="stylesheet" href="assets/atlas.css">
 <link rel="stylesheet" href="assets/anim.css">
 </head>
 <body data-mid="m04">
-<header class="top">
-  <a class="brand" href="index.html"><span class="logo">C#</span><b>C#</b><i>交互课件</i></a>
-  <div class="crumb"><span>语言进阶</span><em>/</em><strong>C# 进阶</strong></div>
-  <div class="top-r">
-    <span class="stat">51278 字 · 180 代码 · 7 图 · 1 表</span>
-    <button class="mini" id="btnNav">目录</button>
-  </div>
-</header>
-<div class="wrap">
-  <aside class="side" id="side">
-    <div class="side-h">本篇目录</div>
-    <nav class="tocbox"><a class="toc lv2" href="#①简单的数据结构类">①简单的数据结构类</a><a class="toc lv3" href="#arraylist">💡ArrayList</a><a class="toc lv3" href="#stack-栈">💡Stack 栈</a><a class="toc lv3" href="#queue-队列">💡Queue 队列</a><a class="toc lv3" href="#hashtable">💡HashTable</a><a class="toc lv2" href="#②泛型">②泛型</a><a class="toc lv3" href="#泛型">💡泛型</a><a class="toc lv3" href="#泛型约束">💡泛型约束</a><a class="toc lv2" href="#③常用的泛型数据结构类">③常用的泛型数据结构类</a><a class="toc lv3" href="#list">💡 list</a><a class="toc lv3" href="#dictionary">💡Dictionary</a><a class="toc lv3" href="#顺序存储和链式存储">💡顺序存储和链式存储</a><a class="toc lv3" href="#linkedlist">💡 Linkedlist</a><a class="toc lv3" href="#泛型栈和队列">💡泛型栈和队列</a><a class="toc lv2" href="#④委托和事件">④委托和事件</a><a class="toc lv3" href="#委托">💡 委托</a><a class="toc lv3" href="#事件">💡事件</a><a class="toc lv3" href="#匿名函数">💡匿名函数</a><a class="toc lv3" href="#lambad表达式">💡 Lambad表达式</a><a class="toc lv2" href="#⑤list排序">⑤List排序</a><a class="toc lv3" href="#list-自带的排序方法">💡List 自带的排序方法</a><a class="toc lv3" href="#自定义-的排序">💡自定义 的排序</a><a class="toc lv3" href="#通过委托函数进行排序">💡通过委托函数进行排序</a><a class="toc lv3" href="#list-排序总结">💡List 排序总结</a><a class="toc lv2" href="#⑥协变逆变">⑥协变逆变</a><a class="toc lv3" href="#协变-out-返回值和逆变-in-参数">💡协变 out 返回值和逆变 in 参数</a><a class="toc lv3" href="#协变和逆变结合里氏替换原则">💡协变和逆变结合里氏替换原则</a><a class="toc lv2" href="#⑦多线程">⑦多线程</a><a class="toc lv3" href="#理论知识">💡理论知识</a><a class="toc lv3" href="#线程类-thread">💡线程类 Thread</a><a class="toc lv3" href="#线程之间的共享数据-lock-锁">💡线程之间的共享数据 Lock 锁</a><a class="toc lv3" href="#多线程的意义">💡多线程的意义</a><a class="toc lv2" href="#⑧预处理器指令">⑧预处理器指令</a><a class="toc lv3" href="#什么是编译器">💡什么是编译器</a><a class="toc lv3" href="#什么是预处理器指令">💡什么是预处理器指令</a><a class="toc lv3" href="#常见的预处理器指令">💡常见的预处理器指令</a><a class="toc lv2" href="#⑨反射和特性">⑨反射和特性</a><a class="toc lv3" href="#什么是程序集-和-元数据">💡什么是程序集 和 元数据</a><a class="toc lv3" href="#反射的概念-和作用">💡反射的概念 和作用</a><a class="toc lv3" href="#反射的语法">💡反射的语法</a><a class="toc lv3" href="#自定义特性">💡自定义特性</a><a class="toc lv3" href="#系统自带的特性">💡系统自带的特性</a><a class="toc lv2" href="#⑩迭代器">⑩迭代器</a><a class="toc lv3" href="#迭代器是什么">💡迭代器是什么</a><a class="toc lv3" href="#用yield-return-语法糖实现迭代器-系统实现">💡用yield return 语法糖实现迭代器（系统实现）</a><a class="toc lv3" href="#用yield-return-语法糖为泛型类实现迭代器-系统实现">💡用yield return 语法糖为泛型类实现迭代器（系统实现）</a><a class="toc lv2" href="#⑪特殊语法">⑪特殊语法</a><a class="toc lv3" href="#var隐式类型">💡var隐式类型</a><a class="toc lv3" href="#设置对象初始值">💡设置对象初始值</a><a class="toc lv3" href="#设置集合初始值">💡设置集合初始值</a><a class="toc lv3" href="#匿名类型">💡匿名类型</a><a class="toc lv3" href="#可空类型">💡可空类型</a><a class="toc lv3" href="#空合并操作符">💡空合并操作符</a><a class="toc lv3" href="#内插字符串">💡内插字符串</a><a class="toc lv3" href="#单句逻辑简略写法">💡单句逻辑简略写法</a><a class="toc lv2" href="#⑫值类型和引用类型2">⑫值类型和引用类型2</a><a class="toc lv3" href="#如何判断-值类型和引用类型">💡如何判断 值类型和引用类型</a><a class="toc lv3" href="#语句块">💡语句块</a><a class="toc lv3" href="#变量的生命周期">💡变量的生命周期</a><a class="toc lv3" href="#结构体中的值和引用">💡结构体中的值和引用</a><a class="toc lv3" href="#类中的值和引用">💡类中的值和引用</a><a class="toc lv3" href="#数组中的存储规则">💡数组中的存储规则</a><a class="toc lv3" href="#结构体继承接口">💡结构体继承接口</a><a class="toc lv2" href="#⑬排序进阶">⑬排序进阶</a><a class="toc lv3" href="#插入排序-https-www-yuque-com-yuqueyonghutueuys-c_sharp-os2l369ymp2wpxtx"><a href="https://www.yuque.com/yuqueyonghutueuys/c_sharp/os2l369ymp2wpxtx" target="_blank" rel="noopener">💡插入排序</a></a><a class="toc lv3" href="#希尔排序-https-www-yuque-com-yuqueyonghutueuys-c_sharp-os2l369ymp2wpxtx">💡<a href="https://www.yuque.com/yuqueyonghutueuys/c_sharp/os2l369ymp2wpxtx" target="_blank" rel="noopener">希尔排序</a></a><a class="toc lv3" href="#归并排序-https-www-yuque-com-yuqueyonghutueuys-c_sharp-os2l369ymp2wpxtx">💡<a href="https://www.yuque.com/yuqueyonghutueuys/c_sharp/os2l369ymp2wpxtx" target="_blank" rel="noopener">归并排序</a></a><a class="toc lv3" href="#快速排序-https-www-yuque-com-yuqueyonghutueuys-c_sharp-os2l369ymp2wpxtx">💡<a href="https://www.yuque.com/yuqueyonghutueuys/c_sharp/os2l369ymp2wpxtx" target="_blank" rel="noopener">快速排序</a></a><a class="toc lv3" href="#堆排序-https-www-yuque-com-yuqueyonghutueuys-c_sharp-os2l369ymp2wpxtx">💡<a href="https://www.yuque.com/yuqueyonghutueuys/c_sharp/os2l369ymp2wpxtx" target="_blank" rel="noopener">堆排序</a></a></nav>
-    <div class="side-h">全部模块</div>
-    <nav class="navbox"><div class="ng"><div class="ngt">语言地基</div><a href="m01.html">C# 入门</a><a href="m02.html">C# 基础</a></div><div class="ng"><div class="ngt">面向对象</div><a href="m03.html">C# 核心</a><a href="m07.html">C# 面向对象思想</a></div><div class="ng"><div class="ngt">语言进阶</div><a href="m04.html" class="on">C# 进阶</a></div><div class="ng"><div class="ngt">算法与数据结构</div><a href="m05.html">排序算法</a><a href="m08.html">算法</a></div><div class="ng"><div class="ngt">实战补充</div><a href="m06.html">C# 控制台小游戏知识补充</a><a href="m11.html">练习题</a></div><div class="ng"><div class="ngt">速查参考</div><a href="m09.html">C# 中英文对照表</a><a href="m10.html">C# 语法简写</a></div></nav>
-  </aside>
-  <main class="main">
-    <div class="mhead">
-      <div class="kick">语言进阶 · 模块 04</div>
-      <h1>C# 进阶</h1>
-      <p class="msub">委托事件、泛型、反射、特性与多线程</p>
-      <div class="chips"><span>51278 字原稿</span><span>180 段代码</span><span>7 张配图</span><span>1 个表格</span></div>
+<div id="app">
+<aside id="rail">
+<div class="brand"><h1><span class="dot"></span>C# 语言图谱</h1><p>11 模块 · 112,173 字 · 296 段代码 · 13 个演示</p></div>
+<div class="searchwrap"><input id="q" type="search" placeholder="搜索模块 / 关键词…" autocomplete="off"></div>
+<div class="cards">
+<div class="catg" data-cat="语言地基">语言地基</div>
+<a class="mcard" data-id="m01" data-cat="语言地基" data-text="C# 入门 变量、类型转换、运算符与流程控制 语言地基" href="m01.html"><span class="rd">已读</span><div class="t"><i>🚀</i><span>C# 入门</span></div><div class="s">变量、类型转换、运算符与流程控制</div><div class="m">4890 字 · 12 代码 · 4 图 · 1 演示</div><div class="bar"><i></i></div></a>
+<a class="mcard" data-id="m02" data-cat="语言地基" data-text="C# 基础 枚举、数组、值类型与引用类型 语言地基" href="m02.html"><span class="rd">已读</span><div class="t"><i>🧱</i><span>C# 基础</span></div><div class="s">枚举、数组、值类型与引用类型</div><div class="m">3325 字 · 12 代码 · 1 图 · 2 演示</div><div class="bar"><i></i></div></a>
+<div class="catg" data-cat="面向对象">面向对象</div>
+<a class="mcard" data-id="m03" data-cat="面向对象" data-text="C# 核心 封装继承多态、集合与常用类库 面向对象" href="m03.html"><span class="rd">已读</span><div class="t"><i>⚡</i><span>C# 核心</span></div><div class="s">封装继承多态、集合与常用类库</div><div class="m">19997 字 · 70 代码 · 0 图 · 2 演示</div><div class="bar"><i></i></div></a>
+<a class="mcard" data-id="m07" data-cat="面向对象" data-text="C# 面向对象思想 六大设计原则：SRP / OCP / LSP / DIP / LOP / ISP 面向对象" href="m07.html"><span class="rd">已读</span><div class="t"><i>🧠</i><span>C# 面向对象思想</span></div><div class="s">六大设计原则：SRP / OCP / LSP / DIP / LOP / ISP</div><div class="m">1165 字 · 0 代码 · 0 图 · 1 演示</div><div class="bar"><i></i></div></a>
+<div class="catg" data-cat="语言进阶">语言进阶</div>
+<a class="mcard on" data-id="m04" data-cat="语言进阶" data-text="C# 进阶 委托事件、泛型、反射、特性与多线程 语言进阶" href="m04.html"><span class="rd">已读</span><div class="t"><i>🛠️</i><span>C# 进阶</span></div><div class="s">委托事件、泛型、反射、特性与多线程</div><div class="m">51278 字 · 180 代码 · 7 图 · 1 演示</div><div class="bar"><i></i></div></a>
+<div class="catg" data-cat="算法与数据结构">算法与数据结构</div>
+<a class="mcard" data-id="m05" data-cat="算法与数据结构" data-text="排序算法 八大排序的原理、图解与复杂度 算法与数据结构" href="m05.html"><span class="rd">已读</span><div class="t"><i>📊</i><span>排序算法</span></div><div class="s">八大排序的原理、图解与复杂度</div><div class="m">15611 字 · 8 代码 · 8 图 · 1 演示</div><div class="bar"><i></i></div></a>
+<a class="mcard" data-id="m08" data-cat="算法与数据结构" data-text="算法 进制转换、递归与单例模式 算法与数据结构" href="m08.html"><span class="rd">已读</span><div class="t"><i>🧮</i><span>算法</span></div><div class="s">进制转换、递归与单例模式</div><div class="m">917 字 · 4 代码 · 0 图 · 2 演示</div><div class="bar"><i></i></div></a>
+<div class="catg" data-cat="实战补充">实战补充</div>
+<a class="mcard" data-id="m06" data-cat="实战补充" data-text="C# 控制台小游戏知识补充 控制台交互、异步等待等零碎补丁 实战补充" href="m06.html"><span class="rd">已读</span><div class="t"><i>🎮</i><span>C# 控制台小游戏知识补充</span></div><div class="s">控制台交互、异步等待等零碎补丁</div><div class="m">1215 字 · 6 代码 · 1 图 · 1 演示</div><div class="bar"><i></i></div></a>
+<a class="mcard" data-id="m11" data-cat="实战补充" data-text="练习题 入门到核心的自测题集 实战补充" href="m11.html"><span class="rd">已读</span><div class="t"><i>📝</i><span>练习题</span></div><div class="s">入门到核心的自测题集</div><div class="m">12881 字 · 0 代码 · 5 图 · 0 演示</div><div class="bar"><i></i></div></a>
+<div class="catg" data-cat="速查参考">速查参考</div>
+<a class="mcard" data-id="m09" data-cat="速查参考" data-text="C# 中英文对照表 48 个关键字的字面含义，翻卡速记 速查参考" href="m09.html"><span class="rd">已读</span><div class="t"><i>🔤</i><span>C# 中英文对照表</span></div><div class="s">48 个关键字的字面含义，翻卡速记</div><div class="m">170 字 · 0 代码 · 0 图 · 1 演示</div><div class="bar"><i></i></div></a>
+<a class="mcard" data-id="m10" data-cat="速查参考" data-text="C# 语法简写 完整写法 ↔ 语法糖，一行一行对着看 速查参考" href="m10.html"><span class="rd">已读</span><div class="t"><i>✂️</i><span>C# 语法简写</span></div><div class="s">完整写法 ↔ 语法糖，一行一行对着看</div><div class="m">724 字 · 4 代码 · 0 图 · 1 演示</div><div class="bar"><i></i></div></a>
+</div>
+<div class="railfoot"><span>阅读进度</span><b data-prog>0%</b></div>
+</aside>
+<main id="main">
+  <header id="topbar">
+    <button class="mtoggle" id="railToggle" aria-label="目录">☰</button>
+    <div class="crumbbar">
+      <span class="kicker">语言进阶</span>
+      <h2>C# 进阶</h2>
+      <span class="one">委托事件、泛型、反射、特性与多线程</span>
     </div>
-<section class="zone"><div class="zone-h"><span>图形演示 · 1 个</span><h2>先动手，再读文字</h2><p>下面的图都能点、能拖、能播放。先看它动，再回去读原稿，理解会快很多。</p></div><div data-demo="dele"></div></section>
-    <article class="doc">
+    <nav class="tabs" id="tabs">
+      <button data-p="read" class="on">精读<em>1 演示</em></button>
+      <button data-p="code">代码 <em id="tabCodeN">180</em></button>
+      <button data-p="fig">图示 <em id="tabFigN">7</em></button>
+    </nav>
+  </header>
+  <section id="view">
+    <div class="panel on" data-p="read">
+      <div class="mhead">
+        <div class="kick">语言进阶 · 第 5 模块</div>
+        <h1>🛠️ C# 进阶</h1>
+        <div class="chips">
+          <span class="chip"><b>51278</b> 字</span>
+          <span class="chip"><b>180</b> 代码</span>
+          <span class="chip"><b>7</b> 配图</span>
+          <span class="chip"><b>1</b> 演示</span>
+        </div>
+      </div>
+      <section class="zone"><div class="zone-h"><span>图形演示 · 1 个</span><h2>先动手，再读文字</h2><p>下面的图都能点、能拖、能播放。先看它动，再回去读原稿，理解会快很多。</p></div><div data-demo="dele"></div></section>
+      <article class="doc">
 <p class="tx">####</p>
 <h2 id="①简单的数据结构类" class="hd lv2">①简单的数据结构类</h2>
 <p class="tx">存储数据的容器</p>
@@ -2754,11 +2783,37 @@ foreach (string item in list2)
 <h3 id="快速排序-https-www-yuque-com-yuqueyonghutueuys-c_sharp-os2l369ymp2wpxtx" class="hd lv3">💡<a href="https://www.yuque.com/yuqueyonghutueuys/c_sharp/os2l369ymp2wpxtx" target="_blank" rel="noopener">快速排序</a></h3>
 <h3 id="堆排序-https-www-yuque-com-yuqueyonghutueuys-c_sharp-os2l369ymp2wpxtx" class="hd lv3">💡<a href="https://www.yuque.com/yuqueyonghutueuys/c_sharp/os2l369ymp2wpxtx" target="_blank" rel="noopener">堆排序</a></h3>
     </article>
-    <footer class="pnbar"><a class="pn prev" href="m03.html"><span>上一节</span>C# 核心</a><a class="pn next" href="m05.html"><span>下一节</span>排序算法</a></footer>
-  </main>
+      <div class="pager">
+      <a href="m07.html">← 🧠 C# 面向对象思想</a>
+      <button id="markBtn" class="mark">标记已读</button>
+      <a href="m05.html">📊 排序算法 →</a>
+      </div>
+    </div>
+    <div class="panel" data-p="code">
+      <div class="mhead"><div class="kick">代码速览</div><h1>本模块的 180 段代码</h1>
+      <p style="font-size:12.5px;color:var(--sub);margin:6px 0 0">按出现顺序排列，标的是所在小节。点「复制」可取走整段。</p></div>
+      <div class="codelist" id="codeList"></div>
+      <div class="pager">
+      <a href="m07.html">← 🧠 C# 面向对象思想</a>
+      <button id="markBtn" class="mark">标记已读</button>
+      <a href="m05.html">📊 排序算法 →</a>
+      </div>
+    </div>
+    <div class="panel" data-p="fig">
+      <div class="mhead"><div class="kick">配图</div><h1>本模块的 7 张图</h1>
+      <p style="font-size:12.5px;color:var(--sub);margin:6px 0 0">点任意一张放大查看。</p></div>
+      <div class="figgrid" id="figGrid"></div>
+      <div class="pager">
+      <a href="m07.html">← 🧠 C# 面向对象思想</a>
+      <button id="markBtn" class="mark">标记已读</button>
+      <a href="m05.html">📊 排序算法 →</a>
+      </div>
+    </div>
+  </section>
+</main>
 </div>
-<button class="totop" id="totop">↑</button>
-<script src="assets/app.js"></script>
+<script>window.BOOK_MODS=[{"id": "m01", "href": "m01.html", "cat": "语言地基", "ico": "🚀", "title": "C# 入门", "sub": "变量、类型转换、运算符与流程控制"}, {"id": "m02", "href": "m02.html", "cat": "语言地基", "ico": "🧱", "title": "C# 基础", "sub": "枚举、数组、值类型与引用类型"}, {"id": "m03", "href": "m03.html", "cat": "面向对象", "ico": "⚡", "title": "C# 核心", "sub": "封装继承多态、集合与常用类库"}, {"id": "m07", "href": "m07.html", "cat": "面向对象", "ico": "🧠", "title": "C# 面向对象思想", "sub": "六大设计原则：SRP / OCP / LSP / DIP / LOP / ISP"}, {"id": "m04", "href": "m04.html", "cat": "语言进阶", "ico": "🛠️", "title": "C# 进阶", "sub": "委托事件、泛型、反射、特性与多线程"}, {"id": "m05", "href": "m05.html", "cat": "算法与数据结构", "ico": "📊", "title": "排序算法", "sub": "八大排序的原理、图解与复杂度"}, {"id": "m08", "href": "m08.html", "cat": "算法与数据结构", "ico": "🧮", "title": "算法", "sub": "进制转换、递归与单例模式"}, {"id": "m06", "href": "m06.html", "cat": "实战补充", "ico": "🎮", "title": "C# 控制台小游戏知识补充", "sub": "控制台交互、异步等待等零碎补丁"}, {"id": "m11", "href": "m11.html", "cat": "实战补充", "ico": "📝", "title": "练习题", "sub": "入门到核心的自测题集"}, {"id": "m09", "href": "m09.html", "cat": "速查参考", "ico": "🔤", "title": "C# 中英文对照表", "sub": "48 个关键字的字面含义，翻卡速记"}, {"id": "m10", "href": "m10.html", "cat": "速查参考", "ico": "✂️", "title": "C# 语法简写", "sub": "完整写法 ↔ 语法糖，一行一行对着看"}];</script>
 <script src="assets/anim.js"></script>
+<script src="assets/atlas.js"></script>
 </body>
 </html>

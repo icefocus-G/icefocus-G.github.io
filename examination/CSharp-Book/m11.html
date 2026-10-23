@@ -3,36 +3,65 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
-<title>练习题 · C# 交互课件</title>
-<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='14' fill='%2368217a'/%3E%3Ctext x='32' y='45' font-size='36' font-family='monospace' font-weight='700' fill='%23fff' text-anchor='middle'%3E%23%3C/text%3E%3C/svg%3E">
-<link rel="stylesheet" href="assets/style.css">
+<title>练习题 · C# 语言图谱</title>
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='14' fill='%236366f1'/%3E%3Ctext x='32' y='44' font-size='34' font-family='monospace' font-weight='700' fill='%23fff' text-anchor='middle'%3E%23%3C/text%3E%3C/svg%3E">
+<link rel="stylesheet" href="assets/atlas.css">
 <link rel="stylesheet" href="assets/anim.css">
 </head>
 <body data-mid="m11">
-<header class="top">
-  <a class="brand" href="index.html"><span class="logo">C#</span><b>C#</b><i>交互课件</i></a>
-  <div class="crumb"><span>实战补充</span><em>/</em><strong>练习题</strong></div>
-  <div class="top-r">
-    <span class="stat">12881 字 · 0 代码 · 5 图 · 0 表</span>
-    <button class="mini" id="btnNav">目录</button>
-  </div>
-</header>
-<div class="wrap">
-  <aside class="side" id="side">
-    <div class="side-h">本篇目录</div>
-    <nav class="tocbox"><a class="toc lv2" href="#c-入门">C#入门</a><a class="toc lv2" href="#c-基础">C#基础</a><a class="toc lv2" href="#c-核心">C#核心</a><a class="toc lv2" href="#c-进阶">C#进阶</a></nav>
-    <div class="side-h">全部模块</div>
-    <nav class="navbox"><div class="ng"><div class="ngt">语言地基</div><a href="m01.html">C# 入门</a><a href="m02.html">C# 基础</a></div><div class="ng"><div class="ngt">面向对象</div><a href="m03.html">C# 核心</a><a href="m07.html">C# 面向对象思想</a></div><div class="ng"><div class="ngt">语言进阶</div><a href="m04.html">C# 进阶</a></div><div class="ng"><div class="ngt">算法与数据结构</div><a href="m05.html">排序算法</a><a href="m08.html">算法</a></div><div class="ng"><div class="ngt">实战补充</div><a href="m06.html">C# 控制台小游戏知识补充</a><a href="m11.html" class="on">练习题</a></div><div class="ng"><div class="ngt">速查参考</div><a href="m09.html">C# 中英文对照表</a><a href="m10.html">C# 语法简写</a></div></nav>
-  </aside>
-  <main class="main">
-    <div class="mhead">
-      <div class="kick">实战补充 · 模块 11</div>
-      <h1>练习题</h1>
-      <p class="msub">入门到核心的自测题集</p>
-      <div class="chips"><span>12881 字原稿</span><span>0 段代码</span><span>5 张配图</span><span>0 个表格</span></div>
+<div id="app">
+<aside id="rail">
+<div class="brand"><h1><span class="dot"></span>C# 语言图谱</h1><p>11 模块 · 112,173 字 · 296 段代码 · 13 个演示</p></div>
+<div class="searchwrap"><input id="q" type="search" placeholder="搜索模块 / 关键词…" autocomplete="off"></div>
+<div class="cards">
+<div class="catg" data-cat="语言地基">语言地基</div>
+<a class="mcard" data-id="m01" data-cat="语言地基" data-text="C# 入门 变量、类型转换、运算符与流程控制 语言地基" href="m01.html"><span class="rd">已读</span><div class="t"><i>🚀</i><span>C# 入门</span></div><div class="s">变量、类型转换、运算符与流程控制</div><div class="m">4890 字 · 12 代码 · 4 图 · 1 演示</div><div class="bar"><i></i></div></a>
+<a class="mcard" data-id="m02" data-cat="语言地基" data-text="C# 基础 枚举、数组、值类型与引用类型 语言地基" href="m02.html"><span class="rd">已读</span><div class="t"><i>🧱</i><span>C# 基础</span></div><div class="s">枚举、数组、值类型与引用类型</div><div class="m">3325 字 · 12 代码 · 1 图 · 2 演示</div><div class="bar"><i></i></div></a>
+<div class="catg" data-cat="面向对象">面向对象</div>
+<a class="mcard" data-id="m03" data-cat="面向对象" data-text="C# 核心 封装继承多态、集合与常用类库 面向对象" href="m03.html"><span class="rd">已读</span><div class="t"><i>⚡</i><span>C# 核心</span></div><div class="s">封装继承多态、集合与常用类库</div><div class="m">19997 字 · 70 代码 · 0 图 · 2 演示</div><div class="bar"><i></i></div></a>
+<a class="mcard" data-id="m07" data-cat="面向对象" data-text="C# 面向对象思想 六大设计原则：SRP / OCP / LSP / DIP / LOP / ISP 面向对象" href="m07.html"><span class="rd">已读</span><div class="t"><i>🧠</i><span>C# 面向对象思想</span></div><div class="s">六大设计原则：SRP / OCP / LSP / DIP / LOP / ISP</div><div class="m">1165 字 · 0 代码 · 0 图 · 1 演示</div><div class="bar"><i></i></div></a>
+<div class="catg" data-cat="语言进阶">语言进阶</div>
+<a class="mcard" data-id="m04" data-cat="语言进阶" data-text="C# 进阶 委托事件、泛型、反射、特性与多线程 语言进阶" href="m04.html"><span class="rd">已读</span><div class="t"><i>🛠️</i><span>C# 进阶</span></div><div class="s">委托事件、泛型、反射、特性与多线程</div><div class="m">51278 字 · 180 代码 · 7 图 · 1 演示</div><div class="bar"><i></i></div></a>
+<div class="catg" data-cat="算法与数据结构">算法与数据结构</div>
+<a class="mcard" data-id="m05" data-cat="算法与数据结构" data-text="排序算法 八大排序的原理、图解与复杂度 算法与数据结构" href="m05.html"><span class="rd">已读</span><div class="t"><i>📊</i><span>排序算法</span></div><div class="s">八大排序的原理、图解与复杂度</div><div class="m">15611 字 · 8 代码 · 8 图 · 1 演示</div><div class="bar"><i></i></div></a>
+<a class="mcard" data-id="m08" data-cat="算法与数据结构" data-text="算法 进制转换、递归与单例模式 算法与数据结构" href="m08.html"><span class="rd">已读</span><div class="t"><i>🧮</i><span>算法</span></div><div class="s">进制转换、递归与单例模式</div><div class="m">917 字 · 4 代码 · 0 图 · 2 演示</div><div class="bar"><i></i></div></a>
+<div class="catg" data-cat="实战补充">实战补充</div>
+<a class="mcard" data-id="m06" data-cat="实战补充" data-text="C# 控制台小游戏知识补充 控制台交互、异步等待等零碎补丁 实战补充" href="m06.html"><span class="rd">已读</span><div class="t"><i>🎮</i><span>C# 控制台小游戏知识补充</span></div><div class="s">控制台交互、异步等待等零碎补丁</div><div class="m">1215 字 · 6 代码 · 1 图 · 1 演示</div><div class="bar"><i></i></div></a>
+<a class="mcard on" data-id="m11" data-cat="实战补充" data-text="练习题 入门到核心的自测题集 实战补充" href="m11.html"><span class="rd">已读</span><div class="t"><i>📝</i><span>练习题</span></div><div class="s">入门到核心的自测题集</div><div class="m">12881 字 · 0 代码 · 5 图 · 0 演示</div><div class="bar"><i></i></div></a>
+<div class="catg" data-cat="速查参考">速查参考</div>
+<a class="mcard" data-id="m09" data-cat="速查参考" data-text="C# 中英文对照表 48 个关键字的字面含义，翻卡速记 速查参考" href="m09.html"><span class="rd">已读</span><div class="t"><i>🔤</i><span>C# 中英文对照表</span></div><div class="s">48 个关键字的字面含义，翻卡速记</div><div class="m">170 字 · 0 代码 · 0 图 · 1 演示</div><div class="bar"><i></i></div></a>
+<a class="mcard" data-id="m10" data-cat="速查参考" data-text="C# 语法简写 完整写法 ↔ 语法糖，一行一行对着看 速查参考" href="m10.html"><span class="rd">已读</span><div class="t"><i>✂️</i><span>C# 语法简写</span></div><div class="s">完整写法 ↔ 语法糖，一行一行对着看</div><div class="m">724 字 · 4 代码 · 0 图 · 1 演示</div><div class="bar"><i></i></div></a>
+</div>
+<div class="railfoot"><span>阅读进度</span><b data-prog>0%</b></div>
+</aside>
+<main id="main">
+  <header id="topbar">
+    <button class="mtoggle" id="railToggle" aria-label="目录">☰</button>
+    <div class="crumbbar">
+      <span class="kicker">实战补充</span>
+      <h2>练习题</h2>
+      <span class="one">入门到核心的自测题集</span>
     </div>
-
-    <article class="doc">
+    <nav class="tabs" id="tabs">
+      <button data-p="read" class="on">精读</button>
+      <button data-p="code">代码 <em id="tabCodeN">0</em></button>
+      <button data-p="fig">图示 <em id="tabFigN">5</em></button>
+    </nav>
+  </header>
+  <section id="view">
+    <div class="panel on" data-p="read">
+      <div class="mhead">
+        <div class="kick">实战补充 · 第 9 模块</div>
+        <h1>📝 练习题</h1>
+        <div class="chips">
+          <span class="chip"><b>12881</b> 字</span>
+          <span class="chip"><b>0</b> 代码</span>
+          <span class="chip"><b>5</b> 配图</span>
+          <span class="chip"><b>0</b> 演示</span>
+        </div>
+      </div>
+      
+      <article class="doc">
 <h2 id="c-入门" class="hd lv2">C#入门</h2>
 <p class="tx"><a href="https://www.bilibili.com/opus/649221630301569025?spm_id_from=333.1387.0.0" target="_blank" rel="noopener">https://www.bilibili.com/opus/649221630301569025?spm_id_from=333.1387.0.0</a></p>
 <ul class="bl"><li>1.6个杯子排成一排，右边3杯有水，左边3杯没有水。只移动一个杯子，让有水的和没水的杯子完全间隔，该怎么移动？</li><li>2.一个粗细均匀的长直管子,两端开口,里面有4个白球4个黑球,球的直径、两端开口的直径等于管子的内径,现在白球和黑球的排列是wwwwbbbb,要求不取出任何一个球,使得排列变为bbwwwwbb，应该如何操作？</li><li>3.怎样种四棵树使得任意两棵树的距离相等？</li><li>4.有两根不均匀分布的香，香烧完的时间是一个小时，你能用什么方法来确定一段15分钟的时间？</li><li>5.请简单描述 Console.Write(&amp;#34;&amp;#34;)和Console.WriteLine(&amp;#34;&amp;#34;)的区别，简单描述Console.ReadKey()和Console.ReadLine()的区别。</li><li>6.在控制台上请用户输入用户名、年龄、班级</li><li>7.在控制台上问用户喜欢什么运动，不管用户输入什么，你都回答：“哈哈，好巧，我也喜欢这个运动”</li><li>8.在控制台上输出如下10*10的空心星型方阵</li><li><b><i></b><b></i></b>*</li><li><b>            </b></li><li><b>            </b></li><li><b>            </b></li><li>**</li><li><b><i></b><b></i></b>*</li><li>![](https://cdn.nlark.com/yuque/0/2026/png/28231373/1768313052066-e1bd9c39-5b4d-4e2e-a691-841d250fbd72.png) +</li><li>13.请默写出常用的14个变量类型，以及他们所占用的内存空间。</li><li>14.请将2进制11000111、001101、01010101转为10进制，写出计算过程</li><li>15.请将10进制99、1024、78937转为2进制，写出计算过程</li><li>16.下面的变量名哪些是错误的？U3d               No.1                    3day$money        discount_ 1          Shang Haiclass              int                        _a_b_c_Main         _   2C                        print</li><li>17.按照驼峰命名法命名以下变量（使用英文）我的年龄、我的性别、我的攻击力、我的防御力、你的身高、你的体重</li><li>18.常量有什么特点？</li><li>19.请简述你觉得在游戏开发中常量会用来干什么？</li><li>20.请写出至少5种转义字符</li><li>21.请用至少两种方式在控制台打印出：我是小明我今年18我的爱好是制作游戏我要好好学习，天天向上</li><li>22.什么情况下会出现数据类型的隐式转换，请举例说明</li><li>23.请将自己名字的每一个字符转换成数字并打印出来</li><li>24.显示类型转换有几种方式？他们分别是什么，请举例说明？</li><li>25.请将24069转成字符，并打印</li><li>26.提示用户输入姓名、语文、数学、英语成绩，并将输入的3门成绩用整形变量存储</li><li>27.请用户输入一个数字如果输入有误，则提示用户输入错误</li><li>28.提示用户输入姓名、语文、数学、英语成绩如果输入的成绩有误，则提示用户输入错误否则将输入的字符串转为整型变量存储</li><li>29.定义一个变量存储你的年龄，十年后你的年龄是多少？请输出到控制台</li><li>30.计算一个半径为5的圆的面积和周长面积公式：πr²周长公式：2πr</li><li>31.计算任意三门成绩的总分、平均分打印到控制台。三门成绩均为整数类型（C#  Unity  Math）</li><li>32.商店T恤的价格为285元/件，裤子的价格为720元/条，小李在该店买了2件T恤和3条裤子，请计算小李该付多少钱？打3.8折后呢？</li><li>33.int a = 10, b = 20;int number1 = ++a + b;a = 10;b = 20;int number2 = a + b++;a = 10;b = 20;int number3 = a++ + ++b + a++;请说明 number1和number2和number3的结果</li><li>34.有两个数a=99，b=87，请写出两种方法交换他们的值，让a = 87，b=99</li><li>35.请把987652秒通过代码转为n天n小时n分钟n秒显示在控制台中</li><li>36.定义一个变量存储客户的姓名，然后在屏幕上显示：“你好，XXX”XXX代表客户的姓名</li><li>37.定义两个变量，一个存储客户的姓名，另一个存储年龄，然后在屏幕上显示：“xxx + yyy岁了”。xxx代表客户的姓名，yyy代表年龄举例（唐老狮18岁了）</li><li>38.当我们去面试时，前台会要求我们填一张表格，有姓名，年龄，邮箱，家庭住址，期望工资，请把这些信息在控制台输出。</li><li>39.请用户输入用户名、年龄、班级，最后一起用占位符形式打印出来</li><li>40.请口答下列表达式的结果我的年龄（18） &gt; 你们的年龄（22）兔子的速度（3m/s） &lt;  乌龟的速度 (0.3m/s)狗的重量( 50kg ) &lt; 兔子的重量( 5kg )我身上的Money( 10元 )  == 你身上也有Money( 10元 )</li><li>41.求打印结果是什么？bool b = true;Console.WriteLine( b != true );Console.WriteLine(10==10);Console.WriteLine(10&gt;20);Console.WriteLine(10&lt;=20);Console.WriteLine(10&lt;=10);</li><li>42.bool gameOver, startGame;int a = 10, b = 15;gameOver = a &gt; (b - 5);startGame = gameOver == (b &gt; (a + 5));Console.WriteLine(&amp;#34;startGame = &amp;#34; + startGame);请问打印结果是什么？</li><li>43.求打印结果是什么？Console.WriteLine(true || true);Console.WriteLine(false || true);Console.WriteLine(true &amp;&amp; true);Console.WriteLine(true &amp;&amp; false);Console.WriteLine(!true);</li><li>44.求打印结果是什么？bool gameOver;bool isWin;int health = 100;gameOver = true;isWin = false;Console.Write(gameOver || isWin &amp;&amp; health &gt; 0);</li><li>45.35 &lt;&lt; 4 和 66 &gt;&gt; 1 的结果为？</li><li>46.99 ^ 33 和 76 | 85 的结果为？</li><li>47.比较两个数的大小，求出最大的。</li><li>48.提示用户输入一个姓名，然后再控制台输出姓名，只要输入的不是帅哥，就显示美女。</li><li>49.依次输入学生的姓名，C#语言的成绩，Unity的成绩，两门成绩都大于等于90分，才能毕业，请输出最后的结果。</li><li>50.要求用户输入一个年份，然后判断是不是闰年？闰年判断条件：年份能被400整除（2000）或者年份能被4整除，但是不能被100整除（2008）</li><li>51.请用户输入今日看唐老狮视频花了多少分钟，如果大于60分钟，那么在控制台输出“今天看视频花了XX分钟，看来你离成功又进了一步!”</li><li>52.请输入你的 语文，数学，英语成绩，满足以下任意条件，则输出“非常棒，继续加油”语文成绩大于70 并且 数学成绩大于80 并且英语成绩大于90语文成绩等于100或者数学成绩等于100或者英语成绩等于100语文成绩大于90 并且 其它两门中有一门成绩大于70</li><li>53.定义一个变量，存储小赵的考试成绩，如果小赵的考试成绩大于（含）90分，那么爸爸奖励100元钱，否则一个月不能玩游戏</li><li>54.要求用户输入两个数a、b，如果两个数可以整除或者这两个数加起来大于100，则输出a的值，否则输出b的值</li><li>55.输入一个整数，如果这个数是偶数，则打印“Your input is even”，否则打印“Your input is odd”</li><li>56.有3个整形变量，分别存储不同的值，编写代码输出其中最大的整数</li><li>57.写一个程序接受用户输入的字符，如果输入的字符是0~9数字中的一个，则显示“您输入了一个数字”，否则显示这不是一个数字</li><li>58.提示用户输入用户名，然后再提示输入密码，如果用户名是“admin”，并且密码是&amp;#34;8888&amp;#34;，则提示正确，否则，如果用户名不是admin还提示用户用户名不存在，如果用户名是admin则提示密码错误</li><li>59.提示用户输入年龄，如果大于等于18，则告知用户可以查看，如果小于13岁，则告知不允许查看，如果大于等于13并且小于18，则提示用户是否继续查看（yes、no），如果输入的是yes则提示用户请查看，否则提示“退出”。</li><li>60.请说明以下代码的打印结果（不要打一遍代码，请直接通过阅读说出结果）int a = 5;if( a &gt; 3){int b = 0;++b;b += a;}Console.WriteLine(b);</li><li>61.唐老狮的工资是由基本工资+绩效决定的绩效说明：学生评价 很兴奋，则评定为A级，绩效工资500学生评价 很充实，则评定为B级，不加绩效工资学生评价 还好吧，则评定为C级，绩效工资扣300学生评价 难理解，则评定为D级，绩效工资扣500学生评价 枯燥泛味，则评定为E级，绩效工资扣800   假设唐老狮的工资是4000请用户输入王老师的评级，并算出王老师的工资是多少？</li><li>62.小唐带了10元钱去星巴克买咖啡，三种型号选择：1=(中杯，¥5)2=(大杯，¥7)3=(超大杯，¥11)请用户输入选择的型号，如果钱够，则购买成功，并算出小王最后还剩多少钱？如果钱不够，则提示用户“钱不够，请换其他型号”</li><li>63.输入学生的考试成绩，如果成绩&gt;=90：A90 &gt; 成绩 &gt;= 80:B80 &gt; 成绩 &gt;= 70:C70 &gt; 成绩 &gt;= 60:D成绩 &lt; 60:E（使用switch语法完成）最后输出学生的考试等级</li><li>![](https://cdn.nlark.com/yuque/0/2026/png/28231373/1768829147026-ccd46cc6-39cb-43dc-bb24-ed3ac20aeb6e.png)</li><li>64.在控制台输入一个（0~9）的数并显示为大写。如输入2，则显示二</li><li>65.在控制台输出1到100</li><li>66.在控制台输出1到100之间所有整数的和</li><li>67.用while和continue实现计算1到100（包含）之间的除了能被7整除之外所有整数的和</li><li>68.提示用户输入一个数，判断该数是否是素数并打印。（素数/质数：只能被1和这个数字本身整除的数字，1不是质数，最小的质数是2）</li><li>69.要求输入用户名和密码（admin/8888），用户名或者密码错误，则提示“用户名或密码错误”，直到输入正确为止</li><li>70.输入班级人数，然后依次输入学员成绩（需提示当前是第几个学员），计算班级学员的平均成绩和总成绩。</li><li>71.定义一个整形变量sum，然后分别把1~100之间的数字依次累加到sum中，当sum的值大于500的时候，中断操作，并在控制台输出累加到第几个数字就可以使sum大于500</li><li>72.假设看唐老狮视频的同学有100人，每个月增长20%，请问按此速度增长，经历多少个月看唐老狮视频的同学能达到1000人？</li><li>73.求数列 1,1,2,3,5,8,13....的第20位数字是多少？</li><li>74.找出100内所有素数并打印。</li><li>75.要求用户输入用户名和密码，只要不是admin和8888就一直提示用户名或密码错误，请重新输入</li><li>76.不断提示请输入你的姓名，直到输入q结束</li><li>77.输出1到100之间的整数（包含本身）</li><li>78.求1~100之间所有偶数的和</li><li>79.找出100~999之间的水仙花数例如：153 = 1<i>1</i>1 + 5<i>5</i>5 + 3<i>3</i>3 这个数就是水仙花数</li><li>80.在控制台上输出九九乘法表</li></ul>
@@ -78,11 +107,37 @@
 <figure class="fig"><img loading="lazy" src="assets/img/440e062dde95.webp" alt=""></figure>
 <ul class="bl"><li>16.计算每个字母出现的次数“Welcome to Unity World！”，使用字典存储，最后遍历整个字典，不区分大小写</li><li>17.请说出常用的数据结构有哪些</li><li>18.请描述顺序存储和链式存储的区别</li><li>19.请尝试自己实现一个双向链表并提供以下方法和属性数据的个数，头节点，尾节点增加数据到链表最后删除指定位置节点</li><li>20.使用Linkedlist，向其中加入10个随机整形变量正向遍历一次打印出信息反向遍历一次打印出信息</li><li>21.自己总结一下数组、List、Dictionary、Stack、Queue、LinkedList这些存储容器，对于我们来说应该如何选择他们来使用</li><li>22.一家三口，妈妈做饭，爸爸妈妈和孩子都要吃饭用委托模拟做饭——&gt;开饭——&gt;吃饭的过程</li><li>23.怪物死亡后，玩家要加10块钱，界面要更新数据，成就要累加怪物击杀数，请用委托来模拟实现这些功能，只用写核心逻辑表现这个过程，不用写的太复杂</li><li>24.有一个热水器，包含一个加热器，一个报警器，一个显示器我们给热水器通上电，当水温超过95度时1.报警器会开始发出语音，告诉你谁的温度2.显示器也会改变水温提示，提示水已经烧开了</li><li>25.写一个函数传入一个整数，返回一个函数之后执行这个匿名函数时传入一个整数和之前那个函数传入的数相乘返回结果</li><li>26.有一个函数，会返回一个委托函数，这个委托函数中只有一句打印代码之后执行返回的委托函数时，可以打印出1~10</li><li>27.写一个怪物类，创建10个怪物将其添加到List中对List列表进行排序，根据用户输入数字进行排序1、攻击排序2、防御排序3、血量排序4、反转</li><li>28.写一个物品类（类型，名字，品质），创建10个物品添加到List中同时使用类型、品质、名字疮毒进行比较排序的权重是：类型&gt;品质&gt;名字长度</li><li>29.请尝试利用List排序方式对Dictionary中的内容排序提示：得到Dictionary的所有键值对信息存入List中</li><li>30.请描述协变逆变有什么作用</li><li>31.通过代码说明协变和逆变的作用</li><li>32.控制台中有一个■它会如贪食蛇一样自动移动请开启一个多线程来检测输入，控制它的转向</li><li>33.请说出至少4种预处理器指令</li><li>34.请使用预处理器指令实现写一个函数计算两个数当是Unity5版本时算加法当是Unity2017版本时算乘法当时Unity2020版本时算减法都不是返回0</li><li>35.新建一个类库工程有一个Player类，有姓名，血量，攻击力，防御力，位置等信息有一个无参构造函数再新建一个控制台工程通过反射的形式使用类库工程生成的dll程序集实例化一个Player对象</li><li>36.为反射练习题中的Player对象中的随便为其中一个成员变量加一个自定义特性同样实现反射练习题中的要求但是当在设置加了自定义特性的成员变量时，在控制台中打印一句非法操作，随意修改XXX成员</li><li>37.请为一个自定义类用两种方法让其可以被foreach遍历</li></ul>
     </article>
-    <footer class="pnbar"><a class="pn prev" href="m10.html"><span>上一节</span>C# 语法简写</a></footer>
-  </main>
+      <div class="pager">
+      <a href="m06.html">← 🎮 C# 控制台小游戏知识补充</a>
+      <button id="markBtn" class="mark">标记已读</button>
+      <a href="m09.html">🔤 C# 中英文对照表 →</a>
+      </div>
+    </div>
+    <div class="panel" data-p="code">
+      <div class="mhead"><div class="kick">代码速览</div><h1>本模块的 0 段代码</h1>
+      <p style="font-size:12.5px;color:var(--sub);margin:6px 0 0">按出现顺序排列，标的是所在小节。点「复制」可取走整段。</p></div>
+      <div class="codelist" id="codeList"></div>
+      <div class="pager">
+      <a href="m06.html">← 🎮 C# 控制台小游戏知识补充</a>
+      <button id="markBtn" class="mark">标记已读</button>
+      <a href="m09.html">🔤 C# 中英文对照表 →</a>
+      </div>
+    </div>
+    <div class="panel" data-p="fig">
+      <div class="mhead"><div class="kick">配图</div><h1>本模块的 5 张图</h1>
+      <p style="font-size:12.5px;color:var(--sub);margin:6px 0 0">点任意一张放大查看。</p></div>
+      <div class="figgrid" id="figGrid"></div>
+      <div class="pager">
+      <a href="m06.html">← 🎮 C# 控制台小游戏知识补充</a>
+      <button id="markBtn" class="mark">标记已读</button>
+      <a href="m09.html">🔤 C# 中英文对照表 →</a>
+      </div>
+    </div>
+  </section>
+</main>
 </div>
-<button class="totop" id="totop">↑</button>
-<script src="assets/app.js"></script>
+<script>window.BOOK_MODS=[{"id": "m01", "href": "m01.html", "cat": "语言地基", "ico": "🚀", "title": "C# 入门", "sub": "变量、类型转换、运算符与流程控制"}, {"id": "m02", "href": "m02.html", "cat": "语言地基", "ico": "🧱", "title": "C# 基础", "sub": "枚举、数组、值类型与引用类型"}, {"id": "m03", "href": "m03.html", "cat": "面向对象", "ico": "⚡", "title": "C# 核心", "sub": "封装继承多态、集合与常用类库"}, {"id": "m07", "href": "m07.html", "cat": "面向对象", "ico": "🧠", "title": "C# 面向对象思想", "sub": "六大设计原则：SRP / OCP / LSP / DIP / LOP / ISP"}, {"id": "m04", "href": "m04.html", "cat": "语言进阶", "ico": "🛠️", "title": "C# 进阶", "sub": "委托事件、泛型、反射、特性与多线程"}, {"id": "m05", "href": "m05.html", "cat": "算法与数据结构", "ico": "📊", "title": "排序算法", "sub": "八大排序的原理、图解与复杂度"}, {"id": "m08", "href": "m08.html", "cat": "算法与数据结构", "ico": "🧮", "title": "算法", "sub": "进制转换、递归与单例模式"}, {"id": "m06", "href": "m06.html", "cat": "实战补充", "ico": "🎮", "title": "C# 控制台小游戏知识补充", "sub": "控制台交互、异步等待等零碎补丁"}, {"id": "m11", "href": "m11.html", "cat": "实战补充", "ico": "📝", "title": "练习题", "sub": "入门到核心的自测题集"}, {"id": "m09", "href": "m09.html", "cat": "速查参考", "ico": "🔤", "title": "C# 中英文对照表", "sub": "48 个关键字的字面含义，翻卡速记"}, {"id": "m10", "href": "m10.html", "cat": "速查参考", "ico": "✂️", "title": "C# 语法简写", "sub": "完整写法 ↔ 语法糖，一行一行对着看"}];</script>
 <script src="assets/anim.js"></script>
+<script src="assets/atlas.js"></script>
 </body>
 </html>

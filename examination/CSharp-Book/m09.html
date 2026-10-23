@@ -3,47 +3,102 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
-<title>C# 中英文对照表 · C# 交互课件</title>
-<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='14' fill='%2368217a'/%3E%3Ctext x='32' y='45' font-size='36' font-family='monospace' font-weight='700' fill='%23fff' text-anchor='middle'%3E%23%3C/text%3E%3C/svg%3E">
-<link rel="stylesheet" href="assets/style.css">
+<title>C# 中英文对照表 · C# 语言图谱</title>
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='14' fill='%236366f1'/%3E%3Ctext x='32' y='44' font-size='34' font-family='monospace' font-weight='700' fill='%23fff' text-anchor='middle'%3E%23%3C/text%3E%3C/svg%3E">
+<link rel="stylesheet" href="assets/atlas.css">
 <link rel="stylesheet" href="assets/anim.css">
 </head>
 <body data-mid="m09">
-<header class="top">
-  <a class="brand" href="index.html"><span class="logo">C#</span><b>C#</b><i>交互课件</i></a>
-  <div class="crumb"><span>速查参考</span><em>/</em><strong>C# 中英文对照表</strong></div>
-  <div class="top-r">
-    <span class="stat">170 字 · 0 代码 · 0 图 · 1 表</span>
-    <button class="mini" id="btnNav">目录</button>
-  </div>
-</header>
-<div class="wrap">
-  <aside class="side" id="side">
-    <div class="side-h">本篇目录</div>
-    <nav class="tocbox"><a class="toc lv2" href="#关键字中英文对照-48-组">关键字中英文对照 · 48 组</a><a class="toc lv2" href="#为什么值得记">为什么值得记</a></nav>
-    <div class="side-h">全部模块</div>
-    <nav class="navbox"><div class="ng"><div class="ngt">语言地基</div><a href="m01.html">C# 入门</a><a href="m02.html">C# 基础</a></div><div class="ng"><div class="ngt">面向对象</div><a href="m03.html">C# 核心</a><a href="m07.html">C# 面向对象思想</a></div><div class="ng"><div class="ngt">语言进阶</div><a href="m04.html">C# 进阶</a></div><div class="ng"><div class="ngt">算法与数据结构</div><a href="m05.html">排序算法</a><a href="m08.html">算法</a></div><div class="ng"><div class="ngt">实战补充</div><a href="m06.html">C# 控制台小游戏知识补充</a><a href="m11.html">练习题</a></div><div class="ng"><div class="ngt">速查参考</div><a href="m09.html" class="on">C# 中英文对照表</a><a href="m10.html">C# 语法简写</a></div></nav>
-  </aside>
-  <main class="main">
-    <div class="mhead">
-      <div class="kick">速查参考 · 模块 09</div>
-      <h1>C# 中英文对照表</h1>
-      <p class="msub">48 个关键字的字面含义，翻卡速记</p>
-      <div class="chips"><span>170 字原稿</span><span>0 段代码</span><span>0 张配图</span><span>1 个表格</span></div>
+<div id="app">
+<aside id="rail">
+<div class="brand"><h1><span class="dot"></span>C# 语言图谱</h1><p>11 模块 · 112,173 字 · 296 段代码 · 13 个演示</p></div>
+<div class="searchwrap"><input id="q" type="search" placeholder="搜索模块 / 关键词…" autocomplete="off"></div>
+<div class="cards">
+<div class="catg" data-cat="语言地基">语言地基</div>
+<a class="mcard" data-id="m01" data-cat="语言地基" data-text="C# 入门 变量、类型转换、运算符与流程控制 语言地基" href="m01.html"><span class="rd">已读</span><div class="t"><i>🚀</i><span>C# 入门</span></div><div class="s">变量、类型转换、运算符与流程控制</div><div class="m">4890 字 · 12 代码 · 4 图 · 1 演示</div><div class="bar"><i></i></div></a>
+<a class="mcard" data-id="m02" data-cat="语言地基" data-text="C# 基础 枚举、数组、值类型与引用类型 语言地基" href="m02.html"><span class="rd">已读</span><div class="t"><i>🧱</i><span>C# 基础</span></div><div class="s">枚举、数组、值类型与引用类型</div><div class="m">3325 字 · 12 代码 · 1 图 · 2 演示</div><div class="bar"><i></i></div></a>
+<div class="catg" data-cat="面向对象">面向对象</div>
+<a class="mcard" data-id="m03" data-cat="面向对象" data-text="C# 核心 封装继承多态、集合与常用类库 面向对象" href="m03.html"><span class="rd">已读</span><div class="t"><i>⚡</i><span>C# 核心</span></div><div class="s">封装继承多态、集合与常用类库</div><div class="m">19997 字 · 70 代码 · 0 图 · 2 演示</div><div class="bar"><i></i></div></a>
+<a class="mcard" data-id="m07" data-cat="面向对象" data-text="C# 面向对象思想 六大设计原则：SRP / OCP / LSP / DIP / LOP / ISP 面向对象" href="m07.html"><span class="rd">已读</span><div class="t"><i>🧠</i><span>C# 面向对象思想</span></div><div class="s">六大设计原则：SRP / OCP / LSP / DIP / LOP / ISP</div><div class="m">1165 字 · 0 代码 · 0 图 · 1 演示</div><div class="bar"><i></i></div></a>
+<div class="catg" data-cat="语言进阶">语言进阶</div>
+<a class="mcard" data-id="m04" data-cat="语言进阶" data-text="C# 进阶 委托事件、泛型、反射、特性与多线程 语言进阶" href="m04.html"><span class="rd">已读</span><div class="t"><i>🛠️</i><span>C# 进阶</span></div><div class="s">委托事件、泛型、反射、特性与多线程</div><div class="m">51278 字 · 180 代码 · 7 图 · 1 演示</div><div class="bar"><i></i></div></a>
+<div class="catg" data-cat="算法与数据结构">算法与数据结构</div>
+<a class="mcard" data-id="m05" data-cat="算法与数据结构" data-text="排序算法 八大排序的原理、图解与复杂度 算法与数据结构" href="m05.html"><span class="rd">已读</span><div class="t"><i>📊</i><span>排序算法</span></div><div class="s">八大排序的原理、图解与复杂度</div><div class="m">15611 字 · 8 代码 · 8 图 · 1 演示</div><div class="bar"><i></i></div></a>
+<a class="mcard" data-id="m08" data-cat="算法与数据结构" data-text="算法 进制转换、递归与单例模式 算法与数据结构" href="m08.html"><span class="rd">已读</span><div class="t"><i>🧮</i><span>算法</span></div><div class="s">进制转换、递归与单例模式</div><div class="m">917 字 · 4 代码 · 0 图 · 2 演示</div><div class="bar"><i></i></div></a>
+<div class="catg" data-cat="实战补充">实战补充</div>
+<a class="mcard" data-id="m06" data-cat="实战补充" data-text="C# 控制台小游戏知识补充 控制台交互、异步等待等零碎补丁 实战补充" href="m06.html"><span class="rd">已读</span><div class="t"><i>🎮</i><span>C# 控制台小游戏知识补充</span></div><div class="s">控制台交互、异步等待等零碎补丁</div><div class="m">1215 字 · 6 代码 · 1 图 · 1 演示</div><div class="bar"><i></i></div></a>
+<a class="mcard" data-id="m11" data-cat="实战补充" data-text="练习题 入门到核心的自测题集 实战补充" href="m11.html"><span class="rd">已读</span><div class="t"><i>📝</i><span>练习题</span></div><div class="s">入门到核心的自测题集</div><div class="m">12881 字 · 0 代码 · 5 图 · 0 演示</div><div class="bar"><i></i></div></a>
+<div class="catg" data-cat="速查参考">速查参考</div>
+<a class="mcard on" data-id="m09" data-cat="速查参考" data-text="C# 中英文对照表 48 个关键字的字面含义，翻卡速记 速查参考" href="m09.html"><span class="rd">已读</span><div class="t"><i>🔤</i><span>C# 中英文对照表</span></div><div class="s">48 个关键字的字面含义，翻卡速记</div><div class="m">170 字 · 0 代码 · 0 图 · 1 演示</div><div class="bar"><i></i></div></a>
+<a class="mcard" data-id="m10" data-cat="速查参考" data-text="C# 语法简写 完整写法 ↔ 语法糖，一行一行对着看 速查参考" href="m10.html"><span class="rd">已读</span><div class="t"><i>✂️</i><span>C# 语法简写</span></div><div class="s">完整写法 ↔ 语法糖，一行一行对着看</div><div class="m">724 字 · 4 代码 · 0 图 · 1 演示</div><div class="bar"><i></i></div></a>
+</div>
+<div class="railfoot"><span>阅读进度</span><b data-prog>0%</b></div>
+</aside>
+<main id="main">
+  <header id="topbar">
+    <button class="mtoggle" id="railToggle" aria-label="目录">☰</button>
+    <div class="crumbbar">
+      <span class="kicker">速查参考</span>
+      <h2>C# 中英文对照表</h2>
+      <span class="one">48 个关键字的字面含义，翻卡速记</span>
     </div>
-<section class="zone"><div class="zone-h"><span>图形演示 · 1 个</span><h2>先动手，再读文字</h2><p>下面的图都能点、能拖、能播放。先看它动，再回去读原稿，理解会快很多。</p></div><div data-demo="vocab" data-pairs="[[&quot;if&quot;,&quot;如果&quot;],[&quot;else&quot;,&quot;其他的&quot;],[&quot;switch&quot;,&quot;切换&quot;],[&quot;default&quot;,&quot;默认的&quot;],[&quot;while&quot;,&quot;直到&quot;],[&quot;foreach&quot;,&quot;为每一个&quot;],[&quot;Continue&quot;,&quot;继续&quot;],[&quot;break&quot;,&quot;中断&quot;],[&quot;return&quot;,&quot;返回&quot;],[&quot;Console&quot;,&quot;控制台&quot;],[&quot;region&quot;,&quot;区域&quot;],[&quot;summary&quot;,&quot;总结&quot;],[&quot;acess&quot;,&quot;访问&quot;],[&quot;private&quot;,&quot;私有的&quot;],[&quot;public&quot;,&quot;公共的&quot;],[&quot;protected&quot;,&quot;受保护的&quot;],[&quot;internal&quot;,&quot;内部的&quot;],[&quot;enum&quot;,&quot;枚举&quot;],[&quot;struct&quot;,&quot;结构体&quot;],[&quot;abstract&quot;,&quot;抽象的&quot;],[&quot;class&quot;,&quot;类&quot;],[&quot;static&quot;,&quot;静态的&quot;],[&quot;interface&quot;,&quot;接口&quot;],[&quot;void&quot;,&quot;空虚&quot;],[&quot;Main&quot;,&quot;主要的&quot;],[&quot;const&quot;,&quot;常量&quot;],[&quot;is&quot;,&quot;是&quot;],[&quot;as&quot;,&quot;作为&quot;],[&quot;virtual&quot;,&quot;虚拟的&quot;],[&quot;override&quot;,&quot;覆盖&quot;],[&quot;base&quot;,&quot;基础&quot;],[&quot;object&quot;,&quot;对象&quot;],[&quot;sealed&quot;,&quot;密封的&quot;],[&quot;partial&quot;,&quot;部分的&quot;],[&quot;operator&quot;,&quot;运算符号&quot;],[&quot;event&quot;,&quot;事件&quot;],[&quot;throw&quot;,&quot;扔&quot;],[&quot;contains&quot;,&quot;包含&quot;],[&quot;slit&quot;,&quot;切割&quot;],[&quot;dictionary&quot;,&quot;字典&quot;],[&quot;Capacity&quot;,&quot;容量&quot;],[&quot;memory&quot;,&quot;内存&quot;],[&quot;terminal&quot;,&quot;终端&quot;],[&quot;community&quot;,&quot;社会&quot;],[&quot;command&quot;,&quot;命令&quot;],[&quot;array&quot;,&quot;排列&quot;],[&quot;dynamic&quot;,&quot;动态&quot;],[&quot;delegate&quot;,&quot;委托&quot;]]"></div></section>
-    <article class="doc">
+    <nav class="tabs" id="tabs">
+      <button data-p="read" class="on">精读<em>1 演示</em></button>
+      <button data-p="code">代码 <em id="tabCodeN">0</em></button>
+      <button data-p="fig">图示 <em id="tabFigN">0</em></button>
+    </nav>
+  </header>
+  <section id="view">
+    <div class="panel on" data-p="read">
+      <div class="mhead">
+        <div class="kick">速查参考 · 第 10 模块</div>
+        <h1>🔤 C# 中英文对照表</h1>
+        <div class="chips">
+          <span class="chip"><b>170</b> 字</span>
+          <span class="chip"><b>0</b> 代码</span>
+          <span class="chip"><b>0</b> 配图</span>
+          <span class="chip"><b>1</b> 演示</span>
+        </div>
+      </div>
+      <section class="zone"><div class="zone-h"><span>图形演示 · 1 个</span><h2>先动手，再读文字</h2><p>下面的图都能点、能拖、能播放。先看它动，再回去读原稿，理解会快很多。</p></div><div data-demo="vocab" data-pairs="[[&quot;if&quot;,&quot;如果&quot;],[&quot;else&quot;,&quot;其他的&quot;],[&quot;switch&quot;,&quot;切换&quot;],[&quot;default&quot;,&quot;默认的&quot;],[&quot;while&quot;,&quot;直到&quot;],[&quot;foreach&quot;,&quot;为每一个&quot;],[&quot;Continue&quot;,&quot;继续&quot;],[&quot;break&quot;,&quot;中断&quot;],[&quot;return&quot;,&quot;返回&quot;],[&quot;Console&quot;,&quot;控制台&quot;],[&quot;region&quot;,&quot;区域&quot;],[&quot;summary&quot;,&quot;总结&quot;],[&quot;acess&quot;,&quot;访问&quot;],[&quot;private&quot;,&quot;私有的&quot;],[&quot;public&quot;,&quot;公共的&quot;],[&quot;protected&quot;,&quot;受保护的&quot;],[&quot;internal&quot;,&quot;内部的&quot;],[&quot;enum&quot;,&quot;枚举&quot;],[&quot;struct&quot;,&quot;结构体&quot;],[&quot;abstract&quot;,&quot;抽象的&quot;],[&quot;class&quot;,&quot;类&quot;],[&quot;static&quot;,&quot;静态的&quot;],[&quot;interface&quot;,&quot;接口&quot;],[&quot;void&quot;,&quot;空虚&quot;],[&quot;Main&quot;,&quot;主要的&quot;],[&quot;const&quot;,&quot;常量&quot;],[&quot;is&quot;,&quot;是&quot;],[&quot;as&quot;,&quot;作为&quot;],[&quot;virtual&quot;,&quot;虚拟的&quot;],[&quot;override&quot;,&quot;覆盖&quot;],[&quot;base&quot;,&quot;基础&quot;],[&quot;object&quot;,&quot;对象&quot;],[&quot;sealed&quot;,&quot;密封的&quot;],[&quot;partial&quot;,&quot;部分的&quot;],[&quot;operator&quot;,&quot;运算符号&quot;],[&quot;event&quot;,&quot;事件&quot;],[&quot;throw&quot;,&quot;扔&quot;],[&quot;contains&quot;,&quot;包含&quot;],[&quot;slit&quot;,&quot;切割&quot;],[&quot;dictionary&quot;,&quot;字典&quot;],[&quot;Capacity&quot;,&quot;容量&quot;],[&quot;memory&quot;,&quot;内存&quot;],[&quot;terminal&quot;,&quot;终端&quot;],[&quot;community&quot;,&quot;社会&quot;],[&quot;command&quot;,&quot;命令&quot;],[&quot;array&quot;,&quot;排列&quot;],[&quot;dynamic&quot;,&quot;动态&quot;],[&quot;delegate&quot;,&quot;委托&quot;]]"></div></section>
+      <article class="doc">
 <h2 id="关键字中英文对照-48-组" class="hd lv2">关键字中英文对照 · 48 组</h2>
 <p class="tx">按字母顺序排，旁边是字面意思。很多关键字的含义就藏在英文原意里，比如 <code>sealed</code>（密封）就是「不能再被继承」。</p>
 <div class="tw"><table class="tb"><tr><td>关键字</td><td>字面意思</td></tr><tr><td><code>if</code></td><td>如果</td></tr><tr><td><code>else</code></td><td>其他的</td></tr><tr><td><code>switch</code></td><td>切换</td></tr><tr><td><code>default</code></td><td>默认的</td></tr><tr><td><code>while</code></td><td>直到</td></tr><tr><td><code>foreach</code></td><td>为每一个</td></tr><tr><td><code>Continue</code></td><td>继续</td></tr><tr><td><code>break</code></td><td>中断</td></tr><tr><td><code>return</code></td><td>返回</td></tr><tr><td><code>Console</code></td><td>控制台</td></tr><tr><td><code>region</code></td><td>区域</td></tr><tr><td><code>summary</code></td><td>总结</td></tr><tr><td><code>acess</code></td><td>访问</td></tr><tr><td><code>private</code></td><td>私有的</td></tr><tr><td><code>public</code></td><td>公共的</td></tr><tr><td><code>protected</code></td><td>受保护的</td></tr><tr><td><code>internal</code></td><td>内部的</td></tr><tr><td><code>enum</code></td><td>枚举</td></tr><tr><td><code>struct</code></td><td>结构体</td></tr><tr><td><code>abstract</code></td><td>抽象的</td></tr><tr><td><code>class</code></td><td>类</td></tr><tr><td><code>static</code></td><td>静态的</td></tr><tr><td><code>interface</code></td><td>接口</td></tr><tr><td><code>void</code></td><td>空虚</td></tr><tr><td><code>Main</code></td><td>主要的</td></tr><tr><td><code>const</code></td><td>常量</td></tr><tr><td><code>is</code></td><td>是</td></tr><tr><td><code>as</code></td><td>作为</td></tr><tr><td><code>virtual</code></td><td>虚拟的</td></tr><tr><td><code>override</code></td><td>覆盖</td></tr><tr><td><code>base</code></td><td>基础</td></tr><tr><td><code>object</code></td><td>对象</td></tr><tr><td><code>sealed</code></td><td>密封的</td></tr><tr><td><code>partial</code></td><td>部分的</td></tr><tr><td><code>operator</code></td><td>运算符号</td></tr><tr><td><code>event</code></td><td>事件</td></tr><tr><td><code>throw</code></td><td>扔</td></tr><tr><td><code>contains</code></td><td>包含</td></tr><tr><td><code>slit</code></td><td>切割</td></tr><tr><td><code>dictionary</code></td><td>字典</td></tr><tr><td><code>Capacity</code></td><td>容量</td></tr><tr><td><code>memory</code></td><td>内存</td></tr><tr><td><code>terminal</code></td><td>终端</td></tr><tr><td><code>community</code></td><td>社会</td></tr><tr><td><code>command</code></td><td>命令</td></tr><tr><td><code>array</code></td><td>排列</td></tr><tr><td><code>dynamic</code></td><td>动态</td></tr><tr><td><code>delegate</code></td><td>委托</td></tr></table></div>
 <h2 id="为什么值得记" class="hd lv2">为什么值得记</h2>
 <p class="tx">读 C# 代码卡住，多半不是语法不会，而是某个关键字没见过。知道 <code>virtual</code>（虚拟的）→ <code>override</code>（覆盖）→ <code>sealed</code>（密封）这三步的关系，看别人的继承结构就不用逐行猜了。</p>
     </article>
-    <footer class="pnbar"><a class="pn prev" href="m08.html"><span>上一节</span>算法</a><a class="pn next" href="m10.html"><span>下一节</span>C# 语法简写</a></footer>
-  </main>
+      <div class="pager">
+      <a href="m11.html">← 📝 练习题</a>
+      <button id="markBtn" class="mark">标记已读</button>
+      <a href="m10.html">✂️ C# 语法简写 →</a>
+      </div>
+    </div>
+    <div class="panel" data-p="code">
+      <div class="mhead"><div class="kick">代码速览</div><h1>本模块的 0 段代码</h1>
+      <p style="font-size:12.5px;color:var(--sub);margin:6px 0 0">按出现顺序排列，标的是所在小节。点「复制」可取走整段。</p></div>
+      <div class="codelist" id="codeList"></div>
+      <div class="pager">
+      <a href="m11.html">← 📝 练习题</a>
+      <button id="markBtn" class="mark">标记已读</button>
+      <a href="m10.html">✂️ C# 语法简写 →</a>
+      </div>
+    </div>
+    <div class="panel" data-p="fig">
+      <div class="mhead"><div class="kick">配图</div><h1>本模块的 0 张图</h1>
+      <p style="font-size:12.5px;color:var(--sub);margin:6px 0 0">点任意一张放大查看。</p></div>
+      <div class="figgrid" id="figGrid"></div>
+      <div class="pager">
+      <a href="m11.html">← 📝 练习题</a>
+      <button id="markBtn" class="mark">标记已读</button>
+      <a href="m10.html">✂️ C# 语法简写 →</a>
+      </div>
+    </div>
+  </section>
+</main>
 </div>
-<button class="totop" id="totop">↑</button>
-<script src="assets/app.js"></script>
+<script>window.BOOK_MODS=[{"id": "m01", "href": "m01.html", "cat": "语言地基", "ico": "🚀", "title": "C# 入门", "sub": "变量、类型转换、运算符与流程控制"}, {"id": "m02", "href": "m02.html", "cat": "语言地基", "ico": "🧱", "title": "C# 基础", "sub": "枚举、数组、值类型与引用类型"}, {"id": "m03", "href": "m03.html", "cat": "面向对象", "ico": "⚡", "title": "C# 核心", "sub": "封装继承多态、集合与常用类库"}, {"id": "m07", "href": "m07.html", "cat": "面向对象", "ico": "🧠", "title": "C# 面向对象思想", "sub": "六大设计原则：SRP / OCP / LSP / DIP / LOP / ISP"}, {"id": "m04", "href": "m04.html", "cat": "语言进阶", "ico": "🛠️", "title": "C# 进阶", "sub": "委托事件、泛型、反射、特性与多线程"}, {"id": "m05", "href": "m05.html", "cat": "算法与数据结构", "ico": "📊", "title": "排序算法", "sub": "八大排序的原理、图解与复杂度"}, {"id": "m08", "href": "m08.html", "cat": "算法与数据结构", "ico": "🧮", "title": "算法", "sub": "进制转换、递归与单例模式"}, {"id": "m06", "href": "m06.html", "cat": "实战补充", "ico": "🎮", "title": "C# 控制台小游戏知识补充", "sub": "控制台交互、异步等待等零碎补丁"}, {"id": "m11", "href": "m11.html", "cat": "实战补充", "ico": "📝", "title": "练习题", "sub": "入门到核心的自测题集"}, {"id": "m09", "href": "m09.html", "cat": "速查参考", "ico": "🔤", "title": "C# 中英文对照表", "sub": "48 个关键字的字面含义，翻卡速记"}, {"id": "m10", "href": "m10.html", "cat": "速查参考", "ico": "✂️", "title": "C# 语法简写", "sub": "完整写法 ↔ 语法糖，一行一行对着看"}];</script>
 <script src="assets/anim.js"></script>
+<script src="assets/atlas.js"></script>
 </body>
 </html>

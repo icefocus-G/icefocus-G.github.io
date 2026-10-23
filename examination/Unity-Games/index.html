@@ -5,6 +5,7 @@
 <meta name="viewport" content="width=device-width,initial-scale=1">
 <title>Unity 小游戏开发实战 · 课程首页</title>
 <link rel="stylesheet" href="assets/style.css">
+<link rel="stylesheet" href="assets/course.css">
 </head>
 <body>
 
@@ -12,29 +13,47 @@
   <div class="ug-brand">
     <span class="ug-logo">U</span><b>Unity 小游戏开发实战</b><i>13 课 · 逐句拆解</i>
   </div>
+  <div class="tprog"><span>学习进度</span><span class="bar"><i data-pbar></i></span><b data-pct>0%</b></div>
   <div class="ug-top-r">
-    <a class="ug-back" href="../index.html">← 返回课程中心</a>
+    <a class="ug-back" href="../index.html">← 课程中心</a>
     <a class="ug-back" href="bank.html">✎ 练习题</a>
   </div>
 </header>
 
-<main class="ug-main" id="ugHome" style="max-width:1180px;margin:0 auto;padding-top:24px">
+<main id="ugHome" style="max-width:1272px;margin:0 auto;padding:22px 22px 80px">
 
-  <div class="ug-hero">
+  <div class="hero">
+    <span class="kick">13 个可玩复刻 · 逐句讲解 · 无需安装 Unity</span>
     <h1>Unity 小游戏开发实战</h1>
-    <p>把 13 个经典小游戏的 Unity C# 源码一行一行拆开讲：上方是可以直接上手玩的浏览器复刻版，
-       中间是原始源码 + 「为什么这么写」，底部实时打印运行结果和关键变量。
-       目标不是背代码，而是<b>建立"拿到一个游戏想法，怎么一步步做出来"的思维</b>。</p>
+    <p>把 13 个经典小游戏的 Unity C# 源码一行一行拆开讲：上方是可以直接上手玩的浏览器复刻版，中间是原始源码 +「为什么这么写」，底部实时打印运行结果和关键变量。</p>
+    <p>目标不是背代码，而是<b>建立"拿到一个游戏想法，怎么一步步做出来"的思维</b>。</p>
     <div class="stats">
       <span>13 个可玩游戏</span>
       <span>80 个 C# 脚本</span>
       <span>7814 行源码</span>
       <span>逐句中文注释</span>
-      <span>无需安装 Unity</span>
+      <span>29 道闯关题</span>
+    </div>
+    <div class="hkpi">
+      <div><b>13</b><span>课时</span></div>
+      <div><b>3</b><span>每课分节（演示 / 源码 / 运行）</span></div>
+      <div><b>29</b><span>测验题</span></div>
+      <div><b>100%</b><span>浏览器内可跑</span></div>
     </div>
   </div>
 
-  <!-- ============ 思维总纲 ============ -->
+  <!-- 学习路径 -->
+  <section class="ug-sec">
+    <h2>🗺️ 学习路径<small>按难度递进，后一课复用前一课的模式</small></h2>
+    <div class="path">
+      <div><b>① 入门 · ★</b><span>Pong / 贪吃蛇 —— 物理移动、碰撞回调、网格与队列</span></div>
+      <div><b>② 进阶 · ★★</b><span>像素鸟 / 打砖块 / 大金刚 —— 重力积分、反弹向量、生成器</span></div>
+      <div><b>③ 挑战 · ★★★</b><span>小行星 / 太空侵略者 / 炸弹人 / 蜈蚣 / 扫雷</span></div>
+      <div><b>④ 综合 · ★★★★+</b><span>2048 / 俄罗斯方块 / 吃豆人 —— 索引、旋转矩阵、状态机</span></div>
+    </div>
+  </section>
+
+  <!-- 思维总纲 -->
   <section class="ug-sec">
     <h2>🧭 游戏开发思维总纲 · 七步法<small>拿到任何游戏想法，都按这个顺序走</small></h2>
     <div class="seven">
@@ -48,7 +67,7 @@
     </div>
   </section>
 
-  <!-- ============ 自查清单 ============ -->
+  <!-- 自查 -->
   <section class="ug-sec">
     <h2>✅ 五个通用自查问题<small>开工前先答一遍，能少走很多弯路</small></h2>
     <ul class="chk">
@@ -60,7 +79,7 @@
     </ul>
   </section>
 
-  <!-- ============ 课时目录 ============ -->
+  <!-- 课时目录 -->
   <section class="ug-sec">
     <h2>🎮 课时目录<small id="homeStat"></small></h2>
     <div class="cards" id="homeCards"></div>
@@ -73,13 +92,15 @@
       <li><b>带着问题读代码</b> —— 紫色左边线的行有「为什么这么写」，优先看这些行。</li>
       <li><b>看底部输出</b> —— 运行时控制台会打印关键状态变化，对照代码理解执行时机。</li>
       <li><b>按难度顺序走</b> —— 目录顺序就是推荐顺序，后面的游戏会复用前面的模式。</li>
-      <li><b>学完做练习</b> —— 每课的「练习题」检验是否真的理解了背后的设计决策。</li>
+      <li><b>学完做测验</b> —— 每课末尾的「闯关测验」检验是否真的理解了背后的设计决策。</li>
     </ul>
   </section>
 
 </main>
 
 <script src="lessons/loader.js"></script>
+<script src="assets/quiz.js"></script>
 <script src="assets/app.js"></script>
+<script src="assets/course.js"></script>
 </body>
 </html>
