@@ -111,13 +111,28 @@
     });
     if (!list.length) { host.innerHTML = '<div class="empty">本模块没有代码段。</div>'; return; }
     host.innerHTML = list.map(function (c, i) {
-      return '<div class="codeitem"><div class="ch"><span class="no">' + (i + 1) + '</span>' +
+      return '<div class="codeitem" data-key="' + CUR + '#' + i + '"><div class="ch"><span class="no">' + (i + 1) + '</span>' +
         '<span class="h">' + esc(c.label || '代码段') + '</span>' +
+        '<button class="mini btn-run">▶ 运行</button>' +
         '<button class="mini copy" data-i="' + i + '">复制</button></div>' +
         '<pre class="code" data-lang="' + esc(c.lang) + '"><code>' + esc(c.text) + '</code></pre></div>';
     }).join('');
     var cnt = $('#tabCodeN');
     if (cnt) cnt.textContent = list.length;
+
+    /* 给正文代码块与代码卡打上同一套 key，供「运行」查表 */
+    var cp = $$('.doc .cpair');
+    cp.forEach(function (el, i) {
+      el.setAttribute('data-key', CUR + '#' + i);
+      if (el.querySelector('.btn-run')) return;
+      var head = el.querySelector('.chead');
+      var copyBtn = el.querySelector('.mini.copy');
+      var btn = document.createElement('button');
+      btn.className = 'mini btn-run';
+      btn.textContent = '▶ 运行';
+      if (copyBtn) head.insertBefore(btn, copyBtn);
+      else if (head) head.appendChild(btn);
+    });
   }
 
   /* ---------------- 图示面板 ---------------- */
@@ -169,6 +184,127 @@
     document.addEventListener('keydown', function (e) { if (e.key === 'Escape') lb.classList.remove('on'); });
   }
 
+  /* ---------------- 运行（GitHub Actions 预跑结果回放） ------------------
+     站点是纯静态托管，没有服务器能编译 C#。构建时用 GitHub Actions 把每段
+     示例真跑一遍，结果落在 assets/run-output.json；这里的「运行」只是回放。
+     原稿里有大量讲解文字混在代码块里（一维数组、string 是 char 的…），
+     这些段编译不过，按钮降级成一个不可点的「片段」标记，不再挂红框吓人。
+     ---------------------------------------------------------------------- */
+  var RUNDATA = null, RUNP = null;
+
+  function loadRun() {
+    if (RUNP) return RUNP;
+    RUNP = fetch('assets/run-output.json', { cache: 'no-cache' })
+      .then(function (r) { return r.ok ? r.json() : null; })
+      .then(function (j) { RUNDATA = j; return j; })
+      .catch(function () { RUNDATA = null; return null; });
+    return RUNP;
+  }
+
+  function fmtOut(t) { return String(t || '').replace(/[&<>]/g, function (c) { return { '&': '&amp;', '<': '&lt;', '>': '&gt;' }[c]; }); }
+
+  /* 把编译错误码翻成人话，比直接甩 CS1002 有用 */
+  function hintOf(err) {
+    var e = String(err || '');
+    if (/CS1001|CS1002|CS1003|CS1519|CS1525|CS1031/.test(e)) return '原稿这段混了讲解文字，不构成完整语句';
+    if (/CS0103/.test(e)) return '用到了上文定义的变量或方法，单独一段跑不起来';
+    if (/CS0246|CS0234/.test(e)) return '用到了别处定义的类型或命名空间';
+    if (/CS1513|CS8124/.test(e)) return '括号或代码块不完整（原稿被截断）';
+    if (/CS1056/.test(e)) return '含有编译器无法识别的字符';
+    return '这段在原稿里不是可独立运行的程序';
+  }
+
+  /* 首屏就把按钮分好档，用户一眼能看出哪几段真能跑 */
+  function markButtons() {
+    if (!RUNDATA) return;
+    $$('.btn-run').forEach(function (b) {
+      var box = b.closest('.cpair, .codeitem');
+      if (!box) return;
+      var rec = RUNDATA.items[box.getAttribute('data-key')];
+      if (!rec || rec.s !== 'fail') return;
+      var tag = document.createElement('span');
+      tag.className = 'seg-tag';
+      tag.textContent = '片段';
+      tag.title = hintOf(rec.e);
+      b.parentNode.replaceChild(tag, b);
+    });
+  }
+
+  function runPanel(box, key, codeLen) {
+    var old = box.nextElementSibling;
+    if (old && old.classList && old.classList.contains('runbox')) { old.remove(); return; }
+
+    var d = RUNDATA;
+    var head = '<div class="rb-h"><b>运行结果</b><span>' +
+      (d && d.runtime ? fmtOut(d.runtime) + ' · ' + fmtOut(d.generated) : '—') +
+      '</span><button class="mini rb-x">收起</button></div>';
+    var body = '';
+
+    if (!d) {
+      body = '<pre class="rb-out rb-warn">拿不到 assets/run-output.json。\n本地 file:// 打开时浏览器会拦截读取，请用静态服务器或线上地址访问。</pre>';
+    } else {
+      var rec = d.items[key];
+      if (!rec) {
+        body = '<pre class="rb-out rb-warn">这段没有预跑数据。\n可能是新加的代码，等 GitHub Actions 跑完再试。</pre>';
+      } else if (rec.n && Math.abs(rec.n - codeLen) > 12) {
+        body = '<pre class="rb-out rb-warn">代码已更新（' + codeLen + ' 字符 / 预跑 ' + rec.n + ' 字符），这份输出可能过期。</pre>';
+      } else if (rec.s === 'ok') {
+        body = '<pre class="rb-out">' + (rec.o ? fmtOut(rec.o)
+          : '（编译并运行成功，这段没有控制台输出 —— 原稿这里只做声明，没有打印）') + '</pre>';
+      } else if (rec.s === 'lib') {
+        body = '<pre class="rb-out rb-note">这段是类 / 方法定义，没有可以执行的入口 —— 已通过编译检查。</pre>';
+      } else if (rec.s === 'runerr') {
+        body = '<pre class="rb-out rb-err">运行时报错：\n' + fmtOut(rec.e || '（无错误信息）') + '</pre>';
+      } else {
+        body = '<pre class="rb-out rb-err">这段在原稿里不是可独立运行的程序：\n' + fmtOut(rec.e || '（无编译信息）') + '</pre>';
+      }
+    }
+
+    var div = document.createElement('div');
+    div.className = 'runbox';
+    div.innerHTML = head + body;
+    box.parentNode.insertBefore(div, box.nextSibling);
+    var x = div.querySelector('.rb-x');
+    if (x) x.onclick = function () { div.remove(); };
+  }
+
+  function initRun() {
+    document.addEventListener('click', function (e) {
+      var b = e.target.closest('.btn-run');
+      if (!b) return;
+      var box = b.closest('.cpair, .codeitem');
+      if (!box) return;
+      var key = box.getAttribute('data-key');
+      if (!key) return;
+      var code = box.querySelector('pre.code');
+      var pre = code || box.querySelector('pre');
+      var len = pre ? pre.textContent.length : 0;
+      if (RUNDATA) { runPanel(box, key, len); return; }
+      b.disabled = true;
+      b.classList.add('loading');
+      b.textContent = '载入…';
+      loadRun().then(function () {
+        b.disabled = false;
+        b.classList.remove('loading');
+        b.textContent = '▶ 运行';
+        runPanel(box, key, len);
+      });
+    });
+
+    /* 数据到手后立刻分档；顺带在代码页顶部报一下本模块的可跑比例 */
+    loadRun().then(function (d) {
+      if (!d) return;
+      markButtons();
+      var run = 0;
+      Object.keys(d.items).forEach(function (k) {
+        if (k.indexOf(CUR + '#') !== 0) return;
+        var s = d.items[k].s;
+        if (s === 'ok' || s === 'lib') run++;
+      });
+      $$('[data-runcount]').forEach(function (el) { el.textContent = run; });
+    });
+  }
+
   /* ---------------- 已读 ---------------- */
   function initMark() {
     var b = $('#markBtn');
@@ -208,6 +344,6 @@
 
   document.addEventListener('DOMContentLoaded', function () {
     initSearch(); initTabs(); initCode(); initFigs();
-    initCopy(); initLightbox(); initMark(); initHome(); initDrawer();
+    initCopy(); initLightbox(); initMark(); initHome(); initDrawer(); initRun();
   });
 })();

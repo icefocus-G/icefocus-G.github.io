@@ -1,0 +1,71 @@
+name: C# 示例预跑
+
+# 站点是 GitHub Pages 纯静态托管，没有服务器能编译 C#。
+# 这里用 dotnet 把课件里每一段代码真跑一遍，把 stdout / 编译错误落成
+# examination/CSharp-Book/assets/run-output.json，页面上的「▶ 运行」只回放这份数据。
+#
+# 触发路径刻意不包含 assets/run-output.json —— 否则本 workflow 提交结果时
+# 会再触发自己，形成无限循环。
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - 'examination/CSharp-Book/m*.html'
+      - 'examination/CSharp-Book/tools/run_examples.py'
+      - '.github/workflows/csharp-run.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+concurrency:
+  group: csharp-run
+  cancel-in-progress: true
+
+jobs:
+  run:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+
+    steps:
+      - name: 取回仓库
+        uses: actions/checkout@v4
+
+      - name: 装 .NET 9
+        uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: '9.0.x'
+
+      - name: 装 Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+
+      - name: 版本自检
+        run: |
+          dotnet --version
+          python3 --version
+
+      - name: 预跑全部代码段
+        working-directory: examination/CSharp-Book
+        run: python3 tools/run_examples.py
+
+      - name: 提交结果
+        run: |
+          OUT=examination/CSharp-Book/assets/run-output.json
+          if [ ! -f "$OUT" ]; then
+            echo "::error::没有生成 $OUT"
+            exit 1
+          fi
+          echo "—— 结果大小 ——"
+          wc -c "$OUT"
+          if git diff --quiet -- "$OUT"; then
+            echo "输出与上次一致，无需提交。"
+            exit 0
+          fi
+          git config user.name  'github-actions[bot]'
+          git config user.email 'github-actions[bot]@users.noreply.github.com'
+          git add "$OUT"
+          git commit -m "chore(csharp-book): 重新预跑示例输出 [skip ci]"
+          git push

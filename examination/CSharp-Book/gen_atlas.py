@@ -161,7 +161,7 @@ def module_page(mods, m, zone, doc):
     </div>
     <div class="panel" data-p="code">
       <div class="mhead"><div class="kick">代码速览</div><h1>本模块的 {code} 段代码</h1>
-      <p style="font-size:12.5px;color:var(--sub);margin:6px 0 0">按出现顺序排列，标的是所在小节。点「复制」可取走整段。</p></div>
+      <p style="font-size:12.5px;color:var(--sub);margin:6px 0 0">按出现顺序排列，标的是所在小节。点「复制」可取走整段，点「▶ 运行」看它在 dotnet 里的真实输出 —— 本模块 <b data-runcount>—</b> 段能独立编译，标着「片段」的是原稿里混了讲解文字、跑不起来的段落。</p></div>
       <div class="codelist" id="codeList"></div>
       {pager}
     </div>
@@ -242,7 +242,7 @@ def home_page(mods, sort_demo):
       <span class="kick">图形化 · 可操作 · 有动画</span>
       <h1>C# 语言图谱</h1>
       <p>语雀《C# 学习》11 篇原稿逐块还原，按六个分类重排成 11 个模块；每段代码都能单独抽出、每张图都能放大、每个模块都配了可以直接上手的图形演示。</p>
-      <p>正文一字未改，演示是额外的「先看懂再读」层。全部本地化，不依赖外链。</p>
+      <p>正文一字未改，演示是额外的「先看懂再读」层。代码段可以点「▶ 运行」看 dotnet 的真实输出 —— 结果由 GitHub Actions 预先跑好、页面只做回放，全站仍是纯静态。296 段里 35 段能独立编译，其余是原稿代码块里混了讲解文字的片段。</p>
       <div class="kpis">
         <div class="kpi"><b>{words}</b><span>正文字数</span></div>
         <div class="kpi"><b>{code}</b><span>代码段</span></div>

@@ -11,10 +11,43 @@
 | 页签 | 内容 | 交互 |
 |---|---|---|
 | 精读 | 语雀原稿逐块还原（一字未改）+ 该模块的图形演示 | 演示可点、可拖、可播放 |
-| 代码 | 本模块全部代码段，按出现顺序排列并标注所在小节 | 单段复制 |
+| 代码 | 本模块全部代码段，按出现顺序排列并标注所在小节 | 单段复制 + ▶ 运行 |
 | 图示 | 本模块全部配图 | 点击放大（Esc 关闭） |
 
 左侧模块卡实时显示阅读进度；每篇文章底部有「标记已读」，进度存 localStorage。
+
+## 「▶ 运行」怎么工作
+
+站点是 GitHub Pages 纯静态托管，**没有服务器能编译 C#**。所以这里的运行不是现场执行，
+而是「预跑 + 回放」：
+
+```
+GitHub Actions（.github/workflows/csharp-run.yml）
+  └─ dotnet 9 逐段编译/运行 examination/CSharp-Book 里全部 296 段代码
+       └─ 产出 assets/run-output.json（状态 + 标准输出 + 编译错误）
+            └─ 页面点「▶ 运行」→ fetch 这份 JSON → 渲染成终端面板
+```
+
+- **能跑的段**（`ok`）：显示真实 stdout，例如 m05 的排序段会打出打乱前 / 排序后的两行数组。
+- **只有定义没有入口的段**（`lib`）：通过编译检查，提示「没有可执行入口」。
+- **原稿里混了解讲文字的段**：语雀原稿中大量代码块是「一维数组」「string 是 char 的数组化呈现」
+  这类说明文字，本身不构成程序。这些段不挂按钮，只留一个灰色「片段」标记，鼠标停上去能看到原因。
+  全仓 296 段中 35 段可独立编译。
+
+改过 `m*.html` 里的代码后，push 会触发 workflow 重跑（触发路径只监听 `m*.html`、`tools/`、workflow 自身，
+不监听 `run-output.json`，否则提交结果会再触发自己）。也可以手动 `workflow_dispatch`。
+
+本地想重跑（需要 dotnet 9）：
+
+```bash
+cd examination/CSharp-Book
+python3 tools/run_examples.py           # 全量，约 4~5 分钟
+python3 tools/run_examples.py --limit 20  # 只跑前 20 段调试
+```
+
+> `run-output.json` 里每段都带 `n`（源码字符数）。页面会用当前代码长度和它比对，
+> 差超过 12 字符就提示「代码已更新、这份输出可能过期」，避免展示错位的旧输出。
+
 
 ## 目录结构
 
@@ -23,11 +56,14 @@ CSharp-Book/
 ├── index.html           总览仪表盘（分类筛选 + 模块卡 + 排序演示）
 ├── m01.html … m11.html  11 个模块页（精读 / 代码 / 图示）
 ├── assets/
-│   ├── atlas.css        图谱外壳（配色、侧栏、页签、正文排版）
-│   ├── atlas.js         页签切换、代码抽取、图示灯箱、搜索、阅读进度
+│   ├── atlas.css        图谱外壳（配色、侧栏、页签、正文排版、运行面板）
+│   ├── atlas.js         页签切换、代码抽取、运行回放、图示灯箱、搜索、阅读进度
 │   ├── anim.css         13 个图形演示的样式
 │   ├── anim.js          13 个图形演示（rAF 驱动，Canvas / SVG / DOM）
+│   ├── run-output.json  ★ 预跑结果（296 段的运行状态与输出，由 Actions 生成，不要手改）
 │   ├── img/             26 张配图（已从语雀 CDN 本地化）
+├── tools/
+│   └── run_examples.py  ★ 用 dotnet 预跑全部代码段 → 写 assets/run-output.json
 ├── build.py             原稿 → 旧版 HTML（语雀 md 渲染器，保留不动）
 ├── gen_atlas.py         旧版 HTML → 图谱外壳（抽取演示区/正文，重排导航与页签）
 ├── pairs.json           07 对照表抽出的 48 组词条，供翻卡演示
@@ -56,6 +92,13 @@ python3 gen_atlas.py    # 重排成图谱外壳
 ```
 
 只调样式/交互改 `assets/atlas.css` 与 `assets/atlas.js` 即可，不必重跑构建。
+
+> ⚠️ **`gen_atlas.py` 现在已经不能直接重跑**：它靠 `parse_cards()` 从旧版首页的
+> `<section class="cat">` 里读 11 个模块的元信息，而现在的 `index.html` 已经换成新版仪表盘
+> （hero + `.mgrid`），这个选择器一个模块都匹配不到，重跑会把首页写成空壳。
+> 要改正文，请直接编辑 `m01..m11.html` 的 `<article class="doc">`，或先补一个读
+> `.mcard2` 的解析分支再用。`_legacy/` 里留着重排前的旧版页面可对照。
+
 
 ## 模块与演示
 
