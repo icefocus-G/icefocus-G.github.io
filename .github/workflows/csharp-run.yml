@@ -26,7 +26,15 @@ concurrency:
 jobs:
   run:
     runs-on: ubuntu-latest
-    timeout-minutes: 30
+    timeout-minutes: 40
+    env:
+      # 强制 UTF-8：代码段里全是中文，decoding 一处失误整批就挂
+      PYTHONUTF8: '1'
+      PYTHONIOENCODING: 'utf-8'
+      LANG: C.UTF-8
+      DOTNET_CLI_TELEMETRY_OPTOUT: '1'
+      DOTNET_NOLOGO: '1'
+      DOTNET_SKIP_FIRST_TIME_EXPERIENCE: '1'
 
     steps:
       - name: 取回仓库
@@ -46,10 +54,11 @@ jobs:
         run: |
           dotnet --version
           python3 --version
+          python3 -c "import sys; print('stdout 编码:', sys.stdout.encoding)"
 
       - name: 预跑全部代码段
         working-directory: examination/CSharp-Book
-        run: python3 tools/run_examples.py
+        run: python3 -u tools/run_examples.py
 
       - name: 提交结果
         run: |
@@ -60,15 +69,29 @@ jobs:
           fi
           echo "—— 结果大小 ——"
           wc -c "$OUT"
-          if git diff --quiet -- "$OUT"; then
-            echo "输出与上次一致，无需提交。"
-            exit 0
-          fi
+
           git config user.name  'github-actions[bot]'
           git config user.email 'github-actions[bot]@users.noreply.github.com'
           git add "$OUT"
+          if git diff --cached --quiet; then
+            echo "输出与上次一致，无需提交。"
+            exit 0
+          fi
           # 不要写 [skip ci]：那会连 Pages 部署一起跳过，站点就不更新了。
           # 防自触发靠的是上面的 paths 白名单（不含 run-output.json）。
           git commit -m "chore(csharp-book): 重新预跑示例输出"
-          # checkout 在 push 事件下是 detached HEAD，显式推回 main
-          git push origin HEAD:main
+
+          # 预跑要跑好几分钟，期间别人（或我自己）可能又 push 了，直接 push 会
+          # 被 non-fast-forward 拒掉 —— 之前那次 CI 就是死在这里。所以 rebase 重试。
+          for i in 1 2 3; do
+            git checkout -B main 2>/dev/null || true
+            git fetch origin main
+            git rebase origin/main || { echo "::error::rebase 失败"; exit 1; }
+            if git push origin HEAD:main; then
+              echo "已推送（第 $i 次尝试）"
+              exit 0
+            fi
+            sleep 5
+          done
+          echo "::error::三次推送都失败"
+          exit 1

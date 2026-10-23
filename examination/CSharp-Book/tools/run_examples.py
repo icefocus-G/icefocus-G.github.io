@@ -13,7 +13,7 @@
 与 assets/atlas.js 在页面上收集代码的顺序一致。每条另存 n（源码字符数），
 页面用它校验「数据是否与当前代码同步」。
 """
-import os, re, io, json, html, sys, time, shutil, subprocess, tempfile, argparse
+import os, re, io, json, html, sys, time, shutil, subprocess, tempfile, argparse, traceback
 
 HERE = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 OUT = os.path.join(HERE, 'assets', 'run-output.json')
@@ -94,7 +94,8 @@ def build(root, kind):
     with io.open(os.path.join(root, 'ex.csproj'), 'w', encoding='utf-8') as f:
         f.write(CSPROJ.format(kind=kind))
     p = subprocess.run(['dotnet', 'build', '-v', 'q', '--nologo', '-c', 'Release'],
-                       cwd=root, capture_output=True, text=True, timeout=180)
+                       cwd=root, capture_output=True, text=True, errors='replace',
+                       timeout=180)
     return p.returncode, (p.stdout or '') + (p.stderr or '')
 
 
@@ -104,7 +105,7 @@ def run_dll(root, timeout=8):
         return 1, '', '未生成可执行文件'
     try:
         p = subprocess.run(['dotnet', dll], cwd=root, capture_output=True, text=True,
-                           timeout=timeout, stdin=subprocess.DEVNULL)
+                           errors='replace', timeout=timeout, stdin=subprocess.DEVNULL)
         return p.returncode, p.stdout, p.stderr
     except subprocess.TimeoutExpired as e:
         o = (e.stdout or b'')
@@ -132,7 +133,7 @@ def clean_out(txt, limit=3000):
     return txt
 
 
-def main():
+def run():
     ap = argparse.ArgumentParser()
     ap.add_argument('--limit', type=int, default=0)
     args = ap.parse_args()
@@ -140,7 +141,8 @@ def main():
     root = tempfile.mkdtemp(prefix='csbook-run-')
     data = {'generated': time.strftime('%Y-%m-%d %H:%M:%S'), 'runtime': '', 'items': {}}
     try:
-        v = subprocess.run(['dotnet', '--version'], capture_output=True, text=True).stdout.strip()
+        v = subprocess.run(['dotnet', '--version'], capture_output=True, text=True,
+                           errors='replace').stdout.strip()
         data['runtime'] = 'dotnet ' + v
 
         total = 0
@@ -209,6 +211,22 @@ def main():
         stat[r['s']] = stat.get(r['s'], 0) + 1
     print('完成：%d 段 → %s' % (len(data['items']), OUT))
     print('分布：', stat)
+
+
+def main():
+    """统一入口：任何顶层异常都写进 GITHUB_STEP_SUMMARY，否则 Actions 里只能看到 exit 1。"""
+    try:
+        run()
+    except SystemExit:
+        raise
+    except Exception:
+        tb = traceback.format_exc()
+        print(tb, file=sys.stderr, flush=True)
+        summary = os.environ.get('GITHUB_STEP_SUMMARY')
+        if summary:
+            with io.open(summary, 'a', encoding='utf-8') as f:
+                f.write('## C# 示例预跑失败\n\n```\n%s\n```\n' % tb[-4000:])
+        sys.exit(1)
 
 
 if __name__ == '__main__':
