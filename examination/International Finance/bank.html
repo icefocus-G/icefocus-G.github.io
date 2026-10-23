@@ -651,6 +651,10 @@ body{
   .ifc .fcard .feq .frac i,.ifc .fcard .feq .frac em{font-size:14px;padding:0 6px}
   .ifc .fcard .feq2{font-size:13.5px}
   .ifc .fcard .fvars{grid-template-columns:1fr}
+  /* 做题训练：三个按钮一行等分，题号提示单独一行居中，避免手机上挤成两行半 */
+  .ifc .trbar{gap:8px}
+  .ifc .trbar .cbtn{flex:1 1 0;min-width:0;margin:0;padding:10px 6px;text-align:center;white-space:nowrap}
+  .ifc .trbar .trpos{flex:1 1 100%;margin-left:0;text-align:center}
 }
 .ifc .mh3{font-size:14.5px;margin:26px 0 12px;padding-left:11px;border-left:3px solid var(--accent)}
 .ifc .mh3 em{font-style:normal;font-size:12px;color:var(--ink3);font-weight:400;margin-left:8px}
@@ -683,6 +687,8 @@ body{
 /* ==== 做题训练模块 ==== */
 .ifc .trwrap{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:18px 20px;margin-bottom:16px}
 .ifc .trbar{display:flex;gap:9px;flex-wrap:wrap;align-items:center}
+.ifc .trbar .trpos{margin-left:auto;font-size:12.5px;color:var(--ink3);font-variant-numeric:tabular-nums;
+     background:var(--bg);border:1px solid var(--line);border-radius:7px;padding:4px 10px;white-space:nowrap}
 .ifc .trstat{display:flex;gap:26px;flex-wrap:wrap;margin:14px 0 0}
 .ifc .trstat>div{font-size:12px;color:var(--ink3)}
 .ifc .trstat b{display:block;font-size:22px;color:var(--accent);line-height:1.25;font-variant-numeric:tabular-nums}
@@ -1156,6 +1162,7 @@ body{
           <button class="cbtn" id="trStart">开始训练</button>
           <button class="cbtn ghost" id="trNext">下一题</button>
           <button class="cbtn ghost" id="trReset">清空记录</button>
+          <span class="trpos" id="trPosLabel"></span>
         </div>
         <div class="trstat" id="trStat"></div>
         <div class="pbar"><i id="trBar"></i></div>
@@ -3534,14 +3541,18 @@ function trRender(){
   const box = $("#trBox");
   const un = TR.order.filter(function(i){ return TR.done[i]===undefined; });
   if((TR.cur===null||TR.cur===undefined) && un.length===0){
-    box.innerHTML = '<div class="trdone">全部 '+TQ.length+' 题都练过一轮了 🎉 自评正确率 '+
+    TR.cur = null; trRenderPos();
+    box.innerHTML = (TR.flash ? '<div class="trflash">'+TR.flash+'</div>' : '') +
+      '<div class="trdone">全部 '+TQ.length+' 题都练过一轮了 🎉 自评正确率 '+
       (Object.values(TR.done).filter(x=>x==="ok").length/Object.keys(TR.done).length*100).toFixed(0)+
-      '%。点「清空记录」可重新开始，或到上面看错题本。</div>';
+      '%。点「开始训练」可重开一轮（错题本保留），或到「错题库」把错题单独重练。</div>';
+    TR.flash = null;
     return;
   }
   const idx = (TR.cur!==null && TR.cur!==undefined) ? TR.cur : un[0];
-  if(idx===undefined){ box.innerHTML=''; return; }
+  if(idx===undefined){ box.innerHTML=''; trRenderPos(); return; }
   TR.cur = idx;
+  trRenderPos();
   const t = TQ[idx];
   box.innerHTML = '<div class="tq"><div class="tqmeta"><span class="ytag">'+t.y+'</span><span>'+t.tag+'</span>'+
     '<a class="jump" data-go="'+t.k+'" style="margin-left:auto">看题型详解 →</a></div>'+
@@ -3557,6 +3568,85 @@ function trRender(){
     TR.flash = null;
   }
 }
+/* 题号位置提示（右上角）：第几题 / 本轮已练几题 */
+function trRenderPos(){
+  const el = $("#trPosLabel");
+  if(!el) return;
+  const total = TQ.length;
+  const doneN = Object.keys(TR.done).length;
+  const p = (TR.cur!==null && TR.cur!==undefined) ? TR.order.indexOf(TR.cur) : -1;
+  el.textContent = (p >= 0 ? "第 " + (p+1) + " / " + total + " 题" : "本轮共 " + total + " 题") +
+                   " · 已练 " + doneN + " 题";
+}
+function trScrollToBox(){
+  const bx = $("#trBox");
+  if(!bx) return;
+  setTimeout(function(){ bx.scrollIntoView({behavior:"smooth", block:"center"}); }, 40);
+}
+/* 开新一轮：顺序重排、本轮进度清零，错题本保留（错题本是独立资产，不该被「开始训练」抹掉） */
+function trNewRound(msg){
+  TR = { order: trShuffle(TQ.map(function(_,i){ return i; })), pos: 0,
+         done: {}, wrong: TR.wrong || {}, cur: null };
+  trInit();
+  TR.cur = TR.order[0];
+  trSave();
+  TR.flash = msg;
+  trRender(); trScrollToBox();
+}
+/* 「开始训练」：以前它只做 trInit + trNext，而面板本来就显示着第一道未做的题，
+   所以点下去 DOM 重建、内容一模一样 —— 看着像按钮坏了。现在三个分支都有明确反馈。 */
+function trStartRound(){
+  const total = TQ.length;
+  const doneN = Object.keys(TR.done).length;
+  if(doneN >= total){
+    if(!confirm("本轮 " + total + " 题已经全部练完。\n\n要重开一轮吗？（题目顺序会重新打乱，错题本保留）")) return;
+    trNewRound("▶ 新一轮已开始：顺序已重新打乱，第 1 / " + total + " 题。");
+    return;
+  }
+  if(doneN > 0){
+    const un = TR.order.filter(function(i){ return TR.done[i]===undefined; });
+    const restart = confirm("本轮已练 " + doneN + " / " + total + " 题。\n\n" +
+      "点「确定」= 重新抽题，从第 1 题开始（本轮进度清零，错题本保留）\n" +
+      "点「取消」= 继续本轮，跳到第一道还没做的题");
+    if(restart){ trNewRound("▶ 新一轮已开始：顺序已重新打乱，第 1 / " + total + " 题。"); return; }
+    TR.cur = un.length ? un[0] : null;
+    TR.flash = "↩ 继续本轮：已跳到第一道还没做的题，进度 " + doneN + " / " + total + " 保留。";
+    trRender(); trScrollToBox();
+    return;
+  }
+  trNewRound("▶ 训练开始：已随机抽题排序，共 " + total + " 题，先自己做再展开答案自评。");
+}
+/* 往后推进：从 fromIdx 在抽题顺序里的位置往后找下一道还没做的题；
+   走到队尾就折回开头补前面漏掉的。返回 false 表示已经没题可推。
+   判分后用 silent=true（不加提示、不滚动），点「下一题」用 silent=false。 */
+function trAdvanceFrom(fromIdx, silent){
+  const order = TR.order, total = order.length;
+  const start = (fromIdx!==null && fromIdx!==undefined) ? order.indexOf(fromIdx) : -1;
+  let next = -1;
+  for(let k = 1; k <= total; k++){
+    const i = order[((start + k) % total + total) % total];
+    if(TR.done[i] === undefined && i !== fromIdx){ next = i; break; }
+  }
+  if(next === -1){
+    const unLeft = order.filter(function(i){ return TR.done[i]===undefined; }).length;
+    if(unLeft === 0){
+      TR.cur = null;
+      if(!silent) TR.flash = "本轮 " + total + " 题都已练过一轮，点「开始训练」可重开一轮。";
+    } else if(!silent){
+      TR.flash = "只剩这一道没做的题了，判完它本轮就结束。";
+    }
+    trRender();
+    if(!silent) trScrollToBox();
+    return false;
+  }
+  TR.cur = next;
+  trRender();
+  if(!silent) trScrollToBox();
+  return true;
+}
+/* 「下一题」：以前的写法一律回到第一道未做题，和当前题相同时就等于没反应 */
+function trSkipNext(){ trAdvanceFrom(TR.cur, false); }
+/* 兼容旧调用点（判分后推进等） */
 function trNext(){
   const un = TR.order.filter(function(i){ return TR.done[i]===undefined; });
   if(un.length===0){ TR.cur = null; trRender(); return; }
@@ -3589,7 +3679,7 @@ document.addEventListener("click", function(e){
         else { TR.wrong[idx] = s; TR.flash = "✔ 答对 1 次（已连对 " + s + "/" + TR_WRONG_NEED + "），再答对 1 次才移出错题本"; }
       }
     } else { TR.wrong[idx] = 0; TR.flash = "✘ 已记入错题本，需连续答对 " + TR_WRONG_NEED + " 次才能移出"; }
-    TR.cur = null; trSave(); trNext(); trSave(); return;
+    trSave(); trAdvanceFrom(idx, true); trSave(); return;
   }
   if(e.target.closest("#gotoWrong")){ switchTab("wrong"); return; }
   if(e.target.closest("#wrongRedoAll")){
@@ -3603,11 +3693,16 @@ document.addEventListener("click", function(e){
   if(e.target.closest("#trReset2")){
     TR.wrong = {}; trSave(); trRenderWrong(); trStats(); return;
   }
-  if(e.target.closest("#trStart")){ trInit(); TR.cur=null; trNext(); return; }
-  if(e.target.closest("#trNext")){ TR.cur=null; trNext(); return; }
+  if(e.target.closest("#trStart")){ trStartRound(); return; }
+  if(e.target.closest("#trNext")){ trSkipNext(); return; }
   if(e.target.closest("#trReset")){
+    if(!confirm("确定清空训练记录？\n\n本轮进度和错题本都会清零（题目顺序重新打乱），此操作不可撤销。\n只想重开一轮、保留错题本 → 请点「开始训练」。")) return;
     TR = {order:trShuffle(TQ.map((_,i)=>i)), pos:0, done:{}, wrong:{}, cur:null};
-    trSave(); trRender(); return;
+    TR.cur = TR.order[0];
+    trSave();
+    TR.flash = "🧹 训练记录已清空（含错题本），第 1 / " + TQ.length + " 题。";
+    trRender(); trScrollToBox();
+    return;
   }
 });
 
