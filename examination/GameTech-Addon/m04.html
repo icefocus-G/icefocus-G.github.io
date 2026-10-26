@@ -1,0 +1,216 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>计费点与标签体系 · 游戏开发补充技术栈</title>
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='14' fill='%230f766e'/%3E%3Cpath d='M20 40h24M20 32h24M20 24h16' stroke='%23fff' stroke-width='4' stroke-linecap='round'/%3E%3C/svg%3E">
+<link rel="stylesheet" href="assets/style.css">
+</head>
+<body data-mid="m04">
+<div id="app">
+<aside id="rail">
+  <a class="brand" href="index.html">
+    <h1><span class="dot"></span>游戏开发补充技术栈</h1>
+    <p>5 模块 · 5 条技术栈 · 场景标注</p>
+  </a>
+  <div class="searchwrap">
+    <input id="q" type="search" placeholder="搜索模块 / 技术栈…" autocomplete="off">
+  </div>
+  <div class="cards">
+<div class="catg">界面层</div>
+<a class="mcard" href="m01.html" data-id="m01" data-text="UI Toolkit 运行时 UI 新体系：UXML + USS + C# 界面层 界面层 · UI 架构"><span class="rd">已读</span><div class="t"><i>🎨</i><span>UI Toolkit</span></div><div class="s">运行时 UI 新体系：UXML + USS + C#</div><div class="bar"><i></i></div></a>
+<div class="catg">AI 与导航</div>
+<a class="mcard" href="m02.html" data-id="m02" data-text="NavMesh 进阶 承接 Unity m09 第 8 章，只讲它没展开的部分 AI 与导航 AI 与空间导航（进阶）"><span class="rd">已读</span><div class="t"><i>🧭</i><span>NavMesh 进阶</span></div><div class="s">承接 Unity m09 第 8 章，只讲它没展开的部分</div><div class="bar"><i></i></div></a>
+<div class="catg">商业化与发行</div>
+<a class="mcard" href="m03.html" data-id="m03" data-text="广告接入与双区域适配 一套代码出海 + 回国 + 上小游戏 商业化与发行 商业化与发行 · 工程架构"><span class="rd">已读</span><div class="t"><i>📢</i><span>广告接入与双区域适配</span></div><div class="s">一套代码出海 + 回国 + 上小游戏</div><div class="bar"><i></i></div></a>
+<a class="mcard on" href="m04.html" data-id="m04" data-text="计费点与标签体系 先定表再写码：IAA / IAP / 埋点 / 回传 商业化与发行 商业化设计 · 数据"><span class="rd">已读</span><div class="t"><i>🎯</i><span>计费点与标签体系</span></div><div class="s">先定表再写码：IAA / IAP / 埋点 / 回传</div><div class="bar"><i></i></div></a>
+<div class="catg">语言底层</div>
+<a class="mcard" href="m05.html" data-id="m05" data-text="C 语言与内存认知 看懂 IL2CPP 与 Native 插件的底层语言 语言底层 语言底层 · 内存模型"><span class="rd">已读</span><div class="t"><i>⚙️</i><span>C 语言与内存认知</span></div><div class="s">看懂 IL2CPP 与 Native 插件的底层语言</div><div class="bar"><i></i></div></a>
+  </div>
+  <div class="railfoot">
+    <div class="pgwrap"><div class="pg"><i></i></div><span id="pgtxt">0 / 5 已读</span></div>
+    <a class="backlink" href="../../examination/index.html">← 课程中心</a>
+  </div>
+</aside>
+<main id="main">
+
+<header class="mhead">
+  <div class="crumb"><a href="index.html">游戏开发补充技术栈</a><span>/</span>商业化与发行</div>
+  <h1><i>🎯</i>计费点与标签体系</h1>
+  <p class="sub">先定表再写码：IAA / IAP / 埋点 / 回传</p>
+  <div class="statsrow">
+    <span>2,357 字</span><span>5 段代码</span><span>9 节</span><span>4 道自测</span>
+  </div>
+  <div class="scene">
+    <div class="sc"><div class="sk">技术栈</div><div class="sv">商业化设计 · 数据</div></div>
+    <div class="sc"><div class="sk">🎮 游戏开发部位</div><div class="sv">付费点设计、埋点体系、远程调优、A/B 实验、收益归因</div></div>
+    <div class="sc"><div class="sk">🌐 其他领域用途</div><div class="sv">SaaS 订阅定价与分层、增长分析、产品埋点治理、用户分层运营</div></div>
+  </div>
+</header>
+<nav class="toc"><div class="toch">本模块目录</div><a href="#tables">1 先定表，再写码</a><a href="#tags">2 标签分类总表</a><a href="#event">3 事件字典 + 埋点门面</a><a href="#iaa">4 IAA 广告点位清单</a><a href="#iap">5 IAP 商品清单与定价对照</a><a href="#remote">6 远程配置：改策略不发版</a><a href="#freq">7 频控与触发（核心逻辑）</a><a href="#revenue">8 收益回传与归因</a><a href="#dashboard">9 指标看板：只看这 6 个</a><a href="#quiz">自测</a></nav>
+<article>
+<section id="tables"><h2>1 先定表，再写码</h2>
+<p>计费点做砸的项目，九成不是代码问题，而是<strong>表没定清楚就开写</strong>：点位散落在各个脚本里、埋点名一个页面一个写法、奖励数值硬编码。等到要调优时，没有任何一处可以集中改。</p>
+<div class="tw"><table><thead><tr><th>表</th><th>一行代表什么</th><th>关键列</th></tr></thead><tbody><tr><td>事件字典表</td><td>一个埋点事件</td><td>event_key、触发时机、参数、归属模块</td></tr><tr><td>计费点表</td><td>一个可变现点位</td><td>slot_id、类型（IAA/IAP）、触发条件、频控、奖励、开关</td></tr><tr><td>商品表</td><td>一个可购买商品</td><td>sku、区域、价格档、内容、是否首充/限时</td></tr></tbody></table></div>
+<div class="note n-key"><span class="ni">◆</span><div><b>核心</b>顺序不能反：<strong>表 → 埋点门面 → 点位实现 → 看板</strong>。反过来做（先写代码再补表），必然出现同一个行为三个 event_key、同一个点位两套奖励配置。</div></div>
+</section>
+<section id="tags"><h2>2 标签分类总表</h2>
+<p>标签是把「行为流水」压成「用户画像」的中间层。分四类就够，别一上来搞几十个维度。</p>
+<div class="tw"><table><thead><tr><th>类别</th><th>例子</th><th>用途</th></tr></thead><tbody><tr><td>属性标签</td><td>设备档位、地区、渠道、安装天数</td><td>分群基线，做冷启动优化</td></tr><tr><td>行为标签</td><td>日均局数、平均单局时长、失败率、流失关卡</td><td>找卡点，做难度调优</td></tr><tr><td>付费标签</td><td>是否付费、首充有无、累计付费档、最近付费距今天数</td><td>分层运营与召回</td></tr><tr><td>进度标签</td><td>最高关卡、解锁系统数、收集完成度</td><td>定位内容消耗速度</td></tr></tbody></table></div>
+<div class="note n-tip"><span class="ni">→</span><div><b>建议</b>标签要<strong>可回溯计算</strong>：能由原始事件重新算出来。如果某个标签是「当场算完就存」，一旦口径改了就永远修不回来。</div></div>
+</section>
+<section id="event"><h2>3 事件字典 + 埋点门面</h2>
+<p>埋点最怕两件事：名字随性起、调用散落各处。解法是<strong>一个门面 + 一份常量表</strong>，业务代码只准通过门面打点。</p>
+<div class="codewrap"><div class="codebar"><span class="lang">C#</span><button class="copy" type="button">复制</button></div><pre class="code"><code><span class="c-cmt">// 1) 事件常量：唯一真相，禁止在业务里写字符串</span>
+<span class="c-kw">public</span> <span class="c-kw">static</span> <span class="c-kw">class</span> Ev
+{
+    <span class="c-kw">public</span> <span class="c-kw">const</span> <span class="c-kw">string</span> LevelStart   = <span class="c-str">&quot;level_start&quot;</span>;
+    <span class="c-kw">public</span> <span class="c-kw">const</span> <span class="c-kw">string</span> LevelEnd     = <span class="c-str">&quot;level_end&quot;</span>;     <span class="c-cmt">// props: result, level, duration, reviveUsed</span>
+    <span class="c-kw">public</span> <span class="c-kw">const</span> <span class="c-kw">string</span> AdShow       = <span class="c-str">&quot;ad_show&quot;</span>;       <span class="c-cmt">// props: slot, provider, result</span>
+    <span class="c-kw">public</span> <span class="c-kw">const</span> <span class="c-kw">string</span> AdRevenue    = <span class="c-str">&quot;ad_revenue&quot;</span>;    <span class="c-cmt">// props: slot, ecpm, currency</span>
+    <span class="c-kw">public</span> <span class="c-kw">const</span> <span class="c-kw">string</span> IapPurchase  = <span class="c-str">&quot;iap_purchase&quot;</span>;  <span class="c-cmt">// props: sku, price, currency, firstPay</span>
+    <span class="c-kw">public</span> <span class="c-kw">const</span> <span class="c-kw">string</span> ShopOpen     = <span class="c-str">&quot;shop_open&quot;</span>;     <span class="c-cmt">// props: from</span>
+}
+
+<span class="c-cmt">// 2) 门面：所有打点唯一入口，统一补公共参数</span>
+<span class="c-kw">public</span> <span class="c-kw">static</span> <span class="c-kw">class</span> Track
+{
+    <span class="c-kw">static</span> ITracker impl = <span class="c-kw">new</span> NullTracker();
+
+    <span class="c-kw">public</span> <span class="c-kw">static</span> <span class="c-kw">void</span> Init(ITracker t) =&gt; impl = t;
+
+    <span class="c-kw">public</span> <span class="c-kw">static</span> <span class="c-kw">void</span> Send(<span class="c-kw">string</span> ev, Dictionary&lt;<span class="c-kw">string</span>, <span class="c-kw">object</span>&gt; props = <span class="c-kw">null</span>)
+    {
+        props ??= <span class="c-kw">new</span> Dictionary&lt;<span class="c-kw">string</span>, <span class="c-kw">object</span>&gt;();
+        props[<span class="c-str">&quot;uid&quot;</span>]      = User.Id;
+        props[<span class="c-str">&quot;level&quot;</span>]    = User.MaxLevel;      <span class="c-cmt">// 公共维度自动补齐</span>
+        props[<span class="c-str">&quot;channel&quot;</span>]  = BuildInfo.Channel;
+        props[<span class="c-str">&quot;ts&quot;</span>]       = TimeUtil.NowMs();
+        impl.Log(ev, props);
+    }
+}</code></pre></div>
+<p>国内与海外的埋点后端不同（国内多为自建或神策/友盟，海外多为 Firebase / Adjust），差异全部收在 <code>ITracker</code> 的实现里，业务层无感知。</p>
+<div class="codewrap"><div class="codebar"><span class="lang">C#</span><button class="copy" type="button">复制</button></div><pre class="code"><code><span class="c-kw">public</span> <span class="c-kw">class</span> FirebaseTracker : ITracker
+{
+    <span class="c-kw">public</span> <span class="c-kw">void</span> Log(<span class="c-kw">string</span> ev, Dictionary&lt;<span class="c-kw">string</span>, <span class="c-kw">object</span>&gt; p)
+    {
+        <span class="c-kw">var</span> prm = <span class="c-kw">new</span> Dictionary&lt;<span class="c-kw">string</span>, <span class="c-kw">object</span>&gt;();
+        <span class="c-kw">foreach</span> (<span class="c-kw">var</span> kv <span class="c-kw">in</span> p)
+        {
+            <span class="c-cmt">// Firebase 参数值只接受 string / long / double</span>
+            prm[kv.Key] = kv.Value <span class="c-kw">is</span> <span class="c-kw">int</span> i ? (<span class="c-kw">long</span>)i
+                        : kv.Value <span class="c-kw">is</span> <span class="c-kw">float</span> f ? (<span class="c-kw">double</span>)f
+                        : kv.Value?.ToString() ?? <span class="c-str">&quot;&quot;</span>;
+        }
+        FirebaseAnalytics.LogEvent(ev, prm);
+    }
+}
+
+<span class="c-kw">public</span> <span class="c-kw">class</span> DomesticTracker : ITracker   <span class="c-cmt">// 神策 / 友盟 / 自建</span>
+{
+    <span class="c-kw">public</span> <span class="c-kw">void</span> Log(<span class="c-kw">string</span> ev, Dictionary&lt;<span class="c-kw">string</span>, <span class="c-kw">object</span>&gt; p)
+    {
+        SensorsDataAPI.Track(ev, p);          <span class="c-cmt">// 支持嵌套与数组</span>
+    }
+}</code></pre></div>
+<div class="note n-warn"><span class="ni">⚠</span><div><b>坑</b>跨平台埋点最大的坑是<strong>类型不一致</strong>：Firebase 只收 string / long / double，把 <code>float</code> 直接塞进去会被静默丢弃或转成字符串，导致看板上全是 0。类型转换必须在适配器里做完。</div></div>
+</section>
+<section id="iaa"><h2>4 IAA 广告点位清单</h2>
+<p>休闲游戏的广告收入结构通常是「激励视频为主、插屏为辅、Banner 保底」。点位不是越多越好——插屏太密会直接抬高流失率。</p>
+<div class="tw"><table><thead><tr><th>点位</th><th>类型</th><th>触发时机</th><th>频控建议</th><th>注意</th></tr></thead><tbody><tr><td>开屏</td><td>Splash</td><td>冷启动后首次进入主界面</td><td>每会话 1 次</td><td>要有跳过，别做成强插</td></tr><tr><td>关卡结束</td><td>Interstitial</td><td>结算页出现时</td><td>≥60s 间隔，前 3 关不弹</td><td>新手期必须保护</td></tr><tr><td>失败复活</td><td>Rewarded</td><td>失败结算页</td><td>每关 1 次</td><td>核心变现点，务必 SSV</td></tr><tr><td>双倍奖励</td><td>Rewarded</td><td>胜利结算页</td><td>每关 1 次</td><td>转化最高，按钮要显眼</td></tr><tr><td>离线收益翻倍</td><td>Rewarded</td><td>回归时离线收益弹窗</td><td>每日 3 次</td><td>与留存强相关</td></tr><tr><td>免费道具/抽奖</td><td>Rewarded</td><td>商店/抽奖页</td><td>每日上限</td><td>配合进度卡点</td></tr><tr><td>主界面 Banner</td><td>Banner</td><td>常驻底部</td><td>—</td><td>别遮挡操作区，iOS 需注意安全区</td></tr></tbody></table></div>
+<div class="note n-key"><span class="ni">◆</span><div><b>核心</b>新手前 3 关<strong>不弹任何非激励广告</strong>。这是留存与变现的经典权衡点：前期多赚几分钱，换来的是次留下滑，长期 LTV 反而更低。</div></div>
+</section>
+<section id="iap"><h2>5 IAP 商品清单与定价对照</h2>
+<div class="tw"><table><thead><tr><th>SKU</th><th>类型</th><th>国内档位</th><th>海外档位</th><th>设计要点</th></tr></thead><tbody><tr><td>remove_ads</td><td>一次性</td><td>¥6</td><td>$0.99</td><td>最常见的首付费点，转化率高</td></tr><tr><td>starter_pack</td><td>一次性</td><td>¥6</td><td>$0.99</td><td>首充礼包，限购 1 次，价值感要强</td></tr><tr><td>coin_small</td><td>消耗品</td><td>¥6</td><td>$0.99</td><td>基础档，用于比价锚定</td></tr><tr><td>coin_mid</td><td>消耗品</td><td>¥30</td><td>$4.99</td><td>主力档，通常销量最高</td></tr><tr><td>coin_large</td><td>消耗品</td><td>¥68</td><td>$9.99</td><td>大 R 档</td></tr><tr><td>battle_pass</td><td>订阅/赛季</td><td>¥30/月</td><td>$4.99/月</td><td>长期留存与稳定收入</td></tr></tbody></table></div>
+<ul class="pts"><li><strong>定价不要按汇率换算</strong>：国内 ¥6 / ¥30 / ¥68 是习惯档位，海外 $0.99 / $4.99 / $9.99 是习惯档位，两者不是汇率关系</li><li><strong>必须有锚定</strong>：大包单价要明显低于小包，否则没人买大包</li><li><strong>首充只在 1 次</strong>：首充礼包的价值感一旦被稀释，后续付费转化会塌</li><li><strong>消耗品要能重复买</strong>，一次性商品（去广告）买完就没有复购，别指望它撑收入</li></ul>
+</section>
+<section id="remote"><h2>6 远程配置：改策略不发版</h2>
+<p>频控参数、点位开关、奖励倍率、AB 分组，全都不该写死在包里。发一版审核要几天，而调优要按小时迭代。</p>
+<div class="codewrap"><div class="codebar"><span class="lang">JSON</span><button class="copy" type="button">复制</button></div><pre class="code"><code>{
+  <span class="c-str">&quot;version&quot;</span>: <span class="c-num">12</span>,
+  <span class="c-str">&quot;slots&quot;</span>: {
+    <span class="c-str">&quot;inter_level_end&quot;</span>: { <span class="c-str">&quot;on&quot;</span>: <span class="c-kw">true</span>, <span class="c-str">&quot;minIntervalSec&quot;</span>: <span class="c-num">60</span>, <span class="c-str">&quot;skipFirstLevels&quot;</span>: <span class="c-num">3</span> },
+    <span class="c-str">&quot;reward_revive&quot;</span>:   { <span class="c-str">&quot;on&quot;</span>: <span class="c-kw">true</span>, <span class="c-str">&quot;maxPerLevel&quot;</span>: <span class="c-num">1</span>, <span class="c-str">&quot;rewardMul&quot;</span>: <span class="c-num">1.0</span> },
+    <span class="c-str">&quot;reward_double&quot;</span>:   { <span class="c-str">&quot;on&quot;</span>: <span class="c-kw">true</span>, <span class="c-str">&quot;maxPerLevel&quot;</span>: <span class="c-num">1</span>, <span class="c-str">&quot;rewardMul&quot;</span>: <span class="c-num">2.0</span> }
+  },
+  <span class="c-str">&quot;experiments&quot;</span>: {
+    <span class="c-str">&quot;exp_inter_freq&quot;</span>: { <span class="c-str">&quot;group&quot;</span>: <span class="c-str">&quot;A&quot;</span>, <span class="c-str">&quot;minIntervalSec&quot;</span>: <span class="c-num">45</span> }
+  },
+  <span class="c-str">&quot;fallback&quot;</span>: { <span class="c-str">&quot;on&quot;</span>: <span class="c-kw">true</span> }
+}</code></pre></div>
+<div class="note n-warn"><span class="ni">⚠</span><div><b>坑</b>远程配置必须有<strong>兜底</strong>：拉取失败就用本地默认值，且默认值要保守（频控更严、开关更少）。否则某次配置服务挂掉，可能给用户连弹 10 个插屏。</div></div>
+</section>
+<section id="freq"><h2>7 频控与触发（核心逻辑）</h2>
+<p>频控不是「加个计时器」那么简单，它要同时管住四个维度：<strong>冷却、单局上限、每日上限、全局窗口</strong>。少一个就会漏。</p>
+<div class="codewrap"><div class="codebar"><span class="lang">C#</span><button class="copy" type="button">复制</button></div><pre class="code"><code><span class="c-kw">public</span> <span class="c-kw">class</span> SlotGate
+{
+    <span class="c-kw">readonly</span> SlotCfg cfg;
+    DateTime lastShow;
+    <span class="c-kw">readonly</span> Dictionary&lt;<span class="c-kw">string</span>, <span class="c-kw">int</span>&gt; perSession = <span class="c-kw">new</span>();
+    <span class="c-kw">int</span> perDay; DateTime dayAnchor;
+
+    <span class="c-kw">public</span> <span class="c-kw">bool</span> CanShow(<span class="c-kw">string</span> slotId, <span class="c-kw">int</span> currentLevel)
+    {
+        <span class="c-kw">if</span> (!cfg.On) <span class="c-kw">return</span> <span class="c-kw">false</span>;
+        <span class="c-kw">if</span> (currentLevel &lt;= cfg.SkipFirstLevels) <span class="c-kw">return</span> <span class="c-kw">false</span>;
+
+        <span class="c-cmt">// 1) 冷却</span>
+        <span class="c-kw">if</span> ((DateTime.UtcNow - lastShow).TotalSeconds &lt; cfg.MinIntervalSec) <span class="c-kw">return</span> <span class="c-kw">false</span>;
+
+        <span class="c-cmt">// 2) 每日上限（跨天重置用锚点，不用 DateTime.Today 比较字符串）</span>
+        <span class="c-kw">if</span> (dayAnchor.Date != DateTime.UtcNow.Date) { perDay = <span class="c-num">0</span>; dayAnchor = DateTime.UtcNow; }
+        <span class="c-kw">if</span> (perDay &gt;= cfg.DailyCap) <span class="c-kw">return</span> <span class="c-kw">false</span>;
+
+        <span class="c-cmt">// 3) 单局/单会话上限</span>
+        perSession.TryGetValue(slotId, <span class="c-kw">out</span> <span class="c-kw">var</span> n);
+        <span class="c-kw">if</span> (n &gt;= cfg.MaxPerSession) <span class="c-kw">return</span> <span class="c-kw">false</span>;
+
+        <span class="c-kw">return</span> <span class="c-kw">true</span>;
+    }
+
+    <span class="c-kw">public</span> <span class="c-kw">void</span> MarkShown(<span class="c-kw">string</span> slotId)
+    {
+        lastShow = DateTime.UtcNow;
+        perDay++;
+        perSession[slotId] = perSession.GetValueOrDefault(slotId) + <span class="c-num">1</span>;
+    }
+}</code></pre></div>
+<div class="note n-warn"><span class="ni">⚠</span><div><b>坑</b><strong><code>MarkShown</code> 必须在真正展示后调用，不能在「准备展示」时调用</strong>。否则广告加载失败也会消耗频控额度，用户点了没反应又没奖励，体验极差。</div></div>
+</section>
+<section id="revenue"><h2>8 收益回传与归因</h2>
+<p>想把 LTV 算准，光有「展示次数」不够，必须拿到<strong>每次展示的收益（impression-level revenue）</strong>。主流聚合平台都提供收益回调。</p>
+<div class="tw"><table><thead><tr><th>数据</th><th>来源</th><th>用途</th></tr></thead><tbody><tr><td>广告展示收益</td><td>MAX 的 OnAdRevenuePaidEvent / AdMob 的 PaidEvent</td><td>按点位算真实 eCPM，而不是估算</td></tr><tr><td>内购订单</td><td>Apple / Google 服务端收据校验</td><td>防漏单、防伪造</td></tr><tr><td>归因来源</td><td>Adjust / AppsFlyer / 平台回调</td><td>算渠道 ROI，决定投放预算</td></tr></tbody></table></div>
+<div class="codewrap"><div class="codebar"><span class="lang">C#</span><button class="copy" type="button">复制</button></div><pre class="code"><code><span class="c-cmt">// MAX 的收益回调：每次展示后立即上报，别攒批</span>
+MaxSdkCallbacks.Interstitial.OnAdRevenuePaidEvent += (adUnitId, info) =&gt;
+{
+    Track.Send(Ev.AdRevenue, <span class="c-kw">new</span> Dictionary&lt;<span class="c-kw">string</span>, <span class="c-kw">object</span>&gt;
+    {
+        [<span class="c-str">&quot;slot&quot;</span>]     = SlotOf(adUnitId),
+        [<span class="c-str">&quot;network&quot;</span>]  = info.NetworkName,
+        [<span class="c-str">&quot;ecpm&quot;</span>]     = info.Revenue,          <span class="c-cmt">// 已经是美元</span>
+        [<span class="c-str">&quot;currency&quot;</span>] = <span class="c-str">&quot;USD&quot;</span>
+    });
+};</code></pre></div>
+<div class="note n-key"><span class="ni">◆</span><div><b>核心</b>内购必须做<strong>服务端校验 + 幂等发货</strong>：客户端拿到收据后发给自己的服务器，服务器向 Apple/Google 校验，成功才发货，并以订单号去重。纯客户端校验等于没有校验。</div></div>
+</section>
+<section id="dashboard"><h2>9 指标看板：只看这 6 个</h2>
+<div class="tw"><table><thead><tr><th>指标</th><th>口径</th><th>看什么</th></tr></thead><tbody><tr><td>ARPDAU</td><td>日广告收入 + 日内购收入 ÷ DAU</td><td>整体变现效率</td></tr><tr><td>eCPM</td><td>广告收入 ÷ 展示次数 × 1000</td><td>广告价值，分点位看</td></tr><tr><td>填充率</td><td>成功展示 ÷ 请求次数</td><td>广告源是否够，低说明要加源</td></tr><tr><td>IVR（激励视频渗透）</td><td>看激励视频的 DAU ÷ 总 DAU</td><td>点位设计是否合理</td></tr><tr><td>次留 / 7 留</td><td>次日回访 ÷ 新增</td><td>变现调优有没有伤到留存</td></tr><tr><td>LTV / CAC</td><td>生命周期价值 ÷ 获客成本</td><td>能不能放量，&lt;1 就是亏</td></tr></tbody></table></div>
+<div class="note n-info"><span class="ni">ⓘ</span><div><b>背景</b>变现调优永远看<strong>成对指标</strong>：单看 ARPDAU 上涨就加大插屏，很可能次留在跌、LTV 在降。只盯一个数的优化，基本都在透支未来。</div></div>
+</section>
+<section class="quiz" id="quiz">
+<h2>自测 · 4 题</h2>
+<p class="qhint">点选项立即判定，答错会给出原因。</p>
+<div class="qcard" data-q="0" data-a="1" data-why="表定清楚了，点位、奖励、频控才有唯一真相。反过来做必然出现同一点位两套配置、同一行为多个事件名，后期无法集中调优。"><div class="qt"><span class="qn">1</span>计费点设计的正确顺序是？</div><div class="opts"><button class="opt" data-q="0" data-i="0" type="button"><span class="oi">A</span><span>直接写代码，跑起来再补埋点</span></button><button class="opt" data-q="0" data-i="1" type="button"><span class="oi">B</span><span>先定三张表 → 埋点门面 → 点位实现 → 看板</span></button><button class="opt" data-q="0" data-i="2" type="button"><span class="oi">C</span><span>先做看板再补埋点</span></button><button class="opt" data-q="0" data-i="3" type="button"><span class="oi">D</span><span>边写代码边想点位</span></button></div><div class="qfb"></div></div>
+<div class="qcard" data-q="1" data-a="1" data-why="这是留存与变现的经典权衡。新手期是流失最高的阶段，多赚几分钱却抬高流失，会让整体 LTV 下降。"><div class="qt"><span class="qn">2</span>为什么新手前 3 关不该弹插屏？</div><div class="opts"><button class="opt" data-q="1" data-i="0" type="button"><span class="oi">A</span><span>技术实现复杂</span></button><button class="opt" data-q="1" data-i="1" type="button"><span class="oi">B</span><span>前期的广告收益换不来次留损失，长期 LTV 更低</span></button><button class="opt" data-q="1" data-i="2" type="button"><span class="oi">C</span><span>平台规定禁止</span></button><button class="opt" data-q="1" data-i="3" type="button"><span class="oi">D</span><span>插屏在低关卡填充率低</span></button></div><div class="qfb"></div></div>
+<div class="qcard" data-q="2" data-a="1" data-why="提前扣减会导致「加载失败也消耗额度」，用户点了没响应、也没奖励，体验最差。必须在真正展示后标记。"><div class="qt"><span class="qn">3</span>频控额度应该在什么时机扣减？</div><div class="opts"><button class="opt" data-q="2" data-i="0" type="button"><span class="oi">A</span><span>决定要展示时</span></button><button class="opt" data-q="2" data-i="1" type="button"><span class="oi">B</span><span>广告真正成功展示之后</span></button><button class="opt" data-q="2" data-i="2" type="button"><span class="oi">C</span><span>广告加载完成时</span></button><button class="opt" data-q="2" data-i="3" type="button"><span class="oi">D</span><span>用户点击按钮时</span></button></div><div class="qfb"></div></div>
+<div class="qcard" data-q="3" data-a="1" data-why="类型不一致会导致参数静默丢失，看板上显示全 0。类型转换必须在 ITracker 适配器里统一处理。"><div class="qt"><span class="qn">4</span>跨平台埋点最容易出的问题是？</div><div class="opts"><button class="opt" data-q="3" data-i="0" type="button"><span class="oi">A</span><span>网络延迟</span></button><button class="opt" data-q="3" data-i="1" type="button"><span class="oi">B</span><span>参数类型不统一，Firebase 只收 string/long/double，float 会被丢弃</span></button><button class="opt" data-q="3" data-i="2" type="button"><span class="oi">C</span><span>事件名太长</span></button><button class="opt" data-q="3" data-i="3" type="button"><span class="oi">D</span><span>打点太频繁</span></button></div><div class="qfb"></div></div>
+</section>
+</article>
+<nav class="pagenav"><a class="pv" href="m03.html"><span>上一模块</span><b>广告接入与双区域适配</b></a><a class="nx" href="m05.html"><span>下一模块</span><b>C 语言与内存认知</b></a></nav>
+
+</main>
+</div>
+<script src="assets/app.js"></script>
+</body>
+</html>

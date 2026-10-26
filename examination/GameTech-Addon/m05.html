@@ -1,0 +1,183 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>C 语言与内存认知 · 游戏开发补充技术栈</title>
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='14' fill='%230f766e'/%3E%3Cpath d='M20 40h24M20 32h24M20 24h16' stroke='%23fff' stroke-width='4' stroke-linecap='round'/%3E%3C/svg%3E">
+<link rel="stylesheet" href="assets/style.css">
+</head>
+<body data-mid="m05">
+<div id="app">
+<aside id="rail">
+  <a class="brand" href="index.html">
+    <h1><span class="dot"></span>游戏开发补充技术栈</h1>
+    <p>5 模块 · 5 条技术栈 · 场景标注</p>
+  </a>
+  <div class="searchwrap">
+    <input id="q" type="search" placeholder="搜索模块 / 技术栈…" autocomplete="off">
+  </div>
+  <div class="cards">
+<div class="catg">界面层</div>
+<a class="mcard" href="m01.html" data-id="m01" data-text="UI Toolkit 运行时 UI 新体系：UXML + USS + C# 界面层 界面层 · UI 架构"><span class="rd">已读</span><div class="t"><i>🎨</i><span>UI Toolkit</span></div><div class="s">运行时 UI 新体系：UXML + USS + C#</div><div class="bar"><i></i></div></a>
+<div class="catg">AI 与导航</div>
+<a class="mcard" href="m02.html" data-id="m02" data-text="NavMesh 进阶 承接 Unity m09 第 8 章，只讲它没展开的部分 AI 与导航 AI 与空间导航（进阶）"><span class="rd">已读</span><div class="t"><i>🧭</i><span>NavMesh 进阶</span></div><div class="s">承接 Unity m09 第 8 章，只讲它没展开的部分</div><div class="bar"><i></i></div></a>
+<div class="catg">商业化与发行</div>
+<a class="mcard" href="m03.html" data-id="m03" data-text="广告接入与双区域适配 一套代码出海 + 回国 + 上小游戏 商业化与发行 商业化与发行 · 工程架构"><span class="rd">已读</span><div class="t"><i>📢</i><span>广告接入与双区域适配</span></div><div class="s">一套代码出海 + 回国 + 上小游戏</div><div class="bar"><i></i></div></a>
+<a class="mcard" href="m04.html" data-id="m04" data-text="计费点与标签体系 先定表再写码：IAA / IAP / 埋点 / 回传 商业化与发行 商业化设计 · 数据"><span class="rd">已读</span><div class="t"><i>🎯</i><span>计费点与标签体系</span></div><div class="s">先定表再写码：IAA / IAP / 埋点 / 回传</div><div class="bar"><i></i></div></a>
+<div class="catg">语言底层</div>
+<a class="mcard on" href="m05.html" data-id="m05" data-text="C 语言与内存认知 看懂 IL2CPP 与 Native 插件的底层语言 语言底层 语言底层 · 内存模型"><span class="rd">已读</span><div class="t"><i>⚙️</i><span>C 语言与内存认知</span></div><div class="s">看懂 IL2CPP 与 Native 插件的底层语言</div><div class="bar"><i></i></div></a>
+  </div>
+  <div class="railfoot">
+    <div class="pgwrap"><div class="pg"><i></i></div><span id="pgtxt">0 / 5 已读</span></div>
+    <a class="backlink" href="../../examination/index.html">← 课程中心</a>
+  </div>
+</aside>
+<main id="main">
+
+<header class="mhead">
+  <div class="crumb"><a href="index.html">游戏开发补充技术栈</a><span>/</span>语言底层</div>
+  <h1><i>⚙️</i>C 语言与内存认知</h1>
+  <p class="sub">看懂 IL2CPP 与 Native 插件的底层语言</p>
+  <div class="statsrow">
+    <span>2,669 字</span><span>5 段代码</span><span>8 节</span><span>4 道自测</span>
+  </div>
+  <div class="scene">
+    <div class="sc"><div class="sk">技术栈</div><div class="sv">语言底层 · 内存模型</div></div>
+    <div class="sc"><div class="sk">🎮 游戏开发部位</div><div class="sv">阅读 IL2CPP 生成代码、写 Native 插件、控制 struct 内存布局、unsafe 互操作、性能热点分析</div></div>
+    <div class="sc"><div class="sk">🌐 其他领域用途</div><div class="sv">嵌入式与固件、操作系统与驱动、高性能中间件、跨语言 ABI 设计</div></div>
+  </div>
+</header>
+<nav class="toc"><div class="toch">本模块目录</div><a href="#why">1 为什么 Unity 程序员要懂 C</a><a href="#ptr">2 指针：地址、解引用、算术</a><a href="#mem">3 内存四区与生命周期</a><a href="#struct">4 结构体与内存对齐</a><a href="#gcvsc">5 malloc/free 与 GC 的本质差别</a><a href="#map">6 C 与 C# 逐项对照</a><a href="#unity">7 和 Unity 的连接点</a><a href="#crash">8 常见崩溃与排查</a><a href="#quiz">自测</a></nav>
+<article>
+<section id="why"><h2>1 为什么 Unity 程序员要懂 C</h2>
+<p>你不需要用 C 写游戏逻辑，但你会不断遇到<strong>只有懂 C 才能解释的现象</strong>：为什么 struct 传给 Native 插件后数据全乱、为什么 IL2CPP 下某个反射调用失败、为什么多线程里一个 bool 读写会导致崩溃。</p>
+<div class="tw"><table><thead><tr><th>场景</th><th>为什么需要 C 的认知</th></tr></thead><tbody><tr><td>IL2CPP 打包</td><td>C# 的 IL 会被转成 C++ 再编译，泛型与反射会受裁剪影响</td></tr><tr><td>Native 插件</td><td>P/Invoke 传 struct 时，字段顺序与对齐必须与 C 侧完全一致</td></tr><tr><td>unsafe / fixed</td><td>直接操作内存，需要理解指针与 GC 句柄固定</td></tr><tr><td>GC 与分配</td><td>理解堆、栈、值类型的分配位置，才能减少 GC 峰值</td></tr></tbody></table></div>
+<div class="note n-info"><span class="ni">ⓘ</span><div><b>背景</b>一个反直觉的事实：<strong>C# 的值类型也走栈（或内联在对象里），引用类型走托管堆</strong>。这条规则和 C 的栈/堆划分是同源的——理解 C 的模型，C# 的行为就不再是「魔法」。</div></div>
+</section>
+<section id="ptr"><h2>2 指针：地址、解引用、算术</h2>
+<p>指针就是一个存地址的整数。所有「指针很危险」的说法，本质都是「你手动算错了地址」。</p>
+<div class="codewrap"><div class="codebar"><span class="lang">C</span><button class="copy" type="button">复制</button></div><pre class="code"><code>#include &lt;stdio.h&gt;
+
+<span class="c-kw">int</span> main(<span class="c-kw">void</span>) {
+    <span class="c-kw">int</span> a = <span class="c-num">42</span>;
+    <span class="c-kw">int</span> *p = &amp;a;          <span class="c-cmt">// p 存的是 a 的地址</span>
+
+    <span class="c-kw">printf</span>(<span class="c-str">&quot;%d\n&quot;</span>, *p);   <span class="c-cmt">// 解引用：顺着地址取值 → 42</span>
+    *p = <span class="c-num">100</span>;             <span class="c-cmt">// 顺着地址写值 → a 也变成 100</span>
+
+    <span class="c-kw">int</span> arr[<span class="c-num">5</span>] = {<span class="c-num">10</span>, <span class="c-num">20</span>, <span class="c-num">30</span>, <span class="c-num">40</span>, <span class="c-num">50</span>};
+    <span class="c-kw">int</span> *q = arr;         <span class="c-cmt">// 数组名退化为首元素地址</span>
+    <span class="c-kw">printf</span>(<span class="c-str">&quot;%d\n&quot;</span>, *(q + <span class="c-num">2</span>));   <span class="c-cmt">// 指针算术：跳 2 个 int（不是 2 字节）→ 30</span>
+    <span class="c-kw">printf</span>(<span class="c-str">&quot;%d\n&quot;</span>, q[<span class="c-num">2</span>]);       <span class="c-cmt">// 等价写法</span>
+    <span class="c-kw">return</span> <span class="c-num">0</span>;
+}</code></pre></div>
+<ul class="pts"><li><strong>指针算术按类型宽度走</strong>：<code>int* + 1</code> 前进 4 字节，<code>char* + 1</code> 前进 1 字节。这解释了为什么「跨类型强转指针再算术」会错位。</li><li><strong><code>arr</code> 与 <code>&amp;arr</code> 不同</strong>：前者退化为 <code>int*</code>，后者是 <code>int(*)[5]</code>。两者数值相同，加 1 后差 20 字节。</li><li><strong>NULL 解引用是崩溃第一原因</strong>，且往往在很远的地方才炸——所以崩溃栈经常指向无辜代码。</li></ul>
+</section>
+<section id="mem"><h2>3 内存四区与生命周期</h2>
+<div class="tw"><table><thead><tr><th>区域</th><th>存放</th><th>生命周期</th><th>谁管</th></tr></thead><tbody><tr><td>栈 Stack</td><td>局部变量、函数参数、返回地址</td><td>函数进入/退出自动伸缩</td><td>编译器</td></tr><tr><td>堆 Heap</td><td>malloc / new 出来的对象</td><td>手动 free / delete</td><td>程序员</td></tr><tr><td>全局/静态区 .data/.bss</td><td>全局变量、static 变量</td><td>整个进程</td><td>编译器初始化</td></tr><tr><td>常量区 .rodata</td><td>字符串字面量、const 全局</td><td>整个进程</td><td>只读</td></tr><tr><td>代码区 .text</td><td>机器指令</td><td>整个进程</td><td>只读</td></tr></tbody></table></div>
+<div class="codewrap"><div class="codebar"><span class="lang">C</span><button class="copy" type="button">复制</button></div><pre class="code"><code><span class="c-kw">void</span> bad(<span class="c-kw">void</span>) {
+    <span class="c-kw">int</span> *p = (<span class="c-kw">int</span> *)malloc(<span class="c-num">10</span> * <span class="c-kw">sizeof</span>(<span class="c-kw">int</span>));
+    <span class="c-cmt">// 忘记 free：每次调用泄漏 40 字节，跑久了就 OOM</span>
+}
+
+<span class="c-kw">void</span> also_bad(<span class="c-kw">void</span>) {
+    <span class="c-kw">int</span> *p;
+    { <span class="c-kw">int</span> local = <span class="c-num">5</span>; p = &amp;local; }   <span class="c-cmt">// local 已随作用域销毁</span>
+    *p = <span class="c-num">7</span>;                           <span class="c-cmt">// 悬垂指针：写到了别人的栈帧上</span>
+}
+
+<span class="c-kw">void</span> good(<span class="c-kw">void</span>) {
+    <span class="c-kw">int</span> *p = (<span class="c-kw">int</span> *)malloc(<span class="c-num">10</span> * <span class="c-kw">sizeof</span>(<span class="c-kw">int</span>));
+    <span class="c-kw">if</span> (!p) <span class="c-kw">return</span>;                   <span class="c-cmt">// 一定要判空</span>
+    <span class="c-kw">for</span> (<span class="c-kw">int</span> i = <span class="c-num">0</span>; i &lt; <span class="c-num">10</span>; i++) p[i] = i;
+    free(p);
+    p = NULL;                         <span class="c-cmt">// 置空，防止后续误用</span>
+}</code></pre></div>
+<div class="note n-warn"><span class="ni">⚠</span><div><b>坑</b>C 的两大经典崩溃：<strong>内存泄漏</strong>（malloc 没 free）和<strong>悬垂指针</strong>（free 后继续用）。前者表现为越跑越卡最终被杀，后者表现为随机位置崩溃——两者都极难定位，所以「谁分配谁释放」必须成为铁律。</div></div>
+</section>
+<section id="struct"><h2>4 结构体与内存对齐</h2>
+<p>这是 C# 与 C 交互最容易翻车的知识点。编译器为了保证 CPU 访问效率，会在成员之间<strong>自动插入填充字节（padding）</strong>。</p>
+<div class="codewrap"><div class="codebar"><span class="lang">C</span><button class="copy" type="button">复制</button></div><pre class="code"><code>#include &lt;stdio.h&gt;
+
+<span class="c-kw">struct</span> A { <span class="c-kw">char</span> c; <span class="c-kw">int</span> i; };          <span class="c-cmt">// char(1) + padding(3) + int(4)</span>
+<span class="c-kw">struct</span> B { <span class="c-kw">int</span> i; <span class="c-kw">char</span> c; };          <span class="c-cmt">// int(4) + char(1) + padding(3)</span>
+<span class="c-kw">struct</span> C { <span class="c-kw">char</span> a; <span class="c-kw">char</span> b; <span class="c-kw">int</span> i; };  <span class="c-cmt">// char+char + padding(2) + int</span>
+
+#pragma pack(push, <span class="c-num">1</span>)                 <span class="c-cmt">// 强制 1 字节对齐，取消填充</span>
+<span class="c-kw">struct</span> Packed { <span class="c-kw">char</span> c; <span class="c-kw">int</span> i; };     <span class="c-cmt">// 恰好 5 字节</span>
+#pragma pack(pop)
+
+<span class="c-kw">int</span> main(<span class="c-kw">void</span>) {
+    <span class="c-kw">printf</span>(<span class="c-str">&quot;%zu %zu %zu %zu\n&quot;</span>,
+        <span class="c-kw">sizeof</span>(<span class="c-kw">struct</span> A),   <span class="c-cmt">// 8，不是 5</span>
+        <span class="c-kw">sizeof</span>(<span class="c-kw">struct</span> B),   <span class="c-cmt">// 8</span>
+        <span class="c-kw">sizeof</span>(<span class="c-kw">struct</span> C),   <span class="c-cmt">// 8</span>
+        <span class="c-kw">sizeof</span>(<span class="c-kw">struct</span> Packed)); <span class="c-cmt">// 5</span>
+    <span class="c-kw">return</span> <span class="c-num">0</span>;
+}</code></pre></div>
+<ul class="pts"><li><strong>对齐规则</strong>：每个成员相对起始地址的偏移，必须是该成员自身大小的整数倍；结构体总大小必须是最大成员大小的整数倍。</li><li><strong>因此 sizeof 永远 ≥ 成员大小之和</strong>，不能用它来估算「字段加起来多少字节」。</li><li><strong>字段顺序影响大小</strong>：<code>{char, int}</code> 和 <code>{int, char}</code> 都是 8；但 <code>{char, char, int}</code> 是 8，<code>{char, int, char}</code> 却是 12。</li></ul>
+<div class="note n-key"><span class="ni">◆</span><div><b>核心</b>结论：<strong>跨语言传 struct 时，字段顺序、类型宽度、对齐方式三者必须逐字节一致</strong>。少对一项，数据就会错位——而且不会报错，只会安静地算出垃圾值。</div></div>
+</section>
+<section id="gcvsc"><h2>5 malloc/free 与 GC 的本质差别</h2>
+<div class="tw"><table><thead><tr><th>维度</th><th>C（malloc/free）</th><th>C#（GC）</th></tr></thead><tbody><tr><td>谁释放</td><td>程序员显式 free</td><td>垃圾回收器自动</td></tr><tr><td>释放时机</td><td>确定，立即归还</td><td>不确定，等 GC 触发</td></tr><tr><td>碎片</td><td>容易产生外部碎片</td><td>会压缩（部分 GC 实现）</td></tr><tr><td>开销分布</td><td>分配/释放各自付出</td><td>分配便宜，回收时集中停顿</td></tr><tr><td>典型问题</td><td>泄漏、悬垂指针、重复 free</td><td>GC 峰值卡顿、非托管泄漏</td></tr></tbody></table></div>
+<p>Unity 里你其实同时面对两套：<strong>托管堆由 GC 管，Native 侧（纹理、Mesh、NativeArray）要自己 Release</strong>。所以「Unity 内存泄漏」通常是非托管资源没释放，而不是 GC 没跑。</p>
+<div class="note n-tip"><span class="ni">→</span><div><b>建议</b>优化 Unity GC 的核心不是「少 new」这种笼统建议，而是：<strong>消除每帧的堆分配</strong>。用对象池、避免闭包捕获、避免 <code>string +</code> 拼接、用 <code>StringBuilder</code> 或 <code>TMP_Text.SetText</code>。</div></div>
+</section>
+<section id="map"><h2>6 C 与 C# 逐项对照</h2>
+<div class="tw"><table><thead><tr><th>概念</th><th>C</th><th>C#</th></tr></thead><tbody><tr><td>字符串</td><td><code>char*</code> / <code>char[]</code>，以 <code>\0</code> 结尾</td><td><code>string</code>，不可变，长度独立存储</td></tr><tr><td>数组</td><td>裸指针 + 长度自己记</td><td>带长度与边界检查</td></tr><tr><td>结构体</td><td><code>struct</code>，值语义</td><td><code>struct</code>，值语义（但可含方法）</td></tr><tr><td>对象</td><td>无原生对象，靠 struct 组合</td><td><code>class</code>，引用语义，堆分配</td></tr><tr><td>内存释放</td><td><code>free</code> / <code>delete</code></td><td>GC</td></tr><tr><td>指针</td><td><code>int*</code></td><td><code>int*</code> 仅在 <code>unsafe</code> 上下文</td></tr><tr><td>函数指针</td><td><code>int (*fp)(int)</code></td><td><code>delegate</code> / <code>Action</code> / <code>Func</code></td></tr><tr><td>可变参数</td><td><code>va_list</code></td><td><code>params object[]</code></td></tr><tr><td>编译期计算</td><td><code>#define</code> 宏</td><td><code>const</code> / <code>static readonly</code> / 源生成器</td></tr></tbody></table></div>
+<div class="note n-info"><span class="ni">ⓘ</span><div><b>背景</b>最值得注意的差异是<strong>数组</strong>：C 的数组不知道自己的长度（<code>sizeof</code> 只在同作用域内有效），而 C# 数组自带 Length。这也解释了为什么 C 的 API 几乎都要额外传一个 length 参数。</div></div>
+</section>
+<section id="unity"><h2>7 和 Unity 的连接点</h2>
+<p>四个最实际的连接点。每一个都是「不懂 C 就会踩坑」的地方。</p>
+<h3 class="sub-h">① P/Invoke 传 struct</h3>
+<div class="codewrap"><div class="codebar"><span class="lang">C#</span><button class="copy" type="button">复制</button></div><pre class="code"><code>[StructLayout(LayoutKind.Sequential, Pack = <span class="c-num">1</span>)]  <span class="c-cmt">// 必须与 C 侧 #pragma pack 一致</span>
+<span class="c-kw">public</span> <span class="c-kw">struct</span> Payload
+{
+    <span class="c-kw">public</span> <span class="c-kw">byte</span>  type;
+    <span class="c-kw">public</span> <span class="c-kw">int</span>   <span class="c-kw">value</span>;
+    <span class="c-kw">public</span> <span class="c-kw">float</span> weight;
+}
+
+[DllImport(<span class="c-str">&quot;mylib&quot;</span>)]
+<span class="c-kw">static</span> <span class="c-kw">extern</span> <span class="c-kw">void</span> SendPayload(<span class="c-kw">ref</span> Payload p);
+
+<span class="c-cmt">// C 侧必须完全对应：</span>
+<span class="c-cmt">// #pragma pack(push,1)</span>
+<span class="c-cmt">// typedef struct { uint8_t type; int32_t value; float weight; } Payload;</span>
+<span class="c-cmt">// #pragma pack(pop)</span></code></pre></div>
+<h3 class="sub-h">② unsafe + fixed：把托管数组钉住</h3>
+<div class="codewrap"><div class="codebar"><span class="lang">C#</span><button class="copy" type="button">复制</button></div><pre class="code"><code><span class="c-kw">unsafe</span> <span class="c-kw">void</span> Process(<span class="c-kw">byte</span>[] data)
+{
+    <span class="c-cmt">// fixed：告诉 GC 这批内存我要直接操作，别搬走</span>
+    <span class="c-kw">fixed</span> (<span class="c-kw">byte</span>* p = data)
+    {
+        Native.Process(p, data.Length);
+    }
+    <span class="c-cmt">// 离开 fixed 作用域后，GC 才能移动这块内存</span>
+}</code></pre></div>
+<h3 class="sub-h">③ IL2CPP 的影响</h3>
+<ul class="pts"><li>C# 的 IL 被转成 C++ 再编译为原生码，<strong>不是解释执行</strong></li><li>泛型会为每个值类型实例生成独立代码 → 包体增大，需注意 link.xml 保留</li><li>反射受裁剪影响，<code>Assembly.GetTypes()</code> 可能拿不到被裁掉的类型</li><li><code>unsafe</code> 代码在 IL2CPP 下正常运行，Mono 下需开启 Allow &#x27;unsafe&#x27; Code</li></ul>
+<h3 class="sub-h">④ 值类型的内存位置</h3>
+<div class="tw"><table><thead><tr><th>情况</th><th>分配位置</th></tr></thead><tbody><tr><td>局部值类型变量</td><td>线程栈</td></tr><tr><td>class 的字段（值类型）</td><td>内联在托管堆对象里，不额外分配</td></tr><tr><td>数组元素（值类型）</td><td>托管堆上的连续内存</td></tr><tr><td>装箱后</td><td>托管堆上新建对象（热点！避免）</td></tr></tbody></table></div>
+</section>
+<section id="crash"><h2>8 常见崩溃与排查</h2>
+<div class="tw"><table><thead><tr><th>现象</th><th>常见原因</th><th>排查</th></tr></thead><tbody><tr><td>随机位置崩溃、栈无意义</td><td>悬垂指针 / 缓冲区越界写</td><td>ASan、Valgrind；Unity 里开 Addressables 的泄漏检测</td></tr><tr><td>跑久了越来越卡、最终被杀</td><td>内存泄漏</td><td>Profiler 抓 Native 内存曲线，看是否单调上升</td></tr><tr><td>传 struct 后数据全乱</td><td>对齐 / Pack 不一致</td><td>两侧打印 sizeof，逐字段比对偏移</td></tr><tr><td>多线程偶发崩溃</td><td>无锁共享变量</td><td>用原子操作；加锁范围要小</td></tr><tr><td>free 时报 invalid pointer</td><td>重复 free / free 非堆指针</td><td>free 后置 NULL；只释放 malloc 的指针</td></tr></tbody></table></div>
+<div class="note n-warn"><span class="ni">⚠</span><div><b>坑</b>一个隐蔽陷阱：<strong>越界写通常不立即崩溃</strong>。它悄悄破坏了相邻内存，等到那块内存被使用时才炸，而崩溃栈指向的往往是无辜代码。这就是为什么「加一行日志就好了」的现象真实存在——日志改变了内存布局。</div></div>
+</section>
+<section class="quiz" id="quiz">
+<h2>自测 · 4 题</h2>
+<p class="qhint">点选项立即判定，答错会给出原因。</p>
+<div class="qcard" data-q="0" data-a="1" data-why="char 占 1 字节，后面补 3 字节 padding 使 int 对齐到 4 的倍数，int 占 4 字节，总计 8。且总大小必须是最大成员（4）的整数倍，正好满足。"><div class="qt"><span class="qn">1</span>struct A { char c; int i; }; 在默认对齐下 sizeof 是多少？</div><div class="opts"><button class="opt" data-q="0" data-i="0" type="button"><span class="oi">A</span><span>5</span></button><button class="opt" data-q="0" data-i="1" type="button"><span class="oi">B</span><span>8</span></button><button class="opt" data-q="0" data-i="2" type="button"><span class="oi">C</span><span>4</span></button><button class="opt" data-q="0" data-i="3" type="button"><span class="oi">D</span><span>12</span></button></div><div class="qfb"></div></div>
+<div class="qcard" data-q="1" data-a="1" data-why="内存是逐字节映射的。顺序错、宽度错、对齐错，任一不符都会让字段错位，且不会报错，只会算出垃圾值。"><div class="qt"><span class="qn">2</span>C# 与 C 交互传 struct 时，最关键的三项一致性是？</div><div class="opts"><button class="opt" data-q="1" data-i="0" type="button"><span class="oi">A</span><span>变量名、注释、命名空间</span></button><button class="opt" data-q="1" data-i="1" type="button"><span class="oi">B</span><span>字段顺序、类型宽度、对齐方式</span></button><button class="opt" data-q="1" data-i="2" type="button"><span class="oi">C</span><span>文件路径、编码、换行符</span></button><button class="opt" data-q="1" data-i="3" type="button"><span class="oi">D</span><span>方法名、返回类型、访问修饰符</span></button></div><div class="qfb"></div></div>
+<div class="qcard" data-q="2" data-a="2" data-why="指针算术按所指类型宽度走，每次前进 sizeof(int)=4 字节，加 2 即前进 8 字节。这是与 char* 最典型的差异。"><div class="qt"><span class="qn">3</span>C 里 int* p 执行 p + 2，实际前进多少字节（假设 32 位 int）？</div><div class="opts"><button class="opt" data-q="2" data-i="0" type="button"><span class="oi">A</span><span>2</span></button><button class="opt" data-q="2" data-i="1" type="button"><span class="oi">B</span><span>4</span></button><button class="opt" data-q="2" data-i="2" type="button"><span class="oi">C</span><span>8</span></button><button class="opt" data-q="2" data-i="3" type="button"><span class="oi">D</span><span>取决于编译器</span></button></div><div class="qfb"></div></div>
+<div class="qcard" data-q="3" data-a="1" data-why="托管堆由 GC 管理，通常不会真正泄漏（除非有长期强引用）。真正单调上涨的是非托管侧资源——需要显式 Release/Dispose。"><div class="qt"><span class="qn">4</span>Unity 中「内存泄漏」最常见于？</div><div class="opts"><button class="opt" data-q="3" data-i="0" type="button"><span class="oi">A</span><span>C# 托管堆对象没被 GC</span></button><button class="opt" data-q="3" data-i="1" type="button"><span class="oi">B</span><span>非托管资源（纹理 / NativeArray / 原生插件内存）未释放</span></button><button class="opt" data-q="3" data-i="2" type="button"><span class="oi">C</span><span>字符串太多</span></button><button class="opt" data-q="3" data-i="3" type="button"><span class="oi">D</span><span>委托没退订</span></button></div><div class="qfb"></div></div>
+</section>
+</article>
+<nav class="pagenav"><a class="pv" href="m04.html"><span>上一模块</span><b>计费点与标签体系</b></a></nav>
+
+</main>
+</div>
+<script src="assets/app.js"></script>
+</body>
+</html>

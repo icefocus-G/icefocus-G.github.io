@@ -1,0 +1,292 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>广告接入与双区域适配 · 游戏开发补充技术栈</title>
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='14' fill='%230f766e'/%3E%3Cpath d='M20 40h24M20 32h24M20 24h16' stroke='%23fff' stroke-width='4' stroke-linecap='round'/%3E%3C/svg%3E">
+<link rel="stylesheet" href="assets/style.css">
+</head>
+<body data-mid="m03">
+<div id="app">
+<aside id="rail">
+  <a class="brand" href="index.html">
+    <h1><span class="dot"></span>游戏开发补充技术栈</h1>
+    <p>5 模块 · 5 条技术栈 · 场景标注</p>
+  </a>
+  <div class="searchwrap">
+    <input id="q" type="search" placeholder="搜索模块 / 技术栈…" autocomplete="off">
+  </div>
+  <div class="cards">
+<div class="catg">界面层</div>
+<a class="mcard" href="m01.html" data-id="m01" data-text="UI Toolkit 运行时 UI 新体系：UXML + USS + C# 界面层 界面层 · UI 架构"><span class="rd">已读</span><div class="t"><i>🎨</i><span>UI Toolkit</span></div><div class="s">运行时 UI 新体系：UXML + USS + C#</div><div class="bar"><i></i></div></a>
+<div class="catg">AI 与导航</div>
+<a class="mcard" href="m02.html" data-id="m02" data-text="NavMesh 进阶 承接 Unity m09 第 8 章，只讲它没展开的部分 AI 与导航 AI 与空间导航（进阶）"><span class="rd">已读</span><div class="t"><i>🧭</i><span>NavMesh 进阶</span></div><div class="s">承接 Unity m09 第 8 章，只讲它没展开的部分</div><div class="bar"><i></i></div></a>
+<div class="catg">商业化与发行</div>
+<a class="mcard on" href="m03.html" data-id="m03" data-text="广告接入与双区域适配 一套代码出海 + 回国 + 上小游戏 商业化与发行 商业化与发行 · 工程架构"><span class="rd">已读</span><div class="t"><i>📢</i><span>广告接入与双区域适配</span></div><div class="s">一套代码出海 + 回国 + 上小游戏</div><div class="bar"><i></i></div></a>
+<a class="mcard" href="m04.html" data-id="m04" data-text="计费点与标签体系 先定表再写码：IAA / IAP / 埋点 / 回传 商业化与发行 商业化设计 · 数据"><span class="rd">已读</span><div class="t"><i>🎯</i><span>计费点与标签体系</span></div><div class="s">先定表再写码：IAA / IAP / 埋点 / 回传</div><div class="bar"><i></i></div></a>
+<div class="catg">语言底层</div>
+<a class="mcard" href="m05.html" data-id="m05" data-text="C 语言与内存认知 看懂 IL2CPP 与 Native 插件的底层语言 语言底层 语言底层 · 内存模型"><span class="rd">已读</span><div class="t"><i>⚙️</i><span>C 语言与内存认知</span></div><div class="s">看懂 IL2CPP 与 Native 插件的底层语言</div><div class="bar"><i></i></div></a>
+  </div>
+  <div class="railfoot">
+    <div class="pgwrap"><div class="pg"><i></i></div><span id="pgtxt">0 / 5 已读</span></div>
+    <a class="backlink" href="../../examination/index.html">← 课程中心</a>
+  </div>
+</aside>
+<main id="main">
+
+<header class="mhead">
+  <div class="crumb"><a href="index.html">游戏开发补充技术栈</a><span>/</span>商业化与发行</div>
+  <h1><i>📢</i>广告接入与双区域适配</h1>
+  <p class="sub">一套代码出海 + 回国 + 上小游戏</p>
+  <div class="statsrow">
+    <span>3,051 字</span><span>9 段代码</span><span>10 节</span><span>4 道自测</span>
+  </div>
+  <div class="scene">
+    <div class="sc"><div class="sk">技术栈</div><div class="sv">商业化与发行 · 工程架构</div></div>
+    <div class="sc"><div class="sk">🎮 游戏开发部位</div><div class="sv">变现层（激励视频 / 插屏 / 开屏）、版本切分、打包管线、多平台发布</div></div>
+    <div class="sc"><div class="sk">🌐 其他领域用途</div><div class="sv">移动应用广告变现、海外与国内合规分流、多租户/多品牌的构建矩阵</div></div>
+  </div>
+</header>
+<nav class="toc"><div class="toch">本模块目录</div><a href="#dims">1 先分清三个版本维度</a><a href="#asmdef">2 程序集切分：让不该编译的代码根本不参与编译</a><a href="#abstract">3 统一广告抽象层（整个方案的地基）</a><a href="#config">4 广告位配置：不要硬编码 ID</a><a href="#overseas">5 国际版：AdMob + AppLovin MAX</a><a href="#domestic">6 国内版：穿山甲 / 优量汇 + 服务端校验</a><a href="#minigame">7 小游戏版本：微信 / 抖音</a><a href="#pipeline">8 构建管线：一键切版</a><a href="#gradle">9 Android 多渠道</a><a href="#checklist">10 上线检查清单</a><a href="#quiz">自测</a></nav>
+<article>
+<section id="dims"><h2>1 先分清三个版本维度</h2>
+<div class="note n-info"><span class="ni">ⓘ</span><div><b>背景</b><strong>和 Unity-Games 的分工</strong>：Unity-Games 里已经有大量商业化讨论——广告聚合该选 MAX 还是 TopOn、哪些节点做成变现点、皮肤包怎么定价。那些回答的是「<strong>该做什么</strong>」。本篇回答的是「<strong>怎么写</strong>」：SDK 怎么初始化、回调来了怎么分发、两套区域配置怎么在一份代码里共存、打包时怎么切。两篇不重复，接着看。</div></div>
+<p>「国际版 / 国内版」不是一个开关，而是<strong>三个独立维度的叠加</strong>。很多项目一开始只按「区域」分，做到后面发现小游戏和 App 的广告 SDK 根本不是一套 API，只能推倒重来。</p>
+<div class="tw"><table><thead><tr><th>维度</th><th>取值</th><th>影响什么</th></tr></thead><tbody><tr><td>平台形态</td><td>App（iOS / Android）、小游戏（微信 / 抖音）</td><td>广告 SDK 完全不同：App 用原生 SDK，小游戏只能用平台 JS API</td></tr><tr><td>发行区域</td><td>海外、国内</td><td>广告平台、支付通道、隐私合规、审核规则</td></tr><tr><td>内容合规</td><td>GDPR / CCPA / ATT（海外）、版号 / 实名 / 防沉迷（国内）</td><td>初始化顺序、权限弹窗、SDK 采集范围</td></tr></tbody></table></div>
+<div class="note n-key"><span class="ni">◆</span><div><b>核心</b>推荐组合策略：<strong>一个工程 + 多套 asmdef + 一套构建脚本</strong>。不要维护两份工程副本——两份副本三个月后必然分叉，改一个 bug 要改两遍，还经常漏。</div></div>
+</section>
+<section id="asmdef"><h2>2 程序集切分：让不该编译的代码根本不参与编译</h2>
+<p>这是整个方案的地基。用 asmdef 的 <strong>Platform 过滤 + Define Constraints</strong>，让国内版工程里根本不存在 AdMob 的代码——不是「运行时不用」，而是「编译时不存在」。</p>
+<div class="tw"><table><thead><tr><th>程序集</th><th>内容</th><th>约束</th></tr></thead><tbody><tr><td>Game.Ads.Core</td><td>接口、数据模型、工厂</td><td>无平台依赖，全平台编译</td></tr><tr><td>Game.Ads.AdMob</td><td>Google Mobile Ads 实现</td><td>仅 Android / iOS，且 <code>USE_ADMOB</code></td></tr><tr><td>Game.Ads.Max</td><td>AppLovin MAX 聚合实现</td><td>仅 Android / iOS，且 <code>USE_MAX</code></td></tr><tr><td>Game.Ads.Pangle</td><td>穿山甲实现</td><td>仅 Android，且 <code>USE_PANGLE</code></td></tr><tr><td>Game.Ads.GDT</td><td>优量汇实现</td><td>仅 Android，且 <code>USE_GDT</code></td></tr><tr><td>Game.Ads.MiniGame</td><td>微信 / 抖音小游戏实现</td><td>仅 WebGL，且 <code>WECHAT_MINI</code> / <code>DOUYIN_MINI</code></td></tr></tbody></table></div>
+<div class="codewrap"><div class="codebar"><span class="lang">JSON</span><button class="copy" type="button">复制</button></div><pre class="code"><code>// Game.Ads.AdMob.asmdef
+{
+  <span class="c-str">&quot;name&quot;</span>: <span class="c-str">&quot;Game.Ads.AdMob&quot;</span>,
+  <span class="c-str">&quot;references&quot;</span>: [<span class="c-str">&quot;Game.Ads.Core&quot;</span>],
+  <span class="c-str">&quot;includePlatforms&quot;</span>: [<span class="c-str">&quot;Android&quot;</span>, <span class="c-str">&quot;iOS&quot;</span>],
+  <span class="c-str">&quot;defineConstraints&quot;</span>: [<span class="c-str">&quot;USE_ADMOB&quot;</span>],
+  <span class="c-str">&quot;versionDefines&quot;</span>: [
+    { <span class="c-str">&quot;name&quot;</span>: <span class="c-str">&quot;com.google.ads.mobile&quot;</span>, <span class="c-str">&quot;expression&quot;</span>: <span class="c-str">&quot;1.0.0&quot;</span>, <span class="c-str">&quot;define&quot;</span>: <span class="c-str">&quot;HAS_ADMOB&quot;</span> }
+  ]
+}</code></pre></div>
+<div class="note n-warn"><span class="ni">⚠</span><div><b>坑</b><code>defineConstraints</code> 不满足时整个程序集<strong>不参与编译</strong>——这正是我们要的。但注意：如果 Core 里有代码直接 <code>new AdMobProvider()</code>，就会编译失败。所以 Core 只能依赖接口，实例化必须交给工厂。</div></div>
+</section>
+<section id="abstract"><h2>3 统一广告抽象层（整个方案的地基）</h2>
+<p>三个角色，缺一不可：<strong>接口</strong>定义能力、<strong>工厂</strong>决定实例化谁、<strong>门面</strong>收敛调用入口。业务层永远只跟门面说话。</p>
+<div class="codewrap"><div class="codebar"><span class="lang">C#</span><button class="copy" type="button">复制</button></div><pre class="code"><code><span class="c-cmt">// ---- 1) 接口：只暴露业务真正需要的能力 ----</span>
+<span class="c-kw">public</span> <span class="c-kw">interface</span> IAdsProvider
+{
+    <span class="c-kw">void</span> Init(AdsConfig cfg);
+    <span class="c-kw">bool</span> IsReady(AdSlot slot);
+    <span class="c-kw">void</span> Load(AdSlot slot);
+    <span class="c-kw">void</span> Show(AdSlot slot, Action&lt;AdResult&gt; onResult);
+    <span class="c-kw">void</span> SetConsent(<span class="c-kw">bool</span> personalized);
+}
+
+<span class="c-kw">public</span> <span class="c-kw">enum</span> AdResult { Shown, Reward, Closed, Failed, NotReady }
+
+<span class="c-cmt">// ---- 2) 工厂：用宏决定实例化谁 ----</span>
+<span class="c-kw">public</span> <span class="c-kw">static</span> <span class="c-kw">class</span> AdsProviderFactory
+{
+    <span class="c-kw">public</span> <span class="c-kw">static</span> IAdsProvider Create()
+    {
+#<span class="c-kw">if</span> USE_MAX
+        <span class="c-kw">return</span> <span class="c-kw">new</span> MaxProvider();
+#elif USE_ADMOB
+        <span class="c-kw">return</span> <span class="c-kw">new</span> AdMobProvider();
+#elif USE_PANGLE
+        <span class="c-kw">return</span> <span class="c-kw">new</span> PangleProvider();
+#elif USE_GDT
+        <span class="c-kw">return</span> <span class="c-kw">new</span> GdtProvider();
+#elif WECHAT_MINI || DOUYIN_MINI
+        <span class="c-kw">return</span> <span class="c-kw">new</span> MiniGameProvider();
+#<span class="c-kw">else</span>
+        <span class="c-kw">return</span> <span class="c-kw">new</span> NullAdsProvider();   <span class="c-cmt">// 编辑器 / 无广告构建：什么都不做</span>
+#endif
+    }
+}
+
+<span class="c-cmt">// ---- 3) 门面：业务唯一的入口 ----</span>
+<span class="c-kw">public</span> <span class="c-kw">static</span> <span class="c-kw">class</span> Ads
+{
+    <span class="c-kw">static</span> IAdsProvider p;
+    <span class="c-kw">public</span> <span class="c-kw">static</span> <span class="c-kw">void</span> Init(AdsConfig cfg) { p = AdsProviderFactory.Create(); p.Init(cfg); }
+
+    <span class="c-cmt">// 激励视频：拿到 Reward 才发奖</span>
+    <span class="c-kw">public</span> <span class="c-kw">static</span> <span class="c-kw">void</span> ShowReward(<span class="c-kw">string</span> slotId, Action&lt;<span class="c-kw">bool</span>&gt; onRewarded)
+        =&gt; p.Show(slotId, r =&gt; onRewarded(r == AdResult.Reward));
+}</code></pre></div>
+<div class="note n-key"><span class="ni">◆</span><div><b>核心</b><code>NullAdsProvider</code> 不是凑数——它让「编辑器里没接 SDK」也能正常跑通全部业务流程。没有它，团队一半人会卡在「我本地跑不起来」。</div></div>
+</section>
+<section id="config"><h2>4 广告位配置：不要硬编码 ID</h2>
+<p>广告位 ID 一定会变（换账号、换平台、A/B 测试）。硬编码在代码里，每次改都要重新出包审核。用配置表按区域分档。</p>
+<div class="codewrap"><div class="codebar"><span class="lang">JSON</span><button class="copy" type="button">复制</button></div><pre class="code"><code>{
+  <span class="c-str">&quot;region&quot;</span>: <span class="c-str">&quot;overseas&quot;</span>,
+  <span class="c-str">&quot;slots&quot;</span>: {
+    <span class="c-str">&quot;reward_double_coin&quot;</span>: {
+      <span class="c-str">&quot;type&quot;</span>: <span class="c-str">&quot;rewarded&quot;</span>,
+      <span class="c-str">&quot;providers&quot;</span>: {
+        <span class="c-str">&quot;max&quot;</span>:    <span class="c-str">&quot;a1b2c3d4e5&quot;</span>,
+        <span class="c-str">&quot;admob&quot;</span>:  <span class="c-str">&quot;ca-app-pub-xxx/yyy&quot;</span>
+      },
+      <span class="c-str">&quot;cooldownSec&quot;</span>: <span class="c-num">30</span>,
+      <span class="c-str">&quot;dailyCap&quot;</span>: <span class="c-num">20</span>
+    },
+    <span class="c-str">&quot;inter_level_end&quot;</span>: {
+      <span class="c-str">&quot;type&quot;</span>: <span class="c-str">&quot;interstitial&quot;</span>,
+      <span class="c-str">&quot;providers&quot;</span>: { <span class="c-str">&quot;max&quot;</span>: <span class="c-str">&quot;f6g7h8i9j0&quot;</span> },
+      <span class="c-str">&quot;minIntervalSec&quot;</span>: <span class="c-num">60</span>
+    },
+    <span class="c-str">&quot;banner_menu&quot;</span>: { <span class="c-str">&quot;type&quot;</span>: <span class="c-str">&quot;banner&quot;</span>, <span class="c-str">&quot;providers&quot;</span>: { <span class="c-str">&quot;max&quot;</span>: <span class="c-str">&quot;k1l2m3n4&quot;</span> } }
+  }
+}</code></pre></div>
+<ul class="pts"><li><strong>按 region 分文件</strong>：<code>ads_overseas.json</code> / <code>ads_cn.json</code>，构建时按宏挑一份打进包</li><li><strong>slot 用业务语义命名</strong>：<code>reward_double_coin</code> 比 <code>reward_01</code> 好维护一百倍</li><li><strong>频控参数也进配置</strong>：冷却、每日上限都在表里，改策略不用发版</li></ul>
+</section>
+<section id="overseas"><h2>5 国际版：AdMob + AppLovin MAX</h2>
+<p>国际版通常用 <strong>MAX 做聚合</strong>、AdMob 做兜底。聚合的价值是自动比价——同一个广告位同时问几家，谁出价高给谁。</p>
+<div class="note n-warn"><span class="ni">⚠</span><div><b>坑</b><strong>两条选型级的硬事实，官方文档里写着但很容易漏。</strong> ① <strong>Unity Ads 明确不可用于中国大陆安卓流量</strong>（官方帮助中心原话是「中国大陆安卓流量不要使用 UnityAds 进行广告创收」）——这正说明区域分流不是过度设计，而是必须做的事，同一套广告栈在两地根本不能通用。② <strong>聚合主 SDK 与各家 Adapter 的版本必须同步升级</strong>。比如 MAX 从 11.x 升到 12.x 而 Adapter 没跟着升，广告请求能发出去，回传却会静默失败：日志里没有 error、只有一堆 warn，后台表现是填充率莫名掉一半。这种问题排查极费时间，升级时把主 SDK 和全部 Adapter 一起升，别自己组合版本。</div></div>
+<div class="tw"><table><thead><tr><th>平台</th><th>定位</th><th>特点</th></tr></thead><tbody><tr><td>AppLovin MAX</td><td>聚合（Mediation）</td><td>接多家广告源，自动比价；内置 A/B 与远程配置</td></tr><tr><td>Google AdMob</td><td>单一广告源 / 也可聚合</td><td>填充率稳，eCPM 中等；与 Firebase 打通</td></tr></tbody></table></div>
+<div class="codewrap"><div class="codebar"><span class="lang">C#</span><button class="copy" type="button">复制</button></div><pre class="code"><code><span class="c-cmt">// 合规顺序极重要：先拿同意，再初始化 SDK</span>
+<span class="c-kw">public</span> <span class="c-kw">class</span> MaxProvider : IAdsProvider
+{
+    <span class="c-kw">public</span> <span class="c-kw">void</span> Init(AdsConfig cfg)
+    {
+        <span class="c-cmt">// 1) GDPR：向用户征询（欧洲）</span>
+        MaxSdk.SetHasUserConsent(cfg.GdprConsent);
+        <span class="c-cmt">// 2) CCPA：美国加州「不要出售我的信息」</span>
+        MaxSdk.SetDoNotSell(!cfg.CcpaOptIn);
+        <span class="c-cmt">// 3) ATT（iOS 14.5+）：必须在 SDK 初始化之前弹</span>
+        <span class="c-cmt">//    App Tracking Transparency 授权，否则 IDFA 拿不到，eCPM 直接腰斩</span>
+        MaxSdk.SetConsentFlowEnabled(<span class="c-kw">true</span>);
+
+        MaxSdkCallbacks.OnSdkInitializedEvent += _ =&gt;
+        {
+            MaxSdkCallbacks.Rewarded.OnAdLoadedEvent += (id, info) =&gt; cache[id] = AdResult.Shown;
+            <span class="c-kw">foreach</span> (<span class="c-kw">var</span> s <span class="c-kw">in</span> cfg.RewardedSlots) MaxSdk.LoadRewardedAd(s);
+            <span class="c-kw">foreach</span> (<span class="c-kw">var</span> s <span class="c-kw">in</span> cfg.InterstitialSlots) MaxSdk.LoadInterstitial(s);
+        };
+        MaxSdk.InitializeSdk();
+    }
+}</code></pre></div>
+<div class="note n-warn"><span class="ni">⚠</span><div><b>坑</b><strong>ATT 顺序错了 eCPM 会腰斩</strong>：iOS 上如果先初始化广告 SDK 再弹 ATT，SDK 会在无 IDFA 状态下完成初始化，后续即便用户同意也拿不到设备标识。这个顺序必须写进代码注释，否则新人重构时会调回来。</div></div>
+</section>
+<section id="domestic"><h2>6 国内版：穿山甲 / 优量汇 + 服务端校验</h2>
+<div class="tw"><table><thead><tr><th>平台</th><th>归属</th><th>备注</th></tr></thead><tbody><tr><td>穿山甲（Pangle）</td><td>字节跳动</td><td>国内 eCPM 较高，激励视频强</td></tr><tr><td>优量汇（GDT）</td><td>腾讯</td><td>填充稳定</td></tr><tr><td>GroMore</td><td>穿山甲系聚合</td><td>国内做聚合的主流选择</td></tr></tbody></table></div>
+<div class="codewrap"><div class="codebar"><span class="lang">C#</span><button class="copy" type="button">复制</button></div><pre class="code"><code><span class="c-cmt">// 国内 Android 必须在初始化前完成隐私合规声明</span>
+<span class="c-kw">public</span> <span class="c-kw">class</span> PangleProvider : IAdsProvider
+{
+    <span class="c-kw">public</span> <span class="c-kw">void</span> Init(AdsConfig cfg)
+    {
+        <span class="c-kw">var</span> ctx = UnityPlayer.currentActivity;
+        <span class="c-cmt">// 1) 用户是否同意隐私政策（不同意就不能初始化）</span>
+        TTAdSdk.Init(<span class="c-kw">new</span> TTAdConfig.Builder()
+            .AppId(cfg.PangleAppId)
+            .AppName(cfg.AppName)
+            .UseMediation(<span class="c-kw">true</span>)
+            .SetPrivacyCompliance(<span class="c-kw">new</span> TTAdPrivacyComplianceConfig.Builder()
+                .SetLimitPersonalAd(!cfg.PersonalizedAds)   <span class="c-cmt">// 个性化广告开关</span>
+                .Build())
+            .Build(), _ =&gt; { <span class="c-cmt">/* 初始化完成后再 Load */</span> });
+    }
+}</code></pre></div>
+<p>国内做激励视频，<strong>服务端校验（SSV）不是可选项</strong>。客户端回调可以被篡改，发奖逻辑必须由自己的服务器向广告平台核验后再下发。</p>
+<div class="codewrap"><div class="codebar"><span class="lang">流程</span><button class="copy" type="button">复制</button></div><pre class="code"><code>客户端：Show 时带上透传参数（订单号 + 用户 ID）
+   ↓
+广告平台：用户看完 → 平台服务器回调你的 /ad/reward?token=...
+   ↓
+你的服务器：验签 → 幂等检查（同一 token 只发一次）→ 发货
+   ↓
+客户端：轮询 / 长连接拿到发货结果 → 刷新 UI</code></pre></div>
+<div class="note n-key"><span class="ni">◆</span><div><b>核心</b>判断标准很简单：<strong>奖励有真实价值（金币、复活、抽卡）就必须走 SSV</strong>。纯展示类（插屏、Banner）不需要。</div></div>
+</section>
+<section id="minigame"><h2>7 小游戏版本：微信 / 抖音</h2>
+<p>小游戏跑在 WebGL 上，<strong>不能接入原生广告 SDK</strong>。只能用平台提供的 JS API，通过 jslib 桥接进 Unity。</p>
+<div class="tw"><table><thead><tr><th>平台</th><th>广告 API</th><th>特点</th></tr></thead><tbody><tr><td>微信小游戏</td><td>wx.createRewardedVideoAd / createInterstitialAd</td><td>需在后台开通流量主，有资质门槛</td></tr><tr><td>抖音小游戏</td><td>tt.createRewardedVideoAd</td><td>同理，走抖音开放平台</td></tr></tbody></table></div>
+<div class="codewrap"><div class="codebar"><span class="lang">JS</span><button class="copy" type="button">复制</button></div><pre class="code"><code><span class="c-cmt">// Plugins/WeChatAds.jslib —— Unity 侧调到这里</span>
+mergeInto(LibraryManager.library, {
+  ShowRewardAd: <span class="c-kw">function</span> (slotPtr, cbPtr) {
+    <span class="c-kw">var</span> slot = UTF8ToString(slotPtr);
+    <span class="c-kw">var</span> ad = wx.createRewardedVideoAd({ adUnitId: slot });
+    ad.onClose(<span class="c-kw">function</span> (res) {
+      <span class="c-kw">var</span> ok = res &amp;&amp; res.isEnded;         <span class="c-cmt">// isEnded 才是「看完」</span>
+      dynCall(&#x27;vii&#x27;, cbPtr, [ok ? <span class="c-num">1</span> : <span class="c-num">0</span>]);
+    });
+    ad.show().<span class="c-kw">catch</span>(<span class="c-kw">function</span> () {
+      ad.load().<span class="c-kw">then</span>(<span class="c-kw">function</span> () { ad.show(); }).<span class="c-kw">catch</span>(<span class="c-kw">function</span> () {
+        dynCall(&#x27;vii&#x27;, cbPtr, [<span class="c-num">0</span>]);
+      });
+    });
+  }
+});</code></pre></div>
+<div class="note n-warn"><span class="ni">⚠</span><div><b>坑</b>微信的 <code>res.isEnded</code> 才是有效观看的判据。很多实现只判断 <code>onClose</code> 被调用就发奖，导致用户点右上角关闭也能领奖——这是最常见的漏损点。</div></div>
+</section>
+<section id="pipeline"><h2>8 构建管线：一键切版</h2>
+<p>手工切 define symbols 一定会出错。写成 Editor 脚本，让「切国际版 / 切国内版 / 切小游戏」变成菜单里的一次点击，也是 CI 的唯一入口。</p>
+<div class="codewrap"><div class="codebar"><span class="lang">C#</span><button class="copy" type="button">复制</button></div><pre class="code"><code><span class="c-kw">public</span> <span class="c-kw">enum</span> BuildTarget2 { Overseas, Domestic, WeChat, Douyin }
+
+<span class="c-kw">public</span> <span class="c-kw">static</span> <span class="c-kw">class</span> BuildSwitcher
+{
+    <span class="c-kw">static</span> <span class="c-kw">readonly</span> Dictionary&lt;BuildTarget2, <span class="c-kw">string</span>[]&gt; Defines = <span class="c-kw">new</span>()
+    {
+        [BuildTarget2.Overseas] = <span class="c-kw">new</span>[] { <span class="c-str">&quot;USE_MAX&quot;</span>, <span class="c-str">&quot;USE_ADMOB&quot;</span> },
+        [BuildTarget2.Domestic] = <span class="c-kw">new</span>[] { <span class="c-str">&quot;USE_PANGLE&quot;</span>, <span class="c-str">&quot;USE_GDT&quot;</span> },
+        [BuildTarget2.WeChat]   = <span class="c-kw">new</span>[] { <span class="c-str">&quot;WECHAT_MINI&quot;</span> },
+        [BuildTarget2.Douyin]   = <span class="c-kw">new</span>[] { <span class="c-str">&quot;DOUYIN_MINI&quot;</span> },
+    };
+
+    [MenuItem(<span class="c-str">&quot;Build/切到国际版&quot;</span>)]
+    <span class="c-kw">static</span> <span class="c-kw">void</span> ToOverseas() =&gt; Apply(BuildTarget2.Overseas, <span class="c-str">&quot;com.company.game&quot;</span>, <span class="c-str">&quot;ads_overseas&quot;</span>);
+
+    <span class="c-kw">static</span> <span class="c-kw">void</span> Apply(BuildTarget2 t, <span class="c-kw">string</span> bundleId, <span class="c-kw">string</span> cfgName)
+    {
+        <span class="c-kw">var</span> g = BuildTargetGroup.Android;
+        <span class="c-cmt">// 清掉所有广告相关宏，再设当前这套——避免残留</span>
+        <span class="c-kw">var</span> all = Defines.Values.SelectMany(x =&gt; x).ToArray();
+        <span class="c-kw">var</span> cur = PlayerSettings.GetScriptingDefineSymbolsForGroup(g)
+                    .Split(&#x27;;&#x27;).Where(s =&gt; s.Length &gt; <span class="c-num">0</span> &amp;&amp; !all.Contains(s)).ToList();
+        cur.AddRange(Defines[t].SelectMany(x =&gt; x.Split(&#x27;,&#x27;)));
+        PlayerSettings.SetScriptingDefineSymbolsForGroup(g, <span class="c-kw">string</span>.Join(<span class="c-str">&quot;;&quot;</span>, cur));
+
+        PlayerSettings.SetApplicationIdentifier(g, bundleId);
+        <span class="c-cmt">// 再拷贝对应的 ads 配置到 Resources</span>
+        AssetDatabase.CopyAsset($<span class="c-str">&quot;Assets/AdsConfig/{cfgName}.json&quot;</span>, <span class="c-str">&quot;Assets/Resources/ads.json&quot;</span>);
+    }
+}</code></pre></div>
+<div class="note n-tip"><span class="ni">→</span><div><b>建议</b>CI 里可以直接走 <code>-executeMethod BuildSwitcher.ToOverseas</code>，配合 <code>-quit -batchmode</code>，一条命令出对应版本的包。</div></div>
+</section>
+<section id="gradle"><h2>9 Android 多渠道</h2>
+<p>国内安卓要上多个应用商店，每个渠道的广告 ID、推送 SDK、统计都有差异。用 Gradle 的 productFlavors 而不是打多个包。</p>
+<div class="codewrap"><div class="codebar"><span class="lang">Gradle</span><button class="copy" type="button">复制</button></div><pre class="code"><code><span class="c-kw">android</span> {
+  <span class="c-kw">flavorDimensions</span> <span class="c-str">&quot;channel&quot;</span>
+  <span class="c-kw">productFlavors</span> {
+    tencent { <span class="c-kw">dimension</span> <span class="c-str">&quot;channel&quot;</span>; <span class="c-kw">applicationIdSuffix</span> <span class="c-str">&quot;&quot;</span> }
+    huawei  { <span class="c-kw">dimension</span> <span class="c-str">&quot;channel&quot;</span>; <span class="c-kw">applicationIdSuffix</span> <span class="c-str">&quot;&quot;</span> }
+    xiaomi  { <span class="c-kw">dimension</span> <span class="c-str">&quot;channel&quot;</span>; <span class="c-kw">applicationIdSuffix</span> <span class="c-str">&quot;&quot;</span> }
+  }
+  <span class="c-kw">sourceSets</span> {
+    tencent { res.srcDirs += &#x27;src/tencent/res&#x27; }
+    huawei  { res.srcDirs += &#x27;src/huawei/res&#x27; }
+  }
+}</code></pre></div>
+<div class="note n-warn"><span class="ni">⚠</span><div><b>坑</b>渠道号不要从应用商店后台手填——容易填错且不可查。用 <code>applicationIdSuffix</code> 或构建时注入 manifestPlaceholders，让渠道号<strong>从构建配置派生</strong>。</div></div>
+</section>
+<section id="checklist"><h2>10 上线检查清单</h2>
+<div class="tw"><table><thead><tr><th>项</th><th>国际版</th><th>国内版</th></tr></thead><tbody><tr><td>隐私政策弹窗</td><td>首次启动，拒绝则不初始化 SDK</td><td>同上，且必须先于任何 SDK</td></tr><tr><td>ATT（iOS）</td><td>初始化 SDK 前弹</td><td>—</td></tr><tr><td>GDPR / CCPA</td><td>按地区下发同意流</td><td>—</td></tr><tr><td>广告位配置</td><td>走 overseas 表</td><td>走 cn 表</td></tr><tr><td>激励视频校验</td><td>MAX 的 SSV</td><td>穿山甲 SSV（必做）</td></tr><tr><td>包名 / 签名</td><td>海外包名，正式签名</td><td>每渠道独立包名</td></tr><tr><td>测试</td><td>用测试设备 ID，别点自己的真实广告</td><td>同左（防作弊封号）</td></tr><tr><td>合规材料</td><td>隐私政策 URL、数据安全表</td><td>版号、软著、隐私政策、实名与防沉迷</td></tr></tbody></table></div>
+<div class="note n-warn"><span class="ni">⚠</span><div><b>坑</b>最后一条最容易翻车：<strong>开发期反复点自己的广告会被平台判定为无效流量</strong>，轻则扣量，重则封号。所有测试必须用平台的测试设备白名单。</div></div>
+</section>
+<section class="quiz" id="quiz">
+<h2>自测 · 4 题</h2>
+<p class="qhint">点选项立即判定，答错会给出原因。</p>
+<div class="qcard" data-q="0" data-a="1" data-why="国内上架不允许集成未经声明的海外采集类 SDK，且不参与编译能彻底避免遗漏调用与包体膨胀。这是 asmdef defineConstraints 的核心价值。"><div class="qt"><span class="qn">1</span>为什么国内版工程里不应该存在 AdMob 的代码？</div><div class="opts"><button class="opt" data-q="0" data-i="0" type="button"><span class="oi">A</span><span>包体会变大</span></button><button class="opt" data-q="0" data-i="1" type="button"><span class="oi">B</span><span>避免合规风险与编译依赖，用 asmdef 的 defineConstraints 让它不参与编译</span></button><button class="opt" data-q="0" data-i="2" type="button"><span class="oi">C</span><span>AdMob 不支持 Android</span></button><button class="opt" data-q="0" data-i="3" type="button"><span class="oi">D</span><span>只是代码整洁问题</span></button></div><div class="qfb"></div></div>
+<div class="qcard" data-q="1" data-a="1" data-why="SDK 初始化时就会读取设备标识并缓存。顺序颠倒会导致后续无法补取，是新手最常踩的 eCPM 杀手。"><div class="qt"><span class="qn">2</span>iOS 上 ATT 授权为什么必须在广告 SDK 初始化之前？</div><div class="opts"><button class="opt" data-q="1" data-i="0" type="button"><span class="oi">A</span><span>系统强制要求</span></button><button class="opt" data-q="1" data-i="1" type="button"><span class="oi">B</span><span>否则 SDK 会在无 IDFA 状态下完成初始化，后续即便同意也拿不到设备标识，eCPM 大幅下降</span></button><button class="opt" data-q="1" data-i="2" type="button"><span class="oi">C</span><span>为了加快启动速度</span></button><button class="opt" data-q="1" data-i="3" type="button"><span class="oi">D</span><span>ATT 与广告无关</span></button></div><div class="qfb"></div></div>
+<div class="qcard" data-q="2" data-a="1" data-why="用户点右上角关闭也会触发 onClose，但不是有效观看。必须检查 res.isEnded，否则会出现大量未看完也发奖的漏损。"><div class="qt"><span class="qn">3</span>微信小游戏激励视频，判断「用户真的看完了」的依据是？</div><div class="opts"><button class="opt" data-q="2" data-i="0" type="button"><span class="oi">A</span><span>onClose 被调用</span></button><button class="opt" data-q="2" data-i="1" type="button"><span class="oi">B</span><span>res.isEnded === true</span></button><button class="opt" data-q="2" data-i="2" type="button"><span class="oi">C</span><span>广告时长达到 30 秒</span></button><button class="opt" data-q="2" data-i="3" type="button"><span class="oi">D</span><span>onLoad 成功</span></button></div><div class="qfb"></div></div>
+<div class="qcard" data-q="3" data-a="1" data-why="客户端回调可被篡改或伪造。只要奖励有真实价值，就必须由自己的服务端向广告平台验签并幂等发货。"><div class="qt"><span class="qn">4</span>业务层拿到激励视频奖励的唯一可信来源是？</div><div class="opts"><button class="opt" data-q="3" data-i="0" type="button"><span class="oi">A</span><span>客户端 Show 回调返回 Reward</span></button><button class="opt" data-q="3" data-i="1" type="button"><span class="oi">B</span><span>服务端校验（SSV）通过后的发货通知</span></button><button class="opt" data-q="3" data-i="2" type="button"><span class="oi">C</span><span>广告 SDK 日志</span></button><button class="opt" data-q="3" data-i="3" type="button"><span class="oi">D</span><span>本地缓存的观看计数</span></button></div><div class="qfb"></div></div>
+</section>
+</article>
+<nav class="pagenav"><a class="pv" href="m02.html"><span>上一模块</span><b>NavMesh 进阶</b></a><a class="nx" href="m04.html"><span>下一模块</span><b>计费点与标签体系</b></a></nav>
+
+</main>
+</div>
+<script src="assets/app.js"></script>
+</body>
+</html>

@@ -1,0 +1,228 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>UI Toolkit · 游戏开发补充技术栈</title>
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='14' fill='%230f766e'/%3E%3Cpath d='M20 40h24M20 32h24M20 24h16' stroke='%23fff' stroke-width='4' stroke-linecap='round'/%3E%3C/svg%3E">
+<link rel="stylesheet" href="assets/style.css">
+</head>
+<body data-mid="m01">
+<div id="app">
+<aside id="rail">
+  <a class="brand" href="index.html">
+    <h1><span class="dot"></span>游戏开发补充技术栈</h1>
+    <p>5 模块 · 5 条技术栈 · 场景标注</p>
+  </a>
+  <div class="searchwrap">
+    <input id="q" type="search" placeholder="搜索模块 / 技术栈…" autocomplete="off">
+  </div>
+  <div class="cards">
+<div class="catg">界面层</div>
+<a class="mcard on" href="m01.html" data-id="m01" data-text="UI Toolkit 运行时 UI 新体系：UXML + USS + C# 界面层 界面层 · UI 架构"><span class="rd">已读</span><div class="t"><i>🎨</i><span>UI Toolkit</span></div><div class="s">运行时 UI 新体系：UXML + USS + C#</div><div class="bar"><i></i></div></a>
+<div class="catg">AI 与导航</div>
+<a class="mcard" href="m02.html" data-id="m02" data-text="NavMesh 进阶 承接 Unity m09 第 8 章，只讲它没展开的部分 AI 与导航 AI 与空间导航（进阶）"><span class="rd">已读</span><div class="t"><i>🧭</i><span>NavMesh 进阶</span></div><div class="s">承接 Unity m09 第 8 章，只讲它没展开的部分</div><div class="bar"><i></i></div></a>
+<div class="catg">商业化与发行</div>
+<a class="mcard" href="m03.html" data-id="m03" data-text="广告接入与双区域适配 一套代码出海 + 回国 + 上小游戏 商业化与发行 商业化与发行 · 工程架构"><span class="rd">已读</span><div class="t"><i>📢</i><span>广告接入与双区域适配</span></div><div class="s">一套代码出海 + 回国 + 上小游戏</div><div class="bar"><i></i></div></a>
+<a class="mcard" href="m04.html" data-id="m04" data-text="计费点与标签体系 先定表再写码：IAA / IAP / 埋点 / 回传 商业化与发行 商业化设计 · 数据"><span class="rd">已读</span><div class="t"><i>🎯</i><span>计费点与标签体系</span></div><div class="s">先定表再写码：IAA / IAP / 埋点 / 回传</div><div class="bar"><i></i></div></a>
+<div class="catg">语言底层</div>
+<a class="mcard" href="m05.html" data-id="m05" data-text="C 语言与内存认知 看懂 IL2CPP 与 Native 插件的底层语言 语言底层 语言底层 · 内存模型"><span class="rd">已读</span><div class="t"><i>⚙️</i><span>C 语言与内存认知</span></div><div class="s">看懂 IL2CPP 与 Native 插件的底层语言</div><div class="bar"><i></i></div></a>
+  </div>
+  <div class="railfoot">
+    <div class="pgwrap"><div class="pg"><i></i></div><span id="pgtxt">0 / 5 已读</span></div>
+    <a class="backlink" href="../../examination/index.html">← 课程中心</a>
+  </div>
+</aside>
+<main id="main">
+
+<header class="mhead">
+  <div class="crumb"><a href="index.html">游戏开发补充技术栈</a><span>/</span>界面层</div>
+  <h1><i>🎨</i>UI Toolkit</h1>
+  <p class="sub">运行时 UI 新体系：UXML + USS + C#</p>
+  <div class="statsrow">
+    <span>3,892 字</span><span>6 段代码</span><span>11 节</span><span>4 道自测</span>
+  </div>
+  <div class="scene">
+    <div class="sc"><div class="sk">技术栈</div><div class="sv">界面层 · UI 架构</div></div>
+    <div class="sc"><div class="sk">🎮 游戏开发部位</div><div class="sv">HUD（血条 / 体力 / 弹药）、背包网格、主菜单与设置、技能栏、对话系统</div></div>
+    <div class="sc"><div class="sk">🌐 其他领域用途</div><div class="sv">编辑器扩展与工具窗口、数据密集的桌面应用、需要样式热重载的后台系统</div></div>
+  </div>
+</header>
+<nav class="toc"><div class="toch">本模块目录</div><a href="#why">1 先摆正位置：运行时官方仍推荐 UGUI</a><a href="#tri">2 三件套：UXML / USS / C#</a><a href="#uxml">3 UXML 结构与常用控件</a><a href="#uss">4 USS：背下这 8 个属性就够用</a><a href="#cs">5 C# 驱动：查询、事件、动态创建</a><a href="#bind">6 数据绑定：两种，别混用</a><a href="#case1">7 实战一：血量条（三件套齐全）</a><a href="#case2">8 实战二：背包列表（ListView 虚拟化）</a><a href="#case3">9 实战三：设置面板（Toggle + Slider）</a><a href="#landing">10 落地模式：什么场景配什么做法</a><a href="#pitfalls">11 坑与最佳实践</a><a href="#quiz">自测</a></nav>
+<article>
+<section id="why"><h2>1 先摆正位置：运行时官方仍推荐 UGUI</h2>
+<div class="note n-warn"><span class="ni">⚠</span><div><b>坑</b><strong>先说清楚一件事，免得学错方向。</strong> 截至 Unity 6.3 / 6.5，官方 UI 系统对比文档里写的仍然是：<strong>运行时推荐 uGUI，UI Toolkit 是「alternative（替代方案）」；编辑器推荐 UI Toolkit</strong>。所以 UI Toolkit 不是「UGUI 的接班人」，现在也不是运行时的默认选择。学它是为了在数据密集的场景用对工具，不是为了全面替换 uGUI。</div></div>
+<p>Unity 里同时存在三套 UI 方案。最容易犯的错，是<strong>用 UGUI 的思维去写 UI Toolkit</strong>——把每个元素都当 RectTransform，然后发现布局怎么都对不上。</p>
+<div class="tw"><table><thead><tr><th>维度</th><th>UGUI（Canvas）</th><th>IMGUI（OnGUI）</th><th>UI Toolkit</th></tr></thead><tbody><tr><td>渲染</td><td>场景内 Canvas，走 UI 合批</td><td>立即模式，每帧重绘</td><td>保留模式，独立渲染管线</td></tr><tr><td>布局</td><td>RectTransform + 手动锚点</td><td>代码里算坐标</td><td>Flexbox（USS），像写网页</td></tr><tr><td>样式</td><td>Inspector 逐项调</td><td>GUIStyle</td><td>USS 类 CSS，可热重载</td></tr><tr><td>列表</td><td>自己写复用池</td><td>自己算</td><td>ListView 自带虚拟化</td></tr><tr><td>擅长</td><td>游戏内 HUD、世界空间 UI</td><td>编辑器工具、快速调试</td><td>数据密集界面、复杂列表、编辑器扩展</td></tr><tr><td>运行时</td><td>全版本</td><td>全版本</td><td>2021.2+</td></tr></tbody></table></div>
+<p><strong>它现在还缺什么</strong>，这张表比「它有什么」更能帮你做选型。以下是官方对比文档里明确标为不支持的：</p>
+<div class="tw"><table><thead><tr><th>能力</th><th>UI Toolkit</th><th>UGUI</th><th>影响</th></tr></thead><tbody><tr><td>与 Animation Clip / Timeline 集成</td><td>不支持</td><td>支持</td><td>需要时间轴编排出场的 UI 动画，只能留在 UGUI</td></tr><tr><td>序列化事件（Inspector 里连回调）</td><td>不支持</td><td>支持</td><td>只能在代码里注册，策划改不了</td></tr><tr><td>场景内可视化编辑（In-scene authoring）</td><td>不支持</td><td>支持</td><td>必须在 UI Builder 里编辑资源文件</td></tr></tbody></table></div>
+<div class="note n-key"><span class="ni">◆</span><div><b>核心</b>判断标准：界面元素超过 50 个、需要滚动列表、需要主题切换 → 选 UI Toolkit；<strong>需要世界空间跟随 3D 物体、需要粒子/Shader 叠在 UI 上、需要 Timeline 编排 → 还是 UGUI</strong>。两者可以在同一个项目里共存，实际项目里混合使用才是常态。</div></div>
+</section>
+<section id="tri"><h2>2 三件套：UXML / USS / C#</h2>
+<p>UI Toolkit 的界面由三种文件协作，和网页的 HTML / CSS / JS 一一对应。理解这个映射关系，学习成本会立刻降一半。</p>
+<div class="tw"><table><thead><tr><th>网页</th><th>UI Toolkit</th><th>职责</th></tr></thead><tbody><tr><td>HTML</td><td>UXML（.uxml）</td><td>元素结构与层级</td></tr><tr><td>CSS</td><td>USS（.uss）</td><td>外观与布局</td></tr><tr><td>JavaScript</td><td>C#</td><td>行为、数据、事件</td></tr></tbody></table></div>
+<div class="codewrap"><div class="codebar"><span class="lang">UXML</span><button class="copy" type="button">复制</button></div><pre class="code"><code>&lt;!-- HealthBar.uxml：容器 + 底槽 + 填充 + 文字 --&gt;
+&lt;ui:UXML xmlns:ui=&quot;UnityEngine.UIElements&quot;&gt;
+  &lt;ui:VisualElement name=&quot;hp-root&quot; class=&quot;hp-root&quot;&gt;
+    &lt;ui:VisualElement name=&quot;hp-fill&quot; class=&quot;hp-fill&quot;/&gt;
+    &lt;ui:Label name=&quot;hp-text&quot; text=&quot;100 / 100&quot; class=&quot;hp-text&quot;/&gt;
+  &lt;/ui:VisualElement&gt;
+&lt;/ui:UXML&gt;</code></pre></div>
+<div class="note n-tip"><span class="ni">→</span><div><b>建议</b>UXML 是资源文件，运行时用 VisualTreeAsset 实例化。也可以纯 C# 建树（new VisualElement()），但结构一复杂就没法维护——除非是动态生成的格子，否则不要纯代码建树。</div></div>
+</section>
+<section id="uxml"><h2>3 UXML 结构与常用控件</h2>
+<p>所有控件都继承自 <strong>VisualElement</strong>。容器本身也是 VisualElement，靠 flex 布局嵌套——没有「容器控件」这种特殊类型。</p>
+<div class="tw"><table><thead><tr><th>控件</th><th>用途</th><th>关键点</th></tr></thead><tbody><tr><td>VisualElement</td><td>通用容器</td><td>默认 display:flex，铺满父级</td></tr><tr><td>Label</td><td>文本</td><td>支持富文本标签</td></tr><tr><td>Button</td><td>按钮</td><td>clicked 事件</td></tr><tr><td>TextField</td><td>输入框</td><td>注意移动端软键盘遮挡</td></tr><tr><td>Toggle</td><td>开关</td><td>值变化用 ChangeEvent&lt;bool&gt;</td></tr><tr><td>Slider / SliderInt</td><td>滑条</td><td>ChangeEvent&lt;float&gt;</td></tr><tr><td>ScrollView</td><td>滚动容器</td><td>内容多时优于普通容器</td></tr><tr><td>ListView</td><td>虚拟化列表</td><td>只渲染可见行，背包必备</td></tr><tr><td>Foldout</td><td>折叠组</td><td>设置面板分组</td></tr><tr><td>ProgressBar</td><td>进度条</td><td>血条/经验条可直接用</td></tr></tbody></table></div>
+<div class="note n-info"><span class="ni">ⓘ</span><div><b>背景</b>UXML 里 name 属性是<strong>唯一标识</strong>，C# 靠它查找；class 属性是样式选择器，可以多个。和网页的 id / class 完全同构。</div></div>
+</section>
+<section id="uss"><h2>4 USS：背下这 8 个属性就够用</h2>
+<p>游戏 UI 的布局有 95% 只用到 Flexbox 的少数属性。把这几个吃透，比拼凑各种偏方有用得多。</p>
+<div class="tw"><table><thead><tr><th>属性</th><th>作用</th><th>常见值</th></tr></thead><tbody><tr><td>flex-direction</td><td>主轴方向</td><td>row / column</td></tr><tr><td>justify-content</td><td>主轴对齐</td><td>flex-start / center / space-between</td></tr><tr><td>align-items</td><td>交叉轴对齐</td><td>center / flex-end / stretch</td></tr><tr><td>flex-grow</td><td>剩余空间占比</td><td>0 / 1</td></tr><tr><td>flex-shrink</td><td>空间不足时收缩</td><td>0（不收缩）/ 1</td></tr><tr><td>width / height</td><td>尺寸</td><td>px / % / auto</td></tr><tr><td>padding / margin</td><td>内边距 / 外边距</td><td>四向可单独设</td></tr><tr><td>gap</td><td>子元素间距</td><td>省掉一堆 margin</td></tr></tbody></table></div>
+<div class="codewrap"><div class="codebar"><span class="lang">USS</span><button class="copy" type="button">复制</button></div><pre class="code"><code>.hp-root {
+  position: absolute;      /* 绝对定位到屏幕上某个位置 */
+  top: 24px; left: 24px;
+  width: 240px; height: 28px;
+  background-color: rgba(0, 0, 0, 0.55);
+  border-radius: 14px;
+  overflow: hidden;
+  justify-content: center;
+  align-items: center;
+}
+
+.hp-fill {
+  position: absolute;
+  left: 0; top: 0; bottom: 0;
+  width: 70%;                       /* C# 里改这个值就是改血量 */
+  background-color: rgb(220, 60, 60);
+  transition: width 0.25s ease-out; /* 掉血带动画，不需要写协程 */
+}
+
+.hp-text {
+  color: #fff;
+  font-size: 13px;
+  -unity-font-style: bold;
+  -unity-text-align: middle-center;
+}</code></pre></div>
+<div class="note n-warn"><span class="ni">⚠</span><div><b>坑</b>USS 不是完整 CSS：不支持 @media、对 ::before/::after 支持有限、calc() 在旧版本不可用、没有 float。写之前先确认当前 Unity 版本的 USS 支持范围，否则会白调半天。</div></div>
+</section>
+<section id="cs"><h2>5 C# 驱动：查询、事件、动态创建</h2>
+<div class="codewrap"><div class="codebar"><span class="lang">C#</span><button class="copy" type="button">复制</button></div><pre class="code"><code><span class="c-kw">using</span> UnityEngine;
+<span class="c-kw">using</span> UnityEngine.UIElements;
+
+<span class="c-kw">public</span> <span class="c-kw">class</span> HudController : MonoBehaviour
+{
+    [SerializeField] UIDocument doc;
+    [SerializeField] VisualTreeAsset slotTemplate;   <span class="c-cmt">// 拖一个 .uxml 进来</span>
+
+    VisualElement fill;
+    Label text;
+
+    <span class="c-kw">void</span> OnEnable()
+    {
+        <span class="c-kw">var</span> root = doc.rootVisualElement;
+
+        <span class="c-cmt">// Q&lt;T&gt; 用 name 查；也可以 Q&lt;Button&gt;(className: &quot;btn&quot;)</span>
+        fill = root.Q&lt;VisualElement&gt;(<span class="c-str">&quot;hp-fill&quot;</span>);
+        text = root.Q&lt;Label&gt;(<span class="c-str">&quot;hp-text&quot;</span>);
+
+        root.Q&lt;Button&gt;(<span class="c-str">&quot;btn-settings&quot;</span>)?.RegisterCallback&lt;ClickEvent&gt;(_ =&gt; OpenSettings());
+
+        <span class="c-cmt">// 动态创建：拿模板实例化，再塞进容器</span>
+        <span class="c-kw">var</span> slot = slotTemplate.Instantiate();
+        slot.Q&lt;Label&gt;(<span class="c-str">&quot;slot-index&quot;</span>).text = <span class="c-str">&quot;1&quot;</span>;
+        root.Q&lt;VisualElement&gt;(<span class="c-str">&quot;bag-grid&quot;</span>).Add(slot);
+    }
+
+    <span class="c-kw">public</span> <span class="c-kw">void</span> SetHp(<span class="c-kw">int</span> cur, <span class="c-kw">int</span> max)
+    {
+        <span class="c-kw">float</span> pct = max &lt;= <span class="c-num">0</span> ? <span class="c-num">0f</span> : (<span class="c-kw">float</span>)cur / max;
+        fill.style.width = Length.Percent(pct * <span class="c-num">100f</span>);
+        text.text = $<span class="c-str">&quot;{cur} / {max}&quot;</span>;
+    }
+}</code></pre></div>
+<div class="tw"><table><thead><tr><th>事件类型</th><th>触发时机</th></tr></thead><tbody><tr><td>ClickEvent</td><td>点击（含触摸）</td></tr><tr><td>ChangeEvent&amp;lt;T&amp;gt;</td><td>值变化：Toggle / Slider / TextField</td></tr><tr><td>PointerEnterEvent / PointerLeaveEvent</td><td>指针进入 / 离开</td></tr><tr><td>PointerDownEvent / PointerUpEvent</td><td>按下 / 抬起</td></tr><tr><td>KeyDownEvent</td><td>键盘按下</td></tr><tr><td>GeometryChangedEvent</td><td>尺寸或位置变化（做自适应布局时用）</td></tr></tbody></table></div>
+<div class="note n-tip"><span class="ni">→</span><div><b>建议</b>元素还没布局完就读取 resolvedStyle.width 会拿到 0，因为布局发生在下一帧。要么等 GeometryChangedEvent，要么用 schedule.Execute(...).ExecuteLater(0) 推迟一帧。</div></div>
+</section>
+<section id="bind"><h2>6 数据绑定：两种，别混用</h2>
+<div class="tw"><table><thead><tr><th>方式</th><th>适用</th><th>代价</th></tr></thead><tbody><tr><td>序列化绑定（bind-path + SerializedObject）</td><td>编辑器扩展、Inspector 替代品</td><td>运行时性能差，且依赖 SerializedObject</td></tr><tr><td>运行时手动刷新（推荐）</td><td>游戏内 HUD / 背包</td><td>要自己写刷新方法，但完全可控</td></tr></tbody></table></div>
+<p>游戏内界面几乎都应该用<strong>手动刷新</strong>：数据变了就调用一次 SetXxx()。它比绑定更啰嗦，但没有隐藏开销，也不会在你不想刷的时候刷。</p>
+<div class="codewrap"><div class="codebar"><span class="lang">C#</span><button class="copy" type="button">复制</button></div><pre class="code"><code><span class="c-cmt">// 反例：每帧反射式刷新，帧率越高越亏</span>
+<span class="c-kw">void</span> Update() =&gt; label.text = player.hp.ToString();
+
+<span class="c-cmt">// 正例：只在数据变化时推</span>
+<span class="c-kw">public</span> <span class="c-kw">void</span> OnHpChanged(<span class="c-kw">int</span> cur, <span class="c-kw">int</span> max) =&gt; SetHp(cur, max);
+
+<span class="c-cmt">// 绑定事件而不是轮询</span>
+player.OnHpChanged += OnHpChanged;
+<span class="c-kw">void</span> OnDisable() =&gt; player.OnHpChanged -= OnHpChanged;  <span class="c-cmt">// 别忘了退订</span></code></pre></div>
+</section>
+<section id="case1"><h2>7 实战一：血量条（三件套齐全）</h2>
+<p>把第 2、4、5 节拼起来，就是一个能跑的 HUD 血条。关键在于<strong>填充条用绝对定位 + width 百分比</strong>，而不是改 scale——改 scale 会让圆角和描边变形。</p>
+<ul class="pts"><li>结构：<code>hp-root</code>（底槽，overflow:hidden + 圆角）→ <code>hp-fill</code>（填充，绝对定位 left:0）→ <code>hp-text</code>（文字，居中）</li><li>数值：<code>fill.style.width = Length.Percent(pct * 100)</code></li><li>动画：USS 的 <code>transition: width .25s</code> 直接生效，不需要协程</li><li>变色：低于 30% 时给 root 加 <code>class</code>，用 <code>.hp-root.low .hp-fill{ background-color: #ff3b30 }</code></li></ul>
+<div class="note n-warn"><span class="ni">⚠</span><div><b>坑</b>不要用 <code>style.width = pct * 240</code>（硬编码像素）。父容器尺寸一变就全错，而且高分屏下对不上。始终用百分比。</div></div>
+</section>
+<section id="case2"><h2>8 实战二：背包列表（ListView 虚拟化）</h2>
+<p>背包有 200 格时，<code>for</code> 循环建 200 个元素会明显卡顿，而且滚动时全程占内存。<strong>ListView 只创建可见的十几行</strong>，滚动时复用。</p>
+<div class="codewrap"><div class="codebar"><span class="lang">C#</span><button class="copy" type="button">复制</button></div><pre class="code"><code>ListView bag;
+
+<span class="c-kw">void</span> BuildBag(List&lt;Item&gt; items)
+{
+    bag = doc.rootVisualElement.Q&lt;ListView&gt;(<span class="c-str">&quot;bag-list&quot;</span>);
+
+    bag.makeItem = () =&gt; slotTemplate.Instantiate();      <span class="c-cmt">// 造一个空壳（只造可见数量）</span>
+    bag.bindItem = (el, i) =&gt;                             <span class="c-cmt">// 把数据填进去（滚动时反复调用）</span>
+    {
+        <span class="c-kw">var</span> it = items[i];
+        el.Q&lt;VisualElement&gt;(<span class="c-str">&quot;icon&quot;</span>).style.backgroundImage = <span class="c-kw">new</span> StyleBackground(it.icon);
+        el.Q&lt;Label&gt;(<span class="c-str">&quot;count&quot;</span>).text = it.count &gt; <span class="c-num">1</span> ? it.count.ToString() : <span class="c-str">&quot;&quot;</span>;
+        el.Q&lt;VisualElement&gt;(<span class="c-str">&quot;sel&quot;</span>).EnableInClassList(<span class="c-str">&quot;on&quot;</span>, i == selectedIndex);
+    };
+    bag.itemsSource = items;       <span class="c-cmt">// 数据源</span>
+    bag.fixedItemHeight = <span class="c-num">88</span>;      <span class="c-cmt">// 固定行高是虚拟化的前提</span>
+    bag.selectionType = SelectionType.Single;
+    bag.Rebuild();                 <span class="c-cmt">// 数据变了要 Rebuild</span>
+}</code></pre></div>
+<div class="note n-key"><span class="ni">◆</span><div><b>核心</b>虚拟化的前提是<strong>固定行高</strong>。如果格子高度不一，ListView 会退化成全量渲染，性能优势消失——这种场景改用 ScrollView + 自己做池。</div></div>
+</section>
+<section id="case3"><h2>9 实战三：设置面板（Toggle + Slider）</h2>
+<div class="codewrap"><div class="codebar"><span class="lang">C#</span><button class="copy" type="button">复制</button></div><pre class="code"><code><span class="c-kw">void</span> BindSettings()
+{
+    <span class="c-kw">var</span> root = doc.rootVisualElement;
+
+    <span class="c-kw">var</span> music = root.Q&lt;Toggle&gt;(<span class="c-str">&quot;tg-music&quot;</span>);
+    music.<span class="c-kw">value</span> = PlayerPrefs.GetInt(<span class="c-str">&quot;opt.music&quot;</span>, <span class="c-num">1</span>) == <span class="c-num">1</span>;
+    music.RegisterValueChangedCallback(e =&gt;
+    {
+        AudioListener.volume = e.newValue ? <span class="c-num">1f</span> : <span class="c-num">0f</span>;      <span class="c-cmt">// e.newValue 而不是 music.value</span>
+        PlayerPrefs.SetInt(<span class="c-str">&quot;opt.music&quot;</span>, e.newValue ? <span class="c-num">1</span> : <span class="c-num">0</span>);
+    });
+
+    <span class="c-kw">var</span> sens = root.Q&lt;Slider&gt;(<span class="c-str">&quot;sl-sens&quot;</span>);
+    sens.lowValue = <span class="c-num">0.1f</span>; sens.highValue = <span class="c-num">5f</span>;
+    sens.<span class="c-kw">value</span> = PlayerPrefs.GetFloat(<span class="c-str">&quot;opt.sens&quot;</span>, <span class="c-num">1f</span>);
+    sens.RegisterValueChangedCallback(e =&gt; PlayerPrefs.SetFloat(<span class="c-str">&quot;opt.sens&quot;</span>, e.newValue));
+}</code></pre></div>
+<div class="note n-tip"><span class="ni">→</span><div><b>建议</b>回调里一律用 <code>e.newValue</code>，不要回读控件的 <code>.value</code>。滑块拖动时两者可能不一致，而且回读会让「程序改值」和「用户改值」纠缠在一起。</div></div>
+</section>
+<section id="landing"><h2>10 落地模式：什么场景配什么做法</h2>
+<div class="tw"><table><thead><tr><th>游戏 UI</th><th>UI Toolkit 做法</th><th>要不要用</th></tr></thead><tbody><tr><td>HUD 血条 / 弹药</td><td>ProgressBar 或绝对定位填充条 + USS transition</td><td>推荐</td></tr><tr><td>背包 / 商店网格</td><td>ListView + 固定行高 + 选中态 class</td><td>推荐</td></tr><tr><td>主菜单 / 设置</td><td>UXML 分文件 + Foldout 分组</td><td>推荐</td></tr><tr><td>技能栏</td><td>ListView 横向模式 或 固定数量 Button</td><td>可选（数量少用 Button 更简单）</td></tr><tr><td>对话系统</td><td>ScrollView + 逐字机（定时追加 text）</td><td>推荐</td></tr><tr><td>跟随 3D 物体的血条</td><td>——</td><td>用 UGUI + World Space，别硬套</td></tr></tbody></table></div>
+</section>
+<section id="pitfalls"><h2>11 坑与最佳实践</h2>
+<ul class="pts"><li><strong>面板数量控制</strong>：每个 UIDocument 是一次 Draw Call。把常驻 HUD 合成一个 UIDocument，弹窗各自独立。</li><li><strong>display 与 visibility</strong>：<code>display:none</code> 不参与布局、不渲染；<code>visibility:hidden</code> 保留布局、不渲染。做显示隐藏动画时用后者。</li><li><strong>不要每帧改 style</strong>：改 <code>style.width</code> 会触发布局重算。数值没变就别赋值，或加脏标记。</li><li><strong>资源释放</strong>：动态 Instantiate 的 VisualTreeAsset 记得在关闭面板时 RemoveFromHierarchy，否则越积越多。</li><li><strong>移动端软键盘</strong>：TextField 在 Android 上会顶起画面，需在 UIDocument 的 PanelSettings 里配好缩放模式。</li><li><strong>字体</strong>：UI Toolkit 用的是 FontAsset，不是 Font。中文字体要先做子集，否则包体暴涨。</li><li><strong>PanelSettings 资产</strong>：一个项目通常一个，负责缩放模式（Scale With Screen Size）和分辨率参考值——这是全局的，别每个界面各建一个。</li></ul>
+</section>
+<section class="quiz" id="quiz">
+<h2>自测 · 4 题</h2>
+<p class="qhint">点选项立即判定，答错会给出原因。</p>
+<div class="qcard" data-q="0" data-a="1" data-why="ListView 做虚拟化，只实例化可见行并复用；但前提是行高固定，否则会退化成全量渲染。"><div class="qt"><span class="qn">1</span>背包有 300 个格子，用 UI Toolkit 实现时最该选哪个控件？</div><div class="opts"><button class="opt" data-q="0" data-i="0" type="button"><span class="oi">A</span><span>for 循环 new 300 个 VisualElement</span></button><button class="opt" data-q="0" data-i="1" type="button"><span class="oi">B</span><span>ListView + 固定行高</span></button><button class="opt" data-q="0" data-i="2" type="button"><span class="oi">C</span><span>ScrollView 里铺 300 个 Button</span></button><button class="opt" data-q="0" data-i="3" type="button"><span class="oi">D</span><span>IMGUI 的 BeginScrollView</span></button></div><div class="qfb"></div></div>
+<div class="qcard" data-q="1" data-a="2" data-why="scale 会让圆角和描边变形；硬编码像素在父容器尺寸变化和高分屏下都会失真。百分比 + USS transition 是标准做法。"><div class="qt"><span class="qn">2</span>血条的填充部分应该怎么控制长度？</div><div class="opts"><button class="opt" data-q="1" data-i="0" type="button"><span class="oi">A</span><span>改 transform.scale.x</span></button><button class="opt" data-q="1" data-i="1" type="button"><span class="oi">B</span><span>硬编码像素 width</span></button><button class="opt" data-q="1" data-i="2" type="button"><span class="oi">C</span><span>style.width = Length.Percent(pct*100)</span></button><button class="opt" data-q="1" data-i="3" type="button"><span class="oi">D</span><span>改 margin-left</span></button></div><div class="qfb"></div></div>
+<div class="qcard" data-q="2" data-a="1" data-why="拖动过程中回读控件值可能拿到尚未同步的旧值，也会让「我用代码改了值」触发同一回调，形成循环。"><div class="qt"><span class="qn">3</span>Slider 的 RegisterValueChangedCallback 里，为什么要用 e.newValue 而不是回读 slider.value？</div><div class="opts"><button class="opt" data-q="2" data-i="0" type="button"><span class="oi">A</span><span>性能更好</span></button><button class="opt" data-q="2" data-i="1" type="button"><span class="oi">B</span><span>避免「程序改值」与「用户改值」纠缠，且拖动瞬间两者可能不一致</span></button><button class="opt" data-q="2" data-i="2" type="button"><span class="oi">C</span><span>e.newValue 是只读的所以更快</span></button><button class="opt" data-q="2" data-i="3" type="button"><span class="oi">D</span><span>没有区别，习惯问题</span></button></div><div class="qfb"></div></div>
+<div class="qcard" data-q="3" data-a="1" data-why="UI Toolkit 目前不擅长世界空间 UI（跟随 3D 物体、被遮挡关系影响）。这类需求仍应使用 UGUI 的 World Space Canvas。"><div class="qt"><span class="qn">4</span>下面哪种 UI 最不适合用 UI Toolkit？</div><div class="opts"><button class="opt" data-q="3" data-i="0" type="button"><span class="oi">A</span><span>200 行的设置列表</span></button><button class="opt" data-q="3" data-i="1" type="button"><span class="oi">B</span><span>跟随 3D 角色头顶的血条</span></button><button class="opt" data-q="3" data-i="2" type="button"><span class="oi">C</span><span>主菜单</span></button><button class="opt" data-q="3" data-i="3" type="button"><span class="oi">D</span><span>编辑器扩展工具窗口</span></button></div><div class="qfb"></div></div>
+</section>
+</article>
+<nav class="pagenav"><a class="nx" href="m02.html"><span>下一模块</span><b>NavMesh 进阶</b></a></nav>
+
+</main>
+</div>
+<script src="assets/app.js"></script>
+</body>
+</html>

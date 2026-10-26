@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>游戏开发补充技术栈</title>
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='14' fill='%230f766e'/%3E%3Cpath d='M20 40h24M20 32h24M20 24h16' stroke='%23fff' stroke-width='4' stroke-linecap='round'/%3E%3C/svg%3E">
+<link rel="stylesheet" href="assets/style.css">
+</head>
+<body data-mid="index" class="is-index">
+<div id="app">
+<aside id="rail">
+  <a class="brand" href="index.html">
+    <h1><span class="dot"></span>游戏开发补充技术栈</h1>
+    <p>5 模块 · 5 条技术栈 · 场景标注</p>
+  </a>
+  <div class="searchwrap">
+    <input id="q" type="search" placeholder="搜索模块 / 技术栈…" autocomplete="off">
+  </div>
+  <div class="cards">
+<div class="catg">界面层</div>
+<a class="mcard" href="m01.html" data-id="m01" data-text="UI Toolkit 运行时 UI 新体系：UXML + USS + C# 界面层 界面层 · UI 架构"><span class="rd">已读</span><div class="t"><i>🎨</i><span>UI Toolkit</span></div><div class="s">运行时 UI 新体系：UXML + USS + C#</div><div class="bar"><i></i></div></a>
+<div class="catg">AI 与导航</div>
+<a class="mcard" href="m02.html" data-id="m02" data-text="NavMesh 进阶 承接 Unity m09 第 8 章，只讲它没展开的部分 AI 与导航 AI 与空间导航（进阶）"><span class="rd">已读</span><div class="t"><i>🧭</i><span>NavMesh 进阶</span></div><div class="s">承接 Unity m09 第 8 章，只讲它没展开的部分</div><div class="bar"><i></i></div></a>
+<div class="catg">商业化与发行</div>
+<a class="mcard" href="m03.html" data-id="m03" data-text="广告接入与双区域适配 一套代码出海 + 回国 + 上小游戏 商业化与发行 商业化与发行 · 工程架构"><span class="rd">已读</span><div class="t"><i>📢</i><span>广告接入与双区域适配</span></div><div class="s">一套代码出海 + 回国 + 上小游戏</div><div class="bar"><i></i></div></a>
+<a class="mcard" href="m04.html" data-id="m04" data-text="计费点与标签体系 先定表再写码：IAA / IAP / 埋点 / 回传 商业化与发行 商业化设计 · 数据"><span class="rd">已读</span><div class="t"><i>🎯</i><span>计费点与标签体系</span></div><div class="s">先定表再写码：IAA / IAP / 埋点 / 回传</div><div class="bar"><i></i></div></a>
+<div class="catg">语言底层</div>
+<a class="mcard" href="m05.html" data-id="m05" data-text="C 语言与内存认知 看懂 IL2CPP 与 Native 插件的底层语言 语言底层 语言底层 · 内存模型"><span class="rd">已读</span><div class="t"><i>⚙️</i><span>C 语言与内存认知</span></div><div class="s">看懂 IL2CPP 与 Native 插件的底层语言</div><div class="bar"><i></i></div></a>
+  </div>
+  <div class="railfoot">
+    <div class="pgwrap"><div class="pg"><i></i></div><span id="pgtxt">0 / 5 已读</span></div>
+    <a class="backlink" href="../../examination/index.html">← 课程中心</a>
+  </div>
+</aside>
+<main id="main">
+
+<header class="mhead idx">
+  <div class="crumb">课程中心<span>/</span>补充技术栈</div>
+  <h1><i>🧭</i>游戏开发补充技术栈</h1>
+  <p class="sub">只收已有课程尚未覆盖的部分。5 个模块分属 5 条技术栈，每节都标了「用在游戏的哪儿、还能用在哪」。</p>
+  <div class="statsrow">
+    <span>5 模块</span><span>5 条技术栈</span><span>16,179 字</span>
+    <span>31 段代码</span><span>20 道自测</span>
+  </div>
+  <div class="scope">
+    <div class="scope-t">这份清单是怎么定出来的</div>
+    <p>以 <code>origin/main</code> 为准，逐个读取了 CSharp-Book（11 模块）、CSharp-Map（20 分册）、Unity（27 模块）、
+    Unity-Book（75 课时）、Unity-Games（14 工程 × 9 页签）的实际章节标题并做了全文关键词检索。
+    凡是已有课程讲过的一律不收，下列 11 类被判定为重复、已剔除。</p>
+  </div>
+</header>
+
+<section class="idxsec">
+  <h2>覆盖矩阵</h2>
+  <p class="lead">五个模块对应五条技术栈，最右一列写明它与已有课程的真实关系——包括哪部分是重复的、哪部分才是本篇的增量。</p>
+  <div class="tw"><table><thead><tr><th>模块</th><th>技术栈</th><th>游戏开发部位</th><th>其他领域</th><th>与已有课程的关系</th></tr></thead><tbody><tr><td>UI Toolkit</td><td>界面层</td><td>HUD / 背包 / 主菜单 / 技能栏 / 对话</td><td>编辑器扩展、数据密集桌面应用</td><td>已有课程只有 UGUI 与 TextMeshPro，全文检索 UI Toolkit 命中 0 个文件</td></tr><tr><td>NavMesh 进阶</td><td>AI 与导航</td><td>敌人追击巡逻、NPC 寻路、点击移动</td><td>AGV 调度、室内导航、可达性分析</td><td>m09 已有 5 节基础专题（概念/组件/OffMeshLink/障碍），本篇只补它没展开的参数取值、Areas 代价、路径查询 API、运行时重建</td></tr><tr><td>广告接入与双区域</td><td>商业化与发行</td><td>变现层、版本切分、打包管线</td><td>移动广告变现、多租户构建</td><td>Unity-Games 有商业化策略建议（选哪家聚合、哪里做变现点），但没有 SDK 初始化与回调分发实现</td></tr><tr><td>计费点与标签体系</td><td>商业化设计</td><td>付费点设计、埋点、远程调优</td><td>SaaS 定价、增长分析、埋点治理</td><td>全文检索「计费」命中 0 个文件，商业化设计完全未涉及</td></tr><tr><td>C 语言与内存</td><td>语言底层</td><td>IL2CPP、Native 插件、struct 布局</td><td>嵌入式、驱动、跨语言 ABI</td><td>全文检索「C 语言」「malloc」「内存对齐」均命中 0；IL2CPP 只在 6 处上下文被顺带提及，无底层内存模型教学</td></tr></tbody></table></div>
+</section>
+
+<section class="idxsec">
+  <h2>五个模块</h2>
+  <div class="bigcards">
+<a class="bigcard" href="m01.html"><div class="bc-top"><i>🎨</i><span class="bc-cat">界面层</span></div><h3>UI Toolkit</h3><p class="bc-sub">运行时 UI 新体系：UXML + USS + C#</p><div class="bc-scene"><b>🎮</b>HUD（血条 / 体力 / 弹药）、背包网格、主菜单与设置、技能栏、对话系统</div><div class="bc-scene"><b>🌐</b>编辑器扩展与工具窗口、数据密集的桌面应用、需要样式热重载的后台系统</div><div class="bc-foot">11 节 · 4 道自测 →</div></a>
+<a class="bigcard" href="m02.html"><div class="bc-top"><i>🧭</i><span class="bc-cat">AI 与导航</span></div><h3>NavMesh 进阶</h3><p class="bc-sub">承接 Unity m09 第 8 章，只讲它没展开的部分</p><div class="bc-scene"><b>🎮</b>敌人追击与巡逻、NPC 自动寻路、点击移动（RTS / MOBA）、程序化地图（肉鸽 / 塔防）的寻路重建</div><div class="bc-scene"><b>🌐</b>机器人路径规划、AGV 仓储调度、室内导航、无人机航线、地图服务的可达性分析</div><div class="bc-foot">10 节 · 4 道自测 →</div></a>
+<a class="bigcard" href="m03.html"><div class="bc-top"><i>📢</i><span class="bc-cat">商业化与发行</span></div><h3>广告接入与双区域适配</h3><p class="bc-sub">一套代码出海 + 回国 + 上小游戏</p><div class="bc-scene"><b>🎮</b>变现层（激励视频 / 插屏 / 开屏）、版本切分、打包管线、多平台发布</div><div class="bc-scene"><b>🌐</b>移动应用广告变现、海外与国内合规分流、多租户/多品牌的构建矩阵</div><div class="bc-foot">10 节 · 4 道自测 →</div></a>
+<a class="bigcard" href="m04.html"><div class="bc-top"><i>🎯</i><span class="bc-cat">商业化与发行</span></div><h3>计费点与标签体系</h3><p class="bc-sub">先定表再写码：IAA / IAP / 埋点 / 回传</p><div class="bc-scene"><b>🎮</b>付费点设计、埋点体系、远程调优、A/B 实验、收益归因</div><div class="bc-scene"><b>🌐</b>SaaS 订阅定价与分层、增长分析、产品埋点治理、用户分层运营</div><div class="bc-foot">9 节 · 4 道自测 →</div></a>
+<a class="bigcard" href="m05.html"><div class="bc-top"><i>⚙️</i><span class="bc-cat">语言底层</span></div><h3>C 语言与内存认知</h3><p class="bc-sub">看懂 IL2CPP 与 Native 插件的底层语言</p><div class="bc-scene"><b>🎮</b>阅读 IL2CPP 生成代码、写 Native 插件、控制 struct 内存布局、unsafe 互操作、性能热点分析</div><div class="bc-scene"><b>🌐</b>嵌入式与固件、操作系统与驱动、高性能中间件、跨语言 ABI 设计</div><div class="bc-foot">8 节 · 4 道自测 →</div></a>
+  </div>
+</section>
+
+<section class="idxsec">
+  <h2>已判定重复、不再收录</h2>
+  <p class="lead">以下主题在 GitHub 上已有完整教学，本地对应文件不再整理成新教程，避免重复建设。</p>
+  <div class="tw"><table class="dupt"><thead><tr><th>主题</th><th>已有位置</th></tr></thead><tbody><tr><td>UniTask / ScriptableObject / Newtonsoft.Json / MessagePack</td><td class='src'>Unity</td></tr><tr><td>PlayerPrefs / Binary 持久化 / Excel 配置表</td><td class='src'>Unity</td></tr><tr><td>Addressables / YooAsset / HybridCLR / 性能优化</td><td class='src'>Unity</td></tr><tr><td>UGUI / TextMeshPro / InputSystem / iOS / Android</td><td class='src'>Unity</td></tr><tr><td>动画 1D / 2D 混合树</td><td class='src'>Unity（m09）</td></tr><tr><td>NavMesh 概念 / Agent 组件字段 / OffMeshLink 字段 / 障碍面板（基础部分）</td><td class='src'>Unity（m09 第 8 章）</td></tr><tr><td>委托事件 / 泛型 / 反射 / 多线程 / 协变逆变 / 迭代器 / 预处理器</td><td class='src'>CSharp-Book（m04）</td></tr><tr><td>八大排序算法</td><td class='src'>CSharp-Book（m05）</td></tr><tr><td>栈 / 队列 / List / Dictionary / LinkedList / 匿名函数 / Lambda</td><td class='src'>CSharp-Book（m04）</td></tr><tr><td>14 个小游戏工程解剖 / 2048 手册 / Tetris 解剖 / 类图</td><td class='src'>Unity-Games</td></tr><tr><td>单例模式 / 公共 Mono 模块（75 课时框架）</td><td class='src'>Unity-Book</td></tr><tr><td>C# 20 张分册思维导图</td><td class='src'>CSharp-Map</td></tr></tbody></table></div>
+</section>
+
+<section class="idxsec">
+  <h2>这些判定是怎么核对出来的</h2>
+  <p class="lead">上面每一条「已覆盖 / 是缺口」都来自可复现的检索，不是凭印象。核对基准是本站仓库的 <code>1f4bae2</code>（= origin/main）。</p>
+  <ol class="howto">
+    <li><b>先锁定版本</b>，防止核对对象在过程中变动：<code>git rev-parse HEAD origin/main</code> 两者必须一致。</li>
+    <li><b>全文检索，但要排除本课程自己的目录</b>：<code>grep -ril --include="*.html" --exclude-dir=GameTech-Addon "关键词" examination/</code>。不排除的话，本篇自己写的内容会把每一项「缺口」都变成命中，等于没核对。</li>
+    <li><b>看章节结构，不能只数关键词</b>：抽出文中所有 <code>href="#..."</code> 锚点，确认该主题是独立小节还是顺带提及。这一条曾推翻过一个错误判断——NavMesh 原本被误记为「只顺带提了一句烘焙」，抽出锚点后才发现 m09 里有 5 个小节。</li>
+    <li><b>区分「有建议」和「有实现」</b>：命中数不等于覆盖度。Unity-Games 里「广告」出现 7 处，但全是选哪家聚合、哪里设变现点的策略建议，没有一行 SDK 初始化或回调代码，所以广告接入仍算缺口。</li>
+    <li><b>字数要注明口径</b>：汉字数、非空白字符数、总字符数能差出三倍以上，混用会得出错误结论。</li>
+  </ol>
+</section>
+
+<footer class="idxfoot">
+  <p>内容源：<code>_src/content_a.py</code> / <code>_src/content_b.py</code>，改完跑 <code>python3 _src/build.py</code> 重新生成。</p>
+  <p>正文合计 16,179 字符（含标点与英文，不含代码块） · 31 段代码 · 20 道自测 · 全部离线可读。</p>
+</footer>
+
+</main>
+</div>
+<script src="assets/app.js"></script>
+</body>
+</html>

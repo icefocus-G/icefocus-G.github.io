@@ -1,0 +1,213 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>NavMesh 进阶 · 游戏开发补充技术栈</title>
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='14' fill='%230f766e'/%3E%3Cpath d='M20 40h24M20 32h24M20 24h16' stroke='%23fff' stroke-width='4' stroke-linecap='round'/%3E%3C/svg%3E">
+<link rel="stylesheet" href="assets/style.css">
+</head>
+<body data-mid="m02">
+<div id="app">
+<aside id="rail">
+  <a class="brand" href="index.html">
+    <h1><span class="dot"></span>游戏开发补充技术栈</h1>
+    <p>5 模块 · 5 条技术栈 · 场景标注</p>
+  </a>
+  <div class="searchwrap">
+    <input id="q" type="search" placeholder="搜索模块 / 技术栈…" autocomplete="off">
+  </div>
+  <div class="cards">
+<div class="catg">界面层</div>
+<a class="mcard" href="m01.html" data-id="m01" data-text="UI Toolkit 运行时 UI 新体系：UXML + USS + C# 界面层 界面层 · UI 架构"><span class="rd">已读</span><div class="t"><i>🎨</i><span>UI Toolkit</span></div><div class="s">运行时 UI 新体系：UXML + USS + C#</div><div class="bar"><i></i></div></a>
+<div class="catg">AI 与导航</div>
+<a class="mcard on" href="m02.html" data-id="m02" data-text="NavMesh 进阶 承接 Unity m09 第 8 章，只讲它没展开的部分 AI 与导航 AI 与空间导航（进阶）"><span class="rd">已读</span><div class="t"><i>🧭</i><span>NavMesh 进阶</span></div><div class="s">承接 Unity m09 第 8 章，只讲它没展开的部分</div><div class="bar"><i></i></div></a>
+<div class="catg">商业化与发行</div>
+<a class="mcard" href="m03.html" data-id="m03" data-text="广告接入与双区域适配 一套代码出海 + 回国 + 上小游戏 商业化与发行 商业化与发行 · 工程架构"><span class="rd">已读</span><div class="t"><i>📢</i><span>广告接入与双区域适配</span></div><div class="s">一套代码出海 + 回国 + 上小游戏</div><div class="bar"><i></i></div></a>
+<a class="mcard" href="m04.html" data-id="m04" data-text="计费点与标签体系 先定表再写码：IAA / IAP / 埋点 / 回传 商业化与发行 商业化设计 · 数据"><span class="rd">已读</span><div class="t"><i>🎯</i><span>计费点与标签体系</span></div><div class="s">先定表再写码：IAA / IAP / 埋点 / 回传</div><div class="bar"><i></i></div></a>
+<div class="catg">语言底层</div>
+<a class="mcard" href="m05.html" data-id="m05" data-text="C 语言与内存认知 看懂 IL2CPP 与 Native 插件的底层语言 语言底层 语言底层 · 内存模型"><span class="rd">已读</span><div class="t"><i>⚙️</i><span>C 语言与内存认知</span></div><div class="s">看懂 IL2CPP 与 Native 插件的底层语言</div><div class="bar"><i></i></div></a>
+  </div>
+  <div class="railfoot">
+    <div class="pgwrap"><div class="pg"><i></i></div><span id="pgtxt">0 / 5 已读</span></div>
+    <a class="backlink" href="../../examination/index.html">← 课程中心</a>
+  </div>
+</aside>
+<main id="main">
+
+<header class="mhead">
+  <div class="crumb"><a href="index.html">游戏开发补充技术栈</a><span>/</span>AI 与导航</div>
+  <h1><i>🧭</i>NavMesh 进阶</h1>
+  <p class="sub">承接 Unity m09 第 8 章，只讲它没展开的部分</p>
+  <div class="statsrow">
+    <span>4,210 字</span><span>6 段代码</span><span>10 节</span><span>4 道自测</span>
+  </div>
+  <div class="scene">
+    <div class="sc"><div class="sk">技术栈</div><div class="sv">AI 与空间导航（进阶）</div></div>
+    <div class="sc"><div class="sk">🎮 游戏开发部位</div><div class="sv">敌人追击与巡逻、NPC 自动寻路、点击移动（RTS / MOBA）、程序化地图（肉鸽 / 塔防）的寻路重建</div></div>
+    <div class="sc"><div class="sk">🌐 其他领域用途</div><div class="sv">机器人路径规划、AGV 仓储调度、室内导航、无人机航线、地图服务的可达性分析</div></div>
+  </div>
+</header>
+<nav class="toc"><div class="toch">本模块目录</div><a href="#scope">1 先划清边界：哪些 Unity m09 已经讲了</a><a href="#bake">2 烘焙参数：m09 只给了截图，这里逐个讲</a><a href="#areas">3 Areas 与寻路代价</a><a href="#agent">4 Agent 的四个坑（字段含义见 m09）</a><a href="#query">5 路径查询三件套（m09 完全没提）</a><a href="#offmesh">6 OffMeshLink：画不出跳跃的样子</a><a href="#obstacle">7 动态障碍：carve 还是不 carve</a><a href="#runtime">8 运行时重建：解开 m09 那条局限</a><a href="#perf">9 性能与常见坑</a><a href="#beyond">10 跳出游戏：同一套思路还能用在哪</a><a href="#quiz">自测</a></nav>
+<article>
+<section id="scope"><h2>1 先划清边界：哪些 Unity m09 已经讲了</h2>
+<div class="note n-warn"><span class="ni">⚠</span><div><b>坑</b><strong>本篇不是入门。</strong> Unity 课程 m09 已有一个独立的「8- 导航寻路系统」章节，讲了概念、组件字段和面板操作。本篇只补它没展开的三件事：<strong>烘焙参数怎么调、寻路代价怎么设、网格怎么在运行时重建</strong>。没看过 m09 的话，先回去看那一章，否则这里会跟不上。</div></div>
+<div class="tw"><table><thead><tr><th>主题</th><th>去哪看</th><th>本篇是否重讲</th></tr></thead><tbody><tr><td>NavMesh 概念、与 A* 的关系、系统组成</td><td>Unity m09 · 01 概述</td><td>不重讲</td></tr><tr><td>Agent 各属性字段的含义（Speed / Stopping Distance 等）</td><td>Unity m09 · 03 寻路组件</td><td>不重讲，只讲字段的坑</td></tr><tr><td>OffMeshLink 的 Start / End / Cost Override 字段</td><td>Unity m09 · 04 网格外连接</td><td>不重讲，只讲跨越的控制权接管</td></tr><tr><td>动态障碍的 Shape / Carve 基本概念</td><td>Unity m09 · 05 动态障碍</td><td>不重讲，只讲什么场景该开</td></tr><tr><td><strong>烘焙参数的实际取值、Areas 代价、路径查询 API、运行时重建</strong></td><td><strong>本篇</strong></td><td>m09 基本空白</td></tr></tbody></table></div>
+<p>为什么这些算「空白」：m09 的「02 导航网格生成」一节正文只有几十个字，Bake 页签的七八个参数基本靠截图带过；<code>NavMeshPath</code>、<code>NavMesh.CalculatePath</code>、<code>NavMeshSurface</code> 在那一章里一次都没出现。而这些恰恰是项目里真正会卡住你的地方。</p>
+<div class="note n-key"><span class="ni">◆</span><div><b>核心</b>顺带把最容易被忽略的一层认知补上：<strong>NavMesh 解决的是「在地形上怎么走」，不是「该往哪走」</strong>。追击、撤退、巡逻这些决策仍要你自己写状态机；NavMesh 只负责把决策结果变成一个可达的位置。</div></div>
+<div class="note n-warn"><span class="ni">⚠</span><div><b>坑</b><strong>还有一个版本问题要知道。</strong> m09 讲的是 <code>Window &gt; AI &gt; Navigation</code> 那个面板和它的 Bake 页签，但从 Unity 2022 起、到 Unity 6 已经明确移除：<strong>旧的内置 Navigation 窗口不再存在</strong>，烘焙改成组件式——装 <code>com.unity.ai.navigation</code> 包，给地形挂 <code>NavMeshSurface</code>，在组件的 Inspector 里点 Bake。所以如果你用的是 Unity 6，按 m09 去找那个窗口会找不到；本篇第 8 节讲的就是这套组件式工作流，包括它带来的运行时重建能力。</div></div>
+</section>
+<section id="bake"><h2>2 烘焙参数：m09 只给了截图，这里逐个讲</h2>
+<p>Bake 页签里的每个参数，本质上都在回答同一个问题：<strong>这块地面，一个多大的角色能走过去？</strong> 关键是要意识到参数之间不独立——单独调对某一个，未必对。</p>
+<div class="tw"><table><thead><tr><th>参数</th><th>决定什么</th><th>调错的后果</th></tr></thead><tbody><tr><td>Agent Radius</td><td>烘焙边缘精确度，决定可行走区域离墙留多远</td><td>偏小 → 卡墙；偏大 → 窄门被封死，整条路断掉</td></tr><tr><td>Agent Height</td><td>决定拱桥、门洞下方能否穿越</td><td>偏大 → 洞被填成实心，通道消失</td></tr><tr><td>Max Slope</td><td>斜坡超过此角度即视为不可走</td><td>偏小 → 缓坡也走不上去；偏大 → 陡坡能爬，违反直觉</td></tr><tr><td>Step Height</td><td>台阶小于此值可直接迈上</td><td>偏小 → 一段楼梯被切成几十块不连通区域</td></tr><tr><td>Min Region Area</td><td>小于此面积的孤立碎片被丢弃</td><td>设 0 会留下大量走不出去的小岛</td></tr><tr><td>Height Mesh</td><td>生成高度网格，让角色贴合起伏</td><td>平坦地形开着纯属白烧性能</td></tr><tr><td>Generated Off Mesh Links</td><td>Drop Height / Jump Distance 自动生成跳落连接</td><td>开太大 → 角色从该断开的地方&quot;自动跳&quot;，像开了挂</td></tr></tbody></table></div>
+<div class="note n-warn"><span class="ni">⚠</span><div><b>坑</b>最常见的低级错误是 <strong>Agent Radius 填 0</strong>。这意味着可行走区域紧贴碰撞体边缘，一点余量都不留，实际跑起来角色会反复和边缘碰撞、卡在墙角。经验值取角色胶囊半径 × 0.9。</div></div>
+<div class="note n-tip"><span class="ni">→</span><div><b>建议</b><strong>Agent Radius 和 Step Height 是一对</strong>：楼梯台阶的高度要小于 Step Height，同时楼梯宽度要大于 2 × Agent Radius，一段楼梯才可能被烘成连续可走面。只改其中一个，楼梯照样断。</div></div>
+</section>
+<section id="areas"><h2>3 Areas 与寻路代价</h2>
+<p>Areas 让同一张地图上的地面具有<strong>不同的通行代价</strong>。A* 会优先走代价低的区域——这是做「敌人绕开泥地」「NPC 只走人行道」的正解。</p>
+<div class="tw"><table><thead><tr><th>Area</th><th>默认代价</th><th>典型用途</th></tr></thead><tbody><tr><td>Walkable</td><td>1</td><td>普通地面</td></tr><tr><td>Not Walkable</td><td>—</td><td>墙、水面、岩浆（永不通行）</td></tr><tr><td>Jump</td><td>2</td><td>跳跃连接（代价高，非必要不走）</td></tr><tr><td>自定义（如 Mud / Road）</td><td>自定</td><td>泥地代价调高 → 绕行；大路代价调低 → 优先</td></tr></tbody></table></div>
+<div class="codewrap"><div class="codebar"><span class="lang">C#</span><button class="copy" type="button">复制</button></div><pre class="code"><code><span class="c-cmt">// 只允许走 Walkable + Road 两个区域</span>
+<span class="c-kw">int</span> mask = (<span class="c-num">1</span> &lt;&lt; NavMesh.GetAreaFromName(<span class="c-str">&quot;Walkable&quot;</span>))
+         | (<span class="c-num">1</span> &lt;&lt; NavMesh.GetAreaFromName(<span class="c-str">&quot;Road&quot;</span>));
+agent.areaMask = mask;
+
+<span class="c-cmt">// 运行时临时禁行某个区域（比如桥塌了）</span>
+agent.areaMask &amp;= ~(<span class="c-num">1</span> &lt;&lt; NavMesh.GetAreaFromName(<span class="c-str">&quot;Bridge&quot;</span>));</code></pre></div>
+</section>
+<section id="agent"><h2>4 Agent 的四个坑（字段含义见 m09）</h2>
+<p>Speed / Angular Speed / Acceleration / Stopping Distance 这些字段叫什么、干什么，m09 的 03 节已经逐个列过了，这里不重复。只说四个<strong>字段名看起来正常、用起来会出错</strong>的地方。</p>
+<p><strong>坑一：用 <code>remainingDistance</code> 判断到没到。</strong> 它看起来最直观，实际最不可靠——在 <code>pathPending == true</code> 期间返回 <code>Infinity</code>，路径不完整时也没有意义。</p>
+<div class="codewrap"><div class="codebar"><span class="lang">C#</span><button class="copy" type="button">复制</button></div><pre class="code"><code><span class="c-cmt">// 错误写法：会「有时到了不触发、有时瞬间触发」</span>
+<span class="c-kw">bool</span> bad(NavMeshAgent a) =&gt; a.remainingDistance &lt;= <span class="c-num">0.5f</span>;
+
+<span class="c-cmt">// 正确写法：四个条件缺一不可</span>
+<span class="c-kw">bool</span> Arrived(NavMeshAgent a)
+{
+    <span class="c-kw">if</span> (a.pathPending) <span class="c-kw">return</span> <span class="c-kw">false</span>;                 <span class="c-cmt">// 路径还在算</span>
+    <span class="c-kw">if</span> (!a.hasPath) <span class="c-kw">return</span> <span class="c-kw">true</span>;                     <span class="c-cmt">// 无路可走</span>
+    <span class="c-kw">if</span> (a.pathStatus != NavMeshPathStatus.PathComplete) <span class="c-kw">return</span> <span class="c-kw">true</span>;
+    <span class="c-kw">return</span> a.remainingDistance &lt;= a.stoppingDistance + <span class="c-num">0.05f</span>;
+}</code></pre></div>
+<p><strong>坑二：改了 <code>areaMask</code> 不生效。</strong> 掩码只在<strong>下一次寻路</strong>时被读取，当前已经算好的路径不会重算。改完必须重新 <code>SetDestination</code> 一次。</p>
+<p><strong>坑三：<code>radius</code> 和烘焙时的 Agent Radius 不一致。</strong> 运行时的 <code>agent.radius</code> 只影响代理之间的避障推挤，<strong>不影响它实际能走哪</strong>——能不能走是烘焙时定死的。把运行时 radius 调小，角色不会因此钻进更窄的缝，但会和别的代理挤得更近，表现为穿模。</p>
+<p><strong>坑四：<code>avoidancePriority</code> 的方向是反的。</strong> 数值 <strong>0 是最高优先级</strong>，越大越容易被推开。想做一个「不会被杂兵挤开」的 Boss，要把它调到接近 0，而不是 99。</p>
+</section>
+<section id="query"><h2>5 路径查询三件套（m09 完全没提）</h2>
+<p>点击移动、可达性判断、视线预警，都靠这三个<strong>静态方法</strong>，而不是让 agent 真的跑一遍再观察结果。这是本篇最值得带走的一节——m09 里这三个 API 一次都没出现。</p>
+<div class="codewrap"><div class="codebar"><span class="lang">C#</span><button class="copy" type="button">复制</button></div><pre class="code"><code><span class="c-cmt">// 1) SamplePosition：把任意点吸附到最近的 NavMesh 上</span>
+<span class="c-cmt">//    点击地面拿到的点常常不在 NavMesh 上（尤其在斜坡/边缘）</span>
+<span class="c-kw">if</span> (NavMesh.SamplePosition(clickPoint, <span class="c-kw">out</span> <span class="c-kw">var</span> hit, <span class="c-num">2f</span>, NavMesh.AllAreas))
+    agent.SetDestination(hit.position);
+
+<span class="c-cmt">// 2) Raycast：判断两点之间有没有被墙/断开阻隔（比物理射线便宜且贴 NavMesh）</span>
+NavMeshHit navHit;
+<span class="c-kw">bool</span> blocked = NavMesh.Raycast(agent.position, target, <span class="c-kw">out</span> navHit, NavMesh.AllAreas);
+<span class="c-kw">if</span> (blocked) Debug.DrawLine(agent.position, navHit.position, Color.red);
+
+<span class="c-cmt">// 3) CalculatePath：只算路径不移动，用来做「能不能过去」的预判</span>
+<span class="c-kw">var</span> path = <span class="c-kw">new</span> NavMeshPath();
+<span class="c-kw">if</span> (NavMesh.CalculatePath(agent.position, target, NavMesh.AllAreas, path)
+    &amp;&amp; path.status == NavMeshPathStatus.PathComplete)
+{
+    <span class="c-cmt">// path.corners 就是拐点数组，可以用来画路线、算真实路程</span>
+    <span class="c-kw">float</span> len = <span class="c-num">0f</span>;
+    <span class="c-kw">for</span> (<span class="c-kw">int</span> i = <span class="c-num">1</span>; i &lt; path.corners.Length; i++) len += Vector3.Distance(path.corners[i-<span class="c-num">1</span>], path.corners[i]);
+}</code></pre></div>
+<div class="note n-tip"><span class="ni">→</span><div><b>建议</b><strong>做点击移动一定要先 SamplePosition</strong>。玩家点的是屏幕射线与地面的交点，边界处经常落在 NavMesh 之外，直接 SetDestination 会得到一个最近但很怪的贴合点，表现为「点这边，人跑那边」。</div></div>
+</section>
+<section id="offmesh"><h2>6 OffMeshLink：画不出跳跃的样子</h2>
+<p>OffMeshLink 的 Start / End / Cost Override 字段含义在 m09 的 04 节已经讲了。这里解决它没覆盖的真问题：<strong>默认行为是让 agent 匀速直线滑过去</strong>，所以跳跃看着像平移、爬梯看着像飘。要改观感，必须自己接管这段位移。</p>
+<p>接管的关键是三步：进入 link 时关掉 agent 的位姿驱动 → 自己插值或播动画 → 结束后调 <code>CompleteOffMeshLink()</code> 交还控制权。</p>
+<div class="codewrap"><div class="codebar"><span class="lang">C#</span><button class="copy" type="button">复制</button></div><pre class="code"><code><span class="c-cmt">// 让角色在跨越时播跳跃动画：手动接管 OffMeshLink</span>
+<span class="c-kw">void</span> Update()
+{
+    <span class="c-kw">if</span> (agent.isOnOffMeshLink &amp;&amp; !jumping)
+    {
+        jumping = <span class="c-kw">true</span>;
+        <span class="c-kw">var</span> data = agent.currentOffMeshLinkData;
+        StartCoroutine(JumpAcross(data.startPos, data.endPos));
+    }
+}
+
+IEnumerator JumpAcross(Vector3 from, Vector3 to)
+{
+    agent.updatePosition = <span class="c-kw">false</span>;      <span class="c-cmt">// 松开控制权，自己插值</span>
+    agent.updateRotation = <span class="c-kw">false</span>;
+    <span class="c-kw">float</span> t = <span class="c-num">0f</span>, dur = <span class="c-num">0.4f</span>;
+    <span class="c-kw">while</span> (t &lt; dur)
+    {
+        t += Time.deltaTime;
+        <span class="c-kw">float</span> k = Mathf.Clamp01(t / dur);
+        <span class="c-kw">var</span> p = Vector3.Lerp(from, to, k);
+        p.y += Mathf.Sin(k * Mathf.PI) * <span class="c-num">1.2f</span>;   <span class="c-cmt">// 抛物线</span>
+        transform.position = p;
+        <span class="c-kw">yield</span> <span class="c-kw">return</span> <span class="c-kw">null</span>;
+    }
+    agent.CompleteOffMeshLink();       <span class="c-cmt">// 交还控制权</span>
+    agent.updatePosition = <span class="c-kw">true</span>;
+    agent.updateRotation = <span class="c-kw">true</span>;
+    jumping = <span class="c-kw">false</span>;
+}</code></pre></div>
+<div class="note n-warn"><span class="ni">⚠</span><div><b>坑</b>忘了调用 <code>CompleteOffMeshLink()</code>，agent 会永久卡在 link 上不动。这是 OffMeshLink 最常见的 bug。</div></div>
+</section>
+<section id="obstacle"><h2>7 动态障碍：carve 还是不 carve</h2>
+<p>可移动的障碍（箱子、路障）有两种处理方式，选错会让性能或行为任一崩掉。</p>
+<div class="tw"><table><thead><tr><th>策略</th><th>做法</th><th>开销</th><th>效果</th></tr></thead><tbody><tr><td>不 carve（默认）</td><td>只靠 agent 的局部避障绕开</td><td>低</td><td>障碍物周围不会挖洞，agent 会贴着挤过去</td></tr><tr><td>carve = true</td><td>在 NavMesh 上真实挖洞</td><td>高（重新计算局部网格）</td><td>路径真正绕开，像一堵墙</td></tr></tbody></table></div>
+<div class="codewrap"><div class="codebar"><span class="lang">C#</span><button class="copy" type="button">复制</button></div><pre class="code"><code><span class="c-cmt">// 大而少（门、路障）：开 carve 才符合预期</span>
+<span class="c-kw">var</span> ob = box.GetComponent&lt;NavMeshObstacle&gt;();
+ob.shape = NavMeshObstacleShape.Box;
+ob.size = <span class="c-kw">new</span> Vector3(<span class="c-num">2f</span>, <span class="c-num">2f</span>, <span class="c-num">2f</span>);
+ob.carving = <span class="c-kw">true</span>;
+ob.carveOnlyStationary = <span class="c-kw">true</span>;        <span class="c-cmt">// 只有静止时才挖洞，移动中不挖</span>
+ob.carvingTimeToStationary = <span class="c-num">0.3f</span>;   <span class="c-cmt">// 停下多久算「静止」</span>
+
+<span class="c-cmt">// 小而多（几十个滚来滚去的球）：别开 carve，交给避障</span>
+ob.carving = <span class="c-kw">false</span>;</code></pre></div>
+<div class="note n-key"><span class="ni">◆</span><div><b>核心</b>判断口诀：<strong>大而少 → carve；小而多 → 不 carve</strong>。给几十个移动物体开 carve，每帧都在重建局部网格，帧率会断崖式下跌。</div></div>
+</section>
+<section id="runtime"><h2>8 运行时重建：解开 m09 那条局限</h2>
+<div class="note n-info"><span class="ni">ⓘ</span><div><b>背景</b>m09 的 01 节在讲概念时写过一句局限：<strong>「只能在编辑模式下进行烘焙，游戏场景模式下不行」</strong>。这句话在旧版 Navigation 面板下是对的，但用 <code>com.unity.ai.navigation</code> 包里的 <strong>NavMeshSurface</strong> 就可以在运行时重新构建——肉鸽、塔防、建造类这种程序化生成的地图，靠的就是它。</div></div>
+<p>把 NavMeshSurface 挂到场景里，配好 agentType 与要收集的层，之后就能在代码里重建：</p>
+<div class="codewrap"><div class="codebar"><span class="lang">C#</span><button class="copy" type="button">复制</button></div><pre class="code"><code><span class="c-kw">using</span> Unity.AI.Navigation;
+
+<span class="c-cmt">// 场景里挂 NavMeshSurface，配好 agentType 与收集的层</span>
+<span class="c-kw">public</span> <span class="c-kw">void</span> Rebuild()
+{
+    surface.BuildNavMesh();            <span class="c-cmt">// 同步构建，会卡一帧</span>
+}
+
+<span class="c-cmt">// 更平滑的做法：异步更新，避免卡顿</span>
+<span class="c-kw">public</span> <span class="c-kw">void</span> RebuildAsync(NavMeshData data)
+{
+    <span class="c-kw">var</span> settings = NavMesh.GetSettingsByID(<span class="c-num">0</span>);
+    <span class="c-kw">var</span> src = <span class="c-kw">new</span> NavMeshBuildSource();
+    <span class="c-kw">var</span> sources = <span class="c-kw">new</span> List&lt;NavMeshBuildSource&gt;();
+    <span class="c-cmt">// ... 收集 sources ...</span>
+    NavMeshBuilder.UpdateNavMeshDataAsync(data, settings, sources, bounds);
+}</code></pre></div>
+<div class="tw"><table><thead><tr><th>时机</th><th>做法</th><th>注意</th></tr></thead><tbody><tr><td>地图生成后一次</td><td>BuildNavMesh()</td><td>可接受一次卡顿</td></tr><tr><td>局部改动（放一个建筑）</td><td>只更新该 bounds 内的数据</td><td>bounds 要算准，否则边缘有洞</td></tr><tr><td>每帧变化</td><td>不要重建，改用 NavMeshObstacle carve</td><td>重建的开销是毫秒级</td></tr></tbody></table></div>
+<div class="note n-warn"><span class="ni">⚠</span><div><b>坑</b>不要在 <code>Update()</code> 里调 <code>BuildNavMesh()</code>。它的开销在毫秒量级，一帧调一次等于把帧率钉死。</div></div>
+</section>
+<section id="perf"><h2>9 性能与常见坑</h2>
+<ul class="pts"><li><strong>别每帧 SetDestination</strong>：目标没变就别调，否则每帧重算路径。给追击 AI 加个 0.2s 的节流。</li><li><strong>agent 数量</strong>：几十个没问题；上百个要分帧更新（关 updatePosition/updateRotation，自己按帧分摊移动）。</li><li><strong>卡墙角</strong>：90% 是 Agent Radius 与 collider 半径不匹配，或 stoppingDistance=0 导致贴脸推挤。</li><li><strong>穿墙</strong>：agent 的 radius 小于烘焙时的 Agent Radius，会钻进本该不可走的缝隙。</li><li><strong>路径 Partial</strong>：<code>pathStatus == PathPartial</code> 表示只能到最近可达点。UI 上要区分「到了」和「到不了」。</li><li><strong>多场景烘焙</strong>：用 NavMeshSurface 的 Collect Objects 选择 Current Object / All / Volume，别漏了动态加载的场景。</li><li><strong>导航网格可视化</strong>：Scene 视图开 Navigation 面板的 Show NavMesh，排查问题比读日志快十倍。</li></ul>
+</section>
+<section id="beyond"><h2>10 跳出游戏：同一套思路还能用在哪</h2>
+<div class="tw"><table><thead><tr><th>领域</th><th>映射关系</th><th>差异点</th></tr></thead><tbody><tr><td>AGV / 仓储机器人</td><td>NavMesh ≈ 可通行栅格地图</td><td>要处理多机避障与死锁，比游戏严格</td></tr><tr><td>室内导航（商场/机场）</td><td>导航网格 ≈ 楼层平面</td><td>跨楼层要靠 OffMeshLink 式的连接（电梯/扶梯）</td></tr><tr><td>无人机航线</td><td>3D 空间而非 2D 地面</td><td>NavMesh 只有 2.5D，真 3D 要用体素/八叉树</td></tr><tr><td>地图服务可达性</td><td>Areas ≈ 道路等级代价</td><td>实时路况 = 动态代价，等价于运行时改 area cost</td></tr></tbody></table></div>
+<div class="note n-info"><span class="ni">ⓘ</span><div><b>背景</b>NavMesh 的本质是「<strong>把连续空间离散成带权图 + 在其上跑 A</strong>*」。理解了这一层，换到任何寻路问题（包括非空间问题，如任务依赖排序）都能迁移。</div></div>
+</section>
+<section class="quiz" id="quiz">
+<h2>自测 · 4 题</h2>
+<p class="qhint">点选项立即判定，答错会给出原因。</p>
+<div class="qcard" data-q="0" data-a="1" data-why="Radius 为 0 意味着可行走区域紧贴碰撞体边缘，没有留出身位，实际跑动时反复与边缘碰撞而卡住。经验值约为角色胶囊半径 × 0.9。"><div class="qt"><span class="qn">1</span>烘焙时 Agent Radius 填 0，最可能出现什么现象？</div><div class="opts"><button class="opt" data-q="0" data-i="0" type="button"><span class="oi">A</span><span>烘焙失败</span></button><button class="opt" data-q="0" data-i="1" type="button"><span class="oi">B</span><span>角色会一直卡墙角</span></button><button class="opt" data-q="0" data-i="2" type="button"><span class="oi">C</span><span>帧率下降</span></button><button class="opt" data-q="0" data-i="3" type="button"><span class="oi">D</span><span>路径变短</span></button></div><div class="qfb"></div></div>
+<div class="qcard" data-q="1" data-a="1" data-why="屏幕射线与地面的交点在地图边界、斜坡处经常不在 NavMesh 上。直接 SetDestination 会得到异常贴合点，表现为「点这边却跑那边」。"><div class="qt"><span class="qn">2</span>点击移动时，为什么必须先 NavMesh.SamplePosition？</div><div class="opts"><button class="opt" data-q="1" data-i="0" type="button"><span class="oi">A</span><span>提升精度</span></button><button class="opt" data-q="1" data-i="1" type="button"><span class="oi">B</span><span>点击点常落在 NavMesh 之外，需要吸附到最近的可走点</span></button><button class="opt" data-q="1" data-i="2" type="button"><span class="oi">C</span><span>为了省性能</span></button><button class="opt" data-q="1" data-i="3" type="button"><span class="oi">D</span><span>避免射线穿透</span></button></div><div class="qfb"></div></div>
+<div class="qcard" data-q="2" data-a="1" data-why="口诀是大而少用 carve、小而多用避障。carve 每帧都在重建局部网格，50 个同时开会直接拖垮帧率。"><div class="qt"><span class="qn">3</span>场景里有 50 个滚动的球需要绕开，NavMeshObstacle 该怎么配？</div><div class="opts"><button class="opt" data-q="2" data-i="0" type="button"><span class="oi">A</span><span>全部 carving=true</span></button><button class="opt" data-q="2" data-i="1" type="button"><span class="oi">B</span><span>全部 carving=false，交给避障</span></button><button class="opt" data-q="2" data-i="2" type="button"><span class="oi">C</span><span>一半开一半关</span></button><button class="opt" data-q="2" data-i="3" type="button"><span class="oi">D</span><span>改用 NavMeshSurface 每帧重建</span></button></div><div class="qfb"></div></div>
+<div class="qcard" data-q="3" data-a="1" data-why="pathPending 期间 remainingDistance 返回 Infinity，路径不完整时也不可靠。必须组合判断，否则会出现「有时不触发、有时瞬触」的诡异现象。"><div class="qt"><span class="qn">4</span>判断 agent 是否到达目标，正确做法是？</div><div class="opts"><button class="opt" data-q="3" data-i="0" type="button"><span class="oi">A</span><span>remainingDistance &lt;= 0.5f 即可</span></button><button class="opt" data-q="3" data-i="1" type="button"><span class="oi">B</span><span>先看 pathPending，再看 hasPath 与 pathStatus，最后比 remainingDistance</span></button><button class="opt" data-q="3" data-i="2" type="button"><span class="oi">C</span><span>看 velocity 是否为 0</span></button><button class="opt" data-q="3" data-i="3" type="button"><span class="oi">D</span><span>看 destination 是否等于 position</span></button></div><div class="qfb"></div></div>
+</section>
+</article>
+<nav class="pagenav"><a class="pv" href="m01.html"><span>上一模块</span><b>UI Toolkit</b></a><a class="nx" href="m03.html"><span>下一模块</span><b>广告接入与双区域适配</b></a></nav>
+
+</main>
+</div>
+<script src="assets/app.js"></script>
+</body>
+</html>
