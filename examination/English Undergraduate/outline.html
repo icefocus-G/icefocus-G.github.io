@@ -1,0 +1,747 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#f6f4ef">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="format-detection" content="telephone=no">
+<title>0 基础到精通 · 英语（专升本）13000</title>
+<style>
+:root{
+  /* —— 取自「财务管理学」的纸感配色 —— */
+  --bg:#f6f4ef; --paper2:#efece4; --card:#fffefb;
+  --ink:#15171b; --ink2:#3b3d42; --ink3:#75736e;
+  --line:#e3ded2; --line-soft:#eee9de;
+  --main:#b8452f; --main-d:#9c3a27; --main-s:#f3e2dc;
+  --teal:#1d3a34; --teal-s:#e2ece8;
+  --warn-s:#f7ece6; --ok:#2f6b4f; --ok-s:#e8f1ea;
+  --bad:#b8452f; --bad-s:#f3e2dc;
+  --serif:"Songti SC","Noto Serif SC","Source Han Serif SC","STSong",Georgia,"Times New Roman",serif;
+  --mono:"SFMono-Regular",ui-monospace,"JetBrains Mono",Menlo,Consolas,monospace;
+  --r:18px;
+  --shadow:0 1px 2px rgba(21,23,27,.04),0 12px 32px -18px rgba(21,23,27,.28);
+}
+*{box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{margin:0;background:var(--bg);color:var(--ink);font-size:15px;line-height:1.8;
+  font-family:-apple-system,BlinkMacSystemFont,"PingFang SC","Hiragino Sans GB","Microsoft YaHei","Segoe UI",Roboto,sans-serif;
+  -webkit-font-smoothing:antialiased;
+  background-image:radial-gradient(900px 520px at 80% -6%,rgba(184,69,47,.085),transparent 62%),
+                   radial-gradient(760px 500px at 2% 6%,rgba(29,58,52,.07),transparent 60%);
+  background-attachment:fixed;background-repeat:no-repeat}
+::selection{background:var(--main);color:#fff}
+.wrap{max-width:1180px;margin:0 auto;padding:0 16px 90px}
+
+/* ---------- 顶端书写条 ---------- */
+#bar{position:fixed;top:0;left:0;height:2.5px;width:0;z-index:120;
+  background:linear-gradient(90deg,var(--main),#d98b5f 55%,var(--teal));transition:width .1s linear}
+
+/* ---------- 顶部 ---------- */
+.hero{padding:66px 20px 44px;border-bottom:1px solid var(--line);position:relative;overflow:hidden}
+.hero .in{max-width:1180px;margin:0 auto;position:relative}
+.eyebrow{display:inline-flex;align-items:center;gap:10px;font-family:var(--mono);font-size:11px;
+  letter-spacing:.24em;text-transform:uppercase;color:var(--main);font-weight:600;margin-bottom:20px}
+.eyebrow::after{content:"";width:52px;height:1px;background:var(--main);opacity:.5}
+.hero h1{font-family:var(--serif);font-weight:600;font-size:clamp(30px,4.6vw,54px);
+  line-height:1.16;letter-spacing:-.015em;margin:0}
+.hero h1 em{font-style:normal;color:var(--main)}
+.hero .lede{margin:20px 0 0;max-width:56ch;font-size:15.5px;line-height:1.9;color:var(--ink2)}
+.hero .lede b{color:var(--ink);font-weight:600}
+.hero .chips{margin-top:26px;display:flex;gap:8px;flex-wrap:wrap}
+.hero .chip{background:var(--card);border:1px solid var(--line);border-radius:999px;
+  padding:5px 13px;font-size:12.5px;color:var(--ink2);line-height:1.6}
+.hero .chip b{font-family:var(--mono);color:var(--main);font-weight:600;margin:0 1px}
+.hero-fig{position:absolute;right:0;top:8px;width:270px;text-align:right;pointer-events:none}
+.hf-en{font-family:var(--serif);font-style:italic;font-size:17px;line-height:1.75;
+  color:rgba(21,23,27,.16);letter-spacing:.01em}
+.hf-rule{height:1px;width:58%;margin:20px 0 20px auto;background:var(--line)}
+.hf-cap{font-family:var(--mono);font-size:9.5px;letter-spacing:.22em;color:rgba(117,115,110,.5);line-height:1.95}
+@media screen and (max-width:1279px){.hero-fig{display:none}}
+
+/* ---------- 布局 ---------- */
+.layout{display:grid;grid-template-columns:238px 1fr;gap:34px;align-items:start;padding-top:34px}
+nav{position:sticky;top:22px;max-height:calc(100vh - 44px);overflow:auto;padding-right:4px}
+nav .nt{font-family:var(--mono);font-size:10.5px;letter-spacing:.2em;text-transform:uppercase;
+  color:var(--ink3);padding:0 0 10px 13px}
+nav a{display:block;font-size:14px;color:var(--ink2);text-decoration:none;line-height:1.65;
+  padding:7px 0 7px 13px;border-left:2px solid transparent;transition:.18s;-webkit-transition:.18s}
+nav a:hover{color:var(--main);border-left-color:var(--main-s)}
+nav a.on{color:var(--main);border-left-color:var(--main);font-weight:600}
+
+section{margin-bottom:44px;scroll-margin-top:16px}
+
+/* ---------- 章节头 ---------- */
+.chead{position:relative;display:flex;gap:18px;align-items:flex-start;
+  padding-bottom:15px;border-bottom:1px solid var(--line);margin-bottom:18px}
+.ch-numeral{font-family:var(--serif);font-size:62px;line-height:.84;font-weight:600;
+  color:transparent;-webkit-text-stroke:1px var(--line);letter-spacing:-.04em;
+  flex:0 0 auto;margin-top:-3px;user-select:none}
+.ch-kicker{font-family:var(--mono);font-size:10.5px;letter-spacing:.2em;color:var(--main);
+  text-transform:uppercase;margin-bottom:5px}
+.chead h2{font-family:var(--serif);font-size:clamp(23px,3vw,31px);font-weight:600;
+  margin:0;line-height:1.24;letter-spacing:.005em}
+.ch-sub{color:var(--ink3);font-size:12.5px;margin:8px 0 0;line-height:1.75;letter-spacing:.01em}
+
+.card{background:var(--card);border:1px solid var(--line-soft);border-radius:var(--r);
+  padding:20px 24px;margin-bottom:16px;box-shadow:var(--shadow);position:relative;overflow:hidden;
+  transition:transform .25s ease,border-color .25s ease,box-shadow .25s ease}
+.card::before{content:"";position:absolute;left:0;top:0;bottom:0;width:3px;background:var(--main);
+  transform:scaleY(0);transform-origin:top;transition:transform .3s ease}
+.card:hover{transform:translateY(-2px);border-color:var(--line);
+  box-shadow:0 2px 4px rgba(21,23,27,.04),0 20px 42px -24px rgba(21,23,27,.36)}
+.card:hover::before{transform:scaleY(1)}
+.card h3{font-family:var(--serif);font-size:17.5px;margin:0 0 10px;color:var(--ink);font-weight:600}
+.lead{font-size:13.5px;color:var(--ink2);background:rgba(184,69,47,.035);border-radius:0 8px 8px 0;
+  border-left:2px solid var(--main-s);padding:10px 14px;line-height:1.9;margin-bottom:14px}
+.lead b{color:var(--main-d)}
+
+/* 试卷结构表 */
+table{width:100%;border-collapse:collapse;font-size:13.5px}
+th,td{padding:9px 10px;border-bottom:1px solid var(--line-soft);text-align:left}
+th{background:var(--paper2);color:var(--ink3);font-weight:600;font-size:11.5px;
+  letter-spacing:.08em;white-space:nowrap}
+td{color:var(--ink2)}
+td b{color:var(--ink)}
+td.num{font-family:var(--mono);font-size:13px;font-variant-numeric:tabular-nums;color:var(--ink)}
+tr:last-child td{border-bottom:none}
+tr:last-child td{background:rgba(239,236,228,.5)}
+.badge{display:inline-block;font-size:11px;padding:1px 8px;border-radius:999px;white-space:nowrap;
+  font-family:var(--mono);letter-spacing:.03em}
+.badge.o{background:var(--main-s);color:var(--main-d);border:1px solid rgba(184,69,47,.22)}
+.badge.s{background:var(--teal-s);color:var(--teal);border:1px solid rgba(29,58,52,.2)}
+
+/* 题型卡 */
+.type{background:var(--card);border:1px solid var(--line-soft);border-radius:var(--r);
+  padding:19px 22px;margin-bottom:14px;box-shadow:var(--shadow)}
+.type .th{display:flex;align-items:baseline;gap:10px;flex-wrap:wrap;margin-bottom:10px;
+  padding-bottom:10px;border-bottom:1px dashed var(--line)}
+.type .th b{font-family:var(--serif);font-size:17px;font-weight:600}
+.type .th .rk{font-family:var(--mono);font-size:11px;color:var(--main-d);background:var(--main-s);
+  border:1px solid rgba(184,69,47,.2);border-radius:999px;padding:2px 9px;letter-spacing:.02em}
+.type .th .pt{margin-left:auto;font-family:var(--mono);font-size:11.5px;color:var(--ink3)}
+.type dl{margin:0}
+.type dt{font-size:11px;color:var(--main);font-weight:700;margin-top:11px;
+  font-family:var(--mono);letter-spacing:.16em;text-transform:uppercase}
+.type dd{margin:3px 0 0;font-size:13.5px;color:var(--ink2);line-height:1.92}
+.type dd ol,.type dd ul{margin:3px 0 0;padding-left:20px}
+.type dd b{color:var(--ink)}
+.type .pit{background:rgba(184,69,47,.045);border-left:2px solid var(--main);
+  border-radius:0 8px 8px 0;padding:9px 13px;font-size:13px;color:#7d2f20;margin-top:12px;line-height:1.85}
+.type .pit b{color:var(--main-d)}
+
+/* 单元 */
+.units{display:grid;grid-template-columns:repeat(auto-fill,minmax(300px,1fr));gap:13px}
+.unit{background:var(--card);border:1px solid var(--line-soft);border-radius:var(--r);
+  padding:16px 18px;box-shadow:var(--shadow);transition:transform .25s ease,border-color .25s ease}
+.unit:hover{transform:translateY(-2px);border-color:var(--line)}
+.unit .un{font-family:var(--mono);font-size:10.5px;color:var(--main);font-weight:600;letter-spacing:.14em}
+.unit h4{font-family:var(--serif);font-size:16px;margin:5px 0 9px;line-height:1.42;font-weight:600}
+.unit .tx{font-size:12.5px;color:var(--ink3);line-height:1.8;margin-bottom:9px}
+.unit .tx i{font-style:normal;color:var(--ink2)}
+.unit .vw{display:flex;flex-wrap:wrap;gap:5px;margin-bottom:8px}
+.unit .vw span{font-size:11.5px;background:var(--paper2);color:var(--ink2);border-radius:999px;
+  padding:2px 8px;line-height:1.55;font-family:var(--mono)}
+.unit .wr{font-size:12px;color:var(--teal);background:var(--teal-s);border-radius:8px;
+  padding:6px 10px;line-height:1.72}
+
+/* 词表 */
+.vgroup{margin-bottom:24px}
+.vgroup h4{font-family:var(--serif);font-size:16px;margin:0 0 11px;padding-left:10px;
+  border-left:3px solid var(--main);font-weight:600;line-height:1.4}
+.vlist{display:grid;grid-template-columns:repeat(auto-fill,minmax(252px,1fr));gap:8px}
+.vrow{display:flex;gap:8px;align-items:baseline;background:var(--card);border:1px solid var(--line-soft);
+  border-radius:10px;padding:7px 12px;font-size:13px;transition:.18s}
+.vrow:hover{border-color:var(--line);background:#fff}
+.vrow .a{color:var(--ink);font-family:var(--serif);font-size:14px}
+.vrow .ar{color:var(--ink3);font-size:11.5px}
+.vrow .b{color:var(--main-d);font-weight:600;margin-left:auto;text-align:right;font-size:12.5px}
+
+/* 语法 */
+.ga{background:var(--card);border:1px solid var(--line-soft);border-radius:var(--r);
+  padding:18px 20px;margin-bottom:14px;box-shadow:var(--shadow)}
+.ga h4{font-family:var(--serif);font-size:16.5px;margin:0 0 10px;color:var(--ink);font-weight:600}
+.ga .core{font-size:13.5px;color:var(--ink2);background:var(--paper2);border-radius:9px;
+  padding:10px 13px;line-height:1.88;margin-bottom:11px;border-left:2px solid var(--teal)}
+.ga ul{margin:0;padding-left:20px}
+.ga li{font-size:13.5px;line-height:1.98;margin-bottom:5px;color:var(--ink2)}
+.ga li b{color:var(--ink)}
+
+/* 写作 */
+.wt{background:var(--card);border:1px solid var(--line-soft);border-radius:var(--r);
+  padding:18px 20px;margin-bottom:14px;box-shadow:var(--shadow)}
+.wt h4{font-family:var(--serif);font-size:16.5px;margin:0 0 7px;font-weight:600}
+.wt .real{font-family:var(--mono);font-size:11px;color:var(--teal);background:var(--teal-s);
+  border-radius:999px;padding:2px 9px;display:inline-block;margin-bottom:10px;letter-spacing:.02em}
+.wt .fr{background:rgba(246,244,239,.6);border:1px dashed var(--line);border-radius:10px;
+  padding:11px 14px;font-size:13px;line-height:1.92;margin-bottom:10px;color:var(--ink2)}
+.wt .fr div{margin-bottom:2px}
+.wt .se{font-family:var(--serif);font-size:13.5px;line-height:2;color:var(--main-d)}
+
+/* 路线图 */
+.road{position:relative;padding-left:0}
+.phase{background:var(--card);border:1px solid var(--line-soft);border-radius:var(--r);
+  padding:16px 19px;margin-bottom:12px;box-shadow:var(--shadow)}
+.phase .ph{display:flex;align-items:baseline;gap:9px;flex-wrap:wrap;margin-bottom:8px;
+  padding-bottom:9px;border-bottom:1px dashed var(--line)}
+.phase .ph b{font-family:var(--serif);font-size:16px;font-weight:600}
+.phase .ph .wk{font-family:var(--mono);font-size:10.5px;background:var(--main);color:#fff;
+  border-radius:999px;padding:2px 9px;letter-spacing:.04em}
+.phase .ph .goal{margin-left:auto;font-size:11.5px;color:var(--ink3)}
+.phase ul{margin:0;padding-left:20px}
+.phase li{font-size:13.5px;color:var(--ink2);line-height:1.92;margin-bottom:4px}
+.phase li b{color:var(--ink)}
+
+footer{color:var(--ink3);font-size:11.5px;line-height:1.95;text-align:center;margin-top:36px;
+  padding-top:20px;border-top:1px solid var(--line);letter-spacing:.01em}
+
+@media (max-width:860px){
+  body{background-image:radial-gradient(500px 340px at 88% -4%,rgba(184,69,47,.08),transparent 60%)}
+  #bar{display:none}
+  .hero{padding:36px 18px 30px}
+  .hero h1{font-size:clamp(26px,7.4vw,34px);line-height:1.2}
+  .hero .lede{font-size:14px;margin-top:16px}
+  .hero .chips{margin-top:20px;gap:6px}
+  .hero .chip{font-size:11.5px;padding:4px 11px}
+  .eyebrow{font-size:10px;margin-bottom:14px}
+  .layout{grid-template-columns:1fr;gap:0;padding-top:20px}
+  nav{position:static;max-height:none;margin-bottom:20px;display:flex;gap:6px;overflow-x:auto;
+      padding:0 0 10px;border-bottom:1px solid var(--line);scrollbar-width:none}
+  nav::-webkit-scrollbar{display:none}
+  nav .nt{display:none}
+  nav a{flex:0 0 auto;white-space:nowrap;border-left:none;border:1px solid var(--line);
+    padding:6px 12px;border-radius:999px;font-size:12.5px;margin:0;background:var(--card);
+    color:var(--ink2)}
+  nav a.on{border-color:var(--main);background:var(--main-s);color:var(--main-d);font-weight:600}
+  section{margin-bottom:34px}
+  .chead{gap:12px;padding-bottom:12px;margin-bottom:15px}
+  .ch-numeral{font-size:40px}
+  .chead h2{font-size:20px}
+  .ch-sub{font-size:11.5px}
+  .card,.type,.ga,.wt,.phase{padding:15px 15px;border-radius:14px}
+  .units{grid-template-columns:1fr}
+  .vlist{grid-template-columns:1fr}
+  table{font-size:12.5px}
+  th,td{padding:7px 6px}
+  th{font-size:11px}
+  td.num{font-size:12px}
+  .type .th b{font-size:15.5px}
+  /* 首列"第X部分"保持一行，避免拆成"第一部/分" */
+  th:nth-child(1),td:nth-child(1){white-space:nowrap}
+  .phase .ph .goal{margin-left:0;flex:1 1 100%}
+}
+@media print{
+  body{background:#fff;background-image:none}
+  #bar,nav,.hero-fig{display:none !important}
+  .layout{display:block}
+  .card,.type,.unit,.ga,.wt,.phase{box-shadow:none}
+}
+</style>
+</head>
+<body>
+
+<div id="bar"></div>
+
+<div class="hero">
+  <div class="in">
+    <div class="hero-fig" aria-hidden="true">
+      <div class="hf-en">Reading is to the mind<br>what exercise is to the body.</div>
+      <div class="hf-rule"></div>
+      <div class="hf-cap">PART I&ndash;VII &middot; 100 MARKS<br>150 MINUTES &middot; NO LISTENING</div>
+    </div>
+    <div class="eyebrow">13000 &middot; English &middot; Self-taught</div>
+    <h1>0 基础到精通<br><em>英语（专升本）</em></h1>
+    <p class="lede">教材《英语（二）自学教程》2012 年版 · 张敬源、张虹 · 外研社。七大题型，100 分，150 分钟，无听力。这一页只讲一件事：<b>每个题型该拿多少分、怎么拿到</b>。</p>
+    <div class="chips">
+      <span class="chip"><b>7</b> 大题型</span>
+      <span class="chip"><b>100</b> 分 / 150 分钟</span>
+      <span class="chip">客观 <b>55</b> · 主观 <b>45</b></span>
+      <span class="chip"><b>12</b> 个单元</span>
+      <span class="chip">词形转换 <b>7</b> 类</span>
+      <span class="chip">写作模板 <b>6</b> 类</span>
+    </div>
+  </div>
+</div>
+
+<div class="wrap">
+<div class="layout">
+
+<nav id="nav">
+  <div class="nt">目录</div>
+  <a href="#s1">① 考试全景</a>
+  <a href="#s2">② 七大题型解法</a>
+  <a href="#s3">③ 教材 12 单元</a>
+  <a href="#s4">④ 语法体系</a>
+  <a href="#s5">⑤ 词形转换表</a>
+  <a href="#s6">⑥ 写作模板</a>
+  <a href="#s7">⑦ 12 周路线图</a>
+</nav>
+
+<div>
+
+<!-- ============ 1 考试全景 ============ -->
+<section id="s1">
+  <div class="chead">
+    <div class="ch-numeral">01</div>
+    <div>
+      <div class="ch-kicker">Section 01</div>
+      <h2>考试全景</h2>
+      <div class="ch-sub">先把这张表看明白，后面所有复习才有配比</div>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="lead"><b>一句话结论：</b>这张卷子 55 分是机器判的客观题，45 分是主观题。想过线（60 分），最高效的路径是——把 55 分客观题拿到 40+，再在写作上稳住 20+，完形补文当作"送分题"拿下 12+。</div>
+    <table>
+      <thead><tr><th>部分</th><th>题型</th><th>题量</th><th>每题</th><th>合计</th><th>性质</th></tr></thead>
+      <tbody>
+        <tr><td>第一部分</td><td>阅读判断</td><td class='num'>10</td><td class='num'>1</td><td class='num'><b>10</b></td><td><span class='badge o'>客观</span></td></tr>
+        <tr><td>第二部分</td><td>阅读选择</td><td class='num'>5</td><td class='num'>2</td><td class='num'><b>10</b></td><td><span class='badge o'>客观</span></td></tr>
+        <tr><td>第三部分</td><td>概括段落大意和补全句子</td><td class='num'>10</td><td class='num'>1</td><td class='num'><b>10</b></td><td><span class='badge o'>客观</span></td></tr>
+        <tr><td>第四部分</td><td>填句补文</td><td class='num'>5</td><td class='num'>2</td><td class='num'><b>10</b></td><td><span class='badge o'>客观</span></td></tr>
+        <tr><td>第五部分</td><td>填词补文</td><td class='num'>10</td><td class='num'>1.5</td><td class='num'><b>15</b></td><td><span class='badge o'>客观</span></td></tr>
+        <tr><td>第六部分</td><td>完形补文</td><td class='num'>10</td><td class='num'>1.5</td><td class='num'><b>15</b></td><td><span class='badge s'>主观</span></td></tr>
+        <tr><td>第七部分</td><td>短文写作</td><td class='num'>1</td><td class='num'>30</td><td class='num'><b>30</b></td><td><span class='badge s'>主观</span></td></tr>
+        <tr><td colspan='4'><b>合计</b></td><td class='num'><b>100</b></td><td><span class='badge o'>客观 55</span> <span class='badge s'>主观 45</span></td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <div class="card">
+    <h3>三个先想清楚的问题</h3>
+    <dl style="margin:0">
+      <dt style="font-size:13px;color:var(--main-d);font-weight:700">1. 没有听力，那考什么？</dt>
+      <dd style="margin:2px 0 10px;font-size:13.5px;color:var(--ink2)">考"读"和"写"。七大题型里五个是读（判断、选择、段落匹配、补句、补词），两个是写（完形补文、短文写作）。所以复习重心一定在"读长句"和"写对句子"，而不是背单词表。</dd>
+      <dt style="font-size:13px;color:var(--main-d);font-weight:700">2. 词汇要求到底多少？</dt>
+      <dd style="margin:2px 0 10px;font-size:13.5px;color:var(--ink2)">大纲口径是认知 4500 词、熟练掌握 900 词及其搭配。但真正决定分数的是那 900 个高频词——它们在阅读里反复出现，在填词补文里当选项，在完形补文里当提示词。先把 900 拿下，4500 只做"眼熟"处理。</dd>
+      <dt style="font-size:13px;color:var(--main-d);font-weight:700">3. 13000 和 00015 是什么关系？</dt>
+      <dd style="margin:2px 0 0;font-size:13.5px;color:var(--ink2)">同一本教材（2012 年版）、同一套题型结构。13000 是 2024 年专业调整后的新代码，学分从 14 降为 7，但卷面结构没变。所以 <b>00015 的历年真题可以原样当 13000 的真题练</b>。</dd>
+    </dl>
+  </div>
+</section>
+
+<!-- ============ 2 七大题型 ============ -->
+<section id="s2">
+  <div class="chead">
+    <div class="ch-numeral">02</div>
+    <div>
+      <div class="ch-kicker">Section 02</div>
+      <h2>七大题型解法</h2>
+      <div class="ch-sub">每个题型只记三件事：考什么 · 怎么答 · 错在哪</div>
+    </div>
+  </div>
+
+  <div class="type">
+    <div class="th"><b>第一部分 · 阅读判断</b><span class="rk">10 题 × 1 分 = 10 分</span><span class="pt">建议 12 分钟</span></div>
+    <dl>
+      <dt>考什么</dt>
+      <dd>给你一篇约 350 词的短文，10 个句子，判断 A（与原文一致）/ B（与原文矛盾）/ C（原文没提）。</dd>
+      <dt>怎么答</dt>
+      <dd><ol>
+        <li><b>先读题干划关键词</b>，不要先通读全文。10 个题干按顺序扫一遍，圈出人名、数字、动作词。</li>
+        <li><b>回原文定位</b>：题干关键词在原文出现的位置，往往就是答案句。</li>
+        <li><b>三选一的判定口诀</b>：原文有 → A；原文说了相反的事 → B；原文压根没提这件事 → C。</li>
+      </ol></dd>
+    </dl>
+    <div class="pit"><b>最高频失分点：把"原文没提"当成"正确"。</b>典型陷阱——原文说"她的方法在全世界很流行"，题干问"这本书是畅销书"。"方法流行"≠"书畅销"，这是 C 不是 A。另一个陷阱是"人物/时间/地点被替换"：原文坏的是父亲的雪地摩托，题干说"Bode 的坏了"，这是 B。</div>
+  </div>
+
+  <div class="type">
+    <div class="th"><b>第二部分 · 阅读选择</b><span class="rk">5 题 × 2 分 = 10 分</span><span class="pt">建议 12 分钟</span></div>
+    <dl>
+      <dt>考什么</dt>
+      <dd>一篇 350 词短文，5 道四选一。考点只有五类：细节定位、主旨概括、词义推断、作者态度、写作意图。</dd>
+      <dt>怎么答</dt>
+      <dd><ul>
+        <li><b>细节题</b>：题干关键词回原文，正确项一定是原文的<b>同义替换</b>（stay-at-home moms → housewives；high in sugar → rich in sugar）。</li>
+        <li><b>主旨题</b>（mainly talks about）：只看首段 + 各段第一句 + 末段，不要被中间例子带走。</li>
+        <li><b>态度题</b>（tone）：找情感词。sorrow / regret / praise 是遗憾或肯定，sharp / harsh / tyrant 是负面。</li>
+      </ul></dd>
+    </dl>
+    <div class="pit"><b>别用常识答题。</b>选项里那个"听起来最合理"的，往往是原文没说的。每选一项，都要能指出它在原文的哪一句——指不出来就不选。</div>
+  </div>
+
+  <div class="type">
+    <div class="th"><b>第三部分 · 概括段落大意和补全句子</b><span class="rk">10 题 × 1 分 = 10 分</span><span class="pt">建议 15 分钟</span></div>
+    <dl>
+      <dt>考什么</dt>
+      <dd>一篇文章两个任务：Task 1 给 4~5 个段落各选一个小标题；Task 2 用 6~7 个选项补全 5~6 个句子。</dd>
+      <dt>怎么答</dt>
+      <dd><ol>
+        <li><b>Task 1 抓"段落中心句"</b>：多数段落的中心句在首句，少部分在末句。先读首句，再看全段有没有转折（but / however）——转折后面常常才是真中心。</li>
+        <li><b>排除法比正面选更快</b>：先用最不像的排除，剩下的两个再比。</li>
+        <li><b>Task 2 看语法</b>：空格前如果是介词，选项必须是名词或动名词；空格前是 be 动词，选项必须是形容词或分词。语法不对的选项直接划掉。</li>
+      </ol></dd>
+    </dl>
+    <div class="pit"><b>不要用"细节"当"段意"。</b>段落里出现的 30 秒、饼干、温水都是细节，段意是"我如何保持味觉灵敏"。凡是选项只说了一个细节的，基本都不是段意。</div>
+  </div>
+
+  <div class="type">
+    <div class="th"><b>第四部分 · 填句补文</b><span class="rk">5 题 × 2 分 = 10 分</span><span class="pt">建议 12 分钟</span></div>
+    <dl>
+      <dt>考什么</dt>
+      <dd>一篇 400 词短文挖走 5 个句子，给 6 个备选句（1 个干扰项），还原回去。</dd>
+      <dt>怎么答</dt>
+      <dd><ol>
+        <li><b>先看空前空后的"钩子"</b>：代词（they / these / it）必须能在前文找到指代对象；连接词（however / then / also）必须和前后逻辑一致。</li>
+        <li><b>看重复词</b>：空后出现 play simple tunes，选项里有 play the piano —— 这种词汇复现几乎必是答案。</li>
+        <li><b>看序号呼应</b>：前文出现 First、Second，空处就大概率是 Third。</li>
+        <li><b>最后剩一个用不上的就是干扰项</b>，不用纠结。</li>
+      </ol></dd>
+    </dl>
+    <div class="pit"><b>代词指代是最硬的证据。</b>选项里出现 They / These，前文必须有一个复数名词能接住它。接不住，就一定是错的——这条能排掉一半干扰项。</div>
+  </div>
+
+  <div class="type">
+    <div class="th"><b>第五部分 · 填词补文</b><span class="rk">10 题 × 1.5 分 = 15 分</span><span class="pt">建议 15 分钟</span></div>
+    <dl>
+      <dt>考什么</dt>
+      <dd>一篇短文挖 10 个词，给 12 个备选词（2 个干扰），要求选词填空。</dd>
+      <dt>怎么答</dt>
+      <dd><ol>
+        <li><b>第一步全部标词性</b>：把 12 个选项挨个标 N / V / Adj / Adv。这一步花 2 分钟，能省 8 分钟。</li>
+        <li><b>第二步判空位词性</b>：冠词/形容词后 → 名词；be 动词后 → 形容词；修饰动词 → 副词。</li>
+        <li><b>第三步同词性里比搭配</b>：burst into laughter、pay attention to、make sb. laugh——固定搭配直接定答案。</li>
+        <li><b>第四步看单复数/时态</b>：主语是复数，动词就别选三单形式。</li>
+      </ol></dd>
+    </dl>
+    <div class="pit"><b>先做最有把握的，把选项"用掉"。</b>这是 12 选 10，每确定一个就划掉一个，剩下两个干扰项最后自然浮出来。反过来从最难的开始抠，很容易卡死。</div>
+  </div>
+
+  <div class="type">
+    <div class="th"><b>第六部分 · 完形补文</b><span class="rk">10 题 × 1.5 分 = 15 分</span><span class="pt">建议 15 分钟</span></div>
+    <dl>
+      <dt>考什么</dt>
+      <dd>短文里 10 个空，每个空后面用括号给出一个词的原形，要求写出<b>正确形式</b>。不考选词，只考词形。</dd>
+      <dt>怎么答</dt>
+      <dd><ol>
+        <li><b>看到括号是动词</b>，先问三句：句子有过去时间吗（时态）？主语是"做"还是"被做"（语态）？主语单复数（一致）？</li>
+        <li><b>句子里已经有谓语了</b>，那这个动词只能变非谓语：doing / done / to do。</li>
+        <li><b>看到括号是名词/形容词</b>，判断空位要什么词性，再走派生：nature → natural → naturally；important → importance。</li>
+        <li><b>写完检查大小写</b>：句首、专有名词必须大写（Scientists）。</li>
+      </ol></dd>
+    </dl>
+    <div class="pit"><b>这是全卷最该拿满的 15 分。</b>因为它考的规则是有限的、可穷举的——就 7 类词形转换（见第 ⑤ 节）。阅读靠语感，这 15 分靠规则，规则是可以背下来的。</div>
+  </div>
+
+  <div class="type">
+    <div class="th"><b>第七部分 · 短文写作</b><span class="rk">1 题 × 30 分</span><span class="pt">建议 35 分钟</span></div>
+    <dl>
+      <dt>考什么</dt>
+      <dd>给一个题目和 2 个要点，写约 100 词英文短文。近年真题：Uses of the Internet、My Goal for Next Year、Online Shopping、An unforgettable holiday。</dd>
+      <dt>怎么答</dt>
+      <dd><ol>
+        <li><b>三段式，一段一件事</b>：第一段引出话题 + 表态；第二段写要点 1；第三段写要点 2 + 收尾。100 词大概 8~10 句。</li>
+        <li><b>两个要点必须都出现</b>。漏一个要点，直接掉一个档次（30 分掉到 20 分档）。</li>
+        <li><b>宁短勿错</b>：用你会写的简单句，不要硬写复杂句。一个错句扣的分，比你多写两句简单句赚的分多。</li>
+        <li><b>最后留 3 分钟查三样</b>：主谓一致、时态、拼写。</li>
+      </ol></dd>
+    </dl>
+    <div class="pit"><b>字数不够是最冤的失分。</b>100 词左右，宁可写到 110 词。写不满 80 词，评分老师直接按"未完成任务"压档。考前把 6 类模板的开头句和结尾句背死，字数从来不是问题。</div>
+  </div>
+</section>
+
+<!-- ============ 3 教材单元 ============ -->
+<section id="s3">
+  <div class="chead">
+    <div class="ch-numeral">03</div>
+    <div>
+      <div class="ch-kicker">Section 03</div>
+      <h2>教材 12 单元</h2>
+      <div class="ch-sub">《英语（二）自学教程》2012 年版 · 每单元 Text A + Text B</div>
+    </div>
+  </div>
+  <div class="card" style="padding:14px 17px">
+    <div class="lead" style="margin:0"><b>怎么用这 12 个单元：</b>教材本身不会直接出"第几单元"的题，它的作用是<b>提供话题词汇和可迁移的写作素材</b>。一个单元读完，你要带走三样东西：① 这个主题的 5~8 个高频词；② 2~3 个能写进作文的句子结构；③ 一个可以在写作里用的观点。下面每张卡就是按这个逻辑整理的。</div>
+  </div>
+  <div class="units">
+    <div class="unit">
+      <div class="un">UNIT 01</div>
+      <h4>The Power of Language</h4>
+      <div class="tx">Text A　<i>Critical Reading</i><br>Text B　<i>The Language of Confidence</i></div>
+      <div class="vw"><span>critical</span><span>evaluate</span><span>assumption</span><span>assertion</span><span>context</span><span>confidence</span><span>persuade</span></div>
+      <div class="wr">议论文/学习方法类：讲“如何读书 / 如何学习”时可直接引用“critical reading is active reading”。</div>
+    </div>
+    <div class="unit">
+      <div class="un">UNIT 02</div>
+      <h4>Mistakes to Success</h4>
+      <div class="tx">Text A　<i>Spilt Milk</i><br>Text B　<i>The Cake</i></div>
+      <div class="vw"><span>mistake</span><span>regret</span><span>learn from</span><span>opportunity</span><span>failure</span><span>excuse</span><span>experience</span></div>
+      <div class="wr">“一次难忘的经历 / 我从错误中学到什么”——本单元是现成的素材库。</div>
+    </div>
+    <div class="unit">
+      <div class="un">UNIT 03</div>
+      <h4>Friendship and Loyalty</h4>
+      <div class="tx">Text A　<i>Reflections: Friendship and Loyalty</i><br>Text B　<i>A Tribute to the Dog</i></div>
+      <div class="vw"><span>loyalty</span><span>friendship</span><span>trust</span><span>companion</span><span>deposit</span><span>betray</span><span>support</span></div>
+      <div class="wr">“真正的朋友 / 忠诚”类作文；真题填词补文就取自本单元主题（Friendship and Loyalty）。</div>
+    </div>
+    <div class="unit">
+      <div class="un">UNIT 04</div>
+      <h4>The Joy of Work</h4>
+      <div class="tx">Text A　<i>Work Is a Blessing</i><br>Text B　<i>How to Start Your Own Business</i></div>
+      <div class="vw"><span>blessing</span><span>career</span><span>attitude</span><span>diligence</span><span>achieve</span><span>opportunity</span><span>passion</span></div>
+      <div class="wr">“工作的意义 / 我的职业规划”——与真题 2024.04 的 career plan 阅读同话题。</div>
+    </div>
+    <div class="unit">
+      <div class="un">UNIT 05</div>
+      <h4>Keep Your Dreams Alive</h4>
+      <div class="tx">Text A　<i>Life Is Difficult</i><br>Text B　<i>Begin Again</i></div>
+      <div class="vw"><span>dream</span><span>persist</span><span>difficulty</span><span>challenge</span><span>give up</span><span>overcome</span><span>courage</span></div>
+      <div class="wr">“坚持 / 重新开始”——写作万能素材，任何关于“困难与成长”的题目都能用。</div>
+    </div>
+    <div class="unit">
+      <div class="un">UNIT 06</div>
+      <h4>The Value of Money</h4>
+      <div class="tx">Text A　<i>Teaching Children to Spend Pocket Money Wisely</i><br>Text B　<i>The Importance of Money in Life</i></div>
+      <div class="vw"><span>pocket money</span><span>budget</span><span>value</span><span>spend</span><span>save</span><span>wisely</span><span>necessity</span></div>
+      <div class="wr">“零花钱 / 理财”——2024.10 写作真题就考 Uses of the Internet 之外的消费类话题常客。</div>
+    </div>
+    <div class="unit">
+      <div class="un">UNIT 07</div>
+      <h4>Inner Voice</h4>
+      <div class="tx">Text A　<i>Your Inner Voice</i><br>Text B　<i>Make a Good First Impression</i></div>
+      <div class="vw"><span>impression</span><span>judgment</span><span>intuition</span><span>appearance</span><span>behave</span><span>confident</span><span>polite</span></div>
+      <div class="wr">“第一印象 / 倾听内心”——议论类作文可用“第一印象很重要，但不要只看外表”。</div>
+    </div>
+    <div class="unit">
+      <div class="un">UNIT 08</div>
+      <h4>The Great Minds</h4>
+      <div class="tx">Text A　<i>Life without Limits</i><br>Text B　<i>An Unwanted Baby, Steve Jobs</i></div>
+      <div class="vw"><span>limit</span><span>achieve</span><span>talent</span><span>determination</span><span>adopt</span><span>found</span><span>success</span></div>
+      <div class="wr">“我最敬佩的人 / 成功的关键”——人物类作文的固定素材段。</div>
+    </div>
+    <div class="unit">
+      <div class="un">UNIT 09</div>
+      <h4>Facing Life's Challenges</h4>
+      <div class="tx">Text A　<i>300 Hurdles</i><br>Text B　<i>A Violin with Three Strings</i></div>
+      <div class="vw"><span>hurdle</span><span>challenge</span><span>face</span><span>struggle</span><span>strength</span><span>disabled</span><span>inspire</span></div>
+      <div class="wr">“面对困难”——和第 5 单元可以合并成一个万能素材包。</div>
+    </div>
+    <div class="unit">
+      <div class="un">UNIT 10</div>
+      <h4>Ode to Public Transportation</h4>
+      <div class="tx">Text A　<i>The Importance of Public Transportation</i><br>Text B　<i>Personal Advantages of Taking Public Transportation</i></div>
+      <div class="vw"><span>transportation</span><span>convenient</span><span>environment</span><span>traffic</span><span>advantage</span><span>commute</span><span>reduce</span></div>
+      <div class="wr">“公共交通 / 环保出行”——环境类作文的现成论据（减少拥堵、减少污染）。</div>
+    </div>
+    <div class="unit">
+      <div class="un">UNIT 11</div>
+      <h4>Cyber World</h4>
+      <div class="tx">Text A　<i>Cyber Love</i><br>Text B　<i>The Impact of the Internet on Society</i></div>
+      <div class="vw"><span>cyber</span><span>impact</span><span>online</span><span>social media</span><span>convenient</span><span>addict</span><span>privacy</span></div>
+      <div class="wr">“网络的影响 / 网上购物”——2024.10 写作真题 Uses of the Internet 直接对应本单元。</div>
+    </div>
+    <div class="unit">
+      <div class="un">UNIT 12</div>
+      <h4>A Break from Life</h4>
+      <div class="tx">Text A　<i>Feeling Free</i><br>Text B　<i>Self-esteem and Body Image</i></div>
+      <div class="vw"><span>relax</span><span>self-esteem</span><span>body image</span><span>pressure</span><span>balance</span><span>accept</span><span>free</span></div>
+      <div class="wr">“如何减压 / 接纳自己”——健康与心态类作文素材。</div>
+    </div>
+    
+  </div>
+</section>
+
+<!-- ============ 4 语法 ============ -->
+<section id="s4">
+  <div class="chead">
+    <div class="ch-numeral">04</div>
+    <div>
+      <div class="ch-kicker">Section 04</div>
+      <h2>语法体系</h2>
+      <div class="ch-sub">只学这 6 讲——它们直接对应 15 分完形补文和阅读长难句</div>
+    </div>
+  </div>
+  <div class="ga">
+      <h4>一、谓语动词的三件事：时态、语态、主谓一致</h4>
+      <div class="core">完形补文 10 个空里，至少 4 个在考这里。看到括号里是动词，先问三个问题：① 句子有没有明确过去时间？② 主语是"做"还是"被做"？③ 主语单数还是复数？</div>
+      <ul><li>一般过去时：叙事文（讲故事、讲实验经过）默认时态。标志：last year / in 2019 / one day / then。</li><li>现在完成时：have/has + 过去分词。标志：since / so far / over the past years / already。</li><li>被动语态：be + 过去分词。标志：主语是"受事"（time and patience are needed）。</li><li>主谓一致陷阱：each of / every / neither ... 视为单数；the number of 单数，a number of 复数。</li></ul>
+    </div>
+    <div class="ga">
+      <h4>二、非谓语动词：doing / done / to do 怎么选</h4>
+      <div class="core">一个句子里已经有谓语了，括号里再给动词，就只能变非谓语。判断只看一件事：这个动作和它修饰/搭配的词，是"主动、进行"还是"被动、完成"。</div>
+      <ul><li>作定语：主动/进行用 doing（living things, signs telling you ...）；被动/完成用 done（the book written by ...）。</li><li>作状语：主动用 doing；被动用 done；表目的用 to do。</li><li>固定搭配：spend time doing / be busy doing / look forward to doing / be used to doing / have difficulty doing。</li><li>介词后一律 doing（about spending, without saying）。</li></ul>
+    </div>
+    <div class="ga">
+      <h4>三、词性转换：把括号里的词变成该空的词性</h4>
+      <div class="core">完形补文另一半分数在这里。判断空位需要什么词性，只看空前后：</div>
+      <ul><li>冠词/形容词/介词后 → 名词（the importance of, out of laziness）。</li><li>be 动词/系动词后 → 形容词（is effective, seems like an effective way）。</li><li>修饰动词或形容词 → 副词（particularly true, generally believed）。</li><li>more / most / so / very 后 → 形容词或副词原级。</li><li>常见链：nature→natural→naturally；importance→important→importantly。</li></ul>
+    </div>
+    <div class="ga">
+      <h4>四、定语从句与关系词</h4>
+      <div class="core">阅读里长句读不懂，八成卡在从句。先找先行词（被修饰的名词），再看它在从句里充当什么成分。</div>
+      <ul><li>先行词是人 → who / whom / whose；是物 → which / that；是时间地点原因 → when / where / why。</li><li>从句缺主语或宾语 → 用 who/which/that；从句成分完整 → 用 where/when/why 或 whose。</li><li>非限制性从句（逗号后）不能用 that。</li></ul>
+    </div>
+    <div class="ga">
+      <h4>五、状语从句：逻辑关系决定连词</h4>
+      <div class="core">填句补文和阅读判断都在考这个。看到一个空，先判断前后两句是"因果、转折、让步、条件"哪一种。</div>
+      <ul><li>因果：because / since / as / so that / therefore。</li><li>转折：but / however / yet / while（对比）。</li><li>让步：although / though / even if / no matter how。</li><li>条件：if / unless / as long as / in case。</li><li>并列递进：and / besides / moreover / what's more。</li></ul>
+    </div>
+    <div class="ga">
+      <h4>六、比较级与最高级</h4>
+      <div class="core">短文写作加分项、完形补文常考点。</div>
+      <ul><li>单音节 + er/est；多音节前加 more/most。</li><li>不规则：good-better-best, bad-worse-worst, little-less-least, far-farther/further。</li><li>比较级前可加 much / far / even / a lot 加强。</li><li>the + 比较级, the + 比较级（越……越……）。</li></ul>
+    </div>
+    
+</section>
+
+<!-- ============ 5 词形转换 ============ -->
+<section id="s5">
+  <div class="chead">
+    <div class="ch-numeral">05</div>
+    <div>
+      <div class="ch-kicker">Section 05</div>
+      <h2>词形转换表</h2>
+      <div class="ch-sub">填词补文 15 分 + 完形补文 15 分，都在这张表里</div>
+    </div>
+  </div>
+  <div class="card" style="padding:14px 17px">
+    <div class="lead" style="margin:0"><b>背法：</b>不要横向背单词，要<b>纵向背词族</b>。看到一个词，脑子里要自动弹出它的名词、形容词、副词、否定形式。比如 nature → natural → naturally → unnatural。考试时括号里给哪个，你就写对应形式，不用现场想。</div>
+  </div>
+  <div class="vgroup"><h4>名词→形容词</h4><div class="vlist"><div class="vrow"><span class="a">nature</span><span class="ar">自然</span><span class="b">natural 自然的</span></div><div class="vrow"><span class="a">nation</span><span class="ar">国家</span><span class="b">national 国家的</span></div><div class="vrow"><span class="a">culture</span><span class="ar">文化</span><span class="b">cultural 文化的</span></div><div class="vrow"><span class="a">tradition</span><span class="ar">传统</span><span class="b">traditional 传统的</span></div><div class="vrow"><span class="a">person</span><span class="ar">个人</span><span class="b">personal 个人的</span></div><div class="vrow"><span class="a">medicine</span><span class="ar">医学</span><span class="b">medical 医学的</span></div><div class="vrow"><span class="a">history</span><span class="ar">历史</span><span class="b">historical 历史的</span></div><div class="vrow"><span class="a">economy</span><span class="ar">经济</span><span class="b">economic 经济的</span></div><div class="vrow"><span class="a">science</span><span class="ar">科学</span><span class="b">scientific 科学的</span></div><div class="vrow"><span class="a">energy</span><span class="ar">能量</span><span class="b">energetic 精力充沛的</span></div><div class="vrow"><span class="a">health</span><span class="ar">健康</span><span class="b">healthy 健康的</span></div><div class="vrow"><span class="a">wealth</span><span class="ar">财富</span><span class="b">wealthy 富有的</span></div><div class="vrow"><span class="a">danger</span><span class="ar">危险</span><span class="b">dangerous 危险的</span></div><div class="vrow"><span class="a">fame</span><span class="ar">名声</span><span class="b">famous 著名的</span></div><div class="vrow"><span class="a">success</span><span class="ar">成功</span><span class="b">successful 成功的</span></div><div class="vrow"><span class="a">use</span><span class="ar">用途</span><span class="b">useful 有用的 / useless 无用的</span></div><div class="vrow"><span class="a">care</span><span class="ar">关心</span><span class="b">careful 仔细的 / careless 粗心的</span></div><div class="vrow"><span class="a">hope</span><span class="ar">希望</span><span class="b">hopeful 有希望的 / hopeless 绝望的</span></div><div class="vrow"><span class="a">power</span><span class="ar">力量</span><span class="b">powerful 强大的</span></div><div class="vrow"><span class="a">peace</span><span class="ar">和平</span><span class="b">peaceful 和平的</span></div><div class="vrow"><span class="a">value</span><span class="ar">价值</span><span class="b">valuable 有价值的</span></div><div class="vrow"><span class="a">reason</span><span class="ar">原因</span><span class="b">reasonable 合理的</span></div><div class="vrow"><span class="a">comfort</span><span class="ar">舒适</span><span class="b">comfortable 舒适的</span></div><div class="vrow"><span class="a">knowledge</span><span class="ar">知识</span><span class="b">knowledgeable 博学的</span></div><div class="vrow"><span class="a">create</span><span class="ar">创造</span><span class="b">creative 有创造力的</span></div></div></div>
+  <div class="vgroup"><h4>形容词→副词</h4><div class="vlist"><div class="vrow"><span class="a">particular</span><span class="ar">特别的</span><span class="b">particularly 尤其</span></div><div class="vrow"><span class="a">general</span><span class="ar">一般的</span><span class="b">generally 通常</span></div><div class="vrow"><span class="a">real</span><span class="ar">真实的</span><span class="b">really 真正地</span></div><div class="vrow"><span class="a">especial</span><span class="ar">特别的</span><span class="b">especially 尤其</span></div><div class="vrow"><span class="a">extreme</span><span class="ar">极端的</span><span class="b">extremely 极其</span></div><div class="vrow"><span class="a">complete</span><span class="ar">完整的</span><span class="b">completely 完全地</span></div><div class="vrow"><span class="a">direct</span><span class="ar">直接的</span><span class="b">directly 直接地</span></div><div class="vrow"><span class="a">immediate</span><span class="ar">立即的</span><span class="b">immediately 立即</span></div><div class="vrow"><span class="a">rare</span><span class="ar">罕见的</span><span class="b">rarely 很少</span></div><div class="vrow"><span class="a">sure</span><span class="ar">确定的</span><span class="b">surely 确实</span></div><div class="vrow"><span class="a">serious</span><span class="ar">严肃的</span><span class="b">seriously 严重地</span></div><div class="vrow"><span class="a">final</span><span class="ar">最后的</span><span class="b">finally 最后</span></div><div class="vrow"><span class="a">main</span><span class="ar">主要的</span><span class="b">mainly 主要地</span></div><div class="vrow"><span class="a">rapid</span><span class="ar">快速的</span><span class="b">rapidly 迅速地</span></div><div class="vrow"><span class="a">possible</span><span class="ar">可能的</span><span class="b">possibly 可能地</span></div></div></div>
+  <div class="vgroup"><h4>形容词/名词→名词（抽象）</h4><div class="vlist"><div class="vrow"><span class="a">important</span><span class="ar">重要的</span><span class="b">importance 重要性</span></div><div class="vrow"><span class="a">different</span><span class="ar">不同的</span><span class="b">difference 差别</span></div><div class="vrow"><span class="a">independent</span><span class="ar">独立的</span><span class="b">independence 独立</span></div><div class="vrow"><span class="a">confident</span><span class="ar">自信的</span><span class="b">confidence 信心</span></div><div class="vrow"><span class="a">patient</span><span class="ar">耐心的</span><span class="b">patience 耐心</span></div><div class="vrow"><span class="a">able</span><span class="ar">能够的</span><span class="b">ability 能力</span></div><div class="vrow"><span class="a">free</span><span class="ar">自由的</span><span class="b">freedom 自由</span></div><div class="vrow"><span class="a">wise</span><span class="ar">明智的</span><span class="b">wisdom 智慧</span></div><div class="vrow"><span class="a">strong</span><span class="ar">强壮的</span><span class="b">strength 力量</span></div><div class="vrow"><span class="a">long</span><span class="ar">长的</span><span class="b">length 长度</span></div><div class="vrow"><span class="a">high</span><span class="ar">高的</span><span class="b">height 高度</span></div><div class="vrow"><span class="a">wide</span><span class="ar">宽的</span><span class="b">width 宽度</span></div><div class="vrow"><span class="a">deep</span><span class="ar">深的</span><span class="b">depth 深度</span></div><div class="vrow"><span class="a">difficult</span><span class="ar">困难的</span><span class="b">difficulty 困难</span></div><div class="vrow"><span class="a">necessary</span><span class="ar">必要的</span><span class="b">necessity 必要性</span></div></div></div>
+  <div class="vgroup"><h4>动词→名词</h4><div class="vlist"><div class="vrow"><span class="a">decide</span><span class="ar">决定</span><span class="b">decision 决定</span></div><div class="vrow"><span class="a">explain</span><span class="ar">解释</span><span class="b">explanation 解释</span></div><div class="vrow"><span class="a">invite</span><span class="ar">邀请</span><span class="b">invitation 邀请</span></div><div class="vrow"><span class="a">apply</span><span class="ar">申请</span><span class="b">application 申请</span></div><div class="vrow"><span class="a">educate</span><span class="ar">教育</span><span class="b">education 教育</span></div><div class="vrow"><span class="a">invent</span><span class="ar">发明</span><span class="b">invention 发明</span></div><div class="vrow"><span class="a">develop</span><span class="ar">发展</span><span class="b">development 发展</span></div><div class="vrow"><span class="a">achieve</span><span class="ar">达到</span><span class="b">achievement 成就</span></div><div class="vrow"><span class="a">agree</span><span class="ar">同意</span><span class="b">agreement 协议</span></div><div class="vrow"><span class="a">improve</span><span class="ar">改进</span><span class="b">improvement 改进</span></div><div class="vrow"><span class="a">satisfy</span><span class="ar">满足</span><span class="b">satisfaction 满意</span></div><div class="vrow"><span class="a">recognize</span><span class="ar">认出</span><span class="b">recognition 承认</span></div><div class="vrow"><span class="a">protect</span><span class="ar">保护</span><span class="b">protection 保护</span></div><div class="vrow"><span class="a">express</span><span class="ar">表达</span><span class="b">expression 表达</span></div><div class="vrow"><span class="a">compete</span><span class="ar">竞争</span><span class="b">competition 竞争</span></div><div class="vrow"><span class="a">describe</span><span class="ar">描述</span><span class="b">description 描述</span></div><div class="vrow"><span class="a">choose</span><span class="ar">选择</span><span class="b">choice 选择</span></div><div class="vrow"><span class="a">lose</span><span class="ar">失去</span><span class="b">loss 损失</span></div><div class="vrow"><span class="a">solve</span><span class="ar">解决</span><span class="b">solution 解决办法</span></div><div class="vrow"><span class="a">survive</span><span class="ar">幸存</span><span class="b">survival 幸存者</span></div></div></div>
+  <div class="vgroup"><h4>动词→形容词（-ing / -ed 双胞胎）</h4><div class="vlist"><div class="vrow"><span class="a">interest</span><span class="ar">使感兴趣</span><span class="b">interesting 令人感兴趣的 / interested 感到兴趣的</span></div><div class="vrow"><span class="a">excite</span><span class="ar">使兴奋</span><span class="b">exciting 令人兴奋的 / excited 感到兴奋的</span></div><div class="vrow"><span class="a">surprise</span><span class="ar">使惊讶</span><span class="b">surprising 令人惊讶的 / surprised 感到惊讶的</span></div><div class="vrow"><span class="a">bore</span><span class="ar">使厌烦</span><span class="b">boring 使人厌烦的 / bored 感到厌烦的</span></div><div class="vrow"><span class="a">tire</span><span class="ar">使疲劳</span><span class="b">tiring 令人疲惫的 / tired 感到疲惫的</span></div><div class="vrow"><span class="a">satisfy</span><span class="ar">使满意</span><span class="b">satisfying 令人满意的 / satisfied 感到满意的</span></div><div class="vrow"><span class="a">disappoint</span><span class="ar">使失望</span><span class="b">disappointing 令人失望的 / disappointed 感到失望的</span></div><div class="vrow"><span class="a">confuse</span><span class="ar">使困惑</span><span class="b">confusing 令人困惑的 / confused 感到困惑的</span></div><div class="vrow"><span class="a">amaze</span><span class="ar">使惊奇</span><span class="b">amazing 令人惊奇的 / amazed 感到惊奇的</span></div><div class="vrow"><span class="a">worry</span><span class="ar">使担心</span><span class="b">worrying 令人担忧的 / worried 感到担忧的</span></div></div></div>
+  <div class="vgroup"><h4>动词→动词（前缀变化）</h4><div class="vlist"><div class="vrow"><span class="a">able</span><span class="ar">能够的</span><span class="b">enable 使能够 / disable 使不能</span></div><div class="vrow"><span class="a">large</span><span class="ar">大的</span><span class="b">enlarge 扩大</span></div><div class="vrow"><span class="a">rich</span><span class="ar">富的</span><span class="b">enrich 使丰富</span></div><div class="vrow"><span class="a">sure</span><span class="ar">确定的</span><span class="b">ensure 确保</span></div><div class="vrow"><span class="a">power</span><span class="ar">力量</span><span class="b">empower 授权</span></div><div class="vrow"><span class="a">courage</span><span class="ar">勇气</span><span class="b">encourage 鼓励 / discourage 使气馁</span></div><div class="vrow"><span class="a">appear</span><span class="ar">出现</span><span class="b">disappear 消失</span></div><div class="vrow"><span class="a">cover</span><span class="ar">覆盖</span><span class="b">discover 发现 / recover 恢复</span></div><div class="vrow"><span class="a">agree</span><span class="ar">同意</span><span class="b">disagree 不同意</span></div><div class="vrow"><span class="a">understand</span><span class="ar">理解</span><span class="b">misunderstand 误解</span></div></div></div>
+  <div class="vgroup"><h4>否定前缀（填空高频）</h4><div class="vlist"><div class="vrow"><span class="a">possible</span><span class="ar">可能的</span><span class="b">impossible 不可能的</span></div><div class="vrow"><span class="a">polite</span><span class="ar">礼貌的</span><span class="b">impolite 不礼貌的</span></div><div class="vrow"><span class="a">correct</span><span class="ar">正确的</span><span class="b">incorrect 不正确的</span></div><div class="vrow"><span class="a">expensive</span><span class="ar">贵的</span><span class="b">inexpensive 便宜的</span></div><div class="vrow"><span class="a">direct</span><span class="ar">直接的</span><span class="b">indirect 间接的</span></div><div class="vrow"><span class="a">legal</span><span class="ar">合法的</span><span class="b">illegal 非法的</span></div><div class="vrow"><span class="a">regular</span><span class="ar">规律的</span><span class="b">irregular 不规律的</span></div><div class="vrow"><span class="a">fair</span><span class="ar">公平的</span><span class="b">unfair 不公平的</span></div><div class="vrow"><span class="a">usual</span><span class="ar">通常的</span><span class="b">unusual 不寻常的</span></div><div class="vrow"><span class="a">happy</span><span class="ar">快乐的</span><span class="b">unhappy 不快乐的</span></div><div class="vrow"><span class="a">known</span><span class="ar">已知的</span><span class="b">unknown 未知的</span></div><div class="vrow"><span class="a">certain</span><span class="ar">确定的</span><span class="b">uncertain 不确定的</span></div></div></div>
+  
+</section>
+
+<!-- ============ 6 写作 ============ -->
+<section id="s6">
+  <div class="chead">
+    <div class="ch-numeral">06</div>
+    <div>
+      <div class="ch-kicker">Section 06</div>
+      <h2>写作模板</h2>
+      <div class="ch-sub">6 类话题覆盖近年全部真题，背框架不背范文</div>
+    </div>
+  </div>
+  <div class="wt">
+      <h4>网络与科技类</h4>
+      <div class="real">Uses of the Internet（24.10 真题）</div>
+      <div class="fr"><div>· 开头：The Internet plays an important role in my daily life.</div><div>· 中间（两方面）：I use it for various purposes: ... ; ... ; and ...</div><div>· 影响：It makes my life more convenient and efficient. However, ...</div><div>· 结尾：Overall, ... is a valuable tool that ... when used wisely.</div></div>
+      <div class="se">“With the rapid development of technology, ... has become part of our daily life.”<br>“On the one hand, ...; on the other hand, ...”<br>“It not only ... but also ...”<br>“As far as I am concerned, we should make good use of it instead of being controlled by it.”</div>
+    </div>
+    <div class="wt">
+      <h4>目标与计划类</h4>
+      <div class="real">My Goal for Next Year（23.10 真题）</div>
+      <div class="fr"><div>· 开头：As the current year comes to an end, it is time to set new goals.</div><div>· 目标：My goal for next year is to ...</div><div>· 措施（三步）：First, ... Second, ... Third, ...</div><div>· 结尾：I believe that with discipline and persistence, I can ...</div></div>
+      <div class="se">“To achieve this goal, I have made a concrete plan.”<br>“First of all, I will ... In addition, I will ... Last but not least, I will ...”<br>“I am fully confident that my efforts will pay off.”<br>“Nothing is impossible if we put our hearts into it.”</div>
+    </div>
+    <div class="wt">
+      <h4>学习与成长类</h4>
+      <div class="real">常考：学习方法 / 一次难忘的经历 / 我最喜欢的书</div>
+      <div class="fr"><div>· 开头：Everyone has his own way of learning. As for me, ...</div><div>· 展开：具体做法 + 一个例子（for example / once ...）</div><div>· 收获：Thanks to this, I have ...</div><div>· 结尾：In a word, ... is of great benefit to us.</div></div>
+      <div class="se">“What impresses me most is that ...”<br>“It was then that I realized the importance of ...”<br>“Practice makes perfect.”<br>“This experience has taught me a lesson that I will never forget.”</div>
+    </div>
+    <div class="wt">
+      <h4>健康与生活方式类</h4>
+      <div class="real">常考：健康生活 / 运动 / 饮食习惯</div>
+      <div class="fr"><div>· 开头：Health is the most valuable wealth in our life.</div><div>· 问题：Nowadays, many people ... (stay up late / eat fast food)</div><div>· 建议（三条）：First, ... Second, ... Third, ...</div><div>· 结尾：Only in this way can we keep fit and enjoy a better life.</div></div>
+      <div class="se">“It is generally believed that ...”<br>“We are supposed to ... instead of ...”<br>“Only in this way can we ...（倒装，加分句式）”<br>“A good habit is the best investment in our health.”</div>
+    </div>
+    <div class="wt">
+      <h4>环境与责任类</h4>
+      <div class="real">常考：环境保护 / 节约资源 / 低碳生活</div>
+      <div class="fr"><div>· 开头：Environmental protection has become a hot topic in our society.</div><div>· 现状：On the one hand, ...; on the other hand, ...</div><div>· 行动：As students, we can ...</div><div>· 结尾：If everyone makes a small effort, our world will become much better.</div></div>
+      <div class="se">“It is our duty to protect the environment.”<br>“Small actions can make a big difference.”<br>“We should take immediate measures to ...”<br>“Let's join hands to build a green and beautiful world.”</div>
+    </div>
+    <div class="wt">
+      <h4>观点与议论类</h4>
+      <div class="real">常考：网上购物的看法 / 兼职的利弊 / 手机的影响</div>
+      <div class="fr"><div>· 开头：When it comes to ..., opinions vary from person to person.</div><div>· 正面：Some people think that ... because ...</div><div>· 反面：Others argue that ...</div><div>· 我的看法：From my point of view, ...</div><div>· 结尾：In conclusion, we should ...</div></div>
+      <div class="se">“Every coin has two sides.”<br>“Some people hold the view that ..., while others believe that ...”<br>“From my point of view, the advantages outweigh the disadvantages.”<br>“As long as we use it properly, it will benefit us a lot.”</div>
+    </div>
+    
+</section>
+
+<!-- ============ 7 路线图 ============ -->
+<section id="s7">
+  <div class="chead">
+    <div class="ch-numeral">07</div>
+    <div>
+      <div class="ch-kicker">Section 07</div>
+      <h2>12 周路线图</h2>
+      <div class="ch-sub">从 0 基础到 60 分，每周只需 6~8 小时</div>
+    </div>
+  </div>
+
+  <div class="phase">
+    <div class="ph"><b>第一阶段 · 打地基</b><span class="wk">第 1~4 周</span><span class="goal">目标：能读懂简单句，认识 900 高频词里的 500 个</span></div>
+    <ul>
+      <li><b>第 1 周</b>：音标 + 自然拼读过一遍，做到看到生词能读出来。同时开始背核心 300 词（用乱序版，每天 20 个，只要求"看到认识"）。</li>
+      <li><b>第 2 周</b>：五大基本句型（主谓、主谓宾、主系表、双宾、复合宾语）+ 一般现在时/一般过去时。每天造 5 个句子。</li>
+      <li><b>第 3 周</b>：名词单复数、冠词、代词、形容词副词比较级。开始看第 ⑤ 节的词形转换表，一天一组。</li>
+      <li><b>第 4 周</b>：被动语态 + 现在完成时。拿一篇真题阅读判断，逐句翻译（借助工具也行），体会"句子怎么断"。</li>
+    </ul>
+  </div>
+
+  <div class="phase">
+    <div class="ph"><b>第二阶段 · 攻题型</b><span class="wk">第 5~8 周</span><span class="goal">目标：客观题 55 分能拿到 38+</span></div>
+    <ul>
+      <li><b>第 5 周</b>：专攻<b>阅读判断 + 阅读选择</b>。做题法看第 ② 节。每天 1 篇，做完必须写"我为什么错"一句话。</li>
+      <li><b>第 6 周</b>：专攻<b>概括段落大意 + 填句补文</b>。重点练"抓中心句"和"代词指代"。</li>
+      <li><b>第 7 周</b>：专攻<b>填词补文</b>。每天标 12 个选项的词性，练到 3 分钟内标完。</li>
+      <li><b>第 8 周</b>：专攻<b>完形补文</b>。把第 ⑤ 节词形转换表过第二遍，然后拿真题的完形补文做 5 套，对着解析逐空归类错因。</li>
+    </ul>
+  </div>
+
+  <div class="phase">
+    <div class="ph"><b>第三阶段 · 攻写作 + 套卷</b><span class="wk">第 9~11 周</span><span class="goal">目标：写作稳定 20+，整卷模拟过 60</span></div>
+    <ul>
+      <li><b>第 9 周</b>：背第 ⑥ 节 6 类模板的开头句 + 结尾句。每天手写 1 篇，限定 30 分钟。</li>
+      <li><b>第 10 周</b>：整卷模拟 2 套（严格 150 分钟，不查词典）。做完只做一件事：把错题抄进错题本，标出错因类型。</li>
+      <li><b>第 11 周</b>：错题本二刷。同时把 900 高频词过第三遍（这次要求会拼写）。</li>
+    </ul>
+  </div>
+
+  <div class="phase">
+    <div class="ph"><b>第四阶段 · 考前冲刺</b><span class="wk">第 12 周</span><span class="goal">目标：手感 + 答题节奏</span></div>
+    <ul>
+      <li>整卷模拟 2 套，严格计时。重点练<b>时间分配</b>：客观题 65 分钟，完形补文 15 分钟，写作 35 分钟，留 15 分钟检查。</li>
+      <li>只看错题本 + 词形转换表 + 写作模板，不再碰新题。</li>
+      <li>考前一晚：把 6 个写作开头句默写一遍。</li>
+    </ul>
+  </div>
+</section>
+
+<footer>
+  英语（专升本）13000 · 大纲精讲　｜　教材：《英语（二）自学教程》2012 年版（张敬源、张虹 · 外研社）<br>
+  与 00015 英语（二）同教材同题型，历年真题可通用。数据与解析以官方答案为准，遇有出入以考委公布为准。
+</footer>
+
+</div>
+</div>
+</div>
+
+<script>
+// 顶部进度条
+(function(){
+  var bar = document.getElementById('bar');
+  function upd(){
+    var h = document.documentElement.scrollHeight - window.innerHeight;
+    bar.style.width = (h > 0 ? (window.scrollY / h * 100) : 0) + '%';
+  }
+  window.addEventListener('scroll', upd, {passive:true});
+  window.addEventListener('resize', upd);
+  upd();
+})();
+
+// 目录高亮
+(function(){
+  var links = Array.from(document.querySelectorAll('#nav a'));
+  var secs = links.map(function(a){ return document.querySelector(a.getAttribute('href')); });
+  function onScroll(){
+    var y = window.scrollY + 90, idx = 0;
+    secs.forEach(function(s,i){ if(s && s.offsetTop <= y) idx = i; });
+    links.forEach(function(a,i){ a.classList.toggle('on', i===idx); });
+  }
+  window.addEventListener('scroll', onScroll, {passive:true});
+  onScroll();
+})();
+</script>
+</body>
+</html>

@@ -1,0 +1,144 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="theme-color" content="#f6f4ef">
+<meta name="description" content="英语（专升本）13000 · 大纲精讲 + 历年真题库，客观题即时判分">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="default">
+<meta name="format-detection" content="telephone=no">
+<link rel="icon" href="../../assets/icon.svg">
+<title>英语（专升本）13000 · 学习助手</title>
+<style>
+:root{
+  /* —— 取自「财务管理学」的纸感配色 —— */
+  --bg:#f6f4ef; --card:#fffefb; --paper2:#efece4;
+  --ink:#15171b; --ink2:#3b3d42; --ink3:#75736e;
+  --line:#e3ded2; --line-soft:#eee9de;
+  --main:#b8452f; --main-s:#f3e2dc; --deep:#1d3a34;
+  --serif:"Songti SC","Noto Serif SC","Source Han Serif SC","STSong",Georgia,"Times New Roman",serif;
+  --mono:"SFMono-Regular",ui-monospace,"JetBrains Mono",Menlo,Consolas,monospace;
+}
+*{box-sizing:border-box}
+html,body{height:100%;margin:0}
+body{
+  background:var(--bg); color:var(--ink); font-size:14px; line-height:1.7;
+  font-family:-apple-system,BlinkMacSystemFont,"PingFang SC","Microsoft YaHei","Segoe UI",Roboto,sans-serif;
+  display:flex; flex-direction:column; overflow:hidden; -webkit-text-size-adjust:100%;
+  -webkit-font-smoothing:antialiased;
+}
+header{
+  flex:0 0 auto; padding-top:env(safe-area-inset-top);
+  background:var(--card); border-bottom:1px solid var(--line);
+  box-shadow:0 1px 2px rgba(21,23,27,.03);
+}
+.titleRow{min-height:48px; display:flex; align-items:center; padding:0 12px; gap:8px; flex-wrap:wrap}
+.titleRow h1{font-family:var(--serif); font-size:15.5px; margin:0; font-weight:600; letter-spacing:.01em;
+  display:flex; align-items:baseline; gap:7px}
+.titleRow h1 em{font-style:normal; font-family:var(--mono); font-size:10px; letter-spacing:.18em;
+  text-transform:uppercase; color:var(--main); font-weight:600}
+.titleRow .home{color:var(--ink3); text-decoration:none; font-size:16px; line-height:1; padding:5px 7px;
+  border-radius:7px; transition:.18s}
+.titleRow .home:hover{background:var(--paper2); color:var(--main)}
+.titleRow .sp{margin-left:auto}
+.btn{font-size:12.5px; color:var(--ink2); background:var(--card); border:1px solid var(--line);
+  border-radius:999px; padding:5px 13px; cursor:pointer; font-family:inherit; text-decoration:none;
+  line-height:1.6; transition:.18s}
+.btn:hover{border-color:var(--main); color:var(--main)}
+.tabRow{display:flex; gap:7px; padding:0 12px 10px}
+.tab{font-size:13px; color:var(--ink2); background:transparent; border:1px solid var(--line);
+  border-radius:999px; padding:6px 17px; cursor:pointer; font-family:inherit; transition:.18s;
+  letter-spacing:.01em}
+.tab:hover{border-color:var(--main); color:var(--main)}
+.tab.on{background:var(--card); border-color:var(--main); color:var(--main); font-weight:600;
+  box-shadow:0 2px 10px -2px rgba(184,69,47,.22)}
+main{flex:1 1 auto; position:relative; min-height:0}
+iframe{position:absolute; inset:0; width:100%; height:100%; border:0; background:var(--bg); display:none}
+iframe.on{display:block}
+footer{flex:0 0 auto; display:flex; align-items:center; gap:8px; padding:6px 14px;
+  background:var(--card); border-top:1px solid var(--line); color:var(--ink3); font-size:11px;
+  flex-wrap:wrap; letter-spacing:.01em}
+footer .sp{margin-left:auto}
+footer b{color:var(--main); font-weight:600}
+kbd{background:var(--paper2); border:1px solid var(--line); border-radius:4px; padding:0 4px;
+  font-size:10.5px; font-family:var(--mono)}
+@media (max-width:520px){
+  .titleRow h1{font-size:14px}
+  .titleRow h1 em{display:none}
+  .titleRow .btn.hide-sm{display:none}
+  footer .hintKeys{display:none}
+}
+</style>
+</head>
+<body>
+
+<header>
+  <div class="titleRow">
+    <a class="home" href="../../index.html" title="返回首页" aria-label="返回首页">&larr;</a>
+    <h1>英语（专升本）13000 <em>Study Desk</em></h1>
+    <span class="sp"></span>
+    <a class="btn hide-sm" href="../index.html" title="课程中心">课程</a>
+    <button class="btn" id="btnFull" title="全屏切换">全屏</button>
+  </div>
+  <div class="tabRow">
+    <button class="tab on" data-i="0">大纲精讲</button>
+    <button class="tab" data-i="1">历年真题库</button>
+  </div>
+</header>
+
+<main>
+  <iframe class="on" id="f0" src="outline.html" title="大纲精讲"></iframe>
+  <iframe id="f1" src="bank.html" title="历年真题库"></iframe>
+</main>
+
+<footer>
+  <span id="status">就绪</span>
+  <span class="sp"></span>
+  <span class="hintKeys"><kbd>Ctrl/⌘+1</kbd> 大纲 · <kbd>⌘+2</kbd> 题库 · <kbd>⌘+F</kbd> 全屏</span>
+  <span>教材 <b>2012 年版</b> · 与 00015 同源</span>
+</footer>
+
+<script>
+(function(){
+  'use strict';
+  var tabs = Array.prototype.slice.call(document.querySelectorAll('.tabRow .tab'));
+  var frames = [document.getElementById('f0'), document.getElementById('f1')];
+  var status = document.getElementById('status');
+
+  function show(i){
+    tabs.forEach(function(t,j){ t.classList.toggle('on', i===j); });
+    frames.forEach(function(f,j){ f.classList.toggle('on', i===j); });
+    try { location.replace('#' + i); } catch(e){}
+    status.textContent = i===0 ? '大纲精讲' : '历年真题库';
+  }
+
+  tabs.forEach(function(t){
+    t.addEventListener('click', function(){ show(+t.dataset.i); });
+  });
+
+  document.getElementById('btnFull').addEventListener('click', function(){
+    var el = document.documentElement;
+    if(!document.fullscreenElement){
+      (el.requestFullscreen || el.webkitRequestFullscreen || function(){}).call(el);
+    } else {
+      (document.exitFullscreen || document.webkitExitFullscreen || function(){}).call(document);
+    }
+  });
+
+  document.addEventListener('keydown', function(e){
+    if(e.metaKey || e.ctrlKey){
+      if(e.key==='1'){ e.preventDefault(); show(0); }
+      if(e.key==='2'){ e.preventDefault(); show(1); }
+      if(e.key.toLowerCase()==='f'){ e.preventDefault();
+        document.getElementById('btnFull').click(); }
+    }
+  });
+
+  var h = (location.hash||'').replace('#','');
+  if(h==='1') show(1);
+})();
+</script>
+</body>
+</html>
