@@ -440,6 +440,25 @@ nav a.sub2.on::before{background:var(--main)}
   .fcn{font-size:13px}
 }
 
+/* ---------- 宽屏：目录贴画面最左（固定左栏） ---------- */
+@media screen and (min-width:1100px){
+  .wrap{max-width:none;margin:0;padding:0 0 90px}
+  .layout{display:block;padding:0 26px 0 212px}
+  .layout>div{max-width:1000px;margin:0 auto;padding:34px 0 0}
+  .hero{padding:56px 26px 44px 212px}
+  .hero .in{max-width:1000px;margin:0 auto;padding-right:0}
+
+  nav{position:fixed;left:0;top:0;bottom:0;width:212px;height:100vh;max-height:none;
+      overflow-y:auto;overflow-x:hidden;box-sizing:border-box;
+      padding:26px 14px 44px 18px;
+      background:var(--paper);border-right:1px solid var(--line);
+      box-shadow:1px 0 0 rgba(21,23,27,.02);z-index:130}
+  nav .nt{padding:0 0 10px 2px}
+  nav a{padding:7px 6px 7px 2px;border-left:2px solid transparent}
+  nav a.sub2{padding:4px 6px 4px 16px}
+  nav a.sub2::before{left:3px}
+}
+
 </style>
 </head>
 <body>
