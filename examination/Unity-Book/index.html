@@ -719,6 +719,14 @@ svg g.dragging, .dstage .dragging { cursor: grabbing; }
 
 
 </style>
+<style>
+/* ===== 手机端顶栏安全区（自动补丁）：让出摄像头/状态栏/刘海 ===== */
+@media (max-width:900px){
+  .topbar{height:calc(50px + max(env(safe-area-inset-top,0px),16px));
+          padding-top:max(env(safe-area-inset-top,0px),16px);box-sizing:border-box}
+  .sidebar{padding-top:max(env(safe-area-inset-top,0px),16px)}
+}
+</style>
 </head>
 <body>
 

@@ -590,7 +590,7 @@ body.zoom-open #toTop{display:none !important}
 #backFw{position:fixed;right:16px;bottom:96px;z-index:70;display:none;align-items:center;gap:6px;padding:9px 15px;border-radius:999px;border:1px solid var(--line);background:#fff;color:var(--ink2);font-size:14px;font-weight:800;box-shadow:0 6px 18px rgba(15,23,42,.16);cursor:pointer}
 #backFw.on{display:inline-flex}
 #backFw:hover{color:var(--cc,#2563eb);border-color:var(--cc,#2563eb)}
-@media(max-width:900px){#backFw{right:10px;bottom:74px;padding:7px 12px;font-size:13px}}
+@media(max-width:900px){#backFw{right:10px;bottom:calc(74px + var(--safeB));padding:7px 12px;font-size:13px}}
 /* ---- 教材未收录标注（2024版教材核对后新增） ---- */
 .supTag{display:inline-block;font-size:11px;font-weight:700;color:#94a3b8;background:#f1f5f9;border:1px dashed #cbd5e1;border-radius:5px;padding:0 6px;margin:0 5px;vertical-align:2px;letter-spacing:.2px;white-space:nowrap}
 .supwrap{position:relative;margin:10px 0;padding:11px 13px;background:#f8fafc;border:1px dashed #cbd5e1;border-radius:8px;font-size:13px;color:#64748b;line-height:1.7}

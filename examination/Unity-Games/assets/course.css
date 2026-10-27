@@ -267,3 +267,15 @@ details.ug-sec>summary::marker{color:var(--acc);}
   .hkpi,.path{grid-template-columns:repeat(2,1fr);}
   .hero{padding:22px 18px;}
 }
+
+/* ===== 手机端顶栏安全区（自动补丁）：让出摄像头/状态栏/刘海 ===== */
+@media (max-width:960px){
+  .ug-top{height:calc(60px + max(env(safe-area-inset-top,0px),16px));padding-top:max(env(safe-area-inset-top,0px),16px);box-sizing:border-box;
+          padding-left:14px;padding-right:12px;gap:10px;flex-wrap:nowrap}
+  /* 375px 宽时品牌 + 进度条 + 3 个按钮放不下：进度条让位，品牌单行省略号 */
+  .ug-brand{flex:1 1 auto;min-width:0;overflow:hidden}
+  .ug-brand b{display:block;min-width:0;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+  .ug-brand i,.tprog{display:none}
+  .ug-top-r{margin-left:auto;flex:0 0 auto;gap:6px;display:flex}
+  .ug-back{padding:6px 9px;font-size:11.5px;white-space:nowrap}
+}

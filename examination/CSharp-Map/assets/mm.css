@@ -46,3 +46,12 @@ svg#wires{position:absolute;left:0;top:0;overflow:visible;pointer-events:none}
 .node.collapsed>.fold{background:var(--accent);color:#fff;border-color:var(--accent)}
 @media (max-width:760px){#toolbar .title,#stat{display:none}#toolbar{padding:6px 8px;gap:5px}
   #toolbar button,#toolbar a,#toolbar select{padding:4px 7px;font-size:12px}#hint{font-size:11px}}
+
+/* ===== 手机端顶栏安全区（自动补丁）：让出摄像头/状态栏/刘海 ===== */
+@media (max-width:760px){
+  /* 手机上按钮多、一行放不下：允许换行成两排，所有按钮都点得到 */
+  #toolbar{top:calc(12px + max(env(safe-area-inset-top,0px),12px));
+           flex-wrap:wrap;justify-content:center;row-gap:6px;
+           white-space:normal;max-width:calc(100vw - 20px)}
+  #hint,#stat{bottom:calc(10px + env(safe-area-inset-bottom,0px))}
+}

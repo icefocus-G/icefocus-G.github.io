@@ -214,6 +214,15 @@ footer{margin-top:60px;padding-top:20px;border-top:1px solid var(--bd);color:var
 .q .exp{margin-top:6px;font-size:13px;color:var(--tx2)}
 table td,table th{font-size:13px}
 </style>
+<style>
+/* ===== 手机端顶栏安全区（自动补丁）：让出摄像头/状态栏/刘海 ===== */
+@media (max-width:1024px){
+  /* 抽屉目录：顶部让出刘海 / 摄像头 */
+  .side{padding-top:calc(14px + max(env(safe-area-inset-top,0px),16px))}
+  /* 左下角「☰ 目录」浮动按钮：让出 iPhone 底部横条 */
+  #menuBtn{bottom:calc(16px + env(safe-area-inset-bottom,0px))}
+}
+</style>
 </head>
 <body data-page-node-id="wnqBICVmNNIAB6YJzvxGow">
 <button data-page-node-id="msafn468BOvjRp1UVFK26r" id="menuBtn"><!--pnid:ggiTdCMMRYJSQGGo2GUFxA-->☰ 目录</button>

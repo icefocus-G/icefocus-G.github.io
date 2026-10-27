@@ -513,7 +513,7 @@ body{
               padding:6px 12px;font-family:inherit;font-size:12.5px;cursor:pointer;transition:.14s}
 .ifc .tools button:hover{border-color:#b9cbe8;color:var(--accent)}
 .ifc .tabs{position:sticky;top:0;z-index:50;display:flex;gap:7px;overflow-x:auto;
-      padding:11px 0;margin:14px 0 18px;background:rgba(246,247,249,.95);
+      padding:calc(11px + max(env(safe-area-inset-top,0px),16px)) 0 11px;margin:14px 0 18px;background:rgba(246,247,249,.95);
       -webkit-backdrop-filter:saturate(1.5) blur(10px);backdrop-filter:saturate(1.5) blur(10px);
       border-bottom:1px solid var(--line);scrollbar-width:none;-webkit-overflow-scrolling:touch}
 .ifc .tabs::-webkit-scrollbar{display:none}
@@ -665,7 +665,7 @@ body{
   .ifc .hd h1{font-size:17.5px}
   .ifc .hd h1 em{display:block;margin:3px 0 0}
   .ifc .tools{margin-left:0;width:100%;overflow-x:auto}
-  .ifc .tabs{margin:10px 0 15px;padding:9px 0}
+  .ifc .tabs{margin:10px 0 15px;padding:calc(9px + max(env(safe-area-inset-top,0px),16px)) 0 9px}
   .ifc .tab{font-size:13px;padding:9px 15px;min-height:38px;display:inline-flex;align-items:center}
   .ifc .card,.ifc .hero,.ifc .dq{padding:15px 15px}
   .ifc .fi{display:block}
@@ -806,8 +806,8 @@ body{
 #ifDock .cgrid{grid-template-columns:repeat(auto-fit,minmax(118px,1fr));gap:9px}
 #ifDock .cres{font-size:12.8px}
 @media(max-width:640px){
-  #ifDockBtn{right:12px;bottom:12px;padding:10px 15px 10px 13px;font-size:12.5px}
-  #ifDockPanel{left:0;right:0;bottom:0;width:100%;max-height:78vh;border-radius:16px 16px 0 0}
+  #ifDockBtn{right:12px;bottom:calc(12px + env(safe-area-inset-bottom,0px));padding:10px 15px 10px 13px;font-size:12.5px}
+  #ifDockPanel{left:0;right:0;bottom:env(safe-area-inset-bottom,0px);width:100%;max-height:78vh;border-radius:16px 16px 0 0}
   #ifDockPanel.moved{left:auto;right:auto;bottom:auto;width:min(430px,calc(100vw - 20px));border-radius:14px}
   #ifDockHead{border-radius:16px 16px 0 0}
   #ifDockPanel.moved #ifDockHead{border-radius:14px 14px 0 0}

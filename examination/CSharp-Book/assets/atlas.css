@@ -429,3 +429,9 @@ pre.code code{font:inherit;color:inherit;background:none;padding:0;}
 @media (max-width:640px){
   .runbox .rb-out{font-size:11.5px;max-height:260px;}
 }
+
+/* ===== 手机端顶栏安全区（自动补丁）：让出摄像头/状态栏/刘海 ===== */
+@media (max-width:1000px){
+  #topbar{padding-top:calc(14px + max(env(safe-area-inset-top,0px),16px))}
+  #rail{padding-top:max(env(safe-area-inset-top,0px),16px)}
+}

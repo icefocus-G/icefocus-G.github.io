@@ -908,3 +908,13 @@ pre.code.expand { max-height: none; }
 .card.road .card-s { min-height: 0; margin-bottom: 8px; }
 .card.road ul.bl { margin: 0; padding-left: 17px; font-size: 12.5px; line-height: 1.8; color: var(--ink2); font-weight: 500; }
 .card.road ul.bl li { list-style: disc; margin: 3px 0; }
+
+/* ===== 手机端顶栏安全区（自动补丁）：让出摄像头/状态栏/刘海 ===== */
+@media (max-width:1080px){
+  .top{height:calc(56px + max(env(safe-area-inset-top,0px),16px));
+        padding-top:max(env(safe-area-inset-top,0px),16px);box-sizing:border-box}
+  .side{top:calc(56px + max(env(safe-area-inset-top,0px),16px));
+         height:calc(100vh - 56px - max(env(safe-area-inset-top,0px),16px))}
+  /* 窄屏时「目录」按钮别折成两行 */
+  .mini,#btnNav{white-space:nowrap;flex:0 0 auto}
+}
