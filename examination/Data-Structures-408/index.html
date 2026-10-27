@@ -85,7 +85,7 @@ button,input,select{font-family:inherit;font-size:inherit;color:inherit}
 /* ---------- 标签栏 ---------- */
 .tabbar{
   position:sticky; top:0; z-index:30; margin-top:16px;
-  padding:10px 20px; background:rgba(244,246,255,.82); backdrop-filter:blur(14px);
+  padding:calc(10px + max(env(safe-area-inset-top,0px),16px)) 20px 10px; background:rgba(244,246,255,.82); backdrop-filter:blur(14px);
   border-bottom:1px solid rgba(232,236,250,.9);
 }
 .tabbar-in{max-width:1180px;margin:0 auto;display:flex;align-items:center;gap:8px;overflow-x:auto;scrollbar-width:none}
@@ -310,7 +310,7 @@ kbd{
 
   .wrap{padding:14px 14px 60px}
   .hero-wrap{padding:14px 14px 0}
-  .tabbar{padding:8px 14px}
+  .tabbar{padding:calc(8px + max(env(safe-area-inset-top,0px),16px)) 14px 8px}
   .tab{padding:8px 13px;font-size:13px}
   .chap-h{padding:14px 15px;gap:11px}
   .num{width:36px;height:36px;border-radius:12px;font-size:14px}

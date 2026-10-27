@@ -297,8 +297,8 @@ footer{text-align:center;color:var(--ink3);font-size:13px;padding:30px 0 10px}
    —— 只在原样式之后覆盖，桌面版（>900px）保持原有侧栏布局
    ============================================================ */
 :root{
-  --abH:54px;                              /* 顶部应用栏高度 */
-  --safeT:env(safe-area-inset-top,0px);    /* 刘海屏安全区 */
+  --abH:56px;                              /* 顶部应用栏高度 */
+  --safeT:max(env(safe-area-inset-top,0px), 16px);  /* 刘海高度，且保证至少 16px */
   --safeB:env(safe-area-inset-bottom,0px);
 }
 html{-webkit-text-size-adjust:100%;text-size-adjust:100%}

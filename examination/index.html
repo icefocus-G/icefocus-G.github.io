@@ -39,7 +39,7 @@ header{
   position:sticky; top:0; z-index:10;
   padding:10px 18px calc(10px); display:flex; align-items:center; gap:10px;
   background:rgba(11,16,32,.72); backdrop-filter:blur(12px); -webkit-backdrop-filter:blur(12px);
-  border-bottom:1px solid var(--line); padding-top:calc(10px + env(safe-area-inset-top));
+  border-bottom:1px solid var(--line); padding-top:calc(10px + max(env(safe-area-inset-top,0px),16px));  /* 手机端让出刘海/摄像头高度，按钮不再压边 */
 }
 .logo{font-size:15px; font-weight:800; letter-spacing:.16em; color:var(--ink)}
 .logo span{color:var(--a1)}

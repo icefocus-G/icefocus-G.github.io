@@ -25,8 +25,8 @@ body{
   font-family:-apple-system,BlinkMacSystemFont,"PingFang SC","Microsoft YaHei","Segoe UI",Roboto,sans-serif;
   display:flex; flex-direction:column; overflow:hidden; -webkit-text-size-adjust:100%;
 }
-header{background:var(--main); color:#fff; flex:0 0 auto; padding-top:env(safe-area-inset-top)}
-.titleRow{min-height:46px; display:flex; align-items:center; padding:0 10px; gap:6px; flex-wrap:wrap}
+header{background:var(--main); color:#fff; flex:0 0 auto; padding-top:max(env(safe-area-inset-top,0px),16px)}
+.titleRow{min-height:52px; display:flex; align-items:center; padding:0 10px; gap:6px; flex-wrap:wrap}
 .titleRow h1{font-size:15px; margin:0; font-weight:600; flex:1; letter-spacing:.3px; white-space:nowrap; overflow:hidden; text-overflow:ellipsis}
 .btn{
   border:0; background:rgba(255,255,255,.18); color:#fff; padding:5px 11px; border-radius:15px;

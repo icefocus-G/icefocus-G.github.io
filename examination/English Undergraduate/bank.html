@@ -57,7 +57,7 @@ body{
 
 /* ---------- 标签栏 ---------- */
 .tabs{position:sticky;top:0;z-index:40;display:flex;gap:7px;overflow-x:auto;
-  padding:11px 0;background:rgba(246,244,239,.93);
+  padding:calc(11px + max(env(safe-area-inset-top,0px),16px)) 0 11px;background:rgba(246,244,239,.93);
   -webkit-backdrop-filter:blur(12px);backdrop-filter:blur(12px);
   border-bottom:1px solid var(--line);scrollbar-width:none;margin-bottom:18px}
 .tabs::-webkit-scrollbar{display:none}

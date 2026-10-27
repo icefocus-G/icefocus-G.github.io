@@ -465,8 +465,8 @@ nav a.sub2.on::before{background:var(--main)}
    只沿用本页纸感配色变量（--main / --teal / --card），不引入新色板
    ============================================================ */
 :root{
-  --abH:52px;                             /* 顶部选卡栏高度 */
-  --safeT:env(safe-area-inset-top,0px);   /* 刘海屏安全区 */
+  --abH:56px;                              /* 顶部选卡栏高度 */
+  --safeT:max(env(safe-area-inset-top,0px), 16px);  /* 刘海/摄像头安全区，至少留 16px */
   --safeB:env(safe-area-inset-bottom,0px);
 }
 html{-webkit-text-size-adjust:100%;text-size-adjust:100%}
