@@ -435,3 +435,8 @@ pre.code code{font:inherit;color:inherit;background:none;padding:0;}
   #topbar{padding-top:calc(14px + max(env(safe-area-inset-top,0px),16px))}
   #rail{padding-top:max(env(safe-area-inset-top,0px),16px)}
 }
+
+/* ===== 手机端横向溢出（自动补丁）：超长 URL / 无空格长串强制断行 ===== */
+@media (max-width:1000px){
+  .doc{overflow-wrap:anywhere}
+}

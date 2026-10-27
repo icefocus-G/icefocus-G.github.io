@@ -247,6 +247,12 @@ h2.ex{
   .mats .katex{font-size:.86em}
 }
 
+
+/* ===== 手机端横向溢出（自动补丁）：超宽公式横向滚动，不撑破页面 ===== */
+@media (max-width:760px){
+  .eqc{overflow-x:auto;overflow-y:hidden}
+  .eqc .katex{font-size:.92em}
+}
 </style>
 </head>
 <body>
