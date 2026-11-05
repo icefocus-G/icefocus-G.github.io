@@ -1,0 +1,1259 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#f3f1ec">
+<meta name="description" content="识字卡片：把字库排成 A4 识字表、词组表，可下载打印">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-title" content="识字卡片">
+<meta name="apple-mobile-web-app-status-bar-style" content="default">
+<link rel="manifest" href="manifest.webmanifest">
+<link rel="apple-touch-icon" href="assets/icon-180.png">
+<link rel="icon" href="assets/icon-192.png">
+<title>识字卡片 · A4 打印版</title>
+<style>
+:root{
+  --bg:#f3f1ec; --ink:#20242b; --sub:#7b7568; --line:#dcd5c6;
+  --accent:#c0392b; --card:#fffefb;
+  --shadow:0 10px 30px rgba(60,50,35,.14), 0 2px 6px rgba(60,50,35,.08);
+  --font-kai:"KaiTi","STKaiti","Kaiti SC","楷体","BiauKai",serif;
+  --font-song:"SimSun","Songti SC","STSong","宋体",serif;
+  --font-hei:"Microsoft YaHei","PingFang SC","黑体",sans-serif;
+}
+*{box-sizing:border-box}
+html,body{height:100%}
+body{
+  margin:0;background:var(--bg);color:var(--ink);
+  font-family:var(--font-hei);display:flex;flex-direction:column;
+  height:100vh;overflow:hidden;
+}
+
+/* ---------- 顶栏 ---------- */
+.toolbar{
+  flex:0 0 auto;display:flex;align-items:center;gap:12px;padding:11px 18px;
+  background:var(--card);border-bottom:1px solid var(--line);flex-wrap:wrap;z-index:20;
+  position:relative;
+}
+.brand{font-size:17px;font-weight:700;letter-spacing:.06em}
+.brand span{color:var(--accent)}
+.tabs{display:flex;background:#efece5;border-radius:10px;padding:3px;gap:2px}
+.tabs button{
+  border:0;background:transparent;padding:7px 16px;border-radius:8px;
+  font-size:14px;cursor:pointer;color:var(--sub);font-family:inherit;transition:.18s;
+}
+.tabs button.on{background:#fff;color:var(--ink);font-weight:700;box-shadow:0 1px 3px rgba(0,0,0,.12)}
+.spacer{flex:1}
+.actions{display:flex;gap:7px;flex-wrap:wrap;align-items:center}
+#pageActions{display:flex;gap:7px;flex-wrap:wrap;align-items:center}
+button.btn{
+  border:1px solid var(--line);background:#fff;color:var(--ink);
+  padding:8px 13px;border-radius:9px;font-size:13.5px;cursor:pointer;
+  font-family:inherit;transition:.16s;white-space:nowrap;
+}
+button.btn:hover{border-color:#b9ae99;background:#fbf9f4}
+button.btn:active{transform:translateY(1px)}
+button.btn.primary{background:var(--ink);color:#fff;border-color:var(--ink)}
+button.btn.primary:hover{background:#333a44}
+button.btn.ghost{background:transparent}
+button.btn.on{background:#fdecea;border-color:#e6b3ac;color:var(--accent)}
+select.btn{padding:8px 10px}
+.count{font-size:12.5px;color:var(--sub);white-space:nowrap}
+
+/* ---------- 舞台 ---------- */
+.stage{
+  flex:1 1 auto;min-height:0;display:flex;flex-direction:column;
+  align-items:center;justify-content:center;gap:10px;padding:14px;
+}
+.viewport{
+  flex:1 1 auto;min-height:0;width:100%;
+  display:flex;align-items:center;justify-content:center;overflow:hidden;
+}
+.paper-wrap{position:relative;flex:0 0 auto}
+.page{
+  position:absolute;top:0;left:0;width:210mm;height:297mm;background:#fff;
+  transform-origin:top left;box-shadow:var(--shadow);
+}
+.cell{
+  position:absolute;display:flex;align-items:center;justify-content:center;
+  font-family:var(--font-kai);line-height:1;color:#1a1a1a;
+  letter-spacing:.02em;cursor:pointer;user-select:none;transition:background .15s;
+}
+.cell:hover{background:rgba(192,57,43,.045)}
+.cell.blank{cursor:default}
+.cell.blank:hover{background:transparent}
+.cell.hid{color:transparent}
+body.showgrid .cell{outline:.22mm dashed #d9d3c4;outline-offset:-.22mm}
+.gl{position:absolute;pointer-events:none;display:none}
+body.showgrid .gl{display:block}
+.gl.h{
+  left:5%;right:5%;top:50%;height:.18mm;margin-top:-.09mm;
+  background-image:repeating-linear-gradient(to right,#d8d1c0 0 .9mm,transparent .9mm 1.8mm);
+}
+.gl.v{
+  top:5%;bottom:5%;left:50%;width:.18mm;margin-left:-.09mm;
+  background-image:repeating-linear-gradient(to bottom,#d8d1c0 0 .9mm,transparent .9mm 1.8mm);
+}
+.empty-hint{
+  position:absolute;inset:0;display:flex;align-items:center;justify-content:center;
+  color:var(--sub);font-size:16px;font-family:var(--font-hei);text-align:center;line-height:2;
+}
+
+/* ---------- 翻页 ---------- */
+.pager{
+  flex:0 0 auto;display:flex;align-items:center;gap:14px;background:var(--card);
+  border:1px solid var(--line);border-radius:999px;padding:5px 8px;
+  box-shadow:0 2px 8px rgba(60,50,35,.06);
+}
+.pager button{
+  border:0;background:transparent;width:32px;height:32px;border-radius:50%;
+  font-size:18px;cursor:pointer;color:var(--ink);line-height:1;
+}
+.pager button:hover:not(:disabled){background:#f0ece2}
+.pager button:disabled{opacity:.28;cursor:default}
+.pager .info{font-size:13px;color:var(--sub);min-width:200px;text-align:center}
+
+/* ---------- 词组分段定位 ---------- */
+.wfilter{flex:0 0 auto;display:none;gap:6px;flex-wrap:wrap;justify-content:center}
+body.view-words .wfilter{display:flex}
+.wfilter button{
+  border:1px solid var(--line);background:#fff;color:var(--sub);
+  padding:6px 15px;border-radius:999px;font-size:13px;font-family:inherit;
+  cursor:pointer;transition:.16s;white-space:nowrap;
+}
+.wfilter button:hover:not(:disabled){border-color:#b9ae99;color:var(--ink)}
+.wfilter button.on,
+.wfilter button.on:hover,
+.wfilter button.on:not(:disabled){
+  background:var(--ink);color:#fff;border-color:var(--ink);font-weight:600;
+}
+.wfilter button.on .n{opacity:.78}
+.wfilter button:disabled{opacity:.32;cursor:default}
+.wfilter .n{font-size:11px;opacity:.7;margin-left:4px;font-weight:400}
+
+/* ---------- 抽屉 ---------- */
+.mask{position:fixed;inset:0;background:rgba(30,26,20,.32);opacity:0;pointer-events:none;transition:.2s;z-index:40}
+.mask.on{opacity:1;pointer-events:auto}
+.drawer{
+  position:fixed;top:0;right:0;height:100%;width:min(440px,92vw);background:var(--card);
+  border-left:1px solid var(--line);transform:translateX(102%);
+  transition:transform .26s cubic-bezier(.4,0,.2,1);z-index:50;display:flex;flex-direction:column;
+}
+.drawer.on{transform:none}
+.drawer header{
+  padding:16px 20px;border-bottom:1px solid var(--line);
+  display:flex;align-items:center;justify-content:space-between;
+}
+.drawer header h2{margin:0;font-size:15.5px;letter-spacing:.04em}
+.drawer .body{padding:16px 20px 40px;overflow-y:auto;flex:1}
+.field{margin-bottom:20px}
+.field label{display:block;font-size:12.5px;color:var(--sub);margin-bottom:7px;letter-spacing:.04em}
+.field textarea{
+  width:100%;border:1px solid var(--line);border-radius:9px;padding:10px 12px;
+  font-family:var(--font-kai);font-size:17px;line-height:1.7;resize:vertical;
+  background:#fff;color:var(--ink);outline:none;
+}
+.field textarea:focus{border-color:#b9ae99;box-shadow:0 0 0 3px rgba(192,57,43,.07)}
+.hint{font-size:11.5px;color:#a09786;margin-top:6px;line-height:1.6}
+.row{display:flex;gap:8px;flex-wrap:wrap;margin-top:9px}
+.chipbar{
+  display:flex;flex-wrap:wrap;gap:5px;max-height:150px;overflow-y:auto;
+  border:1px solid var(--line);border-radius:9px;padding:8px;background:#faf8f3;
+}
+.chip{
+  display:inline-flex;align-items:center;gap:3px;background:#fff;border:1px solid var(--line);
+  border-radius:7px;padding:3px 7px;font-family:var(--font-kai);font-size:16px;
+}
+.chip b{font-weight:400}
+.chip i{cursor:pointer;font-style:normal;color:#c9bfae;font-size:12px;line-height:1}
+.chip i:hover{color:var(--accent)}
+.settings{display:flex;flex-direction:column;gap:12px}
+.switch{display:flex;align-items:center;justify-content:space-between;font-size:13.5px;gap:10px}
+.switch input[type=checkbox]{width:17px;height:17px;accent-color:var(--accent)}
+
+/* ---------- 加字面板 ---------- */
+#addPanel{display:none;flex:1 1 auto;min-height:0;overflow-y:auto;padding:20px 18px 44px}
+body.mode-add #addPanel{display:flex;justify-content:center;align-items:safe center}
+body.mode-add .stage{display:none}
+body.mode-add #pageActions{display:none}
+.add-wrap{
+  max-width:880px;width:100%;flex:0 0 auto;
+  background:var(--card);border:1px solid var(--line);
+  border-radius:16px;box-shadow:var(--shadow);padding:24px 28px 26px;
+}
+.add-head h1{margin:0 0 7px;font-size:19px;letter-spacing:.04em}
+.add-head p{margin:0 0 18px;font-size:12.5px;color:var(--sub);line-height:1.75}
+#addInput{
+  width:100%;min-height:132px;border:1px solid var(--line);border-radius:12px;
+  padding:13px 15px;font-family:var(--font-kai);font-size:22px;line-height:1.8;
+  resize:vertical;outline:none;background:#fff;color:var(--ink);
+}
+#addInput:focus{border-color:#b9ae99;box-shadow:0 0 0 4px rgba(192,57,43,.07)}
+.add-live{display:flex;gap:18px;flex-wrap:wrap;margin-top:12px;font-size:13px;color:var(--sub)}
+.add-live b{font-size:16px;font-weight:700;margin:0 2px;color:var(--ink)}
+.add-live .nw b{color:#12694a}
+.add-live .dp b{color:#a09786}
+.add-chips{
+  display:flex;flex-wrap:wrap;gap:6px;margin-top:12px;min-height:36px;
+  padding:8px;background:#faf8f3;border:1px solid var(--line);border-radius:10px;
+}
+.add-chips .ph{font-size:12.5px;color:#b3a894;padding:6px 4px}
+.mini{
+  display:inline-flex;align-items:center;justify-content:center;min-width:36px;height:36px;
+  padding:0 9px;border-radius:8px;font-family:var(--font-kai);font-size:20px;
+  border:1px solid var(--line);background:#fff;line-height:1;
+}
+.mini.new{background:#eaf6ef;border-color:#b5dcc6;color:#12694a}
+.mini.dup{background:#f4f1ea;border-color:#e6e0d3;color:#bdb2a0}
+.add-bar{display:flex;gap:9px;flex-wrap:wrap;align-items:center;margin-top:18px}
+.add-opt{display:flex;align-items:center;gap:7px;font-size:12.5px;color:var(--sub);margin-right:2px}
+.add-opt select{
+  border:1px solid var(--line);border-radius:8px;padding:6px 8px;font-size:12.5px;
+  font-family:inherit;background:#fff;color:var(--ink);cursor:pointer;
+}
+.add-sec{margin-top:22px;border-top:1px dashed var(--line);padding-top:16px}
+.add-sec h3{margin:0 0 8px;font-size:13px;letter-spacing:.04em;color:var(--sub);font-weight:600}
+.add-sec .tip{font-size:12px;color:#a09786;line-height:1.7;margin-bottom:9px}
+.sug{display:flex;flex-wrap:wrap;gap:6px}
+.sug button{
+  display:inline-flex;align-items:center;gap:5px;border:1px solid #e6dcc8;background:#fffdf7;
+  border-radius:8px;padding:5px 9px;cursor:pointer;font-family:inherit;transition:.15s;
+}
+.sug button:hover{border-color:#c9b48c;background:#fdf7e8}
+.sug button b{font-family:var(--font-kai);font-size:18px;font-weight:400;line-height:1}
+.sug button span{font-size:11px;color:#a8946c}
+.toast{
+  position:fixed;left:50%;bottom:32px;transform:translate(-50%,16px);
+  background:#20242b;color:#fff;padding:12px 22px;border-radius:11px;font-size:13.5px;
+  opacity:0;pointer-events:none;transition:.24s;z-index:80;
+  box-shadow:0 10px 28px rgba(0,0,0,.22);max-width:88vw;text-align:center;line-height:1.7;
+}
+.toast.on{opacity:1;transform:translate(-50%,0)}
+
+/* ---------- 批量打印容器 ---------- */
+#printAll{display:none}
+#printAll .page{position:relative;transform:none;box-shadow:none;page-break-after:always;break-after:page}
+#printAll .page:last-child{page-break-after:auto;break-after:auto}
+
+@media print{
+  html,body{height:auto;overflow:visible;background:#fff;display:block}
+  .toolbar,.pager,.drawer,.mask,#addPanel,.toast,.wfilter,.boot-fail{display:none!important}
+  .stage{padding:0;display:block;height:auto}
+  .viewport{display:block;overflow:visible;height:auto}
+  .paper-wrap{width:210mm!important;height:297mm!important}
+  .page{transform:none!important;box-shadow:none!important;position:static}
+  body.print-all .stage{display:none!important}
+  body.print-all #printAll{display:block!important}
+}
+@page{size:A4;margin:0}
+
+/* ---------- 词库加载失败 ---------- */
+.boot-fail{
+  position:fixed;inset:0;z-index:90;display:none;align-items:center;justify-content:center;
+  background:rgba(243,241,236,.96);padding:24px;
+}
+.boot-fail.on{display:flex}
+.bf-card{
+  max-width:520px;background:var(--card);border:1px solid var(--line);border-radius:16px;
+  padding:26px 28px;box-shadow:var(--shadow);line-height:1.9;font-size:13.5px;
+}
+.bf-card h2{margin:0 0 10px;font-size:17px}
+.bf-card p{margin:0 0 10px;color:#5e5748}
+.bf-card code{background:#f0ece1;border-radius:5px;padding:1px 5px;font-size:12.5px}
+.bf-msg{color:#a4402f!important;font-size:12.5px;word-break:break-all}
+
+/* ---------- 窄屏「更多」面板 ---------- */
+#btnMore{display:none}
+.more-panel{
+  position:absolute;right:10px;top:calc(100% - 4px);z-index:60;display:none;
+  flex-direction:column;gap:7px;min-width:168px;padding:10px;
+  background:var(--card);border:1px solid var(--line);border-radius:13px;
+  box-shadow:0 12px 30px rgba(60,50,35,.18);
+}
+.more-panel.on{display:flex}
+.more-panel button,.more-panel select{width:100%;min-height:38px;text-align:left}
+body.mode-add .more-panel{display:none!important}
+
+/* ---------- 手机 / 平板 ---------- */
+@media (max-width: 860px){
+  html,body{height:100dvh}
+  body{-webkit-tap-highlight-color:transparent}
+  .toolbar{padding:8px 10px;gap:7px}
+  .brand{display:none}
+  .tabs{flex:0 0 auto}
+  .tabs button{padding:7px 12px;font-size:13.5px}
+  .spacer{flex:1 1 auto;min-width:0}
+  .actions{
+    flex:1 1 100%;flex-wrap:wrap;gap:6px;padding-bottom:0;
+  }
+  button.btn{min-height:38px;padding:8px 11px}
+  .stage{padding:8px 6px;gap:8px}
+  .viewport{min-height:0}
+  .pager{gap:8px;padding:4px 6px;max-width:100%}
+  .pager button{min-width:42px;min-height:38px}
+  .pager .info{font-size:12px;min-width:0;padding:0 2px}
+  .wfilter{gap:5px}
+  .wfilter button{padding:5px 10px;font-size:12px}
+  #addPanel{padding:14px 12px 28px}
+  .add-wrap{padding:16px 14px 18px;border-radius:12px}
+  .add-wrap h1{font-size:19px}
+  .toast{bottom:calc(16px + env(safe-area-inset-bottom));padding:10px 16px;font-size:13px}
+  .drawer{width:100%;max-width:100%}
+}
+@media (max-width: 520px){
+  .count{display:none}
+  .tabs button{padding:7px 10px;font-size:13px}
+  .pager .info{font-size:11.5px}
+  button.btn{padding:6px 9px;font-size:12.5px;min-height:34px;border-radius:8px}
+  .toolbar{padding:7px 8px;gap:6px}
+  .actions{gap:5px}
+  #btnManage{margin-left:0}
+}
+</style>
+</head>
+<body>
+
+<div class="toolbar">
+  <div class="brand">识字<span>卡片</span></div>
+  <div class="tabs">
+    <button id="tabChars" class="on">识字表</button>
+    <button id="tabWords">词组表</button>
+    <button id="tabAdd">加字</button>
+  </div>
+  <div class="spacer"></div>
+  <div class="actions">
+    <span class="count" id="countInfo">—</span>
+    <div id="pageActions">
+      <select class="btn" id="sortSel" title="排序方式">
+        <option value="default">默认排序</option>
+        <option value="random">随机排序</option>
+      </select>
+      <button class="btn" id="btnReseed" title="换一批随机顺序">↻</button>
+      <button class="btn" id="btnHide">隐藏文字</button>
+      <select class="btn" id="fontSel" title="字体">
+        <option value="kai">楷体</option>
+        <option value="song">宋体</option>
+        <option value="hei">黑体</option>
+      </select>
+      <button class="btn" id="btnPrint">打印本页</button>
+      <button class="btn" id="btnPrintAll">打印全部</button>
+      <button class="btn primary" id="btnDownload">下载本页</button>
+    </div>
+    <button class="btn" id="btnMore">更多</button>
+    <button class="btn ghost" id="btnManage">字库</button>
+  </div>
+  <div class="more-panel" id="morePanel"></div>
+</div>
+
+<div class="stage">
+  <div class="wfilter" id="wordFilter">
+    <button data-f="all" class="on">全部</button>
+    <button data-f="2">2 字词组</button>
+    <button data-f="3">3 字词组</button>
+    <button data-f="4">4 字成语</button>
+  </div>
+  <div class="viewport" id="viewport">
+    <div class="paper-wrap" id="paperWrap">
+      <div class="page" id="page"></div>
+    </div>
+  </div>
+  <div class="pager">
+    <button id="prevBtn" title="上一张（←）">‹</button>
+    <div class="info" id="pageInfo">—</div>
+    <button id="nextBtn" title="下一张（→）">›</button>
+  </div>
+</div>
+
+<div id="printAll"></div>
+
+<div id="addPanel">
+  <div class="add-wrap">
+    <div class="add-head">
+      <h1>增加文字</h1>
+      <p>把要加的字直接打进来，或者整段粘贴都可以。标点、空格、换行会自动忽略，重复的字只算一次。</p>
+    </div>
+
+    <textarea id="addInput" spellcheck="false" placeholder="例：学校 老师 同学 朋友&#10;也可以整段粘贴：小明在学校认识了很多新同学"></textarea>
+
+    <div class="add-live" id="addLive"></div>
+    <div class="add-chips" id="addChips"><span class="ph">这里会列出准备加入的新字</span></div>
+
+    <div class="add-bar">
+      <label class="add-opt">加入位置
+        <select id="addPos">
+          <option value="end">排到最后</option>
+          <option value="start">排到最前</option>
+        </select>
+      </label>
+      <button class="btn primary" id="addSave">保存到识字表</button>
+      <button class="btn" id="addSaveGo">保存并看词组表</button>
+      <button class="btn ghost" id="addUndo" disabled>撤销上次添加</button>
+      <button class="btn ghost" id="addClear">清空输入</button>
+    </div>
+
+    <div class="add-sec">
+      <h3>保存后会自动新增的词</h3>
+      <div class="tip" id="newWordTip">—</div>
+      <div class="sug" id="newWordBox"></div>
+    </div>
+
+    <div class="add-sec">
+      <h3>能解锁最多词组的字</h3>
+      <div class="tip" id="sugTip">—</div>
+      <div class="sug" id="sugBox"></div>
+    </div>
+  </div>
+</div>
+
+<div class="toast" id="toast"></div>
+
+<div class="mask" id="mask"></div>
+<aside class="drawer" id="drawer">
+  <header>
+    <h2>字库管理</h2>
+    <button class="btn ghost" id="closeDrawer">关闭</button>
+  </header>
+  <div class="body">
+    <div class="field">
+      <label>文字（可直接粘贴，自动拆成单字并去重）</label>
+      <textarea id="charsInput" rows="6" spellcheck="false"></textarea>
+      <div class="hint" id="charsStat">—</div>
+      <div class="row">
+        <button class="btn primary" id="saveChars">保存文字</button>
+        <button class="btn" id="resetChars">恢复默认 152 字</button>
+      </div>
+    </div>
+
+    <div class="field">
+      <label>当前字库（点 × 可删单字）</label>
+      <div class="chipbar" id="chipBar"></div>
+    </div>
+
+    <div class="field">
+      <label>自定义词组（空格或换行分隔）</label>
+      <textarea id="wordsInput" rows="4" spellcheck="false" placeholder="例：小猫 中国人 万水千山"></textarea>
+      <div class="hint">词组页会自动从字库里组出所有可用词；这里填的词会额外加入，不受字库限制。</div>
+      <div class="row">
+        <button class="btn primary" id="saveWords">保存词组</button>
+      </div>
+    </div>
+
+    <div class="field">
+      <label>设置</label>
+      <div class="settings">
+        <div class="switch"><span>显示田字格辅助线</span><input type="checkbox" id="gridChk"></div>
+      </div>
+    </div>
+
+    <div class="field">
+      <label>备份 / 迁移</label>
+      <div class="row">
+        <button class="btn" id="exportBtn">导出 JSON</button>
+        <button class="btn" id="importBtn">导入 JSON</button>
+        <input type="file" id="fileInput" accept="application/json" hidden>
+      </div>
+      <div class="hint">换电脑或换浏览器时，用导出 / 导入搬运字库。</div>
+    </div>
+  </div>
+</aside>
+
+<div class="boot-fail" id="bootFail">
+  <div class="bf-card">
+    <h2>词库没读到</h2>
+    <p>这个页面要和 <code>data</code> 文件夹一起使用，单独拷走 <code>index.html</code> 是打不开的。</p>
+    <p>本地双击打开：确认 <code>data/dict.json</code>、<code>data/dict.js</code> 都在。改了词库后需要运行 <code>node tools/build-data.js</code> 重新生成 <code>dict.js</code>。</p>
+    <p>部署到线上：确认 <code>data/dict.json</code> 已上传，并且目录名大小写一致。</p>
+    <p class="bf-msg" id="bootFailMsg"></p>
+  </div>
+</div>
+
+<script>
+/* ============================================================
+   数据层：字库 + 词库统一放在 data/dict.json
+   ------------------------------------------------------------
+   网页 / GitHub Pages / PWA / Capacitor / Electron：
+     走 fetch 读 json，改完 json 刷新即生效
+   直接双击打开本地 html（file://）：
+     浏览器禁止 fetch 本地文件，自动改用 <script src="data/dict.js">
+     ——这个文件由 tools/build-data.js 从 dict.json 生成
+   ============================================================ */
+let DATA = { words:{2:[],3:[],4:[]}, defaultChars:[] };
+let DEFAULT_CHARS = [];          /* 运行时由 DATA.defaultChars 填充 */
+let DATA_SOURCE = "";            /* json | script —— 便于排查 */
+
+function injectScript(src){
+  return new Promise((resolve, reject)=>{
+    const el = document.createElement("script");
+    el.src = src;
+    el.onload = resolve;
+    el.onerror = ()=> reject(new Error("加载失败：" + src));
+    document.head.appendChild(el);
+  });
+}
+
+function normalizeData(raw){
+  const src = (raw && raw.words) || {};
+  const words = {2:[], 3:[], 4:[]};
+  [2,3,4].forEach(n=>{
+    const arr = Array.isArray(src[n]) ? src[n]
+              : Array.isArray(src[String(n)]) ? src[String(n)] : [];
+    const seen = new Set();
+    arr.forEach(w=>{
+      if(typeof w !== "string") return;
+      const chars = [...w];
+      if(chars.length !== n || seen.has(w)) return;
+      seen.add(w); words[n].push(w);
+    });
+  });
+  const dc = raw && raw.defaultChars;
+  const chars = typeof dc === "string" ? [...dc]
+              : Array.isArray(dc) ? dc.slice() : [];
+  return {words, defaultChars:chars};
+}
+
+async function loadData(){
+  try{
+    const res = await fetch("data/dict.json", {cache:"no-cache"});
+    if(res.ok){
+      DATA_SOURCE = "json";
+      return normalizeData(await res.json());
+    }
+  }catch(e){ /* file:// 下 fetch 会被安全策略拦掉，走下面的兜底 */ }
+
+  if(!window.__SHIZI_DICT__){
+    try{ await injectScript("data/dict.js"); }catch(e){}
+  }
+  if(window.__SHIZI_DICT__){
+    DATA_SOURCE = "script";
+    return normalizeData(window.__SHIZI_DICT__);
+  }
+  throw new Error("没有读到 data/dict.json");
+}
+
+/* 词库按字数分好组，顺序即默认排序 */
+const WORDS = () => DATA.words;
+
+/* ============================================================
+   状态
+   ============================================================ */
+const STORE_KEY = "shizi_cards_v1";
+const PAGE_W = 210, PAGE_H = 297, MARGIN = 12;
+const CHARS_LAYOUT = { cols:8, rows:11 };
+const WORD_LAYOUT  = { 2:{cols:5,rows:8}, 3:{cols:4,rows:7}, 4:{cols:3,rows:6} };
+
+let state = {
+  chars:[], customWords:[], font:"kai", grid:false,
+  mode:"chars", shuffled:false, seed:20261105,
+  hideAll:false, reveal:[], pageIndex:0,
+  wordFilter:"all"            /* all | 2 | 3 | 4 —— 词组表按字数直接定位 */
+};
+
+function loadState(){
+  try{
+    const raw = localStorage.getItem(STORE_KEY);
+    if(raw){
+      const s = JSON.parse(raw);
+      state.chars = Array.isArray(s.chars) && s.chars.length ? s.chars : [...DEFAULT_CHARS];
+      state.customWords = Array.isArray(s.customWords) ? s.customWords : [];
+      state.font = s.font || "kai";
+      state.grid = !!s.grid;
+      state.shuffled = s.sort === "random";
+      if(Number.isFinite(s.seed)) state.seed = s.seed;
+      if(["all","2","3","4"].includes(s.wordFilter)) state.wordFilter = s.wordFilter;
+    }else{ state.chars = [...DEFAULT_CHARS]; }
+  }catch(e){ state.chars = [...DEFAULT_CHARS]; }
+}
+function saveState(){
+  try{
+    localStorage.setItem(STORE_KEY, JSON.stringify({
+      chars:state.chars, customWords:state.customWords, font:state.font, grid:state.grid,
+      sort: state.shuffled ? "random" : "default", seed: state.seed,
+      wordFilter: state.wordFilter
+    }));
+  }catch(e){}
+}
+
+/* ============================================================
+   工具
+   ============================================================ */
+function mulberry32(a){
+  return function(){
+    a |= 0; a = a + 0x6D2B79F5 | 0;
+    let t = Math.imul(a ^ a >>> 15, 1 | a);
+    t = t + Math.imul(t ^ t >>> 7, 61 | t) ^ t;
+    return ((t ^ t >>> 14) >>> 0) / 4294967296;
+  };
+}
+function shuffleWith(arr, seed){
+  const a = arr.slice(), rnd = mulberry32(seed);
+  for(let i=a.length-1;i>0;i--){
+    const j = Math.floor(rnd()*(i+1));
+    [a[i],a[j]] = [a[j],a[i]];
+  }
+  return a;
+}
+function parseChars(text){
+  const out=[], seen=new Set();
+  for(const ch of text){
+    if(/[\u4e00-\u9fa5A-Za-z0-9]/.test(ch) && !seen.has(ch)){ seen.add(ch); out.push(ch); }
+  }
+  return out;
+}
+function parseWords(text){
+  return text.split(/[\s,，、;；\n\r]+/).map(s=>s.trim())
+             .filter(s=>s.length>=1 && /^[\u4e00-\u9fa5A-Za-z0-9]+$/.test(s));
+}
+function fontStack(){
+  return state.font==="song" ? '"SimSun","Songti SC","STSong","宋体",serif'
+       : state.font==="hei"  ? '"Microsoft YaHei","PingFang SC","黑体",sans-serif'
+       : '"KaiTi","STKaiti","Kaiti SC","楷体","BiauKai",serif';
+}
+function escapeHtml(s){
+  return String(s).replace(/[&<>"']/g, m=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[m]));
+}
+
+/* ============================================================
+   组页
+   ============================================================ */
+function ordered(list){ return state.shuffled ? shuffleWith(list, state.seed) : list.slice(); }
+
+/* 从字库里筛出所有可组成的词：只保留「每个字都在字库里」的词条 */
+function collectWords(pool){
+  const groups = {2:[],3:[],4:[]};
+  const seen = new Set();
+  const push = (w, force)=>{
+    if(!w || seen.has(w)) return;
+    const len = [...w].length;
+    if(!(len in groups)) return;
+    if(!force && ![...w].every(c=>pool.has(c))) return;
+    seen.add(w); groups[len].push(w);
+  };
+  state.customWords.forEach(w=>push(w,true));
+  [2,3,4].forEach(n=> WORDS()[n].forEach(w=>push(w,false)));  return groups;
+}
+function wordTotal(groups){ return groups[2].length + groups[3].length + groups[4].length; }
+
+/* 整个内置词库（不筛字），用于统计「还差哪些字才能解锁更多词」 */
+let _dict = null;
+function dictWords(){
+  if(_dict) return _dict;
+  _dict = WORDS()[2].concat(WORDS()[3], WORDS()[4]);  return _dict;
+}
+function blockedInfo(pool){
+  let blocked = 0;
+  const score = new Map();
+  for(const w of dictWords()){
+    const chars = [...w];
+    if(chars.every(c=>pool.has(c))) continue;
+    blocked++;
+    new Set(chars.filter(c=>!pool.has(c))).forEach(c=>{
+      let e = score.get(c);
+      if(!e){ e = {c, n:0, samples:[]}; score.set(c, e); }
+      e.n++;
+      if(e.samples.length < 4) e.samples.push(w);
+    });
+  }
+  const rank = [...score.values()].sort((a,b)=> b.n-a.n || a.c.localeCompare(b.c));
+  return {blocked, rank};
+}
+
+function buildPages(){
+  const pages = [];
+  if(state.mode === "chars"){
+    const list = ordered(state.chars);
+    const per = CHARS_LAYOUT.cols * CHARS_LAYOUT.rows;
+    const n = Math.max(1, Math.ceil(list.length/per));
+    for(let i=0;i<n;i++){
+      pages.push({kind:"chars", cols:CHARS_LAYOUT.cols, rows:CHARS_LAYOUT.rows,
+        items:list.slice(i*per,(i+1)*per),
+        label:`识字表 · 第 ${i+1} / ${n} 张`, fileTag:"识字表", pageNo:i+1});
+    }
+    return pages;
+  }
+
+  const groups = collectWords(new Set(state.chars));
+  const only = state.wordFilter === "all" ? 0 : +state.wordFilter;
+
+  [2,3,4].forEach(len=>{
+    if(only && len !== only) return;
+    const list = ordered(groups[len]);
+    if(!list.length) return;
+    const L = WORD_LAYOUT[len], per = L.cols*L.rows;
+    const n = Math.ceil(list.length/per);
+    for(let i=0;i<n;i++){
+      pages.push({kind:"words", wordLen:len, cols:L.cols, rows:L.rows,
+        items:list.slice(i*per,(i+1)*per),
+        label:`${len} 字词 · 第 ${i+1} / ${n} 张`, fileTag:`${len}字词`, pageNo:i+1});
+    }
+  });
+
+  if(!pages.length){
+    pages.push({kind:"words", cols:4, rows:7, items:[], label:"词组表 · 暂无可用词",
+      fileTag:"词组表", pageNo:1, empty:true});
+  }
+  return pages;
+}
+
+/* ============================================================
+   渲染
+   ============================================================ */
+const pageEl = document.getElementById("page");
+const wrapEl = document.getElementById("paperWrap");
+const viewEl = document.getElementById("viewport");
+let pages = [];
+
+function cellFont(item, kind, cw, ch){
+  const len = [...String(item)].length;
+  if(kind === "chars") return Math.min(cw*0.80, ch*0.80);
+  return Math.min(cw/(len + 0.55), ch*0.66);
+}
+function keyOf(item){ return state.mode + "::" + item; }
+
+function pageHTML(p){
+  const cw = (PAGE_W - 2*MARGIN)/p.cols;
+  const chh = (PAGE_H - 2*MARGIN)/p.rows;
+  const total = p.cols*p.rows;
+  let html = "";
+  for(let i=0;i<total;i++){
+    const r = Math.floor(i/p.cols), c = i%p.cols;
+    const item = p.items[i];
+    const base = `left:${(MARGIN+c*cw).toFixed(3)}mm;top:${(MARGIN+r*chh).toFixed(3)}mm;`
+               + `width:${cw.toFixed(3)}mm;height:${chh.toFixed(3)}mm;`;
+    if(item === undefined){ html += `<div class="cell blank" style="${base}"></div>`; continue; }
+    const key = keyOf(item);
+    const hidden = state.hideAll ? !state.reveal.includes(key) : state.reveal.includes(key);
+    const fs = cellFont(item, p.kind, cw, chh);
+    html += `<div class="cell${hidden?' hid':''}" data-key="${escapeHtml(key)}" `
+          + `style="${base}font-size:${fs.toFixed(3)}mm;">${escapeHtml(item)}`
+          + `<i class="gl h"></i><i class="gl v"></i></div>`;
+  }
+  return html;
+}
+
+function render(){
+  pages = buildPages();
+  if(state.pageIndex >= pages.length) state.pageIndex = pages.length-1;
+  if(state.pageIndex < 0) state.pageIndex = 0;
+
+  const p = pages[state.pageIndex];
+  pageEl.innerHTML = pageHTML(p);
+  if(p.empty){
+    pageEl.innerHTML += `<div class="empty-hint">字库里还组不出词组<br><span style="font-size:13px">先到「字库」里多添加一些常用字</span></div>`;
+  }
+  pageEl.style.fontFamily = fontStack();
+
+  document.body.classList.toggle("showgrid", state.grid);
+  document.getElementById("pageInfo").textContent = p.label;
+  document.getElementById("prevBtn").disabled = state.pageIndex === 0;
+  document.getElementById("nextBtn").disabled = state.pageIndex >= pages.length-1;
+
+  document.getElementById("countInfo").textContent = state.mode === "chars"
+    ? `共 ${state.chars.length} 字 · ${pages.length} 张`
+    : (()=>{
+        const g = collectWords(new Set(state.chars));
+        const total = g[2].length + g[3].length + g[4].length;
+        const shown = pages.reduce((a,x)=>a+x.items.length,0);
+        return state.wordFilter === "all"
+          ? `共 ${total} 个词组 · ${pages.length} 张`
+          : `${state.wordFilter} 字词组 ${shown} 个 / 共 ${total} · ${pages.length} 张`;
+      })();
+
+  const hb = document.getElementById("btnHide");
+  hb.classList.toggle("on", state.hideAll);
+  hb.textContent = state.hideAll ? "显示文字" : "隐藏文字";
+  document.getElementById("sortSel").value = state.shuffled ? "random" : "default";
+  syncFilterBar();
+
+  fit();
+}
+
+/* 词组分组按钮：显示该组词数，无词的组置灰 */
+function syncFilterBar(){
+  const g = collectWords(new Set(state.chars));
+  const count = {all:g[2].length+g[3].length+g[4].length, "2":g[2].length, "3":g[3].length, "4":g[4].length};
+  document.querySelectorAll("#wordFilter button").forEach(btn=>{
+    const f = btn.dataset.f;
+    btn.classList.toggle("on", f === state.wordFilter);
+    btn.disabled = count[f] === 0;
+    const label = f === "all" ? "全部" : (f === "4" ? "4 字成语" : f + " 字词组");
+    btn.innerHTML = `${label}<span class="n">${count[f]}</span>`;
+  });
+}
+
+pageEl.addEventListener("click", (e)=>{
+  const cell = e.target.closest(".cell");
+  if(!cell || cell.classList.contains("blank")) return;
+  const key = cell.dataset.key;
+  const i = state.reveal.indexOf(key);
+  if(i >= 0) state.reveal.splice(i,1); else state.reveal.push(key);
+  const hidden = state.hideAll ? !state.reveal.includes(key) : state.reveal.includes(key);
+  cell.classList.toggle("hid", hidden);
+});
+
+function fit(){
+  const availW = viewEl.clientWidth - 4;
+  const availH = viewEl.clientHeight - 4;
+  const pxW = PAGE_W*96/25.4, pxH = PAGE_H*96/25.4;
+  const s = Math.max(0.1, Math.min(availW/pxW, availH/pxH));
+  wrapEl.style.width  = (pxW*s)+"px";
+  wrapEl.style.height = (pxH*s)+"px";
+  pageEl.style.transform = `scale(${s})`;
+}
+window.addEventListener("resize", fit);
+
+/* ============================================================
+   交互
+   ============================================================ */
+let view = "chars";          /* chars | words | add */
+const TAB_IDS = {chars:"tabChars", words:"tabWords", add:"tabAdd"};
+
+function setView(v){
+  view = v;
+  if(v !== "add") state.mode = v;
+  state.pageIndex = 0; state.reveal = [];
+  Object.keys(TAB_IDS).forEach(k=>
+    document.getElementById(TAB_IDS[k]).classList.toggle("on", k===v));
+  document.body.classList.toggle("mode-add", v==="add");
+  document.body.classList.toggle("view-words", v==="words");
+  if(v === "add"){
+    refreshAdd();
+    updateCounts();
+    fit();
+    setTimeout(()=>document.getElementById("addInput").focus(), 80);
+  }else{
+    render();
+  }
+}
+document.getElementById("tabChars").onclick = ()=>setView("chars");
+document.getElementById("tabWords").onclick = ()=>setView("words");
+document.getElementById("tabAdd").onclick   = ()=>setView("add");
+
+/* ---------- 排序：默认 / 随机 ---------- */
+function changeSort(random){
+  state.shuffled = random;
+  if(random) state.seed = Math.floor(Math.random()*1e9);
+  state.pageIndex = 0; state.reveal = [];
+  saveState(); render();
+}
+document.getElementById("sortSel").onchange = (e)=>changeSort(e.target.value === "random");
+document.getElementById("btnReseed").onclick = ()=>changeSort(true);
+
+/* ---------- 词组按字数直接定位 ---------- */
+document.querySelectorAll("#wordFilter button").forEach(btn=>{
+  btn.onclick = ()=>{
+    if(btn.disabled) return;
+    state.wordFilter = btn.dataset.f;
+    state.pageIndex = 0; state.reveal = [];
+    saveState(); render();
+  };
+});
+
+document.getElementById("btnHide").onclick = ()=>{
+  state.hideAll = !state.hideAll; state.reveal = []; render();
+};
+document.getElementById("fontSel").onchange = (e)=>{
+  state.font = e.target.value; saveState(); render();
+};
+document.getElementById("prevBtn").onclick = ()=>{
+  if(state.pageIndex>0){ state.pageIndex--; state.reveal=[]; render(); }
+};
+document.getElementById("nextBtn").onclick = ()=>{
+  if(state.pageIndex<pages.length-1){ state.pageIndex++; state.reveal=[]; render(); }
+};
+document.addEventListener("keydown", (e)=>{
+  if(e.target.tagName==="TEXTAREA" || e.target.tagName==="INPUT" || e.target.tagName==="SELECT") return;
+  if(view === "add") return;
+  if(e.key==="ArrowLeft" && state.pageIndex>0){ state.pageIndex--; state.reveal=[]; render(); }
+  if(e.key==="ArrowRight" && state.pageIndex<pages.length-1){ state.pageIndex++; state.reveal=[]; render(); }
+});
+
+/* ---------- 打印 ---------- */
+document.getElementById("btnPrint").onclick = ()=>window.print();
+
+document.getElementById("btnPrintAll").onclick = ()=>{
+  const cont = document.getElementById("printAll");
+  cont.innerHTML = pages.map(p=>
+    `<div class="page" style="font-family:${fontStack()}">${pageHTML(p)}</div>`
+  ).join("");
+  document.body.classList.add("print-all");
+  setTimeout(()=>window.print(), 80);
+};
+window.addEventListener("afterprint", ()=>{
+  document.body.classList.remove("print-all");
+  document.getElementById("printAll").innerHTML = "";
+});
+
+/* ---------- 下载本页：300dpi PNG ---------- */
+document.getElementById("btnDownload").onclick = ()=>{
+  const p = pages[state.pageIndex];
+  if(p.empty){ alert("当前页没有内容可导出"); return; }
+
+  const DPI = 300, K = DPI/25.4;
+  const cv = document.createElement("canvas");
+  cv.width  = Math.round(PAGE_W*K);
+  cv.height = Math.round(PAGE_H*K);
+  const ctx = cv.getContext("2d");
+  ctx.fillStyle = "#ffffff";
+  ctx.fillRect(0,0,cv.width,cv.height);
+
+  const cw = (PAGE_W-2*MARGIN)/p.cols;
+  const chh = (PAGE_H-2*MARGIN)/p.rows;
+  const total = p.cols*p.rows;
+
+  if(state.grid){
+    ctx.save();
+    ctx.strokeStyle = "#d9d3c4";
+    ctx.lineWidth = Math.max(1, 0.18*K);
+    ctx.setLineDash([0.9*K, 0.9*K]);
+    for(let i=0;i<total;i++){
+      const r = Math.floor(i/p.cols), c = i%p.cols;
+      const x0 = (MARGIN+c*cw)*K, y0 = (MARGIN+r*chh)*K;
+      const w = cw*K, h = chh*K;
+      // 外框
+      ctx.strokeRect(x0, y0, w, h);
+      // 中心十字
+      ctx.beginPath();
+      ctx.moveTo(x0 + w*0.05, y0 + h*0.5); ctx.lineTo(x0 + w*0.95, y0 + h*0.5);
+      ctx.moveTo(x0 + w*0.5, y0 + h*0.05); ctx.lineTo(x0 + w*0.5, y0 + h*0.95);
+      ctx.stroke();
+    }
+    ctx.restore();
+  }
+
+  ctx.textAlign = "center";
+  ctx.textBaseline = "middle";
+  ctx.fillStyle = "#1a1a1a";
+
+  p.items.forEach((item, i)=>{
+    const key = keyOf(item);
+    const hidden = state.hideAll ? !state.reveal.includes(key) : state.reveal.includes(key);
+    if(hidden) return;
+    const r = Math.floor(i/p.cols), c = i%p.cols;
+    const fs = cellFont(item, p.kind, cw, chh);
+    ctx.font = `600 ${(fs*K).toFixed(1)}px ${fontStack()}`;
+    const x = (MARGIN+(c+0.5)*cw)*K;
+    const y = (MARGIN+(r+0.5)*chh)*K;
+    const chars = [...item];
+    const adv = fs*1.02;
+    const startX = x - (chars.length-1)*adv*K/2;
+    chars.forEach((ch, idx)=>ctx.fillText(ch, startX+idx*adv*K, y));
+  });
+
+  cv.toBlob(blob=>{
+    const a = document.createElement("a");
+    a.download = `${p.fileTag}_第${p.pageNo}张.png`;
+    a.href = URL.createObjectURL(blob);
+    a.click();
+    setTimeout(()=>URL.revokeObjectURL(a.href), 3000);
+  }, "image/png");
+};
+
+/* ============================================================
+   加字面板
+   ============================================================ */
+const addInput = document.getElementById("addInput");
+const addPosSel = document.getElementById("addPos");
+const addSaveBtn = document.getElementById("addSave");
+const addUndoBtn = document.getElementById("addUndo");
+let lastAdd = null;          /* { chars:[改动前的副本] } 用于撤销 */
+
+let toastTimer = null;
+function toast(msg){
+  const t = document.getElementById("toast");
+  t.textContent = msg;
+  t.classList.add("on");
+  clearTimeout(toastTimer);
+  toastTimer = setTimeout(()=>t.classList.remove("on"), 3600);
+}
+
+function libStats(chars){
+  const pool = new Set(chars || state.chars);
+  const groups = collectWords(pool);
+  return {chars: pool.size, words: wordTotal(groups), groups};
+}
+function updateCounts(){
+  const s = libStats();
+  document.getElementById("countInfo").textContent =
+    `字库 ${s.chars} 字 · 词组 ${s.words} 个`;
+}
+/* 字库变动后按当前所在页面刷新 */
+function refreshCurrent(){
+  if(view === "add"){ refreshAdd(); updateCounts(); }
+  else render();
+}
+
+/* 分析输入：哪些是新的、哪些已在字库里 */
+function analyzeAdd(){
+  const typed = parseChars(addInput.value);
+  const pool = new Set(state.chars);
+  return {
+    typed,
+    fresh: typed.filter(c=>!pool.has(c)),
+    dup:   typed.filter(c=>pool.has(c))
+  };
+}
+
+function refreshAdd(){
+  const {typed, fresh, dup} = analyzeAdd();
+  const now = libStats();
+  const after = libStats(state.chars.concat(fresh));
+
+  document.getElementById("addLive").innerHTML =
+      `输入 <b>${typed.length}</b> 字`
+    + ` · 新增 <span class="nw"><b>${fresh.length}</b></span>`
+    + ` · 已存在 <span class="dp"><b>${dup.length}</b></span>`
+    + ` &nbsp;|&nbsp; 保存后：字库 <b>${now.chars}→${after.chars}</b>`
+    + ` · 词组 <b>${now.words}→${after.words}</b>`
+    + (after.words - now.words > 0 ? ` <span class="nw">(+${after.words - now.words})</span>` : "");
+
+  const box = document.getElementById("addChips");
+  if(!typed.length){
+    box.innerHTML = `<span class="ph">这里会列出准备加入的新字</span>`;
+  }else{
+    box.innerHTML = fresh.map(c=>`<span class="mini new">${escapeHtml(c)}</span>`).join("")
+                  + dup.map(c=>`<span class="mini dup" title="字库里已有">${escapeHtml(c)}</span>`).join("");
+  }
+
+  addSaveBtn.disabled = fresh.length === 0;
+  addUndoBtn.disabled = !lastAdd;
+
+  /* 保存后会自动多出哪些词（词组表就是这么长出来的） */
+  const gained = diffWords(now.groups, after.groups);
+  const nwTip = document.getElementById("newWordTip");
+  const nwBox = document.getElementById("newWordBox");
+  if(!fresh.length){
+    nwTip.textContent = "先输入要加的字，这里会预告词组表会自动多出哪些词。";
+    nwBox.innerHTML = "";
+  }else if(!gained.length){
+    nwTip.textContent = "这几个字暂时组不出新词——它们进字库了，等补上配对的字就会出现。";
+    nwBox.innerHTML = "";
+  }else{
+    nwTip.textContent = `词组表会自动多出 ${gained.length} 个词`
+      + (gained.length > 40 ? "，下面只列前 40 个：" : "：");
+    nwBox.innerHTML = gained.slice(0,40).map(w=>
+      `<span class="mini new" style="font-size:17px;min-width:auto;padding:4px 8px;height:32px">${escapeHtml(w)}</span>`
+    ).join("");
+  }
+
+  /* 建议：还差哪些字能解锁最多词组 */
+  const info = blockedInfo(new Set(state.chars));
+  const tip = document.getElementById("sugTip");
+  const sug = document.getElementById("sugBox");
+  if(!info.blocked){
+    tip.textContent = "内置词库里的词组已经全部能组出来了。";
+    sug.innerHTML = "";
+  }else{
+    tip.textContent = `内置词库里还有 ${info.blocked} 个词因为缺字组不出来。下面这些字补上后能解锁最多词组，点一下即填入输入框：`;
+    sug.innerHTML = info.rank.slice(0,14).map(e=>
+      `<button data-c="${escapeHtml(e.c)}" title="${escapeHtml(e.samples.join("、"))}">`
+      + `<b>${escapeHtml(e.c)}</b><span>+${e.n}</span></button>`
+    ).join("");
+    sug.querySelectorAll("button").forEach((b,i)=>{
+      b.onclick = ()=>{
+        addInput.value = (addInput.value + b.dataset.c).replace(/\s/g,"");
+        const s = info.rank[i];
+        refreshAdd();
+        addInput.focus();
+        toast(`「${s.c}」进来后能组出：${s.samples.slice(0,3).join("、")}`);
+      };
+    });
+  }
+}
+
+/* 两组词对照，返回新增的词 */
+function diffWords(beforeG, afterG){
+  const out = [];
+  [2,3,4].forEach(n=>{
+    const seen = new Set(beforeG[n]);
+    afterG[n].forEach(w=>{ if(!seen.has(w)) out.push(w); });
+  });
+  return out;
+}
+
+addInput.addEventListener("input", refreshAdd);
+addInput.addEventListener("keydown", (e)=>{
+  if((e.ctrlKey || e.metaKey) && e.key === "Enter"){ e.preventDefault(); doAdd(false); }
+});
+
+function doAdd(go){
+  const {fresh} = analyzeAdd();
+  if(!fresh.length){
+    toast("没有可新增的字——这些字都已经在字库里了");
+    return;
+  }
+  const before = libStats();
+  lastAdd = { chars: state.chars.slice() };
+
+  state.chars = addPosSel.value === "start" ? fresh.concat(state.chars)
+                                            : state.chars.concat(fresh);
+  state.pageIndex = 0; state.reveal = [];
+  saveState();
+
+  const after = libStats();
+  addInput.value = "";
+  refreshAdd();
+  updateCounts();
+
+  const gain = after.words - before.words;
+  toast(`已加入 ${fresh.length} 个字 · 字库 ${before.chars}→${after.chars} 字`
+      + ` · 词组已重新生成 ${before.words}→${after.words} 个`
+      + (gain > 0 ? `（+${gain}）` : ""));
+
+  if(go){
+    /* 跳过去是为了“看新词”，所以先回到“全部”，避免被当前字数筛选挡住 */
+    state.wordFilter = "all";
+    setView("words");
+  }
+}
+
+addSaveBtn.onclick   = ()=>doAdd(false);
+document.getElementById("addSaveGo").onclick = ()=>doAdd(true);
+document.getElementById("addClear").onclick  = ()=>{ addInput.value = ""; refreshAdd(); addInput.focus(); };
+addUndoBtn.onclick = ()=>{
+  if(!lastAdd) return;
+  state.chars = lastAdd.chars;
+  lastAdd = null;
+  state.pageIndex = 0; state.reveal = [];
+  saveState();
+  refreshAdd(); updateCounts();
+  toast("已撤销上次添加");
+};
+
+/* ---------- 抽屉 ---------- */
+const drawer = document.getElementById("drawer");
+const mask   = document.getElementById("mask");
+function openDrawer(){ refreshDrawer(); drawer.classList.add("on"); mask.classList.add("on"); }
+function closeDrawer(){ drawer.classList.remove("on"); mask.classList.remove("on"); }
+document.getElementById("btnManage").onclick = openDrawer;
+document.getElementById("closeDrawer").onclick = closeDrawer;
+mask.onclick = closeDrawer;
+
+function refreshDrawer(){
+  document.getElementById("charsInput").value = state.chars.join("");
+  document.getElementById("wordsInput").value = state.customWords.join(" ");
+  document.getElementById("gridChk").checked = state.grid;
+  document.getElementById("charsStat").textContent = `当前 ${state.chars.length} 个字`;
+  const bar = document.getElementById("chipBar");
+  bar.innerHTML = state.chars.map((c,i)=>
+    `<span class="chip"><b>${escapeHtml(c)}</b><i data-i="${i}">×</i></span>`).join("");
+  bar.querySelectorAll("i").forEach(el=>{
+    el.onclick = ()=>{
+      state.chars.splice(+el.dataset.i,1);
+      saveState(); refreshDrawer(); refreshCurrent();
+    };
+  });
+}
+
+document.getElementById("saveChars").onclick = ()=>{
+  const list = parseChars(document.getElementById("charsInput").value);
+  if(!list.length){ alert("没有识别到文字"); return; }
+  state.chars = list; state.pageIndex = 0; state.reveal = [];
+  saveState(); refreshDrawer(); refreshCurrent();
+};
+document.getElementById("resetChars").onclick = ()=>{
+  if(!confirm("恢复为默认的 " + DEFAULT_CHARS.length + " 个字？")) return;
+  state.chars = [...DEFAULT_CHARS];
+  state.pageIndex = 0; state.reveal = [];
+  saveState(); refreshDrawer(); refreshCurrent();
+};
+document.getElementById("saveWords").onclick = ()=>{
+  state.customWords = parseWords(document.getElementById("wordsInput").value);
+  state.pageIndex = 0; state.reveal = [];
+  saveState(); refreshDrawer(); refreshCurrent();
+};
+document.getElementById("gridChk").onchange = (e)=>{
+  state.grid = e.target.checked; saveState(); refreshCurrent();
+};
+
+document.getElementById("exportBtn").onclick = ()=>{
+  const data = JSON.stringify({
+    chars:state.chars, customWords:state.customWords, font:state.font, grid:state.grid
+  }, null, 2);
+  const blob = new Blob([data], {type:"application/json"});
+  const a = document.createElement("a");
+  a.download = "识字卡片_字库备份.json";
+  a.href = URL.createObjectURL(blob);
+  a.click();
+  setTimeout(()=>URL.revokeObjectURL(a.href), 3000);
+};
+document.getElementById("importBtn").onclick = ()=>document.getElementById("fileInput").click();
+document.getElementById("fileInput").onchange = (e)=>{
+  const f = e.target.files[0];
+  if(!f) return;
+  const r = new FileReader();
+  r.onload = ()=>{
+    try{
+      const s = JSON.parse(r.result);
+      if(Array.isArray(s.chars)) state.chars = s.chars;
+      if(Array.isArray(s.customWords)) state.customWords = s.customWords;
+      if(s.font) state.font = s.font;
+      if(typeof s.grid === "boolean") state.grid = s.grid;
+      state.pageIndex = 0; state.reveal = [];
+      saveState(); refreshDrawer(); refreshCurrent();
+      alert("导入成功");
+    }catch(err){ alert("文件格式不对"); }
+  };
+  r.readAsText(f, "utf-8");
+};
+
+/* ---------- 窄屏：次要按钮收进「更多」 ---------- */
+const MORE_IDS = ["btnReseed","fontSel","btnPrint","btnPrintAll"];
+const ACTION_ORDER = ["sortSel","btnReseed","btnHide","fontSel","btnPrint","btnPrintAll","btnDownload"];
+
+function layoutToolbar(){
+  const narrow = window.innerWidth <= 520;
+  const panel  = document.getElementById("morePanel");
+  const acts   = document.getElementById("pageActions");
+  MORE_IDS.forEach(id=>{
+    const el = document.getElementById(id);
+    if(el) (narrow ? panel : acts).appendChild(el);
+  });
+  if(!narrow){
+    ACTION_ORDER.forEach(id=>{
+      const el = document.getElementById(id);
+      if(el) acts.appendChild(el);          /* 恢复桌面端原有顺序 */
+    });
+    panel.classList.remove("on");
+  }
+  document.getElementById("btnMore").style.display = narrow ? "inline-block" : "none";
+  /* ↻ 在面板里单独一行，只有图标会看不懂，窄屏时换成文字 */
+  const re = document.getElementById("btnReseed");
+  if(re) re.textContent = narrow ? "换一批顺序" : "↻";
+}
+document.getElementById("btnMore").onclick = (e)=>{
+  e.stopPropagation();
+  document.getElementById("morePanel").classList.toggle("on");
+};
+document.addEventListener("click", (e)=>{
+  const panel = document.getElementById("morePanel");
+  if(!panel.classList.contains("on")) return;
+  if(!panel.contains(e.target) && e.target.id !== "btnMore") panel.classList.remove("on");
+});
+window.addEventListener("resize", layoutToolbar);
+
+/* ---------- 启动 ---------- */
+(async function boot(){
+  try{
+    DATA = await loadData();
+  }catch(err){
+    document.getElementById("bootFail").classList.add("on");
+    document.getElementById("bootFailMsg").textContent = String(err.message || err);
+    return;
+  }
+  DEFAULT_CHARS = DATA.defaultChars.slice();
+  if(!DEFAULT_CHARS.length) DEFAULT_CHARS = ["猫"];
+
+  loadState();
+  document.getElementById("fontSel").value = state.font;
+  layoutToolbar();
+  render();
+
+  /* 装到手机主屏后离线可用（file:// 下不注册） */
+  if("serviceWorker" in navigator && /^https?:$/.test(location.protocol)){
+    navigator.serviceWorker.register("sw.js").catch(()=>{});
+  }
+})();
+</script>
+</body>
+</html>

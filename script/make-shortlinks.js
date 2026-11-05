@@ -60,6 +60,7 @@ const SHORTCUTS = [
   { alias: 'imgcut',          url: '/tool/img-cut/',                                   title: 'AI 图片切图',           group: '工具', note: '去背景 + 自动分块导出' },
   { alias: 'psd',             url: '/tool/psd-rename/',                                title: '投放图 PSD 生成',       group: '工具' },
   { alias: 'num',             url: '/tool/number-gen/',                                title: '数值随机生成器',        group: '工具', note: '六档 8 组 · 位数固定' },
+  { alias: 'shizi',           url: '/shizi/',                                          title: '识字卡片 · A4 打印',    group: '工具', note: '识字表 + 词组表 · 一键出图打印' },
 
   /* ---- 皮肤 ---- */
   { alias: 'skin0',           url: '/ThemedSkin/default',                              title: '首页皮肤 · 默认',       group: '皮肤' },
