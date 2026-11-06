@@ -1,7 +1,7 @@
 /* 离线缓存：装到手机主屏后断网也能用
    - 页面和词库走「网络优先」，改完数据刷新就是新的
    - 图标等静态资源走「缓存优先」 */
-const CACHE = "shizi-cards-v4";
+const CACHE = "shizi-cards-v5";
 const CORE = [
   "./",
   "./index.html",
@@ -11,6 +11,8 @@ const CORE = [
   "./data/grades.js",
   "./data/pinyin.json",
   "./data/pinyin.js",
+  "./data/audio/manifest.json",
+  "./data/audio/manifest.js",
   "./assets/icon-180.png",
   "./assets/icon-192.png",
   "./assets/icon-512.png"
@@ -44,7 +46,8 @@ self.addEventListener("fetch", e => {
     url.pathname.endsWith("index.html") ||
     url.pathname.endsWith("dict.json") ||
     url.pathname.endsWith("grades.json") ||
-    url.pathname.endsWith("pinyin.json");
+    url.pathname.endsWith("pinyin.json") ||
+    url.pathname.endsWith("manifest.json");
 
   if (networkFirst) {
     e.respondWith(
@@ -55,6 +58,17 @@ self.addEventListener("fetch", e => {
       }).catch(() =>
         caches.match(req).then(r => r || caches.match("./index.html"))
       )
+    );
+  } else if (url.pathname.includes("/data/audio/")) {
+    /* 语音文件：一旦缓存就永远用缓存，听过一遍之后断网也能点读 */
+    e.respondWith(
+      caches.match(req).then(r => r || fetch(req).then(res => {
+        if (res.ok || res.type === "opaque") {
+          const copy = res.clone();
+          caches.open(CACHE).then(c => c.put(req, copy)).catch(() => {});
+        }
+        return res;
+      }))
     );
   } else {
     e.respondWith(

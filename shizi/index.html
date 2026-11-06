@@ -85,6 +85,8 @@ body.dragging .paper-wrap{transition:none!important}
   letter-spacing:.02em;cursor:pointer;user-select:none;transition:background .15s;
 }
 .cell:hover{background:rgba(192,57,43,.045)}
+/* 正在读这一格：底色闪一下，孩子知道读的是哪个 */
+.cell.say{background:rgba(192,57,43,.12);border-radius:1.6mm}
 .cell.blank{cursor:default}
 .cell.blank:hover{background:transparent}
 .cell.hid{color:transparent}
@@ -296,6 +298,7 @@ body.view-grade #pageActions{display:none}
 }
 .gp-card.have{opacity:.5}
 .gp-card.have.on{opacity:1}
+.gp-card.say{background:#fdecea;border-color:#e6b3ac}
 .gp-empty{grid-column:1/-1;color:var(--sub);font-size:13px;padding:20px 4px;line-height:1.9}
 
 /* ---------- 学拼音 ---------- */
@@ -330,6 +333,7 @@ body.view-pinyin #btnMore,body.view-grade #btnMore{display:none!important}
   transition:border-color .15s,background .15s,transform .15s;
 }
 .py-card:hover{border-color:#b9ae99;transform:translateY(-1px)}
+.py-card.say{background:#fdecea;border-color:#e6b3ac;transform:translateY(-1px)}
 .py-card em{
   font-style:normal;font-family:var(--font-hei);font-size:23px;font-weight:600;
   line-height:1.1;color:#1a1a1a;letter-spacing:.02em;
@@ -486,6 +490,7 @@ body.mode-add .more-panel{display:none!important}
       <button class="btn primary" id="btnDownload">下载本页</button>
     </div>
     <button class="btn" id="btnMore">更多</button>
+    <button class="btn" id="btnSound" title="点字 / 点词时是否朗读">声音开</button>
     <button class="btn ghost" id="btnManage">字库</button>
   </div>
   <div class="more-panel" id="morePanel"></div>
@@ -528,7 +533,7 @@ body.mode-add .more-panel{display:none!important}
 <section id="pinyinPanel">
   <div class="py-head">
     <h2>学拼音</h2>
-    <span class="py-tip">点字母可以打勾，方便带着孩子一个个过 · 23 声母 · 24 韵母 · 16 整体认读</span>
+    <span class="py-tip">点卡片听读音、同时打勾，方便带着孩子一个个过 · 23 声母 · 24 韵母 · 16 整体认读</span>
   </div>
   <div class="py-scroll" id="pyScroll"></div>
 </section>
@@ -779,7 +784,8 @@ let state = {
   mode:"chars", shuffled:false, seed:20261105,
   hideAll:false, reveal:[], pageIndex:0,
   wordFilter:"all",           /* all | 2 | 3 | 4 —— 词组表按字数直接定位 */
-  showPy:true                 /* 字上面是否显示拼音 */
+  showPy:true,                /* 字上面是否显示拼音 */
+  sound:true                  /* 点字 / 点词时是否朗读 */
 };
 
 function loadState(){
@@ -795,6 +801,7 @@ function loadState(){
       if(Number.isFinite(s.seed)) state.seed = s.seed;
       if(["all","2","3","4"].includes(s.wordFilter)) state.wordFilter = s.wordFilter;
       if(typeof s.showPy === "boolean") state.showPy = s.showPy;
+      if(typeof s.sound === "boolean") state.sound = s.sound;
     }else{ state.chars = [...DEFAULT_CHARS]; }
   }catch(e){ state.chars = [...DEFAULT_CHARS]; }
 }
@@ -803,9 +810,116 @@ function saveState(){
     localStorage.setItem(STORE_KEY, JSON.stringify({
       chars:state.chars, customWords:state.customWords, font:state.font, grid:state.grid,
       sort: state.shuffled ? "random" : "default", seed: state.seed,
-      wordFilter: state.wordFilter, showPy: state.showPy
+      wordFilter: state.wordFilter, showPy: state.showPy, sound: state.sound
     }));
   }catch(e){}
+}
+
+/* ============================================================
+   语音：字、词、拼音都能点着听
+   ------------------------------------------------------------
+   优先播放 data/audio 里预生成的 mp3（同一个老师的声音、离线也能用），
+   清单里没有的就退回浏览器自带语音合成 —— 保证任何字都有声音。
+   ============================================================ */
+const AUDIO_DIR = "data/audio/";
+let AUDIO_CHARS = {};       /* 字 → 相对路径 */
+let AUDIO_WORDS = {};       /* 词 → 相对路径 */
+let AUDIO_OK = false;       /* 清单是否已就绪 */
+let AUDIO_SOURCE = "";
+let audioTask = null;
+let voiceAudio = null;
+let voiceSeq = 0;
+
+async function loadAudio(){
+  if(AUDIO_OK) return true;
+  if(audioTask) return audioTask;
+  audioTask = (async ()=>{
+    try{
+      const res = await fetch(AUDIO_DIR+"manifest.json");
+      if(res.ok){
+        const j = await res.json();
+        if(j && j.chars){
+          AUDIO_CHARS = j.chars; AUDIO_WORDS = j.words || {};
+          AUDIO_OK = true; AUDIO_SOURCE = "json";
+          return true;
+        }
+      }
+    }catch(e){ /* file:// 下同样走脚本兜底 */ }
+    if(!window.__SHIZI_AUDIO__){
+      try{ await injectScript(AUDIO_DIR+"manifest.js"); }catch(e){}
+    }
+    const j = window.__SHIZI_AUDIO__;
+    if(j && j.chars){
+      AUDIO_CHARS = j.chars; AUDIO_WORDS = j.words || {};
+      AUDIO_OK = true; AUDIO_SOURCE = "script";
+      return true;
+    }
+    return false;
+  })();
+  return audioTask;
+}
+
+/* 上一次的读音停掉，避免点快了两句叠在一起 */
+function stopVoice(){
+  if(voiceAudio){
+    try{ voiceAudio.pause(); }catch(e){}
+    voiceAudio = null;
+  }
+  if(window.speechSynthesis){ try{ speechSynthesis.cancel(); }catch(e){} }
+}
+
+function speakTTS(text){
+  if(!("speechSynthesis" in window)) return false;
+  try{
+    const u = new SpeechSynthesisUtterance(text);
+    u.lang = "zh-CN";
+    u.rate = 0.82;
+    u.pitch = 1.02;
+    const all = speechSynthesis.getVoices() || [];
+    const zh = all.filter(v=>/^(zh|cmn)/i.test(v.lang) || /中文|普通话|Chinese/i.test(v.name));
+    if(zh.length){
+      u.voice = zh.find(v=>/Xiaoxiao|Ting|Yue|Hui|Mei|Female|女/i.test(v.name)) || zh[0];
+    }
+    speechSynthesis.speak(u);
+    return true;
+  }catch(e){ return false; }
+}
+
+/* 读一段文字（单字、词都行）。找不到音频文件就当没这回事，交给系统语音 */
+function speak(text){
+  const t = String(text == null ? "" : text).trim();
+  if(!t || !state.sound) return;
+  stopVoice();
+  const rel = AUDIO_WORDS[t] || AUDIO_CHARS[t];
+  if(rel){
+    const a = new Audio(AUDIO_DIR + rel);
+    a.preload = "auto";
+    voiceAudio = a;
+    const seq = ++voiceSeq;
+    a.play().catch(()=>{ if(seq === voiceSeq) speakTTS(t); });
+    return;
+  }
+  speakTTS(t);
+}
+
+/* 点到的卡片闪一下，让孩子知道在读这个 */
+function flashSay(el){
+  if(!el) return;
+  el.classList.add("say");
+  setTimeout(()=>el.classList.remove("say"), 680);
+}
+
+function syncSoundBtn(){
+  const b = document.getElementById("btnSound");
+  if(!b) return;
+  const narrow = window.innerWidth <= 520;
+  b.classList.toggle("on", state.sound);
+  /* 手机上挤，用两个字；两种状态字数一样，开关时按钮宽度不跳 */
+  b.textContent = state.sound ? (narrow ? "声音" : "声音开")
+                              : (narrow ? "静音" : "声音关");
+  b.title = state.sound
+    ? "点字 / 点词会朗读，点这里关掉"
+    : "已静音，点这里打开朗读";
 }
 
 /* ============================================================
@@ -1053,6 +1167,7 @@ function render(){
   }
 
   document.getElementById("sortSel").value = state.shuffled ? "random" : "default";
+  syncSoundBtn();
   syncFilterBar();
 
   fit();
@@ -1075,11 +1190,16 @@ pageEl.addEventListener("click", (e)=>{
   if(Date.now() < suppressClickUntil) return;      /* 刚拖过页面，别误触格子 */
   const cell = e.target.closest(".cell");
   if(!cell || cell.classList.contains("blank")) return;
-  const key = cell.dataset.key;
-  const i = state.reveal.indexOf(key);
-  if(i >= 0) state.reveal.splice(i,1); else state.reveal.push(key);
-  const hidden = state.hideAll ? !state.reveal.includes(key) : state.reveal.includes(key);
-  cell.classList.toggle("hid", hidden);
+  const key = cell.dataset.key || "";
+  const item = key.slice(key.indexOf("::") + 2);   /* key = 模式::内容 */
+  speak(item);                                     /* 点一下就读 */
+  flashSay(cell);
+  /* 隐藏文字模式下，点一下顺便把这个字露出来（原来的行为）；平时只朗读，不乱藏字 */
+  if(state.hideAll){
+    const i = state.reveal.indexOf(key);
+    if(i >= 0) state.reveal.splice(i,1); else state.reveal.push(key);
+    cell.classList.toggle("hid", !state.reveal.includes(key));
+  }
 });
 
 function fit(){
@@ -1110,6 +1230,7 @@ function setView(v){
   document.body.classList.toggle("view-grade", v==="grade");
   document.body.classList.toggle("view-pinyin", v==="pinyin");
   document.getElementById("gradeSel").classList.toggle("on", v==="grade");
+  syncSoundBtn();          /* 声音按钮在所有页面都在，切页时同步一下状态 */
   if(v === "pinyin"){
     renderPinyinPanel();
     return;
@@ -1182,6 +1303,8 @@ function renderGrade(){
       const c = el.dataset.c;
       if(gradePick.has(c)) gradePick.delete(c); else gradePick.add(c);
       el.classList.toggle("on", gradePick.has(c));
+      speak(c);                                    /* 挑字的时候顺便听一遍 */
+      flashSay(el);
       refreshGradeBar();
     };
   });
@@ -1320,7 +1443,12 @@ function renderPinyinPanel(){
 
   box.innerHTML = html;
   box.querySelectorAll(".py-card").forEach(el=>{
-    el.onclick = ()=>el.classList.toggle("on");
+    el.onclick = ()=>{
+      el.classList.toggle("on");
+      const zi = el.querySelector("b");            /* 卡片上的例字，读它 */
+      speak(zi ? zi.textContent : el.dataset.l);
+      flashSay(el);
+    };
   });
   box.dataset.done = "1";
 }
@@ -1347,6 +1475,20 @@ document.querySelectorAll("#wordFilter button").forEach(btn=>{
 
 document.getElementById("btnHide").onclick = ()=>{
   state.hideAll = !state.hideAll; state.reveal = []; render();
+};
+document.getElementById("btnSound").onclick = ()=>{
+  state.sound = !state.sound;
+  if(!state.sound) stopVoice();
+  saveState(); syncSoundBtn();
+  if(state.sound){
+    /* 打开时读一下当前这几个字，确认有声音 */
+    const p = pages[state.pageIndex];
+    const demo = p && p.items && p.items[0];
+    if(demo) speak(demo);
+    toast("已打开声音 · 点字就能听");
+  }else{
+    toast("已静音");
+  }
 };
 document.getElementById("btnPy").onclick = ()=>{
   if(!Object.keys(PY_CHARS).length){ toast("没读到拼音数据（data/pinyin.json）"); return; }
@@ -1800,6 +1942,10 @@ function layoutToolbar(){
   if(re) re.textContent = narrow ? "换一批顺序" : "↻";
   const pb = document.getElementById("btnPy");
   if(pb) pb.textContent = pyBtnLabel();
+  /* 窄屏一行要挤下六个按钮，「下载本页」省成「下载」，「声音开」省成「声音」 */
+  const dl = document.getElementById("btnDownload");
+  if(dl) dl.textContent = narrow ? "下载" : "下载本页";
+  syncSoundBtn();
 }
 document.getElementById("btnMore").onclick = (e)=>{
   e.stopPropagation();
@@ -1836,8 +1982,13 @@ window.addEventListener("resize", layoutToolbar);
   PY_OK = Object.keys(PY_CHARS).length > 0;
 
   loadState();
+
+  /* 语音清单：读不到只是变成「只有系统语音」，不影响点读 */
+  try{ await loadAudio(); }catch(e){ AUDIO_OK = false; }
+
   document.getElementById("fontSel").value = state.font;
   layoutToolbar();
+  syncSoundBtn();
   render();
 
   /* 装到手机主屏后离线可用（file:// 下不注册） */
