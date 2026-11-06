@@ -17,42 +17,6 @@
  */
 window.WB_TOOLS = [
   {
-    id: 'task-sync',
-    name: '任务同步站',
-    desc: '站内直接操作：不同电脑上 WorkBuddy 的任务记录、会话产物汇总到一个看板。首次使用先在新窗口登录一次。',
-    href: 'tasksync.html',
-    tag: '站内',
-    icon: '↻',
-    open: false,
-  },
-  {
-    id: 'task-sync-window',
-    name: '任务同步站 · 新窗口',
-    desc: '独立窗口打开看板。首次登录、或站内嵌入页扫码没反应时用这个。',
-    href: 'https://wb-task-sync.app.workbuddy.host/',
-    tag: '在线',
-    icon: '⇱',
-    open: true,
-  },
-  {
-    id: 'task-sync-install-mac',
-    name: '采集器安装 · Mac',
-    desc: '点击直接下载。下载后双击运行，装好开机自启，之后网页自动同步本机任务。若系统拦截就右键 → 打开。',
-    href: 'downloads/install-task-sync.command',
-    tag: '下载',
-    icon: '↓',
-    download: true,
-  },
-  {
-    id: 'task-sync-install-win',
-    name: '采集器安装 · Windows',
-    desc: '点击直接下载。下载后双击运行，装好开机自启，之后网页自动同步本机任务。',
-    href: 'downloads/install-task-sync.bat',
-    tag: '下载',
-    icon: '↓',
-    download: true,
-  },
-  {
     id: 'img-cut',
     name: 'AI 图片切图',
     desc: '去背景并按元素自动切块导出 PNG。首次用先设好本机「源文件目录」和「切图输出目录」，之后打开自动沿用；每台电脑各设一次。',
