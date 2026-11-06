@@ -338,7 +338,6 @@ body.view-pinyin #btnMore,body.view-grade #btnMore{display:none!important}
   font-style:normal;font-family:var(--font-hei);font-size:23px;font-weight:600;
   line-height:1.1;color:#1a1a1a;letter-spacing:.02em;
 }
-.py-card b{font-family:var(--font-kai);font-size:17px;line-height:1.15;font-weight:400;color:#444}  /* 只有四声卡还用它 */
 .py-card i{font-style:normal;font-family:var(--font-hei);font-size:11px;color:var(--sub)}
 .py-card.on{background:#fdecea;border-color:#e6b3ac}
 .py-card.on em{color:var(--accent)}
@@ -346,13 +345,30 @@ body.view-pinyin #btnMore,body.view-grade #btnMore{display:none!important}
   content:"✓";position:absolute;top:3px;right:5px;font-size:10px;
   color:var(--accent);font-family:var(--font-hei);
 }
-.py-tone{display:grid;gap:8px;grid-template-columns:repeat(auto-fill,minmax(122px,1fr))}
-.py-tone .py-card em{font-size:26px}
-.py-tone .py-card i{font-size:11.5px}
-.py-tone .py-card u{
-  text-decoration:none;font-style:normal;font-size:11px;color:var(--sub);
-  text-align:center;white-space:nowrap;
+/* 四声表：一行一个韵母，四列四个调 */
+.py-tt{display:grid;gap:6px;max-width:780px}
+.py-tt-row{display:grid;grid-template-columns:40px repeat(4,1fr);gap:8px}
+.py-tt-head span{
+  font-family:var(--font-hei);font-size:11px;color:var(--sub);text-align:center;
+  white-space:nowrap;padding-bottom:2px;
 }
+.py-tt-l{
+  display:flex;align-items:center;justify-content:center;
+  font-family:var(--font-kai);font-size:19px;color:#8a8072;
+}
+.py-tt-c{
+  position:relative;display:flex;align-items:center;justify-content:center;
+  min-height:46px;background:var(--card);border:1px solid var(--line);
+  border-radius:10px;cursor:pointer;user-select:none;
+  transition:border-color .15s,background .15s,transform .15s;
+}
+.py-tt-c:hover{border-color:#b9ae99;transform:translateY(-1px)}
+.py-tt-c em{
+  font-style:normal;font-family:var(--font-kai);font-size:27px;line-height:1;
+  color:#1a1a1a;
+}
+.py-tt-c.say{background:#fdecea;border-color:#e6b3ac;transform:translateY(-1px)}
+.py-tt-c.say em{color:var(--accent)}
 .py-note{
   background:var(--card);border:1px solid var(--line);border-radius:10px;
   padding:12px 14px;font-size:13px;line-height:1.95;color:#333;
@@ -828,6 +844,7 @@ function saveState(){
 const AUDIO_DIR = "data/audio/";
 let AUDIO_CHARS = {};       /* 字 → 相对路径 */
 let AUDIO_WORDS = {};       /* 词 → 相对路径 */
+let AUDIO_TONES = {};       /* 带调韵母（ā á ǎ à…）→ 相对路径，见 tools/build-tones.py */
 let AUDIO_OK = false;       /* 清单是否已就绪 */
 let AUDIO_SOURCE = "";
 let audioTask = null;
@@ -856,6 +873,7 @@ async function loadAudio(){
         const j = await res.json();
         if(j && j.chars){
           AUDIO_CHARS = j.chars; AUDIO_WORDS = j.words || {};
+          AUDIO_TONES = j.tones || {};
           AUDIO_OK = true; AUDIO_SOURCE = "json";
           return true;
         }
@@ -867,6 +885,7 @@ async function loadAudio(){
     const j = window.__SHIZI_AUDIO__;
     if(j && j.chars){
       AUDIO_CHARS = j.chars; AUDIO_WORDS = j.words || {};
+      AUDIO_TONES = j.tones || {};
       AUDIO_OK = true; AUDIO_SOURCE = "script";
       return true;
     }
@@ -969,7 +988,7 @@ function speak(text){
   const t = String(text == null ? "" : text).trim();
   if(!t || !state.sound) return;
   stopVoice();
-  const rel = AUDIO_WORDS[t] || AUDIO_CHARS[t];
+  const rel = AUDIO_WORDS[t] || AUDIO_CHARS[t] || AUDIO_TONES[t];
   if(rel){
     playAudioUrl(blobCache.get(rel) || (AUDIO_DIR + rel), rel, t);
     return;
@@ -1039,11 +1058,10 @@ function prefetchPageAudio(){
 function prefetchPinyinAudio(){
   if(!AUDIO_OK || !state.sound) return;
   const rels = [];
-  document.querySelectorAll("#pinyinPanel .py-card").forEach(el=>{
-    const b = el.querySelector("b");
-    const t = b ? b.textContent.trim() : "";
+  document.querySelectorAll("#pinyinPanel .py-card, #pinyinPanel .py-tt-c").forEach(el=>{
+    const t = (el.dataset.say || "").trim();
     if(!t) return;
-    const rel = AUDIO_CHARS[t] || AUDIO_WORDS[t];
+    const rel = AUDIO_CHARS[t] || AUDIO_WORDS[t] || AUDIO_TONES[t];
     if(rel) rels.push(rel);
   });
   prefetchRels(rels);
@@ -1547,12 +1565,18 @@ const PY_LESSON = [
   ]}
 ];
 
-const PY_TONES = [
-  ["ā","妈","mā","第一声 · 高平"],
-  ["á","麻","má","第二声 · 上扬"],
-  ["ǎ","马","mǎ","第三声 · 降升"],
-  ["à","骂","mà","第四声 · 下降"]
+/* 四声：每个单韵母都列出四个调，格子里只写带调的韵母本身，
+   点一下读这个调（纯元音，不再是「妈麻马骂」那种带声母的例字）。
+   音频见 tools/build-tones.py：拿真实录音剪掉声母，声调一定是对的。 */
+const PY_TONE_SETS = [
+  ["a", ["ā","á","ǎ","à"]],
+  ["o", ["ō","ó","ǒ","ò"]],
+  ["e", ["ē","é","ě","è"]],
+  ["i", ["ī","í","ǐ","ì"]],
+  ["u", ["ū","ú","ǔ","ù"]],
+  ["ü", ["ǖ","ǘ","ǚ","ǜ"]]
 ];
+const PY_TONE_NAMES = ["一声 · 高平", "二声 · 上扬", "三声 · 降升", "四声 · 下降"];
 
 const PY_RULES = [
   "<b>两拼</b>：前音轻短后音重 —— b + a → bā（八）",
@@ -1584,10 +1608,15 @@ function renderPinyinPanel(){
           + '<small>' + sec.note + '</small></h3>' + grid(sec.items) + '</div>';
   });
 
-  html += '<div class="py-sec"><h3>四声<small>用「妈 麻 马 骂」记四个调</small></h3>'
-        + '<div class="py-tone">' + PY_TONES.map(([m,ch,py,d])=>
-            '<div class="py-card" data-l="' + m + '" data-say="' + ch + '"><em>' + m + '</em>'
-          + '<b>' + ch + '</b><i>' + py + '</i><u>' + d + '</u></div>').join("") + '</div></div>';
+  html += '<div class="py-sec"><h3>四声<small>每个韵母都有四个调，点一个听听</small></h3>'
+        + '<div class="py-tt">'
+        + '<div class="py-tt-row py-tt-head"><span></span>'
+        + PY_TONE_NAMES.map(n=>'<span>' + n + '</span>').join("") + '</div>'
+        + PY_TONE_SETS.map(([v,ts])=>
+            '<div class="py-tt-row"><span class="py-tt-l">' + v + '</span>'
+          + ts.map(t=>'<div class="py-tt-c" data-say="' + t + '"><em>' + t + '</em></div>').join("")
+          + '</div>').join("")
+        + '</div></div>';
 
   html += '<div class="py-sec"><h3>拼读规则</h3><div class="py-note">'
         + PY_RULES.map(s=>'<p>' + s + '</p>').join("") + '</div></div>';
@@ -1595,7 +1624,7 @@ function renderPinyinPanel(){
         + PY_TRAPS.map(s=>'<p>' + s + '</p>').join("") + '</div></div>';
 
   box.innerHTML = html;
-  box.querySelectorAll(".py-card").forEach(el=>{
+  box.querySelectorAll(".py-card, .py-tt-c").forEach(el=>{
     el.onclick = ()=>{
       el.classList.toggle("on");
       /* 读卡片自己的音（data-say），不再读例字：点 b 就该是 bō，不是「爸」 */

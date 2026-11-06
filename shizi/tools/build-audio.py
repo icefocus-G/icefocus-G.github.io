@@ -159,12 +159,17 @@ async def main():
     tasks = [run(c, "char") for c in chars] + [run(w, "word") for w in words]
     await asyncio.gather(*tasks)
 
+    # 四声表的音是 tools/build-tones.py 单独剪出来的，重跑本脚本时别把它们丢掉
+    old = read_json("audio/manifest.json") or {}
+    tones = old.get("tones") or {}
+
     manifest = {
         "version": 1,
         "voice": VOICE,
         "rate": RATE,
         "chars": {c: rel_of(c) for c in chars},
         "words": {w: rel_of(w) for w in words},
+        "tones": tones,
     }
     os.makedirs(OUT, exist_ok=True)
     with open(os.path.join(OUT, "manifest.json"), "w", encoding="utf-8") as f:

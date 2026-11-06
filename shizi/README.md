@@ -132,11 +132,13 @@ node   tools/build-data.js       # 顺便生成 data/pinyin.js（双击打开时
 - 每张卡片是「字母 + 它自己的读音」，例如 `b / bō`、`an / ān`、`zhi / zhī`。
   **不显示例字**：以前 `b` 下面写「爸」、点读也读「爸」，孩子会以为 b 就念 bà；
   现在读的是声母的呼读音（`b` 读 bō，和课本一致），字母和读音一一对应
-- 四声用「妈 麻 马 骂」示范，卡片上直接写出调值和读法
+- 四声做成一张小表：`a o e i u ü` 六个韵母 × 四个调，24 格，格子里只写带调的韵母本身
+  （`ā á ǎ à`）。点哪格读哪格，**不带声母**——点 `á` 就是 á，不是「麻」。
+  音频是 `tools/build-tones.py` 用真实录音剪掉声母做出来的，见下面「四声表的音」
 - 底下两块文字：拼读规则（两拼三拼、`j q x` 遇 `ü` 去两点、标调顺序、轻声）和容易混的地方（`b d p q`、平翘舌、前后鼻音、`n/l`、`f/h`）
 - 点卡片会读卡片自己的音，同时打勾，方便在屏幕上一个个过，讲完再取消
 
-内容全部写死在 `index.html` 的 `PY_LESSON` / `PY_TONES` / `PY_RULES` / `PY_TRAPS` 里。
+内容全部写死在 `index.html` 的 `PY_LESSON` / `PY_TONE_SETS` / `PY_RULES` / `PY_TRAPS` 里。
 
 `PY_LESSON` 每项是三个字段：
 
@@ -150,6 +152,24 @@ node   tools/build-data.js       # 顺便生成 data/pinyin.js（双击打开时
 知 吃 诗 日 资 次 思 衣 乌；韵母用 啊 喔 婀 迂 哀 诶 威 凹 欧 优 耶 约 儿 安 恩 因 温 晕 昂 鞥 英 翁。
 
 改了这张表之后跑一次 `python tools/build-audio.py`，缺的音频会自动补上（只补新的）。
+
+**四声表的音（`data/audio/tone/`）**
+
+不能直接让 TTS 读带调拼音：实测 edge-tts 读 `ó` 是平调、读 `ě` 是降调，声调不可靠。
+所以改成「真实汉字录音 + 剪掉声母」：
+
+```bash
+python tools/build-tones.py     # 24 条，依赖 soundfile + lameenc
+```
+
+`tools/build-tones.py` 顶上的 `SPECS` 写着每一格用哪个字：
+`拔 bá` 剪掉 b 就是 `á`、`把 bǎ` 剪掉 b 就是 `ǎ`、`破 pò` 剪掉 p 就是 `ò`；
+本来就以元音开头的（阿 婀 鹅 衣 姨 已 意 乌 无 五 物 迂 鱼 雨 玉）不用剪。
+唯一的坑是 `ě`——这个音只有「恶心」里的「恶」读得出来，脚本会在两个音节之间断开取前半截。
+
+脚本跑完会打印每一格的音高曲线（半音，相对中位数）自检：
+一声接近平的、二声往上、三声先低后收、四声往下，就说明剪对了。
+它写进 `manifest.json` 的 `tones` 字段（`{"ā": "tone/a1.mp3", …}`），前端 `speak()` 会查这张表。
 
 ---
 
@@ -208,6 +228,7 @@ kid-cards/
 │   ├── pinyin.json         汉字注音表（4030 字 + 197 条多音字词组）
 │   ├── pinyin.js           由 pinyin.json 生成，同样用于双击打开
 │   └── audio/              ★ 语音：5747 个 mp3 + manifest.json（文字→文件 绑定表）
+│       └── tone/           四声表的 24 条纯韵母音（ā á ǎ à …）
 │       ├── manifest.json
 │       ├── manifest.js     清单的脚本版，双击打开时兜底
 │       └── 00/ … 3f/       音频文件，按文字哈希分 64 个目录
@@ -217,6 +238,7 @@ kid-cards/
 │   ├── build-grades.py     从 tools/_src 的页面重建 grades.json
 │   ├── build-pinyin.py     重建 pinyin.json（pypinyin + 课本注音）
 │   ├── build-audio.py      重建 data/audio 里的语音与清单
+│   ├── build-tones.py      生成四声表 24 条「纯韵母带调」语音（剪掉声母）
 │   ├── _src/               年级字表的原始页面（离线可重建）
 │   ├── kid-words.js        人工编排的儿童词库
 │   └── build-dict.js       词库生成脚本
