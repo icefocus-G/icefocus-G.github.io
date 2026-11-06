@@ -71,6 +71,16 @@ def collect():
         if is_han(c):
             chars.add(c)
 
+    # 3.5) 候选词组池里「字全部在默认识字表内」的词：词组表会自动匹配出这些词，
+    #      先把音备好，免得点读时退回系统语音（字表变了再跑一次本脚本即可）
+    wp = read_json("wordpool.json") or {}
+    default_chars = set(dj.get("defaultChars") or "")
+    if default_chars:
+        for n in ("2", "3", "4"):
+            for w in (wp.get("words") or {}).get(n) or []:
+                if is_han(w) and all(ch in default_chars for ch in w):
+                    words.add(w)
+
     # 4) 学拼音页的例字（从 index.html 的 PY_LESSON / PY_TONES 里抓）
     idx = os.path.join(ROOT, "index.html")
     if os.path.exists(idx):

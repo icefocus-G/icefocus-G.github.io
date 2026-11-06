@@ -81,7 +81,9 @@ body.dragging .paper-wrap{transition:none!important}
 }
 .cell{
   position:absolute;display:flex;align-items:center;justify-content:center;
-  font-family:var(--font-kai);line-height:1;color:#1a1a1a;
+  /* 卡片字体由顶栏「字体」决定：render() 把选中的字体写进 --font-card。
+     这里不能再写死 var(--font-kai)，否则内联样式被它盖掉，换字体没反应 */
+  font-family:var(--font-card,var(--font-kai));line-height:1;color:#1a1a1a;
   letter-spacing:.02em;cursor:pointer;user-select:none;transition:background .15s;
 }
 .cell:hover{background:rgba(192,57,43,.045)}
@@ -521,7 +523,7 @@ body.mode-add .more-panel{display:none!important}
     <button data-f="all" class="on">全部</button>
     <button data-f="2">2 字词组</button>
     <button data-f="3">3 字词组</button>
-    <button data-f="4">4 字成语</button>
+    <button data-f="4">4 字词</button>
   </div>
   <div class="viewport" id="viewport">
     <div class="paper-wrap" id="paperWrap">
@@ -748,6 +750,57 @@ async function loadGrades(){
     return window.__SHIZI_GRADES__.grades;
   }
   return [];
+}
+
+/* ---------- 候选词组池（可选数据，读不到就只用人工词库） ----------
+   data/wordpool.json 里是一大批候选词（按词频排序），前端按「当前识字表」实时筛，
+   所以识字表里加了字，词组表立刻就能组出相应的词，不用改任何数据。
+   每个字最多贡献 WORD_QUOTA 条词：不然「大」「人」这种高频字会霸屏，
+   生僻字的词反倒排到几百页以后。 */
+let WORDPOOL = {2:[], 3:[], 4:[]};
+let WORDPOOL_SOURCE = "";
+let WORDPOOL_STATE = "idle";     /* idle | loading | done | fail */
+const WORD_QUOTA = 6;
+
+function normalizeWordPool(raw){
+  const src = (raw && raw.words) || {};
+  const out = {2:[], 3:[], 4:[]};
+  [2,3,4].forEach(n=>{
+    const arr = Array.isArray(src[n]) ? src[n] : Array.isArray(src[String(n)]) ? src[String(n)] : [];
+    const seen = new Set();
+    arr.forEach(w=>{
+      if(typeof w !== "string" || [...w].length !== n || seen.has(w)) return;
+      seen.add(w); out[n].push(w);      /* 顺序即词频高低，前端直接用 */
+    });
+  });
+  return out;
+}
+
+async function loadWordPool(){
+  if(WORDPOOL_STATE === "loading" || WORDPOOL_STATE === "done") return;
+  WORDPOOL_STATE = "loading";
+  try{
+    const res = await fetch("data/wordpool.json", {cache:"no-cache"});
+    if(res.ok){
+      WORDPOOL = normalizeWordPool(await res.json());
+      WORDPOOL_SOURCE = "json"; WORDPOOL_STATE = "done";
+    }
+  }catch(e){ /* file:// 下走脚本兜底 */ }
+
+  if(WORDPOOL_STATE !== "done"){
+    if(!window.__SHIZI_WORDPOOL__){
+      try{ await injectScript("data/wordpool.js"); }catch(e){}
+    }
+    if(window.__SHIZI_WORDPOOL__){
+      WORDPOOL = normalizeWordPool(window.__SHIZI_WORDPOOL__);
+      WORDPOOL_SOURCE = "script"; WORDPOOL_STATE = "done";
+    }else{
+      WORDPOOL_STATE = "fail";    /* 没有也能用，只是词组只有人工词库那部分 */
+    }
+  }
+  _dict = null;                   /* 解锁统计要重新算 */
+  if(view === "words" || view === "chars") render();
+  else updateCounts();
 }
 
 /* 词库按字数分好组，顺序即默认排序 */
@@ -1136,14 +1189,32 @@ function collectWords(pool){
   const groups = {2:[],3:[],4:[]};
   const seen = new Set();
   const push = (w, force)=>{
-    if(!w || seen.has(w)) return;
+    if(!w || seen.has(w)) return false;
     const len = [...w].length;
-    if(!(len in groups)) return;
-    if(!force && ![...w].every(c=>pool.has(c))) return;
-    seen.add(w); groups[len].push(w);
+    if(!(len in groups)) return false;
+    if(!force && ![...w].every(c=>pool.has(c))) return false;
+    seen.add(w); groups[len].push(w); return true;
   };
+
+  /* 1) 自己加的 + 人工编排的词库：顺序就是人工排的，最常用最贴孩子的排在前面 */
   state.customWords.forEach(w=>push(w,true));
-  [2,3,4].forEach(n=> WORDS()[n].forEach(w=>push(w,false)));  return groups;
+  [2,3,4].forEach(n=> WORDS()[n].forEach(w=>push(w,false)));
+
+  /* 2) 自动匹配：词池里凡是「每一个字都在识字表里」的词都算候选，
+        再按每个字最多 WORD_QUOTA 条来挑，保证生僻字也有词、高频字不霸屏 */
+  const quota = new Map();
+  [2,3,4].forEach(n=>{
+    for(const w of WORDPOOL[n]){
+      if(seen.has(w)) continue;
+      const cs = [...w];
+      if(!cs.every(c=>pool.has(c))) continue;
+      const keys = cs.map(c=>n + ":" + c);
+      if(keys.some(k=>(quota.get(k) || 0) >= WORD_QUOTA)) continue;
+      keys.forEach(k=>quota.set(k, (quota.get(k) || 0) + 1));
+      push(w, true);
+    }
+  });
+  return groups;
 }
 function wordTotal(groups){ return groups[2].length + groups[3].length + groups[4].length; }
 
@@ -1151,7 +1222,9 @@ function wordTotal(groups){ return groups[2].length + groups[3].length + groups[
 let _dict = null;
 function dictWords(){
   if(_dict) return _dict;
-  _dict = WORDS()[2].concat(WORDS()[3], WORDS()[4]);  return _dict;
+  _dict = WORDS()[2].concat(WORDS()[3], WORDS()[4],
+    WORDPOOL[2], WORDPOOL[3], WORDPOOL[4]);   /* 词池也算进来，「还差哪些字」才准 */
+  return _dict;
 }
 function blockedInfo(pool){
   let blocked = 0;
@@ -1302,6 +1375,7 @@ function render(){
     pageEl.innerHTML += `<div class="empty-hint">字库里还组不出词组<br><span style="font-size:13px">先到「字库」里多添加一些常用字</span></div>`;
   }
   pageEl.style.fontFamily = fontStack();
+  pageEl.style.setProperty("--font-card", fontStack());   /* 格子自己的字体变量 */
 
   document.body.classList.toggle("showgrid", state.grid);
   document.body.classList.toggle("nopy", !state.showPy);   /* 关拼音只藏那一行，字号间距不动 */
@@ -1315,8 +1389,9 @@ function render(){
         const g = collectWords(new Set(state.chars));
         const total = g[2].length + g[3].length + g[4].length;
         const shown = pages.reduce((a,x)=>a+x.items.length,0);
+        const loading = WORDPOOL_STATE === "loading" ? " · 正在匹配更多词组…" : "";
         return state.wordFilter === "all"
-          ? `共 ${total} 个词组 · ${pages.length} 张`
+          ? `共 ${total} 个词组 · ${pages.length} 张${loading}`
           : `${state.wordFilter} 字词组 ${shown} 个 / 共 ${total} · ${pages.length} 张`;
       })();
 
@@ -1347,7 +1422,7 @@ function syncFilterBar(){
     const f = btn.dataset.f;
     btn.classList.toggle("on", f === state.wordFilter);
     btn.disabled = count[f] === 0;
-    const label = f === "all" ? "全部" : (f === "4" ? "4 字成语" : f + " 字词组");
+    const label = f === "all" ? "全部" : (f === "4" ? "4 字词" : f + " 字词组");
     btn.innerHTML = `${label}<span class="n">${count[f]}</span>`;
   });
 }
@@ -1388,6 +1463,7 @@ const TAB_IDS = {pinyin:"tabPinyin", chars:"tabChars", words:"tabWords", add:"ta
 function setView(v){
   view = v;
   if(v === "chars" || v === "words") state.mode = v;
+  if(v === "words") loadWordPool();      /* 词池 600KB，只在真的要看词组时才下载 */
   state.pageIndex = 0; state.reveal = [];
   Object.keys(TAB_IDS).forEach(k=>
     document.getElementById(TAB_IDS[k]).classList.toggle("on", k===v));
@@ -2173,6 +2249,8 @@ window.addEventListener("resize", layoutToolbar);
   layoutToolbar();
   syncSoundBtn();
   render();
+  /* 上次停在「词组表」的话，词池这时候就该补上（首屏先用人工词库顶着） */
+  if(state.mode === "words") loadWordPool();
 
   /* 装到手机主屏后离线可用（file:// 下不注册） */
   if("serviceWorker" in navigator && /^https?:$/.test(location.protocol)){

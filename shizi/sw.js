@@ -1,7 +1,7 @@
 /* 离线缓存：装到手机主屏后断网也能用
    - 页面和词库走「网络优先」，改完数据刷新就是新的
    - 图标等静态资源走「缓存优先」 */
-const CACHE = "shizi-cards-v11";
+const CACHE = "shizi-cards-v12";
 const CORE = [
   "./",
   "./index.html",
@@ -59,6 +59,7 @@ self.addEventListener("fetch", e => {
     url.pathname.endsWith("/") ||
     url.pathname.endsWith("index.html") ||
     url.pathname.endsWith("dict.json") ||
+    url.pathname.endsWith("wordpool.json") ||
     url.pathname.endsWith("grades.json") ||
     url.pathname.endsWith("pinyin.json") ||
     url.pathname.endsWith("manifest.json");
