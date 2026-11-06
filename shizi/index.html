@@ -231,6 +231,55 @@ body.mode-add #pageActions{display:none}
 }
 .toast.on{opacity:1;transform:translate(-50%,0)}
 
+/* ---------- 年级挑字 ---------- */
+.grade-sel{
+  flex:0 0 auto;height:32px;max-width:132px;padding:0 24px 0 11px;
+  border:1px solid var(--line);border-radius:999px;background:var(--card);
+  color:var(--ink);font-size:13px;font-family:var(--font-hei);cursor:pointer;
+  -webkit-appearance:none;appearance:none;
+  background-image:url("data:image/svg+xml;charset=utf8,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='6' viewBox='0 0 10 6'%3E%3Cpath d='M1 1l4 4 4-4' fill='none' stroke='%238a8172' stroke-width='1.5' stroke-linecap='round'/%3E%3C/svg%3E");
+  background-repeat:no-repeat;background-position:right 9px center;
+}
+.grade-sel:hover{border-color:#b9ae99}
+.grade-sel.on{background-color:#fdecea;border-color:#e6b3ac;color:var(--accent)}
+
+#gradePanel{
+  display:none;flex:1 1 auto;min-height:0;flex-direction:column;gap:10px;
+  width:100%;max-width:1200px;margin:0 auto;padding:14px;
+}
+body.view-grade #gradePanel{display:flex}
+body.view-grade .stage{display:none}
+body.view-grade #pageActions{display:none}
+
+.gp-head{display:flex;align-items:baseline;gap:10px;flex-wrap:wrap}
+.gp-head h2{margin:0;font-size:16.5px;font-weight:600;font-family:var(--font-hei)}
+.gp-count{font-size:12.5px;color:var(--sub)}
+.gp-bar{display:flex;align-items:center;gap:7px;flex-wrap:wrap}
+.gp-sel{margin-left:auto;font-size:12.5px;color:var(--sub);white-space:nowrap}
+.gp-grid{
+  flex:1 1 auto;min-height:0;overflow:auto;align-content:start;
+  display:grid;gap:8px;grid-template-columns:repeat(auto-fill,minmax(74px,1fr));
+  padding:2px 2px 18px;overscroll-behavior:contain;
+}
+.gp-card{
+  position:relative;display:flex;flex-direction:column;align-items:center;
+  justify-content:center;gap:3px;padding:9px 4px 7px;background:var(--card);
+  border:1px solid var(--line);border-radius:10px;cursor:pointer;
+  user-select:none;transition:border-color .15s,transform .15s,background .15s;
+}
+.gp-card:hover{border-color:#b9ae99;transform:translateY(-1px)}
+.gp-card b{font-family:var(--font-kai);font-size:28px;line-height:1;font-weight:400;color:#1a1a1a}
+.gp-card i{font-family:var(--font-hei);font-style:normal;font-size:11px;color:var(--sub);letter-spacing:.01em;text-align:center;word-break:break-all}
+.gp-card.on{background:#fdecea;border-color:#e6b3ac;box-shadow:0 1px 6px rgba(192,57,43,.12)}
+.gp-card.on b{color:var(--accent)}
+.gp-card.on::after{
+  content:"✓";position:absolute;top:3px;right:5px;font-size:10px;
+  color:var(--accent);font-family:var(--font-hei);
+}
+.gp-card.have{opacity:.5}
+.gp-card.have.on{opacity:1}
+.gp-empty{grid-column:1/-1;color:var(--sub);font-size:13px;padding:20px 4px;line-height:1.9}
+
 /* ---------- 批量打印容器 ---------- */
 #printAll{display:none}
 #printAll .page{position:relative;transform:none;box-shadow:none;page-break-after:always;break-after:page}
@@ -309,6 +358,13 @@ body.mode-add .more-panel{display:none!important}
   .toolbar{padding:7px 8px;gap:6px}
   .actions{gap:5px}
   #btnManage{margin-left:0}
+  /* 年级面板：选择提示与主按钮各占一行，避免挤在一行被裁掉 */
+  .grade-sel{max-width:118px;font-size:12.5px;padding-left:9px}
+  .gp-bar{gap:6px}
+  .gp-sel{flex:1 1 100%;margin-left:0;text-align:right}
+  #gpAdd{flex:1 1 100%;justify-content:center;min-height:38px}
+  .gp-grid{grid-template-columns:repeat(auto-fill,minmax(66px,1fr));gap:6px}
+  .gp-card b{font-size:25px}
 }
 </style>
 </head>
@@ -321,6 +377,9 @@ body.mode-add .more-panel{display:none!important}
     <button id="tabWords">词组表</button>
     <button id="tabAdd">加字</button>
   </div>
+  <select id="gradeSel" class="grade-sel" title="按年级挑课本里的字">
+    <option value="">按年级挑字</option>
+  </select>
   <div class="spacer"></div>
   <div class="actions">
     <span class="count" id="countInfo">—</span>
@@ -364,6 +423,21 @@ body.mode-add .more-panel{display:none!important}
     <button id="nextBtn" title="下一张（→）">›</button>
   </div>
 </div>
+
+<section id="gradePanel">
+  <div class="gp-head">
+    <h2 id="gpTitle">按年级挑字</h2>
+    <span class="gp-count" id="gpCount"></span>
+  </div>
+  <div class="gp-bar">
+    <button class="btn" id="gpAll">全选</button>
+    <button class="btn" id="gpClear">清空选择</button>
+    <button class="btn" id="gpInvert">反选</button>
+    <span class="gp-sel" id="gpSelInfo">已选 0 字</span>
+    <button class="btn primary" id="gpAdd">加入识字表</button>
+  </div>
+  <div class="gp-grid" id="gpGrid"></div>
+</section>
 
 <div id="printAll"></div>
 
@@ -529,6 +603,32 @@ async function loadData(){
     return normalizeData(window.__SHIZI_DICT__);
   }
   throw new Error("没有读到 data/dict.json");
+}
+
+/* ---------- 年级识字表（可选数据，读不到就不显示入口） ---------- */
+let GRADES = [];
+let GRADES_SOURCE = "";
+let gradeNow = 0;
+const gradePick = new Set();
+
+async function loadGrades(){
+  try{
+    const res = await fetch("data/grades.json", {cache:"no-cache"});
+    if(res.ok){
+      GRADES_SOURCE = "json";
+      const j = await res.json();
+      return Array.isArray(j.grades) ? j.grades : [];
+    }
+  }catch(e){ /* file:// 下同样走脚本兜底 */ }
+
+  if(!window.__SHIZI_GRADES__){
+    try{ await injectScript("data/grades.js"); }catch(e){}
+  }
+  if(window.__SHIZI_GRADES__ && Array.isArray(window.__SHIZI_GRADES__.grades)){
+    GRADES_SOURCE = "script";
+    return window.__SHIZI_GRADES__.grades;
+  }
+  return [];
 }
 
 /* 词库按字数分好组，顺序即默认排序 */
@@ -805,17 +905,24 @@ window.addEventListener("resize", fit);
 /* ============================================================
    交互
    ============================================================ */
-let view = "chars";          /* chars | words | add */
+let view = "chars";          /* chars | words | add | grade */
 const TAB_IDS = {chars:"tabChars", words:"tabWords", add:"tabAdd"};
 
 function setView(v){
   view = v;
-  if(v !== "add") state.mode = v;
+  if(v === "chars" || v === "words") state.mode = v;
   state.pageIndex = 0; state.reveal = [];
   Object.keys(TAB_IDS).forEach(k=>
     document.getElementById(TAB_IDS[k]).classList.toggle("on", k===v));
   document.body.classList.toggle("mode-add", v==="add");
   document.body.classList.toggle("view-words", v==="words");
+  document.body.classList.toggle("view-grade", v==="grade");
+  document.getElementById("gradeSel").classList.toggle("on", v==="grade");
+  if(v === "grade"){
+    renderGrade(gradeNow);
+    refreshGradeBar();
+    return;
+  }
   if(v === "add"){
     refreshAdd();
     updateCounts();
@@ -828,6 +935,108 @@ function setView(v){
 document.getElementById("tabChars").onclick = ()=>setView("chars");
 document.getElementById("tabWords").onclick = ()=>setView("words");
 document.getElementById("tabAdd").onclick   = ()=>setView("add");
+
+/* ---------- 按年级挑字 ---------- */
+function initGradeSelect(){
+  const sel = document.getElementById("gradeSel");
+  if(!GRADES.length){ sel.style.display = "none"; return; }
+  GRADES.forEach(g=>{
+    const o = document.createElement("option");
+    o.value = String(g.grade);
+    o.textContent = g.name + "（" + g.chars.length + " 字）";
+    sel.appendChild(o);
+  });
+  sel.onchange = ()=>{
+    if(!sel.value){ setView(state.mode || "chars"); return; }
+    gradeNow = +sel.value;
+    gradePick.clear();
+    setView("grade");
+  };
+}
+
+function currentGrade(){
+  return GRADES.find(g=>g.grade === gradeNow) || null;
+}
+
+function renderGrade(){
+  const g = currentGrade();
+  const grid = document.getElementById("gpGrid");
+  if(!g){
+    grid.innerHTML = '<div class="gp-empty">没读到年级字表，检查 data/grades.json 是否在。</div>';
+    document.getElementById("gpTitle").textContent = "按年级挑字";
+    document.getElementById("gpCount").textContent = "";
+    refreshGradeBar();
+    return;
+  }
+  const pool = new Set(state.chars);
+  document.getElementById("gpTitle").textContent = g.name + " · 识字表";
+  document.getElementById("gpCount").textContent =
+    "共 " + g.chars.length + " 字 · 课本要求会认";
+
+  grid.innerHTML = g.chars.map(([c,p])=>{
+    const cls = "gp-card" + (gradePick.has(c) ? " on" : "") + (pool.has(c) ? " have" : "");
+    return '<div class="' + cls + '" data-c="' + escapeHtml(c) + '"'
+         + ' title="' + (pool.has(c) ? "字库里已有" : "") + '">'
+         + "<b>" + escapeHtml(c) + "</b><i>" + escapeHtml(p) + "</i></div>";
+  }).join("");
+
+  grid.querySelectorAll(".gp-card").forEach(el=>{
+    el.onclick = ()=>{
+      const c = el.dataset.c;
+      if(gradePick.has(c)) gradePick.delete(c); else gradePick.add(c);
+      el.classList.toggle("on", gradePick.has(c));
+      refreshGradeBar();
+    };
+  });
+  grid.scrollTop = 0;
+}
+
+function refreshGradeBar(){
+  const pool = new Set(state.chars);
+  let dup = 0;
+  gradePick.forEach(c=>{ if(pool.has(c)) dup++; });
+  document.getElementById("gpSelInfo").textContent =
+    "已选 " + gradePick.size + " 字" + (dup ? "（" + dup + " 个已在字库）" : "");
+  document.getElementById("gpAdd").disabled = gradePick.size === 0;
+}
+
+function gradeAddToLib(){
+  const fresh = [...gradePick].filter(c=>!state.chars.includes(c));
+  if(!fresh.length){ toast("选中的字都已经在字库里了"); return; }
+  const before = libStats();
+  lastAdd = { chars: state.chars.slice() };
+
+  state.chars = state.chars.concat(fresh);
+  state.pageIndex = 0; state.reveal = [];
+  saveState();
+  gradePick.clear();
+
+  const after = libStats();
+  updateCounts();
+  const gain = after.words - before.words;
+  toast("已加入 " + fresh.length + " 个字 · 字库 " + before.chars + "→" + after.chars + " 字"
+      + " · 词组 " + before.words + "→" + after.words + " 个" + (gain > 0 ? "（+" + gain + "）" : ""));
+  setView("chars");
+}
+
+document.getElementById("gpAll").onclick = ()=>{
+  const g = currentGrade(); if(!g) return;
+  g.chars.forEach(([c])=>gradePick.add(c));
+  renderGrade(); refreshGradeBar();
+};
+document.getElementById("gpClear").onclick = ()=>{
+  gradePick.clear(); renderGrade(); refreshGradeBar();
+};
+document.getElementById("gpInvert").onclick = ()=>{
+  const g = currentGrade(); if(!g) return;
+  const next = new Set();
+  g.chars.forEach(([c])=>{ if(!gradePick.has(c)) next.add(c); });
+  gradePick.clear();
+  next.forEach(c=>gradePick.add(c));
+  renderGrade(); refreshGradeBar();
+};
+document.getElementById("gpAdd").onclick = gradeAddToLib;
+document.getElementById("gpSelInfo").onclick = refreshGradeBar;
 
 /* ---------- 排序：默认 / 随机 ---------- */
 function changeSort(random){
@@ -863,7 +1072,7 @@ document.getElementById("nextBtn").onclick = ()=>{
 };
 document.addEventListener("keydown", (e)=>{
   if(e.target.tagName==="TEXTAREA" || e.target.tagName==="INPUT" || e.target.tagName==="SELECT") return;
-  if(view === "add") return;
+  if(view === "add" || view === "grade") return;
   if(e.key==="ArrowLeft" && state.pageIndex>0){ state.pageIndex--; state.reveal=[]; render(); }
   if(e.key==="ArrowRight" && state.pageIndex<pages.length-1){ state.pageIndex++; state.reveal=[]; render(); }
 });
@@ -1243,6 +1452,10 @@ window.addEventListener("resize", layoutToolbar);
   }
   DEFAULT_CHARS = DATA.defaultChars.slice();
   if(!DEFAULT_CHARS.length) DEFAULT_CHARS = ["猫"];
+
+  /* 年级字表是可选的：读不到就只是不显示这个入口，不影响其它功能 */
+  try{ GRADES = await loadGrades(); }catch(e){ GRADES = []; }
+  initGradeSelect();
 
   loadState();
   document.getElementById("fontSel").value = state.font;

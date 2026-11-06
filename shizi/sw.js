@@ -1,12 +1,14 @@
 /* 离线缓存：装到手机主屏后断网也能用
    - 页面和词库走「网络优先」，改完数据刷新就是新的
    - 图标等静态资源走「缓存优先」 */
-const CACHE = "shizi-cards-v1";
+const CACHE = "shizi-cards-v2";
 const CORE = [
   "./",
   "./index.html",
   "./manifest.webmanifest",
   "./data/dict.json",
+  "./data/grades.json",
+  "./data/grades.js",
   "./assets/icon-180.png",
   "./assets/icon-192.png",
   "./assets/icon-512.png"
@@ -38,7 +40,8 @@ self.addEventListener("fetch", e => {
     req.mode === "navigate" ||
     url.pathname.endsWith("/") ||
     url.pathname.endsWith("index.html") ||
-    url.pathname.endsWith("dict.json");
+    url.pathname.endsWith("dict.json") ||
+    url.pathname.endsWith("grades.json");
 
   if (networkFirst) {
     e.respondWith(
