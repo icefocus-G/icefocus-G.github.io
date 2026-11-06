@@ -79,7 +79,15 @@ window.WB_TOOLS = [
     icon: '#',
     open: true,
   },
-  { id: 'slot-07', name: '', desc: '', href: '', tag: '', icon: '' },
+  {
+    id: 'shizi',
+    name: '识字卡片 · A4 打印',
+    desc: '给小朋友识字用：识字表 A4 每行 8 字、共 11 行，多出的字自动顺延下一张；词组表按已有字搭配 2/3/4 字词组，可按字数直接定位。加字后词组自动重新搭配，每张都能导出 300dpi PNG 直接打印。',
+    href: '../shizi/',
+    tag: '在线',
+    icon: '字',
+    open: true,
+  },
   { id: 'slot-08', name: '', desc: '', href: '', tag: '', icon: '' },
   { id: 'slot-09', name: '', desc: '', href: '', tag: '', icon: '' },
   { id: 'slot-10', name: '', desc: '', href: '', tag: '', icon: '' },
@@ -92,5 +100,4 @@ window.WB_TOOLS = [
   { id: 'slot-17', name: '', desc: '', href: '', tag: '', icon: '' },
   { id: 'slot-18', name: '', desc: '', href: '', tag: '', icon: '' },
   { id: 'slot-19', name: '', desc: '', href: '', tag: '', icon: '' },
-  { id: 'slot-20', name: '', desc: '', href: '', tag: '', icon: '' },
 ];
