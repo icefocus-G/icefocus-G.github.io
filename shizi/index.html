@@ -401,7 +401,7 @@ body.mode-add .more-panel{display:none!important}
         <option value="random">随机排序</option>
       </select>
       <button class="btn" id="btnReseed" title="换一批随机顺序">↻</button>
-      <button class="btn" id="btnPy" title="在汉字上方显示 / 隐藏拼音">拼音 开</button>
+      <button class="btn" id="btnPy" title="在汉字上方显示 / 隐藏拼音">拼音开</button>
       <button class="btn" id="btnHide">隐藏文字</button>
       <select class="btn" id="fontSel" title="字体">
         <option value="kai">楷体</option>
@@ -924,10 +924,9 @@ function pageHTML(p){
   return html;
 }
 
-/* 拼音按钮文案：窄屏只写「拼音」，靠选中态看开关，省一格宽度 */
+/* 拼音按钮文案：电脑和手机统一用同一种写法，切换时字数不变，文字位置不跳 */
 function pyBtnLabel(){
-  if(window.innerWidth <= 520) return "拼音";
-  return state.showPy ? "拼音 开" : "拼音 关";
+  return state.showPy ? "拼音开" : "拼音关";
 }
 
 function render(){
