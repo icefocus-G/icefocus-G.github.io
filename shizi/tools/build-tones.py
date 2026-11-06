@@ -48,7 +48,20 @@ VOWELS = [
     ("e", "e", ["ē", "é", "ě", "è"], "婀"),
     ("i", "i", ["ī", "í", "ǐ", "ì"], "衣"),
     ("u", "u", ["ū", "ú", "ǔ", "ù"], "乌"),
-    ("v", "ü", ["ǖ", "ǘ", "ǚ", "ǜ"], "迂"),
+    ("v", "ü", ["ǖ", "ǘ", "ǚ", "ǜ"], "鱼"),
+]
+
+# 整体认读音节里，有几个字 TTS 读得不对（迂被读成 yī、约被读成 yāo、冤/晕 也不稳），
+# 改成用读音可靠的常用字当素材，再用同一条一声曲线合成：
+#   (卡片上的带调写法, 素材汉字, 用第几条曲线)
+SYNTH = [
+    ("yū", "鱼", 0),
+    ("yuē", "月", 0),
+    ("yūn", "云", 0),
+    ("yuān", "元", 0),
+    ("ǖ", "鱼", 0),      # 单韵母 ü 卡
+    ("üē", "月", 0),     # 复韵母 üe 卡
+    ("ǖn", "云", 0),     # 前鼻韵母 ün 卡
 ]
 
 # 四个调的音高曲线：横轴 0→1 是时长，纵轴是相对基础音高的半音数
@@ -290,6 +303,19 @@ def main():
             if y is None:
                 raise SystemExit("合成失败：%s%d" % (vid, k + 1))
             clips.append(("%s%d.mp3" % (vid, k + 1), pad(envelope(y, sr), sr), sr, marks[k]))
+
+    # 整音节：同样用 PSOLA，只是走一声那条平曲线
+    for i, (key, src, k) in enumerate(SYNTH):
+        p = source_path(src, man)
+        raw, sr = read_mono(p)
+        base = steady_vowel(raw, sr)
+        f0 = median_f0(base, sr)
+        dur, curve = TONES[k]
+        y = psola(base, sr, f0, curve, dur)
+        if y is None:
+            raise SystemExit("合成失败：" + key)
+        clips.append(("syn%d.mp3" % i, pad(envelope(y, sr), sr), sr, key))
+        print("  整音节 %s ← %s（%.0fHz）" % (key, src, f0))
 
     h = hashlib.md5()
     for name, y, sr, _ in clips:
