@@ -1,0 +1,623 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover" />
+<title>工具箱</title>
+
+<meta name="theme-color" content="#070b18" />
+<meta name="apple-mobile-web-app-capable" content="yes" />
+<meta name="mobile-web-app-capable" content="yes" />
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+<meta name="apple-mobile-web-app-title" content="工具箱" />
+<meta name="format-detection" content="telephone=no,email=no,address=no" />
+
+<link rel="manifest" href="manifest.webmanifest" />
+<link rel="icon" href="icon-192.png" />
+<link rel="apple-touch-icon" sizes="180x180" href="icon-180.png" />
+
+<link rel="apple-touch-startup-image" href="splash/ipad-768x1024.png"
+      media="(device-width:768px) and (device-height:1024px) and (-webkit-device-pixel-ratio:2) and (orientation:portrait)" />
+<link rel="apple-touch-startup-image" href="splash/ipad-768x1024-l.png"
+      media="(device-width:768px) and (device-height:1024px) and (-webkit-device-pixel-ratio:2) and (orientation:landscape)" />
+<link rel="apple-touch-startup-image" href="splash/ipad-810x1080.png"
+      media="(device-width:810px) and (device-height:1080px) and (-webkit-device-pixel-ratio:2) and (orientation:portrait)" />
+<link rel="apple-touch-startup-image" href="splash/ipad-810x1080-l.png"
+      media="(device-width:810px) and (device-height:1080px) and (-webkit-device-pixel-ratio:2) and (orientation:landscape)" />
+<link rel="apple-touch-startup-image" href="splash/ipad-820x1180.png"
+      media="(device-width:820px) and (device-height:1180px) and (-webkit-device-pixel-ratio:2) and (orientation:portrait)" />
+<link rel="apple-touch-startup-image" href="splash/ipad-820x1180-l.png"
+      media="(device-width:820px) and (device-height:1180px) and (-webkit-device-pixel-ratio:2) and (orientation:landscape)" />
+<link rel="apple-touch-startup-image" href="splash/ipad-834x1194.png"
+      media="(device-width:834px) and (device-height:1194px) and (-webkit-device-pixel-ratio:2) and (orientation:portrait)" />
+<link rel="apple-touch-startup-image" href="splash/ipad-834x1194-l.png"
+      media="(device-width:834px) and (device-height:1194px) and (-webkit-device-pixel-ratio:2) and (orientation:landscape)" />
+<link rel="apple-touch-startup-image" href="splash/ipad-1024x1366.png"
+      media="(device-width:1024px) and (device-height:1366px) and (-webkit-device-pixel-ratio:2) and (orientation:portrait)" />
+<link rel="apple-touch-startup-image" href="splash/ipad-1024x1366-l.png"
+      media="(device-width:1024px) and (device-height:1366px) and (-webkit-device-pixel-ratio:2) and (orientation:landscape)" />
+<link rel="apple-touch-startup-image" href="splash/ipad-744x1133.png"
+      media="(device-width:744px) and (device-height:1133px) and (-webkit-device-pixel-ratio:2) and (orientation:portrait)" />
+<link rel="apple-touch-startup-image" href="splash/ipad-744x1133-l.png"
+      media="(device-width:744px) and (device-height:1133px) and (-webkit-device-pixel-ratio:2) and (orientation:landscape)" />
+
+<style>
+  :root {
+    --bg: #070b18;
+    --ink: #e8eefb;
+    --dim: #8b9ec2;
+    --line: rgba(140, 170, 220, 0.16);
+    --a1: #38bdf8;
+    --a2: #a78bfa;
+    --safe-t: env(safe-area-inset-top, 0px);
+    --safe-b: env(safe-area-inset-bottom, 0px);
+    --safe-l: env(safe-area-inset-left, 0px);
+    --safe-r: env(safe-area-inset-right, 0px);
+  }
+
+  * { box-sizing: border-box; }
+
+  html, body {
+    height: 100%;
+    margin: 0;
+  }
+
+  html { -webkit-text-size-adjust: 100%; }
+
+  body {
+    position: fixed;
+    inset: 0;
+    overflow: hidden;
+    background: var(--bg);
+    color: var(--ink);
+    font-family: -apple-system, BlinkMacSystemFont, "PingFang SC", "Microsoft YaHei", "Segoe UI", Inter, Roboto, sans-serif;
+    -webkit-font-smoothing: antialiased;
+    overscroll-behavior: none;
+    touch-action: manipulation;
+  }
+
+  /* 舞台：内嵌工具中心。四边留出刘海 / 状态栏 / home 指示条 */
+  .stage {
+    position: absolute;
+    inset: 0;
+    display: flex;
+    padding: var(--safe-t) var(--safe-r) var(--safe-b) var(--safe-l);
+  }
+
+  #frame {
+    flex: 1;
+    width: 100%;
+    height: 100%;
+    border: 0;
+    display: block;
+    background: var(--bg);
+    opacity: 0;
+    transition: opacity 0.26s ease;
+  }
+
+  #frame.ready { opacity: 1; }
+
+  /* 启动画面：等内嵌页第一次加载完就淡出 */
+  .splash {
+    position: absolute;
+    inset: 0;
+    z-index: 30;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 22px;
+    background:
+      radial-gradient(62% 46% at 50% 34%, rgba(22, 62, 110, 0.55), transparent 72%),
+      radial-gradient(46% 38% at 14% 6%, rgba(20, 70, 120, 0.42), transparent 70%),
+      var(--bg);
+    transition: opacity 0.36s ease, visibility 0.36s;
+  }
+
+  .splash.gone {
+    opacity: 0;
+    visibility: hidden;
+  }
+
+  .mark { display: block; }
+
+  .splash .mark {
+    width: 108px;
+    height: 108px;
+    filter: drop-shadow(0 10px 30px rgba(56, 189, 248, 0.18));
+  }
+
+  .splash .name {
+    font-size: 21px;
+    font-weight: 600;
+    letter-spacing: 0.16em;
+    color: var(--ink);
+    opacity: 0.92;
+  }
+
+  .bar {
+    width: 84px;
+    height: 2px;
+    border-radius: 2px;
+    overflow: hidden;
+    background: rgba(140, 170, 220, 0.16);
+  }
+
+  .bar i {
+    display: block;
+    width: 42%;
+    height: 100%;
+    border-radius: 2px;
+    background: linear-gradient(90deg, var(--a1), var(--a2));
+    animation: slide 1.15s ease-in-out infinite;
+  }
+
+  @keyframes slide {
+    0% { transform: translateX(-110%); }
+    100% { transform: translateX(260%); }
+  }
+
+  /* 连不上时的兜底页 */
+  .offline {
+    position: absolute;
+    inset: 0;
+    z-index: 40;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 14px;
+    padding: 8vw;
+    text-align: center;
+    background:
+      radial-gradient(60% 44% at 50% 36%, rgba(22, 62, 110, 0.45), transparent 72%),
+      var(--bg);
+  }
+
+  .offline[hidden] { display: none; }
+
+  .offline .mark { width: 76px; height: 76px; opacity: 0.9; }
+
+  .offline h2 {
+    margin: 8px 0 0;
+    font-size: 19px;
+    font-weight: 600;
+  }
+
+  .offline p {
+    margin: 0;
+    max-width: 34em;
+    font-size: 14px;
+    line-height: 1.7;
+    color: var(--dim);
+  }
+
+  .offline button {
+    margin-top: 10px;
+    padding: 11px 26px;
+    font-size: 15px;
+    font-family: inherit;
+    color: var(--ink);
+    background: rgba(255, 255, 255, 0.06);
+    border: 1px solid rgba(140, 170, 220, 0.3);
+    border-radius: 999px;
+    cursor: pointer;
+    -webkit-tap-highlight-color: transparent;
+  }
+
+  .offline button:active {
+    background: rgba(56, 189, 248, 0.16);
+    border-color: rgba(56, 189, 248, 0.5);
+  }
+
+  /* 未安装提示条 */
+  .hint {
+    position: absolute;
+    z-index: 45;
+    left: 50%;
+    transform: translateX(-50%);
+    bottom: calc(14px + var(--safe-b));
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    max-width: min(92vw, 520px);
+    padding: 9px 8px 9px 16px;
+    font-size: 13px;
+    line-height: 1.45;
+    color: rgba(232, 238, 251, 0.9);
+    background: rgba(16, 26, 48, 0.86);
+    border: 1px solid var(--line);
+    border-radius: 999px;
+    backdrop-filter: blur(16px);
+    -webkit-backdrop-filter: blur(16px);
+    box-shadow: 0 12px 32px rgba(0, 0, 0, 0.42);
+    animation: rise 0.4s ease both;
+  }
+
+  .hint[hidden] { display: none; }
+
+  .hint b {
+    font-weight: 600;
+    color: #cfe6ff;
+  }
+
+  .hint button {
+    flex: none;
+    width: 26px;
+    height: 26px;
+    display: grid;
+    place-items: center;
+    font-size: 13px;
+    color: var(--dim);
+    background: rgba(255, 255, 255, 0.06);
+    border: 0;
+    border-radius: 50%;
+    cursor: pointer;
+    -webkit-tap-highlight-color: transparent;
+  }
+
+  @keyframes rise {
+    from { opacity: 0; transform: translate(-50%, 10px); }
+    to { opacity: 1; transform: translate(-50%, 0); }
+  }
+
+  /* 右下角悬浮菜单：刷新 / 后退 / 首页 / 外部打开 */
+  .dock[hidden] { display: none; }
+
+  .dock {
+    position: absolute;
+    z-index: 50;
+    right: calc(14px + var(--safe-r));
+    bottom: calc(14px + var(--safe-b));
+    display: flex;
+    flex-direction: column;
+    align-items: flex-end;
+    gap: 10px;
+  }
+
+  .menu {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    padding: 8px;
+    background: rgba(14, 22, 40, 0.86);
+    border: 1px solid var(--line);
+    border-radius: 18px;
+    backdrop-filter: blur(18px);
+    -webkit-backdrop-filter: blur(18px);
+    box-shadow: 0 16px 40px rgba(0, 0, 0, 0.48);
+    transform-origin: bottom right;
+    transition: opacity 0.16s ease, transform 0.16s ease;
+  }
+
+  .menu.hide {
+    opacity: 0;
+    transform: scale(0.9) translateY(6px);
+    pointer-events: none;
+  }
+
+  .menu button {
+    width: 44px;
+    height: 44px;
+    display: grid;
+    place-items: center;
+    color: #cfe0f8;
+    background: rgba(255, 255, 255, 0.05);
+    border: 0;
+    border-radius: 12px;
+    cursor: pointer;
+    -webkit-tap-highlight-color: transparent;
+  }
+
+  .menu button:active {
+    background: rgba(56, 189, 248, 0.2);
+  }
+
+  .menu svg { width: 20px; height: 20px; }
+
+  .fab {
+    width: 46px;
+    height: 46px;
+    display: grid;
+    place-items: center;
+    padding: 0;
+    color: #dbe7fb;
+    background: linear-gradient(180deg, rgba(30, 45, 78, 0.9), rgba(13, 21, 39, 0.92));
+    border: 1px solid rgba(150, 185, 235, 0.26);
+    border-radius: 50%;
+    backdrop-filter: blur(14px);
+    -webkit-backdrop-filter: blur(14px);
+    box-shadow: 0 10px 26px rgba(0, 0, 0, 0.46), inset 0 1px 0 rgba(255, 255, 255, 0.08);
+    opacity: 0.66;
+    cursor: pointer;
+    transition: opacity 0.2s ease, transform 0.2s ease;
+    -webkit-tap-highlight-color: transparent;
+  }
+
+  .dock.open .fab {
+    opacity: 1;
+    color: #ffffff;
+    transform: rotate(45deg);
+    border-color: rgba(56, 189, 248, 0.42);
+  }
+
+  .fab svg { width: 22px; height: 22px; }
+
+  @media (prefers-reduced-motion: reduce) {
+    .splash, #frame, .menu, .fab, .bar i { transition: none !important; animation: none !important; }
+  }
+</style>
+</head>
+<body>
+
+<div class="stage">
+  <iframe id="frame" title="工具箱" src="../tool/"
+          allow="clipboard-write; fullscreen; autoplay; microphone; camera"></iframe>
+</div>
+
+<div class="splash" id="splash">
+  <svg class="mark" viewBox="0 0 200 200" aria-hidden="true">
+    <defs>
+      <linearGradient id="g1" x1="0" y1="0" x2="1" y2="1">
+        <stop offset="0" stop-color="#38bdf8" />
+        <stop offset="1" stop-color="#a78bfa" />
+      </linearGradient>
+    </defs>
+    <rect x="22" y="22" width="72" height="72" rx="16" fill="rgba(255,255,255,0.10)" stroke="rgba(255,255,255,0.42)" stroke-width="2" />
+    <rect x="106" y="22" width="72" height="72" rx="16" fill="rgba(255,255,255,0.10)" stroke="rgba(255,255,255,0.42)" stroke-width="2" />
+    <rect x="22" y="106" width="72" height="72" rx="16" fill="rgba(255,255,255,0.10)" stroke="rgba(255,255,255,0.42)" stroke-width="2" />
+    <rect x="106" y="106" width="72" height="72" rx="16" fill="url(#g1)" />
+  </svg>
+  <div class="name">工具箱</div>
+  <div class="bar"><i></i></div>
+</div>
+
+<div class="offline" id="offline" hidden>
+  <svg class="mark" viewBox="0 0 200 200" aria-hidden="true">
+    <rect x="22" y="22" width="72" height="72" rx="16" fill="rgba(255,255,255,0.10)" stroke="rgba(255,255,255,0.42)" stroke-width="2" />
+    <rect x="106" y="22" width="72" height="72" rx="16" fill="rgba(255,255,255,0.10)" stroke="rgba(255,255,255,0.42)" stroke-width="2" />
+    <rect x="22" y="106" width="72" height="72" rx="16" fill="rgba(255,255,255,0.10)" stroke="rgba(255,255,255,0.42)" stroke-width="2" />
+    <rect x="106" y="106" width="72" height="72" rx="16" fill="rgba(255,255,255,0.10)" stroke="rgba(255,255,255,0.42)" stroke-width="2" />
+  </svg>
+  <h2>连不上工具箱</h2>
+  <p id="offReason">这个壳只是打开工具中心的窗口，页面本身没缓存，需要联网。</p>
+  <button id="retry" type="button">重新加载</button>
+</div>
+
+<div class="hint" id="hint" hidden>
+  <span>点 Safari 的<b>分享</b> → <b>添加到主屏幕</b>，可全屏当 App 用</span>
+  <button id="hintClose" type="button" aria-label="不再提示">✕</button>
+</div>
+
+<div class="dock" id="dock">
+  <div class="menu hide" id="menu">
+    <button id="mReload" type="button" aria-label="刷新" title="刷新">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round">
+        <path d="M20 11a8 8 0 1 0-2.6 6.3" />
+        <path d="M20 4.5V11h-6.4" />
+      </svg>
+    </button>
+    <button id="mBack" type="button" aria-label="后退" title="后退">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round">
+        <path d="M14.5 5 8 12l6.5 7" />
+      </svg>
+    </button>
+    <button id="mHome" type="button" aria-label="回到工具中心" title="回到工具中心">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round">
+        <path d="M4 10.6 12 4l8 6.6" />
+        <path d="M6.5 9.6V20h11V9.6" />
+      </svg>
+    </button>
+    <button id="mOpen" type="button" aria-label="在浏览器打开" title="在浏览器打开">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round">
+        <path d="M14 4h6v6" />
+        <path d="M20 4l-8.5 8.5" />
+        <path d="M19 14.5V19a1.5 1.5 0 0 1-1.5 1.5H5A1.5 1.5 0 0 1 3.5 19V6.5A1.5 1.5 0 0 1 5 5h4.5" />
+      </svg>
+    </button>
+  </div>
+  <button class="fab" id="fab" type="button" aria-label="菜单">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round">
+      <path d="M12 5v14M5 12h14" />
+    </svg>
+  </button>
+</div>
+
+<script>
+(function () {
+  "use strict";
+
+  /* 壳里装的东西：工具中心。用相对路径，换域名 / 本地双击打开都能用 */
+  var INNER = "../tool/";
+
+  var frame     = document.getElementById("frame");
+  var splash    = document.getElementById("splash");
+  var offlineEl = document.getElementById("offline");
+  var offReason = document.getElementById("offReason");
+  var retryBtn  = document.getElementById("retry");
+  var hintEl    = document.getElementById("hint");
+  var hintClose = document.getElementById("hintClose");
+  var dock      = document.getElementById("dock");
+  var menu      = document.getElementById("menu");
+  var fab       = document.getElementById("fab");
+
+  var loadedOnce = false;      /* 内嵌页至少成功加载过一次 */
+  var splashGone = false;
+  var menuTimer  = 0;
+
+  function isStandalone() {
+    return (window.navigator.standalone === true) ||
+           (window.matchMedia && window.matchMedia("(display-mode: standalone)").matches);
+  }
+
+  function hideSplash() {
+    if (splashGone) return;
+    splashGone = true;
+    splash.classList.add("gone");   /* 只隐藏不删：重试时还要再用一次 */
+    frame.classList.add("ready");
+  }
+
+  function showOffline(reason) {
+    if (reason) offReason.textContent = reason;
+    offlineEl.hidden = false;
+    hintEl.hidden = true;
+    dock.hidden = true;          /* 打不开的时候，刷新/后退都没意义 */
+    hideSplash();
+  }
+
+  function hideOffline() {
+    offlineEl.hidden = true;
+    dock.hidden = false;
+  }
+
+  function innerUrl() {
+    try {
+      return frame.contentWindow.location.href;
+    } catch (e) {
+      return new URL(INNER, location.href).href;
+    }
+  }
+
+  /* 工具中心所在的目录，用来判断内嵌页是不是真的加载对了 */
+  var INNER_DIR = new URL(INNER, location.href).pathname;
+
+  function innerPath() {
+    try { return frame.contentWindow.location.pathname; } catch (e) { return ""; }
+  }
+
+  /* ---- 加载：成功就收启动图，长时间没动静就探一次网络 ---- */
+  frame.addEventListener("load", function () {
+    var path = innerPath();
+
+    /* 404 / 网络错误的页面也会触发 load，得先确认装进来的确实是工具中心 */
+    if (path.indexOf(INNER_DIR) !== 0) {
+      showOffline(path && path !== "blank"
+        ? "这个地址打不开：" + path + "。可能是断网，或工具中心改过路径。"
+        : "页面没加载出来。多半是断网了，连上 Wi-Fi 再点重试。");
+      return;
+    }
+
+    loadedOnce = true;
+    hideSplash();
+    hideOffline();
+  });
+
+  setTimeout(function () {
+    if (loadedOnce) return;
+    /* 还没加载出来：探测一次，区分「离线」和「服务器慢」 */
+    fetch(INNER, { cache: "no-store" })
+      .then(function (r) {
+        if (!r.ok) showOffline("服务器返回 " + r.status + "，稍后再试。");
+      })
+      .catch(function () {
+        showOffline(navigator.onLine
+          ? "网络连不上 icefocus.cn，检查一下 Wi-Fi。"
+          : "设备现在没联网，连上 Wi-Fi 后再点重试。");
+      });
+  }, 7000);
+
+  /* 兜底：15 秒还没好，就当失败，别让启动图一直转 */
+  setTimeout(function () {
+    if (!splashGone) showOffline("");
+  }, 15000);
+
+  retryBtn.addEventListener("click", function () {
+    hideOffline();
+    splashGone = false;
+    loadedOnce = false;
+    if (splash) splash.classList.remove("gone");
+    frame.src = INNER;
+  });
+
+  /* ---- 网络状态 ---- */
+  window.addEventListener("online", function () {
+    if (!offlineEl.hidden) {
+      offlineEl.hidden = true;
+      frame.src = INNER;
+    }
+  });
+
+  window.addEventListener("offline", function () {
+    showOffline("设备已离线，工具中心需要联网。");
+  });
+
+  /* ---- 悬浮菜单 ---- */
+  function setMenu(open) {
+    dock.classList.toggle("open", open);
+    menu.classList.toggle("hide", !open);
+    clearTimeout(menuTimer);
+    if (open) {
+      menuTimer = setTimeout(function () { setMenu(false); }, 5000);
+    }
+  }
+
+  fab.addEventListener("click", function (e) {
+    e.stopPropagation();
+    setMenu(menu.classList.contains("hide"));
+  });
+
+  /* 双击（连点两下）直接刷新，省一次菜单 */
+  var lastFabTap = 0;
+  fab.addEventListener("pointerup", function () {
+    var now = Date.now();
+    if (now - lastFabTap < 320) { reload(); setMenu(false); }
+    lastFabTap = now;
+  });
+
+  document.addEventListener("click", function () {
+    if (!menu.classList.contains("hide")) setMenu(false);
+  });
+
+  menu.addEventListener("click", function (e) { e.stopPropagation(); });
+
+  function reload() {
+    try { frame.contentWindow.location.reload(); }
+    catch (e) { frame.src = INNER; }
+  }
+
+  document.getElementById("mReload").addEventListener("click", function () {
+    reload();
+    setMenu(false);
+  });
+
+  document.getElementById("mBack").addEventListener("click", function () {
+    try { frame.contentWindow.history.back(); } catch (e) {}
+    setMenu(false);
+  });
+
+  document.getElementById("mHome").addEventListener("click", function () {
+    frame.src = INNER;
+    setMenu(false);
+  });
+
+  document.getElementById("mOpen").addEventListener("click", function () {
+    /* 装成 App 后 window.open 会交给 Safari，壳本身不动 */
+    window.open(innerUrl(), "_blank");
+    setMenu(false);
+  });
+
+  /* ---- 没装到桌面时，提醒一次怎么装 ---- */
+  var HINT_KEY = "toolbox.shell.hint";
+
+  function showHintOnce() {
+    if (isStandalone()) return;
+    try { if (localStorage.getItem(HINT_KEY) === "off") return; } catch (e) {}
+    if (!/iPhone|iPad|iPod|Macintosh/.test(navigator.userAgent)) return;
+    setTimeout(function () { hintEl.hidden = false; }, 2600);
+  }
+
+  hintClose.addEventListener("click", function () {
+    hintEl.hidden = true;
+    try { localStorage.setItem(HINT_KEY, "off"); } catch (e) {}
+  });
+
+  /* ---- 注册壳自己的 Service Worker：断网也能打开这个壳（内嵌页仍需联网） ---- */
+  if ("serviceWorker" in navigator && /^https?:$/.test(location.protocol)) {
+    navigator.serviceWorker.register("sw.js").catch(function () {});
+  }
+
+  showHintOnce();
+})();
+</script>
+</body>
+</html>
