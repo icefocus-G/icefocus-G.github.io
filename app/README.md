@@ -12,10 +12,36 @@ app/
 ├── sw.js                  只缓存壳自己（/app/），断网也能打开壳并提示
 ├── icon-180/192/512/1024  桌面图标（180 是 iOS 实际用的 apple-touch-icon）
 ├── splash/                iPad 各机型启动图，避免打开瞬间白屏
-└── build-assets.py        重新生成上面这些图片
+├── build-assets.py        重新生成上面这些图片
+├── toolbox.mobileconfig   Web Clip 描述文件：装到 iPad 上会生成主屏图标
+├── build-webclip.py       生成上面这个描述文件
+└── install.html           安装引导页（下载描述文件 / 说明步骤）
 ```
 
-## 装到 iPad 上（30 秒）
+## 装到 iPad 上
+
+### 方式 A：描述文件（会走系统「安装」，主屏出现图标）
+
+1. iPad 用 **Safari** 打开 **`icefocus.cn/app/install`**
+2. 点「下载安装文件」，允许下载配置描述文件
+3. **设置** → 顶部「已下载描述文件」（或 通用 → VPN 与设备管理）→ **安装**
+4. 回主屏，出现「工具箱」图标，点开全屏
+
+比「添加到主屏幕」多的一步是去设置里确认安装。好处是可以把同一个链接发给多台 iPad
+（教室里几台设备装一次就好），图标、名字、打开的地址都固定在里面，不用一台台建书签。
+
+> 描述文件里只有一条 `com.apple.webClip.managed`，作用是「在桌面放一个指向某个网址的图标」，
+> 不申请任何权限，随时可在 设置 → 通用 → VPN 与设备管理 里删掉。
+> 它是未签名描述文件，安装时会提示「未验证」，点继续即可 —— 新系统如果直接拦掉，
+> 就改用下面的方式 B，效果一样。
+
+改名字 / 地址 / 图标：编辑 `build-webclip.py` 顶部的常量，然后
+
+```bash
+python app/build-webclip.py
+```
+
+### 方式 B：添加到主屏幕（最简单）
 
 1. iPad 打开 Safari，输入 **`icefocus.cn/app/`**
 2. 点顶部的**分享**按钮 → **添加到主屏幕**
@@ -23,6 +49,14 @@ app/
 4. 从主屏点开，即可全屏使用（底部没有 Safari 工具栏）
 
 > 必须用 **Safari**。Chrome / 微信内置浏览器加不了主屏，也不支持全屏模式。
+
+### 注意
+
+GitHub Pages 把 `.mobileconfig` 按 `application/octet-stream` 发出，Safari 收到这个类型不会弹
+安装提示。所以 `install.html` 的做法是：页面加载时先把文件 `fetch` 回来，点击时在**同步调用栈**里
+用 `application/x-apple-aspen-config` 重新打包成 blob 再下载 —— 一是绕过服务器的 MIME，
+二是保住用户手势（iOS 只在手势里才允许下载）。以后换托管平台、能直接设
+`Content-Type: application/x-apple-aspen-config` 的话，直接给链接就行，这段可以删掉。
 
 第一次打开时底部会出现一次「点分享 → 添加到主屏幕」的提示条，点 ✕ 后不再出现
 （记在 `localStorage` 的 `toolbox.shell.hint`）。
