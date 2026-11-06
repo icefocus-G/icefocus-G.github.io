@@ -216,7 +216,8 @@
     z-index: 45;
     left: 50%;
     transform: translateX(-50%);
-    bottom: calc(14px + var(--safe-b));
+    /* 抬高一点：Safari 的底部工具栏会盖住贴着底边的东西（装成 App 后这条不显示） */
+    bottom: calc(56px + var(--safe-b));
     display: flex;
     align-items: center;
     gap: 10px;
@@ -231,7 +232,7 @@
     backdrop-filter: blur(16px);
     -webkit-backdrop-filter: blur(16px);
     box-shadow: 0 12px 32px rgba(0, 0, 0, 0.42);
-    animation: rise 0.4s ease both;
+    animation: rise 0.4s ease;   /* 不用 both：动画没跑起来时也要是可见的 */
   }
 
   .hint[hidden] { display: none; }
@@ -344,7 +345,7 @@
   .fab svg { width: 22px; height: 22px; }
 
   @media (prefers-reduced-motion: reduce) {
-    .splash, #frame, .menu, .fab, .bar i { transition: none !important; animation: none !important; }
+    .splash, #frame, .menu, .fab, .bar i, .hint { transition: none !important; animation: none !important; }
   }
 </style>
 </head>
