@@ -69,8 +69,12 @@ select.btn{padding:8px 10px}
 .viewport{
   flex:1 1 auto;min-height:0;width:100%;
   display:flex;align-items:center;justify-content:center;overflow:hidden;
+  touch-action:pan-y;              /* 横划交给我们翻页，纵向仍可滚动 */
 }
-.paper-wrap{position:relative;flex:0 0 auto}
+.paper-wrap{position:relative;flex:0 0 auto;will-change:transform}
+#viewport{cursor:grab}
+body.dragging #viewport,body.dragging .cell{cursor:grabbing}
+body.dragging .paper-wrap{transition:none!important}
 .page{
   position:absolute;top:0;left:0;width:210mm;height:297mm;background:#fff;
   transform-origin:top left;box-shadow:var(--shadow);
@@ -91,6 +95,8 @@ select.btn{padding:8px 10px}
   font-family:var(--font-hei);font-weight:400;letter-spacing:0;
   text-align:center;white-space:nowrap;color:inherit;opacity:.82;
 }
+/* 关掉拼音：只把拼音行藏起来，占位与字号都不变 */
+body.nopy .cell .py{visibility:hidden}
 body.showgrid .cell{outline:.22mm dashed #d9d3c4;outline-offset:-.22mm}
 .gl{position:absolute;pointer-events:none;display:none}
 body.showgrid .gl{display:block}
@@ -292,6 +298,64 @@ body.view-grade #pageActions{display:none}
 .gp-card.have.on{opacity:1}
 .gp-empty{grid-column:1/-1;color:var(--sub);font-size:13px;padding:20px 4px;line-height:1.9}
 
+/* ---------- 学拼音 ---------- */
+#pinyinPanel{
+  display:none;flex:1 1 auto;min-height:0;flex-direction:column;gap:10px;
+  width:100%;max-width:1200px;margin:0 auto;padding:14px;
+}
+body.view-pinyin #pinyinPanel{display:flex}
+body.view-pinyin .stage{display:none}
+body.view-pinyin #pageActions{display:none}
+body.view-pinyin #gradeSel{display:none}
+body.view-pinyin .count{display:none}
+/* 这两个页面没有分页工具栏，「更多」里全是分页相关按钮，一并收起 */
+body.view-pinyin #btnMore,body.view-grade #btnMore{display:none!important}
+.py-head{display:flex;align-items:baseline;gap:10px;flex-wrap:wrap}
+.py-head h2{margin:0;font-size:16.5px;font-weight:600;font-family:var(--font-hei)}
+.py-tip{font-size:12.5px;color:var(--sub)}
+.py-scroll{
+  flex:1 1 auto;min-height:0;overflow:auto;overscroll-behavior:contain;
+  display:flex;flex-direction:column;gap:16px;padding:2px 2px 22px;
+}
+.py-sec h3{
+  margin:0 0 8px;font-size:13.5px;font-weight:600;font-family:var(--font-hei);
+  display:flex;align-items:baseline;gap:8px;
+}
+.py-sec h3 small{font-weight:400;font-size:11.5px;color:var(--sub)}
+.py-grid{display:grid;gap:8px;grid-template-columns:repeat(auto-fill,minmax(80px,1fr))}
+.py-card{
+  position:relative;display:flex;flex-direction:column;align-items:center;gap:2px;
+  padding:9px 4px 8px;background:var(--card);border:1px solid var(--line);
+  border-radius:10px;cursor:pointer;user-select:none;
+  transition:border-color .15s,background .15s,transform .15s;
+}
+.py-card:hover{border-color:#b9ae99;transform:translateY(-1px)}
+.py-card em{
+  font-style:normal;font-family:var(--font-hei);font-size:23px;font-weight:600;
+  line-height:1.1;color:#1a1a1a;letter-spacing:.02em;
+}
+.py-card b{font-family:var(--font-kai);font-size:17px;line-height:1.15;font-weight:400;color:#444}
+.py-card i{font-style:normal;font-family:var(--font-hei);font-size:11px;color:var(--sub)}
+.py-card.on{background:#fdecea;border-color:#e6b3ac}
+.py-card.on em{color:var(--accent)}
+.py-card.on::after{
+  content:"✓";position:absolute;top:3px;right:5px;font-size:10px;
+  color:var(--accent);font-family:var(--font-hei);
+}
+.py-tone{display:grid;gap:8px;grid-template-columns:repeat(auto-fill,minmax(122px,1fr))}
+.py-tone .py-card em{font-size:26px}
+.py-tone .py-card i{font-size:11.5px}
+.py-tone .py-card u{
+  text-decoration:none;font-style:normal;font-size:11px;color:var(--sub);
+  text-align:center;white-space:nowrap;
+}
+.py-note{
+  background:var(--card);border:1px solid var(--line);border-radius:10px;
+  padding:12px 14px;font-size:13px;line-height:1.95;color:#333;
+}
+.py-note p{margin:0}
+.py-note b{color:var(--accent);font-weight:600}
+
 /* ---------- 批量打印容器 ---------- */
 #printAll{display:none}
 #printAll .page{position:relative;transform:none;box-shadow:none;page-break-after:always;break-after:page}
@@ -377,6 +441,14 @@ body.mode-add .more-panel{display:none!important}
   #gpAdd{flex:1 1 100%;justify-content:center;min-height:38px}
   .gp-grid{grid-template-columns:repeat(auto-fill,minmax(66px,1fr));gap:6px}
   .gp-card b{font-size:25px}
+  /* 学拼音 */
+  .py-head h2{font-size:15px}
+  .py-tip{font-size:11.5px}
+  .py-grid{grid-template-columns:repeat(auto-fill,minmax(66px,1fr));gap:6px}
+  .py-card em{font-size:20px}
+  .py-card b{font-size:15px}
+  .py-tone{grid-template-columns:1fr 1fr}
+  .py-note{font-size:12.5px;line-height:1.9;padding:11px 12px}
 }
 </style>
 </head>
@@ -385,6 +457,7 @@ body.mode-add .more-panel{display:none!important}
 <div class="toolbar">
   <div class="brand">识字<span>卡片</span></div>
   <div class="tabs">
+    <button id="tabPinyin">学拼音</button>
     <button id="tabChars" class="on">识字表</button>
     <button id="tabWords">词组表</button>
     <button id="tabAdd">加字</button>
@@ -450,6 +523,14 @@ body.mode-add .more-panel{display:none!important}
     <button class="btn primary" id="gpAdd">加入识字表</button>
   </div>
   <div class="gp-grid" id="gpGrid"></div>
+</section>
+
+<section id="pinyinPanel">
+  <div class="py-head">
+    <h2>学拼音</h2>
+    <span class="py-tip">点字母可以打勾，方便带着孩子一个个过 · 23 声母 · 24 韵母 · 16 整体认读</span>
+  </div>
+  <div class="py-scroll" id="pyScroll"></div>
 </section>
 
 <div id="printAll"></div>
@@ -864,17 +945,17 @@ function cellFont(item, kind, cw, ch){
 function keyOf(item){ return state.mode + "::" + item; }
 
 /* ---------- 格子排版：汉字 + 上方拼音 ----------
-   拼音行高度固定，保证同一张纸里所有字的基线对齐；没有注音的字也留白，
-   这样整页看起来是齐的。 */
+   拼音行高度固定（= 主字 × PY_RATIO × 1.26），与有没有注音、开不开拼音都无关，
+   所以关掉拼音只是把那一行藏起来，汉字大小和格子间距一个像素都不变。 */
 const PY_RATIO = 0.34;      /* 拼音字号 = 主字 × 0.34 */
 const LAT_W    = 0.55;      /* 拼音字母平均宽度（em），用来估音节宽度 */
+let PY_OK = false;          /* 拼音数据是否已加载；没加载就退回「无拼音」排版 */
 
 function cellMetrics(item, kind, cw, chh){
   const text = String(item);
   const chars = [...text];
   const len = chars.length;
-  const py = state.showPy ? wordPinyin(text) : [];
-  const hasPy = py.some(s=>s);
+  const hasPy = PY_OK;      /* 整页统一按「有拼音」排版，避免开关时字号跳动 */
   const H = chh * 0.94;
 
   let fs;
@@ -885,13 +966,16 @@ function cellMetrics(item, kind, cw, chh){
                : Math.min(cw/(len + 0.55), H*0.86);
   }
 
+  const py = hasPy ? wordPinyin(text) : [];
+  const pyH = hasPy ? fs*PY_RATIO*1.26 : 0;
+
   let pyFs = 0;
   if(hasPy){
     const maxLen = Math.max(1, ...py.map(s=>[...s].length));
     pyFs = Math.min(fs*PY_RATIO, (fs*0.94) / (maxLen*LAT_W));
     pyFs = Math.max(pyFs, fs*0.15);       /* 别小到印出来看不清 */
   }
-  return {chars, py, fs, pyFs, pyH: pyFs ? pyFs*1.26 : 0};
+  return {chars, py, fs, pyFs, pyH};
 }
 
 function pageHTML(p){
@@ -912,9 +996,9 @@ function pageHTML(p){
     m.chars.forEach((ch, k)=>{
       const py = m.py[k] || "";
       inner += `<span class="rb">`
-             + (m.pyFs ? `<b class="py" style="font-size:${m.pyFs.toFixed(2)}mm;`
-                       + `height:${m.pyH.toFixed(2)}mm;line-height:${m.pyH.toFixed(2)}mm">`
-                       + `${escapeHtml(py)}</b>` : "")
+             + (m.pyH ? `<b class="py" style="font-size:${m.pyFs.toFixed(2)}mm;`
+                      + `height:${m.pyH.toFixed(2)}mm;line-height:${m.pyH.toFixed(2)}mm">`
+                      + `${escapeHtml(py)}</b>` : "")
              + `<b class="hz" style="font-size:${m.fs.toFixed(2)}mm">${escapeHtml(ch)}</b>`
              + `</span>`;
     });
@@ -941,6 +1025,7 @@ function render(){
   pageEl.style.fontFamily = fontStack();
 
   document.body.classList.toggle("showgrid", state.grid);
+  document.body.classList.toggle("nopy", !state.showPy);   /* 关拼音只藏那一行，字号间距不动 */
   document.getElementById("pageInfo").textContent = p.label;
   document.getElementById("prevBtn").disabled = state.pageIndex === 0;
   document.getElementById("nextBtn").disabled = state.pageIndex >= pages.length-1;
@@ -987,6 +1072,7 @@ function syncFilterBar(){
 }
 
 pageEl.addEventListener("click", (e)=>{
+  if(Date.now() < suppressClickUntil) return;      /* 刚拖过页面，别误触格子 */
   const cell = e.target.closest(".cell");
   if(!cell || cell.classList.contains("blank")) return;
   const key = cell.dataset.key;
@@ -1010,8 +1096,8 @@ window.addEventListener("resize", fit);
 /* ============================================================
    交互
    ============================================================ */
-let view = "chars";          /* chars | words | add | grade */
-const TAB_IDS = {chars:"tabChars", words:"tabWords", add:"tabAdd"};
+let view = "chars";          /* chars | words | add | grade | pinyin */
+const TAB_IDS = {pinyin:"tabPinyin", chars:"tabChars", words:"tabWords", add:"tabAdd"};
 
 function setView(v){
   view = v;
@@ -1022,7 +1108,12 @@ function setView(v){
   document.body.classList.toggle("mode-add", v==="add");
   document.body.classList.toggle("view-words", v==="words");
   document.body.classList.toggle("view-grade", v==="grade");
+  document.body.classList.toggle("view-pinyin", v==="pinyin");
   document.getElementById("gradeSel").classList.toggle("on", v==="grade");
+  if(v === "pinyin"){
+    renderPinyinPanel();
+    return;
+  }
   if(v === "grade"){
     renderGrade(gradeNow);
     refreshGradeBar();
@@ -1037,6 +1128,7 @@ function setView(v){
     render();
   }
 }
+document.getElementById("tabPinyin").onclick = ()=>setView("pinyin");
 document.getElementById("tabChars").onclick = ()=>setView("chars");
 document.getElementById("tabWords").onclick = ()=>setView("words");
 document.getElementById("tabAdd").onclick   = ()=>setView("add");
@@ -1143,6 +1235,96 @@ document.getElementById("gpInvert").onclick = ()=>{
 document.getElementById("gpAdd").onclick = gradeAddToLib;
 document.getElementById("gpSelInfo").onclick = refreshGradeBar;
 
+/* ---------- 学拼音 ---------- */
+const PY_LESSON = [
+  { title:"声母", note:"23 个，读得又轻又短", items:[
+    ["b","爸","bà"], ["p","怕","pà"], ["m","妈","mā"], ["f","飞","fēi"],
+    ["d","大","dà"], ["t","兔","tù"], ["n","牛","niú"], ["l","蓝","lán"],
+    ["g","哥","gē"], ["k","哭","kū"], ["h","花","huā"],
+    ["j","鸡","jī"], ["q","七","qī"], ["x","小","xiǎo"],
+    ["zh","猪","zhū"], ["ch","吃","chī"], ["sh","书","shū"], ["r","人","rén"],
+    ["z","字","zì"], ["c","草","cǎo"], ["s","三","sān"],
+    ["y","羊","yáng"], ["w","我","wǒ"]
+  ]},
+  { title:"单韵母", note:"6 个，一个字母一个音", items:[
+    ["a","阿","ā"], ["o","哦","ó"], ["e","鹅","é"],
+    ["i","衣","yī"], ["u","乌","wū"], ["ü","鱼","yú"]
+  ]},
+  { title:"复韵母", note:"9 个，两个字母滑过去读成一个音", items:[
+    ["ai","爱","ài"], ["ei","妹","mèi"], ["ui","水","shuǐ"],
+    ["ao","猫","māo"], ["ou","手","shǒu"], ["iu","六","liù"],
+    ["ie","谢","xiè"], ["üe","雪","xuě"], ["er","儿","ér"]
+  ]},
+  { title:"前鼻韵母", note:"5 个，收尾时舌尖抵住上牙龈", items:[
+    ["an","山","shān"], ["en","门","mén"], ["in","林","lín"],
+    ["un","春","chūn"], ["ün","裙","qún"]
+  ]},
+  { title:"后鼻韵母", note:"4 个，收尾时舌根抬起，鼻子出声", items:[
+    ["ang","糖","táng"], ["eng","灯","dēng"], ["ing","星","xīng"], ["ong","红","hóng"]
+  ]},
+  { title:"整体认读音节", note:"16 个，看到就整个读出来，不用拼", items:[
+    ["zhi","知","zhī"], ["chi","吃","chī"], ["shi","十","shí"], ["ri","日","rì"],
+    ["zi","字","zì"], ["ci","词","cí"], ["si","四","sì"],
+    ["yi","衣","yī"], ["wu","五","wǔ"], ["yu","鱼","yú"],
+    ["ye","叶","yè"], ["yue","月","yuè"], ["yuan","圆","yuán"],
+    ["yin","音","yīn"], ["yun","云","yún"], ["ying","鹰","yīng"]
+  ]}
+];
+
+const PY_TONES = [
+  ["ā","妈","mā","第一声 · 高平"],
+  ["á","麻","má","第二声 · 上扬"],
+  ["ǎ","马","mǎ","第三声 · 降升"],
+  ["à","骂","mà","第四声 · 下降"]
+];
+
+const PY_RULES = [
+  "<b>两拼</b>：前音轻短后音重 —— b + a → bā（八）",
+  "<b>三拼</b>：声轻、介快、韵母响 —— j + i + a → jiā（家）",
+  "<b>j q x 遇 ü 去两点</b>：ju（居）qu（去）xu（须）；但 n、l 后面保留两点：nǚ（女）lǜ（绿）",
+  "<b>y 后面的 ü 也去点</b>：yu（鱼）yue（月）yuan（圆）yun（云）",
+  "<b>标调顺序</b>：有 a 找 a，没 a 找 o e，i u 并列标在后（liù、guī）；i 上标调要去点",
+  "<b>轻声不标调</b>：妈妈 mā ma、桌子 zhuō zi"
+];
+
+const PY_TRAPS = [
+  "<b>b d p q</b>：右下半圆 b、左下半圆 d、右上半圆 p、左上半圆 q",
+  "<b>平舌 / 翘舌</b>：z c s 舌尖平放，zh ch sh 舌尖翘起来 —— 字 zì / 只 zhī",
+  "<b>前鼻 / 后鼻</b>：an en in 舌尖抵牙龈，ang eng ing 舌根抬起 —— 山 shān / 商 shāng",
+  "<b>n / l</b>：牛 niú 和 流 liú，一个鼻音一个边音，捏住鼻子读 n 会憋住",
+  "<b>f / h</b>：飞 fēi 和 灰 huī，f 用上牙咬下唇，h 从喉咙送气"
+];
+
+function renderPinyinPanel(){
+  const box = document.getElementById("pyScroll");
+  if(box.dataset.done) return;
+  const grid = items => '<div class="py-grid">' + items.map(([l,ch,py])=>
+      '<div class="py-card" data-l="' + l + '"><em>' + l + '</em>'
+    + '<b>' + ch + '</b><i>' + py + '</i></div>').join("") + '</div>';
+
+  let html = "";
+  PY_LESSON.forEach(sec=>{
+    html += '<div class="py-sec"><h3>' + sec.title
+          + '<small>' + sec.note + '</small></h3>' + grid(sec.items) + '</div>';
+  });
+
+  html += '<div class="py-sec"><h3>四声<small>用「妈 麻 马 骂」记四个调</small></h3>'
+        + '<div class="py-tone">' + PY_TONES.map(([m,ch,py,d])=>
+            '<div class="py-card" data-l="' + m + '"><em>' + m + '</em>'
+          + '<b>' + ch + '</b><i>' + py + '</i><u>' + d + '</u></div>').join("") + '</div></div>';
+
+  html += '<div class="py-sec"><h3>拼读规则</h3><div class="py-note">'
+        + PY_RULES.map(s=>'<p>' + s + '</p>').join("") + '</div></div>';
+  html += '<div class="py-sec"><h3>容易混的地方</h3><div class="py-note">'
+        + PY_TRAPS.map(s=>'<p>' + s + '</p>').join("") + '</div></div>';
+
+  box.innerHTML = html;
+  box.querySelectorAll(".py-card").forEach(el=>{
+    el.onclick = ()=>el.classList.toggle("on");
+  });
+  box.dataset.done = "1";
+}
+
 /* ---------- 排序：默认 / 随机 ---------- */
 function changeSort(random){
   state.shuffled = random;
@@ -1175,18 +1357,75 @@ document.getElementById("btnPy").onclick = ()=>{
 document.getElementById("fontSel").onchange = (e)=>{
   state.font = e.target.value; saveState(); render();
 };
-document.getElementById("prevBtn").onclick = ()=>{
-  if(state.pageIndex>0){ state.pageIndex--; state.reveal=[]; render(); }
-};
-document.getElementById("nextBtn").onclick = ()=>{
-  if(state.pageIndex<pages.length-1){ state.pageIndex++; state.reveal=[]; render(); }
-};
+/* 翻页统一入口：按钮、键盘、手指滑动、鼠标拖动都走这里 */
+function goPage(delta){
+  const next = state.pageIndex + delta;
+  if(next < 0 || next >= pages.length) return false;
+  state.pageIndex = next;
+  state.reveal = [];
+  render();
+  return true;
+}
+
+document.getElementById("prevBtn").onclick = ()=>goPage(-1);
+document.getElementById("nextBtn").onclick = ()=>goPage(1);
 document.addEventListener("keydown", (e)=>{
   if(e.target.tagName==="TEXTAREA" || e.target.tagName==="INPUT" || e.target.tagName==="SELECT") return;
-  if(view === "add" || view === "grade") return;
+  if(view === "add" || view === "grade" || view === "pinyin") return;
   if(e.key==="ArrowLeft" && state.pageIndex>0){ state.pageIndex--; state.reveal=[]; render(); }
   if(e.key==="ArrowRight" && state.pageIndex<pages.length-1){ state.pageIndex++; state.reveal=[]; render(); }
 });
+
+/* ---------- 滑动 / 拖动翻页 ----------
+   手机上手指左右划、电脑上按住鼠标左右拖，松手超过阈值就翻页；
+   拖动时纸跟着手走，到头了给点阻尼，松手回弹。拖过之后不触发格子点选。 */
+const DRAG_MIN = 46;              /* 松手判定阈值（px） */
+let dragging = false, dragActive = false;
+let dragStartX = 0, dragStartY = 0, dragDX = 0;
+let suppressClickUntil = 0;
+
+function canDrag(){ return view === "chars" || view === "words"; }
+
+function dragStart(e){
+  if(!canDrag()) return;
+  if(e.pointerType === "mouse" && e.button !== 0) return;
+  dragging = true; dragActive = false;
+  dragStartX = e.clientX; dragStartY = e.clientY; dragDX = 0;
+  wrapEl.style.transition = "none";
+}
+function dragMove(e){
+  if(!dragging) return;
+  const dx = e.clientX - dragStartX, dy = e.clientY - dragStartY;
+  if(!dragActive){
+    /* 先确认是横划，别把纵向滑动和点击抢掉 */
+    if(Math.abs(dx) < 8 || Math.abs(dx) <= Math.abs(dy)) return;
+    dragActive = true;
+    document.body.classList.add("dragging");
+    try{ viewEl.setPointerCapture(e.pointerId); }catch(_){}
+  }
+  const atEdge = (dx < 0 && state.pageIndex >= pages.length-1)
+              || (dx > 0 && state.pageIndex === 0);
+  dragDX = atEdge ? dx*0.28 : dx;
+  wrapEl.style.transform = `translateX(${dragDX.toFixed(1)}px)`;
+}
+function dragEnd(){
+  if(!dragging) return;
+  dragging = false;
+  document.body.classList.remove("dragging");
+  wrapEl.style.transition = "transform .18s cubic-bezier(.2,.7,.3,1)";
+  wrapEl.style.transform = "";
+  if(dragActive){
+    suppressClickUntil = Date.now() + 320;
+    if(dragDX <= -DRAG_MIN) goPage(1);
+    else if(dragDX >= DRAG_MIN) goPage(-1);
+  }
+  dragActive = false; dragDX = 0;
+  setTimeout(()=>{ wrapEl.style.transition = ""; }, 220);
+}
+viewEl.addEventListener("pointerdown", dragStart);
+viewEl.addEventListener("pointermove", dragMove);
+window.addEventListener("pointerup", dragEnd);
+window.addEventListener("pointercancel", dragEnd);
 
 /* ---------- 打印 ---------- */
 document.getElementById("btnPrint").onclick = ()=>window.print();
@@ -1263,7 +1502,7 @@ document.getElementById("btnDownload").onclick = ()=>{
 
     m.chars.forEach((ch, idx)=>{
       const x = startX + idx*adv*K;
-      if(m.pyFs){
+      if(m.pyFs && state.showPy){
         const py = m.py[idx] || "";
         if(py){
           ctx.save();
@@ -1594,6 +1833,7 @@ window.addEventListener("resize", layoutToolbar);
     const pj = await loadPinyin();
     if(pj){ PY_CHARS = pj.chars || {}; PY_WORDS = pj.words || {}; }
   }catch(e){ PY_CHARS = {}; PY_WORDS = {}; }
+  PY_OK = Object.keys(PY_CHARS).length > 0;
 
   loadState();
   document.getElementById("fontSel").value = state.font;
