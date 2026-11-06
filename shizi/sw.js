@@ -1,7 +1,7 @@
 /* 离线缓存：装到手机主屏后断网也能用
    - 页面和词库走「网络优先」，改完数据刷新就是新的
    - 图标等静态资源走「缓存优先」 */
-const CACHE = "shizi-cards-v5";
+const CACHE = "shizi-cards-v6";
 const CORE = [
   "./",
   "./index.html",
@@ -40,6 +40,20 @@ self.addEventListener("fetch", e => {
   const url = new URL(req.url);
   if (url.origin !== location.origin) return;
 
+  /* ------------------------------------------------------------
+     语音文件绝对不拦。
+     ------------------------------------------------------------
+     Safari（iPad / iPhone）播放 <audio> 时会先发 Range 请求，
+     Service Worker 一旦响应，返回的是缓存里那份完整的 200，
+     而不是 206 —— Safari 会判定「服务器不支持分段」然后不出声，
+     桌面 Chrome 比较宽容所以看不出来。
+     这里直接放行，让浏览器自己跟服务器协商 Range 和 HTTP 缓存
+     （CDN 已经给了 206 + max-age=14400，比 SW 缓存更合适）。
+     ------------------------------------------------------------ */
+  const isVoiceFile = url.pathname.includes("/data/audio/") &&
+                      !url.pathname.endsWith("manifest.json");
+  if (isVoiceFile || req.headers.has("range")) return;
+
   const networkFirst =
     req.mode === "navigate" ||
     url.pathname.endsWith("/") ||
@@ -60,13 +74,11 @@ self.addEventListener("fetch", e => {
       )
     );
   } else if (url.pathname.includes("/data/audio/")) {
-    /* 语音文件：一旦缓存就永远用缓存，听过一遍之后断网也能点读 */
+    /* 走到这里只剩 manifest.json（上面已把 mp3 放行） */
     e.respondWith(
       caches.match(req).then(r => r || fetch(req).then(res => {
-        if (res.ok || res.type === "opaque") {
-          const copy = res.clone();
-          caches.open(CACHE).then(c => c.put(req, copy)).catch(() => {});
-        }
+        const copy = res.clone();
+        caches.open(CACHE).then(c => c.put(req, copy)).catch(() => {});
         return res;
       }))
     );

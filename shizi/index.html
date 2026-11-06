@@ -458,6 +458,10 @@ body.mode-add .more-panel{display:none!important}
 </head>
 <body>
 
+<!-- 全程复用这一个播放器：iOS 上频繁 new Audio() 容易出现「点了没声音」 -->
+<audio id="voiceEl" preload="auto" playsinline
+       style="position:fixed;left:-9999px;top:0;width:1px;height:1px;opacity:0;pointer-events:none"></audio>
+
 <div class="toolbar">
   <div class="brand">识字<span>卡片</span></div>
   <div class="tabs">
@@ -827,8 +831,20 @@ let AUDIO_WORDS = {};       /* 词 → 相对路径 */
 let AUDIO_OK = false;       /* 清单是否已就绪 */
 let AUDIO_SOURCE = "";
 let audioTask = null;
-let voiceAudio = null;
+let voiceEl = null;         /* 全程复用这一个 <audio> */
 let voiceSeq = 0;
+let soundWarned = false;    /* 「没放出声音」的提示只弹一次 */
+let lastVoiceError = "";
+
+/* blob 预取：把当前这张纸上的音都先拿到本地。
+   iOS 上点下去时如果还要等网络，play() 容易失败；先备好就几乎必成。 */
+const BLOB_MAX = 300;
+const blobCache = new Map();      /* 相对路径 → blob: URL */
+const blobLoading = new Set();    /* 正在下载，避免重复请求 */
+let prefetchToken = 0;
+
+const IS_IOS = /iPad|iPhone|iPod/.test(navigator.userAgent)
+            || (navigator.platform === "MacIntel" && navigator.maxTouchPoints > 1);
 
 async function loadAudio(){
   if(AUDIO_OK) return true;
@@ -861,11 +877,28 @@ async function loadAudio(){
 
 /* 上一次的读音停掉，避免点快了两句叠在一起 */
 function stopVoice(){
-  if(voiceAudio){
-    try{ voiceAudio.pause(); }catch(e){}
-    voiceAudio = null;
+  if(voiceEl){
+    try{ voiceEl.pause(); }catch(e){}
+    try{ voiceEl.currentTime = 0; }catch(e){}
   }
   if(window.speechSynthesis){ try{ speechSynthesis.cancel(); }catch(e){} }
+  voiceSeq++;
+}
+
+/* 全程复用同一个播放器元素，并且挂在 DOM 里（iOS 上更听话） */
+function audioEl(){
+  if(voiceEl && voiceEl.isConnected) return voiceEl;
+  voiceEl = document.getElementById("voiceEl");
+  if(!voiceEl){
+    voiceEl = document.createElement("audio");
+    voiceEl.id = "voiceEl";
+    voiceEl.style.cssText =
+      "position:fixed;left:-9999px;top:0;width:1px;height:1px;opacity:0;pointer-events:none";
+    document.body.appendChild(voiceEl);
+  }
+  voiceEl.preload = "auto";
+  voiceEl.setAttribute("playsinline", "");
+  return voiceEl;
 }
 
 function speakTTS(text){
@@ -875,31 +908,145 @@ function speakTTS(text){
     u.lang = "zh-CN";
     u.rate = 0.82;
     u.pitch = 1.02;
+    u.volume = 1;
     const all = speechSynthesis.getVoices() || [];
     const zh = all.filter(v=>/^(zh|cmn)/i.test(v.lang) || /中文|普通话|Chinese/i.test(v.name));
     if(zh.length){
       u.voice = zh.find(v=>/Xiaoxiao|Ting|Yue|Hui|Mei|Female|女/i.test(v.name)) || zh[0];
     }
+    /* iOS 上偶尔卡在 paused 状态，先 resume 再读 */
+    try{ if(speechSynthesis.paused) speechSynthesis.resume(); }catch(e){}
     speechSynthesis.speak(u);
     return true;
   }catch(e){ return false; }
 }
 
-/* 读一段文字（单字、词都行）。找不到音频文件就当没这回事，交给系统语音 */
+/* 真的没放出声时的提示（只弹一次，别刷屏） */
+function warnNoSound(){
+  if(soundWarned) return;
+  soundWarned = true;
+  toast(IS_IOS
+    ? "没有声音？看一下 iPad 侧边那颗静音键，再调一下音量；Safari 设置里「自动播放」选「允许」"
+    : "没有声音？检查一下系统音量，或换用 Chrome / Edge 打开");
+  setTimeout(()=>{ soundWarned = false; }, 20000);
+}
+
+/* 把某个音交给播放器。url 可以是 blob: 也可以是普通地址 */
+function playAudioUrl(url, rel, text){
+  const el = audioEl();
+  const seq = ++voiceSeq;
+
+  try{ el.pause(); }catch(e){}
+
+  /* 只比我们自己写的那个值：换地址才重设 src。
+     设置 src 本身就会触发加载，不需要再叫 load()
+     —— 多调一次 load() 会把刚起来的 play() 打断成 AbortError。 */
+  if(el.dataset.src !== url){
+    el.dataset.src = url;
+    el.src = url;
+  }else{
+    try{ el.currentTime = 0; }catch(e){}
+  }
+
+  const p = el.play();
+  if(p && typeof p.then === "function"){
+    p.catch(err=>{
+      lastVoiceError = (err && err.name) || "Error";
+      if(seq !== voiceSeq) return;                  /* 已经点下一个了，不管 */
+      if(err && err.name === "AbortError") return;  /* 被下一次点击打断，正常 */
+      if(url.startsWith("blob:")){
+        /* blob 都播不出来，退回普通地址再试一次（还在这次点击的手势里） */
+        playAudioUrl(AUDIO_DIR + rel, rel + "#net", text);
+        return;
+      }
+      if(!speakTTS(text)) warnNoSound();
+    });
+  }
+}
+
+/* 读一段文字（单字、词都行）。找不到音频文件就交给系统语音 */
 function speak(text){
   const t = String(text == null ? "" : text).trim();
   if(!t || !state.sound) return;
   stopVoice();
   const rel = AUDIO_WORDS[t] || AUDIO_CHARS[t];
   if(rel){
-    const a = new Audio(AUDIO_DIR + rel);
-    a.preload = "auto";
-    voiceAudio = a;
-    const seq = ++voiceSeq;
-    a.play().catch(()=>{ if(seq === voiceSeq) speakTTS(t); });
+    playAudioUrl(blobCache.get(rel) || (AUDIO_DIR + rel), rel, t);
     return;
   }
-  speakTTS(t);
+  /* 清单还没读到时先同步用系统语音：iOS 只认用户手势里的同步调用，
+     放到异步回调里就已经晚了 */
+  if(!speakTTS(t)) warnNoSound();
+}
+
+/* ---------- 预取当前页的音：点下去就响，不用等网络 ---------- */
+function putBlob(rel, url){
+  if(blobCache.has(rel)){ try{ URL.revokeObjectURL(url); }catch(e){} return; }
+  blobCache.set(rel, url);
+  /* 超出上限就回收最早的那批，控制内存（一个音约 8KB） */
+  while(blobCache.size > BLOB_MAX){
+    const first = blobCache.keys().next().value;
+    const old = blobCache.get(first);
+    blobCache.delete(first);
+    try{ URL.revokeObjectURL(old); }catch(e){}
+  }
+}
+
+function prefetchRels(rels){
+  const queue = rels.filter(rel => rel && !blobCache.has(rel) && !blobLoading.has(rel));
+  if(!queue.length) return;
+  const token = ++prefetchToken;      /* 换了页就让上一批停手，别抢带宽 */
+  let i = 0, running = 0;
+  const CONCURRENCY = 4;              /* iOS 同时开太多请求会互相拖累 */
+
+  function next(){
+    if(token !== prefetchToken) return;
+    while(running < CONCURRENCY && i < queue.length){
+      const rel = queue[i++];
+      blobLoading.add(rel);
+      running++;
+      fetch(AUDIO_DIR + rel)
+        .then(r => r.ok ? r.blob() : null)
+        .then(b => { if(b) putBlob(rel, URL.createObjectURL(b)); })
+        .catch(()=>{})
+        .then(()=>{ blobLoading.delete(rel); running--; next(); });
+    }
+  }
+  next();
+}
+
+/* 当前这张纸上出现的字 / 词，空闲时先取回来 */
+let prefetchTask = 0;
+function prefetchPageAudio(){
+  if(!AUDIO_OK || !state.sound) return;
+  clearTimeout(prefetchTask);
+  prefetchTask = setTimeout(()=>{
+    const p = pages[state.pageIndex];
+    if(!p || !p.items) return;
+    const rels = [];
+    p.items.forEach(it=>{
+      if(!it) return;
+      const rel = (p.kind === "chars")
+        ? (AUDIO_CHARS[it] || AUDIO_WORDS[it])
+        : (AUDIO_WORDS[it] || AUDIO_CHARS[it]);
+      if(rel) rels.push(rel);
+    });
+    prefetchRels(rels);
+  }, 900);
+}
+
+/* 学拼音页：67 张卡一次备好 */
+function prefetchPinyinAudio(){
+  if(!AUDIO_OK || !state.sound) return;
+  const rels = [];
+  document.querySelectorAll("#pinyinPanel .py-card").forEach(el=>{
+    const b = el.querySelector("b");
+    const t = b ? b.textContent.trim() : "";
+    if(!t) return;
+    const rel = AUDIO_CHARS[t] || AUDIO_WORDS[t];
+    if(rel) rels.push(rel);
+  });
+  prefetchRels(rels);
 }
 
 /* 点到的卡片闪一下，让孩子知道在读这个 */
@@ -1171,6 +1318,7 @@ function render(){
   syncFilterBar();
 
   fit();
+  prefetchPageAudio();       /* 这一页的字先悄悄下好，点下去立刻出声 */
 }
 
 /* 词组分组按钮：显示该组词数，无词的组置灰 */
@@ -1233,6 +1381,8 @@ function setView(v){
   syncSoundBtn();          /* 声音按钮在所有页面都在，切页时同步一下状态 */
   if(v === "pinyin"){
     renderPinyinPanel();
+    /* 拼音页就 67 张卡，整页的音一次取回来，点哪个都立刻出声 */
+    setTimeout(prefetchPinyinAudio, 400);
     return;
   }
   if(v === "grade"){
@@ -1995,7 +2145,54 @@ window.addEventListener("resize", layoutToolbar);
   if("serviceWorker" in navigator && /^https?:$/.test(location.protocol)){
     navigator.serviceWorker.register("sw.js").catch(()=>{});
   }
+
+  /* 排查用：地址后面加 ?diag=1，左下角显示声音状态（iPad 上没法开控制台） */
+  if(/[?&]diag=1/.test(location.search)) setTimeout(showSoundDiag, 600);
 })();
+
+function showSoundDiag(){
+  let zh = 0;
+  try{ zh = (speechSynthesis.getVoices()||[]).filter(v=>/^(zh|cmn)/i.test(v.lang)).length; }catch(e){}
+  const rows = [
+    ["设备", IS_IOS ? "iOS / iPadOS" : "非 iOS"],
+    ["清单", AUDIO_OK
+      ? "已就绪 · " + AUDIO_SOURCE + " · " + Object.keys(AUDIO_CHARS).length + " 字 / " + Object.keys(AUDIO_WORDS).length + " 词"
+      : "未加载（会退回系统语音）"],
+    ["已预取", blobCache.size + " 条"],
+    ["系统中文语音", zh + " 个"],
+    ["最近一次播放错误", lastVoiceError || "无"],
+    ["声音开关", state.sound ? "开" : "关"],
+    ["Service Worker", (navigator.serviceWorker && navigator.serviceWorker.controller) ? "接管中" : "未接管"]
+  ];
+  const d = document.createElement("div");
+  d.style.cssText = "position:fixed;left:8px;bottom:8px;z-index:9999;max-width:calc(100% - 16px);"
+    + "background:#1a1a1a;color:#f2f2f2;font:12px/1.75 -apple-system,'PingFang SC',sans-serif;"
+    + "padding:10px 14px;border-radius:10px;box-shadow:0 8px 28px rgba(0,0,0,.35)";
+  d.innerHTML = "<div style='font-weight:600;margin-bottom:4px'>声音自检</div>"
+    + rows.map(([k,v])=>`<div><span style="opacity:.6">${k}：</span>${escapeHtml(String(v))}</div>`).join("");
+
+  const tryBtn = document.createElement("button");
+  tryBtn.textContent = "试听一下「天」";
+  tryBtn.style.cssText = "margin-top:8px;padding:7px 14px;border-radius:9px;border:0;"
+    + "background:#c0392b;color:#fff;font:13px/1 inherit;cursor:pointer";
+  tryBtn.onclick = (e)=>{
+    e.stopPropagation();
+    const was = state.sound;
+    state.sound = true;          /* 自检时不管开关状态，都试一下 */
+    speak("天");
+    state.sound = was;
+  };
+  d.appendChild(tryBtn);
+
+  const tip = document.createElement("div");
+  tip.style.cssText = "margin-top:7px;opacity:.5;font-size:11px;line-height:1.6";
+  tip.textContent = "点了还是没声：先看 iPad 侧边那颗静音键，再调音量；"
+    + "Safari → 设置 → 网站设置 → 自动播放，选「允许」。点面板可以关掉。";
+  d.appendChild(tip);
+
+  d.onclick = ()=>d.remove();
+  document.body.appendChild(d);
+}
 </script>
 </body>
 </html>
