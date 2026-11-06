@@ -84,6 +84,13 @@ select.btn{padding:8px 10px}
 .cell.blank{cursor:default}
 .cell.blank:hover{background:transparent}
 .cell.hid{color:transparent}
+/* 一个字的「拼音 + 汉字」竖排小块 */
+.cell .rb{display:flex;flex-direction:column;align-items:center;justify-content:center;flex:0 0 auto}
+.cell .hz{font-weight:400;line-height:1;letter-spacing:.02em;color:inherit}
+.cell .py{
+  font-family:var(--font-hei);font-weight:400;letter-spacing:0;
+  text-align:center;white-space:nowrap;color:inherit;opacity:.82;
+}
 body.showgrid .cell{outline:.22mm dashed #d9d3c4;outline-offset:-.22mm}
 .gl{position:absolute;pointer-events:none;display:none}
 body.showgrid .gl{display:block}
@@ -268,8 +275,13 @@ body.view-grade #pageActions{display:none}
   user-select:none;transition:border-color .15s,transform .15s,background .15s;
 }
 .gp-card:hover{border-color:#b9ae99;transform:translateY(-1px)}
+/* 拼音在上、汉字在下；拼音行固定高度，卡片之间才对得齐 */
+.gp-card i{
+  font-family:var(--font-hei);font-style:normal;font-size:11px;line-height:14px;
+  min-height:14px;color:var(--sub);letter-spacing:0;text-align:center;
+  white-space:nowrap;overflow:hidden;
+}
 .gp-card b{font-family:var(--font-kai);font-size:28px;line-height:1;font-weight:400;color:#1a1a1a}
-.gp-card i{font-family:var(--font-hei);font-style:normal;font-size:11px;color:var(--sub);letter-spacing:.01em;text-align:center;word-break:break-all}
 .gp-card.on{background:#fdecea;border-color:#e6b3ac;box-shadow:0 1px 6px rgba(192,57,43,.12)}
 .gp-card.on b{color:var(--accent)}
 .gp-card.on::after{
@@ -389,6 +401,7 @@ body.mode-add .more-panel{display:none!important}
         <option value="random">随机排序</option>
       </select>
       <button class="btn" id="btnReseed" title="换一批随机顺序">↻</button>
+      <button class="btn" id="btnPy" title="在汉字上方显示 / 隐藏拼音">拼音 开</button>
       <button class="btn" id="btnHide">隐藏文字</button>
       <select class="btn" id="fontSel" title="字体">
         <option value="kai">楷体</option>
@@ -634,6 +647,44 @@ async function loadGrades(){
 /* 词库按字数分好组，顺序即默认排序 */
 const WORDS = () => DATA.words;
 
+/* ---------- 拼音注音表（可选数据，读不到就不显示拼音） ---------- */
+let PY_CHARS = {};        /* 字 -> 拼音（带声调） */
+let PY_WORDS = {};        /* 词组 -> "kē dǒu"（只收多音字，避免「长大」读成 cháng dà） */
+let PY_SOURCE = "";
+
+async function loadPinyin(){
+  try{
+    const res = await fetch("data/pinyin.json", {cache:"no-cache"});
+    if(res.ok){
+      const j = await res.json();
+      if(j && j.chars){ PY_SOURCE = "json"; return j; }
+    }
+  }catch(e){ /* file:// 下同样走脚本兜底 */ }
+
+  if(!window.__SHIZI_PINYIN__){
+    try{ await injectScript("data/pinyin.js"); }catch(e){}
+  }
+  if(window.__SHIZI_PINYIN__ && window.__SHIZI_PINYIN__.chars){
+    PY_SOURCE = "script";
+    return window.__SHIZI_PINYIN__;
+  }
+  return null;
+}
+
+/* 单字读音；没有注音时返回空串（只影响该字的拼音行，不影响排版） */
+function pyOf(ch){ return PY_CHARS[ch] || ""; }
+
+/* 一个词的逐字注音：先查词组修正表，再退回单字 */
+function wordPinyin(word){
+  const hit = PY_WORDS[word];
+  const chars = [...String(word)];
+  if(hit){
+    const arr = hit.split(/\s+/);
+    if(arr.length === chars.length) return arr;
+  }
+  return chars.map(pyOf);
+}
+
 /* ============================================================
    状态
    ============================================================ */
@@ -646,7 +697,8 @@ let state = {
   chars:[], customWords:[], font:"kai", grid:false,
   mode:"chars", shuffled:false, seed:20261105,
   hideAll:false, reveal:[], pageIndex:0,
-  wordFilter:"all"            /* all | 2 | 3 | 4 —— 词组表按字数直接定位 */
+  wordFilter:"all",           /* all | 2 | 3 | 4 —— 词组表按字数直接定位 */
+  showPy:true                 /* 字上面是否显示拼音 */
 };
 
 function loadState(){
@@ -661,6 +713,7 @@ function loadState(){
       state.shuffled = s.sort === "random";
       if(Number.isFinite(s.seed)) state.seed = s.seed;
       if(["all","2","3","4"].includes(s.wordFilter)) state.wordFilter = s.wordFilter;
+      if(typeof s.showPy === "boolean") state.showPy = s.showPy;
     }else{ state.chars = [...DEFAULT_CHARS]; }
   }catch(e){ state.chars = [...DEFAULT_CHARS]; }
 }
@@ -669,7 +722,7 @@ function saveState(){
     localStorage.setItem(STORE_KEY, JSON.stringify({
       chars:state.chars, customWords:state.customWords, font:state.font, grid:state.grid,
       sort: state.shuffled ? "random" : "default", seed: state.seed,
-      wordFilter: state.wordFilter
+      wordFilter: state.wordFilter, showPy: state.showPy
     }));
   }catch(e){}
 }
@@ -810,6 +863,37 @@ function cellFont(item, kind, cw, ch){
 }
 function keyOf(item){ return state.mode + "::" + item; }
 
+/* ---------- 格子排版：汉字 + 上方拼音 ----------
+   拼音行高度固定，保证同一张纸里所有字的基线对齐；没有注音的字也留白，
+   这样整页看起来是齐的。 */
+const PY_RATIO = 0.34;      /* 拼音字号 = 主字 × 0.34 */
+const LAT_W    = 0.55;      /* 拼音字母平均宽度（em），用来估音节宽度 */
+
+function cellMetrics(item, kind, cw, chh){
+  const text = String(item);
+  const chars = [...text];
+  const len = chars.length;
+  const py = state.showPy ? wordPinyin(text) : [];
+  const hasPy = py.some(s=>s);
+  const H = chh * 0.94;
+
+  let fs;
+  if(kind === "chars"){
+    fs = hasPy ? Math.min(cw*0.88, H*0.70) : Math.min(cw*0.86, H*0.94);
+  }else{
+    fs = hasPy ? Math.min(cw/(len + 0.42), H*0.70)
+               : Math.min(cw/(len + 0.55), H*0.86);
+  }
+
+  let pyFs = 0;
+  if(hasPy){
+    const maxLen = Math.max(1, ...py.map(s=>[...s].length));
+    pyFs = Math.min(fs*PY_RATIO, (fs*0.94) / (maxLen*LAT_W));
+    pyFs = Math.max(pyFs, fs*0.15);       /* 别小到印出来看不清 */
+  }
+  return {chars, py, fs, pyFs, pyH: pyFs ? pyFs*1.26 : 0};
+}
+
 function pageHTML(p){
   const cw = (PAGE_W - 2*MARGIN)/p.cols;
   const chh = (PAGE_H - 2*MARGIN)/p.rows;
@@ -823,17 +907,31 @@ function pageHTML(p){
     if(item === undefined){ html += `<div class="cell blank" style="${base}"></div>`; continue; }
     const key = keyOf(item);
     const hidden = state.hideAll ? !state.reveal.includes(key) : state.reveal.includes(key);
-    const fs = cellFont(item, p.kind, cw, chh);
+    const m = cellMetrics(item, p.kind, cw, chh);
+    let inner = "";
+    m.chars.forEach((ch, k)=>{
+      const py = m.py[k] || "";
+      inner += `<span class="rb">`
+             + (m.pyFs ? `<b class="py" style="font-size:${m.pyFs.toFixed(2)}mm;`
+                       + `height:${m.pyH.toFixed(2)}mm;line-height:${m.pyH.toFixed(2)}mm">`
+                       + `${escapeHtml(py)}</b>` : "")
+             + `<b class="hz" style="font-size:${m.fs.toFixed(2)}mm">${escapeHtml(ch)}</b>`
+             + `</span>`;
+    });
     html += `<div class="cell${hidden?' hid':''}" data-key="${escapeHtml(key)}" `
-          + `style="${base}font-size:${fs.toFixed(3)}mm;">${escapeHtml(item)}`
-          + `<i class="gl h"></i><i class="gl v"></i></div>`;
+          + `style="${base}">${inner}<i class="gl h"></i><i class="gl v"></i></div>`;
   }
   return html;
 }
 
+/* 拼音按钮文案：窄屏只写「拼音」，靠选中态看开关，省一格宽度 */
+function pyBtnLabel(){
+  if(window.innerWidth <= 520) return "拼音";
+  return state.showPy ? "拼音 开" : "拼音 关";
+}
+
 function render(){
-  pages = buildPages();
-  if(state.pageIndex >= pages.length) state.pageIndex = pages.length-1;
+  pages = buildPages();  if(state.pageIndex >= pages.length) state.pageIndex = pages.length-1;
   if(state.pageIndex < 0) state.pageIndex = 0;
 
   const p = pages[state.pageIndex];
@@ -862,6 +960,14 @@ function render(){
   const hb = document.getElementById("btnHide");
   hb.classList.toggle("on", state.hideAll);
   hb.textContent = state.hideAll ? "显示文字" : "隐藏文字";
+
+  const pb = document.getElementById("btnPy");
+  if(pb){
+    pb.classList.toggle("on", state.showPy);
+    pb.textContent = pyBtnLabel();
+    pb.disabled = !Object.keys(PY_CHARS).length;
+  }
+
   document.getElementById("sortSel").value = state.shuffled ? "random" : "default";
   syncFilterBar();
 
@@ -977,7 +1083,7 @@ function renderGrade(){
     const cls = "gp-card" + (gradePick.has(c) ? " on" : "") + (pool.has(c) ? " have" : "");
     return '<div class="' + cls + '" data-c="' + escapeHtml(c) + '"'
          + ' title="' + (pool.has(c) ? "字库里已有" : "") + '">'
-         + "<b>" + escapeHtml(c) + "</b><i>" + escapeHtml(p) + "</i></div>";
+         + "<i>" + escapeHtml(p) + "</i><b>" + escapeHtml(c) + "</b></div>";
   }).join("");
 
   grid.querySelectorAll(".gp-card").forEach(el=>{
@@ -1061,6 +1167,12 @@ document.querySelectorAll("#wordFilter button").forEach(btn=>{
 document.getElementById("btnHide").onclick = ()=>{
   state.hideAll = !state.hideAll; state.reveal = []; render();
 };
+document.getElementById("btnPy").onclick = ()=>{
+  if(!Object.keys(PY_CHARS).length){ toast("没读到拼音数据（data/pinyin.json）"); return; }
+  state.showPy = !state.showPy;
+  saveState(); render();
+  toast(state.showPy ? "已显示拼音" : "已隐藏拼音");
+};
 document.getElementById("fontSel").onchange = (e)=>{
   state.font = e.target.value; saveState(); render();
 };
@@ -1134,19 +1246,37 @@ document.getElementById("btnDownload").onclick = ()=>{
   ctx.textBaseline = "middle";
   ctx.fillStyle = "#1a1a1a";
 
+  const PY_FONT = '"Microsoft YaHei","PingFang SC","Helvetica Neue",Arial,sans-serif';
+
   p.items.forEach((item, i)=>{
     const key = keyOf(item);
     const hidden = state.hideAll ? !state.reveal.includes(key) : state.reveal.includes(key);
     if(hidden) return;
     const r = Math.floor(i/p.cols), c = i%p.cols;
-    const fs = cellFont(item, p.kind, cw, chh);
-    ctx.font = `600 ${(fs*K).toFixed(1)}px ${fontStack()}`;
-    const x = (MARGIN+(c+0.5)*cw)*K;
-    const y = (MARGIN+(r+0.5)*chh)*K;
-    const chars = [...item];
-    const adv = fs*1.02;
-    const startX = x - (chars.length-1)*adv*K/2;
-    chars.forEach((ch, idx)=>ctx.fillText(ch, startX+idx*adv*K, y));
+    const m = cellMetrics(item, p.kind, cw, chh);
+    const cx = (MARGIN+(c+0.5)*cw)*K;
+    const cy = (MARGIN+(r+0.5)*chh)*K;
+    const stackH = m.pyH + m.fs;                       /* mm，拼音行 + 汉字 */
+    const topY = cy - stackH*K/2;
+    const adv = m.fs*1.02;
+    const startX = cx - (m.chars.length-1)*adv*K/2;
+    const charCY = topY + m.pyH*K + m.fs*K/2;
+
+    m.chars.forEach((ch, idx)=>{
+      const x = startX + idx*adv*K;
+      if(m.pyFs){
+        const py = m.py[idx] || "";
+        if(py){
+          ctx.save();
+          ctx.globalAlpha = 0.82;
+          ctx.font = `500 ${(m.pyFs*K).toFixed(1)}px ${PY_FONT}`;
+          ctx.fillText(py, x, topY + m.pyH*K/2);
+          ctx.restore();
+        }
+      }
+      ctx.font = `600 ${(m.fs*K).toFixed(1)}px ${fontStack()}`;
+      ctx.fillText(ch, x, charCY);
+    });
   });
 
   cv.toBlob(blob=>{
@@ -1406,9 +1536,10 @@ document.getElementById("fileInput").onchange = (e)=>{
   r.readAsText(f, "utf-8");
 };
 
-/* ---------- 窄屏：次要按钮收进「更多」 ---------- */
-const MORE_IDS = ["btnReseed","fontSel","btnPrint","btnPrintAll"];
-const ACTION_ORDER = ["sortSel","btnReseed","btnHide","fontSel","btnPrint","btnPrintAll","btnDownload"];
+/* ---------- 窄屏：次要按钮收进「更多」 ----------
+   拼音开关留在外面（用得多），隐藏文字 / 换序 / 字体 / 打印收进面板 */
+const MORE_IDS = ["btnReseed","btnHide","fontSel","btnPrint","btnPrintAll"];
+const ACTION_ORDER = ["sortSel","btnReseed","btnPy","btnHide","fontSel","btnPrint","btnPrintAll","btnDownload"];
 
 function layoutToolbar(){
   const narrow = window.innerWidth <= 520;
@@ -1429,6 +1560,8 @@ function layoutToolbar(){
   /* ↻ 在面板里单独一行，只有图标会看不懂，窄屏时换成文字 */
   const re = document.getElementById("btnReseed");
   if(re) re.textContent = narrow ? "换一批顺序" : "↻";
+  const pb = document.getElementById("btnPy");
+  if(pb) pb.textContent = pyBtnLabel();
 }
 document.getElementById("btnMore").onclick = (e)=>{
   e.stopPropagation();
@@ -1456,6 +1589,12 @@ window.addEventListener("resize", layoutToolbar);
   /* 年级字表是可选的：读不到就只是不显示这个入口，不影响其它功能 */
   try{ GRADES = await loadGrades(); }catch(e){ GRADES = []; }
   initGradeSelect();
+
+  /* 拼音表同样是可选的：读不到就不显示拼音，排版退回原样 */
+  try{
+    const pj = await loadPinyin();
+    if(pj){ PY_CHARS = pj.chars || {}; PY_WORDS = pj.words || {}; }
+  }catch(e){ PY_CHARS = {}; PY_WORDS = {}; }
 
   loadState();
   document.getElementById("fontSel").value = state.font;
