@@ -328,7 +328,7 @@ body.view-pinyin #btnMore,body.view-grade #btnMore{display:none!important}
 .py-grid{display:grid;gap:8px;grid-template-columns:repeat(auto-fill,minmax(80px,1fr))}
 .py-card{
   position:relative;display:flex;flex-direction:column;align-items:center;gap:2px;
-  padding:9px 4px 8px;background:var(--card);border:1px solid var(--line);
+  padding:11px 4px 10px;background:var(--card);border:1px solid var(--line);
   border-radius:10px;cursor:pointer;user-select:none;
   transition:border-color .15s,background .15s,transform .15s;
 }
@@ -338,7 +338,7 @@ body.view-pinyin #btnMore,body.view-grade #btnMore{display:none!important}
   font-style:normal;font-family:var(--font-hei);font-size:23px;font-weight:600;
   line-height:1.1;color:#1a1a1a;letter-spacing:.02em;
 }
-.py-card b{font-family:var(--font-kai);font-size:17px;line-height:1.15;font-weight:400;color:#444}
+.py-card b{font-family:var(--font-kai);font-size:17px;line-height:1.15;font-weight:400;color:#444}  /* 只有四声卡还用它 */
 .py-card i{font-style:normal;font-family:var(--font-hei);font-size:11px;color:var(--sub)}
 .py-card.on{background:#fdecea;border-color:#e6b3ac}
 .py-card.on em{color:var(--accent)}
@@ -1509,38 +1509,41 @@ document.getElementById("gpAdd").onclick = gradeAddToLib;
 document.getElementById("gpSelInfo").onclick = refreshGradeBar;
 
 /* ---------- 学拼音 ---------- */
+/* 学拼音：每项 = [符号, 读音标注, 读哪个字]
+   第三项只喂给语音，卡片上不显示。声母读的是它自己的呼读音（b 读 bō），
+   不是例字（不是「爸」）。这些汉字都在 data/audio 的语音清单里。 */
 const PY_LESSON = [
   { title:"声母", note:"23 个，读得又轻又短", items:[
-    ["b","爸","bà"], ["p","怕","pà"], ["m","妈","mā"], ["f","飞","fēi"],
-    ["d","大","dà"], ["t","兔","tù"], ["n","牛","niú"], ["l","蓝","lán"],
-    ["g","哥","gē"], ["k","哭","kū"], ["h","花","huā"],
-    ["j","鸡","jī"], ["q","七","qī"], ["x","小","xiǎo"],
-    ["zh","猪","zhū"], ["ch","吃","chī"], ["sh","书","shū"], ["r","人","rén"],
-    ["z","字","zì"], ["c","草","cǎo"], ["s","三","sān"],
-    ["y","羊","yáng"], ["w","我","wǒ"]
+    ["b","bō","玻"], ["p","pō","坡"], ["m","mō","摸"], ["f","fó","佛"],
+    ["d","dé","得"], ["t","tè","特"], ["n","nè","讷"], ["l","lè","勒"],
+    ["g","gē","哥"], ["k","kē","科"], ["h","hē","喝"],
+    ["j","jī","基"], ["q","qī","欺"], ["x","xī","希"],
+    ["zh","zhī","知"], ["ch","chī","吃"], ["sh","shī","诗"], ["r","rì","日"],
+    ["z","zī","资"], ["c","cī","次"], ["s","sī","思"],
+    ["y","yī","衣"], ["w","wū","乌"]
   ]},
   { title:"单韵母", note:"6 个，一个字母一个音", items:[
-    ["a","阿","ā"], ["o","哦","ó"], ["e","鹅","é"],
-    ["i","衣","yī"], ["u","乌","wū"], ["ü","鱼","yú"]
+    ["a","ā","啊"], ["o","ō","喔"], ["e","ē","婀"],
+    ["i","ī","衣"], ["u","ū","乌"], ["ü","ǖ","迂"]
   ]},
   { title:"复韵母", note:"9 个，两个字母滑过去读成一个音", items:[
-    ["ai","爱","ài"], ["ei","妹","mèi"], ["ui","水","shuǐ"],
-    ["ao","猫","māo"], ["ou","手","shǒu"], ["iu","六","liù"],
-    ["ie","谢","xiè"], ["üe","雪","xuě"], ["er","儿","ér"]
+    ["ai","āi","哀"], ["ei","ēi","诶"], ["ui","uī","威"],
+    ["ao","āo","凹"], ["ou","ōu","欧"], ["iu","iū","优"],
+    ["ie","iē","耶"], ["üe","üē","约"], ["er","ēr","儿"]
   ]},
   { title:"前鼻韵母", note:"5 个，收尾时舌尖抵住上牙龈", items:[
-    ["an","山","shān"], ["en","门","mén"], ["in","林","lín"],
-    ["un","春","chūn"], ["ün","裙","qún"]
+    ["an","ān","安"], ["en","ēn","恩"], ["in","īn","因"],
+    ["un","ūn","温"], ["ün","ǖn","晕"]
   ]},
   { title:"后鼻韵母", note:"4 个，收尾时舌根抬起，鼻子出声", items:[
-    ["ang","糖","táng"], ["eng","灯","dēng"], ["ing","星","xīng"], ["ong","红","hóng"]
+    ["ang","āng","昂"], ["eng","ēng","鞥"], ["ing","īng","英"], ["ong","ōng","翁"]
   ]},
   { title:"整体认读音节", note:"16 个，看到就整个读出来，不用拼", items:[
-    ["zhi","知","zhī"], ["chi","吃","chī"], ["shi","十","shí"], ["ri","日","rì"],
-    ["zi","字","zì"], ["ci","词","cí"], ["si","四","sì"],
-    ["yi","衣","yī"], ["wu","五","wǔ"], ["yu","鱼","yú"],
-    ["ye","叶","yè"], ["yue","月","yuè"], ["yuan","圆","yuán"],
-    ["yin","音","yīn"], ["yun","云","yún"], ["ying","鹰","yīng"]
+    ["zhi","zhī","知"], ["chi","chī","吃"], ["shi","shī","诗"], ["ri","rì","日"],
+    ["zi","zī","资"], ["ci","cī","次"], ["si","sī","思"],
+    ["yi","yī","衣"], ["wu","wū","乌"], ["yu","yū","迂"],
+    ["ye","yē","耶"], ["yue","yuē","约"], ["yuan","yuān","冤"],
+    ["yin","yīn","因"], ["yun","yūn","晕"], ["ying","yīng","英"]
   ]}
 ];
 
@@ -1571,9 +1574,9 @@ const PY_TRAPS = [
 function renderPinyinPanel(){
   const box = document.getElementById("pyScroll");
   if(box.dataset.done) return;
-  const grid = items => '<div class="py-grid">' + items.map(([l,ch,py])=>
-      '<div class="py-card" data-l="' + l + '"><em>' + l + '</em>'
-    + '<b>' + ch + '</b><i>' + py + '</i></div>').join("") + '</div>';
+  const grid = items => '<div class="py-grid">' + items.map(([l,py,ch])=>
+      '<div class="py-card" data-l="' + l + '" data-say="' + ch + '"><em>' + l + '</em>'
+    + '<i>' + py + '</i></div>').join("") + '</div>';
 
   let html = "";
   PY_LESSON.forEach(sec=>{
@@ -1583,7 +1586,7 @@ function renderPinyinPanel(){
 
   html += '<div class="py-sec"><h3>四声<small>用「妈 麻 马 骂」记四个调</small></h3>'
         + '<div class="py-tone">' + PY_TONES.map(([m,ch,py,d])=>
-            '<div class="py-card" data-l="' + m + '"><em>' + m + '</em>'
+            '<div class="py-card" data-l="' + m + '" data-say="' + ch + '"><em>' + m + '</em>'
           + '<b>' + ch + '</b><i>' + py + '</i><u>' + d + '</u></div>').join("") + '</div></div>';
 
   html += '<div class="py-sec"><h3>拼读规则</h3><div class="py-note">'
@@ -1595,8 +1598,8 @@ function renderPinyinPanel(){
   box.querySelectorAll(".py-card").forEach(el=>{
     el.onclick = ()=>{
       el.classList.toggle("on");
-      const zi = el.querySelector("b");            /* 卡片上的例字，读它 */
-      speak(zi ? zi.textContent : el.dataset.l);
+      /* 读卡片自己的音（data-say），不再读例字：点 b 就该是 bō，不是「爸」 */
+      speak(el.dataset.say || el.dataset.l);
       flashSay(el);
     };
   });
