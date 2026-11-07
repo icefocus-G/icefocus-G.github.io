@@ -2,7 +2,7 @@
    - 页面和词库走「网络优先」，改完数据刷新就是新的
    - 图标等静态资源走「缓存优先」
    - 语音 mp3 一律放行（原因见下） */
-const CACHE = "english-cards-v3";
+const CACHE = "english-cards-v4";
 const CORE = [
   "./",
   "./index.html",

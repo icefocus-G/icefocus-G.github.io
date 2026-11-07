@@ -13,7 +13,7 @@
 | 第五页 | 加字 | **加词** |
 | 挑词入口 | 按年级挑字 | **按年级挑词**（1~6 年级，教材单元顺序） |
 | A4 版式 | 8 列 × 11 行 | 竖版 5 列 × 8 行 / 横版 8 列 × 5 行，都是 40 词/张（每格三行） |
-| 点读 | 一个音一个 mp3 | 一个音一个 mp3，1316 条（英式女声） |
+| 点读 | 一个音一个 mp3 | 单词 / 短语 / 句子 1316 条 mp3（英式女声）＋ 29 条纯音素 wav |
 
 **打开方式**：线上从工具箱「英语卡片 · 教材版」进入，或访问 `https://icefocus.cn/en-card/`；本机可以双击桌面「英语卡片」快捷方式、`启动.bat`，或直接打开 `index.html`。
 
@@ -49,12 +49,13 @@
 
 ### 学拼读
 
-- 卡片只印**两行：字母 / 字母组合 + 发音**，不再显示下方例词（例词只在 `data-say` 里，点卡片才报出来）
-- 26 个字母：点一下听**字母名**（A 读 /eɪ/）
+- 卡片只印**两行：字母 / 字母组合 + 发音**，不再显示下方例词
+- **卡面写什么，就听什么**：拼读卡 a 标 /æ/，点一下听到的就是 /æ/ 这一个音（英式真人纯音素录音），不是 apple、也不是 cat；26 字母卡点一下读**字母名**（A 读 /eɪ/）
+- 2.6 秒内**再点同一张卡**，会读示范词，把「这个音」和「放进单词里」连起来；底部浮层会提示当前听到的是什么
 - 5 个短元音、4 个长元音（魔法 e）、9 个辅音组合、22 个元音组合
 - 同一个组合的两种读法都列出来：ea /iː/ tea 与 /e/ head，ow /aʊ/ cow 与 /əʊ/ snow，oo /uː/ moon 与 /ʊ/ book，er /ə/ teacher 与 /ɜː/ her，th /θ/ thin 与 /ð/ this
 - 底下是拼读规则（-s / -ed 三种读法、重音、连读）和易混点（b/d、p/q、th 清浊、ship/sheep…）
-- **单个音素没有录音**，所以拼读区的卡片点一下读的是示范词（底部浮层会提示是哪个词），不会再读成字母名 /eɪ/ 之类跟卡片上 /æ/ 对不上的音。内容写死在 `index.html` 的 `PH_LETTERS` / `PH_SECTIONS` / `PH_RULES` / `PH_TRAPS`
+- 内容写死在 `index.html` 的 `PH_LETTERS` / `PH_SECTIONS` / `PH_RULES` / `PH_TRAPS`；音素音频由 `tools/build-phonemes.py` 生成
 
 ### 加词
 
@@ -89,8 +90,8 @@
 | 位置 | 点一下 |
 |---|---|
 | 单词表 / 短语表格子 | 读这个词 / 整条短语 |
-| 26 字母卡 | 读字母名 |
-| 拼读区卡片 | 读示范词（不会读字母名），底部提示词 |
+| 26 字母卡 | 读字母名（A 读 /eɪ/）；再点一次读例词 |
+| 拼读区卡片 | 读**卡面上那个音标本身**（纯音素 wav）；再点一次读示范词 |
 | 阅读页的句子 | 读这一句；`整篇朗读` 连续读 |
 | 按年级挑词的卡片 | 读这个词并选中 / 取消 |
 
@@ -105,6 +106,7 @@
 | 教材短语 | 202 |
 | 字母 A~Z（读字母名） | 26 |
 | 阅读句子 | 90 |
+| 拼读卡纯音素（英式真人录音，wav） | 29 |
 
 `data/audio/manifest.json` 是「文字 → 文件」绑定表，`readings` 用 `g1a1:0` 这类键存句子：
 
@@ -119,6 +121,9 @@
 - `manifest.js` 是脚本版，`file://` 双击打开时兜底
 - 换音色：改 `tools/build-audio.py` 的 `VOICE`，再 `python tools/build-audio.py --force`
 - 没有对应 mp3 的词退回浏览器 `en-GB` 语音合成
+- **拼读卡的音是另一套**：`data/audio/phon/*.wav`，取自 Cambridge Dictionary 帮助页的英式音素示范录音（`uk_phonetics_sound_*`，只念那一个音，不念例词），用 `tools/build-phonemes.py` 裁掉前后静音后导出 48kHz 单声道 WAV，共 29 条 / 约 1.1 MB。文件名是 IPA 每个字符的 Unicode 码位（`/æ/` → `00e6.wav`），前端 `phonemeRel()` 用同一规则算路径，不另维护清单
+- `/juː/`、`/kw/` 是两个音素连读，Cambridge 没有现成录音，由 `/j/+/uː/`、`/k/+/w/` 拼出来
+- 音素 wav 万一没加载出来，退回系统语音时读**示范词**而不是 IPA 字符（直接念 `/æ/` 会读成「A e」）
 
 ---
 
@@ -139,7 +144,7 @@
 - 地址后加 `?paper=portrait` 或 `?paper=landscape` 可强制，适合做成固定版式的桌面快捷方式
 - **打印本页 / 打印全部 / 下载本页一律按 A4 竖版输出**，跟屏幕上当前是哪套无关；直接按 Ctrl+P 也会临时切成竖版，印完还原
 - 打印时 A4、边距选「无」；阅读页有独立的 `打印本页`
-- `sw.js` 缓存页面和数据，mp3 不缓存（Safari 的 Range 限制），断网时点读退回系统语音
+- `sw.js` 缓存页面和数据，mp3 / wav 都不缓存（Safari 的 Range 限制），断网时点读退回系统语音
 - 本地双击打开时不注册 Service Worker，数据改完必须重跑 `build-data.js`
 
 ---
@@ -156,6 +161,7 @@
 │   ├── reading.json        ★ 1~6 年级分级阅读短文
 │   ├── dict.js / phon.js / levels.js / reading.js   json 的脚本版，file:// 兜底
 │   └── audio/              ★ 1393 个 mp3（1316 条引用）+ manifest.json / .js
+│       └── phon/            ★ 29 个纯音素 wav（拼读卡点读用）
 ├── assets/                 图标
 ├── tools/
 │   ├── textbook.txt        ★ 教材词汇源（12 册，按单元）
@@ -165,7 +171,8 @@
 │   ├── .cache/phon_base.json  手工校过的 DJ 音标基线
 │   ├── content.py          旧版自编词库生成器（保留，仅用于重建基线）
 │   ├── build-data.js       json → js（四份都转）
-│   ├── build-audio.py      生成语音与清单
+│   ├── build-audio.py      生成单词 / 短语 / 字母 / 句子语音与清单
+│   ├── build-phonemes.py    生成拼读卡的纯音素 wav
 │   ├── make-icons.py / make_shortcut.py
 ├── manifest.webmanifest / sw.js / 启动.bat / README.md
 ```
@@ -180,6 +187,7 @@
 python tools/build_textbook.py    # 重新生成 dict / phon / levels / reading 四份 json
 node   tools/build-data.js        # 生成四份 js（本地双击打开必需）
 python tools/build-audio.py       # 增量补新词、新句子的语音
+python tools/build-phonemes.py    # 重新生成 29 条纯音素 wav（网络可用时）
 ```
 
 需要 `pip install edge-tts`。`build_textbook.py` 会用 `.cache/en_UK.txt` 自动补英式音标，`.cache/phon_base.json` 里手工校过的音标优先；重跑不会污染数据。
@@ -194,7 +202,7 @@ python tools/build-audio.py       # 增量补新词、新句子的语音
 
 - 词表是**转录整理**而非出版社官方电子词表；个别版本差异请按课本核对
 - 音标为英式 DJ 写法，词典自动补的部分已做统一（ɛ→e、ɐ→ə、ɹ→r），极个别词可能和课本注音习惯略有出入
-- 单个音素（/æ/ 之类）没有独立的录音，拼读卡读的是示范词；卡面不印例词，点一下会用浮层提示
+- 拼读卡的 29 条音素录音取自 Cambridge Dictionary 帮助页的公开音素示范音频，只作家庭教学发音示范用；`/juː/`、`/kw/` 是拼接的，连贯度略逊于单音素
 - 语音必须由用户先点一下（浏览器不允许自动出声）；iPad 侧边静音键会连网页音频一起静音
 - 手机上偶尔第一次点击没声音：再点一下就好
 - 数据存在浏览器 `localStorage`（键 `english_cards_v1`），换设备不会同步，用「词库 → 导出 / 导入 JSON」搬运

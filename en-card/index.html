@@ -358,7 +358,8 @@ body.view-phonics #btnMore,body.view-level #btnMore{display:none!important}
   font-style:normal;font-family:var(--font-serif);font-size:26px;font-weight:600;
   line-height:1.06;color:#1a1a1a;letter-spacing:.01em;
 }
-.ph-card i{font-style:normal;font-family:var(--font-sans);font-size:13px;color:var(--sub);line-height:1.35}
+/* 音标用带 IPA 扩展的字体，别让 ɪ ɒ ʌ ʃ 落到中文字形上去 */
+.ph-card i{font-style:normal;font-family:"Doulos SIL","Charis SIL","DejaVu Sans","Segoe UI","Arial Unicode MS",var(--font-sans);font-size:13px;font-weight:500;color:#5f5a50;line-height:1.35}
 .ph-card.on{background:var(--accent-soft);border-color:var(--accent-line)}
 .ph-card.on em{color:var(--accent)}
 .ph-card.on::after{
@@ -1143,6 +1144,26 @@ function speak(text, audioKey){
   if(!speakTTS(t)) warnNoSound();
 }
 
+/* ---------- 纯音素录音：卡面写 /æ/，点下去就只听到 /æ/ ----------
+   data/audio/phon/<码位>.wav 由 tools/build-phonemes.py 生成（英式真人音素，
+   已裁掉前后静音）。文件名和这里用同一套规则算，不用另维护一份清单。
+   注意：绝不能退化成读整个示范词 —— 那正是「发音全错」的根源。 */
+function phonemeRel(ipa){
+  const s = String(ipa || "").replace(/^\/|\/$/g, "");
+  const hex = Array.from(s)
+    .map(c => c.codePointAt(0).toString(16).padStart(4, "0"))
+    .join("-");
+  return "phon/" + hex + ".wav";
+}
+
+function playPhoneme(ipa, fallbackWord){
+  if(!state.sound) return;
+  stopVoice();
+  const rel = phonemeRel(ipa);
+  /* 万一 wav 没加载出来，退回系统语音时读示范词，别读 IPA 字符（会念成 "A e"） */
+  playAudioUrl(blobCache.get(rel) || (AUDIO_DIR + rel), rel, fallbackWord || "");
+}
+
 /* ---------- 预取当前页的音：点下去就响，不用等网络 ---------- */
 function putBlob(rel, url){
   if(blobCache.has(rel)){ try{ URL.revokeObjectURL(url); }catch(e){} return; }
@@ -1204,6 +1225,7 @@ function prefetchPhonicsAudio(){
     const w = el.dataset.say, l = el.dataset.letter;
     const rel = (w && (AUDIO_WORDS[w] || AUDIO_PHRASES[w])) || (l && AUDIO_LETTERS[l]);
     if(rel) rels.push(rel);
+    if(el.dataset.ipa && el.dataset.name !== "1") rels.push(phonemeRel(el.dataset.ipa));
   });
   prefetchRels(rels);
 }
@@ -1809,7 +1831,7 @@ const PH_SECTIONS = [
 ];
 
 const PH_RULES = [
-  "<b>字母名 ≠ 字母音</b>：A 念 /eɪ/，在 apple 里念 /æ/；O 念 /əʊ/，在 orange 里念 /ɒ/；U 念 /juː/，在 up 里念 /ʌ/。上面的字母卡读字母名，下面带 /æ/ /ɒ/ /ʌ/ 的拼读卡读的是示范词，这是最容易误以为「发音错了」的地方。",
+  "<b>卡面写什么，就听什么</b>：字母卡 A 读字母名 /eɪ/；拼读卡 a 标 /æ/，点一下听到的就是 /æ/ 这个音本身（英式真人录音），不是 apple、也不是 cat。想听这个音放进单词里怎么读，再点一下同一张卡，会读出示范词。",
   "<b>先拼辅音 + 元音</b>：c-a → ca，再加尾音 → cat。慢一点分开念，再连起来，比整词死记有效。",
   "<b>魔法 e</b>：cap→cape、kit→kite、not→note。词尾的 e 不发音，只负责把前面的元音“拉长”。",
   "<b>复数 -s 三种读法</b>：清音后读 <code>/s/</code>（books）；浊音和元音后读 <code>/z/</code>（dogs、trees）；s/x/ch/sh 之后加 -es 读 <code>/ɪz/</code>（boxes）。",
@@ -1833,20 +1855,20 @@ function renderPhonicsPanel(){
   const box = document.getElementById("phScroll");
   if(box.dataset.done) return;
 
-  /* 卡片只印「字母 / 字母组合 + 发音」两行。
-     data-name="1" 的 26 字母卡点一下读字母名；拼读区点一下读示范词（纯音素没有录音）。
-     例词仍放在 data-say 里，只是不显示，孩子听得到、卡面更干净。 */
+  /* 卡片只印「字母 / 字母组合 + 发音」两行，卡面不放例词。
+     点一下：字母卡听字母名、拼读卡听卡面那个音标本身（纯音素 wav）。
+     2.6 秒内再点同一张卡：听示范词，把音和词连起来。 */
   const letters = '<div class="ph-grid">' + PH_LETTERS.map(([L,ln,w,wi])=>
-      `<div class="ph-card" data-letter="${L}" data-say="${w}" data-name="1" title="示范词 ${w}">`
+      `<div class="ph-card" data-letter="${L}" data-say="${w}" data-ipa="${ln}" data-name="1" title="示范词 ${w}">`
     + `<em>${L}</em><i>${ln}</i></div>`).join("") + "</div>";
 
-  let html = '<div class="ph-sec"><h3>26 个字母<small>点卡片听字母名 · 字母名和字母在单词里的发音不是一回事</small></h3>' + letters + "</div>";
+  let html = '<div class="ph-sec"><h3>26 个字母<small>点卡片听字母名 · 再点一次听例词 · 字母名和字母在单词里的发音不是一回事</small></h3>' + letters + "</div>";
 
   PH_SECTIONS.forEach(sec=>{
     html += '<div class="ph-sec"><h3>' + sec.title + '<small>' + sec.note + '</small></h3>'
           + '<div class="ph-grid' + (sec.wide ? " wide" : "") + '">'
           + sec.items.map(([s,ipa,w,wi])=>
-              `<div class="ph-card" data-letter="${s}" data-say="${w}" title="示范词 ${w}">`
+              `<div class="ph-card" data-letter="${s}" data-say="${w}" data-ipa="${ipa}" title="示范词 ${w}">`
             + `<em>${s}</em><i>${ipa}</i></div>`).join("")
           + "</div></div>";
   });
@@ -1857,14 +1879,29 @@ function renderPhonicsPanel(){
         + PH_TRAPS.map(s=>"<p>" + s + "</p>").join("") + "</div></div>";
 
   box.innerHTML = html;
+  let lastCard = null, lastAt = 0;
   box.querySelectorAll(".ph-card").forEach(el=>{
     el.onclick = ()=>{
-      /* 卡面只有字母和发音。26 字母卡读字母名；拼读卡读示范词，
-         因为单个音素（/æ/、/ʃ/）没有可靠录音，读字母名反而会和卡面标的音对不上。 */
-      const say = el.dataset.name === "1" ? el.dataset.letter : el.dataset.say;
-      speak(say);
-      toast("示范词 " + el.dataset.say);
-      el.classList.toggle("on");
+      const now = Date.now();
+      const again = (lastCard === el) && (now - lastAt < 2600);
+      lastCard = el; lastAt = now;
+
+      const ipa = el.dataset.ipa, word = el.dataset.say;
+      if(again){
+        /* 第二次点：这个音放进单词里是什么样 */
+        speak(word);
+        toast("示范词 " + word + "  " + ipa);
+      }else if(el.dataset.name === "1"){
+        /* 字母卡：卡面标的是字母名，就念字母名 */
+        speak(el.dataset.letter);
+        toast("字母名 " + el.dataset.letter + " " + ipa + " · 再点一次听 " + word);
+      }else{
+        /* 拼读卡：只念卡面上那一个音，绝不念整词 */
+        playPhoneme(ipa, word);
+        toast("正在听 " + ipa + " · 再点一次听 " + word);
+      }
+      box.querySelectorAll(".ph-card.on").forEach(x=>x.classList.remove("on"));
+      el.classList.add("on");
       flashSay(el);
     };
   });
