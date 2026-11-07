@@ -9,7 +9,7 @@
  *   静态资源   cache-first
  */
 
-const CACHE = "toolbox-shell-v1";
+const CACHE = "toolbox-shell-v2";
 
 const SHELL = [
   "./",

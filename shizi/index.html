@@ -27,7 +27,10 @@ html,body{height:100%}
 body{
   margin:0;background:var(--bg);color:var(--ink);
   font-family:var(--font-hei);display:flex;flex-direction:column;
-  height:100vh;overflow:hidden;
+  /* iPad/Safari 的 100vh 把地址栏和工具栏算进去了，比真正看得见的高度大几十像素，
+     底部分页栏就这么被推出屏幕、只露一半。100dvh 是「当前真实可视高度」，随工具栏收放变化。
+     先写 vh 兜底，再写 dvh 给认得的浏览器。 */
+  height:100vh;height:100dvh;overflow:hidden;
 }
 
 /* ---------- 顶栏 ---------- */
@@ -64,7 +67,9 @@ select.btn{padding:8px 10px}
 /* ---------- 舞台 ---------- */
 .stage{
   flex:1 1 auto;min-height:0;display:flex;flex-direction:column;
-  align-items:center;justify-content:center;gap:10px;padding:14px;
+  align-items:center;justify-content:center;gap:10px;
+  /* 底部多留一条安全区：iPad 的 home 指示条、Safari 的工具栏都在这条线上 */
+  padding:14px 14px max(14px,env(safe-area-inset-bottom,0px));
 }
 .viewport{
   flex:1 1 auto;min-height:0;width:100%;
@@ -119,7 +124,7 @@ body.showgrid .gl{display:block}
 
 /* ---------- 翻页 ---------- */
 .pager{
-  flex:0 0 auto;display:flex;align-items:center;gap:14px;background:var(--card);
+  flex:0 0 auto;flex-shrink:0;display:flex;align-items:center;gap:14px;background:var(--card);
   border:1px solid var(--line);border-radius:999px;padding:5px 8px;
   box-shadow:0 2px 8px rgba(60,50,35,.06);
 }
@@ -168,7 +173,7 @@ body.view-words .wfilter{display:flex}
 .field label{display:block;font-size:12.5px;color:var(--sub);margin-bottom:7px;letter-spacing:.04em}
 .field textarea{
   width:100%;border:1px solid var(--line);border-radius:9px;padding:10px 12px;
-  font-family:var(--font-kai);font-size:17px;line-height:1.7;resize:vertical;
+  font-family:var(--font-card,var(--font-kai));font-size:17px;line-height:1.7;resize:vertical;
   background:#fff;color:var(--ink);outline:none;
 }
 .field textarea:focus{border-color:#b9ae99;box-shadow:0 0 0 3px rgba(192,57,43,.07)}
@@ -180,7 +185,7 @@ body.view-words .wfilter{display:flex}
 }
 .chip{
   display:inline-flex;align-items:center;gap:3px;background:#fff;border:1px solid var(--line);
-  border-radius:7px;padding:3px 7px;font-family:var(--font-kai);font-size:16px;
+  border-radius:7px;padding:3px 7px;font-family:var(--font-card,var(--font-kai));font-size:16px;
 }
 .chip b{font-weight:400}
 .chip i{cursor:pointer;font-style:normal;color:#c9bfae;font-size:12px;line-height:1}
@@ -203,7 +208,7 @@ body.mode-add #pageActions{display:none}
 .add-head p{margin:0 0 18px;font-size:12.5px;color:var(--sub);line-height:1.75}
 #addInput{
   width:100%;min-height:132px;border:1px solid var(--line);border-radius:12px;
-  padding:13px 15px;font-family:var(--font-kai);font-size:22px;line-height:1.8;
+  padding:13px 15px;font-family:var(--font-card,var(--font-kai));font-size:22px;line-height:1.8;
   resize:vertical;outline:none;background:#fff;color:var(--ink);
 }
 #addInput:focus{border-color:#b9ae99;box-shadow:0 0 0 4px rgba(192,57,43,.07)}
@@ -218,7 +223,7 @@ body.mode-add #pageActions{display:none}
 .add-chips .ph{font-size:12.5px;color:#b3a894;padding:6px 4px}
 .mini{
   display:inline-flex;align-items:center;justify-content:center;min-width:36px;height:36px;
-  padding:0 9px;border-radius:8px;font-family:var(--font-kai);font-size:20px;
+  padding:0 9px;border-radius:8px;font-family:var(--font-card,var(--font-kai));font-size:20px;
   border:1px solid var(--line);background:#fff;line-height:1;
 }
 .mini.new{background:#eaf6ef;border-color:#b5dcc6;color:#12694a}
@@ -238,7 +243,7 @@ body.mode-add #pageActions{display:none}
   border-radius:8px;padding:5px 9px;cursor:pointer;font-family:inherit;transition:.15s;
 }
 .sug button:hover{border-color:#c9b48c;background:#fdf7e8}
-.sug button b{font-family:var(--font-kai);font-size:18px;font-weight:400;line-height:1}
+.sug button b{font-family:var(--font-card,var(--font-kai));font-size:18px;font-weight:400;line-height:1}
 .sug button span{font-size:11px;color:#a8946c}
 .toast{
   position:fixed;left:50%;bottom:32px;transform:translate(-50%,16px);
@@ -276,7 +281,11 @@ body.view-grade #pageActions{display:none}
 .gp-grid{
   flex:1 1 auto;min-height:0;overflow:auto;align-content:start;
   display:grid;gap:8px;grid-template-columns:repeat(auto-fill,minmax(74px,1fr));
-  padding:2px 2px 18px;overscroll-behavior:contain;
+  padding:2px 2px 18px;
+  /* 原来写的是 overscroll-behavior:contain —— 在 iOS 上它连「拖到头还能再拉一下」的
+     回弹一起去掉了，滑到底硬生生停住。改回 auto 保留惯性回弹；
+     外层 body 是 overflow:hidden，不会连带把整页拖着滚。 */
+  overscroll-behavior:auto;-webkit-overflow-scrolling:touch;
 }
 .gp-card{
   position:relative;display:flex;flex-direction:column;align-items:center;
@@ -291,7 +300,7 @@ body.view-grade #pageActions{display:none}
   min-height:14px;color:var(--sub);letter-spacing:0;text-align:center;
   white-space:nowrap;overflow:hidden;
 }
-.gp-card b{font-family:var(--font-kai);font-size:28px;line-height:1;font-weight:400;color:#1a1a1a}
+.gp-card b{font-family:var(--font-card,var(--font-kai));font-size:28px;line-height:1;font-weight:400;color:#1a1a1a}
 .gp-card.on{background:#fdecea;border-color:#e6b3ac;box-shadow:0 1px 6px rgba(192,57,43,.12)}
 .gp-card.on b{color:var(--accent)}
 .gp-card.on::after{
@@ -319,7 +328,8 @@ body.view-pinyin #btnMore,body.view-grade #btnMore{display:none!important}
 .py-head h2{margin:0;font-size:16.5px;font-weight:600;font-family:var(--font-hei)}
 .py-tip{font-size:12.5px;color:var(--sub)}
 .py-scroll{
-  flex:1 1 auto;min-height:0;overflow:auto;overscroll-behavior:contain;
+  flex:1 1 auto;min-height:0;overflow:auto;
+  overscroll-behavior:auto;-webkit-overflow-scrolling:touch;
   display:flex;flex-direction:column;gap:16px;padding:2px 2px 22px;
 }
 .py-sec h3{
@@ -435,7 +445,7 @@ body.mode-add .more-panel{display:none!important}
     flex:1 1 100%;flex-wrap:wrap;gap:6px;padding-bottom:0;
   }
   button.btn{min-height:38px;padding:8px 11px}
-  .stage{padding:8px 6px;gap:8px}
+  .stage{padding:8px 6px max(10px,env(safe-area-inset-bottom,0px));gap:8px}
   .viewport{min-height:0}
   .pager{gap:8px;padding:4px 6px;max-width:100%}
   .pager button{min-width:42px;min-height:38px}
@@ -1375,7 +1385,9 @@ function render(){
     pageEl.innerHTML += `<div class="empty-hint">字库里还组不出词组<br><span style="font-size:13px">先到「字库」里多添加一些常用字</span></div>`;
   }
   pageEl.style.fontFamily = fontStack();
-  pageEl.style.setProperty("--font-card", fontStack());   /* 格子自己的字体变量 */
+  /* 变量挂在 body 上，而不是只挂在 .page 上：打印用的临时页、词组表、加字面板
+     里显示的也是汉字，都得跟着一起变 */
+  document.body.style.setProperty("--font-card", fontStack());
 
   document.body.classList.toggle("showgrid", state.grid);
   document.body.classList.toggle("nopy", !state.showPy);   /* 关拼音只藏那一行，字号间距不动 */
@@ -1453,6 +1465,10 @@ function fit(){
   pageEl.style.transform = `scale(${s})`;
 }
 window.addEventListener("resize", fit);
+/* iOS 上收起/展开 Safari 工具栏时不一定触发 window.resize，
+   但可视高度确实变了 —— 跟着 visualViewport 再算一次，纸才不会突然超出或留白 */
+if(window.visualViewport) window.visualViewport.addEventListener("resize", fit);
+window.addEventListener("orientationchange", ()=>setTimeout(fit, 260));
 
 /* ============================================================
    交互
@@ -1756,7 +1772,9 @@ document.getElementById("btnPy").onclick = ()=>{
   toast(state.showPy ? "已显示拼音" : "已隐藏拼音");
 };
 document.getElementById("fontSel").onchange = (e)=>{
-  state.font = e.target.value; saveState(); render();
+  state.font = e.target.value; saveState();
+  document.body.style.setProperty("--font-card", fontStack());
+  render();
 };
 /* 翻页统一入口：按钮、键盘、手指滑动、鼠标拖动都走这里 */
 function goPage(delta){
@@ -1781,6 +1799,15 @@ document.addEventListener("keydown", (e)=>{
    手机上手指左右划、电脑上按住鼠标左右拖，松手超过阈值就翻页；
    拖动时纸跟着手走，到头了给点阻尼，松手回弹。拖过之后不触发格子点选。 */
 const DRAG_MIN = 46;              /* 松手判定阈值（px） */
+/* 到头了还能再拖多远：橡皮筋的上限，按视口宽度的 28% 算，最长 200px */
+const edgeLimit = ()=>Math.min(200, Math.max(90, viewEl.clientWidth * 0.28));
+/* iOS 那种橡皮筋：拖得越远，实际位移涨得越慢，永远拖不到极限之外，
+   松手再弹回去 —— 而不是像原来那样乘个 0.28 硬顶着不动。 */
+function rubberBand(dx, limit){
+  const a = Math.abs(dx);
+  if(!a) return 0;
+  return Math.sign(dx) * limit * (1 - 1 / (a / limit + 1));
+}
 let dragging = false, dragActive = false;
 let dragStartX = 0, dragStartY = 0, dragDX = 0;
 let suppressClickUntil = 0;
@@ -1806,14 +1833,15 @@ function dragMove(e){
   }
   const atEdge = (dx < 0 && state.pageIndex >= pages.length-1)
               || (dx > 0 && state.pageIndex === 0);
-  dragDX = atEdge ? dx*0.28 : dx;
+  dragDX = atEdge ? rubberBand(dx, edgeLimit()) : dx;
   wrapEl.style.transform = `translateX(${dragDX.toFixed(1)}px)`;
 }
 function dragEnd(){
   if(!dragging) return;
   dragging = false;
   document.body.classList.remove("dragging");
-  wrapEl.style.transition = "transform .18s cubic-bezier(.2,.7,.3,1)";
+  /* 回弹：略带回冲的曲线，松手时先弹过一点再归位，手上有「拉回来」的感觉 */
+  wrapEl.style.transition = "transform .34s cubic-bezier(.16,1.28,.34,1)";
   wrapEl.style.transform = "";
   if(dragActive){
     suppressClickUntil = Date.now() + 320;
@@ -1821,7 +1849,7 @@ function dragEnd(){
     else if(dragDX >= DRAG_MIN) goPage(-1);
   }
   dragActive = false; dragDX = 0;
-  setTimeout(()=>{ wrapEl.style.transition = ""; }, 220);
+  setTimeout(()=>{ wrapEl.style.transition = ""; }, 360);
 }
 viewEl.addEventListener("pointerdown", dragStart);
 viewEl.addEventListener("pointermove", dragMove);
@@ -2246,6 +2274,7 @@ window.addEventListener("resize", layoutToolbar);
   try{ await loadAudio(); }catch(e){ AUDIO_OK = false; }
 
   document.getElementById("fontSel").value = state.font;
+  document.body.style.setProperty("--font-card", fontStack());
   layoutToolbar();
   syncSoundBtn();
   render();
