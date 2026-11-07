@@ -1,0 +1,3845 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#f3f1ec">
+<meta name="description" content="数学卡片：人教版小学数学 1~6 年级口算表、知识点、应用题，可点读、可练习、可打印">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-title" content="数学卡片">
+<meta name="apple-mobile-web-app-status-bar-style" content="default">
+<link rel="manifest" href="manifest.webmanifest">
+<link rel="apple-touch-icon" href="assets/icon-180.png">
+<link rel="icon" href="assets/icon-192.png">
+<title>数学卡片 · 1~6 年级口算与知识点</title>
+<style>
+:root{
+  --bg:#f3f1ec; --ink:#20242b; --sub:#7b7568; --line:#dcd5c6;
+  --accent:#b45309; --accent-soft:#fdf1e3;
+  --ans:#c0392b; --ok:#12805c; --bad:#c0392b; --blue:#1f6fb2;
+  --card:#fffefb;
+  --shadow:0 10px 30px rgba(60,50,35,.14), 0 2px 6px rgba(60,50,35,.08);
+  --font-hei:"Microsoft YaHei","PingFang SC","Hiragino Sans GB",system-ui,sans-serif;
+  --font-kai:"KaiTi","STKaiti","Kaiti SC","楷体",serif;
+  --font-math:"Cambria","Georgia","Times New Roman","Songti SC",serif;
+}
+*{box-sizing:border-box}
+html,body{height:100%}
+body{
+  margin:0;background:var(--bg);color:var(--ink);
+  font-family:var(--font-hei);display:flex;flex-direction:column;
+  height:100vh;height:100dvh;overflow:hidden;
+  -webkit-tap-highlight-color:transparent;
+}
+
+/* ---------- 顶栏 ---------- */
+.toolbar{
+  flex:0 0 auto;display:flex;align-items:center;gap:12px;padding:11px 18px;
+  background:var(--card);border-bottom:1px solid var(--line);flex-wrap:wrap;z-index:20;
+  position:relative;
+}
+.brand{font-size:17px;font-weight:700;letter-spacing:.06em;white-space:nowrap}
+.brand span{color:var(--accent)}
+.tabs{display:flex;background:#efece5;border-radius:10px;padding:3px;gap:2px}
+.tabs button{
+  border:0;background:transparent;padding:7px 15px;border-radius:8px;
+  font-size:14px;cursor:pointer;color:var(--sub);font-family:inherit;transition:.18s;
+  white-space:nowrap;
+}
+.tabs button.on{background:#fff;color:var(--ink);font-weight:700;box-shadow:0 1px 3px rgba(0,0,0,.12)}
+.spacer{flex:1}
+.actions{display:flex;gap:7px;flex-wrap:wrap;align-items:center}
+#pageActions{display:flex;gap:7px;flex-wrap:wrap;align-items:center}
+button.btn{
+  border:1px solid var(--line);background:#fff;color:var(--ink);
+  padding:8px 13px;border-radius:9px;font-size:13.5px;cursor:pointer;
+  font-family:inherit;transition:.16s;white-space:nowrap;
+}
+button.btn:hover{border-color:#b9ae99;background:#fbf9f4}
+button.btn:active{transform:translateY(1px)}
+button.btn.primary{background:var(--ink);color:#fff;border-color:var(--ink)}
+button.btn.primary:hover{background:#333a44}
+button.btn.ghost{background:transparent}
+button.btn.on{background:var(--accent-soft);border-color:#e8c8a4;color:var(--accent)}
+button.btn:disabled{opacity:.42;cursor:default}
+select.btn{padding:8px 10px;max-width:230px}
+.count{font-size:12.5px;color:var(--sub);white-space:nowrap}
+
+/* ---------- 舞台 ---------- */
+.stage{
+  flex:1 1 auto;min-height:0;display:flex;flex-direction:column;
+  align-items:center;justify-content:center;gap:10px;padding:14px;
+}
+.rotate-hint{display:none;font-size:12px;color:var(--sub)}
+.viewport{
+  flex:1 1 auto;min-height:0;width:100%;
+  display:flex;align-items:center;justify-content:center;overflow:hidden;
+  touch-action:pan-y;
+}
+.paper-wrap{position:relative;flex:0 0 auto;will-change:transform}
+.viewport{cursor:grab}
+body.dragging .viewport,body.dragging .cell{cursor:grabbing}
+body.dragging .paper-wrap{transition:none!important}
+.page{
+  position:absolute;top:0;left:0;width:210mm;height:297mm;background:#fff;
+  transform-origin:top left;box-shadow:var(--shadow);
+}
+body.paper-landscape .page{width:297mm;height:210mm}
+
+/* 口算格子 */
+.cell{
+  position:absolute;display:flex;align-items:center;justify-content:center;
+  color:#1a1a1a;cursor:pointer;user-select:none;transition:background .15s;
+  padding:0 1mm;
+}
+.cell:hover{background:rgba(180,83,9,.05)}
+/* 折成两行的题（单位换算那种长句） */
+.cell .cws{display:flex;flex-direction:column;align-items:center;gap:.5mm;max-width:100%;overflow:hidden}
+.cell.say{background:rgba(180,83,9,.13);border-radius:1.6mm}
+.cell.blank{cursor:default}
+.cell.blank:hover{background:transparent}
+.cell .cw{display:flex;align-items:baseline;justify-content:center;white-space:nowrap;max-width:100%;overflow:hidden}
+.cell .q{font-family:var(--font-math);font-variant-numeric:tabular-nums;letter-spacing:.01em}
+.cell .ans{color:var(--ans);font-family:var(--font-math);font-variant-numeric:tabular-nums}
+.cell .bk{
+  display:inline-block;border-bottom:.28mm solid #b9b3a5;vertical-align:-.12em;
+}
+.cell .ck{
+  display:inline-block;width:.78em;height:.78em;margin:0 .07em;
+  border:.30mm solid #a9a294;border-radius:50%;
+  vertical-align:-.04em;
+}
+/* 分数：上下两层 + 一条横线，比写成 1/2 更像书上的样子 */
+.cell .fr,.ov-q .fr{
+  display:inline-flex;flex-direction:column;align-items:stretch;
+  vertical-align:-.26em;font-size:.86em;line-height:1;text-align:center;
+  margin:0 .06em;font-variant-numeric:tabular-nums;
+}
+.cell .fr b,.ov-q .fr b{font-weight:400;font-style:normal;padding:0 .08em}
+.cell .fr b:first-child,.ov-q .fr b:first-child{border-bottom:.24mm solid currentColor}
+.cell .fr.ans,.ov-q .fr.ans{color:var(--ans)}
+body.noans .cell .fr.ans{visibility:hidden}
+/* 关掉答案：只藏红色那一段，字号与格子位置一个像素都不变 */
+body.noans .cell .ans{visibility:hidden}
+
+/* 知识点格子 */
+.cell.kcell{flex-direction:column;align-items:stretch;justify-content:center;padding:1.6mm 2mm;overflow:hidden}
+.kcell .kname{font-weight:700;line-height:1.3;color:#2b2f36}
+.kcell .kexpr{
+  font-family:var(--font-math);color:var(--accent);line-height:1.42;margin:.5mm 0;
+  white-space:nowrap;overflow:hidden;
+}
+.kcell .knote{
+  color:#6d675a;line-height:1.45;display:-webkit-box;-webkit-line-clamp:2;
+  -webkit-box-orient:vertical;overflow:hidden;
+}
+body.nonote .kcell .knote{visibility:hidden}
+
+/* ---------- 知识表：行式版式 ----------
+   原来是 A4 切成 24 个等大方格，格子大、字小、大片空白。
+   现在改成按单元分组的条目流：一条标题条（册标签 + 单元名）+ 每条知识点一行，
+   左边名称、右边公式 + 一行说明，字能放大一档，翻页也按内容流着排。 */
+.khead{
+  position:absolute;display:flex;align-items:center;
+  background:#fdf2e4;border-left:1.4mm solid var(--accent);
+  border-radius:0 1.6mm 1.6mm 0;padding:0 3mm;overflow:hidden;
+}
+.khead i{
+  flex:0 0 auto;font-style:normal;font-size:3.2mm;font-weight:700;
+  color:#8a4b0b;background:#f6e0c2;border-radius:1mm;padding:.35mm 1.8mm;
+  margin-right:2.6mm;letter-spacing:.03em;
+}
+.khead span{
+  font-size:4mm;font-weight:700;color:#6b3a08;letter-spacing:.01em;
+  white-space:nowrap;overflow:hidden;text-overflow:ellipsis;
+}
+.krow{
+  position:absolute;padding:0;justify-content:flex-start;align-items:stretch;
+  border-bottom:.25mm solid #f0ece1;
+}
+.krow .kn{
+  flex:0 0 40mm;display:flex;align-items:flex-start;padding-top:5.4mm;
+  font-size:4.5mm;font-weight:600;color:#2b2f36;line-height:1.25;padding-left:3.4mm;
+}
+.krow .kb{
+  flex:1 1 auto;min-width:0;padding-right:4mm;
+  display:flex;flex-direction:column;justify-content:center;
+}
+.krow .ke{
+  font-family:var(--font-math);font-weight:600;color:var(--accent);
+  line-height:1.2;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;
+}
+.krow .kt{
+  color:#5c574c;line-height:1.35;margin-top:.9mm;
+  white-space:nowrap;overflow:hidden;text-overflow:ellipsis;
+}
+body.nonote .krow .kt{visibility:hidden}
+
+.empty-hint{
+  position:absolute;inset:0;display:flex;align-items:center;justify-content:center;
+  color:var(--sub);font-size:15px;text-align:center;line-height:2;
+}
+
+/* ---------- 翻页条 ---------- */
+.pager{
+  flex:0 0 auto;display:flex;align-items:center;gap:10px;background:var(--card);
+  border:1px solid var(--line);border-radius:12px;padding:5px 10px;box-shadow:0 2px 8px rgba(60,50,35,.07);
+  max-width:100%;
+}
+.pager button{
+  border:0;background:transparent;font-size:19px;line-height:1;color:#5c5648;
+  cursor:pointer;padding:5px 10px;border-radius:7px;font-family:inherit;flex:0 0 auto;
+}
+.pager button:hover{background:#f0ece1}
+.pager button:disabled{opacity:.28;cursor:default}
+.pager .info{font-size:13px;color:var(--sub);min-width:210px;text-align:center;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.pager .sep{width:1px;height:20px;background:var(--line)}
+.pager .pbtn{
+  font-size:13px;padding:6px 12px;border-radius:8px;border:1px solid var(--line);
+  background:#fff;white-space:nowrap;
+}
+.pager .pbtn:hover{background:#fbf9f4}
+.pager .pbtn.hot{background:var(--ink);color:#fff;border-color:var(--ink)}
+.pager .pbtn .badge{
+  display:inline-block;min-width:16px;padding:0 4px;margin-left:4px;border-radius:9px;
+  background:var(--bad);color:#fff;font-size:11px;line-height:16px;text-align:center;
+}
+
+/* 口算分组定位 */
+.pfilter{display:flex;gap:6px;flex-wrap:wrap;justify-content:center}
+.pfilter button{
+  border:1px solid var(--line);background:#fff;color:var(--sub);
+  padding:5px 11px;border-radius:20px;font-size:12.5px;cursor:pointer;font-family:inherit;
+}
+.pfilter button.on{background:var(--ink);color:#fff;border-color:var(--ink)}
+.pfilter button:disabled{opacity:.35;cursor:default}
+
+/* ---------- 学计算（滚动页） ---------- */
+#calcPanel,#applyPanel,#addPanel{display:none;flex:1 1 auto;min-height:0;overflow:auto;padding:18px}
+body.view-calc #calcPanel,
+body.view-apply #applyPanel,
+body.view-add #addPanel{display:block}
+body.view-calc .stage,
+body.view-apply .stage,
+body.view-add .stage{display:none}
+
+.calc-wrap,.apply-wrap,.add-wrap{max-width:1080px;margin:0 auto}
+.sec{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:16px 18px;margin-bottom:14px}
+.sec h3{margin:0 0 4px;font-size:15.5px}
+.sec h3 small{font-weight:400;color:var(--sub);font-size:12.5px;margin-left:8px}
+.sec p.lead{margin:0 0 12px;color:#5e5748;font-size:13px;line-height:1.75}
+
+/* 数位表 */
+.places{display:flex;gap:0;overflow-x:auto;border-radius:10px;border:1px solid var(--line)}
+.places div{
+  flex:1 0 78px;text-align:center;padding:8px 4px;border-right:1px solid var(--line);
+  font-size:13px;line-height:1.6;
+}
+.places div:last-child{border-right:0}
+.places b{display:block;font-size:16px;font-family:var(--font-math)}
+.places i{display:block;font-style:normal;color:var(--sub);font-size:11.5px}
+.places div.hi{background:var(--accent-soft)}
+
+/* 九九表 */
+.mtable{border-collapse:collapse;font-family:var(--font-math);font-size:13px}
+.mtable td{
+  border:1px solid #e7e1d2;text-align:center;padding:5px 0;min-width:38px;
+  cursor:pointer;transition:.14s;color:#333;
+}
+.mtable td:hover{background:var(--accent-soft)}
+.mtable td.hd{background:#f7f3ea;color:var(--sub);cursor:default;font-family:var(--font-hei);font-size:12px}
+.mtable td.off{background:#fbfaf6;color:#cfc9bb;cursor:default}
+.mtable .scroll{overflow-x:auto}
+/* 加法表 / 减法表 / 口诀表：撑满卡片宽度，格大好点 */
+.mtable.fill{width:100%;max-width:720px;margin:0 auto;table-layout:fixed;font-size:14.5px}
+.mtable.fill td{padding:7px 0}
+/* 单位换算表：类别窄、进率中、说明宽 */
+.mtable.unit{width:100%;table-layout:fixed;font-size:13px}
+.mtable.unit td:nth-child(1){width:92px}
+.mtable.unit td:nth-child(2){width:30%}
+.mtable.unit td{cursor:default}
+
+/* 卡片式口诀 / 规则 */
+.chips{display:flex;flex-wrap:wrap;gap:7px}
+.chip-k{
+  border:1px solid var(--line);background:#fff;border-radius:9px;padding:7px 11px;
+  font-size:13.5px;cursor:pointer;font-family:var(--font-math);transition:.14s;
+}
+.chip-k:hover{background:var(--accent-soft);border-color:#e8c8a4}
+.chip-k.say{background:rgba(180,83,9,.14)}
+.note-list{margin:0;padding-left:18px;color:#4d4a42;font-size:13.5px;line-height:2}
+.note-list b{color:var(--accent)}
+.note-list code{background:#f2eee3;border-radius:5px;padding:1px 5px;font-family:var(--font-math)}
+
+/* ---------- 知识点挑册 ---------- */
+.gradebar{display:flex;gap:6px;flex-wrap:wrap;justify-content:center}
+.gradebar button{
+  border:1px solid var(--line);background:#fff;color:var(--sub);padding:5px 12px;
+  border-radius:20px;font-size:12.5px;cursor:pointer;font-family:inherit;
+}
+.gradebar button.on{background:var(--accent);color:#fff;border-color:var(--accent)}
+
+/* ---------- 应用题 ---------- */
+.ap-grades{display:flex;gap:7px;flex-wrap:wrap;margin-bottom:10px}
+.ap-grades button{
+  border:1px solid var(--line);background:#fff;color:var(--sub);padding:6px 14px;
+  border-radius:20px;font-size:13px;cursor:pointer;font-family:inherit;
+}
+.ap-grades button.on{background:var(--accent);color:#fff;border-color:var(--accent)}
+.ap-actions{display:flex;gap:8px;flex-wrap:wrap;align-items:center;margin-bottom:12px}
+.ap-actions .hint{font-size:12px;color:var(--sub);margin-left:auto}
+.ap-list{display:flex;flex-direction:column;gap:11px;max-width:860px;margin:0 auto}
+.ap-sheet{
+  background:#fff;border:1px solid var(--line);border-radius:13px;padding:12px 16px 11px;
+  box-shadow:0 2px 10px rgba(60,50,35,.06);
+  display:flex;align-items:flex-start;
+}
+/* 左：题干；右：思路/答案。右栏收起时 display:none，完全不吃版面 */
+.ap-main{flex:1 1 auto;min-width:0}
+.ap-side{
+  display:none;flex:0 0 auto;width:min(48%,384px);
+  margin-left:15px;padding-left:15px;border-left:1px dashed var(--line);
+}
+.ap-sheet.split .ap-side{display:block;animation:apIn .18s ease-out}
+.ap-side .ap-block{margin-top:0;border-top:0;padding-top:0}
+.ap-side .ap-block ol{font-size:14px;line-height:1.85}
+.ap-side .ap-ans{margin-top:9px;font-size:14.5px;padding:7px 11px}
+.ap-head{
+  display:flex;align-items:baseline;gap:9px;
+  border-bottom:1px solid #f1eee6;padding-bottom:7px;margin-bottom:8px;
+}
+.ap-no{
+  flex:0 0 auto;width:20px;height:20px;border-radius:50%;background:var(--accent);color:#fff;
+  font-size:12px;line-height:20px;text-align:center;align-self:center;
+  font-variant-numeric:tabular-nums;
+}
+.ap-head h3{margin:0;font-size:16.5px;line-height:1.4;flex:1 1 auto}
+.ap-head .u{flex:0 0 auto;font-size:11.5px;color:var(--sub);letter-spacing:.03em}
+.ap-q{margin-bottom:4px}
+.ap-line{
+  font-size:15.5px;line-height:1.85;padding:1px 6px;margin-left:-6px;border-radius:7px;
+  cursor:pointer;transition:.15s;
+}
+.ap-line:hover{background:#fbf8f1}
+.ap-line.say{background:rgba(180,83,9,.12)}
+.ap-line .tag{
+  display:inline-block;font-size:11px;color:#fff;background:#c3bdae;border-radius:5px;
+  padding:0 5px;margin-right:7px;vertical-align:1px;
+}
+.ap-btns{display:flex;gap:7px;flex-wrap:wrap;margin-top:5px}
+.ap-btns button{
+  border:1px solid var(--line);background:#fdfcfa;color:#5c5648;border-radius:8px;
+  font-size:12.5px;padding:3px 10px;cursor:pointer;font-family:inherit;transition:.15s;
+}
+.ap-btns button:hover{border-color:var(--accent);color:var(--accent)}
+.ap-btns button.on{background:var(--accent);border-color:var(--accent);color:#fff}
+.ap-block{
+  display:none;margin-top:10px;border-top:1px dashed var(--line);padding-top:10px;
+  animation:apIn .18s ease-out;
+}
+.ap-block.on{display:block}
+.ap-block h4{margin:0 0 5px;font-size:12.5px;color:var(--accent);letter-spacing:.03em}
+.ap-block ol{margin:0;padding-left:20px;font-size:14.5px;line-height:1.95;color:#4d4a42}
+.ap-ans{
+  display:none;margin-top:9px;background:#f6f3ea;border-left:3px solid var(--accent);
+  padding:9px 13px;border-radius:0 8px 8px 0;font-size:15px;
+  animation:apIn .18s ease-out;
+}
+.ap-ans.on{display:block}
+@keyframes apIn{from{transform:translateY(-4px)}to{transform:none}}
+.ap-empty{text-align:center;color:var(--sub);padding:40px 0}
+
+/* ---------- 加题 ---------- */
+.add-wrap textarea{
+  width:100%;min-height:150px;border:1px solid var(--line);border-radius:11px;padding:12px 14px;
+  font-family:var(--font-math);font-size:15px;line-height:1.9;resize:vertical;background:#fff;
+}
+.add-live{margin:10px 0;font-size:13px;color:var(--sub)}
+.add-live b.nw{color:var(--ok)}
+.add-live b.dp{color:#a08a5b}
+.add-chips{display:flex;flex-wrap:wrap;gap:6px;margin-bottom:12px}
+.mini{
+  border:1px solid var(--line);border-radius:7px;padding:3px 9px;font-size:13px;
+  font-family:var(--font-math);background:#fff;
+}
+.mini.new{background:#eef7f2;border-color:#b9dfcc;color:#0f6b4e}
+.mini.dup{background:#f7f4ec;color:#9b9585}
+.mini.warn{background:#fdf3e3;border-color:#e8c8a4;color:#8a5a12}
+.add-bar{display:flex;gap:8px;flex-wrap:wrap;align-items:center}
+.add-opt{display:flex;align-items:center;gap:6px;font-size:13px;color:var(--sub)}
+.add-opt select{padding:7px 9px;border-radius:8px;border:1px solid var(--line);font-family:inherit;font-size:13px}
+.gen-row{display:flex;gap:10px;flex-wrap:wrap;align-items:center;margin-top:12px}
+.gen-row label{display:flex;align-items:center;gap:6px;font-size:13px;color:var(--sub)}
+.gen-row input,.gen-row select{
+  padding:7px 9px;border-radius:8px;border:1px solid var(--line);font-family:inherit;font-size:13px;width:88px;
+}
+
+/* ---------- 答题浮层 ---------- */
+.overlay{
+  position:fixed;inset:0;z-index:80;display:none;flex-direction:column;
+  background:rgba(28,32,38,.55);backdrop-filter:blur(2px);padding:14px;
+}
+.overlay.on{display:flex}
+.ov-card{
+  margin:auto;width:min(560px,100%);max-height:100%;overflow:auto;background:var(--card);
+  border-radius:18px;padding:16px 18px 18px;box-shadow:0 24px 60px rgba(20,20,20,.3);
+  display:flex;flex-direction:column;gap:10px;
+}
+.ov-top{display:flex;align-items:center;gap:10px;font-size:12.5px;color:var(--sub)}
+.ov-top .sp{flex:1}
+.ov-top button{
+  border:0;background:transparent;color:var(--sub);font-size:13px;cursor:pointer;
+  font-family:inherit;padding:5px 8px;border-radius:7px;
+}
+.ov-top button:hover{background:#f0ece1}
+.ov-bar{height:6px;background:#eee9dd;border-radius:4px;overflow:hidden}
+.ov-bar i{display:block;height:100%;width:0;background:var(--accent);transition:width .3s}
+.ov-q{
+  text-align:center;font-family:var(--font-math);font-size:44px;letter-spacing:.02em;
+  padding:14px 0 6px;font-variant-numeric:tabular-nums;min-height:78px;
+  display:flex;align-items:center;justify-content:center;gap:2px;flex-wrap:wrap;
+}
+.ov-q .bk{display:inline-block;min-width:1.4em;border-bottom:3px solid #cfc7b6;height:.9em}
+.ov-q .ck{
+  display:inline-block;width:.62em;height:.62em;border:2px solid #cfc7b6;border-radius:50%;margin:0 .06em;
+}
+.ov-q.ok{animation:pop .32s ease}
+.ov-q.bad{animation:shake .34s ease}
+@keyframes pop{0%{transform:scale(.96)}60%{transform:scale(1.05)}100%{transform:scale(1)}}
+@keyframes shake{0%,100%{transform:translateX(0)}25%{transform:translateX(-7px)}75%{transform:translateX(7px)}}
+.ov-input{
+  text-align:center;font-family:var(--font-math);font-size:26px;min-height:46px;
+  border:1px dashed #d6cfbe;border-radius:10px;padding:6px 10px;color:var(--ink);
+  display:flex;align-items:center;justify-content:center;
+}
+.ov-input.empty{color:#c3bcac}
+.ov-msg{text-align:center;font-size:13.5px;min-height:20px;color:var(--sub)}
+.ov-msg.ok{color:var(--ok);font-weight:700}
+.ov-msg.bad{color:var(--bad);font-weight:700}
+.keypad{display:grid;grid-template-columns:repeat(3,1fr);gap:8px}
+.keypad button{
+  border:1px solid var(--line);background:#fff;border-radius:11px;font-family:var(--font-math);
+  font-size:22px;padding:12px 0;cursor:pointer;transition:.1s;color:var(--ink);
+}
+.keypad button:hover{background:#fbf8f1}
+.keypad button:active{transform:scale(.97);background:#f3eee1}
+.keypad button.wide{grid-column:span 2}
+.keypad button.go{background:var(--ink);color:#fff;border-color:var(--ink);font-family:var(--font-hei);font-size:16px}
+.keypad button.del{font-family:var(--font-hei);font-size:15px;color:#8a7f6a}
+.keypad.cmp{grid-template-columns:repeat(3,1fr)}
+.keypad.cmp button{font-size:26px;padding:16px 0}
+.ov-actions{display:flex;gap:8px;flex-wrap:wrap;justify-content:center}
+.ov-actions button{
+  border:1px solid var(--line);background:#fff;border-radius:9px;padding:8px 14px;
+  font-size:13px;cursor:pointer;font-family:inherit;color:#4d4a42;
+}
+.ov-actions button:hover{background:#fbf8f1}
+.ov-done{text-align:center;padding:6px 0 2px}
+.ov-done h3{margin:0 0 6px;font-size:19px}
+.ov-done .big{font-size:40px;font-family:var(--font-math);color:var(--accent);line-height:1.2}
+.ov-done p{margin:4px 0;font-size:13.5px;color:var(--sub)}
+.ov-stats{display:flex;gap:14px;justify-content:center;margin:10px 0 4px}
+.ov-stats div{text-align:center}
+.ov-stats b{display:block;font-size:22px;font-family:var(--font-math)}
+.ov-stats i{font-style:normal;font-size:11.5px;color:var(--sub)}
+
+/* ---------- 演示（数轴 / 十格阵 / 竖式 / 分数条） ---------- */
+.demo-card{margin:auto;width:min(620px,100%);background:var(--card);border-radius:18px;
+  padding:16px 18px 18px;box-shadow:0 24px 60px rgba(20,20,20,.3);max-height:100%;overflow:auto}
+.demo-card h3{margin:0 0 2px;font-size:15.5px}
+.demo-card .sub{font-size:12.5px;color:var(--sub);margin-bottom:10px}
+.demo-stage{display:flex;justify-content:center;padding:6px 0 2px}
+.demo-note{font-size:13px;color:#4d4a42;line-height:1.9;margin-top:10px;background:#f7f4ec;
+  border-radius:9px;padding:9px 12px}
+.demo-note b{color:var(--accent)}
+.demo-card svg{max-width:100%;height:auto}
+.demo-card svg text{font-family:var(--font-math)}
+
+/* 十格阵 */
+.tframe{display:flex;gap:16px;flex-wrap:wrap;justify-content:center}
+.ten{border:2px solid #333;border-radius:6px;display:grid;
+  grid-template-columns:repeat(5,26px);grid-template-rows:repeat(2,26px);overflow:hidden}
+.ten i{border-right:1px solid #cfc7b6;border-bottom:1px solid #cfc7b6;position:relative}
+.ten i:nth-child(5n){border-right:0}
+.ten i:nth-child(n+6){border-bottom:0}
+.ten i.on::after{
+  content:"";position:absolute;inset:4px;border-radius:50%;background:var(--accent);
+}
+.ten i.on.blue::after{background:var(--blue)}
+
+/* 竖式 */
+.colsum{font-family:var(--font-math);font-size:26px;font-variant-numeric:tabular-nums;line-height:1.5}
+.colsum .row{display:flex;justify-content:flex-end;gap:2px}
+.colsum .row span{width:1.05em;text-align:center;transition:.2s}
+.colsum .row span.dim{opacity:.25}
+.colsum .row span.hot{color:var(--bad);font-weight:700}
+.colsum .row span.carry{
+  position:relative;color:#1f6fb2;font-size:.52em;height:0;
+  transform:translateY(-1.05em);
+}
+.colsum hr{border:0;border-top:2px solid #333;margin:3px 0}
+
+/* 分数条 */
+.fbar{width:100%;max-width:420px}
+.fbar .row{display:flex;margin-bottom:6px;align-items:center;gap:8px}
+.fbar .lbl{font-size:12.5px;color:var(--sub);width:52px;text-align:right;flex:0 0 auto}
+.fbar .bar{flex:1;display:flex;border:1.6px solid #333;border-radius:4px;overflow:hidden;height:26px}
+.fbar .bar i{flex:1;border-right:1px solid #cfc7b6;position:relative}
+.fbar .bar i:last-child{border-right:0}
+.fbar .bar i.on{background:var(--accent);opacity:.75}
+.fbar .bar i.on.blue{background:var(--blue);opacity:.7}
+.fbar .bar i span{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;
+  font-size:11px;color:#fff;font-family:var(--font-math)}
+
+/* ---------- 错题本 ---------- */
+#wrongPanel{
+  position:fixed;inset:0;z-index:85;display:none;background:var(--bg);
+  overflow:auto;padding:18px;
+}
+#wrongPanel.on{display:block}
+.wb-wrap{max-width:820px;margin:0 auto}
+.wb-head{display:flex;align-items:center;gap:12px;margin-bottom:14px;flex-wrap:wrap}
+.wb-head h2{margin:0;font-size:19px}
+.wb-head .sp{flex:1}
+.wb-list{background:var(--card);border:1px solid var(--line);border-radius:14px;overflow:hidden}
+.wb-item{
+  display:flex;align-items:center;gap:12px;padding:11px 15px;border-bottom:1px solid #efeade;
+  font-size:14px;
+}
+.wb-item:last-child{border-bottom:0}
+.wb-item .p{font-family:var(--font-math);font-size:17px;flex:0 0 auto;min-width:130px}
+.wb-item .mine{color:var(--bad);font-family:var(--font-math)}
+.wb-item .right{color:var(--ok);font-family:var(--font-math)}
+.wb-item .t{color:#a8a294;font-size:11.5px;margin-left:auto;white-space:nowrap}
+.wb-item .x{
+  border:0;background:transparent;color:#b9b3a5;font-size:16px;cursor:pointer;
+  padding:0 4px;font-family:inherit;
+}
+.wb-empty{text-align:center;color:var(--sub);padding:36px 0;font-size:13.5px;line-height:2}
+.wb-actions{display:flex;gap:8px;flex-wrap:wrap;margin:14px 0 0}
+
+/* ---------- 抽屉 ---------- */
+.mask{position:fixed;inset:0;background:rgba(30,26,20,.34);z-index:50;display:none}
+.mask.on{display:block}
+.drawer{
+  position:fixed;top:0;right:0;bottom:0;width:min(430px,92vw);background:var(--card);
+  z-index:60;transform:translateX(102%);transition:transform .26s cubic-bezier(.3,.9,.3,1);
+  display:flex;flex-direction:column;border-left:1px solid var(--line);
+}
+.drawer.on{transform:translateX(0)}
+.drawer header{
+  display:flex;align-items:center;gap:10px;padding:14px 16px;border-bottom:1px solid var(--line);
+}
+.drawer header h2{margin:0;font-size:16px;flex:1}
+.drawer .body{flex:1;overflow:auto;padding:14px 16px 26px}
+.field{margin-bottom:18px}
+.field>label{display:block;font-size:13px;font-weight:700;margin-bottom:7px}
+.field textarea{
+  width:100%;border:1px solid var(--line);border-radius:10px;padding:10px 12px;
+  font-family:var(--font-math);font-size:14px;line-height:1.8;resize:vertical;
+}
+.field .hint{font-size:12px;color:var(--sub);line-height:1.8;margin-top:6px}
+.field .row{display:flex;gap:8px;flex-wrap:wrap;margin-top:8px}
+.chipbar{display:flex;flex-wrap:wrap;gap:6px;max-height:190px;overflow:auto;padding:2px}
+.chip{
+  display:inline-flex;align-items:center;gap:6px;background:#f6f3ea;border:1px solid var(--line);
+  border-radius:8px;padding:4px 8px;font-size:13px;font-family:var(--font-math);
+}
+.chip i{
+  font-style:normal;color:#b9b3a5;cursor:pointer;font-family:var(--font-hei);font-size:15px;
+  line-height:1;padding:0 1px;
+}
+.chip i:hover{color:var(--bad)}
+.settings{display:flex;flex-direction:column;gap:9px;font-size:13.5px}
+.switch{display:flex;align-items:center;justify-content:space-between;gap:10px}
+.switch input{width:18px;height:18px;accent-color:var(--accent)}
+
+/* ---------- 提示 ---------- */
+.toast{
+  position:fixed;left:50%;bottom:26px;transform:translateX(-50%) translateY(18px);
+  background:rgba(30,32,38,.92);color:#fff;padding:10px 18px;border-radius:11px;
+  font-size:13.5px;line-height:1.6;max-width:min(560px,90vw);text-align:center;
+  opacity:0;pointer-events:none;transition:.22s;z-index:90;
+}
+.toast.on{opacity:1;transform:translateX(-50%) translateY(0)}
+
+/* ---------- 加载失败 ---------- */
+.boot-fail{
+  position:fixed;inset:0;z-index:95;display:none;align-items:center;justify-content:center;
+  background:rgba(243,241,236,.97);padding:24px;
+}
+.boot-fail.on{display:flex}
+.bf-card{
+  max-width:520px;background:var(--card);border:1px solid var(--line);border-radius:16px;
+  padding:26px 28px;box-shadow:var(--shadow);line-height:1.9;font-size:13.5px;
+}
+.bf-card h2{margin:0 0 10px;font-size:17px}
+.bf-card p{margin:0 0 10px;color:#5e5748}
+.bf-card code{background:#f0ece1;border-radius:5px;padding:1px 5px;font-size:12.5px}
+.bf-msg{color:#a4402f!important;font-size:12.5px;word-break:break-all}
+
+/* ---------- 窄屏「更多」 ---------- */
+#btnMore{display:none}
+.more-panel{
+  position:absolute;right:10px;top:calc(100% - 4px);z-index:60;display:none;
+  flex-direction:column;gap:7px;min-width:180px;padding:10px;
+  background:var(--card);border:1px solid var(--line);border-radius:13px;
+  box-shadow:0 12px 30px rgba(60,50,35,.18);
+}
+.more-panel.on{display:flex}
+.more-panel button,.more-panel select{width:100%;min-height:38px;text-align:left;max-width:none}
+
+/* ---------- 批量打印 ---------- */
+#printAll{display:none}
+#printAll .page{position:relative;transform:none;box-shadow:none;page-break-after:always;break-after:page}
+#printAll .page:last-child{page-break-after:auto;break-after:auto}
+
+@media print{
+  html,body{height:auto;overflow:visible;background:#fff;display:block}
+  body:not(.print-all){height:296mm!important;max-height:296mm!important;overflow:hidden!important}
+  body:not(.print-all) .stage,
+  body:not(.print-all) .viewport{height:296mm!important;max-height:296mm!important;overflow:hidden!important}
+  .toolbar,.pager,.drawer,.mask,#addPanel,.toast,.pfilter,.boot-fail,.gradebar,
+  .overlay,#wrongPanel,.rotate-hint,#calcPanel,.ap-grades,.ap-arts,.ap-actions,.ap-btns,.ap-empty{display:none!important}
+  .stage{padding:0;display:block;height:auto}
+  .viewport{display:block;overflow:visible;height:auto}
+  .paper-wrap{width:210mm!important;height:auto!important}
+  body.paper-landscape{--x:0}
+  .page{width:210mm!important;height:296mm!important;border:0!important;
+        transform:none!important;box-shadow:none!important;position:static}
+  body.print-all .stage{display:none!important}
+  body.print-all #printAll{display:block!important}
+  /* 应用题：本年级所有题一起印，题多时自动换页 */
+  body.view-apply{height:auto!important;max-height:none!important;overflow:visible!important}
+  body.view-apply .stage,
+  body.view-apply .viewport{height:auto!important;max-height:none!important;overflow:visible!important}
+  body.view-apply #applyPanel{display:block!important;padding:14mm 16mm;overflow:visible}
+  body.view-apply .apply-wrap{max-width:none}
+  body.view-apply .ap-list{max-width:none;gap:8mm}
+  body.view-apply .ap-sheet{
+    border:0;box-shadow:none;border-radius:0;padding:0 0 11mm;max-width:none;
+    break-inside:avoid;page-break-inside:avoid;
+    border-bottom:1px dashed #ddd;
+  }
+  body.view-apply .ap-sheet:last-child{border-bottom:0;padding-bottom:0}
+  /* 题的编号底色默认不打印，显式打开，不然是白字白底 */
+  body.view-apply .ap-no{
+    background:#b45309!important;color:#fff!important;
+    -webkit-print-color-adjust:exact;print-color-adjust:exact;
+  }
+  body.view-apply .ap-head{border-bottom:1px solid #e2ded4}
+  body.view-apply .ap-side{width:46%;margin-left:6mm;padding-left:6mm}
+  body.view-apply .ap-line:hover,body.view-apply .ap-line.say{background:transparent!important}
+  /* 知识点 / 口算表：屏幕上是横版也按竖版印 */
+}
+@page{size:A4;margin:0}
+
+/* ---------- iPad 横屏 ---------- */
+@media (min-width:900px) and (max-width:1366px) and (orientation:landscape){
+  .toolbar{padding:8px 12px;gap:8px}
+  .brand{font-size:15px}
+  .tabs button{padding:6px 12px;font-size:13.5px}
+  button.btn{padding:7px 10px;font-size:12.5px}
+  .count{font-size:12px}
+  .stage{padding:8px 10px;gap:6px}
+  .pager{padding:3px 6px;gap:8px}
+  .pager .info{font-size:12px;min-width:180px}
+}
+
+/* ---------- 手机 / 平板 ---------- */
+@media (max-width: 860px){
+  .toolbar{padding:8px 10px;gap:7px}
+  .brand{display:none}
+  .tabs button{padding:7px 11px;font-size:13.5px}
+  .spacer{flex:1 1 auto;min-width:0}
+  .actions{flex:1 1 100%;flex-wrap:wrap;gap:6px}
+  button.btn{min-height:38px;padding:8px 11px}
+  .stage{padding:8px 6px;gap:8px}
+  .pager{gap:6px;padding:4px 6px;max-width:100%}
+  .pager button{min-width:40px;min-height:36px}
+  .pager .info{font-size:12px;min-width:0;padding:0 2px}
+  .pager .pbtn{padding:7px 10px;font-size:12.5px}
+  #calcPanel,#applyPanel,#addPanel{padding:14px 12px 30px}
+  .sec{padding:13px 14px}
+  .ap-sheet{padding:12px 13px 12px}
+  .ap-head h3{font-size:15.5px}
+  .ap-head .u{display:none}
+  .ap-actions .hint{display:none}
+  .toast{bottom:calc(16px + env(safe-area-inset-bottom));padding:10px 16px;font-size:13px}
+  .drawer{width:100%;max-width:100%}
+  .ov-q{font-size:36px}
+  .keypad button{font-size:20px;padding:11px 0}
+  .ap-side{width:min(46%,320px);margin-left:12px;padding-left:12px}
+}
+/* 窄屏放不下两栏：思路仍回到题下方，但只在展开时占位 */
+@media (max-width: 700px){
+  .ap-sheet{display:block}
+  .ap-side{
+    width:auto;margin:10px 0 0;padding:10px 0 0;
+    border-left:0;border-top:1px dashed var(--line);
+  }
+  .ap-side .ap-block ol{font-size:14.5px}
+  .ap-side .ap-ans{font-size:15px}
+}
+@media (max-width: 520px){
+  .count{display:none}
+  .tabs button{padding:7px 9px;font-size:12.5px}
+  .tabs{border-radius:9px}
+  .pager .info{font-size:11px;min-width:0;flex:1 1 auto}
+  .pager{gap:6px;padding:4px 6px}
+  .pager button{padding:5px 7px;font-size:17px}
+  .pager .pbtn{padding:5px 8px;font-size:12px}
+  .pager .sep{display:none}
+  button.btn{padding:6px 9px;font-size:12.5px;min-height:34px;border-radius:8px}
+  .toolbar{padding:7px 8px;gap:6px}
+  .select.btn{font-size:12.5px}
+  .ov-card{padding:12px 13px 14px;border-radius:15px}
+  .ov-q{font-size:31px;min-height:66px;padding:10px 0 4px}
+  .ap-line{font-size:15.5px;line-height:2}
+  .mtable td{min-width:31px;font-size:12px;padding:4px 0}
+  /* 数位表：窄屏把 9 列压进一屏，不然要横向拖 */
+  .places div{flex:1 1 0;min-width:0;padding:6px 1px;font-size:10.5px}
+  .places b{font-size:12.5px}
+  .places i{font-size:8.5px}
+}
+</style>
+</head>
+<body>
+<!-- 全程复用这一个播放器：iOS 上频繁 new Audio() 容易出现「点了没声音」 -->
+<audio id="voiceEl" preload="auto" playsinline
+       style="position:fixed;left:-9999px;top:0;width:1px;height:1px;opacity:0;pointer-events:none"></audio>
+
+<div class="toolbar">
+  <div class="brand">数学<span>卡片</span></div>
+  <div class="tabs">
+    <button id="tabCalc">学计算</button>
+    <button id="tabDrill" class="on">口算表</button>
+    <button id="tabKnow">知识表</button>
+    <button id="tabApply">应用题</button>
+    <button id="tabAdd">加题</button>
+  </div>
+  <select id="scopeSel" class="btn" title="按教材单元挑，或按计算题型专项练"></select>
+  <div class="spacer"></div>
+  <div class="actions">
+    <span class="count" id="countInfo">—</span>
+    <div id="pageActions">
+      <select class="btn" id="sortSel" title="排序方式">
+        <option value="default">默认排序</option>
+        <option value="random">随机排序</option>
+      </select>
+      <button class="btn" id="btnReseed" title="换一批随机顺序">↻</button>
+      <button class="btn" id="btnAns" title="在题后面显示 / 隐藏答案">答案关</button>
+      <button class="btn" id="btnNote" title="知识点卡片上是否显示那行说明">说明开</button>
+      <button class="btn" id="btnPaper" title="iPad 横屏版式 / A4 竖版打印模式">打印模式</button>
+      <button class="btn" id="btnPrint">打印本页</button>
+      <button class="btn" id="btnPrintAll">打印全部</button>
+      <button class="btn primary" id="btnDownload">下载本页</button>
+    </div>
+    <button class="btn" id="btnMore">更多</button>
+    <button class="btn" id="btnSound" title="点题目 / 知识点时是否朗读">声音开</button>
+    <button class="btn ghost" id="btnManage">题库</button>
+  </div>
+  <div class="more-panel" id="morePanel"></div>
+</div>
+
+<div class="stage">
+  <div class="rotate-hint">↻ 把 iPad 横过来看，一页能放更多题</div>
+  <div class="pfilter" id="groupBar"></div>
+  <div class="viewport" id="viewport">
+    <div class="paper-wrap" id="paperWrap">
+      <div class="page" id="page"></div>
+    </div>
+  </div>
+  <div class="pager">
+    <button id="prevBtn" title="上一张（←）">‹</button>
+    <div class="info" id="pageInfo">—</div>
+    <button id="nextBtn" title="下一张（→）">›</button>
+    <span class="sep"></span>
+    <button class="pbtn hot" id="btnPractice">开始练习</button>
+    <button class="pbtn" id="btnWrong">错题本<i class="badge" id="wrongBadge" style="display:none">0</i></button>
+  </div>
+</div>
+
+<!-- 学计算 -->
+<section id="calcPanel"><div class="calc-wrap" id="calcWrap"></div></section>
+
+<!-- 应用题 -->
+<section id="applyPanel">
+  <div class="apply-wrap">
+    <div class="ap-grades" id="apGrades"></div>
+    <div class="ap-actions">
+      <button class="btn" id="apQ">全部展开思路</button>
+      <button class="btn" id="apA">全部展开答案</button>
+      <button class="btn" id="apPrint">打印本页</button>
+      <span class="hint">点句子朗读 · 点「解题思路」在这道题下面展开</span>
+    </div>
+    <div id="apSheet"></div>
+  </div>
+</section>
+
+<!-- 加题 -->
+<div id="addPanel">
+  <div class="add-wrap">
+    <div class="sec">
+      <h3>自己加题<small>一行一道，直接写算式</small></h3>
+      <p class="lead">支持 <code>+ - × ÷</code> 和小括号，例如 <code>25×4</code>、<code>3.6+1.8</code>、<code>(12+8)÷5</code>。加进来以后口算表、打印、答题闯关都能用。重复的只算一次。</p>
+      <textarea id="addInput" spellcheck="false" placeholder="例：25×4&#10;3.6+1.8&#10;(12+8)÷5"></textarea>
+      <div class="add-live" id="addLive">—</div>
+      <div class="add-chips" id="addChips"><span class="mini">这里会列出准备加入的题和算出来的答案</span></div>
+      <div class="add-bar">
+        <label class="add-opt">加入位置
+          <select id="addPos">
+            <option value="end">排到最后</option>
+            <option value="start">排到最前</option>
+          </select>
+        </label>
+        <button class="btn primary" id="addSave">加入口算表</button>
+        <button class="btn" id="addSaveGo">加入并去看</button>
+        <button class="btn ghost" id="addUndo" disabled>撤销上次添加</button>
+        <button class="btn ghost" id="addClear">清空输入</button>
+      </div>
+    </div>
+
+    <div class="sec">
+      <h3>按范围自动出题<small>想练哪一档，现出一页</small></h3>
+      <p class="lead">选好范围点「生成」，题目按随机顺序排；同样是这一档，每次生成都不一样。</p>
+      <div class="gen-row">
+        <label>题型
+          <select id="genKind">
+            <option value="as">加减法</option>
+            <option value="md">乘除法（表内）</option>
+            <option value="m1">多位数 × 一位数</option>
+            <option value="m2">两位数 × 两位数</option>
+            <option value="d1">除法（除数一位）</option>
+            <option value="mix">混合运算</option>
+          </select>
+        </label>
+        <label>数的范围 <input id="genMin" type="number" value="1" min="0" max="999"> ~
+          <input id="genMax" type="number" value="20" min="1" max="999"></label>
+        <label>几道 <input id="genCount" type="number" value="40" min="1" max="200"></label>
+        <button class="btn primary" id="genMake">生成</button>
+      </div>
+      <div class="add-chips" id="genChips" style="margin-top:12px"></div>
+    </div>
+  </div>
+</div>
+
+<div id="printAll"></div>
+
+<!-- 答题闯关 -->
+<div class="overlay" id="drillOverlay">
+  <div class="ov-card">
+    <div id="ovPlay">
+      <div class="ov-top">
+        <span id="ovProg">第 1 / 1 题</span>
+        <span class="sp"></span>
+        <span id="ovStreak">连对 0</span>
+        <span id="ovTimer">0:00</span>
+        <button id="ovClose">退出</button>
+      </div>
+      <div class="ov-bar" style="margin-top:8px"><i id="ovBar"></i></div>
+      <div class="ov-q" id="ovQ"></div>
+      <div class="ov-input empty" id="ovInput">输入答案</div>
+      <div class="ov-msg" id="ovMsg"></div>
+      <div class="keypad" id="ovPad"></div>
+      <div class="ov-actions">
+        <button id="ovDemo">看演示</button>
+        <button id="ovRead">读一遍</button>
+        <button id="ovSkip">跳过</button>
+      </div>
+    </div>
+    <div id="ovResult" style="display:none">
+      <div class="ov-done">
+        <h3 id="ovTitle">这一轮做完了</h3>
+        <div class="big" id="ovRate">100%</div>
+        <div class="ov-stats">
+          <div><b id="ovRight">0</b><i>做对</i></div>
+          <div><b id="ovMiss">0</b><i>做错</i></div>
+          <div><b id="ovTime">0:00</b><i>用时</i></div>
+        </div>
+        <p id="ovTip"></p>
+      </div>
+      <div class="ov-actions" style="margin-top:14px">
+        <button id="ovAgain">再来一轮</button>
+        <button id="ovWrongList">看错题</button>
+        <button id="ovBack">回到纸面</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- 演示 -->
+<div class="overlay" id="demoOverlay">
+  <div class="demo-card">
+    <h3 id="demoTitle">演示</h3>
+    <div class="sub" id="demoSub"></div>
+    <div class="demo-stage" id="demoStage"></div>
+    <div class="demo-note" id="demoNote"></div>
+    <div class="ov-actions" style="margin-top:12px">
+      <button id="demoReplay">重放</button>
+      <button id="demoClose">知道了</button>
+    </div>
+  </div>
+</div>
+
+<!-- 错题本 -->
+<div id="wrongPanel">
+  <div class="wb-wrap">
+    <div class="wb-head">
+      <h2>错题本</h2>
+      <span class="count" id="wbCount">—</span>
+      <span class="sp"></span>
+      <button class="btn primary" id="wbRedo">重做一遍</button>
+      <button class="btn" id="wbPrint">打印错题卷</button>
+      <button class="btn ghost" id="wbClear">清空</button>
+      <button class="btn" id="wbClose">关闭</button>
+    </div>
+    <div class="wb-list" id="wbList"></div>
+  </div>
+</div>
+
+<div class="toast" id="toast"></div>
+
+<div class="mask" id="mask"></div>
+<aside class="drawer" id="drawer">
+  <header>
+    <h2>题库管理</h2>
+    <button class="btn ghost" id="closeDrawer">关闭</button>
+  </header>
+  <div class="body">
+    <div class="field">
+      <label>自定义题目（一行一道，可直接粘贴）</label>
+      <textarea id="customInput" rows="6" spellcheck="false" placeholder="25×4&#10;3.6+1.8"></textarea>
+      <div class="hint" id="customStat">—</div>
+      <div class="row">
+        <button class="btn primary" id="saveCustom">保存</button>
+        <button class="btn" id="resetCustom">清空自定义题</button>
+      </div>
+    </div>
+
+    <div class="field">
+      <label>当前自定义题（点 × 可删）</label>
+      <div class="chipbar" id="chipBar"></div>
+    </div>
+
+    <div class="field">
+      <label>设置</label>
+      <div class="settings">
+        <div class="switch"><span>显示格子辅助线</span><input type="checkbox" id="gridChk"></div>
+        <div class="switch"><span>点题目时朗读</span><input type="checkbox" id="soundChk"></div>
+        <div class="switch"><span>答对后自动下一题</span><input type="checkbox" id="autoChk"></div>
+      </div>
+    </div>
+
+    <div class="field">
+      <label>备份 / 迁移</label>
+      <div class="row">
+        <button class="btn" id="exportBtn">导出 JSON</button>
+        <button class="btn" id="importBtn">导入 JSON</button>
+        <input type="file" id="fileInput" accept="application/json" hidden>
+      </div>
+      <div class="hint">自定义题、错题本、版式设置都在浏览器本地；换设备用导出 / 导入搬运。</div>
+    </div>
+
+    <div class="field">
+      <label>这些题从哪来</label>
+      <div class="hint" id="aboutStat">—</div>
+    </div>
+  </div>
+</aside>
+
+<div class="boot-fail" id="bootFail">
+  <div class="bf-card">
+    <h2>题库没读到</h2>
+    <p>这个页面要和 <code>data</code> 文件夹一起使用，单独拷走 <code>index.html</code> 是打不开的。</p>
+    <p>本地双击打开：确认 <code>data/books.json</code>、<code>data/books.js</code> 都在。改了题库后运行 <code>python tools/build_math.py</code>，再 <code>node tools/build-data.js</code>。</p>
+    <p>部署到线上：确认整个 <code>data</code> 目录已上传，目录名大小写一致。</p>
+    <p class="bf-msg" id="bootFailMsg"></p>
+  </div>
+</div>
+
+<script>
+/* ============================================================
+   数据层
+   ------------------------------------------------------------
+   data/books.json   人教版 12 册目录 + 每单元口算题池（题目已展开）
+   data/types.json   按计算类型的题组（专项练）
+   data/know.json    知识点 / 公式（按册、按单元）
+   data/apply.json   1~6 年级应用题
+   data/tables.json  单位换算与公式速查表
+   data/audio/       预生成 mp3 + manifest（文字 → 文件 绑定表）
+
+   网页 / GitHub Pages / PWA：走 fetch 读 json，改完刷新即生效
+   直接双击打开（file://）：浏览器禁止 fetch 本地文件，自动改用同名 .js 兜底
+   ============================================================ */
+let BOOKS = {books:[]};
+let TYPES = {types:[]};
+let KNOW = {items:[]};
+let APPLY = {grades:[]};
+let TABLES = {sections:[]};
+
+function injectScript(src){
+  return new Promise((resolve, reject)=>{
+    const el = document.createElement("script");
+    el.src = src;
+    el.onload = resolve;
+    el.onerror = ()=> reject(new Error("加载失败：" + src));
+    document.head.appendChild(el);
+  });
+}
+
+async function loadJSON(name, globalName){
+  try{
+    const res = await fetch("data/" + name + ".json", {cache:"no-cache"});
+    if(res.ok){
+      const j = await res.json();
+      if(j) return j;
+    }
+  }catch(e){ /* file:// 下会被安全策略拦掉，走下面的 .js 兜底 */ }
+  if(!window[globalName]){
+    try{ await injectScript("data/" + name + ".js"); }catch(e){}
+  }
+  return window[globalName] || null;
+}
+
+/* ============================================================
+   状态
+   ============================================================ */
+const STORE_KEY = "math_cards_v1";
+const MARGIN = 12;                      /* 纸张四周留白（mm） */
+
+/* 两套纸张：竖版 = A4 打印；横版 = iPad 横屏，列多行少、字更大。
+   打印 / 导出 PNG 一律用竖版，跟屏幕上当前是哪套无关。 */
+const PAPER = {
+  portrait:  {w:210, h:297, drill:{cols:4, rows:10}, know:{cols:3, rows:8}},
+  landscape: {w:297, h:210, drill:{cols:5, rows:8},  know:{cols:4, rows:6}}
+};
+
+/* 纸上文字的整体缩放：1 = 原来的字号。
+   0.85 ≈ 比初版小一成半；试过 0.6，太小看不清，退回来了 */
+const PAPER_TEXT_SCALE = 0.85;
+
+function isTablet(){
+  const ua = navigator.userAgent || "";
+  const iPadLike = /iPad|Tablet/.test(ua)
+                || (/Macintosh/.test(ua) && navigator.maxTouchPoints > 1);
+  const wideTouch = window.matchMedia("(pointer:coarse)").matches
+                 && Math.min(window.innerWidth, window.innerHeight) >= 600;
+  return iPadLike || wideTouch;
+}
+function defaultPaper(){ return isTablet() ? "landscape" : "portrait"; }
+function paperSpec(mode){ return PAPER[mode || state.paper] || PAPER.portrait; }
+
+let state = {
+  scope:"",                /* "book:1a" | "type:t10" | "custom" */
+  knowBook:"",             /* 知识表按册看："" = 全部 */
+  paper:"",
+  shuffled:false, seed:20261107,
+  showAns:false,           /* 题目后面是否显示答案 */
+  showNote:true,           /* 知识点卡片是否显示那行说明 */
+  grid:false,
+  sound:true,
+  autoNext:true,
+  pageIndex:0,
+  custom:[],               /* [{p,a,s}] 自己加的题 */
+  wrong:[]                 /* [{p,a,mine,t}] 错题本 */
+};
+
+function loadState(){
+  try{
+    const raw = localStorage.getItem(STORE_KEY);
+    if(!raw) return;
+    const s = JSON.parse(raw);
+    if(typeof s.scope === "string" && s.scope) state.scope = s.scope;
+    if(typeof s.knowBook === "string") state.knowBook = s.knowBook;
+    if(s.paper === "landscape" || s.paper === "portrait") state.paper = s.paper;
+    state.shuffled = s.sort === "random";
+    if(Number.isFinite(s.seed)) state.seed = s.seed;
+    if(typeof s.showAns === "boolean") state.showAns = s.showAns;
+    if(typeof s.showNote === "boolean") state.showNote = s.showNote;
+    if(typeof s.grid === "boolean") state.grid = s.grid;
+    if(typeof s.sound === "boolean") state.sound = s.sound;
+    if(typeof s.autoNext === "boolean") state.autoNext = s.autoNext;
+    if(Array.isArray(s.custom)) state.custom = s.custom.filter(x=>x && x.p);
+    if(Array.isArray(s.wrong)) state.wrong = s.wrong.filter(x=>x && x.p).slice(0,300);
+  }catch(e){}
+}
+function saveState(){
+  try{
+    localStorage.setItem(STORE_KEY, JSON.stringify({
+      scope:state.scope, knowBook:state.knowBook, paper:state.paper,
+      sort: state.shuffled ? "random" : "default", seed:state.seed,
+      showAns:state.showAns, showNote:state.showNote, grid:state.grid,
+      sound:state.sound, autoNext:state.autoNext,
+      custom:state.custom, wrong:state.wrong
+    }));
+  }catch(e){}
+}
+
+/* ============================================================
+   语音：题面、知识点、应用题都能点着听
+   ------------------------------------------------------------
+   读法（「7+5」→「七加五」）在构建数据时就算好了，写在每道题的 s 字段里，
+   这里只负责查清单、播放。清单里没有的退回系统语音合成。
+   ============================================================ */
+const AUDIO_DIR = "data/audio/";
+let AUDIO_TEXTS = {};
+let AUDIO_OK = false;
+let audioTask = null;
+let voiceEl = null;
+let voiceSeq = 0;
+let soundWarned = false;
+let lastVoiceError = "";
+
+const BLOB_MAX = 320;
+const blobCache = new Map();
+const blobLoading = new Set();
+let prefetchToken = 0;
+
+const IS_IOS = /iPad|iPhone|iPod/.test(navigator.userAgent)
+            || (navigator.platform === "MacIntel" && navigator.maxTouchPoints > 1);
+
+async function loadAudio(){
+  if(AUDIO_OK) return true;
+  if(audioTask) return audioTask;
+  audioTask = (async ()=>{
+    try{
+      const res = await fetch(AUDIO_DIR + "manifest.json");
+      if(res.ok){
+        const j = await res.json();
+        if(j && j.texts){ AUDIO_TEXTS = j.texts; AUDIO_OK = true; return true; }
+      }
+    }catch(e){}
+    if(!window.__MATH_AUDIO__){
+      try{ await injectScript(AUDIO_DIR + "manifest.js"); }catch(e){}
+    }
+    const j = window.__MATH_AUDIO__;
+    if(j && j.texts){ AUDIO_TEXTS = j.texts; AUDIO_OK = true; return true; }
+    return false;
+  })();
+  return audioTask;
+}
+
+function stopVoice(){
+  if(voiceEl){
+    try{ voiceEl.pause(); }catch(e){}
+    try{ voiceEl.currentTime = 0; }catch(e){}
+  }
+  if(window.speechSynthesis){ try{ speechSynthesis.cancel(); }catch(e){} }
+  voiceSeq++;
+}
+
+function audioEl(){
+  if(voiceEl && voiceEl.isConnected) return voiceEl;
+  voiceEl = document.getElementById("voiceEl");
+  if(!voiceEl){
+    voiceEl = document.createElement("audio");
+    voiceEl.id = "voiceEl";
+    voiceEl.style.cssText =
+      "position:fixed;left:-9999px;top:0;width:1px;height:1px;opacity:0;pointer-events:none";
+    document.body.appendChild(voiceEl);
+  }
+  voiceEl.preload = "auto";
+  voiceEl.setAttribute("playsinline", "");
+  return voiceEl;
+}
+
+function speakTTS(text){
+  if(!("speechSynthesis" in window)) return false;
+  try{
+    const u = new SpeechSynthesisUtterance(text);
+    u.lang = "zh-CN";
+    u.rate = 0.86;
+    u.pitch = 1.02;
+    const all = speechSynthesis.getVoices() || [];
+    const zh = all.filter(v=>/^zh/i.test(v.lang) || /Chinese|中文|普通话/i.test(v.name));
+    if(zh.length) u.voice = zh.find(v=>/Xiaoxiao|Huihui|Tingting|female/i.test(v.name)) || zh[0];
+    try{ if(speechSynthesis.paused) speechSynthesis.resume(); }catch(e){}
+    speechSynthesis.speak(u);
+    return true;
+  }catch(e){ return false; }
+}
+
+function warnNoSound(){
+  if(soundWarned) return;
+  soundWarned = true;
+  toast(IS_IOS
+    ? "没有声音？看一下 iPad 侧边那颗静音键，再调一下音量；Safari 设置里「自动播放」选「允许」"
+    : "没有声音？检查一下系统音量，或换用 Chrome / Edge 打开");
+  setTimeout(()=>{ soundWarned = false; }, 20000);
+}
+
+function playAudioUrl(url, rel, text){
+  const el = audioEl();
+  const seq = ++voiceSeq;
+  try{ el.pause(); }catch(e){}
+
+  /* 只比我们自己写的那个值：换地址才重设 src。
+     设置 src 本身就会触发加载，不需要再叫 load()——多调一次会把刚起来的 play() 打断。 */
+  if(el.dataset.src !== url){
+    el.dataset.src = url;
+    el.src = url;
+  }else{
+    try{ el.currentTime = 0; }catch(e){}
+  }
+
+  const p = el.play();
+  if(p && typeof p.then === "function"){
+    p.catch(err=>{
+      lastVoiceError = (err && err.name) || "Error";
+      if(seq !== voiceSeq) return;
+      if(err && err.name === "AbortError") return;
+      if(url.startsWith("blob:")){
+        playAudioUrl(AUDIO_DIR + rel, rel + "#net", text);
+        return;
+      }
+      if(!speakTTS(text)) warnNoSound();
+    });
+  }
+}
+
+/* 读一段文字。清单按「说出口的那句话」建索引，同一句话只存一个文件。 */
+function speak(text){
+  const t = String(text == null ? "" : text).trim();
+  if(!t || !state.sound) return;
+  stopVoice();
+  const rel = AUDIO_TEXTS[t];
+  if(rel){
+    playAudioUrl(blobCache.get(rel) || (AUDIO_DIR + rel), rel, t);
+    return;
+  }
+  if(!speakTTS(t)) warnNoSound();
+}
+
+function putBlob(rel, url){
+  if(blobCache.has(rel)){ try{ URL.revokeObjectURL(url); }catch(e){} return; }
+  blobCache.set(rel, url);
+  while(blobCache.size > BLOB_MAX){
+    const first = blobCache.keys().next().value;
+    const old = blobCache.get(first);
+    blobCache.delete(first);
+    try{ URL.revokeObjectURL(old); }catch(e){}
+  }
+}
+
+function prefetchRels(rels){
+  const queue = rels.filter(rel => rel && !blobCache.has(rel) && !blobLoading.has(rel));
+  if(!queue.length) return;
+  const token = ++prefetchToken;
+  let i = 0, running = 0;
+  const CONCURRENCY = 4;
+  function next(){
+    if(token !== prefetchToken) return;
+    while(running < CONCURRENCY && i < queue.length){
+      const rel = queue[i++];
+      blobLoading.add(rel);
+      running++;
+      fetch(AUDIO_DIR + rel)
+        .then(r => r.ok ? r.blob() : null)
+        .then(b => { if(b) putBlob(rel, URL.createObjectURL(b)); })
+        .catch(()=>{})
+        .then(()=>{ blobLoading.delete(rel); running--; next(); });
+    }
+  }
+  next();
+}
+
+let prefetchTask = 0;
+function prefetchPageAudio(){
+  if(!AUDIO_OK || !state.sound) return;
+  clearTimeout(prefetchTask);
+  prefetchTask = setTimeout(()=>{
+    const p = pages[state.pageIndex];
+    if(!p || !p.items) return;
+    const rels = p.items.map(it=> it && AUDIO_TEXTS[it.s]).filter(Boolean);
+    prefetchRels(rels);
+  }, 900);
+}
+
+function flashSay(el){
+  if(!el) return;
+  el.classList.add("say");
+  setTimeout(()=>el.classList.remove("say"), 680);
+}
+
+function syncSoundBtn(){
+  const b = document.getElementById("btnSound");
+  if(!b) return;
+  const narrow = window.innerWidth <= 520;
+  b.classList.toggle("on", state.sound);
+  b.textContent = state.sound ? (narrow ? "声音" : "声音开")
+                              : (narrow ? "静音" : "声音关");
+}
+
+/* ============================================================
+   工具
+   ============================================================ */
+function mulberry32(a){
+  return function(){
+    a |= 0; a = a + 0x6D2B79F5 | 0;
+    let t = Math.imul(a ^ a >>> 15, 1 | a);
+    t = t + Math.imul(t ^ t >>> 7, 61 | t) ^ t;
+    return ((t ^ t >>> 14) >>> 0) / 4294967296;
+  };
+}
+function shuffleWith(arr, seed){
+  const a = arr.slice(), rnd = mulberry32(seed);
+  for(let i=a.length-1;i>0;i--){
+    const j = Math.floor(rnd()*(i+1));
+    [a[i],a[j]] = [a[j],a[i]];
+  }
+  return a;
+}
+function ordered(list){ return state.shuffled ? shuffleWith(list, state.seed) : list.slice(); }
+
+function escapeHtml(s){
+  return String(s).replace(/[&<>"']/g, m=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[m]));
+}
+const MATH_STACK = '"Cambria","Georgia","Times New Roman","Songti SC",serif';
+const CJK_STACK  = '"Microsoft YaHei","PingFang SC","Hiragino Sans GB",sans-serif';
+
+/* 量字宽：字号按真实文字宽度算，长题面（x:14=2:7、3米=＿厘米）也不会挤破格子 */
+const measureCanvas = document.createElement("canvas");
+const measureCtx = measureCanvas.getContext("2d");
+const widthCache = new Map();
+function widthPerMM(text, family){
+  const key = family + "|" + text;
+  let v = widthCache.get(key);
+  if(v === undefined){
+    try{
+      measureCtx.font = "100px " + family;
+      v = measureCtx.measureText(text).width / 100;
+    }catch(e){ v = text.length * 0.5; }
+    if(!v || !isFinite(v)) v = text.length * 0.5;
+    widthCache.set(key, v);
+  }
+  return v;
+}
+
+/* 中文数字（0~9999 够用：口诀答案、手写题的读法） */
+const DIG = "零一二三四五六七八九";
+const POS = ["","十","百","千"];
+function zhInt(n){
+  n = Math.round(n);
+  if(n < 0) return "负" + zhInt(-n);
+  if(n === 0) return "零";
+  if(n > 9999) return String(n);
+  let out = "", started = false, zero = false;
+  for(let p=3;p>=0;p--){
+    const d = Math.floor(n / Math.pow(10,p)) % 10;
+    if(d === 0){
+      if(started) zero = true;
+    }else{
+      if(zero){ out += "零"; zero = false; }
+      out += DIG[d] + POS[p];
+      started = true;
+    }
+  }
+  if(out.startsWith("一十")) out = out.slice(1);
+  return out;
+}
+function zhNum(s){
+  s = String(s);
+  if(s.indexOf(".") >= 0){
+    const parts = s.split(".");
+    return zhInt(+parts[0]) + "点" + parts[1].split("").map(c=>DIG[+c] || c).join("");
+  }
+  return zhInt(+s);
+}
+/* 手写题的读法（数据里的题已经有 s，这里是兜底） */
+function readProblem(p){
+  const s = String(p);
+  if(s.indexOf("○") >= 0){
+    const a = s.split("○");
+    return zhNum(a[0]) + "和" + zhNum(a[1]) + "比大小";
+  }
+  return s.replace(/(\d+)\/(\d+)/g, (m,a,b)=> zhNum(b) + "分之" + zhNum(a))
+          .replace(/(\d+(?:\.\d+)?)%/g, (m,a)=> "百分之" + zhNum(a))
+          .replace(/(\d)x/g, (m,a)=> zhNum(a) + "乘x")
+          .replace(/\d+(?:\.\d+)?/g, m=> zhNum(m))
+          .replace(/\+/g,"加").replace(/-/g,"减").replace(/×/g,"乘")
+          .replace(/÷/g,"除以").replace(/:/g,"比").replace(/=/g,"等于")
+          .replace(/＿/g,"多少");
+}
+
+/* 四则运算求值（加题时算答案，不用 eval） */
+function evalExpr(src){
+  const s = String(src).replace(/×/g,"*").replace(/÷/g,"/").replace(/（/g,"(").replace(/）/g,")");
+  if(!/^[\d+\-*/().\s]+$/.test(s)) return null;
+  let i = 0;
+  function skip(){ while(i < s.length && /\s/.test(s[i])) i++; }
+  function num(){
+    const st = i;
+    while(i < s.length && /[\d.]/.test(s[i])) i++;
+    if(st === i) return null;
+    return parseFloat(s.slice(st, i));
+  }
+  function factor(){
+    skip();
+    if(s[i] === "("){ i++; const v = expr(); skip(); if(s[i] === ")") i++; return v; }
+    if(s[i] === "-"){ i++; const v = factor(); return v == null ? null : -v; }
+    return num();
+  }
+  function term(){
+    let v = factor();
+    for(;;){
+      skip();
+      if(s[i] === "*"){ i++; const r = factor(); if(v==null||r==null) return null; v *= r; }
+      else if(s[i] === "/"){ i++; const r = factor(); if(v==null||r==null||r===0) return null; v /= r; }
+      else return v;
+    }
+  }
+  function expr(){
+    let v = term();
+    for(;;){
+      skip();
+      if(s[i] === "+"){ i++; const r = term(); if(v==null||r==null) return null; v += r; }
+      else if(s[i] === "-"){ i++; const r = term(); if(v==null||r==null) return null; v -= r; }
+      else return v;
+    }
+  }
+  const v = expr();
+  skip();
+  if(i < s.length || v == null || !isFinite(v)) return null;
+  return v;
+}
+function trimNum(v){
+  const s = String(Math.round(v * 10000) / 10000);
+  return s;
+}
+</script>
+<script>
+/* ============================================================
+   组页：把「当前范围」摊成一叠 A4 纸
+   ============================================================ */
+let view = "drill";          /* drill | know | calc | apply | add */
+
+function bookById(id){ return BOOKS.books.find(b=>b.id === id) || null; }
+function bookName(id){ const b = bookById(id); return b ? b.name : ""; }
+function bookShort(id){
+  const b = bookById(id);
+  if(!b) return "";
+  /* 一年级上册 → 一上；二年级下册 → 二下 */
+  const CN = ["", "一", "二", "三", "四", "五", "六"];
+  return (CN[b.grade] || b.grade) + (String(b.id).slice(-1) === "b" ? "下" : "上");
+}
+function defaultScope(){
+  const b = BOOKS.books.find(x=> x.units.some(u=>u.items && u.items.length));
+  return b ? "book:" + b.id : "";
+}
+
+function scopeGroups(){
+  const sc = state.scope || defaultScope();
+  if(sc === "custom"){
+    return [{label:"自定义题", units:[{no:"", title:"我的题目", items: state.custom, note:""}]}];
+  }
+  if(sc.indexOf("type:") === 0){
+    const t = TYPES.types.find(x=>("type:" + x.id) === sc);
+    if(!t) return [];
+    return [{label:t.name, units:[{no:"", title:t.name, items:t.items, note:t.note||""}]}];
+  }
+  const b = bookById(sc.replace("book:", ""));
+  if(!b) return [];
+  return [{label:b.name, units:b.units}];
+}
+
+function buildPages(spec){
+  spec = spec || paperSpec();
+  const pages = [];
+
+  if(view === "know"){
+    const laid = layoutKnow(spec);
+    const name = state.knowBook ? bookName(state.knowBook) : "1~6 年级";
+    return laid.map((pg, i)=>({
+      kind: "know2", cols:1, rows:1, items: [], unit:"", group:0,
+      blocks: pg.blocks, usedH: pg.h,
+      label: name + " 知识点 · 第 " + (i+1) + " / " + laid.length + " 张",
+      fileTag: (state.knowBook || "全部") + "知识点", pageNo:i+1
+    }));
+  }
+
+  /* 口算表：按单元分页，每张 40 题 */
+  const L = spec.drill, per = L.cols * L.rows;
+  scopeGroups().forEach((g, gi)=>{
+    /* 同一档里其它单元的题，用来把「只有十来道题」的那张纸补满，免得半张白纸 */
+    const pool = [];
+    g.units.forEach(u=> (u.items || []).forEach(it=> pool.push(it)));
+    g.units.forEach(u=>{
+      if(!u.items || !u.items.length) return;
+      const list = ordered(u.items);
+      const n = Math.ceil(list.length / per);
+      for(let i=0;i<n;i++){
+        let items = list.slice(i*per, (i+1)*per);
+        let padded = false;
+        if(items.length < per && pool.length > items.length){
+          const seen = new Set(items.map(x=>x.p));
+          for(const it of ordered(pool)){
+            if(items.length >= per) break;
+            if(seen.has(it.p)) continue;
+            seen.add(it.p); items.push(it); padded = true;
+          }
+        }
+        pages.push({kind:"drill", cols:L.cols, rows:L.rows, group:gi, unit:u.title,
+          items: items,
+          label: g.label + " · " + (u.no ? u.no + "、" : "") + u.title
+                 + (padded ? "（＋同册复习）" : "") + " · 第 " + (i+1) + "/" + n + " 张",
+          fileTag: u.title, pageNo:i+1});
+      }
+    });
+  });
+
+  if(!pages.length){
+    pages.push({kind:"drill", cols:L.cols, rows:L.rows, items:[], group:0, unit:"",
+      label:"这里还没有题", fileTag:"口算表", pageNo:1, empty:true});
+  }
+  return pages;
+}
+
+/* ============================================================
+   格子里画什么
+   ------------------------------------------------------------
+   一道题拆成几段：文字 / 填空线 / 比大小圆圈 / 答案。
+   拆开的好处是打印、导出 PNG、答题闯关三处能共用同一套排法。
+   ============================================================ */
+function drillParts(item){
+  const parts = [];
+  let buf = "";
+  const flush = ()=>{ if(buf){ pushText(parts, buf); buf = ""; } };
+  const ans = ()=>{ state.showAns ? pushAns(parts, item.a) : parts.push({t:"b"}); };
+  String(item.p).split("").forEach(ch=>{
+    if(ch === "＿"){
+      flush();
+      ans();
+    }else if(ch === "○"){
+      flush();
+      if(state.showAns) pushAns(parts, item.a); else parts.push({t:"c"});
+    }else{
+      buf += ch;
+    }
+  });
+  flush();
+  /* 题面里没有填空线、也没有比大小圆圈（纯算式，如 0+5 / 3 + 9 - 4 / 8x=24），
+     统一补一个等号加空位，孩子才有地方写答案；关掉答案时留空线。 */
+  if(!/[＿○]/.test(item.p)){
+    const isEq = /x/.test(item.p);
+    /* 解方程的答案另起一段，中间空开一点，别写成「8x=24x=＿」 */
+    parts.push({t:"t", v: isEq ? "\u00a0\u00a0x=" : "="});
+    ans();
+  }
+  return parts;
+}
+
+/* 分数 a/b 单独切成一段，屏幕上画成上下两层。
+   顺带解决「答案本身也是分数」的情况 —— 红色那层也要是分数样子。 */
+function pushText(parts, s){
+  const re = /(\d+)\/(\d+)/g;
+  let last = 0, m;
+  while((m = re.exec(s))){
+    if(m.index > last) parts.push({t:"t", v:s.slice(last, m.index)});
+    parts.push({t:"f", n:m[1], d:m[2]});
+    last = m.index + m[0].length;
+  }
+  if(last < s.length) parts.push({t:"t", v:s.slice(last)});
+}
+function pushAns(parts, v){
+  const s = String(v);
+  const m = /^(\d+)\/(\d+)$/.exec(s);
+  if(m) parts.push({t:"f", n:m[1], d:m[2], ans:true});
+  else parts.push({t:"a", v:s});
+}
+function fracWidth(p){
+  return Math.max(1, Math.max(p.n.length, p.d.length)) * 0.42 + 0.22;
+}
+function partHTML(p, big){
+  if(p.t === "b") return '<i class="bk"' + (big ? "" : ' style="width:1.75em"') + "></i>";
+  if(p.t === "c") return '<i class="ck"></i>';
+  if(p.t === "f"){
+    return '<span class="fr' + (p.ans ? " ans" : "") + '">'
+      + "<b>" + escapeHtml(p.n) + "</b><b>" + escapeHtml(p.d) + "</b></span>";
+  }
+  if(p.t === "a") return '<b class="ans">' + escapeHtml(p.v) + "</b>";
+  return '<span class="q">' + escapeHtml(p.v) + "</span>";
+}
+
+function measureParts(parts, cw, capMm){
+  let unitW = 0;
+  parts.forEach(p=>{
+    p.w = (p.t === "b") ? 1.75 : (p.t === "c") ? 0.92
+        : (p.t === "f") ? fracWidth(p) : widthPerMM(p.v, MATH_STACK);
+    unitW += p.w;
+  });
+  let fs = Math.min(cw * 0.90 / Math.max(unitW, 0.25), capMm, 11);
+  fs = Math.max(fs, 2.2) * PAPER_TEXT_SCALE;
+  return {fs, parts, totalW: unitW * fs};
+}
+
+function drillLayout(item, cw, chh){
+  const parts = drillParts(item);
+  const one = measureParts(parts, cw, chh * 0.42);
+  return splitLines(item, one, parts, cw, chh) || {fs:one.fs, parts, totalW:one.totalW, lines:[one]};
+}
+
+/* 「6平方分米=＿平方厘米」这类长句，挤在一行里会被压成小字。
+   够宽就一行；一旦小到 6mm 以下，就从等号处折成两行：单位写上面，空位写下面。 */
+function splitLines(item, one, parts, cw, chh){
+  if(one.fs >= 6 * PAPER_TEXT_SCALE) return null;
+  const eq = String(item.p).indexOf("=");
+  const us = String(item.p).indexOf("＿");
+  if(!(eq > 0 && us > eq)) return null;
+  let i = parts.findIndex(p=> p.t === "t" && p.v.indexOf("=") >= 0);
+  if(i < 0) return null;
+  const v = parts[i].v, at = v.indexOf("=");
+  const head = {t:"t", v:v.slice(0, at + 1)};
+  const tailText = v.slice(at + 1);
+  const lineA = parts.slice(0, i).concat([head]);
+  const lineB = (tailText ? [{t:"t", v:tailText}] : []).concat(parts.slice(i + 1));
+  if(!lineB.length) return null;
+  /* 两行各自按自己的宽度定字号，再取一个统一的小值，行与行看起来才齐 */
+  const a = measureParts(lineA, cw * 1.02, chh * 0.30);
+  const b = measureParts(lineB, cw * 1.02, chh * 0.30);
+  const fs = Math.min(a.fs, b.fs);
+  a.fs = b.fs = fs;
+  a.totalW = a.parts.reduce((s,p)=>s + p.w, 0) * fs;
+  b.totalW = b.parts.reduce((s,p)=>s + p.w, 0) * fs;
+  return {fs, parts, totalW: Math.max(a.totalW, b.totalW), lines:[a, b]};
+}
+
+function drillInner(m){
+  const lines = m.lines || [{fs:m.fs, parts:m.parts}];
+  const html = lines.map(l=>{
+    let h = "";
+    l.parts.forEach((p, k)=>{
+      if(p.t === "a" && k) h += '<span style="display:inline-block;width:.16em"></span>';
+      h += partHTML(p);
+    });
+    return '<div class="cw" style="font-size:' + l.fs.toFixed(2) + 'mm">' + h + "</div>";
+  }).join("");
+  return lines.length > 1 ? '<div class="cws">' + html + "</div>" : html;
+}
+
+/* ------------------------------------------------------------
+   知识表：按「册 + 单元」分组，再按行高流式分页
+   ------------------------------------------------------------
+   组标题条 7.5mm，一条知识点 11mm（左边名称、右边公式 + 一行说明）。
+   换页时如果这一组还没排完，新页顶上重印组标题并标「（续）」。
+   ------------------------------------------------------------ */
+const KNOW_HEAD = 8.5;
+const KNOW_ITEM = 17;
+const KNOW_NAME_W = 40;      /* 左列名称宽度 mm */
+const KNOW_NAME_FS = 4.5;    /* 名称字号 mm */
+const KNOW_EXPR_MAX = 6.6;   /* 公式字号上限 mm */
+const KNOW_NOTE_MAX = 4;     /* 说明字号上限 mm */
+const KNOW_NOTE_MIN = 3.2;
+
+function unitTitleOf(bookId, no){
+  const bk = bookById(bookId);
+  if(!bk) return "";
+  const un = bk.units.find(x=> x.no === no);
+  if(!un) return "";
+  return (un.no ? un.no + "、" : "") + un.title;
+}
+
+function knowGroups(){
+  const items = KNOW.items.filter(k=> !state.knowBook || k.b === state.knowBook);
+  const order = [], map = new Map();
+  items.forEach(k=>{
+    const key = k.b + "|" + k.u;
+    let g = map.get(key);
+    if(!g){
+      g = {b:k.b, u:k.u, book: bookShort(k.b), label: unitTitleOf(k.b, k.u), items:[]};
+      map.set(key, g);
+      order.push(g);
+    }
+    g.items.push(k);
+  });
+  return order;
+}
+
+function layoutKnow(spec){
+  const availH = spec.h - 2*MARGIN;
+  const out = [];
+  let cur = {blocks: [], h: 0};
+  const flush = ()=>{
+    if(!cur.blocks.length) return;
+    out.push(cur);
+    cur = {blocks: [], h: 0};
+  };
+  knowGroups().forEach(g=>{
+    let i = 0, first = true;
+    while(i < g.items.length){
+      if(cur.h > 0) cur.h += 1.5;                       /* 组与组之间留一口气 */
+      if(availH - cur.h < KNOW_HEAD + KNOW_ITEM) flush();
+      cur.blocks.push({kind:"head", y: cur.h, h: KNOW_HEAD, book: g.book,
+        text: g.label + (first ? "" : "（续）")});
+      cur.h += KNOW_HEAD;
+      first = false;
+      const before = i;
+      while(i < g.items.length && cur.h + KNOW_ITEM <= availH){
+        cur.blocks.push({kind:"item", y: cur.h, h: KNOW_ITEM, it: g.items[i]});
+        cur.h += KNOW_ITEM;
+        i++;
+      }
+      /* 一页连「标题 + 一条」都放不下时的兜底，避免原地打转 */
+      if(i === before && i < g.items.length){
+        cur.blocks.push({kind:"item", y: cur.h, h: KNOW_ITEM, it: g.items[i]});
+        cur.h += KNOW_ITEM;
+        i++;
+      }
+    }
+  });
+  flush();
+  if(!out.length) out.push({blocks: [], h: 0});
+  return out;
+}
+
+/* 一页里公式和说明各用多大字：全页统一，取「最长的那条也放得下」的字号，
+   这样一页看起来是齐的，又不会把长公式挤到格子外面 */
+function knowType(p, availW){
+  const space = availW - KNOW_NAME_W - 6;
+  let maxE = 0, maxN = 0;
+  p.blocks.forEach(b=>{
+    if(b.kind !== "item") return;
+    maxE = Math.max(maxE, widthPerMM(b.it.expr, MATH_STACK));
+    maxN = Math.max(maxN, widthPerMM(b.it.note, CJK_STACK));
+  });
+  const expr = Math.max(4.2, Math.min(KNOW_EXPR_MAX, maxE > 0 ? space / maxE : KNOW_EXPR_MAX));
+  const note = Math.max(KNOW_NOTE_MIN, Math.min(KNOW_NOTE_MAX, maxN > 0 ? space / maxN : KNOW_NOTE_MAX));
+  return {expr, note};
+}
+
+function knowPageHTML(p, spec){
+  const availW = spec.w - 2*MARGIN;
+  const ty = knowType(p, availW);
+  let html = "";
+  p.blocks.forEach(b=>{
+    const top = (MARGIN + b.y).toFixed(3);
+    if(b.kind === "head"){
+      html += '<div class="khead" style="left:' + MARGIN + "mm;top:" + top + "mm;width:"
+            + availW.toFixed(3) + "mm;height:" + KNOW_HEAD + 'mm">'
+            + "<i>" + escapeHtml(b.book) + "</i>"
+            + "<span>" + escapeHtml(b.text) + "</span></div>";
+      return;
+    }
+    const it = b.it;
+    html += '<div class="cell krow" data-i="' + escapeHtml(it.name) + '" data-s="'
+          + escapeHtml(it.s || (it.name + "，" + it.note)) + '" style="left:' + MARGIN
+          + "mm;top:" + top + "mm;width:" + availW.toFixed(3) + "mm;height:" + KNOW_ITEM + 'mm">'
+          + '<div class="kn">' + escapeHtml(it.name) + "</div>"
+          + '<div class="kb">'
+            + '<div class="ke" style="font-size:' + ty.expr.toFixed(2) + 'mm">'
+              + escapeHtml(it.expr) + "</div>"
+            + '<div class="kt" style="font-size:' + ty.note.toFixed(2) + 'mm">'
+              + escapeHtml(it.note) + "</div>"
+          + "</div></div>";
+  });
+  return html;
+}
+
+function pageHTML(p, spec){
+  spec = spec || paperSpec();
+  if(p.kind === "know2") return knowPageHTML(p, spec);
+  const cw = (spec.w - 2*MARGIN) / p.cols;
+  const chh = (spec.h - 2*MARGIN) / p.rows;
+  const total = p.cols * p.rows;
+  let html = "";
+  for(let i=0;i<total;i++){
+    const r = Math.floor(i / p.cols), c = i % p.cols;
+    const it = p.items[i];
+    const base = "left:" + (MARGIN + c*cw).toFixed(3) + "mm;top:" + (MARGIN + r*chh).toFixed(3)
+               + "mm;width:" + cw.toFixed(3) + "mm;height:" + chh.toFixed(3) + "mm;";
+    if(it === undefined){
+      html += '<div class="cell blank" style="' + base + '"></div>';
+      continue;
+    }
+    html += '<div class="cell" data-i="' + i + '" style="' + base + '">'
+          + drillInner(drillLayout(it, cw, chh)) + "</div>";
+  }
+  return html;
+}
+
+/* ============================================================
+   渲染
+   ============================================================ */
+const pageEl = document.getElementById("page");
+const wrapEl = document.getElementById("paperWrap");
+const viewEl = document.getElementById("viewport");
+let pages = [];
+
+function render(){
+  pages = buildPages();
+  if(state.pageIndex >= pages.length) state.pageIndex = pages.length - 1;
+  if(state.pageIndex < 0) state.pageIndex = 0;
+
+  const p = pages[state.pageIndex];
+  pageEl.innerHTML = pageHTML(p);
+  if(p.empty){
+    pageEl.innerHTML += '<div class="empty-hint">这一档还没有题<br>'
+      + '<span style="font-size:13px">到「加题」里写几道，或换一个单元</span></div>';
+  }
+
+  document.body.classList.toggle("showgrid", state.grid);
+  document.body.classList.toggle("noans", !state.showAns);
+  document.body.classList.toggle("nonote", !state.showNote);
+
+  document.getElementById("pageInfo").textContent = p.label;
+  document.getElementById("prevBtn").disabled = state.pageIndex === 0;
+  document.getElementById("nextBtn").disabled = state.pageIndex >= pages.length - 1;
+
+  const total = pages.reduce((a,x)=> a + (x.items ? x.items.length : 0), 0)
+              - pages.filter(x=>x.empty).length * 0;
+  document.getElementById("countInfo").textContent = view === "know"
+    ? "共 " + KNOW.items.length + " 条知识点 · " + pages.length + " 张"
+    : "共 " + (state.scope === "custom" ? state.custom.length
+             : pages.reduce((a,x)=>a+x.items.length,0)) + " 题 · " + pages.length + " 张";
+
+  const ab = document.getElementById("btnAns");
+  ab.classList.toggle("on", state.showAns);
+  ab.textContent = state.showAns ? "答案开" : "答案关";
+  document.getElementById("btnPractice").style.display = (view === "drill") ? "" : "none";
+  const nb = document.getElementById("btnNote");
+  nb.classList.toggle("on", state.showNote);
+  nb.textContent = state.showNote ? "说明开" : "说明关";
+  nb.style.display = view === "know" ? "" : "none";
+
+  document.getElementById("sortSel").value = state.shuffled ? "random" : "default";
+  syncSoundBtn();
+  syncGroupBar();
+  syncWrongBadge();
+  fit();
+  prefetchPageAudio();
+}
+
+/* 分组快跳：口算表按单元，知识表按册 */
+function syncGroupBar(){
+  const bar = document.getElementById("groupBar");
+  const p = pages[state.pageIndex];
+  if(view === "know"){
+    let html = '<button data-book="" class="' + (state.knowBook ? "" : "on") + '">全部</button>';
+    BOOKS.books.forEach(b=>{
+      html += '<button data-book="' + b.id + '" class="' + (state.knowBook === b.id ? "on" : "") + '">'
+            + escapeHtml(bookShort(b.id)) + "</button>";
+    });
+    bar.innerHTML = html;
+    bar.querySelectorAll("button").forEach(btn=>{
+      btn.onclick = ()=>{
+        state.knowBook = btn.dataset.book;
+        state.pageIndex = 0;
+        saveState(); render();
+      };
+    });
+    bar.style.display = "";
+    return;
+  }
+
+  const groups = scopeGroups();
+  if(groups.length === 1 && groups[0].units.length <= 1){
+    bar.innerHTML = "";
+    bar.style.display = "none";
+    return;
+  }
+  const anchors = [];
+  const seen = new Set();
+  pages.forEach((pg, i)=>{
+    if(pg.empty) return;
+    if(seen.has(pg.unit)) return;
+    seen.add(pg.unit);
+    anchors.push({title:pg.unit, i});
+  });
+  bar.innerHTML = anchors.map(a=>
+    '<button data-i="' + a.i + '" class="' + (p && p.unit === a.title ? "on" : "") + '">'
+    + escapeHtml(a.title) + "</button>").join("");
+  bar.querySelectorAll("button").forEach(btn=>{
+    btn.onclick = ()=>{
+      const i = +btn.dataset.i;
+      if(i === state.pageIndex){ return; }
+      state.pageIndex = i;
+      render();
+    };
+  });
+  bar.style.display = "";
+}
+
+function fit(){
+  const spec = paperSpec();
+  const availW = viewEl.clientWidth - 4;
+  const availH = viewEl.clientHeight - 4;
+  const pxW = spec.w * 96 / 25.4, pxH = spec.h * 96 / 25.4;
+  const s = Math.max(0.1, Math.min(availW / pxW, availH / pxH));
+  wrapEl.style.width  = (pxW * s) + "px";
+  wrapEl.style.height = (pxH * s) + "px";
+  pageEl.style.transform = "scale(" + s + ")";
+}
+window.addEventListener("resize", fit);
+
+/* 点格子：读题 + 闪一下 */
+pageEl.addEventListener("click", (e)=>{
+  if(Date.now() < suppressClickUntil) return;      /* 刚拖过纸面，别误触 */
+  const cell = e.target.closest(".cell");
+  if(!cell || cell.classList.contains("blank")) return;
+  const say = cell.dataset.s
+    || (view === "drill" ? (pages[state.pageIndex].items[+cell.dataset.i] || {}).s : "");
+  if(say) speak(say);
+  flashSay(cell);
+});
+</script>
+<script>
+/* ============================================================
+   视图切换
+   ============================================================ */
+const TAB_IDS = {calc:"tabCalc", drill:"tabDrill", know:"tabKnow", apply:"tabApply", add:"tabAdd"};
+
+function setView(v){
+  if(view === "apply" && v !== "apply") stopSeq();
+  view = v;
+  state.pageIndex = 0;
+  Object.keys(TAB_IDS).forEach(k=>
+    document.getElementById(TAB_IDS[k]).classList.toggle("on", k === v));
+  document.body.classList.toggle("view-calc", v === "calc");
+  document.body.classList.toggle("view-know", v === "know");
+  document.body.classList.toggle("view-apply", v === "apply");
+  document.body.classList.toggle("view-add", v === "add");
+  document.getElementById("scopeSel").style.display = (v === "drill") ? "" : "none";
+
+  /* 计算 / 应用题 / 加题 三页不用纸面那套按钮，收起来免得误点 */
+  const paperView = (v === "drill" || v === "know");
+  document.getElementById("pageActions").style.display = paperView ? "" : "none";
+  if(!paperView){
+    document.getElementById("countInfo").textContent =
+      v === "calc" ? "竖式 / 口诀 / 凑十破十" :
+      v === "apply" ? "一~六年级 · 应用题" : "自己写题 / 自动出题";
+  }
+
+  if(v === "calc"){ renderCalc(); return; }
+  if(v === "apply"){ renderApply(); return; }
+  if(v === "add"){ refreshAdd(); refreshGenChips(); return; }
+  if(v === "know" && !state.knowBook) state.knowBook = "";
+  render();
+}
+document.getElementById("tabCalc").onclick  = ()=>setView("calc");
+document.getElementById("tabDrill").onclick = ()=>setView("drill");
+document.getElementById("tabKnow").onclick  = ()=>setView("know");
+document.getElementById("tabApply").onclick = ()=>setView("apply");
+document.getElementById("tabAdd").onclick   = ()=>setView("add");
+
+/* ---------- 范围下拉：按教材 / 按题型 / 自定义 ---------- */
+function initScope(){
+  const sel = document.getElementById("scopeSel");
+  let html = '<optgroup label="按教材单元">';
+  BOOKS.books.forEach(b=>{
+    const n = b.units.reduce((a,u)=>a + (u.items ? u.items.length : 0), 0);
+    html += '<option value="book:' + b.id + '">' + b.name + "（" + n + " 题）</option>";
+  });
+  html += '</optgroup><optgroup label="按计算题型">';
+  TYPES.types.forEach(t=>{
+    html += '<option value="type:' + t.id + '">' + t.name + "（" + t.items.length + " 题）</option>";
+  });
+  html += "</optgroup>";
+  if(state.custom.length){
+    html += '<optgroup label="我的"><option value="custom">自定义题（' + state.custom.length + " 题）</option></optgroup>";
+  }
+  sel.innerHTML = html;
+  if(!state.scope) state.scope = defaultScope();
+  if(![...sel.options].some(o=>o.value === state.scope)) state.scope = defaultScope();
+  sel.value = state.scope;
+  sel.onchange = ()=>{
+    state.scope = sel.value;
+    state.pageIndex = 0;
+    saveState();
+    render();
+  };
+}
+
+/* ---------- 顶栏按钮 ---------- */
+document.getElementById("sortSel").onchange = (e)=>{
+  state.shuffled = e.target.value === "random";
+  if(state.shuffled) state.seed = Math.floor(Math.random()*1e9);
+  state.pageIndex = 0;
+  saveState(); render();
+};
+document.getElementById("btnReseed").onclick = ()=>{
+  state.shuffled = true;
+  state.seed = Math.floor(Math.random()*1e9);
+  state.pageIndex = 0;
+  saveState(); render();
+  toast("已换一批顺序");
+};
+document.getElementById("btnAns").onclick = ()=>{
+  state.showAns = !state.showAns;
+  saveState(); render();
+  toast(state.showAns ? "答案已显示（可以当答案卷用）" : "答案已隐藏");
+};
+document.getElementById("btnNote").onclick = ()=>{
+  state.showNote = !state.showNote;
+  saveState(); render();
+};
+document.getElementById("btnSound").onclick = ()=>{
+  state.sound = !state.sound;
+  if(!state.sound) stopVoice();
+  saveState(); syncSoundBtn();
+  document.getElementById("soundChk").checked = state.sound;
+  toast(state.sound ? "已打开声音 · 点题目就能听" : "已静音");
+};
+
+/* 纸张版式按钮：按钮文字表示「点一下会切到哪套」 */
+function syncPaperBtn(){
+  const b = document.getElementById("btnPaper");
+  if(!b) return;
+  const land = state.paper === "landscape";
+  b.textContent = land ? "打印模式" : "横屏模式";
+  b.classList.toggle("on", land);
+}
+function setPaper(mode, silent){
+  if(mode !== "landscape" && mode !== "portrait") return;
+  state.paper = mode;
+  saveState();
+  document.body.classList.toggle("paper-landscape", mode === "landscape");
+  render();
+  if(!silent) toast(mode === "portrait"
+    ? "打印模式 · A4 竖版：打印和导出都用这个版式"
+    : "横屏模式 · A4 横版：适合 iPad 横着看");
+}
+document.getElementById("btnPaper").onclick = ()=>
+  setPaper(state.paper === "landscape" ? "portrait" : "landscape");
+
+/* ============================================================
+   学计算（速查页）
+   ============================================================ */
+function sec(title, sub, body){
+  return '<div class="sec"><h3>' + title + (sub ? "<small>" + sub + "</small>" : "")
+       + "</h3>" + body + "</div>";
+}
+
+function placesHTML(){
+  const cells = [["亿","100000000"],["千万","10000000"],["百万","1000000"],["十万","100000"],
+                 ["万","10000"],["千","1000"],["百","100"],["十","10"],["个","1"]];
+  return '<div class="places">' + cells.map(([n,v],i)=>
+    '<div class="' + (n === "个" || n === "万" || n === "亿" ? "hi" : "") + '"><b>' + n + "</b><i>"
+    + (i < 4 ? "亿级" : i < 8 ? "万级" : "个级") + "</i></div>").join("")
+    + '</div><p class="lead" style="margin:10px 0 0">从右边起，第一位是<b>个位</b>，'
+    + '四位一级。读大数先分级：<code>3 8000 0000</code> 读作三亿八千万。</p>';
+}
+
+function mulTableHTML(){
+  let html = '<div style="overflow-x:auto"><table class="mtable fill"><tr><td class="hd">×</td>';
+  for(let j=1;j<=9;j++) html += '<td class="hd">' + j + "</td>";
+  html += "</tr>";
+  for(let i=1;i<=9;i++){
+    html += '<tr><td class="hd">' + i + "</td>";
+    for(let j=1;j<=9;j++){
+      const p = i*j;
+      html += (j <= i)
+        ? '<td data-a="' + i + '" data-b="' + j + '">' + p + "</td>"
+        : '<td class="off"></td>';
+    }
+    html += "</tr>";
+  }
+  html += "</table></div>";
+  return html;
+}
+
+function addTableHTML(){
+  let html = '<div style="overflow-x:auto"><table class="mtable fill"><tr><td class="hd">+</td>';
+  for(let j=1;j<=9;j++) html += '<td class="hd">' + j + "</td>";
+  html += "</tr>";
+  for(let i=1;i<=9;i++){
+    html += '<tr><td class="hd">' + i + "</td>";
+    for(let j=1;j<=9;j++) html += '<td data-say="' + zhInt(i) + "加" + zhInt(j) + "等于" + zhInt(i+j) + '">' + (i+j) + "</td>";
+    html += "</tr>";
+  }
+  html += "</table></div>";
+  return html;
+}
+
+function subTableHTML(){
+  let html = '<div style="overflow-x:auto"><table class="mtable fill"><tr><td class="hd">−</td>';
+  for(let j=1;j<=9;j++) html += '<td class="hd">' + j + "</td>";
+  html += "</tr>";
+  for(let i=1;i<=9;i++){
+    html += '<tr><td class="hd">' + i + "</td>";
+    for(let j=1;j<=9;j++){
+      html += (i >= j)
+        ? '<td data-say="' + zhInt(i) + "减" + zhInt(j) + "等于" + zhInt(i-j) + '">' + (i-j) + "</td>"
+        : '<td class="off"></td>';
+    }
+    html += "</tr>";
+  }
+  html += "</table></div>";
+  return html;
+}
+
+function kouJue(i, j){
+  const a = Math.min(i, j), b = Math.max(i, j), p = a * b;
+  return zhInt(a) + zhInt(b) + (p < 10 ? "得" : "") + zhInt(p);
+}
+
+function renderCalc(){
+  const wrap = document.getElementById("calcWrap");
+  if(wrap.dataset.done) return;
+
+  let html = "";
+  html += sec("数位与读数", "个、十、百、千、万、亿", placesHTML());
+  html += sec("20 以内加法表", "点一格听读法", addTableHTML());
+  html += sec("20 以内减法表", "点一格听读法", subTableHTML());
+  html += sec("乘法口诀表", "点一格读口诀（三角排列，左下角是全部 45 句）", mulTableHTML());
+
+  html += sec("竖式的三条规矩", "为什么孩子竖式总算错", '<ul class="note-list">'
+    + "<li><b>相同数位对齐</b>：个位对个位、十位对十位。小数是<b>小数点对齐</b>，不是末位对齐。</li>"
+    + "<li><b>从个位算起</b>：一位一位往前推，写清算到哪一位了。</li>"
+    + "<li><b>满十进一 / 不够减退一当十</b>：进位的小 1 一定要写在上一行，退位点别忘了点。</li>"
+    + "</ul>");
+
+  html += sec("凑十法 · 破十法", "20 以内加减的核心，点下面两个例子看图示", ''
+    + '<div class="chips">'
+    + '<button class="chip-k" data-demo="9+8">9 + 8</button>'
+    + '<button class="chip-k" data-demo="13-9">13 − 9</button>'
+    + '<button class="chip-k" data-demo="8+7">8 + 7</button>'
+    + '<button class="chip-k" data-demo="15-7">15 − 7</button>'
+    + "</div>"
+    + '<p class="lead" style="margin:12px 0 0"><b>凑十</b>：看大数、拆小数，先凑成 10。9 + 8：9 要 1，'
+    + "8 分成 1 和 7；9 + 1 = 10，10 + 7 = 17。<br>"
+    + "<b>破十</b>：个位不够减，先把 10 破开。13 − 9：10 − 9 = 1，1 + 3 = 4。</p>");
+
+  html += sec("运算顺序", "混合运算先算谁", '<ul class="note-list">'
+    + "<li>只有加减，或只有乘除：<b>从左往右</b>算。</li>"
+    + "<li>有加减也有乘除：<b>先乘除，后加减</b>。</li>"
+    + "<li>有小括号：<b>先算括号里面</b>。括号里也要按上面的顺序。</li>"
+    + "</ul>");
+
+  /* 单位换算速查（数据来自 data/tables.json 的第一节） */
+  const t0 = (TABLES.sections[0] || {rows:[]});
+  html += sec("单位换算速查", "进率记牢，比背公式管用", '<div style="overflow-x:auto">'
+    + '<table class="mtable unit"><tr><td class="hd">类别</td><td class="hd">进率</td><td class="hd">说明</td></tr>'
+    + t0.rows.map(r=>'<tr><td class="hd" style="font-family:var(--font-hei)">' + escapeHtml(r[0])
+        + '</td><td style="font-family:var(--font-hei);text-align:left;padding:5px 8px">' + escapeHtml(r[1])
+        + '</td><td style="font-family:var(--font-hei);text-align:left;padding:5px 8px;color:#6d675a">' + escapeHtml(r[2])
+        + "</td></tr>").join("")
+    + "</table></div>");
+
+  html += sec("最容易错的地方", "对号入座看看踩过哪几条", '<ul class="note-list">'
+    + "<li><b>0 不能作除数</b>：5 ÷ 0 没有意义，0 ÷ 5 = 0。</li>"
+    + "<li><b>余数必须比除数小</b>：17 ÷ 5 = 3……2，写成 2……7 就错了。</li>"
+    + "<li><b>面积带平方单位</b>：周长是 26 <b>米</b>，面积是 54 <b>平方米</b>，别混。</li>"
+    + "<li><b>分数加减先通分</b>：分母不同不能直接加分子。</li>"
+    + "<li><b>求一个数的几倍用乘法</b>，求「是几倍」用除法。</li>"
+    + "<li><b>百分数不带单位</b>：25% 表示关系，不能写成 25% 元。</li>"
+    + "</ul>");
+
+  wrap.innerHTML = html;
+  wrap.dataset.done = "1";
+
+  wrap.querySelectorAll(".mtable td[data-a]").forEach(td=>{
+    td.onclick = ()=>{
+      const i = +td.dataset.a, j = +td.dataset.b;
+      speak(kouJue(i, j));
+      flashSay(td);
+    };
+  });
+  wrap.querySelectorAll(".mtable td[data-say]").forEach(td=>{
+    td.onclick = ()=>{ speak(td.dataset.say); flashSay(td); };
+  });
+  wrap.querySelectorAll("[data-demo]").forEach(b=>{
+    b.onclick = ()=>{
+      const p = b.dataset.demo;
+      const m = p.match(/^(\d+)([+\-−])(\d+)$/);
+      if(!m) return;
+      const op = m[2] === "−" ? "-" : m[2];
+      openDemo({p: m[1] + op + m[3], a: String(op === "+" ? +m[1] + +m[3] : +m[1] - +m[3])});
+    };
+  });
+}
+
+/* ============================================================
+   应用题
+   ============================================================ */
+let apGrade = 1;
+let apOpen = {};        /* "年级:第几题" -> {s:思路展开, a:答案展开} */
+let apPlaying = -1;     /* 正在连读的题号，-1 = 没在读 */
+
+function apGradeOf(){
+  return APPLY.grades.find(g=>+g.grade === apGrade) || APPLY.grades[0] || null;
+}
+
+/* 每道题各自记展开状态，切年级再回来还是原样 */
+function apSt(i){
+  const k = apGrade + ":" + i;
+  return apOpen[k] || (apOpen[k] = {s:false, a:false});
+}
+
+function apCardHTML(a, i, g){
+  const st = apSt(i);
+  const q = a.q.map((s, k)=>
+    '<div class="ap-line" data-say="' + escapeHtml(s) + '">'
+    + '<span class="tag">' + (k+1) + "</span>" + escapeHtml(s) + "</div>").join("");
+  /* 思路 / 答案都放右栏：展开时往右长，不往下顶，题干始终留在原处 */
+  return '<article class="ap-sheet' + (st.s || st.a ? " split" : "") + '" data-i="' + i + '">'
+    + '<div class="ap-main">'
+      + '<div class="ap-head">'
+        + '<span class="ap-no">' + (i+1) + "</span>"
+        + "<h3>" + escapeHtml(a.title) + "</h3>"
+        + (a.unit ? '<span class="u">' + escapeHtml(a.unit) + "</span>" : "")
+      + "</div>"
+      + '<div class="ap-q">' + q + "</div>"
+      + '<div class="ap-btns">'
+        + '<button data-act="s" class="' + (st.s ? "on" : "") + '">'
+          + (st.s ? "收起思路" : "解题思路") + "</button>"
+        + '<button data-act="a" class="' + (st.a ? "on" : "") + '">'
+          + (st.a ? "收起答案" : "看答案") + "</button>"
+        + '<button data-act="r">' + (apPlaying === i ? "停止" : "朗读") + "</button>"
+      + "</div>"
+    + "</div>"
+    + '<div class="ap-side">'
+      + '<div class="ap-block' + (st.s ? " on" : "") + '"><h4>解题思路</h4><ol>'
+        + a.steps.map(x=>"<li>" + escapeHtml(x) + "</li>").join("") + "</ol></div>"
+      + '<div class="ap-ans' + (st.a ? " on" : "") + '">' + escapeHtml(a.a) + "</div>"
+    + "</div>"
+    + "</article>";
+}
+
+/* 刷新每题「朗读 / 停止」按钮的文字 */
+function setApPlayLabel(){
+  document.querySelectorAll(".ap-btns button[data-act=r]").forEach(b=>{
+    const card = b.closest(".ap-sheet");
+    if(!card) return;
+    const on = apPlaying >= 0 && +card.dataset.i === apPlaying;
+    b.textContent = on ? "停止" : "朗读";
+    b.classList.toggle("on", on);
+  });
+}
+
+/* 顶部两个「全部展开 / 收起」按钮的文字 */
+function syncApActions(){
+  const g = apGradeOf();
+  const q = document.getElementById("apQ"), a = document.getElementById("apA");
+  if(!q || !a) return;
+  if(!g || !g.items.length){ q.textContent = "全部展开思路"; a.textContent = "全部展开答案"; return; }
+  let allS = true, allA = true;
+  g.items.forEach((_, i)=>{ const st = apSt(i); if(!st.s) allS = false; if(!st.a) allA = false; });
+  q.textContent = allS ? "收起全部思路" : "全部展开思路";
+  a.textContent = allA ? "收起全部答案" : "全部展开答案";
+  q.classList.toggle("on", allS);
+  a.classList.toggle("on", allA);
+}
+
+function renderApply(){
+  const gb = document.getElementById("apGrades");
+  const sheet = document.getElementById("apSheet");
+  if(!APPLY.grades.length){
+    gb.innerHTML = "";
+    sheet.innerHTML = '<div class="ap-empty">没读到应用题，检查 data/apply.json（本地双击打开时还需要 data/apply.js）。</div>';
+    return;
+  }
+  gb.innerHTML = APPLY.grades.map(g=>
+    '<button data-g="' + g.grade + '" class="' + (+g.grade === apGrade ? "on" : "") + '">'
+    + escapeHtml(g.name) + " · " + g.items.length + " 题</button>").join("");
+  gb.querySelectorAll("button").forEach(b=>{
+    b.onclick = ()=>{ apGrade = +b.dataset.g; stopSeq(); renderApply(); };
+  });
+
+  const g = apGradeOf();
+  if(!g) return;
+
+  /* 一个年级的题全部铺开，不再一次只看一篇 */
+  sheet.innerHTML = '<div class="ap-list">'
+    + g.items.map((a, i)=>apCardHTML(a, i, g)).join("") + "</div>";
+
+  /* 点句子朗读 */
+  sheet.querySelectorAll(".ap-line").forEach(el=>{
+    el.onclick = ()=>{
+      stopSeq();
+      speak(el.dataset.say);
+      el.classList.add("say");
+      setTimeout(()=>el.classList.remove("say"), 900);
+    };
+  });
+
+  /* 每题自己的「解题思路 / 看答案 / 朗读」——只动这一张卡，不重绘整页 */
+  sheet.querySelectorAll(".ap-sheet").forEach(card=>{
+    const i = +card.dataset.i, art = g.items[i];
+    card.querySelectorAll(".ap-btns button").forEach(b=>{
+      b.onclick = ()=>{
+        const act = b.dataset.act;
+        if(act === "r"){
+          if(seqPlaying && apPlaying === i){ stopSeq(); return; }
+          stopSeq();
+          if(!state.sound){ toast("声音是关着的，先点顶部「声音开」"); return; }
+          apPlaying = i;
+          playSeq(art.q);
+          setApPlayLabel();
+          return;
+        }
+        const st = apSt(i);
+        st[act] = !st[act];
+        card.querySelector(act === "s" ? ".ap-block" : ".ap-ans").classList.toggle("on", st[act]);
+        card.classList.toggle("split", st.s || st.a);
+        b.classList.toggle("on", st[act]);
+        b.textContent = act === "s" ? (st[act] ? "收起思路" : "解题思路")
+                                    : (st[act] ? "收起答案" : "看答案");
+        syncApActions();
+      };
+    });
+  });
+  syncApActions();
+}
+
+/* 全部展开 / 收起 */
+document.getElementById("apQ").onclick = ()=>{
+  const g = apGradeOf(); if(!g) return;
+  let all = g.items.every((_, i)=>apSt(i).s);
+  g.items.forEach((_, i)=>{ apSt(i).s = !all; });
+  renderApply();
+};
+document.getElementById("apA").onclick = ()=>{
+  const g = apGradeOf(); if(!g) return;
+  let all = g.items.every((_, i)=>apSt(i).a);
+  g.items.forEach((_, i)=>{ apSt(i).a = !all; });
+  renderApply();
+};
+document.getElementById("apPrint").onclick = ()=>window.print();
+
+/* 顺序朗读：一句读完接下一句 */
+let seqQueue = [], seqPlaying = false, seqTimer = null;
+function stopSeq(){
+  seqQueue = []; seqPlaying = false;
+  clearTimeout(seqTimer);
+  const el = document.getElementById("voiceEl");
+  if(el) el.onended = null;
+  stopVoice();
+  document.querySelectorAll(".ap-line.say").forEach(x=>x.classList.remove("say"));
+  apPlaying = -1;
+  setApPlayLabel();
+}
+function playSeq(list){
+  seqQueue = list.slice();
+  seqPlaying = true;
+  stepSeq();
+}
+function stepSeq(){
+  if(!seqQueue.length){ stopSeq(); return; }
+  const text = seqQueue.shift();
+  document.querySelectorAll(".ap-line.say").forEach(x=>x.classList.remove("say"));
+  const line = [...document.querySelectorAll(".ap-line")].find(x=>x.dataset.say === text);
+  if(line) line.classList.add("say");
+  const rel = AUDIO_TEXTS[text];
+  if(rel){
+    const el = audioEl();
+    el.onended = ()=>{ el.onended = null; seqTimer = setTimeout(stepSeq, 240); };
+    playAudioUrl(blobCache.get(rel) || (AUDIO_DIR + rel), rel, text);
+  }else{
+    speakTTS(text);
+    seqTimer = setTimeout(stepSeq, 700 + text.length * 160);
+  }
+}
+
+/* ============================================================
+   加题
+   ============================================================ */
+const addInput = document.getElementById("addInput");
+let lastAdd = null;
+
+function parseLine(line){
+  let s = String(line).trim()
+    .replace(/[＝]/g, "=").replace(/[＋]/g, "+").replace(/[－—]/g, "-")
+    .replace(/[＊xX]/g, "×").replace(/[／]/g, "/").replace(/[（]/g, "(").replace(/[）]/g, ")");
+  s = s.replace(/[=＝]\s*$/, "").trim();
+  if(!s) return null;
+  if(/^[\d+\-×÷/().\s]+$/.test(s)){
+    const v = evalExpr(s);
+    if(v == null) return null;
+    return {p: s.replace(/\s+/g, ""), a: trimNum(v), s: readProblem(s)};
+  }
+  /* 带空格的比大小：7 ○ 5 */
+  if(/^\d+\s*[○<>]\s*\d+$/.test(s)){
+    const m = s.match(/^(\d+)\s*([○<>])\s*(\d+)$/);
+    const a = +m[1], b = +m[3];
+    return {p: m[1] + "○" + m[3], a: a > b ? ">" : (a < b ? "<" : "="),
+            s: zhNum(m[1]) + "和" + zhNum(m[3]) + "比大小"};
+  }
+  return null;
+}
+
+function analyzeAdd(){
+  const raw = String(addInput.value).split(/[\n\r]+/).map(x=>x.trim()).filter(Boolean);
+  const parsed = [], bad = [];
+  raw.forEach(line=>{
+    const it = parseLine(line);
+    if(it) parsed.push(it); else bad.push(line);
+  });
+  const pool = new Set([...state.custom.map(x=>x.p)]);
+  const seen = new Set();
+  const fresh = [];
+  parsed.forEach(it=>{
+    if(pool.has(it.p) || seen.has(it.p)) return;
+    seen.add(it.p); fresh.push(it);
+  });
+  const dup = parsed.length - fresh.length;
+  return {parsed, fresh, dup, bad};
+}
+
+function refreshAdd(){
+  if(!addInput) return;
+  const {parsed, fresh, dup, bad} = analyzeAdd();
+  document.getElementById("addLive").innerHTML =
+      "识别 <b>" + parsed.length + "</b> 题"
+    + " · 新增 <span style='color:#12805c'><b>" + fresh.length + "</b></span>"
+    + " · 已有 <b>" + dup + "</b>"
+    + (bad.length ? " · <span style='color:#b45309'>看不懂 " + bad.length + " 行</span>" : "");
+  const box = document.getElementById("addChips");
+  if(!parsed.length){
+    box.innerHTML = '<span class="mini">这里会列出准备加入的题和算出来的答案</span>';
+  }else{
+    box.innerHTML = fresh.map(it=>'<span class="mini new">' + escapeHtml(it.p) + " = " + escapeHtml(it.a) + "</span>").join("")
+      + (bad.length ? bad.map(l=>'<span class="mini warn" title="只认 + - × ÷ 和小括号">' + escapeHtml(l) + "</span>").join("") : "");
+  }
+  document.getElementById("addSave").disabled = fresh.length === 0;
+  document.getElementById("addUndo").disabled = !lastAdd;
+}
+addInput.addEventListener("input", refreshAdd);
+addInput.addEventListener("keydown", (e)=>{
+  if((e.ctrlKey || e.metaKey) && e.key === "Enter"){ e.preventDefault(); doAdd(false); }
+});
+
+function doAdd(go){
+  const {fresh} = analyzeAdd();
+  if(!fresh.length){ toast("没有可新增的题——都加过了"); return; }
+  lastAdd = {custom: state.custom.slice()};
+  const pos = document.getElementById("addPos").value;
+  state.custom = pos === "start" ? fresh.concat(state.custom) : state.custom.concat(fresh);
+  state.scope = "custom";
+  state.pageIndex = 0;
+  saveState();
+  initScope();
+  addInput.value = "";
+  refreshAdd();
+  toast("已加入 " + fresh.length + " 道题 · 自定义题共 " + state.custom.length + " 道");
+  if(go) setView("drill"); else render();
+}
+document.getElementById("addSave").onclick = ()=>doAdd(false);
+document.getElementById("addSaveGo").onclick = ()=>doAdd(true);
+document.getElementById("addClear").onclick = ()=>{ addInput.value = ""; refreshAdd(); addInput.focus(); };
+document.getElementById("addUndo").onclick = ()=>{
+  if(!lastAdd) return;
+  state.custom = lastAdd.custom;
+  lastAdd = null;
+  saveState(); initScope(); refreshAdd(); render();
+  toast("已撤销上次添加");
+};
+
+/* ---------- 按范围自动出题 ---------- */
+let genCache = [];
+function refreshGenChips(){
+  const box = document.getElementById("genChips");
+  if(!genCache.length){ box.innerHTML = ""; return; }
+  box.innerHTML = genCache.slice(0, 60).map(it=>
+    '<span class="mini new">' + escapeHtml(it.p) + " = " + escapeHtml(it.a) + "</span>").join("")
+    + (genCache.length > 60 ? '<span class="mini">…还有 ' + (genCache.length - 60) + " 道</span>" : "");
+}
+document.getElementById("genMake").onclick = ()=>{
+  const kind = document.getElementById("genKind").value;
+  const lo = Math.max(0, +document.getElementById("genMin").value || 1);
+  const hi = Math.max(lo + 1, +document.getElementById("genMax").value || 20);
+  const count = Math.min(200, Math.max(1, +document.getElementById("genCount").value || 40));
+  const rnd = mulberry32(Math.floor(Math.random() * 1e9));
+  const pick = (a, b)=> a + Math.floor(rnd() * (b - a + 1));
+  const out = [], seen = new Set();
+  let guard = 0;
+  while(out.length < count && guard++ < count * 60){
+    let p = "", a = null;
+    if(kind === "as"){
+      const x = pick(lo, hi), y = pick(lo, hi);
+      if(rnd() < 0.5){ p = x + "+" + y; a = x + y; }
+      else { const m = Math.max(x, y), n = Math.min(x, y); p = m + "-" + n; a = m - n; }
+    }else if(kind === "md"){
+      const x = pick(Math.max(1, Math.min(9, lo)), Math.min(9, hi));
+      const y = pick(1, 9);
+      if(rnd() < 0.5){ p = x + "×" + y; a = x * y; }
+      else { p = (x*y) + "÷" + x; a = y; }
+    }else if(kind === "m1"){
+      const x = pick(lo, hi), y = pick(2, 9);
+      p = x + "×" + y; a = x * y;
+    }else if(kind === "m2"){
+      const x = pick(Math.max(10, lo), Math.max(11, hi)), y = pick(Math.max(10, lo), Math.max(11, hi));
+      p = x + "×" + y; a = x * y;
+    }else if(kind === "d1"){
+      const b = pick(2, 9), q = pick(Math.max(1, lo), Math.max(2, hi));
+      p = (b*q) + "÷" + b; a = q;
+    }else{
+      const x = pick(lo, hi), y = pick(2, 9), z = pick(2, 9);
+      const pat = pick(1, 3);
+      if(pat === 1){ p = x + " + " + y + " × " + z; a = x + y*z; }
+      else if(pat === 2){ p = x + " × " + y + " - " + z; a = x*y - z; }
+      else { p = "(" + x + " + " + y + ") × " + z; a = (x+y)*z; }
+      if(a < 0) continue;
+    }
+    if(seen.has(p)) continue;
+    seen.add(p);
+    out.push({p, a: trimNum(a), s: readProblem(p)});
+  }
+  genCache = out;
+  addInput.value = out.map(it=>it.p).join("\n");
+  refreshAdd();
+  refreshGenChips();
+  toast("已生成 " + out.length + " 道，点「加入口算表」收下");
+};
+
+/* ============================================================
+   题库抽屉
+   ============================================================ */
+const drawer = document.getElementById("drawer");
+const maskEl = document.getElementById("mask");
+function openDrawer(){ refreshDrawer(); drawer.classList.add("on"); maskEl.classList.add("on"); }
+function closeDrawer(){ drawer.classList.remove("on"); maskEl.classList.remove("on"); }
+document.getElementById("btnManage").onclick = openDrawer;
+document.getElementById("closeDrawer").onclick = closeDrawer;
+maskEl.onclick = closeDrawer;
+
+function refreshDrawer(){
+  document.getElementById("customInput").value = state.custom.map(x=>x.p).join("\n");
+  document.getElementById("customStat").textContent = "当前 " + state.custom.length + " 道自定义题";
+  document.getElementById("gridChk").checked = state.grid;
+  document.getElementById("soundChk").checked = state.sound;
+  document.getElementById("autoChk").checked = state.autoNext;
+  document.getElementById("aboutStat").innerHTML =
+      "教材：人教版小学数学 1~6 年级（成都主城区现行）<br>"
+    + "题库：" + BOOKS.books.length + " 册 / "
+    + BOOKS.books.reduce((a,b)=>a + b.units.length, 0) + " 单元 / "
+    + BOOKS.books.reduce((a,b)=>a + b.units.reduce((x,u)=>x + u.items.length, 0), 0) + " 道题<br>"
+    + "知识点：" + KNOW.items.length + " 条 · 应用题："
+    + APPLY.grades.reduce((a,g)=>a + g.items.length, 0) + " 道<br>"
+    + "语音：" + (AUDIO_OK ? Object.keys(AUDIO_TEXTS).length + " 条" : "未加载（退回系统语音）");
+  const bar = document.getElementById("chipBar");
+  bar.innerHTML = state.custom.length
+    ? state.custom.map((it,i)=>'<span class="chip">' + escapeHtml(it.p) + '<i data-i="' + i + '">×</i></span>').join("")
+    : '<span class="mini">还没有自定义题</span>';
+  bar.querySelectorAll("i").forEach(el=>{
+    el.onclick = ()=>{
+      state.custom.splice(+el.dataset.i, 1);
+      saveState(); initScope(); refreshDrawer();
+      if(view === "drill") render();
+    };
+  });
+}
+document.getElementById("saveCustom").onclick = ()=>{
+  const lines = document.getElementById("customInput").value.split(/[\n\r]+/);
+  const out = [];
+  lines.forEach(l=>{
+    const it = parseLine(l);
+    if(it) out.push(it);
+  });
+  state.custom = out;
+  saveState(); initScope(); refreshDrawer();
+  if(view === "drill") render();
+  toast("自定义题已保存：" + out.length + " 道");
+};
+document.getElementById("resetCustom").onclick = ()=>{
+  if(!confirm("清空全部自定义题？")) return;
+  state.custom = [];
+  saveState(); initScope(); refreshDrawer();
+  if(view === "drill") render();
+};
+document.getElementById("gridChk").onchange = (e)=>{
+  state.grid = e.target.checked; saveState(); render();
+};
+document.getElementById("soundChk").onchange = (e)=>{
+  state.sound = e.target.checked;
+  if(!state.sound) stopVoice();
+  saveState(); syncSoundBtn();
+};
+document.getElementById("autoChk").onchange = (e)=>{
+  state.autoNext = e.target.checked; saveState();
+};
+document.getElementById("exportBtn").onclick = ()=>{
+  const data = JSON.stringify({
+    custom: state.custom, wrong: state.wrong, scope: state.scope,
+    paper: state.paper, showAns: state.showAns
+  }, null, 2);
+  const blob = new Blob([data], {type:"application/json"});
+  const a = document.createElement("a");
+  a.download = "数学卡片_备份.json";
+  a.href = URL.createObjectURL(blob);
+  a.click();
+  setTimeout(()=>URL.revokeObjectURL(a.href), 3000);
+};
+document.getElementById("importBtn").onclick = ()=>document.getElementById("fileInput").click();
+document.getElementById("fileInput").onchange = (e)=>{
+  const f = e.target.files[0];
+  if(!f) return;
+  const r = new FileReader();
+  r.onload = ()=>{
+    try{
+      const s = JSON.parse(r.result);
+      if(Array.isArray(s.custom)) state.custom = s.custom.filter(x=>x && x.p);
+      if(Array.isArray(s.wrong)) state.wrong = s.wrong.filter(x=>x && x.p);
+      if(typeof s.showAns === "boolean") state.showAns = s.showAns;
+      saveState(); initScope(); refreshDrawer(); render();
+      alert("导入成功");
+    }catch(err){ alert("文件格式不对"); }
+  };
+  r.readAsText(f, "utf-8");
+};
+</script>
+<script>
+/* ============================================================
+   口算闯关：纸上那 40 道题，变成能答、能判、能计时的练习
+   ============================================================ */
+let drill = null;
+
+function normAns(s){
+  return String(s == null ? "" : s).trim()
+    .replace(/[０-９]/g, c=> String.fromCharCode(c.charCodeAt(0) - 65248))
+    .replace(/[．。]/g, ".").replace(/[…⋯]+/g, "…")
+    .replace(/[＞]/g, ">").replace(/[＜]/g, "<").replace(/[＝]/g, "=")
+    .replace(/\s+/g, "").replace(/^x=/i, "").replace(/^x/, "");
+}
+function isRight(mine, ans){
+  const a = normAns(mine), b = normAns(ans);
+  if(!a) return false;
+  if(a === b) return true;
+  const fa = parseFloat(a), fb = parseFloat(b);
+  if(!isNaN(fa) && !isNaN(fb) && !/[\/:…]/.test(a) && Math.abs(fa - fb) < 1e-9) return true;
+  return false;
+}
+
+function startPractice(items){
+  items = (items || []).filter(it=> it && it.p);
+  if(!items.length){ toast("这一张还没有题"); return; }
+  drill = {items, i:0, right:0, miss:0, streak:0, val:"", locked:false,
+           mode:"answer", t0:Date.now(), timer:null};
+  document.getElementById("drillOverlay").classList.add("on");
+  document.getElementById("ovPlay").style.display = "";
+  document.getElementById("ovResult").style.display = "none";
+  clearInterval(drill.timer);
+  drill.timer = setInterval(updateTimer, 400);
+  updateTimer();
+  openQ();
+}
+
+function updateTimer(){
+  if(!drill) return;
+  const s = Math.floor((Date.now() - drill.t0) / 1000);
+  document.getElementById("ovTimer").textContent = Math.floor(s/60) + ":" + String(s%60).padStart(2,"0");
+}
+
+function openQ(){
+  const it = drill.items[drill.i];
+  drill.val = ""; drill.locked = false; drill.mode = "answer";
+  document.getElementById("ovProg").textContent = "第 " + (drill.i+1) + " / " + drill.items.length + " 题";
+  document.getElementById("ovStreak").textContent = "连对 " + drill.streak;
+  const msg = document.getElementById("ovMsg");
+  msg.textContent = ""; msg.className = "ov-msg";
+  const q = document.getElementById("ovQ");
+  q.className = "ov-q";
+  q.innerHTML = qHTML(it);
+  buildPad(String(it.a));
+  setInput("");
+  document.getElementById("ovBar").style.width = (drill.i / drill.items.length * 100) + "%";
+  setTimeout(()=>{ if(drill && drill.items[drill.i] === it) speak(it.s || readProblem(it.p)); }, 140);
+  const rel = AUDIO_TEXTS[it.s];
+  if(rel) prefetchRels([rel]);
+}
+
+function qHTML(it){
+  const was = state.showAns;
+  state.showAns = false;
+  const parts = drillParts(it);
+  state.showAns = was;
+  return parts.map(p=> partHTML(p, true)).join("");
+}
+
+function buildPad(ans){
+  const pad = document.getElementById("ovPad");
+  if(ans === ">" || ans === "<" || ans === "="){
+    pad.className = "keypad cmp";
+    pad.innerHTML = ["＞","＝","＜"].map(k=>
+      '<button data-k="' + k + '">' + k + "</button>").join("");
+    pad.querySelectorAll("button").forEach(b=> b.onclick = ()=> padKey(b.dataset.k));
+    return;
+  }
+  pad.className = "keypad";
+  const need = [];
+  if(ans.indexOf(".") >= 0) need.push(".");
+  if(ans.indexOf("/") >= 0) need.push("/");
+  if(ans.indexOf(":") >= 0) need.push(":");
+  if(ans.indexOf("…") >= 0) need.push("…");
+  let keys = "1234567890".split("").concat(need);
+  let html = keys.map(k=>'<button data-k="' + k + '">' + k + "</button>").join("");
+  html += '<button data-k="⌫" class="del">⌫</button>';
+  html += '<button data-k="ok" class="go" style="grid-column:1/-1">确定</button>';
+  pad.innerHTML = html;
+  pad.querySelectorAll("button").forEach(b=> b.onclick = ()=> padKey(b.dataset.k));
+}
+
+function setInput(v){
+  const el = document.getElementById("ovInput");
+  el.textContent = v || "输入答案";
+  el.classList.toggle("empty", !v);
+}
+
+function padKey(k){
+  if(!drill || drill.locked) return;
+  if(k === "ok"){ submit(); return; }
+  if(k === "⌫"){ drill.val = drill.val.slice(0, -1); }
+  else if(k.length === 1){ drill.val += k; }
+  setInput(drill.val);
+}
+
+function submit(){
+  if(!drill) return;
+  if(drill.mode === "next"){ nextQ(); return; }
+  if(!drill.val) return;
+  const it = drill.items[drill.i];
+  drill.locked = true;
+  const ok = isRight(drill.val, it.a);
+  const q = document.getElementById("ovQ");
+  const msg = document.getElementById("ovMsg");
+  if(ok){
+    drill.right++; drill.streak++;
+    q.classList.add("ok");
+    msg.className = "ov-msg ok";
+    msg.textContent = drill.streak >= 3 ? "对！连对 " + drill.streak + " 题" : "对！";
+    document.getElementById("ovStreak").textContent = "连对 " + drill.streak;
+    if(state.autoNext){
+      setTimeout(nextQ, 620);
+    }else{
+      drill.mode = "next";
+      drill.locked = false;
+      const go = document.querySelector('#ovPad button[data-k="ok"]');
+      if(go) go.textContent = "下一题";
+    }
+  }else{
+    drill.miss++; drill.streak = 0;
+    q.classList.add("bad");
+    msg.className = "ov-msg bad";
+    msg.textContent = "答案是 " + it.a + "　（你写的是 " + drill.val + "）";
+    document.getElementById("ovStreak").textContent = "连对 0";
+    addWrong(it, drill.val);
+    setTimeout(nextQ, 1750);
+  }
+}
+
+function nextQ(){
+  if(!drill) return;
+  drill.i++;
+  if(drill.i >= drill.items.length){ finishPractice(); return; }
+  openQ();
+}
+
+function finishPractice(){
+  clearInterval(drill.timer);
+  const total = drill.items.length;
+  const right = drill.right, miss = drill.miss;
+  const rate = total ? Math.round(right / total * 100) : 0;
+  const sec = Math.floor((Date.now() - drill.t0) / 1000);
+  document.getElementById("ovPlay").style.display = "none";
+  document.getElementById("ovResult").style.display = "";
+  document.getElementById("ovTitle").textContent =
+    rate === 100 ? "全对，厉害！" : rate >= 80 ? "做得不错" : "再练一遍会更好";
+  document.getElementById("ovRate").textContent = rate + "%";
+  document.getElementById("ovRight").textContent = right;
+  document.getElementById("ovMiss").textContent = miss;
+  document.getElementById("ovTime").textContent = Math.floor(sec/60) + ":" + String(sec%60).padStart(2,"0");
+  const per = right ? Math.round(sec / right * 10) / 10 : 0;
+  document.getElementById("ovTip").textContent =
+    "平均每题 " + per + " 秒" + (miss ? " · 做错的题已经收进错题本" : "");
+  document.getElementById("ovBar").style.width = "100%";
+}
+
+function closeDrill(){
+  if(drill) clearInterval(drill.timer);
+  drill = null;
+  document.getElementById("drillOverlay").classList.remove("on");
+  stopVoice();
+}
+
+document.getElementById("btnPractice").onclick = ()=>{
+  if(view !== "drill"){ toast("「学计算」「知识表」是看的页面，口算表才能练"); return; }
+  const p = pages[state.pageIndex];
+  startPractice(p ? p.items : []);
+};
+document.getElementById("ovClose").onclick = closeDrill;
+document.getElementById("ovBack").onclick = closeDrill;
+document.getElementById("ovAgain").onclick = ()=>{
+  if(drill) startPractice(drill.items.map(x=>x));
+};
+document.getElementById("ovWrongList").onclick = ()=>{ openWrong(); };
+document.getElementById("ovSkip").onclick = ()=>{ if(drill && !drill.locked) nextQ(); };
+document.getElementById("ovRead").onclick = ()=>{
+  if(!drill) return;
+  const it = drill.items[drill.i];
+  speak(it.s || readProblem(it.p));
+};
+document.getElementById("ovDemo").onclick = ()=>{
+  if(!drill) return;
+  openDemo(drill.items[drill.i]);
+};
+document.addEventListener("keydown", (e)=>{
+  if(!drill) return;
+  if(e.target.tagName === "TEXTAREA" || e.target.tagName === "INPUT") return;
+  if(/^[0-9]$/.test(e.key)){ padKey(e.key); e.preventDefault(); }
+  if(e.key === "." || e.key === "/" || e.key === ":" ){ padKey(e.key); e.preventDefault(); }
+  if(e.key === "Backspace"){ padKey("⌫"); e.preventDefault(); }
+  if(e.key === "Enter"){ padKey("ok"); e.preventDefault(); }
+  if(e.key === ">" || e.key === "<" || e.key === "="){ padKey(e.key === ">" ? "＞" : e.key === "<" ? "＜" : "＝"); e.preventDefault(); }
+  if(e.key === "Escape") closeDrill();
+});
+
+/* ============================================================
+   演示：数轴 / 十格阵 / 竖式 / 分数条 / 口诀表
+   ------------------------------------------------------------
+   点一道题先看见「为什么」，再回到题上算 —— 这是数学和识字最大的不同。
+   ============================================================ */
+let lastDemo = null;
+
+function openDemo(item){
+  const d = pickDemo(item);
+  lastDemo = d;
+  document.getElementById("demoTitle").textContent = d.title;
+  document.getElementById("demoSub").textContent = d.sub || "";
+  const stage = document.getElementById("demoStage");
+  stage.innerHTML = d.html;
+  document.getElementById("demoNote").innerHTML = d.note || "";
+  document.getElementById("demoOverlay").classList.add("on");
+  if(d.play) setTimeout(()=>{ try{ d.play(stage); }catch(e){} }, 80);
+}
+document.getElementById("demoClose").onclick = ()=>{
+  document.getElementById("demoOverlay").classList.remove("on");
+};
+document.getElementById("demoReplay").onclick = ()=>{
+  if(!lastDemo) return;
+  const stage = document.getElementById("demoStage");
+  stage.innerHTML = lastDemo.html;
+  if(lastDemo.play) setTimeout(()=>{ try{ lastDemo.play(stage); }catch(e){} }, 60);
+};
+document.getElementById("demoOverlay").onclick = (e)=>{
+  if(e.target.id === "demoOverlay") document.getElementById("demoOverlay").classList.remove("on");
+};
+
+function pickDemo(item){
+  const p = String(item.p || ""), ans = String(item.a || "");
+  let m;
+  if((m = p.match(/^(\d+)([+\-])(\d+)$/))){
+    const x = +m[1], y = +m[3], op = m[2];
+    if(op === "+" && x + y <= 20 && x <= 10 && y <= 10) return tenFrame(x, y, "+");
+    if(op === "-" && x <= 20) return tenFrame(x, y, "-");
+    if(x < 100 && (op === "+" ? x + y : x) < 100) return numberLine(x, y, op);
+    return colAddSub(x, y, op);
+  }
+  if((m = p.match(/^(\d+)×(\d+)$/))){
+    const x = +m[1], y = +m[2];
+    if(x <= 9 && y <= 9) return multiTableDemo(x, y);
+    return colMul(x, y);
+  }
+  if((m = p.match(/^(\d+)÷(\d+)$/))) return divDemo(+m[1], +m[2]);
+  if(p.indexOf("/") >= 0) return fracDemo(p, ans);
+  if(p.indexOf("○") >= 0) return cmpLine(p);
+  if(p.indexOf("＿") >= 0) return convDemo(p, ans);
+  if(/^x/.test(p)) return eqDemo(p, ans);
+  return {
+    title:"看这道题", sub:"",
+    html:'<div class="colsum" style="font-size:34px">' + escapeHtml(p) + "</div>",
+    note: (item.s || "") + "　答案：" + escapeHtml(ans)
+  };
+}
+
+/* ---------- 十格阵（凑十 / 破十） ---------- */
+function tenFrame(x, y, op){
+  const isAdd = op === "+";
+  const total = isAdd ? x + y : x;
+  const dot = (n, cls, extra)=> Array.from({length:10}, (_, i)=>
+    '<i class="' + (i < n ? "on " + cls : "") + '"></i>').join("");
+
+  let html = '<div class="tframe">';
+  if(isAdd){
+    html += '<div><div class="ten" data-frame="a">' + dot(x, "") + "</div>"
+          + '<div style="text-align:center;font-size:12px;color:#7b7568;margin-top:4px">先摆 ' + x + " 个</div></div>";
+    html += '<div><div class="ten" data-frame="b">' + dot(y, "blue") + "</div>"
+          + '<div style="text-align:center;font-size:12px;color:#7b7568;margin-top:4px">再添 ' + y + " 个</div></div>";
+  }else{
+    const inFirst = Math.min(10, x);
+    const inSecond = Math.max(0, x - 10);
+    html += '<div><div class="ten" data-frame="a">' + dot(inFirst, "") + "</div></div>";
+    if(inSecond) html += '<div><div class="ten" data-frame="b">' + dot(inSecond, "blue") + "</div></div>";
+  }
+  html += "</div>";
+
+  let note;
+  if(isAdd){
+    const need = 10 - x;
+    note = need > 0 && need <= y
+      ? "<b>凑十法</b>：" + x + " 要 " + need + " 就满十，把 " + y + " 分成 " + need + " 和 " + (y-need)
+        + "。<br>" + x + " + " + need + " = 10，10 + " + (y-need) + " = " + (x+y) + "。"
+      : "<b>直接数</b>：" + x + " 个再添 " + y + " 个，一共 " + (x+y) + " 个。";
+  }else{
+    const left = x - y;
+    note = x > 10
+      ? "<b>破十法</b>：个位 " + (x%10) + " 不够减 " + y + "，先把 10 破开。<br>"
+        + "10 − " + y + " = " + (10-y) + "，" + (10-y) + " + " + (x%10) + " = " + left + "。"
+      : "<b>想加算减</b>：" + y + " 加几等于 " + x + "？" + y + " + " + left + " = " + x
+        + "，所以 " + x + " − " + y + " = " + left + "。";
+  }
+
+  return {
+    title: isAdd ? "十格阵看加法" : "十格阵看减法",
+    sub: x + (isAdd ? " + " : " − ") + y + (isAdd ? " = " + (x+y) : " = " + (x-y)),
+    html, note,
+    play(stage){
+      const dots = [...stage.querySelectorAll(".ten i.on")];
+      dots.forEach(d=> d.style.opacity = "0");
+      dots.forEach((d, i)=> setTimeout(()=>{
+        d.style.transition = "opacity .18s";
+        d.style.opacity = "1";
+      }, 90 * i));
+
+      /* 凑十：把第二格里的 need 个真的「飞」到第一格，孩子看得见 6+4 变成 10 */
+      if(!isAdd) return;
+      const need = Math.min(10 - x, y);
+      if(need <= 0) return;
+      const fa = stage.querySelector('.ten[data-frame="a"]');
+      const fb = stage.querySelector('.ten[data-frame="b"]');
+      if(!fa || !fb) return;
+      const holes = [...fa.querySelectorAll("i:not(.on)")].slice(0, need);
+      /* 从第二格的末尾几个开始搬，剩下的点还是从左上角排满，不留下空洞 */
+      const movers = [...fb.querySelectorAll("i.on")].slice(-need);
+      if(holes.length < need || movers.length < need) return;
+
+      const wait = 90 * dots.length + 340;
+      setTimeout(()=>{
+        const labA = fa.nextElementSibling, labB = fb.nextElementSibling;
+        movers.forEach((m, i)=>{
+          const t = holes[i];
+          const a = m.getBoundingClientRect(), b = t.getBoundingClientRect();
+          const size = Math.max(8, a.width - 8);
+          const fly = document.createElement("div");
+          fly.style.cssText = "position:fixed;z-index:99;pointer-events:none;border-radius:50%;"
+            + "left:" + (a.left + (a.width - size)/2) + "px;top:" + (a.top + (a.height - size)/2) + "px;"
+            + "width:" + size + "px;height:" + size + "px;background:var(--blue);"
+            + "transition:transform .58s cubic-bezier(.34,1.16,.64,1)";
+          document.body.appendChild(fly);
+          m.style.opacity = "0";
+          requestAnimationFrame(()=>{
+            fly.style.transform = "translate(" + (b.left - a.left) + "px," + (b.top - a.top) + "px)";
+          });
+          setTimeout(()=>{ fly.remove(); t.classList.add("on", "blue"); }, 600 + i * 45);
+        });
+        setTimeout(()=>{
+          if(labA) labA.textContent = "第一格满了：10 个";
+          if(labB) labB.textContent = "第二格还剩 " + (y - need) + " 个";
+        }, 640 + need * 45);
+      }, wait);
+    }
+  };
+}
+
+/* ---------- 数轴 ---------- */
+function svgNumberLine(x, y, op){
+  const isAdd = op === "+";
+  const res = isAdd ? x + y : x - y;
+  const hiRaw = Math.max(x, res, 10);
+  const step = hiRaw <= 20 ? 1 : hiRaw <= 50 ? 5 : hiRaw <= 100 ? 10 : 20;
+  const hi = Math.ceil(hiRaw / step) * step + step;
+  const W = 560, H = 150, PL = 26, PR = 26, PY = 108;
+  const sx = v => PL + (v / hi) * (W - PL - PR);
+  const arcY = 44;
+  const a = sx(x), b = sx(res);
+  const mid = (a + b) / 2;
+  let ticks = "";
+  for(let v=0; v<=hi; v+=step){
+    ticks += '<line x1="' + sx(v).toFixed(1) + '" y1="' + (PY-4) + '" x2="' + sx(v).toFixed(1)
+          + '" y2="' + (PY+4) + '" stroke="#b9b3a5"/>'
+          + '<text x="' + sx(v).toFixed(1) + '" y="' + (PY+20) + '" font-size="11" fill="#7b7568" text-anchor="middle">'
+          + v + "</text>";
+  }
+  const path = "M" + a + "," + PY + " Q" + mid + "," + arcY + " " + b + "," + PY;
+  const svg = '<svg viewBox="0 0 ' + W + " " + (H) + '" width="' + W + '" height="' + H + '">'
+    + '<line x1="' + PL + '" y1="' + PY + '" x2="' + (W-PR) + '" y2="' + PY + '" stroke="#333" stroke-width="1.4"/>'
+    + ticks
+    + '<path d="' + path + '" fill="none" stroke="#b45309" stroke-width="2.2" stroke-linecap="round" class="arc"/>'
+    + '<circle cx="' + a + '" cy="' + PY + '" r="5" fill="#20242b"/>'
+    + '<circle cx="' + b + '" cy="' + PY + '" r="5" fill="#c0392b"/>'
+    + '<text x="' + a + '" y="' + (PY-12) + '" font-size="15" fill="#20242b" text-anchor="middle">' + x + "</text>"
+    + '<text x="' + b + '" y="' + (PY-12) + '" font-size="15" fill="#c0392b" text-anchor="middle">' + res + "</text>"
+    + '<text x="' + mid + '" y="' + (arcY-8) + '" font-size="13" fill="#b45309" text-anchor="middle">'
+    + (isAdd ? "往右跳 " + y : "往左跳 " + y) + "</text>"
+    + "</svg>";
+  return {svg, path};
+}
+
+function numberLine(x, y, op){
+  const {svg, path} = svgNumberLine(x, y, op);
+  const isAdd = op === "+";
+  const res = isAdd ? x + y : x - y;
+  return {
+    title: "数轴上看" + (isAdd ? "加法" : "减法"),
+    sub: x + (isAdd ? " + " : " − ") + y + " = " + res,
+    html: '<div class="demo-stage">' + svg + "</div>",
+    note: isAdd
+      ? "<b>加法就是往右跳</b>：从 " + x + " 出发，一小格是一，往右跳 " + y + " 格，正好落在 " + res + "。"
+      : "<b>减法就是往左跳</b>：从 " + x + " 出发，往左跳 " + y + " 格，正好落在 " + res + "。",
+    play(stage){
+      const p = stage.querySelector("path.arc");
+      if(!p) return;
+      const len = p.getTotalLength();
+      p.style.strokeDasharray = len;
+      p.style.strokeDashoffset = len;
+      requestAnimationFrame(()=>{
+        p.style.transition = "stroke-dashoffset 1.1s ease";
+        p.style.strokeDashoffset = "0";
+      });
+    }
+  };
+}
+
+/* ---------- 比大小（数轴） ---------- */
+function cmpLine(p){
+  const m = p.match(/^(-?\d+)○(-?\d+)$/);
+  if(!m) return pickDemo({p:"0+0", a:"0"});
+  const a = +m[1], b = +m[2];
+  const lo = Math.min(0, a, b), hiRaw = Math.max(10, a, b);
+  const step = (hiRaw - lo) <= 20 ? 1 : 5;
+  const W = 560, H = 120, PL = 30, PR = 30, PY = 84;
+  const hi = Math.ceil(hiRaw / step) * step;
+  const sx = v => PL + ((v - lo) / (hi - lo)) * (W - PL - PR);
+  let ticks = "";
+  for(let v=lo; v<=hi; v+=step){
+    ticks += '<line x1="' + sx(v) + '" y1="' + (PY-4) + '" x2="' + sx(v) + '" y2="' + (PY+4) + '" stroke="#b9b3a5"/>'
+          + '<text x="' + sx(v) + '" y="' + (PY+19) + '" font-size="11" fill="#7b7568" text-anchor="middle">' + v + "</text>";
+  }
+  const svg = '<svg viewBox="0 0 ' + W + " " + H + '" width="' + W + '" height="' + H + '">'
+    + '<line x1="' + PL + '" y1="' + PY + '" x2="' + (W-PR) + '" y2="' + PY + '" stroke="#333" stroke-width="1.4"/>'
+    + ticks
+    + '<circle cx="' + sx(a) + '" cy="' + PY + '" r="6" fill="#20242b"/>'
+    + '<circle cx="' + sx(b) + '" cy="' + PY + '" r="6" fill="#1f6fb2"/>'
+    + '<text x="' + sx(a) + '" y="' + (PY-12) + '" font-size="15" text-anchor="middle">' + a + "</text>"
+    + '<text x="' + sx(b) + '" y="' + (PY-12) + '" font-size="15" text-anchor="middle" fill="#1f6fb2">' + b + "</text>"
+    + "</svg>";
+  return {
+    title:"数轴上比大小", sub: a + " 和 " + b,
+    html:'<div class="demo-stage">' + svg + "</div>",
+    note:"<b>数轴上，右边的数总比左边的大。</b>" + a + " 在 " + b + " 的"
+      + (a > b ? "右边" : a < b ? "左边" : "同一点") + "，所以 "
+      + a + (a > b ? " > " : a < b ? " < " : " = ") + b + "。"
+  };
+}
+
+/* ---------- 竖式 ---------- */
+function colSum(a, b, op){
+  const res = op === "+" ? a + b : a - b;
+  const A = String(a), B = String(b), R = String(res);
+  const n = Math.max(A.length, B.length, R.length);
+  const pad = s => s.padStart(n, " ");
+  const pa = pad(A), pb = pad(B), pr = pad(R);
+
+  /* 进位 / 退位标记 */
+  const marks = new Array(n).fill("");
+  if(op === "+"){
+    let carry = 0;
+    for(let i=n-1;i>=0;i--){
+      const s = (+pa[i] || 0) + (+pb[i] || 0) + carry;
+      carry = s >= 10 ? 1 : 0;
+      if(carry && i > 0) marks[i-1] = "1";
+    }
+  }else{
+    let borrow = 0;
+    for(let i=n-1;i>=0;i--){
+      const top = (+pa[i] || 0) - borrow;
+      if(top < (+pb[i] || 0)){ borrow = 1; if(i>0) marks[i-1] = "·"; }
+      else borrow = 0;
+    }
+  }
+
+  const cellsOf = s => s.split("").map((ch, i)=>
+    '<span data-col="' + (n-1-i) + '" style="width:1.05em;text-align:center">'
+    + (ch === " " ? "&nbsp;" : ch) + "</span>").join("");
+  const lead = t => '<span style="width:1.05em;text-align:center;color:#7b7568">' + (t||"") + "</span>";
+
+  const html =
+      '<div class="row" style="height:.95em;font-size:.52em;color:#1f6fb2">' + lead("")
+      + marks.map((m,i)=>'<span data-col="' + (n-1-i) + '" style="width:1.05em;text-align:center">' + (m||"") + "</span>").join("")
+      + "</div>"
+    + '<div class="row">' + lead("") + cellsOf(pa) + "</div>"
+    + '<div class="row">' + lead(op) + cellsOf(pb) + "</div>"
+    + "<hr>"
+    + '<div class="row">' + lead("") + cellsOf(pr) + "</div>";
+  return {html, n};
+}
+
+/* 一位一位往前亮：从个位开始，进位 / 退位那个小记号跟着出现 */
+function playCols(stage){
+  const el = stage.querySelector(".colsum");
+  if(!el) return;
+  const cols = [...new Set([...el.querySelectorAll("[data-col]")].map(x=>+x.dataset.col))]
+    .sort((a,b)=> b - a);
+  cols.forEach((c, k)=>{
+    setTimeout(()=>{
+      el.querySelectorAll('[data-col="' + c + '"]').forEach(x=> x.classList.add("hot"));
+      setTimeout(()=> el.querySelectorAll('[data-col="' + c + '"]').forEach(x=> x.classList.remove("hot")), 600);
+    }, k * 520);
+  });
+}
+
+function colAddSub(a, b, op){
+  const res = op === "+" ? a + b : a - b;
+  const spec = colSum(a, b, op);
+  return {
+    title: "竖式看" + (op === "+" ? "加法" : "减法"),
+    sub: a + " " + op + " " + b + " = " + res,
+    html: '<div class="colsum">' + spec.html + "</div>",
+    note: op === "+"
+      ? "<b>相同数位对齐，从个位加起。</b>哪一位满十，就向前一位进 1（顶上那个蓝色小 1）。"
+      : "<b>相同数位对齐，从个位减起。</b>哪一位不够减，就从前一位退 1 当 10（顶上那个小点）。",
+    play: playCols
+  };
+}
+
+function colMul(x, y){
+  const res = x * y;
+  const ys = String(y);
+  if(ys.length === 1){
+    const n = Math.max(String(x).length, String(res).length);
+    const cellsOf = s => s.padStart(n, " ").split("").map((ch, i)=>
+      '<span data-col="' + (n-1-i) + '" style="width:1.05em;text-align:center">'
+      + (ch === " " ? "&nbsp;" : ch) + "</span>").join("");
+    const lead = t => '<span style="width:1.05em;text-align:center;color:#7b7568">' + (t||"") + "</span>";
+    const html = '<div class="row">' + lead("") + cellsOf(String(x)) + "</div>"
+      + '<div class="row">' + lead("×") + cellsOf(ys) + "</div>"
+      + "<hr>"
+      + '<div class="row">' + lead("") + cellsOf(String(res)) + "</div>";
+    return {
+      title: "竖式看乘法",
+      sub: x + " × " + y + " = " + res,
+      html: '<div class="colsum">' + html + "</div>",
+      note: "<b>从个位乘起，哪一位上的积满几十，就向前一位进几。</b>最后别忘了把进上来的数加上。",
+      play: playCols
+    };
+  }
+  const parts = ys.split("").reverse().map((d, k)=>({d: +d, v: x * (+d) * Math.pow(10, k)}))
+    .filter(p=> p.v);
+  return {
+    title: "两位数相乘，拆开算",
+    sub: x + " × " + y + " = " + res,
+    html: '<div class="colsum" style="font-size:26px">' + x + " × " + y + "</div>",
+    note: "<b>把 " + y + " 拆成 " + ys.split("").map((d,k)=> +d * Math.pow(10, ys.length-1-k)).join(" + ") + "：</b><br>"
+      + parts.map(p=> x + " × " + p.v / x + " = " + p.v).join("<br>")
+      + "<br>加起来：" + parts.map(p=> p.v).join(" + ") + " = " + res
+  };
+}
+
+function divDemo(n, d){
+  const q = Math.floor(n / d), r = n % d;
+  const html = '<div class="colsum" style="font-size:30px">' + n + " ÷ " + d + " = " + q
+    + (r ? " …… " + r : "") + "</div>";
+  const note = r
+    ? "<b>想乘法口诀：</b>" + d + " × " + q + " = " + (d*q) + "，比 " + n + " 小一点，正好；<br>"
+      + n + " − " + (d*q) + " = " + r + "，余数 " + r + " 比除数 " + d + " 小，可以。"
+    : "<b>想乘法口诀：</b>" + d + " 乘几等于 " + n + "？" + d + " × " + q + " = " + n
+      + "，所以商是 " + q + "，正好除尽。";
+  return {
+    title: "除法想口诀",
+    sub: n + " ÷ " + d + " = " + q + (r ? "……" + r : ""),
+    html, note
+  };
+}
+
+function multiTableDemo(i, j){
+  let html = '<div style="overflow-x:auto"><table class="mtable fill"><tr><td class="hd">×</td>';
+  for(let c=1;c<=9;c++) html += '<td class="hd">' + c + "</td>";
+  html += "</tr>";
+  for(let r=1;r<=9;r++){
+    html += '<tr><td class="hd">' + r + "</td>";
+    for(let c=1;c<=9;c++){
+      const on = (c === Math.min(i,j) && r === Math.max(i,j));
+      html += '<td' + (on ? ' style="background:#fdf1e3;font-weight:700;color:#b45309"' : "") + ">"
+            + r*c + "</td>";
+    }
+    html += "</tr>";
+  }
+  html += "</table></div>";
+  const a = Math.min(i, j), b = Math.max(i, j);
+  return {
+    title: "口诀表里找 " + a + "×" + b,
+    sub: kouJue(i, j) + "　→　" + i + " × " + j + " = " + i*j,
+    html,
+    note: "<b>每句口诀都在表里有一格。</b>" + i + "×" + j + " 意思是 " + j + " 个 " + i + " 相加：<br>"
+      + Array.from({length: j}, ()=> i).join(" + ") + " = " + i*j
+      + "　　（交换位置，得数一样：" + j + "×" + i + " 也是 " + i*j + "）"
+  };
+}
+
+function fracBarHTML(n, d, cls, label){
+  let cells = "";
+  for(let i=0;i<d;i++) cells += '<i class="' + (i < n ? "on " + (cls||"") : "") + '"></i>';
+  return '<div class="row"><div class="lbl">' + (label||"") + '</div><div class="bar">' + cells + "</div></div>";
+}
+
+function fracDemo(p, ans){
+  const fr = [...p.matchAll(/(\d+)\/(\d+)/g)].map(m=>[+m[1], +m[2]]);
+  const op = p.indexOf("+") >= 0 ? "+" : p.indexOf("-") >= 0 ? "-"
+           : p.indexOf("×") >= 0 ? "×" : "÷";
+  if(fr.length < 2){
+    return {title:"看分数", sub: p, html:"", note:"答案：" + escapeHtml(ans)};
+  }
+  const [n1, d1] = fr[0], [n2, d2] = fr[1];
+  const g = (a, b)=> b ? g(b, a%b) : a;
+  const l = d1 / g(d1, d2) * d2;
+
+  if(op === "+" || op === "-"){
+    const k1 = l / d1, k2 = l / d2;
+    const sum = op === "+" ? n1*k1 + n2*k2 : n1*k1 - n2*k2;
+    const html = '<div class="fbar">'
+      + fracBarHTML(n1, d1, "", n1 + "/" + d1)
+      + fracBarHTML(n2, d2, "blue", n2 + "/" + d2)
+      + '<div style="height:8px"></div>'
+      + fracBarHTML(Math.max(0, sum), l, "", sum + "/" + l)
+      + "</div>";
+    return {
+      title: "分数条看" + (op === "+" ? "加法" : "减法"),
+      sub: p + " = " + ans,
+      html,
+      note: "<b>分母不同，先通分。</b>" + d1 + " 和 " + d2 + " 的最小公倍数是 " + l + "：<br>"
+        + n1 + "/" + d1 + " = " + (n1*k1) + "/" + l + "，" + n2 + "/" + d2 + " = " + (n2*k2) + "/" + l
+        + "<br>分母不变，分子相" + (op === "+" ? "加" : "减") + "：" + (n1*k1) + (op === "+" ? " + " : " − ")
+        + (n2*k2) + " = " + sum + "，结果是 " + sum + "/" + l + " = " + ans + "。"
+    };
+  }
+  return {
+    title: "分数" + (op === "×" ? "乘法" : "除法"),
+    sub: p + " = " + ans,
+    html: '<div class="fbar">' + fracBarHTML(n1, d1, "", n1 + "/" + d1)
+      + fracBarHTML(n2, d2, "blue", n2 + "/" + d2) + "</div>",
+    note: op === "×"
+      ? "<b>分子乘分子，分母乘分母。</b>能约分的先约分，数小好算。"
+      : "<b>除以一个数，等于乘这个数的倒数。</b>" + n2 + "/" + d2 + " 的倒数是 " + d2 + "/" + n2 + "。"
+  };
+}
+
+const CONV = {
+  "米|分米":10, "分米|厘米":10, "厘米|毫米":10, "米|厘米":100, "千米|米":1000, "米|毫米":1000,
+  "平方米|平方分米":100, "平方分米|平方厘米":100, "平方米|平方厘米":10000,
+  "公顷|平方米":10000, "平方千米|公顷":100, "吨|千克":1000, "千克|克":1000,
+  "升|毫升":1000, "立方米|立方分米":1000, "立方分米|立方厘米":1000,
+  "时|分":60, "分|秒":60, "日|时":24, "年|月":12, "周|日":7,
+  "元|角":10, "角|分":10, "元|分":100
+};
+
+function convDemo(p, ans){
+  const m = p.match(/^(\d+)([^\d=＿\s]+)=＿([^\d=＿\s]*)$/);
+  if(!m){
+    return {title:"单位换算", sub:p, html:'<div class="colsum" style="font-size:28px">' + escapeHtml(p) + "</div>",
+      note:"答案：" + escapeHtml(ans)};
+  }
+  const v = +m[1], from = m[2], to = m[3];
+  if(!to){
+    /* 4万 = 40000 */
+    const rate = from === "亿" ? 100000000 : from === "万" ? 10000 : 1;
+    return {
+      title:"大数改写", sub:p + escapeHtml(ans),
+      html:'<div class="colsum" style="font-size:30px">' + v + from + " = " + ans + "</div>",
+      note:"<b>1 " + from + " = " + rate + "</b>，所以 " + v + " " + from + " = " + v + " × " + rate + " = " + ans + "。"
+    };
+  }
+  const rate = CONV[from + "|" + to];
+  return {
+    title:"单位换算", sub: v + from + " = " + ans + to,
+    html:'<div class="colsum" style="font-size:30px">' + v + from + " = " + ans + to + "</div>",
+    note: rate
+      ? "<b>1 " + from + " = " + rate + " " + to + "</b>（大单位化小单位，乘进率）<br>"
+        + v + " × " + rate + " = " + ans + "，所以 " + v + from + " = " + ans + to + "。"
+      : "把大单位化成小单位，乘进率；小单位化大单位，除以进率。"
+  };
+}
+
+function eqDemo(p, ans){
+  const one = p.match(/^x([+\-])(\d+)=(\d+)$/);
+  const mul = p.match(/^(\d+)x=(\d+)$/);
+  const prop = p.match(/^x:(\d+)=(\d+):(\d+)$/);
+  let note = "";
+  if(one){
+    const op = one[1], b = +one[2], c = +one[3];
+    note = "<b>把 x 单独留在一边。</b>两边同时" + (op === "+" ? "减去 " : "加上 ") + b + "：<br>"
+      + "x = " + c + " " + (op === "+" ? "−" : "+") + " " + b + " = " + ans;
+  }else if(mul){
+    note = "<b>两边同时除以 " + mul[1] + "：</b><br>x = " + mul[2] + " ÷ " + mul[1] + " = " + ans;
+  }else if(prop){
+    note = "<b>比例的基本性质：内项之积 = 外项之积。</b><br>"
+      + "x × " + prop[3] + " = " + prop[1] + " × " + prop[2] + "，所以 x = " + ans + "。";
+  }else{
+    note = "两边同时做相同的运算，等式仍然成立；目标是把 x 留在一侧。答案：x = " + ans;
+  }
+  return {
+    title:"解方程 / 解比例", sub: p + "　→　x = " + ans,
+    html:'<div class="colsum" style="font-size:28px">' + escapeHtml(p) + "</div>",
+    note
+  };
+}
+</script>
+<script>
+/* ============================================================
+   错题本
+   ============================================================ */
+function addWrong(item, mine){
+  const hit = state.wrong.find(w=> w.p === item.p);
+  if(hit){ hit.mine = mine; hit.t = Date.now(); }
+  else state.wrong.unshift({p:item.p, a:String(item.a), mine:String(mine), t:Date.now()});
+  state.wrong = state.wrong.slice(0, 300);
+  saveState();
+  syncWrongBadge();
+}
+function syncWrongBadge(){
+  const b = document.getElementById("wrongBadge");
+  if(!b) return;
+  b.textContent = state.wrong.length;
+  b.style.display = state.wrong.length ? "" : "none";
+}
+function openWrong(){
+  renderWrong();
+  document.getElementById("wrongPanel").classList.add("on");
+}
+function renderWrong(){
+  const list = document.getElementById("wbList");
+  document.getElementById("wbCount").textContent = "共 " + state.wrong.length + " 道";
+  if(!state.wrong.length){
+    list.innerHTML = '<div class="wb-empty">还没有错题<br>'
+      + '<span style="font-size:12.5px">点下面的「开始练习」做一页，做错的题会自动收进来</span></div>';
+    return;
+  }
+  list.innerHTML = state.wrong.map((w, i)=>{
+    const d = new Date(w.t || Date.now());
+    const t = (d.getMonth()+1) + "/" + d.getDate();
+    return '<div class="wb-item"><span class="p">' + escapeHtml(w.p) + "</span>"
+      + '<span class="mine">你写 ' + escapeHtml(w.mine) + "</span>"
+      + '<span class="right">正确 ' + escapeHtml(w.a) + "</span>"
+      + '<span class="t">' + t + "</span>"
+      + '<button class="x" data-i="' + i + '" title="删掉这道">×</button></div>';
+  }).join("");
+  list.querySelectorAll("button.x").forEach(b=>{
+    b.onclick = ()=>{
+      state.wrong.splice(+b.dataset.i, 1);
+      saveState(); renderWrong(); syncWrongBadge();
+    };
+  });
+}
+document.getElementById("btnWrong").onclick = openWrong;
+document.getElementById("wbClose").onclick = ()=>{
+  document.getElementById("wrongPanel").classList.remove("on");
+};
+document.getElementById("wbClear").onclick = ()=>{
+  if(!state.wrong.length) return;
+  if(!confirm("清空错题本？")) return;
+  state.wrong = [];
+  saveState(); renderWrong(); syncWrongBadge();
+};
+document.getElementById("wbRedo").onclick = ()=>{
+  if(!state.wrong.length){ toast("错题本是空的"); return; }
+  const items = state.wrong.map(w=>({p:w.p, a:w.a, s:readProblem(w.p)}));
+  document.getElementById("wrongPanel").classList.remove("on");
+  startPractice(items);
+};
+document.getElementById("wbPrint").onclick = ()=>{
+  if(!state.wrong.length){ toast("错题本是空的"); return; }
+  printPages(pagesFrom(state.wrong.map(w=>({p:w.p, a:w.a, s:readProblem(w.p)}))));
+};
+
+/* ============================================================
+   打印 / 导出
+   ============================================================ */
+function pagesFrom(items, tag){
+  const L = PAPER.portrait.drill, per = L.cols * L.rows;
+  const list = items.slice();
+  const n = Math.max(1, Math.ceil(list.length / per));
+  const out = [];
+  for(let i=0;i<n;i++){
+    out.push({kind:"drill", cols:L.cols, rows:L.rows,
+      items: list.slice(i*per, (i+1)*per),
+      label:(tag||"题目") + " · 第 " + (i+1) + " / " + n + " 张",
+      fileTag: tag || "题目", pageNo:i+1});
+  }
+  return out;
+}
+
+function printPages(ps){
+  const cont = document.getElementById("printAll");
+  cont.innerHTML = ps.map(p=>
+    '<div class="page">' + pageHTML(p, PAPER.portrait) + "</div>").join("");
+  document.body.classList.add("print-all");
+  setTimeout(()=>{
+    window.print();
+  }, 90);
+}
+
+document.getElementById("btnPrint").onclick = ()=>{
+  if(state.paper === "landscape"){
+    setPaper("portrait", true);
+    toast("已切到 A4 竖版打印模式");
+  }
+  setTimeout(()=>window.print(), 90);
+};
+document.getElementById("btnPrintAll").onclick = ()=>{
+  const ps = buildPages(PAPER.portrait);
+  if(!ps.length || ps[0].empty){ toast("这一档还没有题"); return; }
+  printPages(ps);
+};
+
+/* Ctrl+P / 分享菜单里直接打印时，临时把横屏版式换成竖版，印完还原 */
+let printRestore = null;
+window.addEventListener("beforeprint", ()=>{
+  if(state.paper === "landscape"){
+    printRestore = "landscape";
+    state.paper = "portrait";
+    document.body.classList.remove("paper-landscape");
+    render();
+  }
+});
+window.addEventListener("afterprint", ()=>{
+  document.body.classList.remove("print-all");
+  document.getElementById("printAll").innerHTML = "";
+  if(printRestore){
+    state.paper = printRestore;
+    printRestore = null;
+    document.body.classList.add("paper-landscape");
+    render();
+  }
+});
+
+/* ---------- 下载本页：300dpi PNG ---------- */
+/* 300dpi 导出：知识表按行式版式重画，字号与 HTML 那边同一套 knowType() 算法 */
+function drawKnowPage(ctx, p, spec, K){
+  const availW = spec.w - 2*MARGIN;
+  const ty = knowType(p, availW);
+  ctx.textBaseline = "middle";
+  ctx.textAlign = "left";
+  p.blocks.forEach(b=>{
+    const top = MARGIN + b.y;
+    if(b.kind === "head"){
+      const midY = (top + KNOW_HEAD/2)*K;
+      ctx.fillStyle = "#fdf2e4";
+      ctx.fillRect(MARGIN*K, top*K, availW*K, KNOW_HEAD*K);
+      ctx.fillStyle = "#b45309";
+      ctx.fillRect(MARGIN*K, top*K, 1.4*K, KNOW_HEAD*K);
+      /* 册标签：浅橙底圆角块 */
+      ctx.font = "700 " + (3.2*K).toFixed(1) + "px " + CJK_STACK;
+      const tagW = ctx.measureText(b.book).width + 3.6*K;
+      ctx.fillStyle = "#f6e0c2";
+      ctx.fillRect((MARGIN + 2.6)*K, midY - 2.4*K, tagW, 4.8*K);
+      ctx.fillStyle = "#8a4b0b";
+      ctx.fillText(b.book, (MARGIN + 4.4)*K, midY);
+      /* 单元名 */
+      ctx.fillStyle = "#6b3a08";
+      ctx.font = "700 " + (4*K).toFixed(1) + "px " + CJK_STACK;
+      ctx.fillText(b.text, (MARGIN + 2.6)*K + tagW + 2.6*K, midY);
+      return;
+    }
+    const it = b.it;
+    ctx.fillStyle = "#2b2f36";
+    ctx.font = "600 " + (KNOW_NAME_FS*K).toFixed(1) + "px " + CJK_STACK;
+    ctx.fillText(it.name, (MARGIN + 3.4)*K, (top + 5.4)*K);
+
+    /* 公式和说明两行整体居中：公式行 7.2mm + 间距 0.9 + 说明 4.86 ≈ 13mm */
+    const exprY = top + 5.4, noteY = top + 13;
+    ctx.fillStyle = "#b45309";
+    ctx.font = "600 " + (ty.expr*K).toFixed(1) + "px " + MATH_STACK;
+    ctx.fillText(it.expr, (MARGIN + KNOW_NAME_W)*K, exprY*K);
+
+    if(state.showNote){
+      ctx.fillStyle = "#5c574c";
+      ctx.font = (ty.note*K).toFixed(1) + "px " + CJK_STACK;
+      ctx.fillText(it.note, (MARGIN + KNOW_NAME_W)*K, noteY*K);
+    }
+
+    ctx.strokeStyle = "#efeade";
+    ctx.lineWidth = Math.max(1, 0.25*K);
+    ctx.beginPath();
+    ctx.moveTo((MARGIN + 3)*K, (top + KNOW_ITEM)*K);
+    ctx.lineTo((MARGIN + availW - 4)*K, (top + KNOW_ITEM)*K);
+    ctx.stroke();
+  });
+}
+
+function drawPage(p, spec, cv){
+  const DPI = 300, K = DPI/25.4;
+  cv.width  = Math.round(spec.w * K);
+  cv.height = Math.round(spec.h * K);
+  const ctx = cv.getContext("2d");
+  ctx.fillStyle = "#ffffff";
+  ctx.fillRect(0, 0, cv.width, cv.height);
+
+  if(p.kind === "know2"){ drawKnowPage(ctx, p, spec, K); return; }
+
+  const cw = (spec.w - 2*MARGIN)/p.cols;
+  const chh = (spec.h - 2*MARGIN)/p.rows;
+  const total = p.cols*p.rows;
+
+  if(state.grid){
+    ctx.save();
+    ctx.strokeStyle = "#d9d3c4";
+    ctx.lineWidth = Math.max(1, 0.2*K);
+    for(let i=0;i<total;i++){
+      const r = Math.floor(i/p.cols), c = i%p.cols;
+      ctx.strokeRect((MARGIN+c*cw)*K, (MARGIN+r*chh)*K, cw*K, chh*K);
+    }
+    ctx.restore();
+  }
+
+  ctx.textBaseline = "middle";
+  p.items.forEach((it, i)=>{
+    const r = Math.floor(i/p.cols), c = i%p.cols;
+    const cx = (MARGIN + (c+0.5)*cw)*K;
+    const cy = (MARGIN + (r+0.5)*chh)*K;
+
+    const m = drillLayout(it, cw, chh);
+    const lines = m.lines || [{fs:m.fs, parts:m.parts, totalW:m.totalW}];
+    const lh = m.fs * K * 1.18;
+    lines.forEach((l, li)=>{
+      const ly = cy + (li - (lines.length - 1) / 2) * lh;
+      let x = cx - l.totalW*K/2;
+      ctx.textAlign = "left";
+      l.parts.forEach(pt=>{
+        drawOnePart(ctx, pt, x, ly, l.fs, K);
+        x += pt.w * l.fs * K;
+      });
+    });
+  });
+}
+
+/* 画一段：文字 / 红线 / 分数 / 比大小圆圈 */
+function drawOnePart(ctx, pt, x, cy, fs, K){
+  let w = pt.w * fs * K;
+  if(pt.t === "t"){
+    ctx.fillStyle = "#1a1a1a";
+    ctx.font = (fs*K).toFixed(1) + "px " + MATH_STACK;
+    ctx.fillText(pt.v, x, cy);
+  }else if(pt.t === "a"){
+    x += 0.16*fs*K; w -= 0.16*fs*K;
+    ctx.fillStyle = "#c0392b";
+    ctx.font = (fs*K).toFixed(1) + "px " + MATH_STACK;
+    ctx.fillText(pt.v, x, cy);
+  }else if(pt.t === "b"){
+    ctx.strokeStyle = "#b9b3a5";
+    ctx.lineWidth = Math.max(1, 0.3*K);
+    ctx.beginPath();
+    ctx.moveTo(x + 2, cy + fs*K*0.30);
+    ctx.lineTo(x + w - 2, cy + fs*K*0.30);
+    ctx.stroke();
+  }else if(pt.t === "f"){
+    /* 分数：分子 / 横线 / 分母，三层都按同一个中心线摆 */
+    ctx.font = (fs * 0.68 * K).toFixed(1) + "px " + MATH_STACK;
+    ctx.textAlign = "center";
+    ctx.fillStyle = pt.ans ? "#c0392b" : "#1a1a1a";
+    const fx = x + w/2, half = fs * K * 0.42;
+    ctx.fillText(pt.n, fx, cy - half*0.62);
+    ctx.fillText(pt.d, fx, cy + half*0.62);
+    ctx.strokeStyle = ctx.fillStyle;
+    ctx.lineWidth = Math.max(1, 0.22*K);
+    ctx.beginPath();
+    ctx.moveTo(x + w*0.10, cy - half*0.10);
+    ctx.lineTo(x + w*0.90, cy - half*0.10);
+    ctx.stroke();
+    ctx.textAlign = "left";
+  }else{
+    /* 比大小圆圈：直径 0.62em，圆心抬到数字中腰，和左右两个数看着像一份 */
+    const d = w * 0.848;
+    ctx.strokeStyle = "#a9a294";
+    ctx.lineWidth = Math.max(1, 0.30*K);
+    ctx.beginPath();
+    ctx.arc(x + w/2, cy - d*0.44, d/2, 0, Math.PI*2);
+    ctx.stroke();
+  }
+}
+
+document.getElementById("btnDownload").onclick = ()=>{
+  const spec = PAPER.portrait;              /* 导出的图永远是 A4 竖版 */
+  const ps = buildPages(spec);
+  const p = ps[Math.min(state.pageIndex, ps.length-1)];
+  if(!p || p.empty){ toast("这一档还没有题"); return; }
+  if(state.paper === "landscape") toast("已按 A4 竖版导出当前页");
+  const cv = document.createElement("canvas");
+  drawPage(p, spec, cv);
+  cv.toBlob(blob=>{
+    const a = document.createElement("a");
+    a.download = (p.fileTag || "数学") + "_第" + p.pageNo + "张.png";
+    a.href = URL.createObjectURL(blob);
+    a.click();
+    setTimeout(()=>URL.revokeObjectURL(a.href), 3000);
+  }, "image/png");
+};
+
+/* ============================================================
+   真纸滑动
+   ------------------------------------------------------------
+   纸跟着手指走，不加投影。左右划过阈值：整张纸推出画面，下一张从另一侧滑进来；
+   到第一张 / 最后一张继续拉，或上下拉到底，都用越拉越沉的橡皮筋阻尼，松手弹回。
+   ============================================================ */
+const DRAG_MIN = 46;
+const BOUNCE_MAX = 92;
+let dragging = false, dragActive = false, dragAxis = "";
+let dragStartX = 0, dragStartY = 0, dragDX = 0, dragDY = 0;
+let flipping = false;
+var suppressClickUntil = 0;
+
+function canDrag(){ return (view === "drill" || view === "know") && !flipping; }
+function rubber(v){
+  const a = Math.abs(v);
+  return Math.sign(v) * BOUNCE_MAX * (1 - 1/(a/150 + 1));
+}
+function paperTransform(x, y, tilt){
+  wrapEl.style.transform = "translate3d(" + x.toFixed(1) + "px," + y.toFixed(1) + "px,0)"
+                         + " rotate(" + tilt.toFixed(2) + "deg)";
+}
+function springBack(){
+  wrapEl.style.transition = "transform .52s cubic-bezier(.18,1.28,.34,1)";
+  paperTransform(0, 0, 0);
+  setTimeout(()=>{ if(!dragging && !flipping) wrapEl.style.transition = ""; }, 540);
+}
+function flipPage(delta){
+  if(flipping) return false;
+  const next = state.pageIndex + delta;
+  if(next < 0 || next >= pages.length) return false;
+  flipping = true;
+  const W = wrapEl.getBoundingClientRect().width || 600;
+  const out = (delta > 0 ? -1 : 1) * (W + 56);
+  wrapEl.style.transition = "transform .25s cubic-bezier(.42,0,.72,.35)";
+  paperTransform(out, 0, 0);
+  setTimeout(()=>{
+    state.pageIndex = next;
+    render();
+    wrapEl.style.transition = "none";
+    paperTransform(-out, 0, 0);
+    /* 强制回流让浏览器认下这个起点，再启动滑入动画。
+       不用 requestAnimationFrame：Safari 后台标签页会挂起 rAF，纸会卡在屏外。 */
+    void wrapEl.offsetHeight;
+    wrapEl.style.transition = "transform .36s cubic-bezier(.16,.92,.28,1)";
+    paperTransform(0, 0, 0);
+    setTimeout(()=>{ flipping = false; wrapEl.style.transition = ""; }, 380);
+  }, 250);
+  return true;
+}
+function goPage(delta){ return flipPage(delta); }
+
+document.getElementById("prevBtn").onclick = ()=>goPage(-1);
+document.getElementById("nextBtn").onclick = ()=>goPage(1);
+document.addEventListener("keydown", (e)=>{
+  if(drill) return;
+  if(e.target.tagName === "TEXTAREA" || e.target.tagName === "INPUT" || e.target.tagName === "SELECT") return;
+  if(view !== "drill" && view !== "know") return;
+  if(e.key === "ArrowLeft") goPage(-1);
+  if(e.key === "ArrowRight") goPage(1);
+});
+
+function dragStart(e){
+  if(!canDrag()) return;
+  if(e.pointerType === "mouse" && e.button !== 0) return;
+  dragging = true; dragActive = false; dragAxis = "";
+  dragStartX = e.clientX; dragStartY = e.clientY; dragDX = 0; dragDY = 0;
+  wrapEl.style.transition = "none";
+}
+function dragMove(e){
+  if(!dragging) return;
+  const dx = e.clientX - dragStartX, dy = e.clientY - dragStartY;
+  if(!dragActive){
+    if(Math.max(Math.abs(dx), Math.abs(dy)) < 8) return;
+    dragActive = true;
+    dragAxis = Math.abs(dx) >= Math.abs(dy) ? "x" : "y";
+    document.body.classList.add("dragging");
+    try{ viewEl.setPointerCapture(e.pointerId); }catch(_){}
+  }
+  if(dragAxis === "x"){
+    const atEdge = (dx < 0 && state.pageIndex >= pages.length - 1)
+                || (dx > 0 && state.pageIndex === 0);
+    dragDX = atEdge ? rubber(dx) : dx;
+    dragDY = 0;
+    paperTransform(dragDX, 0, Math.max(-1.1, Math.min(1.1, -dragDX*0.0035)));
+  }else{
+    dragDY = rubber(dy);
+    dragDX = 0;
+    paperTransform(0, dragDY, 0);
+  }
+}
+function dragEnd(){
+  if(!dragging) return;
+  dragging = false;
+  document.body.classList.remove("dragging");
+  const dx = dragDX, active = dragActive, axis = dragAxis;
+  dragActive = false; dragAxis = ""; dragDX = 0; dragDY = 0;
+  if(!active) return;
+  suppressClickUntil = Date.now() + 360;
+  const delta = dx <= -DRAG_MIN ? 1 : (dx >= DRAG_MIN ? -1 : 0);
+  const ok = delta && state.pageIndex + delta >= 0 && state.pageIndex + delta < pages.length;
+  if(axis === "x" && ok) flipPage(delta);
+  else springBack();
+}
+viewEl.addEventListener("pointerdown", dragStart);
+viewEl.addEventListener("pointermove", dragMove);
+window.addEventListener("pointerup", dragEnd);
+window.addEventListener("pointercancel", dragEnd);
+
+/* ============================================================
+   窄屏：次要按钮收进「更多」
+   ============================================================ */
+const MORE_IDS = ["btnReseed","btnNote","btnPaper","btnPrint","btnPrintAll"];
+const ACTION_ORDER = ["sortSel","btnReseed","btnAns","btnNote","btnPaper","btnPrint","btnPrintAll","btnDownload"];
+
+function layoutToolbar(){
+  const narrow = window.innerWidth <= 620;
+  const TAB_TEXT = {
+    tabCalc:["学计算","计算"], tabDrill:["口算表","口算"], tabKnow:["知识表","知识"],
+    tabApply:["应用题","应用题"], tabAdd:["加题","加题"]
+  };
+  Object.keys(TAB_TEXT).forEach(id=>{
+    const el = document.getElementById(id);
+    if(el) el.textContent = TAB_TEXT[id][narrow ? 1 : 0];
+  });
+  const panel = document.getElementById("morePanel");
+  const acts  = document.getElementById("pageActions");
+  MORE_IDS.forEach(id=>{
+    const el = document.getElementById(id);
+    if(el) (narrow ? panel : acts).appendChild(el);
+  });
+  if(!narrow){
+    ACTION_ORDER.forEach(id=>{
+      const el = document.getElementById(id);
+      if(el) acts.appendChild(el);
+    });
+    panel.classList.remove("on");
+  }
+  const manage = document.getElementById("btnManage");
+  if(manage) (narrow ? panel : document.querySelector(".actions")).appendChild(manage);
+  document.getElementById("btnMore").style.display = narrow ? "inline-block" : "none";
+
+  const re = document.getElementById("btnReseed");
+  if(re) re.textContent = narrow ? "换一批顺序" : "↻";
+  const dl = document.getElementById("btnDownload");
+  if(dl) dl.textContent = narrow ? "下载" : "下载本页";
+  const pr = document.getElementById("btnPrint");
+  if(pr) pr.textContent = narrow ? "打印本页" : "打印本页";
+  syncPaperBtn();
+  syncSoundBtn();
+}
+document.getElementById("btnMore").onclick = (e)=>{
+  e.stopPropagation();
+  document.getElementById("morePanel").classList.toggle("on");
+};
+document.addEventListener("click", (e)=>{
+  const panel = document.getElementById("morePanel");
+  if(!panel.classList.contains("on")) return;
+  if(!panel.contains(e.target) && e.target.id !== "btnMore") panel.classList.remove("on");
+});
+window.addEventListener("resize", layoutToolbar);
+
+/* ---------- 提示 ---------- */
+let toastTimer = null;
+function toast(msg){
+  const t = document.getElementById("toast");
+  t.textContent = msg;
+  t.classList.add("on");
+  clearTimeout(toastTimer);
+  toastTimer = setTimeout(()=>t.classList.remove("on"), 3600);
+}
+
+/* ============================================================
+   启动
+   ============================================================ */
+(async function boot(){
+  try{
+    const [b, t, k, a, tb] = await Promise.all([
+      loadJSON("books", "__MATH_BOOKS__"),
+      loadJSON("types", "__MATH_TYPES__"),
+      loadJSON("know",  "__MATH_KNOW__"),
+      loadJSON("apply", "__MATH_APPLY__"),
+      loadJSON("tables","__MATH_TABLES__")
+    ]);
+    if(!b || !b.books || !b.books.length) throw new Error("没有读到 data/books.json");
+    BOOKS = b;
+    if(t && t.types) TYPES = t;
+    if(k && k.items) KNOW = k;
+    if(a && a.grades) APPLY = a;
+    if(tb && tb.sections) TABLES = tb;
+  }catch(err){
+    document.getElementById("bootFail").classList.add("on");
+    document.getElementById("bootFailMsg").textContent = String(err.message || err);
+    return;
+  }
+
+  loadState();
+
+  /* 地址参数：?ans=1 直接出答案卷；?sort=random 打乱；?paper=portrait|landscape 强制版式 */
+  const qp = new URLSearchParams(location.search);
+  if(qp.get("ans") === "1") state.showAns = true;
+  if(qp.get("ans") === "0") state.showAns = false;
+  if(qp.get("note") === "0") state.showNote = false;
+  if(qp.get("sort") === "random"){ state.shuffled = true; state.seed = Number(qp.get("seed")) || 20261107; }
+
+
+  /* iPad 上直接进横屏版式；?paper=portrait|landscape 可强制 */
+  const forcePaper = new URLSearchParams(location.search).get("paper");
+  if(forcePaper === "landscape" || forcePaper === "portrait") state.paper = forcePaper;
+  if(!state.paper) state.paper = defaultPaper();
+  document.body.classList.add(state.paper === "landscape" ? "paper-landscape" : "paper-portrait");
+
+  initScope();
+  layoutToolbar();
+  syncSoundBtn();
+  syncWrongBadge();
+
+  /* 语音清单：读不到只是变成「只有系统语音」，不影响点读 */
+  loadAudio();
+
+  /* 带参数直接打开某一页，方便做成多个桌面快捷方式：
+     ?view=drill|know|calc|apply|add&scope=book:1a&book=2b */
+  const qs = new URLSearchParams(location.search);
+  const want = qs.get("view");
+  const wantScope = qs.get("scope");
+  if(wantScope){
+    const sel = document.getElementById("scopeSel");
+    /* 认不出来的范围就直接忽略，别把纸面搞成空白 */
+    if([...sel.options].some(o=>o.value === wantScope)){
+      state.scope = wantScope;
+      sel.value = wantScope;
+    }
+  }
+  const wantBook = qs.get("book");
+  if(wantBook && bookById(wantBook)) state.knowBook = wantBook;
+
+  setView(["drill","know","calc","apply","add"].includes(want) ? want : "drill");
+
+  if("serviceWorker" in navigator && /^https?:$/.test(location.protocol)){
+    navigator.serviceWorker.register("sw.js").catch(()=>{});
+  }
+
+  if(/[?&]diag=1/.test(location.search)) setTimeout(showDiag, 700);
+})();
+
+function showDiag(){
+  const rows = [
+    ["教材", BOOKS.books.length + " 册 / "
+      + BOOKS.books.reduce((a,b)=>a + b.units.reduce((x,u)=>x + u.items.length, 0), 0) + " 题"],
+    ["知识点", KNOW.items.length + " 条"],
+    ["应用题", APPLY.grades.reduce((a,g)=>a + g.items.length, 0) + " 道"],
+    ["语音清单", AUDIO_OK ? Object.keys(AUDIO_TEXTS).length + " 句" : "未加载（退回系统语音）"],
+    ["已预取", blobCache.size + " 句"],
+    ["最近一次播放错误", lastVoiceError || "无"],
+    ["设备", IS_IOS ? "iOS / iPadOS" : "其它"],
+    ["声音开关", state.sound ? "开" : "关"]
+  ];
+  const d = document.createElement("div");
+  d.style.cssText = "position:fixed;left:8px;bottom:8px;z-index:9999;max-width:calc(100% - 16px);"
+    + "background:#1a1a1a;color:#f2f2f2;font:12px/1.75 -apple-system,'PingFang SC',sans-serif;"
+    + "padding:10px 14px;border-radius:10px;box-shadow:0 8px 28px rgba(0,0,0,.35)";
+  d.innerHTML = "<div style='font-weight:600;margin-bottom:4px'>自检</div>"
+    + rows.map(r=>'<div><span style="opacity:.6">' + r[0] + "：</span>" + escapeHtml(String(r[1])) + "</div>").join("");
+  const btn = document.createElement("button");
+  btn.textContent = "试听一下「七加五」";
+  btn.style.cssText = "margin-top:8px;padding:7px 14px;border-radius:9px;border:0;"
+    + "background:#b45309;color:#fff;font:13px/1 inherit;cursor:pointer";
+  btn.onclick = (e)=>{ e.stopPropagation(); const was = state.sound; state.sound = true; speak("七加五"); state.sound = was; };
+  d.appendChild(btn);
+  d.onclick = ()=>d.remove();
+  document.body.appendChild(d);
+}
+</script>
+
+
+
+
+
+</body>
+</html>
+
