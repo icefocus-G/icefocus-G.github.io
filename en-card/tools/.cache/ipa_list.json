@@ -1,0 +1,498 @@
+[
+  {
+    "name": "ar.txt",
+    "path": "data/ar.txt",
+    "sha": "249e7c8e655ba2508175153ac01f4dde69927ce5",
+    "size": 32883883,
+    "url": "https://api.github.com/repos/open-dict-data/ipa-dict/contents/data/ar.txt?ref=master",
+    "html_url": "https://github.com/open-dict-data/ipa-dict/blob/master/data/ar.txt",
+    "git_url": "https://api.github.com/repos/open-dict-data/ipa-dict/git/blobs/249e7c8e655ba2508175153ac01f4dde69927ce5",
+    "download_url": "https://raw.githubusercontent.com/open-dict-data/ipa-dict/master/data/ar.txt",
+    "type": "file",
+    "_links": {
+      "self": "https://api.github.com/repos/open-dict-data/ipa-dict/contents/data/ar.txt?ref=master",
+      "git": "https://api.github.com/repos/open-dict-data/ipa-dict/git/blobs/249e7c8e655ba2508175153ac01f4dde69927ce5",
+      "html": "https://github.com/open-dict-data/ipa-dict/blob/master/data/ar.txt"
+    }
+  },
+  {
+    "name": "de.txt",
+    "path": "data/de.txt",
+    "sha": "9a6b0c95c713d1a82cc173b25cc221bc55b278d0",
+    "size": 30726400,
+    "url": "https://api.github.com/repos/open-dict-data/ipa-dict/contents/data/de.txt?ref=master",
+    "html_url": "https://github.com/open-dict-data/ipa-dict/blob/master/data/de.txt",
+    "git_url": "https://api.github.com/repos/open-dict-data/ipa-dict/git/blobs/9a6b0c95c713d1a82cc173b25cc221bc55b278d0",
+    "download_url": "https://raw.githubusercontent.com/open-dict-data/ipa-dict/master/data/de.txt",
+    "type": "file",
+    "_links": {
+      "self": "https://api.github.com/repos/open-dict-data/ipa-dict/contents/data/de.txt?ref=master",
+      "git": "https://api.github.com/repos/open-dict-data/ipa-dict/git/blobs/9a6b0c95c713d1a82cc173b25cc221bc55b278d0",
+      "html": "https://github.com/open-dict-data/ipa-dict/blob/master/data/de.txt"
+    }
+  },
+  {
+    "name": "en_UK.txt",
+    "path": "data/en_UK.txt",
+    "sha": "f33a9d08cba10e434e20b0a6d417857e11680030",
+    "size": 1684124,
+    "url": "https://api.github.com/repos/open-dict-data/ipa-dict/contents/data/en_UK.txt?ref=master",
+    "html_url": "https://github.com/open-dict-data/ipa-dict/blob/master/data/en_UK.txt",
+    "git_url": "https://api.github.com/repos/open-dict-data/ipa-dict/git/blobs/f33a9d08cba10e434e20b0a6d417857e11680030",
+    "download_url": "https://raw.githubusercontent.com/open-dict-data/ipa-dict/master/data/en_UK.txt",
+    "type": "file",
+    "_links": {
+      "self": "https://api.github.com/repos/open-dict-data/ipa-dict/contents/data/en_UK.txt?ref=master",
+      "git": "https://api.github.com/repos/open-dict-data/ipa-dict/git/blobs/f33a9d08cba10e434e20b0a6d417857e11680030",
+      "html": "https://github.com/open-dict-data/ipa-dict/blob/master/data/en_UK.txt"
+    }
+  },
+  {
+    "name": "en_US.txt",
+    "path": "data/en_US.txt",
+    "sha": "f7cdfe30714777ad3f928977586e7425881687b4",
+    "size": 3180267,
+    "url": "https://api.github.com/repos/open-dict-data/ipa-dict/contents/data/en_US.txt?ref=master",
+    "html_url": "https://github.com/open-dict-data/ipa-dict/blob/master/data/en_US.txt",
+    "git_url": "https://api.github.com/repos/open-dict-data/ipa-dict/git/blobs/f7cdfe30714777ad3f928977586e7425881687b4",
+    "download_url": "https://raw.githubusercontent.com/open-dict-data/ipa-dict/master/data/en_US.txt",
+    "type": "file",
+    "_links": {
+      "self": "https://api.github.com/repos/open-dict-data/ipa-dict/contents/data/en_US.txt?ref=master",
+      "git": "https://api.github.com/repos/open-dict-data/ipa-dict/git/blobs/f7cdfe30714777ad3f928977586e7425881687b4",
+      "html": "https://github.com/open-dict-data/ipa-dict/blob/master/data/en_US.txt"
+    }
+  },
+  {
+    "name": "eo.txt",
+    "path": "data/eo.txt",
+    "sha": "7181140b460cb4e43dd41410fdf9911d2e6e88c8",
+    "size": 491389,
+    "url": "https://api.github.com/repos/open-dict-data/ipa-dict/contents/data/eo.txt?ref=master",
+    "html_url": "https://github.com/open-dict-data/ipa-dict/blob/master/data/eo.txt",
+    "git_url": "https://api.github.com/repos/open-dict-data/ipa-dict/git/blobs/7181140b460cb4e43dd41410fdf9911d2e6e88c8",
+    "download_url": "https://raw.githubusercontent.com/open-dict-data/ipa-dict/master/data/eo.txt",
+    "type": "file",
+    "_links": {
+      "self": "https://api.github.com/repos/open-dict-data/ipa-dict/contents/data/eo.txt?ref=master",
+      "git": "https://api.github.com/repos/open-dict-data/ipa-dict/git/blobs/7181140b460cb4e43dd41410fdf9911d2e6e88c8",
+      "html": "https://github.com/open-dict-data/ipa-dict/blob/master/data/eo.txt"
+    }
+  },
+  {
+    "name": "es_ES.txt",
+    "path": "data/es_ES.txt",
+    "sha": "4d984cfa7ee5c28fc25161bb5f4aa660847f8d61",
+    "size": 16310951,
+    "url": "https://api.github.com/repos/open-dict-data/ipa-dict/contents/data/es_ES.txt?ref=master",
+    "html_url": "https://github.com/open-dict-data/ipa-dict/blob/master/data/es_ES.txt",
+    "git_url": "https://api.github.com/repos/open-dict-data/ipa-dict/git/blobs/4d984cfa7ee5c28fc25161bb5f4aa660847f8d61",
+    "download_url": "https://raw.githubusercontent.com/open-dict-data/ipa-dict/master/data/es_ES.txt",
+    "type": "file",
+    "_links": {
+      "self": "https://api.github.com/repos/open-dict-data/ipa-dict/contents/data/es_ES.txt?ref=master",
+      "git": "https://api.github.com/repos/open-dict-data/ipa-dict/git/blobs/4d984cfa7ee5c28fc25161bb5f4aa660847f8d61",
+      "html": "https://github.com/open-dict-data/ipa-dict/blob/master/data/es_ES.txt"
+    }
+  },
+  {
+    "name": "es_MX.txt",
+    "path": "data/es_MX.txt",
+    "sha": "3b40b802d00be0ddf416edf493f7bd22db2987e8",
+    "size": 16198940,
+    "url": "https://api.github.com/repos/open-dict-data/ipa-dict/contents/data/es_MX.txt?ref=master",
+    "html_url": "https://github.com/open-dict-data/ipa-dict/blob/master/data/es_MX.txt",
+    "git_url": "https://api.github.com/repos/open-dict-data/ipa-dict/git/blobs/3b40b802d00be0ddf416edf493f7bd22db2987e8",
+    "download_url": "https://raw.githubusercontent.com/open-dict-data/ipa-dict/master/data/es_MX.txt",
+    "type": "file",
+    "_links": {
+      "self": "https://api.github.com/repos/open-dict-data/ipa-dict/contents/data/es_MX.txt?ref=master",
+      "git": "https://api.github.com/repos/open-dict-data/ipa-dict/git/blobs/3b40b802d00be0ddf416edf493f7bd22db2987e8",
+      "html": "https://github.com/open-dict-data/ipa-dict/blob/master/data/es_MX.txt"
+    }
+  },
+  {
+    "name": "fa.txt",
+    "path": "data/fa.txt",
+    "sha": "987a59a07271a5277839b362e4d0311964b68feb",
+    "size": 240166,
+    "url": "https://api.github.com/repos/open-dict-data/ipa-dict/contents/data/fa.txt?ref=master",
+    "html_url": "https://github.com/open-dict-data/ipa-dict/blob/master/data/fa.txt",
+    "git_url": "https://api.github.com/repos/open-dict-data/ipa-dict/git/blobs/987a59a07271a5277839b362e4d0311964b68feb",
+    "download_url": "https://raw.githubusercontent.com/open-dict-data/ipa-dict/master/data/fa.txt",
+    "type": "file",
+    "_links": {
+      "self": "https://api.github.com/repos/open-dict-data/ipa-dict/contents/data/fa.txt?ref=master",
+      "git": "https://api.github.com/repos/open-dict-data/ipa-dict/git/blobs/987a59a07271a5277839b362e4d0311964b68feb",
+      "html": "https://github.com/open-dict-data/ipa-dict/blob/master/data/fa.txt"
+    }
+  },
+  {
+    "name": "fi.txt",
+    "path": "data/fi.txt",
+    "sha": "46c453c341f42538aaed686af2cb3116e7c3216f",
+    "size": 2912947,
+    "url": "https://api.github.com/repos/open-dict-data/ipa-dict/contents/data/fi.txt?ref=master",
+    "html_url": "https://github.com/open-dict-data/ipa-dict/blob/master/data/fi.txt",
+    "git_url": "https://api.github.com/repos/open-dict-data/ipa-dict/git/blobs/46c453c341f42538aaed686af2cb3116e7c3216f",
+    "download_url": "https://raw.githubusercontent.com/open-dict-data/ipa-dict/master/data/fi.txt",
+    "type": "file",
+    "_links": {
+      "self": "https://api.github.com/repos/open-dict-data/ipa-dict/contents/data/fi.txt?ref=master",
+      "git": "https://api.github.com/repos/open-dict-data/ipa-dict/git/blobs/46c453c341f42538aaed686af2cb3116e7c3216f",
+      "html": "https://github.com/open-dict-data/ipa-dict/blob/master/data/fi.txt"
+    }
+  },
+  {
+    "name": "fr_FR.txt",
+    "path": "data/fr_FR.txt",
+    "sha": "ee68660273657c895103e70ace1f2d5a295cef1c",
+    "size": 6152841,
+    "url": "https://api.github.com/repos/open-dict-data/ipa-dict/contents/data/fr_FR.txt?ref=master",
+    "html_url": "https://github.com/open-dict-data/ipa-dict/blob/master/data/fr_FR.txt",
+    "git_url": "https://api.github.com/repos/open-dict-data/ipa-dict/git/blobs/ee68660273657c895103e70ace1f2d5a295cef1c",
+    "download_url": "https://raw.githubusercontent.com/open-dict-data/ipa-dict/master/data/fr_FR.txt",
+    "type": "file",
+    "_links": {
+      "self": "https://api.github.com/repos/open-dict-data/ipa-dict/contents/data/fr_FR.txt?ref=master",
+      "git": "https://api.github.com/repos/open-dict-data/ipa-dict/git/blobs/ee68660273657c895103e70ace1f2d5a295cef1c",
+      "html": "https://github.com/open-dict-data/ipa-dict/blob/master/data/fr_FR.txt"
+    }
+  },
+  {
+    "name": "fr_QC.txt",
+    "path": "data/fr_QC.txt",
+    "sha": "4ab643ff3e8dfabb12693d786a971da655eb9330",
+    "size": 6744326,
+    "url": "https://api.github.com/repos/open-dict-data/ipa-dict/contents/data/fr_QC.txt?ref=master",
+    "html_url": "https://github.com/open-dict-data/ipa-dict/blob/master/data/fr_QC.txt",
+    "git_url": "https://api.github.com/repos/open-dict-data/ipa-dict/git/blobs/4ab643ff3e8dfabb12693d786a971da655eb9330",
+    "download_url": "https://raw.githubusercontent.com/open-dict-data/ipa-dict/master/data/fr_QC.txt",
+    "type": "file",
+    "_links": {
+      "self": "https://api.github.com/repos/open-dict-data/ipa-dict/contents/data/fr_QC.txt?ref=master",
+      "git": "https://api.github.com/repos/open-dict-data/ipa-dict/git/blobs/4ab643ff3e8dfabb12693d786a971da655eb9330",
+      "html": "https://github.com/open-dict-data/ipa-dict/blob/master/data/fr_QC.txt"
+    }
+  },
+  {
+    "name": "is.txt",
+    "path": "data/is.txt",
+    "sha": "9359a6b6c180485080a917ec516898bafb630ecb",
+    "size": 1596279,
+    "url": "https://api.github.com/repos/open-dict-data/ipa-dict/contents/data/is.txt?ref=master",
+    "html_url": "https://github.com/open-dict-data/ipa-dict/blob/master/data/is.txt",
+    "git_url": "https://api.github.com/repos/open-dict-data/ipa-dict/git/blobs/9359a6b6c180485080a917ec516898bafb630ecb",
+    "download_url": "https://raw.githubusercontent.com/open-dict-data/ipa-dict/master/data/is.txt",
+    "type": "file",
+    "_links": {
+      "self": "https://api.github.com/repos/open-dict-data/ipa-dict/contents/data/is.txt?ref=master",
+      "git": "https://api.github.com/repos/open-dict-data/ipa-dict/git/blobs/9359a6b6c180485080a917ec516898bafb630ecb",
+      "html": "https://github.com/open-dict-data/ipa-dict/blob/master/data/is.txt"
+    }
+  },
+  {
+    "name": "ja.txt",
+    "path": "data/ja.txt",
+    "sha": "29e0233e93c60435758adc0cac00ed002859d7cd",
+    "size": 6795765,
+    "url": "https://api.github.com/repos/open-dict-data/ipa-dict/contents/data/ja.txt?ref=master",
+    "html_url": "https://github.com/open-dict-data/ipa-dict/blob/master/data/ja.txt",
+    "git_url": "https://api.github.com/repos/open-dict-data/ipa-dict/git/blobs/29e0233e93c60435758adc0cac00ed002859d7cd",
+    "download_url": "https://raw.githubusercontent.com/open-dict-data/ipa-dict/master/data/ja.txt",
+    "type": "file",
+    "_links": {
+      "self": "https://api.github.com/repos/open-dict-data/ipa-dict/contents/data/ja.txt?ref=master",
+      "git": "https://api.github.com/repos/open-dict-data/ipa-dict/git/blobs/29e0233e93c60435758adc0cac00ed002859d7cd",
+      "html": "https://github.com/open-dict-data/ipa-dict/blob/master/data/ja.txt"
+    }
+  },
+  {
+    "name": "jam.txt",
+    "path": "data/jam.txt",
+    "sha": "e0dc079bfb2f3d9df6c4a1f695c98611daca49a1",
+    "size": 34169,
+    "url": "https://api.github.com/repos/open-dict-data/ipa-dict/contents/data/jam.txt?ref=master",
+    "html_url": "https://github.com/open-dict-data/ipa-dict/blob/master/data/jam.txt",
+    "git_url": "https://api.github.com/repos/open-dict-data/ipa-dict/git/blobs/e0dc079bfb2f3d9df6c4a1f695c98611daca49a1",
+    "download_url": "https://raw.githubusercontent.com/open-dict-data/ipa-dict/master/data/jam.txt",
+    "type": "file",
+    "_links": {
+      "self": "https://api.github.com/repos/open-dict-data/ipa-dict/contents/data/jam.txt?ref=master",
+      "git": "https://api.github.com/repos/open-dict-data/ipa-dict/git/blobs/e0dc079bfb2f3d9df6c4a1f695c98611daca49a1",
+      "html": "https://github.com/open-dict-data/ipa-dict/blob/master/data/jam.txt"
+    }
+  },
+  {
+    "name": "km.txt",
+    "path": "data/km.txt",
+    "sha": "91be1e4ad5759822d4600b32b020ed673b029cdc",
+    "size": 100144,
+    "url": "https://api.github.com/repos/open-dict-data/ipa-dict/contents/data/km.txt?ref=master",
+    "html_url": "https://github.com/open-dict-data/ipa-dict/blob/master/data/km.txt",
+    "git_url": "https://api.github.com/repos/open-dict-data/ipa-dict/git/blobs/91be1e4ad5759822d4600b32b020ed673b029cdc",
+    "download_url": "https://raw.githubusercontent.com/open-dict-data/ipa-dict/master/data/km.txt",
+    "type": "file",
+    "_links": {
+      "self": "https://api.github.com/repos/open-dict-data/ipa-dict/contents/data/km.txt?ref=master",
+      "git": "https://api.github.com/repos/open-dict-data/ipa-dict/git/blobs/91be1e4ad5759822d4600b32b020ed673b029cdc",
+      "html": "https://github.com/open-dict-data/ipa-dict/blob/master/data/km.txt"
+    }
+  },
+  {
+    "name": "ko.txt",
+    "path": "data/ko.txt",
+    "sha": "5429dd0cb60bb1829bca74ba7163dbc7176b5aa5",
+    "size": 2232325,
+    "url": "https://api.github.com/repos/open-dict-data/ipa-dict/contents/data/ko.txt?ref=master",
+    "html_url": "https://github.com/open-dict-data/ipa-dict/blob/master/data/ko.txt",
+    "git_url": "https://api.github.com/repos/open-dict-data/ipa-dict/git/blobs/5429dd0cb60bb1829bca74ba7163dbc7176b5aa5",
+    "download_url": "https://raw.githubusercontent.com/open-dict-data/ipa-dict/master/data/ko.txt",
+    "type": "file",
+    "_links": {
+      "self": "https://api.github.com/repos/open-dict-data/ipa-dict/contents/data/ko.txt?ref=master",
+      "git": "https://api.github.com/repos/open-dict-data/ipa-dict/git/blobs/5429dd0cb60bb1829bca74ba7163dbc7176b5aa5",
+      "html": "https://github.com/open-dict-data/ipa-dict/blob/master/data/ko.txt"
+    }
+  },
+  {
+    "name": "ma.txt",
+    "path": "data/ma.txt",
+    "sha": "b7a0dcc0fe97e278d7c8ba34ca359507d8954014",
+    "size": 581598,
+    "url": "https://api.github.com/repos/open-dict-data/ipa-dict/contents/data/ma.txt?ref=master",
+    "html_url": "https://github.com/open-dict-data/ipa-dict/blob/master/data/ma.txt",
+    "git_url": "https://api.github.com/repos/open-dict-data/ipa-dict/git/blobs/b7a0dcc0fe97e278d7c8ba34ca359507d8954014",
+    "download_url": "https://raw.githubusercontent.com/open-dict-data/ipa-dict/master/data/ma.txt",
+    "type": "file",
+    "_links": {
+      "self": "https://api.github.com/repos/open-dict-data/ipa-dict/contents/data/ma.txt?ref=master",
+      "git": "https://api.github.com/repos/open-dict-data/ipa-dict/git/blobs/b7a0dcc0fe97e278d7c8ba34ca359507d8954014",
+      "html": "https://github.com/open-dict-data/ipa-dict/blob/master/data/ma.txt"
+    }
+  },
+  {
+    "name": "nb.txt",
+    "path": "data/nb.txt",
+    "sha": "ad96dcf284cb52d167741d04915ea1ab55a80898",
+    "size": 259767,
+    "url": "https://api.github.com/repos/open-dict-data/ipa-dict/contents/data/nb.txt?ref=master",
+    "html_url": "https://github.com/open-dict-data/ipa-dict/blob/master/data/nb.txt",
+    "git_url": "https://api.github.com/repos/open-dict-data/ipa-dict/git/blobs/ad96dcf284cb52d167741d04915ea1ab55a80898",
+    "download_url": "https://raw.githubusercontent.com/open-dict-data/ipa-dict/master/data/nb.txt",
+    "type": "file",
+    "_links": {
+      "self": "https://api.github.com/repos/open-dict-data/ipa-dict/contents/data/nb.txt?ref=master",
+      "git": "https://api.github.com/repos/open-dict-data/ipa-dict/git/blobs/ad96dcf284cb52d167741d04915ea1ab55a80898",
+      "html": "https://github.com/open-dict-data/ipa-dict/blob/master/data/nb.txt"
+    }
+  },
+  {
+    "name": "nl.txt",
+    "path": "data/nl.txt",
+    "sha": "935beb50fd9d1b1643f54ff5871dac4e897e1b5f",
+    "size": 4031508,
+    "url": "https://api.github.com/repos/open-dict-data/ipa-dict/contents/data/nl.txt?ref=master",
+    "html_url": "https://github.com/open-dict-data/ipa-dict/blob/master/data/nl.txt",
+    "git_url": "https://api.github.com/repos/open-dict-data/ipa-dict/git/blobs/935beb50fd9d1b1643f54ff5871dac4e897e1b5f",
+    "download_url": "https://raw.githubusercontent.com/open-dict-data/ipa-dict/master/data/nl.txt",
+    "type": "file",
+    "_links": {
+      "self": "https://api.github.com/repos/open-dict-data/ipa-dict/contents/data/nl.txt?ref=master",
+      "git": "https://api.github.com/repos/open-dict-data/ipa-dict/git/blobs/935beb50fd9d1b1643f54ff5871dac4e897e1b5f",
+      "html": "https://github.com/open-dict-data/ipa-dict/blob/master/data/nl.txt"
+    }
+  },
+  {
+    "name": "or.txt",
+    "path": "data/or.txt",
+    "sha": "988dd193f822cfe257eaef033277538ad6566990",
+    "size": 211279,
+    "url": "https://api.github.com/repos/open-dict-data/ipa-dict/contents/data/or.txt?ref=master",
+    "html_url": "https://github.com/open-dict-data/ipa-dict/blob/master/data/or.txt",
+    "git_url": "https://api.github.com/repos/open-dict-data/ipa-dict/git/blobs/988dd193f822cfe257eaef033277538ad6566990",
+    "download_url": "https://raw.githubusercontent.com/open-dict-data/ipa-dict/master/data/or.txt",
+    "type": "file",
+    "_links": {
+      "self": "https://api.github.com/repos/open-dict-data/ipa-dict/contents/data/or.txt?ref=master",
+      "git": "https://api.github.com/repos/open-dict-data/ipa-dict/git/blobs/988dd193f822cfe257eaef033277538ad6566990",
+      "html": "https://github.com/open-dict-data/ipa-dict/blob/master/data/or.txt"
+    }
+  },
+  {
+    "name": "pt_BR.txt",
+    "path": "data/pt_BR.txt",
+    "sha": "325e8ee20aaf15f2fe7d4782617b2eefa79bd830",
+    "size": 2828684,
+    "url": "https://api.github.com/repos/open-dict-data/ipa-dict/contents/data/pt_BR.txt?ref=master",
+    "html_url": "https://github.com/open-dict-data/ipa-dict/blob/master/data/pt_BR.txt",
+    "git_url": "https://api.github.com/repos/open-dict-data/ipa-dict/git/blobs/325e8ee20aaf15f2fe7d4782617b2eefa79bd830",
+    "download_url": "https://raw.githubusercontent.com/open-dict-data/ipa-dict/master/data/pt_BR.txt",
+    "type": "file",
+    "_links": {
+      "self": "https://api.github.com/repos/open-dict-data/ipa-dict/contents/data/pt_BR.txt?ref=master",
+      "git": "https://api.github.com/repos/open-dict-data/ipa-dict/git/blobs/325e8ee20aaf15f2fe7d4782617b2eefa79bd830",
+      "html": "https://github.com/open-dict-data/ipa-dict/blob/master/data/pt_BR.txt"
+    }
+  },
+  {
+    "name": "ro.txt",
+    "path": "data/ro.txt",
+    "sha": "2c69b2a06a813f56b77c9167fbea5face0e899cc",
+    "size": 1599278,
+    "url": "https://api.github.com/repos/open-dict-data/ipa-dict/contents/data/ro.txt?ref=master",
+    "html_url": "https://github.com/open-dict-data/ipa-dict/blob/master/data/ro.txt",
+    "git_url": "https://api.github.com/repos/open-dict-data/ipa-dict/git/blobs/2c69b2a06a813f56b77c9167fbea5face0e899cc",
+    "download_url": "https://raw.githubusercontent.com/open-dict-data/ipa-dict/master/data/ro.txt",
+    "type": "file",
+    "_links": {
+      "self": "https://api.github.com/repos/open-dict-data/ipa-dict/contents/data/ro.txt?ref=master",
+      "git": "https://api.github.com/repos/open-dict-data/ipa-dict/git/blobs/2c69b2a06a813f56b77c9167fbea5face0e899cc",
+      "html": "https://github.com/open-dict-data/ipa-dict/blob/master/data/ro.txt"
+    }
+  },
+  {
+    "name": "sv.txt",
+    "path": "data/sv.txt",
+    "sha": "aa9d7e243c2d2ad93c7f092dbdf2fda21d4879e4",
+    "size": 574869,
+    "url": "https://api.github.com/repos/open-dict-data/ipa-dict/contents/data/sv.txt?ref=master",
+    "html_url": "https://github.com/open-dict-data/ipa-dict/blob/master/data/sv.txt",
+    "git_url": "https://api.github.com/repos/open-dict-data/ipa-dict/git/blobs/aa9d7e243c2d2ad93c7f092dbdf2fda21d4879e4",
+    "download_url": "https://raw.githubusercontent.com/open-dict-data/ipa-dict/master/data/sv.txt",
+    "type": "file",
+    "_links": {
+      "self": "https://api.github.com/repos/open-dict-data/ipa-dict/contents/data/sv.txt?ref=master",
+      "git": "https://api.github.com/repos/open-dict-data/ipa-dict/git/blobs/aa9d7e243c2d2ad93c7f092dbdf2fda21d4879e4",
+      "html": "https://github.com/open-dict-data/ipa-dict/blob/master/data/sv.txt"
+    }
+  },
+  {
+    "name": "sw.txt",
+    "path": "data/sw.txt",
+    "sha": "5f4d2f69bc8933b694f9ee84c67a8597b52e9901",
+    "size": 1040728,
+    "url": "https://api.github.com/repos/open-dict-data/ipa-dict/contents/data/sw.txt?ref=master",
+    "html_url": "https://github.com/open-dict-data/ipa-dict/blob/master/data/sw.txt",
+    "git_url": "https://api.github.com/repos/open-dict-data/ipa-dict/git/blobs/5f4d2f69bc8933b694f9ee84c67a8597b52e9901",
+    "download_url": "https://raw.githubusercontent.com/open-dict-data/ipa-dict/master/data/sw.txt",
+    "type": "file",
+    "_links": {
+      "self": "https://api.github.com/repos/open-dict-data/ipa-dict/contents/data/sw.txt?ref=master",
+      "git": "https://api.github.com/repos/open-dict-data/ipa-dict/git/blobs/5f4d2f69bc8933b694f9ee84c67a8597b52e9901",
+      "html": "https://github.com/open-dict-data/ipa-dict/blob/master/data/sw.txt"
+    }
+  },
+  {
+    "name": "tts.txt",
+    "path": "data/tts.txt",
+    "sha": "9cc22767da567e4781e75a92d09b5584a6c20b2d",
+    "size": 56121,
+    "url": "https://api.github.com/repos/open-dict-data/ipa-dict/contents/data/tts.txt?ref=master",
+    "html_url": "https://github.com/open-dict-data/ipa-dict/blob/master/data/tts.txt",
+    "git_url": "https://api.github.com/repos/open-dict-data/ipa-dict/git/blobs/9cc22767da567e4781e75a92d09b5584a6c20b2d",
+    "download_url": "https://raw.githubusercontent.com/open-dict-data/ipa-dict/master/data/tts.txt",
+    "type": "file",
+    "_links": {
+      "self": "https://api.github.com/repos/open-dict-data/ipa-dict/contents/data/tts.txt?ref=master",
+      "git": "https://api.github.com/repos/open-dict-data/ipa-dict/git/blobs/9cc22767da567e4781e75a92d09b5584a6c20b2d",
+      "html": "https://github.com/open-dict-data/ipa-dict/blob/master/data/tts.txt"
+    }
+  },
+  {
+    "name": "vi_C.txt",
+    "path": "data/vi_C.txt",
+    "sha": "734e6942f49fd335b5600b89d146ce62f5b6f796",
+    "size": 2868521,
+    "url": "https://api.github.com/repos/open-dict-data/ipa-dict/contents/data/vi_C.txt?ref=master",
+    "html_url": "https://github.com/open-dict-data/ipa-dict/blob/master/data/vi_C.txt",
+    "git_url": "https://api.github.com/repos/open-dict-data/ipa-dict/git/blobs/734e6942f49fd335b5600b89d146ce62f5b6f796",
+    "download_url": "https://raw.githubusercontent.com/open-dict-data/ipa-dict/master/data/vi_C.txt",
+    "type": "file",
+    "_links": {
+      "self": "https://api.github.com/repos/open-dict-data/ipa-dict/contents/data/vi_C.txt?ref=master",
+      "git": "https://api.github.com/repos/open-dict-data/ipa-dict/git/blobs/734e6942f49fd335b5600b89d146ce62f5b6f796",
+      "html": "https://github.com/open-dict-data/ipa-dict/blob/master/data/vi_C.txt"
+    }
+  },
+  {
+    "name": "vi_N.txt",
+    "path": "data/vi_N.txt",
+    "sha": "b7ddbc5b28364389d00daf6c50b28438802599df",
+    "size": 2808884,
+    "url": "https://api.github.com/repos/open-dict-data/ipa-dict/contents/data/vi_N.txt?ref=master",
+    "html_url": "https://github.com/open-dict-data/ipa-dict/blob/master/data/vi_N.txt",
+    "git_url": "https://api.github.com/repos/open-dict-data/ipa-dict/git/blobs/b7ddbc5b28364389d00daf6c50b28438802599df",
+    "download_url": "https://raw.githubusercontent.com/open-dict-data/ipa-dict/master/data/vi_N.txt",
+    "type": "file",
+    "_links": {
+      "self": "https://api.github.com/repos/open-dict-data/ipa-dict/contents/data/vi_N.txt?ref=master",
+      "git": "https://api.github.com/repos/open-dict-data/ipa-dict/git/blobs/b7ddbc5b28364389d00daf6c50b28438802599df",
+      "html": "https://github.com/open-dict-data/ipa-dict/blob/master/data/vi_N.txt"
+    }
+  },
+  {
+    "name": "vi_S.txt",
+    "path": "data/vi_S.txt",
+    "sha": "bbd02e5bf237ebd8ced9fb44c3f628d5c7a48344",
+    "size": 2808425,
+    "url": "https://api.github.com/repos/open-dict-data/ipa-dict/contents/data/vi_S.txt?ref=master",
+    "html_url": "https://github.com/open-dict-data/ipa-dict/blob/master/data/vi_S.txt",
+    "git_url": "https://api.github.com/repos/open-dict-data/ipa-dict/git/blobs/bbd02e5bf237ebd8ced9fb44c3f628d5c7a48344",
+    "download_url": "https://raw.githubusercontent.com/open-dict-data/ipa-dict/master/data/vi_S.txt",
+    "type": "file",
+    "_links": {
+      "self": "https://api.github.com/repos/open-dict-data/ipa-dict/contents/data/vi_S.txt?ref=master",
+      "git": "https://api.github.com/repos/open-dict-data/ipa-dict/git/blobs/bbd02e5bf237ebd8ced9fb44c3f628d5c7a48344",
+      "html": "https://github.com/open-dict-data/ipa-dict/blob/master/data/vi_S.txt"
+    }
+  },
+  {
+    "name": "yue.txt",
+    "path": "data/yue.txt",
+    "sha": "b280c38f0c9f2630ca8d284c08a507575604ce7d",
+    "size": 1779057,
+    "url": "https://api.github.com/repos/open-dict-data/ipa-dict/contents/data/yue.txt?ref=master",
+    "html_url": "https://github.com/open-dict-data/ipa-dict/blob/master/data/yue.txt",
+    "git_url": "https://api.github.com/repos/open-dict-data/ipa-dict/git/blobs/b280c38f0c9f2630ca8d284c08a507575604ce7d",
+    "download_url": "https://raw.githubusercontent.com/open-dict-data/ipa-dict/master/data/yue.txt",
+    "type": "file",
+    "_links": {
+      "self": "https://api.github.com/repos/open-dict-data/ipa-dict/contents/data/yue.txt?ref=master",
+      "git": "https://api.github.com/repos/open-dict-data/ipa-dict/git/blobs/b280c38f0c9f2630ca8d284c08a507575604ce7d",
+      "html": "https://github.com/open-dict-data/ipa-dict/blob/master/data/yue.txt"
+    }
+  },
+  {
+    "name": "zh_hans.txt",
+    "path": "data/zh_hans.txt",
+    "sha": "56603d8b52689fa973cc9868463d5d0f525858a1",
+    "size": 1369263,
+    "url": "https://api.github.com/repos/open-dict-data/ipa-dict/contents/data/zh_hans.txt?ref=master",
+    "html_url": "https://github.com/open-dict-data/ipa-dict/blob/master/data/zh_hans.txt",
+    "git_url": "https://api.github.com/repos/open-dict-data/ipa-dict/git/blobs/56603d8b52689fa973cc9868463d5d0f525858a1",
+    "download_url": "https://raw.githubusercontent.com/open-dict-data/ipa-dict/master/data/zh_hans.txt",
+    "type": "file",
+    "_links": {
+      "self": "https://api.github.com/repos/open-dict-data/ipa-dict/contents/data/zh_hans.txt?ref=master",
+      "git": "https://api.github.com/repos/open-dict-data/ipa-dict/git/blobs/56603d8b52689fa973cc9868463d5d0f525858a1",
+      "html": "https://github.com/open-dict-data/ipa-dict/blob/master/data/zh_hans.txt"
+    }
+  },
+  {
+    "name": "zh_hant.txt",
+    "path": "data/zh_hant.txt",
+    "sha": "5e1824603dab53579fcaa16a557c70c3daefb67c",
+    "size": 1456104,
+    "url": "https://api.github.com/repos/open-dict-data/ipa-dict/contents/data/zh_hant.txt?ref=master",
+    "html_url": "https://github.com/open-dict-data/ipa-dict/blob/master/data/zh_hant.txt",
+    "git_url": "https://api.github.com/repos/open-dict-data/ipa-dict/git/blobs/5e1824603dab53579fcaa16a557c70c3daefb67c",
+    "download_url": "https://raw.githubusercontent.com/open-dict-data/ipa-dict/master/data/zh_hant.txt",
+    "type": "file",
+    "_links": {
+      "self": "https://api.github.com/repos/open-dict-data/ipa-dict/contents/data/zh_hant.txt?ref=master",
+      "git": "https://api.github.com/repos/open-dict-data/ipa-dict/git/blobs/5e1824603dab53579fcaa16a557c70c3daefb67c",
+      "html": "https://github.com/open-dict-data/ipa-dict/blob/master/data/zh_hant.txt"
+    }
+  }
+]

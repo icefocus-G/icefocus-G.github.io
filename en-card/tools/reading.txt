@@ -1,0 +1,130 @@
+# 分级阅读短文 · 人教版《英语（新起点）》一年级起点配套（原创）
+# 每篇只用本年级及以前学过的词，个别生词在括号内给中文。
+# 格式： === 年级 | 册次单元 | 英文标题 | 中文标题
+#        English sentence. | 中文翻译
+
+=== 1 | 一年级上 Unit 1 | My Schoolbag | 我的书包
+I have a book. | 我有一本书。
+I have a pencil and a ruler. | 我有一支铅笔和一把尺子。
+Look! This is my schoolbag. | 看！这是我的书包。
+My teacher is here. | 我的老师在这儿。
+Thank you, teacher! | 谢谢您，老师！
+
+=== 1 | 一年级上 Unit 3 | My Cat | 我的猫
+I have a cat. | 我有一只猫。
+It is black and white. | 它是黑白色的。
+This is my dog. | 这是我的狗。
+The dog is big. | 这只狗很大。
+What is it? A bird! | 它是什么？一只鸟！
+
+=== 1 | 一年级下 Unit 4 | I Am Hungry | 我饿了
+I am hungry. | 我饿了。
+I want rice and fish. | 我想要米饭和鱼。
+I like eggs and noodles. | 我喜欢鸡蛋和面条。
+I am thirsty. | 我渴了。
+I want water, please. | 请给我水。
+
+=== 2 | 二年级上 Unit 1 | My Family | 我的一家
+This is my father. | 这是我爸爸。
+This is my mother. | 这是我妈妈。
+He is tall. She is pretty. | 他个子高。她很漂亮。
+I have a brother and a sister. | 我有一个哥哥和一个姐姐。
+Who is he? My grandfather! | 他是谁？我的爷爷！
+
+=== 2 | 二年级下 Unit 3 | Four Seasons | 四个季节
+Spring is warm. | 春天很暖和。
+Summer is hot. | 夏天很热。
+Autumn is cool. | 秋天很凉爽。
+Winter is cold. | 冬天很冷。
+My favourite season is spring. | 我最喜欢的季节是春天。
+
+=== 2 | 二年级下 Unit 5 | My Day | 我的一天
+I get up at seven. | 我七点起床。
+I go to school at eight. | 我八点去上学。
+I eat lunch at twelve. | 我十二点吃午饭。
+I go home at four. | 我四点回家。
+I go to bed at nine. | 我九点上床睡觉。
+
+=== 3 | 三年级上 Unit 2 | My Body | 我的身体
+I have two eyes and two ears. | 我有两只眼睛和两只耳朵。
+This is my nose. This is my mouth. | 这是我的鼻子。这是我的嘴巴。
+My hair is short. | 我的头发很短。
+Ouch! My leg hurts. | 哎哟！我的腿疼。
+Help me, please. | 请帮帮我。
+
+=== 3 | 三年级下 Unit 2 | Our School | 我们的学校
+This is our classroom. | 这是我们的教室。
+It is on the first floor. | 它在一楼。
+The library is on the second floor. | 图书馆在二楼。
+We read books in the library. | 我们在图书馆读书。
+We play sports on the playground. | 我们在操场上做运动。
+
+=== 3 | 三年级上 Unit 6 | My Birthday | 我的生日
+My birthday is in June. | 我的生日在六月。
+Today is my birthday. | 今天是我的生日。
+I have a big cake. | 我有一个大蛋糕。
+It is delicious! | 它很好吃！
+My friends sing songs for me. | 我的朋友们为我唱歌。
+
+=== 4 | 四年级上 Unit 3 | How Do You Go? | 你怎么去？
+I usually go to school by bike. | 我通常骑自行车上学。
+My father goes to work by subway. | 我爸爸坐地铁上班。
+We go to the park on foot. | 我们步行去公园。
+My aunt goes to Beijing by plane. | 我姑姑坐飞机去北京。
+A train is slow but fun. | 火车慢一点，但很有意思。
+
+=== 4 | 四年级下 Unit 1 | In My Neighbourhood | 我家附近
+My home is near a park. | 我家在公园附近。
+The bank is across from the bookshop. | 银行在书店对面。
+Go straight and turn left. | 直走，然后向左转。
+The restaurant is next to the hospital. | 餐馆紧挨着医院。
+You can find it! | 你能找到它！
+
+=== 4 | 四年级下 Unit 6 | Countries | 国家
+China is a big country. | 中国是一个大国。
+Pandas live in China. | 熊猫生活在中国。
+Koalas live in Australia. | 考拉生活在澳大利亚。
+You can see Big Ben in the UK. | 在英国你能看到大本钟。
+Maple leaves are from Canada. | 枫叶来自加拿大。
+
+=== 5 | 五年级上 Unit 1 | My Friends | 我的朋友
+Lily is clever and polite. | 莉莉聪明又有礼貌。
+She is quiet, but she is helpful. | 她很安静，但是乐于助人。
+Tom is active and popular. | 汤姆活跃又受欢迎。
+He is sometimes careless. | 他有时候有点粗心。
+We are all good friends. | 我们都是好朋友。
+
+=== 5 | 五年级下 Unit 1 | Good Habits | 好习惯
+I go to bed early. | 我很早睡觉。
+I exercise every day. | 我每天锻炼。
+I do not eat too much candy. | 我不吃太多糖果。
+I drink water, not cola. | 我喝水，不喝可乐。
+Good habits keep us healthy. | 好习惯让我们保持健康。
+
+=== 5 | 五年级下 Unit 5 | A Trip to Sanya | 三亚之旅
+Last summer we went to the beach. | 去年夏天我们去了海边。
+We swam in the sea. | 我们在海里游泳。
+We ate ice-cream and took photos. | 我们吃了冰淇淋，还拍了照片。
+We bought some gifts. | 我们买了一些礼物。
+We felt tired but happy. | 我们觉得累，但很开心。
+
+=== 6 | 六年级上 Unit 1 | Welcome to Chengdu | 欢迎来成都
+Chengdu is a famous city in the west of China. | 成都是中国西部一座著名的城市。
+You can taste hot pot and morning tea. | 你可以品尝火锅和早茶。
+The food is spicy and delicious. | 这里的食物又辣又好吃。
+Many visitors go to see the pandas. | 很多游客去看熊猫。
+Come and visit Chengdu! | 来成都玩吧！
+
+=== 6 | 六年级上 Unit 3 | Amazing Animals | 神奇的动物
+A whale is a mammal, not a fish. | 鲸是哺乳动物，不是鱼。
+A penguin is a bird, but it cannot fly. | 企鹅是鸟，但它不会飞。
+A shark has sharp teeth. | 鲨鱼有锋利的牙齿。
+An elephant has a long trunk. | 大象有长长的象鼻。
+Some insects are very small. | 有些昆虫非常小。
+
+=== 6 | 六年级下 Unit 6 | A Pen Pal | 一位笔友
+I have a pen pal in Canada. | 我有一位加拿大的笔友。
+We send emails every week. | 我们每周发电子邮件。
+She lives in the countryside. | 她住在乡下。
+She told me about Thanksgiving. | 她跟我讲了感恩节。
+I told her about hot pot and pandas. | 我跟她讲了火锅和熊猫。

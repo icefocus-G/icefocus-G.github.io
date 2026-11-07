@@ -1,0 +1,1033 @@
+# 人教版《英语（新起点）》一年级起点 · 1~6 年级（共 12 册）教材词汇
+# 成都主城区（武侯、青羊、锦江、金牛、成华等）小学英语现行用书
+# 格式：  === 年级+册 UnitN    /    每行「英文 中文」，英文含空格的归到短语库
+# 说明：仅做必要的纠错（原资料中的 Februry→February、fifity→fifty 等拼写）
+
+=== 1A U1
+book 书，书本
+ruler 尺子
+pencil 铅笔
+schoolbag 书包
+teacher 教师
+I 我
+have 有
+a/an 一（个）
+
+=== 1A U2
+face 脸
+ear 耳朵
+eye 眼睛
+nose 鼻子
+mouth 嘴巴
+this 这（个）
+is 是
+my 我的
+
+=== 1A U3
+dog 狗
+bird 鸟
+tiger 老虎
+monkey 猴子
+cat 猫
+what 什么
+it 它
+
+=== 1A U4
+one 一
+two 二
+three 三
+four 四
+five 五
+six 六
+seven 七
+eight 八
+nine 九
+ten 十
+how 多少
+many 多的，许多的
+are 是
+
+=== 1A U5
+black 黑色；黑色的
+yellow 黄色；黄色的
+blue 蓝色；蓝色的
+red 红色；红色的
+green 绿色；绿色的
+colour 颜色
+
+=== 1A U6
+apple 苹果
+pear 梨
+banana 香蕉
+orange 柑橘；橙
+do （助动词）
+you 你；你们
+like 喜欢；喜爱
+yes 是，是的
+no 不，不是
+there （代替主语）
+
+=== 1B U1
+chair 椅子
+desk 书桌，写字台
+blackboard 黑板
+on 在……上
+under 在……下面
+in 在……里面
+where 在哪里
+the 放在名词前，特指
+
+=== 1B U2
+light 灯
+bed 床
+door 门，出入口
+box 箱子，盒子
+near 靠近，接近
+behind 在……背后
+
+=== 1B U3
+plane 飞机
+ball 球
+doll 玩偶，玩具娃娃
+train 列车，火车
+car 小汽车
+bear 玩具熊，熊
+can 可以，能够
+sure 当然
+sorry 对不起，抱歉
+
+=== 1B U4
+rice 米饭
+noodles 面条
+vegetable 蔬菜
+fish 鱼肉，鱼
+chicken 鸡肉，鸡
+egg 鸡蛋
+hungry 饥饿的
+want 要，想要
+and 和
+
+=== 1B U5
+juice 果汁
+tea 茶，茶叶
+milk 奶，牛奶
+water 水
+thirsty 口渴的
+thanks 感谢
+
+=== 1B U6
+shirt 衬衫
+T-shirt T恤衫
+skirt 裙子
+dress 连衣裙
+socks 短袜
+shorts 短裤
+your 你的，你们的
+
+=== 2A U1
+father 父亲
+mother 母亲
+brother 兄；弟
+sister 姐；妹
+grandmother （外）祖母
+grandfather （外）祖父
+who 谁
+he 他
+she 她
+
+=== 2A U2
+classmate 同班同学
+friend 朋友
+woman 女人
+girl 女孩
+man 男人
+boy 男孩
+look 看；瞧
+his 他的
+name 名字
+her 她的
+or 还是
+
+=== 2A U3
+big 大的
+tall 高的
+pretty 漂亮的
+thin 瘦的
+short 矮的
+handsome 英俊的
+new 新的
+does （助动词）
+
+=== 2A U4
+bookshop 书店
+zoo 动物园
+school 学校
+supermarket 超市
+park 公园
+hospital 医院
+go 去
+to 向，朝
+
+=== 2A U5
+grass 草
+tree 树
+flower 花
+boat 船
+lake 湖
+hill 山
+
+=== 2A U6
+Christmas 圣诞节
+Father Christmas 圣诞老人
+Christmas tree 圣诞树
+card 贺卡
+present 礼物
+New Year 新年
+merry 高兴的
+too 也
+here 这儿
+for 给，为
+thank 谢谢
+happy 快乐的
+
+=== 2B U1
+play football 踢足球
+fly a kite 放风筝
+ride a bike 骑自行车
+make a model plane 做飞机模型
+swim 游泳
+make a snowman 堆雪人
+can't 不能，不会
+
+=== 2B U2
+rainy 下雨的
+cloudy 多云的
+snowy 下雪的
+windy 刮风的
+sunny 晴朗的
+umbrella 雨伞
+weather 天气
+wow 哇
+let's 让我们
+
+=== 2B U3
+spring 春天
+summer 夏天
+autumn 秋天
+winter 冬天
+hot 炎热的
+warm 温暖的
+cool 凉爽的
+cold 寒冷的
+favourite 最喜欢的
+season 季节
+
+=== 2B U4
+eleven 十一
+twelve 十二
+twenty 二十
+thirty 三十
+forty 四十
+fifty 五十
+thirteen 十三
+fourteen 十四
+fifteen 十五
+time 时间
+playtime 游戏时间
+
+=== 2B U5
+get up 起床
+eat breakfast 吃早饭
+go to school 上学
+eat lunch 吃午饭
+go home 回家
+eat dinner 吃晚饭
+go to bed 上床睡觉
+when 什么时候
+every day 每天
+at 在……点钟
+
+=== 2B U6
+Sunday 星期天
+Monday 星期一
+Tuesday 星期二
+Wednesday 星期三
+Thursday 星期四
+Friday 星期五
+Saturday 星期六
+today 今天
+
+=== 3A U1
+my 我的
+your 你的
+name 名字
+new 新的
+year 年
+old 年老的
+how old 多大
+class 班级
+grade 年级
+age 年龄
+dear 亲爱的
+
+=== 3A U2
+body 身体
+head 头
+hair 头发
+arm 胳膊
+hand 手
+leg 腿
+foot 脚
+feet 脚（复数）
+the matter 麻烦事
+hurt 疼痛；弄疼
+help 帮助
+bad 坏的；糟糕
+bite 咬
+tongue 舌头
+kick 踢
+morning 早晨
+afternoon 下午
+summary 总结
+face 脸
+eye 眼睛
+nose 鼻子
+mouth 嘴巴
+ear 耳朵
+
+=== 3A U3
+bread 面包
+cake 蛋糕
+fruit 水果
+ice-cream 冰淇淋
+potato 土豆
+tomato 西红柿
+meat 肉
+for 当作
+shopping list 购物单
+cola 可乐
+buy 买
+rice 米
+noodles 面条
+vegetables 蔬菜
+fish 鱼
+chicken 鸡
+egg 鸡蛋
+
+=== 3A U4
+duck 鸭子
+chicken 鸡
+rabbit 兔子
+pet 宠物
+snake 蛇
+turtle 海龟
+small 小的
+long 长的
+look for 寻找
+tail 尾巴
+dance 跳舞
+cat 猫
+dog 狗
+bird 鸟
+fish 鱼
+monkey 猴子
+tiger 老虎
+big 大
+short 短
+
+=== 3A U5
+cap 帽子
+coat 大衣
+shoes 鞋
+sweater 毛衣
+jacket 夹克衫
+gloves 手套
+trousers 裤子
+should 应该
+wear 穿
+week 星期
+soon 不久
+look forward to 盼望
+T-shirt T恤
+shorts 短裤
+socks 短袜
+skirt 裙子
+dress 连衣裙
+shirt 衬衫
+
+=== 3A U6
+January 一月
+February 二月
+March 三月
+April 四月
+May 五月
+June 六月
+July 七月
+August 八月
+September 九月
+October 十月
+November 十一月
+December 十二月
+birthday 生日
+first 第一
+party 聚会
+delicious 美味的
+
+=== 3B U1
+Chinese 语文；汉语
+English 英语
+science 科学
+PE 体育
+music 音乐
+maths 数学
+art 美术
+computer class 计算机课
+we 我们
+that 那，那个
+
+=== 3B U2
+classroom 教室
+library 图书馆
+toilet 洗手间
+playground 操场
+first 第一的
+second 第二的
+third 第三的
+floor 楼层
+room 房间
+our 我们的
+they 他们
+chair 椅子
+desk 书桌
+blackboard 黑板
+
+=== 3B U3
+after school 放学后
+play sports 做运动
+draw pictures 画画
+play chess 下棋
+dance 跳舞
+sing songs 唱歌
+read books 读书
+really 确实
+tomorrow 明天
+wake up 叫醒
+be back 回来
+
+=== 3B U4
+family 家庭
+uncle 叔叔
+aunt 阿姨
+cousin 堂（表）兄弟姐妹
+handsome 英俊的
+beautiful 美丽的
+lost 遗失
+water bottle 水瓶
+know 知道
+OK 好的
+much 很多的
+welcome 受欢迎的
+
+=== 3B U5
+cooking dinner 正在做饭
+walking the dog 正在遛狗
+watering the plants 正在给植物浇水
+cleaning the room 正在打扫房间
+listening to music 正在听音乐
+watching TV 正在看电视
+feeding the fish 正在喂鱼
+play with 与……玩耍
+in one hour 一小时之后
+everyone 人人
+children 孩子们
+run 跑
+
+=== 3B U6
+home 家
+bedroom 卧室
+living room 客厅
+bathroom 浴室
+dining room 餐厅
+study 书房
+kitchen 厨房
+for rent 供出租
+sofa 沙发
+light 灯
+bed 床
+door 门
+box 盒子
+
+=== 4A U1
+running 跑步
+basketball 篮球
+roller skating 滑旱冰
+jumping rope 跳绳
+ping-pong 乒乓球
+interesting 有趣的
+often 经常
+be good at 擅长
+late 晚
+swim 游泳
+friend 朋友
+father 父亲
+get up 起床
+
+=== 4A U2
+visit one's grandparents 看望祖父母
+go to a drawing club 去绘画俱乐部
+climb a hill 爬山
+pick fruit 采摘水果
+play computer games 玩电脑游戏
+go fishing 钓鱼
+go to the cinema 看电影
+on the weekend 在周末
+fun 有趣的
+always 总是
+step 踏；踩
+paint 颜料
+evening 傍晚
+dirty 脏的
+their 他们的
+house 房子
+poor 可怜的
+hope 希望
+so 那么
+Saturday 星期六
+near 靠近
+day 白天
+
+=== 4A U3
+usually 通常
+by bus 乘公交车
+by boat 乘小船
+by ship 乘轮船
+by car 乘小汽车
+by taxi 乘出租车
+by bike 骑自行车
+on foot 步行
+by school bus 乘校车
+by subway 乘地铁
+by plane 乘飞机
+by train 乘火车
+garden 花园
+meeting place 集合地点
+gate 大门
+transportation 交通
+film 电影
+earth 地球
+snow 雪
+theatre 剧场
+come 来
+enjoy 欣赏
+park 公园
+apple 苹果
+
+=== 4A U4
+pen 钢笔
+knife 小刀
+eraser 橡皮
+crayon 蜡笔
+scissors 剪刀
+glue stick 胶棒
+paper 纸
+use 使用
+please 请
+find 找到
+Excuse me 对不起，打扰一下
+phone 电话
+dad 爸爸
+hamburger 汉堡包
+ruler 尺子
+pencil 铅笔
+schoolbag 书包
+shop 商店
+
+=== 4A U5
+climb on the window ledge 爬窗台
+dangerous 危险的
+play with fire 玩火
+Be careful 当心
+run down the stairs 跑下楼梯
+sidewalk 人行道
+wait for 等待
+safe 安全
+stop 停
+street 街道
+safety rule 安全规则
+green 绿色的
+red 红色的
+play football 踢足球
+
+=== 4A U6
+nurse 护士
+cook 厨师
+doctor 医生
+bus driver 公交司机
+police officer 警官
+taxi driver 出租司机
+farmer 农民
+worker 工人
+in the future 将来
+great 好极了
+job 工作
+sick 有病的
+people 人们
+teach 教
+just 只是
+myself 我自己
+sound 听起来
+Monday 星期一
+Tuesday 星期二
+Wednesday 星期三
+Thursday 星期四
+Friday 星期五
+teacher 老师
+
+=== 4B U1
+across from 对面
+next to 紧邻
+between 在……之间
+restaurant 餐馆
+post office 邮局
+bank 银行
+grocery 食品杂货店
+turn left 向左转
+turn right 向右转
+go straight 直行
+crossroads 十字路口
+neighbourhood 街坊
+send 发送
+get 得到
+money 钱
+get to 到达
+before 在……之前
+leave 离开
+toy 玩具
+hospital 医院
+bookshop 书店
+school 学校
+supermarket 超市
+ball 球
+
+=== 4B U2
+city 城市
+street 街道
+sports centre 体育中心
+hotel 宾馆
+square 广场
+buy toys 买玩具
+see a film 看电影
+go boating 去划船
+busy 忙碌的
+station 车站
+place 地方
+thing 事物
+stay 停留
+star 星星
+king 国王
+central 中心的
+take photos 照相
+museum 博物馆
+dream 梦
+
+=== 4B U3
+sea 大海
+ski 滑雪
+eat seafood 吃海鲜
+West Lake 西湖
+row a boat 划船
+the Great Wall 长城
+take photos 照相
+summer vacation 暑假
+travel 旅游
+
+=== 4B U4
+reading 读书
+skateboarding 玩滑板
+singing 唱歌
+dancing 跳舞
+doing jigsaw puzzles 拼拼图
+making models 制作模型
+collecting erasers 收集橡皮
+different 不同的
+hobby 爱好
+stamp 邮票
+catch 抓住
+
+=== 4B U5
+go for a picnic 去野餐
+play the violin 拉小提琴
+go skating 去滑冰
+go camping 去野营
+do the housework 做家务
+free 空闲的
+never 从不
+once a week 一周一次
+twice a week 一周两次
+three times a week 一周三次
+
+=== 4B U6
+Canada 加拿大
+Australia 澳大利亚
+the UK 英国
+the USA 美国
+China 中国
+koala 考拉
+maple leaves 枫叶
+Big Ben 大本钟
+Disneyland 迪斯尼乐园
+campfire 篝火
+cute 可爱的
+country 国家
+pretty 漂亮的
+
+=== 5A U1
+clever 聪明的
+careless 粗心的
+polite 有礼貌的
+quiet 安静的
+cute 可爱的
+friendly 友好的
+helpful 有帮助的
+active 活跃的
+popular 受欢迎的
+talk 说话
+party 聚会
+all 全部
+but 但是
+sometimes 有时
+bark 叫
+forget 忘记
+with 同……一起
+
+=== 5A U2
+wear glasses 戴眼镜
+slim 苗条的
+curly 卷曲的
+straight 直的
+nice 好的
+young 年轻的
+teach 教
+
+=== 5A U3
+animal 动物
+elephant 大象
+panda 熊猫
+horse 马
+cow 牛
+pig 猪
+sheep 绵羊
+bee 蜜蜂
+farm 农场
+fast 迅速
+why 为什么
+lovely 可爱的
+butterfly 蝴蝶
+
+=== 5A U4
+exercise book 练习本
+pencil sharpener 铅笔刀
+a pair of scissors 一把剪刀
+pencil box 铅笔盒
+a box of crayons 一盒蜡笔
+please 请
+only 只
+also 也
+saleswoman 女售货员
+great 好极了
+love 喜欢
+how much 多少钱
+a lot 很多
+
+=== 5A U5
+wonderful 精彩的
+cool 酷的
+fantastic 极好的
+cartoons 动画片
+news shows 新闻节目
+nature shows 自然节目
+
+=== 5A U6
+chore 家务
+clean the room 打扫房间
+make the bed 整理床铺
+take out the rubbish 倒垃圾
+wash clothes 洗衣服
+tidy the desk 清理书桌
+sweep the floor 扫地
+call 打电话给
+guess 猜
+
+=== 5B U1
+too much 太多
+candy 糖果
+go to bed 去睡觉
+early 早
+exercise 锻炼
+tired 困倦的
+drink 喝
+before 在……之前
+dirty 脏的
+always 总是
+stomachache 胃疼
+headache 头疼
+toothache 牙疼
+a lot of 许多
+sleepy 困的
+subject 学科
+mark 分数
+advice 建议
+more 更多的
+
+=== 5B U2
+New Year's Day 新年
+Tree Planting Day 植树节
+Mother's Day 母亲节
+Children's Day 儿童节
+Father's Day 父亲节
+Teacher's Day 教师节
+National Day 国庆节
+Christmas Day 圣诞节
+birthday 生日
+fifth 第五
+tenth 第十
+twelfth 第十二
+twenty-fifth 第二十五
+plant 种植
+make a poster 制作海报
+celebrate 庆祝
+have a picnic 野餐
+office 办公室
+together 在一起
+special 特别的
+
+=== 5B U3
+send an email 发电子邮件
+write a letter 写信
+make a phone call 打电话
+send a short message 发送短消息
+mail a present 邮寄礼物
+make a video call 打视频电话
+say 说；讲
+make a card 制作卡片
+everywhere 到处
+flower show 花展
+
+=== 5B U4
+cleaned the window 擦窗子（过去式）
+watched TV 看电视（过去式）
+climbed a hill 爬山（过去式）
+visited grandparents 看望祖父母（过去式）
+danced 跳舞（过去式）
+jumped rope 跳绳（过去式）
+listened to music 听音乐（过去式）
+rowed a boat 划船（过去式）
+played computer games 玩电脑游戏（过去式）
+stayed at home 呆在家里（过去式）
+played the piano 弹钢琴（过去式）
+played chess 下棋（过去式）
+washed clothes 洗衣服（过去式）
+boring 乏味的
+badminton 羽毛球
+won 赢（过去式）
+
+=== 5B U5
+went to the beach 去海边（过去式）
+drank cold drinks 喝冷饮（过去式）
+swam 游泳（过去式）
+ate ice-cream 吃冰淇淋（过去式）
+the Stone Forest 石林
+bought some gifts 买礼物（过去式）
+took photos 拍照片（过去式）
+saw flowers 赏花（过去式）
+slept 睡觉（过去式）
+delicious 美味的
+felt happy 觉得高兴（过去式）
+sad 悲哀的
+left 离开（过去式）
+French fries 法式炸薯条
+were 是（过去式）
+
+=== 5B U6
+was born 出生
+started to speak 开始说话
+learned to walk 学走路
+learned to ride a bike 学骑自行车
+went to kindergarten 上幼儿园
+went to school 上学
+learned to swim 学游泳
+fifteenth 第十五
+started to buy things 开始学买东西
+started to study English 开始学英语
+started to use a computer 开始使用电脑
+all over 到处
+out of 离开
+into 进入
+chopsticks 筷子
+wet 湿的
+
+=== 6A U1
+morning tea 早茶
+soup 汤
+garden 花园
+the Potala Palace 布达拉宫
+the Summer Palace 颐和园
+The Terracotta Army 兵马俑
+vacation 假期
+taste 品尝
+map 地图
+north 北
+south 南
+east 东
+west 西
+famous 著名的
+temple 寺
+around 遍及
+the Yangtze River 长江
+foggy 有雾的
+spicy 辣的
+silk 丝绸
+forest 树林
+stone 石头
+
+=== 6A U2
+London 伦敦
+Toronto 多伦多
+Sydney 悉尼
+Washington 华盛顿
+the British Museum 大英博物馆
+the CN Tower 加拿大国家电视塔
+kangaroo 袋鼠
+the Opera House 悉尼歌剧院
+the White House 白宫
+clock 时钟
+speak 说
+French 法语
+Tower Bridge 伦敦塔桥
+the London Eye 伦敦眼
+hiking 远足
+sunrise 日出
+president 总统
+
+=== 6A U3
+reptile 爬行动物
+bird 鸟
+mammal 哺乳动物
+insect 昆虫
+penguin 企鹅
+shark 鲨鱼
+whale 鲸
+kind 种类
+metre 米
+spend 花费
+trunk 象鼻
+peanut 花生
+fan 扇子
+tusk 长牙
+Africa 非洲
+Asia 亚洲
+smart 聪明的
+
+=== 6A U4
+scared 害怕的
+worried 担心的
+angry 生气的
+proud 自豪的
+sad 难过的
+excited 激动的
+happy 高兴的
+ill 有病
+win 获胜
+race 赛跑
+find 发现
+cry 哭
+because 因为
+test 测验
+competition 竞赛
+hurt 弄伤
+
+=== 6A U5
+inventor 发明家
+artist 画家
+scientist 科学家
+poet 诗人
+writer 作家
+American 美国人
+French 法国人
+Danish 丹麦人
+poem 诗
+paint 用颜料画
+invention 发明
+invent 发明
+study 学习
+story 故事
+university 大学
+deaf 聋的
+blind 失明的
+fall 落下
+
+=== 6A U6
+dumpling 饺子
+fan 迷，爱好者
+ice lantern 冰灯
+bring 带来
+be afraid of 害怕
+hear 听到
+pen pal 笔友
+broken 损坏了的
+pity 遗憾
+prize 奖品
+look forward to 盼望
+
+=== 6B U1
+live 居住
+quite 相当
+scarf 围巾
+airport 机场
+pupil 小学生
+arrive 到达
+meet 会面
+wardrobe 衣柜
+
+=== 6B U2
+show around 带领参观
+Queen's Park 女王公园
+art gallery 艺术馆
+public library 公共图书馆
+downtown 市中心
+Lake Ontario 安大略湖
+stadium 体育场
+
+=== 6B U3
+volunteer 志愿者
+sandwich 三明治
+top 上边
+habit 习惯
+idea 主意
+less 更少
+at least 至少
+
+=== 6B U4
+talk about 谈论
+hockey 曲棍球
+together 一起
+special 特殊的
+beaver 海狸
+raccoon 浣熊
+moose 驼鹿
+
+=== 6B U5
+countryside 乡下
+Thanksgiving 感恩节
+roast turkey 烤火鸡
+squirrel 松鼠
+swan 天鹅
+wild goose 大雁
+frog 青蛙
+
+=== 6B U6
+English-Chinese dictionary 英汉词典
+shopping centre 购物中心
+shopping mall 大型综合商业中心
+amazing 惊人的
+hot pot 火锅

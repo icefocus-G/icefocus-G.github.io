@@ -1,0 +1,4810 @@
+{
+ "version": 2,
+ "updated": "2026-11-07",
+ "accent": "uk",
+ "note": "音标（英式 DJ）+ 中文释义。教材词以教材释义为准；其余为词典补充，便于自定义加词。",
+ "words": {
+  "cat": [
+   "kæt",
+   "猫"
+  ],
+  "dog": [
+   "dɒɡ",
+   "狗"
+  ],
+  "pig": [
+   "pɪɡ",
+   "猪"
+  ],
+  "duck": [
+   "dʌk",
+   "鸭子"
+  ],
+  "hen": [
+   "hen",
+   "母鸡"
+  ],
+  "bird": [
+   "bɜːd",
+   "鸟"
+  ],
+  "fish": [
+   "fɪʃ",
+   "鱼"
+  ],
+  "rabbit": [
+   "ˈræbɪt",
+   "兔子"
+  ],
+  "tiger": [
+   "ˈtaɪɡə",
+   "老虎"
+  ],
+  "panda": [
+   "ˈpændə",
+   "熊猫"
+  ],
+  "monkey": [
+   "ˈmʌŋki",
+   "猴子"
+  ],
+  "elephant": [
+   "ˈelɪfənt",
+   "大象"
+  ],
+  "lion": [
+   "ˈlaɪən",
+   "狮子"
+  ],
+  "bear": [
+   "beə",
+   "玩具熊，熊"
+  ],
+  "cow": [
+   "kaʊ",
+   "牛"
+  ],
+  "horse": [
+   "hɔːs",
+   "马"
+  ],
+  "sheep": [
+   "ʃiːp",
+   "绵羊"
+  ],
+  "mouse": [
+   "maʊs",
+   "老鼠"
+  ],
+  "fox": [
+   "fɒks",
+   "狐狸"
+  ],
+  "red": [
+   "red",
+   "红色的"
+  ],
+  "blue": [
+   "bluː",
+   "蓝色；蓝色的"
+  ],
+  "yellow": [
+   "ˈjeləʊ",
+   "黄色；黄色的"
+  ],
+  "green": [
+   "ɡriːn",
+   "绿色的"
+  ],
+  "black": [
+   "blæk",
+   "黑色；黑色的"
+  ],
+  "white": [
+   "waɪt",
+   "白色"
+  ],
+  "pink": [
+   "pɪŋk",
+   "粉色"
+  ],
+  "brown": [
+   "braʊn",
+   "棕色"
+  ],
+  "one": [
+   "wʌn",
+   "一"
+  ],
+  "two": [
+   "tuː",
+   "二"
+  ],
+  "three": [
+   "θriː",
+   "三"
+  ],
+  "four": [
+   "fɔː",
+   "四"
+  ],
+  "five": [
+   "faɪv",
+   "五"
+  ],
+  "six": [
+   "sɪks",
+   "六"
+  ],
+  "seven": [
+   "ˈsevn",
+   "七"
+  ],
+  "eight": [
+   "eɪt",
+   "八"
+  ],
+  "nine": [
+   "naɪn",
+   "九"
+  ],
+  "ten": [
+   "ten",
+   "十"
+  ],
+  "mum": [
+   "mʌm",
+   "妈妈"
+  ],
+  "dad": [
+   "dæd",
+   "爸爸"
+  ],
+  "sister": [
+   "ˈsɪstə",
+   "姐；妹"
+  ],
+  "brother": [
+   "ˈbrʌðə",
+   "兄；弟"
+  ],
+  "baby": [
+   "ˈbeɪbi",
+   "宝宝"
+  ],
+  "family": [
+   "ˈfæməli",
+   "家庭"
+  ],
+  "friend": [
+   "frend",
+   "朋友"
+  ],
+  "boy": [
+   "bɔɪ",
+   "男孩"
+  ],
+  "girl": [
+   "ɡɜːl",
+   "女孩"
+  ],
+  "grandma": [
+   "ˈɡrænmɑː",
+   "奶奶；外婆"
+  ],
+  "grandpa": [
+   "ˈɡrænpɑː",
+   "爷爷；外公"
+  ],
+  "eye": [
+   "aɪ",
+   "眼睛"
+  ],
+  "ear": [
+   "ɪə",
+   "耳朵"
+  ],
+  "nose": [
+   "nəʊz",
+   "鼻子"
+  ],
+  "mouth": [
+   "maʊθ",
+   "嘴巴"
+  ],
+  "hand": [
+   "hænd",
+   "手"
+  ],
+  "foot": [
+   "fʊt",
+   "脚"
+  ],
+  "head": [
+   "hed",
+   "头"
+  ],
+  "face": [
+   "feɪs",
+   "脸"
+  ],
+  "arm": [
+   "ɑːm",
+   "胳膊"
+  ],
+  "leg": [
+   "leɡ",
+   "腿"
+  ],
+  "hair": [
+   "heə",
+   "头发"
+  ],
+  "apple": [
+   "ˈæpl",
+   "苹果"
+  ],
+  "banana": [
+   "bəˈnɑːnə",
+   "香蕉"
+  ],
+  "egg": [
+   "eɡ",
+   "鸡蛋"
+  ],
+  "milk": [
+   "mɪlk",
+   "奶，牛奶"
+  ],
+  "cake": [
+   "keɪk",
+   "蛋糕"
+  ],
+  "water": [
+   "ˈwɔːtə",
+   "水"
+  ],
+  "rice": [
+   "raɪs",
+   "米"
+  ],
+  "bread": [
+   "bred",
+   "面包"
+  ],
+  "hello": [
+   "həˈləʊ",
+   "你好"
+  ],
+  "bye": [
+   "baɪ",
+   "再见"
+  ],
+  "yes": [
+   "jes",
+   "是，是的"
+  ],
+  "no": [
+   "nəʊ",
+   "不，不是"
+  ],
+  "I": [
+   "aɪ",
+   "我"
+  ],
+  "you": [
+   "juː",
+   "你；你们"
+  ],
+  "he": [
+   "hiː",
+   "他"
+  ],
+  "she": [
+   "ʃiː",
+   "她"
+  ],
+  "we": [
+   "wiː",
+   "我们"
+  ],
+  "it": [
+   "ɪt",
+   "它"
+  ],
+  "my": [
+   "maɪ",
+   "我的"
+  ],
+  "this": [
+   "ðɪs",
+   "这（个）"
+  ],
+  "that": [
+   "ðæt",
+   "那，那个"
+  ],
+  "please": [
+   "pliːz",
+   "请"
+  ],
+  "sorry": [
+   "ˈsɒri",
+   "对不起，抱歉"
+  ],
+  "thank": [
+   "θæŋk",
+   "谢谢"
+  ],
+  "a": [
+   "ə",
+   "一（个）"
+  ],
+  "the": [
+   "ðə",
+   "放在名词前，特指"
+  ],
+  "to": [
+   "tuː",
+   "向，朝"
+  ],
+  "of": [
+   "əv",
+   "……的"
+  ],
+  "for": [
+   "fɔː",
+   "当作"
+  ],
+  "from": [
+   "frɒm",
+   "从……"
+  ],
+  "at": [
+   "æt",
+   "在……点钟"
+  ],
+  "with": [
+   "wɪð",
+   "同……一起"
+  ],
+  "and": [
+   "ænd",
+   "和"
+  ],
+  "but": [
+   "bʌt",
+   "但是"
+  ],
+  "or": [
+   "ɔː",
+   "还是"
+  ],
+  "not": [
+   "nɒt",
+   "不"
+  ],
+  "can": [
+   "kæn",
+   "可以，能够"
+  ],
+  "do": [
+   "duː",
+   "（助动词）"
+  ],
+  "have": [
+   "hæv",
+   "有"
+  ],
+  "is": [
+   "ɪz",
+   "是"
+  ],
+  "am": [
+   "æm",
+   "是（我）"
+  ],
+  "are": [
+   "ɑː",
+   "是"
+  ],
+  "how": [
+   "haʊ",
+   "多少"
+  ],
+  "who": [
+   "huː",
+   "谁"
+  ],
+  "where": [
+   "weə",
+   "在哪里"
+  ],
+  "when": [
+   "wen",
+   "什么时候"
+  ],
+  "why": [
+   "waɪ",
+   "为什么"
+  ],
+  "what": [
+   "wɒt",
+   "什么"
+  ],
+  "your": [
+   "jɔː",
+   "你的"
+  ],
+  "me": [
+   "miː",
+   "我（宾格）"
+  ],
+  "us": [
+   "ʌs",
+   "我们（宾格）"
+  ],
+  "let": [
+   "let",
+   "让"
+  ],
+  "best": [
+   "best",
+   "最好的"
+  ],
+  "under": [
+   "ˈʌndə",
+   "在……下面"
+  ],
+  "on": [
+   "ɒn",
+   "在……上"
+  ],
+  "in": [
+   "ɪn",
+   "在……里面"
+  ],
+  "up": [
+   "ʌp",
+   "向上"
+  ],
+  "down": [
+   "daʊn",
+   "向下"
+  ],
+  "here": [
+   "hɪə",
+   "这儿"
+  ],
+  "now": [
+   "naʊ",
+   "现在"
+  ],
+  "there": [
+   "ðeə",
+   "（代替主语）"
+  ],
+  "very": [
+   "ˈveri",
+   "很"
+  ],
+  "too": [
+   "tuː",
+   "也"
+  ],
+  "many": [
+   "ˈmeni",
+   "多的，许多的"
+  ],
+  "much": [
+   "mʌtʃ",
+   "很多的"
+  ],
+  "some": [
+   "sʌm",
+   "一些"
+  ],
+  "all": [
+   "ɔːl",
+   "全部"
+  ],
+  "lot": [
+   "lɒt",
+   "大量"
+  ],
+  "come": [
+   "kʌm",
+   "来"
+  ],
+  "go": [
+   "ɡəʊ",
+   "去"
+  ],
+  "pen": [
+   "pen",
+   "钢笔"
+  ],
+  "pencil": [
+   "ˈpensl",
+   "铅笔"
+  ],
+  "book": [
+   "bʊk",
+   "书，书本"
+  ],
+  "bag": [
+   "bæɡ",
+   "书包"
+  ],
+  "ruler": [
+   "ˈruːlə",
+   "尺子"
+  ],
+  "rubber": [
+   "ˈrʌbə",
+   "橡皮"
+  ],
+  "crayon": [
+   "ˈkreɪən",
+   "蜡笔"
+  ],
+  "desk": [
+   "desk",
+   "书桌"
+  ],
+  "chair": [
+   "tʃeə",
+   "椅子"
+  ],
+  "school": [
+   "skuːl",
+   "学校"
+  ],
+  "class": [
+   "klɑːs",
+   "班级"
+  ],
+  "teacher": [
+   "ˈtiːtʃə",
+   "老师"
+  ],
+  "pupil": [
+   "ˈpjuːpl",
+   "小学生"
+  ],
+  "door": [
+   "dɔː",
+   "门"
+  ],
+  "window": [
+   "ˈwɪndəʊ",
+   "窗户"
+  ],
+  "ball": [
+   "bɔːl",
+   "球"
+  ],
+  "doll": [
+   "dɒl",
+   "玩偶，玩具娃娃"
+  ],
+  "kite": [
+   "kaɪt",
+   "风筝"
+  ],
+  "juice": [
+   "dʒuːs",
+   "果汁"
+  ],
+  "tea": [
+   "tiː",
+   "茶，茶叶"
+  ],
+  "coffee": [
+   "ˈkɒfi",
+   "咖啡"
+  ],
+  "soup": [
+   "suːp",
+   "汤"
+  ],
+  "meat": [
+   "miːt",
+   "肉"
+  ],
+  "chicken": [
+   "ˈtʃɪkɪn",
+   "鸡"
+  ],
+  "noodles": [
+   "ˈnuːdlz",
+   "面条"
+  ],
+  "dumpling": [
+   "ˈdʌmplɪŋ",
+   "饺子"
+  ],
+  "candy": [
+   "ˈkændi",
+   "糖果"
+  ],
+  "chocolate": [
+   "ˈtʃɒklət",
+   "巧克力"
+  ],
+  "cream": [
+   "kriːm",
+   "奶油"
+  ],
+  "ice": [
+   "aɪs",
+   "冰"
+  ],
+  "orange": [
+   "ˈɒrɪndʒ",
+   "柑橘；橙"
+  ],
+  "grape": [
+   "ɡreɪp",
+   "葡萄"
+  ],
+  "pear": [
+   "peə",
+   "梨"
+  ],
+  "peach": [
+   "piːtʃ",
+   "桃子"
+  ],
+  "watermelon": [
+   "ˈwɔːtəmelən",
+   "西瓜"
+  ],
+  "tomato": [
+   "təˈmɑːtəʊ",
+   "西红柿"
+  ],
+  "potato": [
+   "pəˈteɪtəʊ",
+   "土豆"
+  ],
+  "carrot": [
+   "ˈkærət",
+   "胡萝卜"
+  ],
+  "onion": [
+   "ˈʌnjən",
+   "洋葱"
+  ],
+  "fork": [
+   "fɔːk",
+   "叉子"
+  ],
+  "shirt": [
+   "ʃɜːt",
+   "衬衫"
+  ],
+  "coat": [
+   "kəʊt",
+   "大衣"
+  ],
+  "dress": [
+   "dres",
+   "连衣裙"
+  ],
+  "skirt": [
+   "skɜːt",
+   "裙子"
+  ],
+  "hat": [
+   "hæt",
+   "帽子"
+  ],
+  "cap": [
+   "kæp",
+   "帽子"
+  ],
+  "shoe": [
+   "ʃuː",
+   "鞋"
+  ],
+  "sock": [
+   "sɒk",
+   "袜子"
+  ],
+  "trousers": [
+   "ˈtraʊzəz",
+   "裤子"
+  ],
+  "sweater": [
+   "ˈswetə",
+   "毛衣"
+  ],
+  "glove": [
+   "ɡlʌv",
+   "手套"
+  ],
+  "scarf": [
+   "skɑːf",
+   "围巾"
+  ],
+  "spring": [
+   "sprɪŋ",
+   "春天"
+  ],
+  "summer": [
+   "ˈsʌmə",
+   "夏天"
+  ],
+  "autumn": [
+   "ˈɔːtəm",
+   "秋天"
+  ],
+  "winter": [
+   "ˈwɪntə",
+   "冬天"
+  ],
+  "morning": [
+   "ˈmɔːnɪŋ",
+   "早晨"
+  ],
+  "afternoon": [
+   "ˌɑːftəˈnuːn",
+   "下午"
+  ],
+  "evening": [
+   "ˈiːvnɪŋ",
+   "傍晚"
+  ],
+  "night": [
+   "naɪt",
+   "夜晚"
+  ],
+  "today": [
+   "təˈdeɪ",
+   "今天"
+  ],
+  "tomorrow": [
+   "təˈmɒrəʊ",
+   "明天"
+  ],
+  "yesterday": [
+   "ˈjestədeɪ",
+   "昨天"
+  ],
+  "week": [
+   "wiːk",
+   "星期"
+  ],
+  "month": [
+   "mʌnθ",
+   "月"
+  ],
+  "year": [
+   "jɪə",
+   "年"
+  ],
+  "day": [
+   "deɪ",
+   "白天"
+  ],
+  "time": [
+   "taɪm",
+   "时间"
+  ],
+  "hour": [
+   "ˈaʊə",
+   "小时"
+  ],
+  "minute": [
+   "ˈmɪnɪt",
+   "分钟"
+  ],
+  "Monday": [
+   "ˈmʌndeɪ",
+   "星期一"
+  ],
+  "Tuesday": [
+   "ˈtjuːzdeɪ",
+   "星期二"
+  ],
+  "Wednesday": [
+   "ˈwenzdeɪ",
+   "星期三"
+  ],
+  "Thursday": [
+   "ˈθɜːzdeɪ",
+   "星期四"
+  ],
+  "Friday": [
+   "ˈfraɪdeɪ",
+   "星期五"
+  ],
+  "Saturday": [
+   "ˈsætədeɪ",
+   "星期六"
+  ],
+  "Sunday": [
+   "ˈsʌndeɪ",
+   "星期天"
+  ],
+  "mother": [
+   "ˈmʌðə",
+   "母亲"
+  ],
+  "father": [
+   "ˈfɑːðə",
+   "父亲"
+  ],
+  "son": [
+   "sʌn",
+   "儿子"
+  ],
+  "daughter": [
+   "ˈdɔːtə",
+   "女儿"
+  ],
+  "uncle": [
+   "ˈʌŋkl",
+   "叔叔"
+  ],
+  "aunt": [
+   "ɑːnt",
+   "阿姨"
+  ],
+  "cousin": [
+   "ˈkʌzn",
+   "堂（表）兄弟姐妹"
+  ],
+  "doctor": [
+   "ˈdɒktə",
+   "医生"
+  ],
+  "nurse": [
+   "nɜːs",
+   "护士"
+  ],
+  "farmer": [
+   "ˈfɑːmə",
+   "农民"
+  ],
+  "driver": [
+   "ˈdraɪvə",
+   "司机"
+  ],
+  "cook": [
+   "kʊk",
+   "厨师"
+  ],
+  "police": [
+   "pəˈliːs",
+   "警察"
+  ],
+  "worker": [
+   "ˈwɜːkə",
+   "工人"
+  ],
+  "bed": [
+   "bed",
+   "床"
+  ],
+  "box": [
+   "bɒks",
+   "盒子"
+  ],
+  "cup": [
+   "kʌp",
+   "杯子"
+  ],
+  "bowl": [
+   "bəʊl",
+   "碗"
+  ],
+  "spoon": [
+   "spuːn",
+   "勺子"
+  ],
+  "plate": [
+   "pleɪt",
+   "盘子"
+  ],
+  "house": [
+   "haʊs",
+   "房子"
+  ],
+  "home": [
+   "həʊm",
+   "家"
+  ],
+  "room": [
+   "ruːm",
+   "房间"
+  ],
+  "table": [
+   "ˈteɪbl",
+   "桌子"
+  ],
+  "clock": [
+   "klɒk",
+   "时钟"
+  ],
+  "phone": [
+   "fəʊn",
+   "电话"
+  ],
+  "coin": [
+   "kɔɪn",
+   "硬币"
+  ],
+  "boat": [
+   "bəʊt",
+   "船"
+  ],
+  "ship": [
+   "ʃɪp",
+   "轮船"
+  ],
+  "van": [
+   "væn",
+   "小货车"
+  ],
+  "car": [
+   "kɑː",
+   "小汽车"
+  ],
+  "bus": [
+   "bʌs",
+   "公共汽车"
+  ],
+  "bike": [
+   "baɪk",
+   "自行车"
+  ],
+  "train": [
+   "treɪn",
+   "列车，火车"
+  ],
+  "plane": [
+   "pleɪn",
+   "飞机"
+  ],
+  "maths": [
+   "mæθs",
+   "数学"
+  ],
+  "English": [
+   "ˈɪŋɡlɪʃ",
+   "英语"
+  ],
+  "Chinese": [
+   "ˌtʃaɪˈniːz",
+   "语文；汉语"
+  ],
+  "music": [
+   "ˈmjuːzɪk",
+   "音乐"
+  ],
+  "art": [
+   "ɑːt",
+   "美术"
+  ],
+  "lesson": [
+   "ˈlesn",
+   "课"
+  ],
+  "homework": [
+   "ˈhəʊmwɜːk",
+   "作业"
+  ],
+  "question": [
+   "ˈkwestʃən",
+   "问题"
+  ],
+  "answer": [
+   "ˈɑːnsə",
+   "回答"
+  ],
+  "story": [
+   "ˈstɔːri",
+   "故事"
+  ],
+  "picture": [
+   "ˈpɪktʃə",
+   "图画"
+  ],
+  "game": [
+   "ɡeɪm",
+   "游戏"
+  ],
+  "song": [
+   "sɒŋ",
+   "歌曲"
+  ],
+  "library": [
+   "ˈlaɪbrəri",
+   "图书馆"
+  ],
+  "playground": [
+   "ˈpleɪɡraʊnd",
+   "操场"
+  ],
+  "blackboard": [
+   "ˈblækbɔːd",
+   "黑板"
+  ],
+  "computer": [
+   "kəmˈpjuːtə",
+   "电脑"
+  ],
+  "learn": [
+   "lɜːn",
+   "学习"
+  ],
+  "study": [
+   "ˈstʌdi",
+   "学习"
+  ],
+  "teach": [
+   "tiːtʃ",
+   "教"
+  ],
+  "help": [
+   "help",
+   "帮助"
+  ],
+  "listen": [
+   "ˈlɪsn",
+   "听"
+  ],
+  "speak": [
+   "spiːk",
+   "说"
+  ],
+  "look": [
+   "lʊk",
+   "看；瞧"
+  ],
+  "see": [
+   "siː",
+   "看见"
+  ],
+  "watch": [
+   "wɒtʃ",
+   "观看"
+  ],
+  "touch": [
+   "tʌtʃ",
+   "触摸"
+  ],
+  "think": [
+   "θɪŋk",
+   "想；认为"
+  ],
+  "know": [
+   "nəʊ",
+   "知道"
+  ],
+  "find": [
+   "faɪnd",
+   "发现"
+  ],
+  "give": [
+   "ɡɪv",
+   "给"
+  ],
+  "take": [
+   "teɪk",
+   "拿；带走"
+  ],
+  "put": [
+   "pʊt",
+   "放"
+  ],
+  "make": [
+   "meɪk",
+   "制作"
+  ],
+  "clean": [
+   "kliːn",
+   "打扫；干净的"
+  ],
+  "wash": [
+   "wɒʃ",
+   "洗"
+  ],
+  "sleep": [
+   "sliːp",
+   "睡觉"
+  ],
+  "wake": [
+   "weɪk",
+   "醒来"
+  ],
+  "wait": [
+   "weɪt",
+   "等待"
+  ],
+  "start": [
+   "stɑːt",
+   "开始"
+  ],
+  "finish": [
+   "ˈfɪnɪʃ",
+   "完成"
+  ],
+  "hurry": [
+   "ˈhʌri",
+   "赶快"
+  ],
+  "bring": [
+   "brɪŋ",
+   "带来"
+  ],
+  "buy": [
+   "baɪ",
+   "买"
+  ],
+  "sell": [
+   "sel",
+   "卖"
+  ],
+  "pay": [
+   "peɪ",
+   "付款"
+  ],
+  "want": [
+   "wɒnt",
+   "要，想要"
+  ],
+  "need": [
+   "niːd",
+   "需要"
+  ],
+  "like": [
+   "laɪk",
+   "喜欢；喜爱"
+  ],
+  "love": [
+   "lʌv",
+   "喜欢"
+  ],
+  "hope": [
+   "həʊp",
+   "希望"
+  ],
+  "try": [
+   "traɪ",
+   "尝试"
+  ],
+  "win": [
+   "wɪn",
+   "获胜"
+  ],
+  "lose": [
+   "luːz",
+   "输；丢失"
+  ],
+  "fly": [
+   "flaɪ",
+   "飞"
+  ],
+  "climb": [
+   "klaɪm",
+   "爬"
+  ],
+  "ride": [
+   "raɪd",
+   "骑"
+  ],
+  "drive": [
+   "draɪv",
+   "开车"
+  ],
+  "swim": [
+   "swɪm",
+   "游泳"
+  ],
+  "laugh": [
+   "lɑːf",
+   "笑"
+  ],
+  "cry": [
+   "kraɪ",
+   "哭"
+  ],
+  "smile": [
+   "smaɪl",
+   "微笑"
+  ],
+  "shout": [
+   "ʃaʊt",
+   "喊"
+  ],
+  "open": [
+   "ˈəʊpən",
+   "打开"
+  ],
+  "close": [
+   "kləʊz",
+   "关上"
+  ],
+  "push": [
+   "pʊʃ",
+   "推"
+  ],
+  "pull": [
+   "pʊl",
+   "拉"
+  ],
+  "throw": [
+   "θrəʊ",
+   "扔"
+  ],
+  "catch": [
+   "kætʃ",
+   "抓住"
+  ],
+  "carry": [
+   "ˈkæri",
+   "搬；携带"
+  ],
+  "build": [
+   "bɪld",
+   "建造"
+  ],
+  "fix": [
+   "fɪks",
+   "修理"
+  ],
+  "count": [
+   "kaʊnt",
+   "数；计算"
+  ],
+  "spell": [
+   "spel",
+   "拼写"
+  ],
+  "jump": [
+   "dʒʌmp",
+   "跳"
+  ],
+  "run": [
+   "rʌn",
+   "跑"
+  ],
+  "walk": [
+   "wɔːk",
+   "走"
+  ],
+  "sing": [
+   "sɪŋ",
+   "唱歌"
+  ],
+  "dance": [
+   "dɑːns",
+   "跳舞"
+  ],
+  "draw": [
+   "drɔː",
+   "画画"
+  ],
+  "read": [
+   "riːd",
+   "读"
+  ],
+  "write": [
+   "raɪt",
+   "写"
+  ],
+  "play": [
+   "pleɪ",
+   "玩"
+  ],
+  "eat": [
+   "iːt",
+   "吃"
+  ],
+  "drink": [
+   "drɪŋk",
+   "喝"
+  ],
+  "sit": [
+   "sɪt",
+   "坐"
+  ],
+  "stand": [
+   "stænd",
+   "站"
+  ],
+  "long": [
+   "lɒŋ",
+   "长的"
+  ],
+  "short": [
+   "ʃɔːt",
+   "短"
+  ],
+  "tall": [
+   "tɔːl",
+   "高的"
+  ],
+  "high": [
+   "haɪ",
+   "高的（位置）"
+  ],
+  "low": [
+   "ləʊ",
+   "低的"
+  ],
+  "fat": [
+   "fæt",
+   "胖的"
+  ],
+  "thin": [
+   "θɪn",
+   "瘦的"
+  ],
+  "old": [
+   "əʊld",
+   "年老的"
+  ],
+  "young": [
+   "jʌŋ",
+   "年轻的"
+  ],
+  "new": [
+   "njuː",
+   "新的"
+  ],
+  "nice": [
+   "naɪs",
+   "好的"
+  ],
+  "kind": [
+   "kaɪnd",
+   "种类"
+  ],
+  "clever": [
+   "ˈklevə",
+   "聪明的"
+  ],
+  "brave": [
+   "breɪv",
+   "勇敢的"
+  ],
+  "quiet": [
+   "ˈkwaɪət",
+   "安静的"
+  ],
+  "loud": [
+   "laʊd",
+   "大声的"
+  ],
+  "fast": [
+   "fɑːst",
+   "迅速"
+  ],
+  "slow": [
+   "sləʊ",
+   "慢的"
+  ],
+  "strong": [
+   "strɒŋ",
+   "强壮的"
+  ],
+  "weak": [
+   "wiːk",
+   "虚弱的"
+  ],
+  "busy": [
+   "ˈbɪzi",
+   "忙碌的"
+  ],
+  "free": [
+   "friː",
+   "空闲的"
+  ],
+  "easy": [
+   "ˈiːzi",
+   "容易的"
+  ],
+  "hard": [
+   "hɑːd",
+   "难的；硬的"
+  ],
+  "dirty": [
+   "ˈdɜːti",
+   "脏的"
+  ],
+  "tidy": [
+   "ˈtaɪdi",
+   "整洁的"
+  ],
+  "hungry": [
+   "ˈhʌŋɡri",
+   "饥饿的"
+  ],
+  "thirsty": [
+   "ˈθɜːsti",
+   "口渴的"
+  ],
+  "tired": [
+   "ˈtaɪəd",
+   "困倦的"
+  ],
+  "angry": [
+   "ˈæŋɡri",
+   "生气的"
+  ],
+  "afraid": [
+   "əˈfreɪd",
+   "害怕的"
+  ],
+  "excited": [
+   "ɪkˈsaɪtɪd",
+   "激动的"
+  ],
+  "beautiful": [
+   "ˈbjuːtɪfl",
+   "美丽的"
+  ],
+  "delicious": [
+   "dɪˈlɪʃəs",
+   "美味的"
+  ],
+  "wonderful": [
+   "ˈwʌndəfl",
+   "精彩的"
+  ],
+  "favourite": [
+   "ˈfeɪvərɪt",
+   "最喜欢的"
+  ],
+  "cute": [
+   "kjuːt",
+   "可爱的"
+  ],
+  "hot": [
+   "hɒt",
+   "炎热的"
+  ],
+  "cold": [
+   "kəʊld",
+   "寒冷的"
+  ],
+  "wet": [
+   "wet",
+   "湿的"
+  ],
+  "sunny": [
+   "ˈsʌni",
+   "晴朗的"
+  ],
+  "rainy": [
+   "ˈreɪni",
+   "下雨的"
+  ],
+  "windy": [
+   "ˈwɪndi",
+   "刮风的"
+  ],
+  "cloudy": [
+   "ˈklaʊdi",
+   "多云的"
+  ],
+  "bad": [
+   "bæd",
+   "坏的；糟糕"
+  ],
+  "good": [
+   "ɡʊd",
+   "好的"
+  ],
+  "happy": [
+   "ˈhæpi",
+   "高兴的"
+  ],
+  "sad": [
+   "sæd",
+   "难过的"
+  ],
+  "big": [
+   "bɪɡ",
+   "大"
+  ],
+  "small": [
+   "smɔːl",
+   "小的"
+  ],
+  "mountain": [
+   "ˈmaʊntən",
+   "山"
+  ],
+  "river": [
+   "ˈrɪvə",
+   "河"
+  ],
+  "lake": [
+   "leɪk",
+   "湖"
+  ],
+  "sea": [
+   "siː",
+   "大海"
+  ],
+  "beach": [
+   "biːtʃ",
+   "海滩"
+  ],
+  "forest": [
+   "ˈfɒrɪst",
+   "树林"
+  ],
+  "field": [
+   "fiːld",
+   "田野"
+  ],
+  "farm": [
+   "fɑːm",
+   "农场"
+  ],
+  "village": [
+   "ˈvɪlɪdʒ",
+   "村庄"
+  ],
+  "city": [
+   "ˈsɪti",
+   "城市"
+  ],
+  "country": [
+   "ˈkʌntri",
+   "国家"
+  ],
+  "world": [
+   "wɜːld",
+   "世界"
+  ],
+  "island": [
+   "ˈaɪlənd",
+   "岛"
+  ],
+  "bridge": [
+   "brɪdʒ",
+   "桥"
+  ],
+  "road": [
+   "rəʊd",
+   "路"
+  ],
+  "hospital": [
+   "ˈhɒspɪtl",
+   "医院"
+  ],
+  "station": [
+   "ˈsteɪʃn",
+   "车站"
+  ],
+  "museum": [
+   "mjuˈziːəm",
+   "博物馆"
+  ],
+  "restaurant": [
+   "ˈrestrɒnt",
+   "餐馆"
+  ],
+  "kitchen": [
+   "ˈkɪtʃɪn",
+   "厨房"
+  ],
+  "bathroom": [
+   "ˈbɑːθruːm",
+   "浴室"
+  ],
+  "bedroom": [
+   "ˈbedruːm",
+   "卧室"
+  ],
+  "sofa": [
+   "ˈsəʊfə",
+   "沙发"
+  ],
+  "mirror": [
+   "ˈmɪrə",
+   "镜子"
+  ],
+  "lamp": [
+   "læmp",
+   "台灯"
+  ],
+  "key": [
+   "kiː",
+   "钥匙"
+  ],
+  "money": [
+   "ˈmʌni",
+   "钱"
+  ],
+  "ticket": [
+   "ˈtɪkɪt",
+   "票"
+  ],
+  "map": [
+   "mæp",
+   "地图"
+  ],
+  "letter": [
+   "ˈletə",
+   "信；字母"
+  ],
+  "present": [
+   "ˈpreznt",
+   "礼物"
+  ],
+  "party": [
+   "ˈpɑːti",
+   "聚会"
+  ],
+  "holiday": [
+   "ˈhɒlədeɪ",
+   "假日"
+  ],
+  "birthday": [
+   "ˈbɜːθdeɪ",
+   "生日"
+  ],
+  "sport": [
+   "spɔːt",
+   "运动"
+  ],
+  "football": [
+   "ˈfʊtbɔːl",
+   "足球"
+  ],
+  "basketball": [
+   "ˈbɑːskɪtbɔːl",
+   "篮球"
+  ],
+  "badminton": [
+   "ˈbædmɪntən",
+   "羽毛球"
+  ],
+  "race": [
+   "reɪs",
+   "赛跑"
+  ],
+  "team": [
+   "tiːm",
+   "队"
+  ],
+  "tree": [
+   "triː",
+   "树"
+  ],
+  "flower": [
+   "ˈflaʊə",
+   "花"
+  ],
+  "grass": [
+   "ɡrɑːs",
+   "草"
+  ],
+  "leaf": [
+   "liːf",
+   "叶子"
+  ],
+  "garden": [
+   "ˈɡɑːdn",
+   "花园"
+  ],
+  "park": [
+   "pɑːk",
+   "公园"
+  ],
+  "zoo": [
+   "zuː",
+   "动物园"
+  ],
+  "shop": [
+   "ʃɒp",
+   "商店"
+  ],
+  "street": [
+   "striːt",
+   "街道"
+  ],
+  "sun": [
+   "sʌn",
+   "太阳"
+  ],
+  "moon": [
+   "muːn",
+   "月亮"
+  ],
+  "star": [
+   "stɑː",
+   "星星"
+  ],
+  "sky": [
+   "skaɪ",
+   "天空"
+  ],
+  "rain": [
+   "reɪn",
+   "雨"
+  ],
+  "snow": [
+   "snəʊ",
+   "雪"
+  ],
+  "idea": [
+   "aɪˈdɪə",
+   "主意"
+  ],
+  "dream": [
+   "driːm",
+   "梦"
+  ],
+  "wish": [
+   "wɪʃ",
+   "愿望"
+  ],
+  "plan": [
+   "plæn",
+   "计划"
+  ],
+  "reason": [
+   "ˈriːzn",
+   "原因"
+  ],
+  "problem": [
+   "ˈprɒbləm",
+   "难题"
+  ],
+  "mistake": [
+   "mɪˈsteɪk",
+   "错误"
+  ],
+  "rule": [
+   "ruːl",
+   "规则"
+  ],
+  "chance": [
+   "tʃɑːns",
+   "机会"
+  ],
+  "luck": [
+   "lʌk",
+   "运气"
+  ],
+  "danger": [
+   "ˈdeɪndʒə",
+   "危险"
+  ],
+  "safety": [
+   "ˈseɪfti",
+   "安全"
+  ],
+  "health": [
+   "helθ",
+   "健康"
+  ],
+  "life": [
+   "laɪf",
+   "生活；生命"
+  ],
+  "future": [
+   "ˈfjuːtʃə",
+   "未来"
+  ],
+  "memory": [
+   "ˈmeməri",
+   "记忆"
+  ],
+  "feeling": [
+   "ˈfiːlɪŋ",
+   "感觉"
+  ],
+  "mind": [
+   "maɪnd",
+   "头脑"
+  ],
+  "heart": [
+   "hɑːt",
+   "心"
+  ],
+  "voice": [
+   "vɔɪs",
+   "嗓音"
+  ],
+  "word": [
+   "wɜːd",
+   "词"
+  ],
+  "language": [
+   "ˈlæŋɡwɪdʒ",
+   "语言"
+  ],
+  "culture": [
+   "ˈkʌltʃə",
+   "文化"
+  ],
+  "history": [
+   "ˈhɪstri",
+   "历史"
+  ],
+  "science": [
+   "ˈsaɪəns",
+   "科学"
+  ],
+  "nature": [
+   "ˈneɪtʃə",
+   "自然"
+  ],
+  "space": [
+   "speɪs",
+   "太空；空间"
+  ],
+  "planet": [
+   "ˈplænɪt",
+   "行星"
+  ],
+  "earth": [
+   "ɜːθ",
+   "地球"
+  ],
+  "ocean": [
+   "ˈəʊʃn",
+   "海洋"
+  ],
+  "weather": [
+   "ˈweðə",
+   "天气"
+  ],
+  "temperature": [
+   "ˈtemprətʃə",
+   "温度"
+  ],
+  "wind": [
+   "wɪnd",
+   "风"
+  ],
+  "cloud": [
+   "klaʊd",
+   "云"
+  ],
+  "storm": [
+   "stɔːm",
+   "暴风雨"
+  ],
+  "shadow": [
+   "ˈʃædəʊ",
+   "影子"
+  ],
+  "light": [
+   "laɪt",
+   "灯"
+  ],
+  "colour": [
+   "ˈkʌlə",
+   "颜色"
+  ],
+  "sound": [
+   "saʊnd",
+   "听起来"
+  ],
+  "silence": [
+   "ˈsaɪləns",
+   "寂静"
+  ],
+  "queen": [
+   "kwiːn",
+   "女王"
+  ],
+  "agree": [
+   "əˈɡriː",
+   "同意"
+  ],
+  "refuse": [
+   "rɪˈfjuːz",
+   "拒绝"
+  ],
+  "promise": [
+   "ˈprɒmɪs",
+   "答应；承诺"
+  ],
+  "decide": [
+   "dɪˈsaɪd",
+   "决定"
+  ],
+  "choose": [
+   "tʃuːz",
+   "选择"
+  ],
+  "change": [
+   "tʃeɪndʒ",
+   "改变"
+  ],
+  "grow": [
+   "ɡrəʊ",
+   "生长"
+  ],
+  "move": [
+   "muːv",
+   "移动"
+  ],
+  "follow": [
+   "ˈfɒləʊ",
+   "跟随"
+  ],
+  "lead": [
+   "liːd",
+   "带领"
+  ],
+  "share": [
+   "ʃeə",
+   "分享"
+  ],
+  "protect": [
+   "prəˈtekt",
+   "保护"
+  ],
+  "save": [
+   "seɪv",
+   "拯救；节省"
+  ],
+  "collect": [
+   "kəˈlekt",
+   "收集"
+  ],
+  "discover": [
+   "dɪˈskʌvə",
+   "发现"
+  ],
+  "invent": [
+   "ɪnˈvent",
+   "发明"
+  ],
+  "explain": [
+   "ɪkˈspleɪn",
+   "解释"
+  ],
+  "describe": [
+   "dɪˈskraɪb",
+   "描述"
+  ],
+  "remember": [
+   "rɪˈmembə",
+   "记得"
+  ],
+  "forget": [
+   "fəˈɡet",
+   "忘记"
+  ],
+  "imagine": [
+   "ɪˈmædʒɪn",
+   "想象"
+  ],
+  "believe": [
+   "bɪˈliːv",
+   "相信"
+  ],
+  "enjoy": [
+   "ɪnˈdʒɔɪ",
+   "欣赏"
+  ],
+  "practise": [
+   "ˈpræktɪs",
+   "练习"
+  ],
+  "improve": [
+   "ɪmˈpruːv",
+   "提高"
+  ],
+  "prepare": [
+   "prɪˈpeə",
+   "准备"
+  ],
+  "succeed": [
+   "səkˈsiːd",
+   "成功"
+  ],
+  "celebrate": [
+   "ˈselɪbreɪt",
+   "庆祝"
+  ],
+  "care": [
+   "keə",
+   "关心"
+  ],
+  "worry": [
+   "ˈwʌri",
+   "担心"
+  ],
+  "surprise": [
+   "səˈpraɪz",
+   "惊喜"
+  ],
+  "hands": [
+   "hændz",
+   "手（复数）"
+  ],
+  "games": [
+   "ɡeɪmz",
+   "游戏（复数）"
+  ],
+  "books": [
+   "bʊks",
+   "书（复数）"
+  ],
+  "songs": [
+   "sɒŋz",
+   "歌（复数）"
+  ],
+  "pictures": [
+   "ˈpɪktʃəz",
+   "图画（复数）"
+  ],
+  "TV": [
+   "ˌtiː ˈviː",
+   "电视"
+  ],
+  "schoolbag": [
+   "ˈskuːlbæɡ",
+   "书包"
+  ],
+  "an": [
+   "ən",
+   "一（个）"
+  ],
+  "near": [
+   "niə",
+   "靠近"
+  ],
+  "behind": [
+   "bɪˈhaɪnd",
+   "在……背后"
+  ],
+  "sure": [
+   "ʃɔː",
+   "当然"
+  ],
+  "vegetable": [
+   "ˈvedʒɪtəbəl",
+   "蔬菜"
+  ],
+  "thanks": [
+   "θæŋks",
+   "感谢"
+  ],
+  "T-shirt": [
+   "ˈtiː ʃɜːt",
+   "T恤"
+  ],
+  "socks": [
+   "sɒks",
+   "短袜"
+  ],
+  "shorts": [
+   "ʃɔːts",
+   "短裤"
+  ],
+  "grandmother": [
+   "ˈɡrændmʌðə",
+   "（外）祖母"
+  ],
+  "grandfather": [
+   "ˈɡrændfɑːðə",
+   "（外）祖父"
+  ],
+  "classmate": [
+   "ˈklɑːsmeɪt",
+   "同班同学"
+  ],
+  "woman": [
+   "ˈwʊmən",
+   "女人"
+  ],
+  "man": [
+   "mæn",
+   "男人"
+  ],
+  "his": [
+   "hɪz",
+   "他的"
+  ],
+  "name": [
+   "neɪm",
+   "名字"
+  ],
+  "her": [
+   "hɜː",
+   "她的"
+  ],
+  "pretty": [
+   "ˈprɪti",
+   "漂亮的"
+  ],
+  "handsome": [
+   "ˈhændsʌm",
+   "英俊的"
+  ],
+  "does": [
+   "dəʊ",
+   "（助动词）"
+  ],
+  "bookshop": [
+   "ˈbʊkʃɒp",
+   "书店"
+  ],
+  "supermarket": [
+   "ˈsuːpəmɑːkɪt",
+   "超市"
+  ],
+  "hill": [
+   "hɪl",
+   "山"
+  ],
+  "Christmas": [
+   "ˈkrɪsməs",
+   "圣诞节"
+  ],
+  "card": [
+   "kɑːd",
+   "贺卡"
+  ],
+  "merry": [
+   "ˈmeri",
+   "高兴的"
+  ],
+  "can't": [
+   "kɑːnt",
+   "不能，不会"
+  ],
+  "snowy": [
+   "snəʊi",
+   "下雪的"
+  ],
+  "umbrella": [
+   "ʌˈmbrelə",
+   "雨伞"
+  ],
+  "wow": [
+   "waʊ",
+   "哇"
+  ],
+  "let's": [
+   "lets",
+   "让我们"
+  ],
+  "warm": [
+   "wɔːm",
+   "温暖的"
+  ],
+  "cool": [
+   "kuːl",
+   "酷的"
+  ],
+  "season": [
+   "ˈsiːzən",
+   "季节"
+  ],
+  "eleven": [
+   "ɪˈlevən",
+   "十一"
+  ],
+  "twelve": [
+   "twelv",
+   "十二"
+  ],
+  "twenty": [
+   "ˈtwenti",
+   "二十"
+  ],
+  "thirty": [
+   "ˈθɜːti",
+   "三十"
+  ],
+  "forty": [
+   "ˈfɔːti",
+   "四十"
+  ],
+  "fifty": [
+   "ˈfɪfti",
+   "五十"
+  ],
+  "thirteen": [
+   "θɜːˈtiːn",
+   "十三"
+  ],
+  "fourteen": [
+   "fɔːˈtiːn",
+   "十四"
+  ],
+  "fifteen": [
+   "fɪˈftiːn",
+   "十五"
+  ],
+  "playtime": [
+   "ˈpleɪtaɪm",
+   "游戏时间"
+  ],
+  "grade": [
+   "ɡreɪd",
+   "年级"
+  ],
+  "age": [
+   "eɪdʒ",
+   "年龄"
+  ],
+  "dear": [
+   "diə",
+   "亲爱的"
+  ],
+  "body": [
+   "ˈbɒdi",
+   "身体"
+  ],
+  "feet": [
+   "fiːt",
+   "脚（复数）"
+  ],
+  "hurt": [
+   "hɜːt",
+   "弄伤"
+  ],
+  "bite": [
+   "baɪt",
+   "咬"
+  ],
+  "tongue": [
+   "tʌŋ",
+   "舌头"
+  ],
+  "kick": [
+   "kɪk",
+   "踢"
+  ],
+  "summary": [
+   "ˈsʌməri",
+   "总结"
+  ],
+  "fruit": [
+   "fruːt",
+   "水果"
+  ],
+  "ice-cream": [
+   "ˌaɪs ˈkriːm",
+   "冰淇淋"
+  ],
+  "cola": [
+   "ˈkəʊlə",
+   "可乐"
+  ],
+  "vegetables": [
+   "ˈvedʒɪtəbəlz",
+   "蔬菜"
+  ],
+  "pet": [
+   "pet",
+   "宠物"
+  ],
+  "snake": [
+   "sneɪk",
+   "蛇"
+  ],
+  "turtle": [
+   "ˈtɜːtəl",
+   "海龟"
+  ],
+  "tail": [
+   "teɪl",
+   "尾巴"
+  ],
+  "shoes": [
+   "ʃuːz",
+   "鞋"
+  ],
+  "jacket": [
+   "ˈdʒækɪt",
+   "夹克衫"
+  ],
+  "gloves": [
+   "ɡlʌvz",
+   "手套"
+  ],
+  "should": [
+   "ʃʊd",
+   "应该"
+  ],
+  "wear": [
+   "weə",
+   "穿"
+  ],
+  "soon": [
+   "suːn",
+   "不久"
+  ],
+  "January": [
+   "ˈdʒænjuəri",
+   "一月"
+  ],
+  "February": [
+   "ˈfebruəri",
+   "二月"
+  ],
+  "March": [
+   "mɑːtʃ",
+   "三月"
+  ],
+  "April": [
+   "ˈeɪprəl",
+   "四月"
+  ],
+  "May": [
+   "meɪ",
+   "五月"
+  ],
+  "June": [
+   "dʒuːn",
+   "六月"
+  ],
+  "July": [
+   "dʒʊˈlaɪ",
+   "七月"
+  ],
+  "August": [
+   "ˈɔːɡəst",
+   "八月"
+  ],
+  "September": [
+   "sepˈtembə",
+   "九月"
+  ],
+  "October": [
+   "ɒkˈtəʊbə",
+   "十月"
+  ],
+  "November": [
+   "nəʊˈvembə",
+   "十一月"
+  ],
+  "December": [
+   "dɪˈsembə",
+   "十二月"
+  ],
+  "first": [
+   "fɜːst",
+   "第一"
+  ],
+  "PE": [
+   "ˌpiːˈiː",
+   "体育"
+  ],
+  "classroom": [
+   "ˈklɑːsruːm",
+   "教室"
+  ],
+  "toilet": [
+   "ˈtɔɪlət",
+   "洗手间"
+  ],
+  "second": [
+   "ˈsekənd",
+   "第二的"
+  ],
+  "third": [
+   "θɜːd",
+   "第三的"
+  ],
+  "floor": [
+   "flɔː",
+   "楼层"
+  ],
+  "our": [
+   "aʊə",
+   "我们的"
+  ],
+  "they": [
+   "ðeɪ",
+   "他们"
+  ],
+  "really": [
+   "ˈriəli",
+   "确实"
+  ],
+  "lost": [
+   "lɒst",
+   "遗失"
+  ],
+  "OK": [
+   "ˌəʊˈkeɪ",
+   "好的"
+  ],
+  "welcome": [
+   "ˈwelkʌm",
+   "受欢迎的"
+  ],
+  "everyone": [
+   "ˈevrɪwɒn",
+   "人人"
+  ],
+  "children": [
+   "ˈtʃɪldrən",
+   "孩子们"
+  ],
+  "running": [
+   "ˈrʌnɪŋ",
+   "跑步"
+  ],
+  "ping-pong": [
+   "pɪŋ pɒŋ",
+   "乒乓球"
+  ],
+  "interesting": [
+   "ˈɪntrəstɪŋ",
+   "有趣的"
+  ],
+  "often": [
+   "ˈɒfən",
+   "经常"
+  ],
+  "late": [
+   "leɪt",
+   "晚"
+  ],
+  "fun": [
+   "fʌn",
+   "有趣的"
+  ],
+  "always": [
+   "ˈɔːlweɪz",
+   "总是"
+  ],
+  "step": [
+   "step",
+   "踏；踩"
+  ],
+  "paint": [
+   "peɪnt",
+   "用颜料画"
+  ],
+  "their": [
+   "ðeə",
+   "他们的"
+  ],
+  "poor": [
+   "pɔː",
+   "可怜的"
+  ],
+  "so": [
+   "səʊ",
+   "那么"
+  ],
+  "usually": [
+   "ˈjuːʒuːəli",
+   "通常"
+  ],
+  "gate": [
+   "ɡeɪt",
+   "大门"
+  ],
+  "transportation": [
+   "trænspɔːˈteɪʃən",
+   "交通"
+  ],
+  "film": [
+   "fɪlm",
+   "电影"
+  ],
+  "theatre": [
+   "ˈθiətə",
+   "剧场"
+  ],
+  "knife": [
+   "naɪf",
+   "小刀"
+  ],
+  "eraser": [
+   "ɪˈreɪzə",
+   "橡皮"
+  ],
+  "scissors": [
+   "ˈsɪsəz",
+   "剪刀"
+  ],
+  "paper": [
+   "ˈpeɪpə",
+   "纸"
+  ],
+  "use": [
+   "juːz",
+   "使用"
+  ],
+  "hamburger": [
+   "ˈhæmbɜːɡə",
+   "汉堡包"
+  ],
+  "dangerous": [
+   "ˈdeɪndʒərəs",
+   "危险的"
+  ],
+  "sidewalk": [
+   "ˈsaɪdwɔːk",
+   "人行道"
+  ],
+  "safe": [
+   "seɪf",
+   "安全"
+  ],
+  "stop": [
+   "stɒp",
+   "停"
+  ],
+  "great": [
+   "ɡreɪt",
+   "好极了"
+  ],
+  "job": [
+   "dʒɒb",
+   "工作"
+  ],
+  "sick": [
+   "sɪk",
+   "有病的"
+  ],
+  "people": [
+   "ˈpiːpəl",
+   "人们"
+  ],
+  "just": [
+   "dʒʌst",
+   "只是"
+  ],
+  "myself": [
+   "maɪˈself",
+   "我自己"
+  ],
+  "between": [
+   "bɪˈtwiːn",
+   "在……之间"
+  ],
+  "bank": [
+   "bæŋk",
+   "银行"
+  ],
+  "grocery": [
+   "ˈɡrəʊsəri",
+   "食品杂货店"
+  ],
+  "crossroads": [
+   "ˈkrɒsrəʊdz",
+   "十字路口"
+  ],
+  "neighbourhood": [
+   "ˈneɪbəhʊd",
+   "街坊"
+  ],
+  "send": [
+   "send",
+   "发送"
+  ],
+  "get": [
+   "ɡet",
+   "得到"
+  ],
+  "before": [
+   "bɪˈfɔː",
+   "在……之前"
+  ],
+  "leave": [
+   "liːv",
+   "离开"
+  ],
+  "toy": [
+   "tɔɪ",
+   "玩具"
+  ],
+  "hotel": [
+   "həʊˈtel",
+   "宾馆"
+  ],
+  "square": [
+   "skweə",
+   "广场"
+  ],
+  "place": [
+   "pleɪs",
+   "地方"
+  ],
+  "thing": [
+   "θɪŋ",
+   "事物"
+  ],
+  "stay": [
+   "steɪ",
+   "停留"
+  ],
+  "king": [
+   "kɪŋ",
+   "国王"
+  ],
+  "central": [
+   "ˈsentrəl",
+   "中心的"
+  ],
+  "ski": [
+   "skiː",
+   "滑雪"
+  ],
+  "travel": [
+   "ˈtrævəl",
+   "旅游"
+  ],
+  "reading": [
+   "ˈriːdɪŋ",
+   "读书"
+  ],
+  "skateboarding": [
+   "ˈskeɪtbɔːdɪŋ",
+   "玩滑板"
+  ],
+  "singing": [
+   "ˈsɪŋɪŋ",
+   "唱歌"
+  ],
+  "dancing": [
+   "ˈdɑːnsɪŋ",
+   "跳舞"
+  ],
+  "different": [
+   "ˈdɪfrənt",
+   "不同的"
+  ],
+  "hobby": [
+   "ˈhɒbi",
+   "爱好"
+  ],
+  "stamp": [
+   "stæmp",
+   "邮票"
+  ],
+  "never": [
+   "ˈnevə",
+   "从不"
+  ],
+  "Canada": [
+   "ˈkænədə",
+   "加拿大"
+  ],
+  "Australia": [
+   "ɒˈstreɪliə",
+   "澳大利亚"
+  ],
+  "China": [
+   "ˈtʃaɪnə",
+   "中国"
+  ],
+  "koala": [
+   "kəʊˈɑːlə",
+   "考拉"
+  ],
+  "Disneyland": [
+   "ˈdɪznilænd",
+   "迪斯尼乐园"
+  ],
+  "campfire": [
+   "ˈkæmpfaɪə",
+   "篝火"
+  ],
+  "careless": [
+   "ˈkeələs",
+   "粗心的"
+  ],
+  "polite": [
+   "pəˈlaɪt",
+   "有礼貌的"
+  ],
+  "friendly": [
+   "ˈfrendli",
+   "友好的"
+  ],
+  "helpful": [
+   "ˈhelpfəl",
+   "有帮助的"
+  ],
+  "active": [
+   "ˈæktɪv",
+   "活跃的"
+  ],
+  "popular": [
+   "ˈpɒpjʊlə",
+   "受欢迎的"
+  ],
+  "talk": [
+   "tɔːk",
+   "说话"
+  ],
+  "sometimes": [
+   "ˈsʌmtaɪmz",
+   "有时"
+  ],
+  "bark": [
+   "bɑːk",
+   "叫"
+  ],
+  "slim": [
+   "slɪm",
+   "苗条的"
+  ],
+  "curly": [
+   "ˈkɜːli",
+   "卷曲的"
+  ],
+  "straight": [
+   "streɪt",
+   "直的"
+  ],
+  "animal": [
+   "ˈænɪməl",
+   "动物"
+  ],
+  "bee": [
+   "biː",
+   "蜜蜂"
+  ],
+  "lovely": [
+   "ˈlʌvli",
+   "可爱的"
+  ],
+  "butterfly": [
+   "ˈbʌtəflaɪ",
+   "蝴蝶"
+  ],
+  "only": [
+   "ˈəʊnli",
+   "只"
+  ],
+  "also": [
+   "ˈɒlsəʊ",
+   "也"
+  ],
+  "saleswoman": [
+   "ˈseɪlswʊmən",
+   "女售货员"
+  ],
+  "fantastic": [
+   "fɑːˈntæstɪk",
+   "极好的"
+  ],
+  "cartoons": [
+   "kɑːˈtuːnz",
+   "动画片"
+  ],
+  "chore": [
+   "tʃɔː",
+   "家务"
+  ],
+  "call": [
+   "kɔːl",
+   "打电话给"
+  ],
+  "guess": [
+   "ɡes",
+   "猜"
+  ],
+  "early": [
+   "ˈɜːli",
+   "早"
+  ],
+  "exercise": [
+   "ˈeksəsaɪz",
+   "锻炼"
+  ],
+  "stomachache": [
+   "ˈstʌməkeɪk",
+   "胃疼"
+  ],
+  "headache": [
+   "ˈhedeɪk",
+   "头疼"
+  ],
+  "toothache": [
+   "ˈtuːθeɪk",
+   "牙疼"
+  ],
+  "sleepy": [
+   "ˈsliːpi",
+   "困的"
+  ],
+  "subject": [
+   "ˈsʌbdʒɪkt",
+   "学科"
+  ],
+  "mark": [
+   "mɑːk",
+   "分数"
+  ],
+  "advice": [
+   "əˈdvaɪs",
+   "建议"
+  ],
+  "more": [
+   "mɔː",
+   "更多的"
+  ],
+  "fifth": [
+   "fɪfθ",
+   "第五"
+  ],
+  "tenth": [
+   "tenθ",
+   "第十"
+  ],
+  "twelfth": [
+   "twelfθ",
+   "第十二"
+  ],
+  "twenty-fifth": [
+   "ˈtwenti fɪfθ",
+   "第二十五"
+  ],
+  "plant": [
+   "plænt",
+   "种植"
+  ],
+  "office": [
+   "ˈɒfɪs",
+   "办公室"
+  ],
+  "together": [
+   "təˈɡeðə",
+   "一起"
+  ],
+  "special": [
+   "ˈspeʃəl",
+   "特殊的"
+  ],
+  "say": [
+   "seɪ",
+   "说；讲"
+  ],
+  "everywhere": [
+   "ˈevrɪweə",
+   "到处"
+  ],
+  "danced": [
+   "dɑːnst",
+   "跳舞（过去式）"
+  ],
+  "boring": [
+   "ˈbɔːrɪŋ",
+   "乏味的"
+  ],
+  "won": [
+   "wʌn",
+   "赢（过去式）"
+  ],
+  "swam": [
+   "swæm",
+   "游泳（过去式）"
+  ],
+  "slept": [
+   "slept",
+   "睡觉（过去式）"
+  ],
+  "left": [
+   "left",
+   "离开（过去式）"
+  ],
+  "were": [
+   "wɜː",
+   "是（过去式）"
+  ],
+  "fifteenth": [
+   "ˈfɪftiːnθ",
+   "第十五"
+  ],
+  "into": [
+   "ˈɪntʊ",
+   "进入"
+  ],
+  "chopsticks": [
+   "ˈtʃɒpstɪks",
+   "筷子"
+  ],
+  "vacation": [
+   "veɪˈkeɪʃən",
+   "假期"
+  ],
+  "taste": [
+   "teɪst",
+   "品尝"
+  ],
+  "north": [
+   "nɔːθ",
+   "北"
+  ],
+  "south": [
+   "saʊθ",
+   "南"
+  ],
+  "east": [
+   "iːst",
+   "东"
+  ],
+  "west": [
+   "west",
+   "西"
+  ],
+  "famous": [
+   "ˈfeɪməs",
+   "著名的"
+  ],
+  "temple": [
+   "ˈtempəl",
+   "寺"
+  ],
+  "around": [
+   "əˈraʊnd",
+   "遍及"
+  ],
+  "foggy": [
+   "ˈfɒɡi",
+   "有雾的"
+  ],
+  "spicy": [
+   "ˈspaɪsi",
+   "辣的"
+  ],
+  "silk": [
+   "sɪlk",
+   "丝绸"
+  ],
+  "stone": [
+   "stəʊn",
+   "石头"
+  ],
+  "London": [
+   "ˈlʌndən",
+   "伦敦"
+  ],
+  "Toronto": [
+   "təˈrɒntəʊ",
+   "多伦多"
+  ],
+  "Sydney": [
+   "ˈsɪdni",
+   "悉尼"
+  ],
+  "Washington": [
+   "ˈwɒʃɪŋtən",
+   "华盛顿"
+  ],
+  "kangaroo": [
+   "ˈkæŋɡəruː",
+   "袋鼠"
+  ],
+  "French": [
+   "frentʃ",
+   "法语"
+  ],
+  "hiking": [
+   "ˈhaɪkɪŋ",
+   "远足"
+  ],
+  "sunrise": [
+   "ˈsʌnraɪz",
+   "日出"
+  ],
+  "president": [
+   "ˈprezɪdənt",
+   "总统"
+  ],
+  "reptile": [
+   "ˈreptaɪl",
+   "爬行动物"
+  ],
+  "mammal": [
+   "ˈmæməl",
+   "哺乳动物"
+  ],
+  "insect": [
+   "ˈɪnsekt",
+   "昆虫"
+  ],
+  "penguin": [
+   "ˈpeŋɡwɪn",
+   "企鹅"
+  ],
+  "shark": [
+   "ʃɑːk",
+   "鲨鱼"
+  ],
+  "whale": [
+   "weɪl",
+   "鲸"
+  ],
+  "metre": [
+   "ˈmiːtə",
+   "米"
+  ],
+  "spend": [
+   "spend",
+   "花费"
+  ],
+  "trunk": [
+   "trʌŋk",
+   "象鼻"
+  ],
+  "peanut": [
+   "ˈpiːnʌt",
+   "花生"
+  ],
+  "fan": [
+   "fæn",
+   "扇子"
+  ],
+  "tusk": [
+   "tʌsk",
+   "长牙"
+  ],
+  "Africa": [
+   "ˈæfrɪkə",
+   "非洲"
+  ],
+  "Asia": [
+   "ˈeɪʃə",
+   "亚洲"
+  ],
+  "smart": [
+   "smɑːt",
+   "聪明的"
+  ],
+  "scared": [
+   "skeəd",
+   "害怕的"
+  ],
+  "worried": [
+   "ˈwʌrɪd",
+   "担心的"
+  ],
+  "proud": [
+   "praʊd",
+   "自豪的"
+  ],
+  "ill": [
+   "ɪl",
+   "有病"
+  ],
+  "because": [
+   "bɪˈkʌz",
+   "因为"
+  ],
+  "test": [
+   "test",
+   "测验"
+  ],
+  "competition": [
+   "kɒmpətɪˈʃən",
+   "竞赛"
+  ],
+  "inventor": [
+   "ɪˈnventə",
+   "发明家"
+  ],
+  "artist": [
+   "ˈɑːtɪst",
+   "画家"
+  ],
+  "scientist": [
+   "ˈsaɪəntɪst",
+   "科学家"
+  ],
+  "poet": [
+   "pəʊɪt",
+   "诗人"
+  ],
+  "writer": [
+   "ˈraɪtə",
+   "作家"
+  ],
+  "American": [
+   "əˈmerɪkən",
+   "美国人"
+  ],
+  "Danish": [
+   "ˈdeɪnɪʃ",
+   "丹麦人"
+  ],
+  "poem": [
+   "pəʊɪm",
+   "诗"
+  ],
+  "invention": [
+   "ɪˈnvenʃən",
+   "发明"
+  ],
+  "university": [
+   "juːnɪvɜːˈsɪti",
+   "大学"
+  ],
+  "deaf": [
+   "def",
+   "聋的"
+  ],
+  "blind": [
+   "blaɪnd",
+   "失明的"
+  ],
+  "fall": [
+   "fɔːl",
+   "落下"
+  ],
+  "hear": [
+   "hiə",
+   "听到"
+  ],
+  "broken": [
+   "ˈbrəʊkən",
+   "损坏了的"
+  ],
+  "pity": [
+   "ˈpɪti",
+   "遗憾"
+  ],
+  "prize": [
+   "praɪz",
+   "奖品"
+  ],
+  "live": [
+   "lɪv",
+   "居住"
+  ],
+  "quite": [
+   "kwaɪt",
+   "相当"
+  ],
+  "airport": [
+   "ˈeəpɔːt",
+   "机场"
+  ],
+  "arrive": [
+   "əˈraɪv",
+   "到达"
+  ],
+  "meet": [
+   "miːt",
+   "会面"
+  ],
+  "wardrobe": [
+   "ˈwɔːdrəʊb",
+   "衣柜"
+  ],
+  "downtown": [
+   "ˈdaʊntaʊn",
+   "市中心"
+  ],
+  "stadium": [
+   "ˈsteɪdiəm",
+   "体育场"
+  ],
+  "volunteer": [
+   "vɒləntiˈə",
+   "志愿者"
+  ],
+  "sandwich": [
+   "ˈsændwɪtʃ",
+   "三明治"
+  ],
+  "top": [
+   "tɒp",
+   "上边"
+  ],
+  "habit": [
+   "ˈhæbɪt",
+   "习惯"
+  ],
+  "less": [
+   "les",
+   "更少"
+  ],
+  "hockey": [
+   "ˈhɒki",
+   "曲棍球"
+  ],
+  "beaver": [
+   "ˈbiːvə",
+   "海狸"
+  ],
+  "raccoon": [
+   "ræˈkuːn",
+   "浣熊"
+  ],
+  "moose": [
+   "muːs",
+   "驼鹿"
+  ],
+  "countryside": [
+   "ˈkʌntrɪsaɪd",
+   "乡下"
+  ],
+  "Thanksgiving": [
+   "ˈθæŋksɡɪvɪŋ",
+   "感恩节"
+  ],
+  "squirrel": [
+   "ˈskwɪrəl",
+   "松鼠"
+  ],
+  "swan": [
+   "swɒn",
+   "天鹅"
+  ],
+  "frog": [
+   "frɒɡ",
+   "青蛙"
+  ],
+  "amazing": [
+   "əˈmeɪzɪŋ",
+   "惊人的"
+  ],
+  "model": [
+   "ˈmɒdəl",
+   ""
+  ],
+  "snowman": [
+   "ˈsnəʊmən",
+   ""
+  ],
+  "breakfast": [
+   "ˈbrekfəst",
+   ""
+  ],
+  "lunch": [
+   "lʌntʃ",
+   ""
+  ],
+  "dinner": [
+   "ˈdɪnə",
+   ""
+  ],
+  "every": [
+   "ˈevri",
+   ""
+  ],
+  "matter": [
+   "ˈmætə",
+   ""
+  ],
+  "shopping": [
+   "ˈʃɒpɪŋ",
+   ""
+  ],
+  "list": [
+   "lɪst",
+   ""
+  ],
+  "forward": [
+   "ˈfɔːwəd",
+   ""
+  ],
+  "after": [
+   "ˈɑːftə",
+   ""
+  ],
+  "sports": [
+   "spɔːts",
+   ""
+  ],
+  "chess": [
+   "tʃes",
+   ""
+  ],
+  "be": [
+   "biː",
+   "是"
+  ],
+  "back": [
+   "bæk",
+   ""
+  ],
+  "bottle": [
+   "ˈbɒtəl",
+   ""
+  ],
+  "cooking": [
+   "ˈkʊkɪŋ",
+   ""
+  ],
+  "walking": [
+   "ˈwɔːkɪŋ",
+   ""
+  ],
+  "watering": [
+   "ˈwɔːtərɪŋ",
+   ""
+  ],
+  "plants": [
+   "plænts",
+   ""
+  ],
+  "cleaning": [
+   "ˈkliːnɪŋ",
+   ""
+  ],
+  "listening": [
+   "ˈlɪsənɪŋ",
+   ""
+  ],
+  "watching": [
+   "ˈwɒtʃɪŋ",
+   ""
+  ],
+  "feeding": [
+   "ˈfiːdɪŋ",
+   ""
+  ],
+  "living": [
+   "ˈlɪvɪŋ",
+   ""
+  ],
+  "dining": [
+   "ˈdaɪnɪŋ",
+   ""
+  ],
+  "rent": [
+   "rent",
+   ""
+  ],
+  "roller": [
+   "ˈrəʊlə",
+   ""
+  ],
+  "skating": [
+   "ˈskeɪtɪŋ",
+   ""
+  ],
+  "jumping": [
+   "ˈdʒʌmpɪŋ",
+   ""
+  ],
+  "rope": [
+   "rəʊp",
+   ""
+  ],
+  "visit": [
+   "ˈvɪzɪt",
+   ""
+  ],
+  "one's": [
+   "wɒn",
+   "某人的"
+  ],
+  "grandparents": [
+   "ˈɡrændpeərənts",
+   ""
+  ],
+  "pick": [
+   "pɪk",
+   ""
+  ],
+  "fishing": [
+   "ˈfɪʃɪŋ",
+   ""
+  ],
+  "cinema": [
+   "ˈsɪnəmə",
+   ""
+  ],
+  "weekend": [
+   "wiːˈkend",
+   ""
+  ],
+  "by": [
+   "baɪ",
+   "乘（车）"
+  ],
+  "taxi": [
+   "ˈtæksi",
+   ""
+  ],
+  "subway": [
+   "ˈsʌbweɪ",
+   ""
+  ],
+  "meeting": [
+   "ˈmiːtɪŋ",
+   ""
+  ],
+  "glue": [
+   "ɡluː",
+   ""
+  ],
+  "stick": [
+   "stɪk",
+   ""
+  ],
+  "excuse": [
+   "ɪkˈskjuːz",
+   ""
+  ],
+  "fire": [
+   "faɪə",
+   ""
+  ],
+  "careful": [
+   "ˈkeəfəl",
+   ""
+  ],
+  "stairs": [
+   "steəz",
+   ""
+  ],
+  "officer": [
+   "ˈɒfɪsə",
+   ""
+  ],
+  "across": [
+   "əˈkrɒs",
+   ""
+  ],
+  "next": [
+   "nekst",
+   ""
+  ],
+  "post": [
+   "pəʊst",
+   ""
+  ],
+  "turn": [
+   "tɜːn",
+   ""
+  ],
+  "right": [
+   "raɪt",
+   ""
+  ],
+  "centre": [
+   "ˈsentə",
+   ""
+  ],
+  "toys": [
+   "tɔɪz",
+   ""
+  ],
+  "boating": [
+   "ˈbəʊtɪŋ",
+   ""
+  ],
+  "photos": [
+   "ˈfəʊtəʊz",
+   ""
+  ],
+  "seafood": [
+   "ˈsiːfuːd",
+   ""
+  ],
+  "row": [
+   "rəʊ",
+   ""
+  ],
+  "wall": [
+   "wɔːl",
+   ""
+  ],
+  "doing": [
+   "ˈduːɪŋ",
+   ""
+  ],
+  "jigsaw": [
+   "ˈdʒɪɡsɔː",
+   ""
+  ],
+  "puzzles": [
+   "ˈpʌzəlz",
+   ""
+  ],
+  "making": [
+   "ˈmeɪkɪŋ",
+   ""
+  ],
+  "models": [
+   "ˈmɒdəlz",
+   ""
+  ],
+  "collecting": [
+   "kəˈlektɪŋ",
+   ""
+  ],
+  "erasers": [
+   "ɪˈreɪzəz",
+   ""
+  ],
+  "picnic": [
+   "ˈpɪknɪk",
+   ""
+  ],
+  "violin": [
+   "vaɪəˈlɪn",
+   ""
+  ],
+  "camping": [
+   "ˈkæmpɪŋ",
+   ""
+  ],
+  "housework": [
+   "ˈhaʊswɜːk",
+   ""
+  ],
+  "once": [
+   "wɒns",
+   ""
+  ],
+  "twice": [
+   "twaɪs",
+   ""
+  ],
+  "times": [
+   "taɪmz",
+   ""
+  ],
+  "uk": [
+   "ˌjuːˈkeɪ",
+   ""
+  ],
+  "usa": [
+   "ˌjuː es ˈeɪ",
+   ""
+  ],
+  "maple": [
+   "ˈmeɪpəl",
+   ""
+  ],
+  "leaves": [
+   "liːvz",
+   ""
+  ],
+  "ben": [
+   "ben",
+   ""
+  ],
+  "glasses": [
+   "ˈɡlɑːsɪz",
+   ""
+  ],
+  "sharpener": [
+   "ˈʃɑːpənə",
+   ""
+  ],
+  "pair": [
+   "peə",
+   ""
+  ],
+  "crayons": [
+   "kreɪɒnz",
+   ""
+  ],
+  "news": [
+   "njuːz",
+   ""
+  ],
+  "shows": [
+   "ʃəʊz",
+   ""
+  ],
+  "out": [
+   "aʊt",
+   ""
+  ],
+  "rubbish": [
+   "ˈrʌbɪʃ",
+   ""
+  ],
+  "clothes": [
+   "kləʊðz",
+   ""
+  ],
+  "sweep": [
+   "swiːp",
+   ""
+  ],
+  "year's": [
+   "jiə",
+   ""
+  ],
+  "planting": [
+   "ˈplæntɪŋ",
+   ""
+  ],
+  "mother's": [
+   "ˈmʌðəz",
+   ""
+  ],
+  "children's": [
+   "ˈtʃɪldrən",
+   ""
+  ],
+  "father's": [
+   "ˈfɑːðə",
+   ""
+  ],
+  "teacher's": [
+   "ˈtiːtʃə",
+   ""
+  ],
+  "national": [
+   "ˈnæʃənəl",
+   ""
+  ],
+  "poster": [
+   "ˈpəʊstə",
+   ""
+  ],
+  "email": [
+   "ˈiːmeɪl",
+   ""
+  ],
+  "message": [
+   "ˈmesɪdʒ",
+   ""
+  ],
+  "mail": [
+   "meɪl",
+   ""
+  ],
+  "video": [
+   "ˈvɪdɪəʊ",
+   ""
+  ],
+  "show": [
+   "ʃəʊ",
+   ""
+  ],
+  "cleaned": [
+   "kliːnd",
+   ""
+  ],
+  "watched": [
+   "wɒtʃt",
+   ""
+  ],
+  "climbed": [
+   "klaɪmd",
+   ""
+  ],
+  "visited": [
+   "ˈvɪzɪtɪd",
+   ""
+  ],
+  "jumped": [
+   "dʒʌmpt",
+   ""
+  ],
+  "listened": [
+   "ˈlɪsənd",
+   ""
+  ],
+  "rowed": [
+   "rəʊd",
+   ""
+  ],
+  "played": [
+   "pleɪd",
+   ""
+  ],
+  "stayed": [
+   "steɪd",
+   ""
+  ],
+  "piano": [
+   "pɪˈænəʊ",
+   ""
+  ],
+  "washed": [
+   "wɒʃt",
+   ""
+  ],
+  "went": [
+   "went",
+   ""
+  ],
+  "drank": [
+   "dræŋk",
+   ""
+  ],
+  "drinks": [
+   "drɪŋks",
+   ""
+  ],
+  "ate": [
+   "et",
+   ""
+  ],
+  "bought": [
+   "bɔːt",
+   ""
+  ],
+  "gifts": [
+   "ɡɪfts",
+   ""
+  ],
+  "took": [
+   "tʊk",
+   ""
+  ],
+  "saw": [
+   "sɔː",
+   ""
+  ],
+  "flowers": [
+   "ˈflaʊəz",
+   ""
+  ],
+  "felt": [
+   "felt",
+   ""
+  ],
+  "fries": [
+   "fraɪz",
+   ""
+  ],
+  "was": [
+   "wɒz",
+   ""
+  ],
+  "born": [
+   "bɔːn",
+   ""
+  ],
+  "started": [
+   "ˈstɑːtɪd",
+   ""
+  ],
+  "learned": [
+   "lɜːn",
+   ""
+  ],
+  "kindergarten": [
+   "ˈkɪndəɡɑːtən",
+   ""
+  ],
+  "things": [
+   "θɪŋz",
+   ""
+  ],
+  "over": [
+   "ˈəʊvə",
+   ""
+  ],
+  "potala": [
+   "pəˈtɑːlə",
+   ""
+  ],
+  "palace": [
+   "ˈpælɪs",
+   ""
+  ],
+  "terracotta": [
+   "ˈterəkɒtə",
+   ""
+  ],
+  "army": [
+   "ˈɑːmi",
+   ""
+  ],
+  "yangtze": [
+   "ˈjæŋtsi",
+   ""
+  ],
+  "british": [
+   "ˈbrɪtɪʃ",
+   ""
+  ],
+  "cn": [
+   "ˌsiːˈen",
+   ""
+  ],
+  "tower": [
+   "ˈtaʊə",
+   ""
+  ],
+  "opera": [
+   "ˈɒpərə",
+   ""
+  ],
+  "lantern": [
+   "ˈlɑːntən",
+   ""
+  ],
+  "pal": [
+   "pæl",
+   ""
+  ],
+  "queen's": [
+   "kwiːn",
+   ""
+  ],
+  "gallery": [
+   "ˈɡæləri",
+   ""
+  ],
+  "public": [
+   "ˈpʌblɪk",
+   ""
+  ],
+  "ontario": [
+   "ɒnˈteəriəʊ",
+   ""
+  ],
+  "least": [
+   "liːst",
+   ""
+  ],
+  "about": [
+   "əˈbaʊt",
+   ""
+  ],
+  "roast": [
+   "rəʊst",
+   ""
+  ],
+  "turkey": [
+   "ˈtɜːki",
+   ""
+  ],
+  "wild": [
+   "waɪld",
+   ""
+  ],
+  "goose": [
+   "ɡuːs",
+   ""
+  ],
+  "english-chinese": [
+   "ˈɪŋɡlɪʃ ˌtʃaɪˈniːz",
+   ""
+  ],
+  "dictionary": [
+   "ˈdɪkʃənəri",
+   ""
+  ],
+  "mall": [
+   "mæl",
+   ""
+  ],
+  "pot": [
+   "pɒt",
+   ""
+  ],
+  "eggs": [
+   "eɡz",
+   ""
+  ],
+  "eyes": [
+   "aɪz",
+   ""
+  ],
+  "ears": [
+   "iəz",
+   ""
+  ],
+  "ouch": [
+   "aʊtʃ",
+   ""
+  ],
+  "hurts": [
+   "hɜːts",
+   ""
+  ],
+  "june": [
+   "dʒuːn",
+   ""
+  ],
+  "friends": [
+   "frendz",
+   ""
+  ],
+  "goes": [
+   "ɡəʊz",
+   ""
+  ],
+  "work": [
+   "wɜːk",
+   ""
+  ],
+  "china": [
+   "ˈtʃaɪnə",
+   ""
+  ],
+  "pandas": [
+   "ˈpændəz",
+   ""
+  ],
+  "koalas": [
+   "kəʊˈɑːləz",
+   ""
+  ],
+  "australia": [
+   "ɒˈstreɪliə",
+   ""
+  ],
+  "canada": [
+   "ˈkænədə",
+   ""
+  ],
+  "lily": [
+   "ˈlɪli",
+   ""
+  ],
+  "tom": [
+   "tɒm",
+   ""
+  ],
+  "habits": [
+   "ˈhæbɪts",
+   ""
+  ],
+  "keep": [
+   "kiːp",
+   ""
+  ],
+  "healthy": [
+   "ˈhelθi",
+   ""
+  ],
+  "last": [
+   "lɑːst",
+   ""
+  ],
+  "chengdu": [
+   "ˌtʃeŋˈduː",
+   ""
+  ],
+  "food": [
+   "fuːd",
+   ""
+  ],
+  "visitors": [
+   "ˈvɪzɪtəz",
+   ""
+  ],
+  "has": [
+   "hæz",
+   ""
+  ],
+  "sharp": [
+   "ʃɑːp",
+   ""
+  ],
+  "teeth": [
+   "tiːθ",
+   ""
+  ],
+  "insects": [
+   "ˈɪnsekts",
+   ""
+  ],
+  "emails": [
+   "ˈiːmeɪlz",
+   ""
+  ],
+  "told": [
+   "təʊld",
+   ""
+  ],
+  "thanksgiving": [
+   "ˈθæŋksɡɪvɪŋ",
+   ""
+  ]
+ },
+ "phrases": {
+  "Father Christmas": [
+   "ˈfɑːðə ˈkrɪsməs",
+   "圣诞老人"
+  ],
+  "Christmas tree": [
+   "ˈkrɪsməs triː",
+   "圣诞树"
+  ],
+  "New Year": [
+   "njuː jɪə",
+   "新年"
+  ],
+  "play football": [
+   "pleɪ ˈfʊtbɔːl",
+   "踢足球"
+  ],
+  "fly a kite": [
+   "flaɪ ə kaɪt",
+   "放风筝"
+  ],
+  "ride a bike": [
+   "raɪd ə baɪk",
+   "骑自行车"
+  ],
+  "make a model plane": [
+   "meɪk ə ˈmɒdəl pleɪn",
+   "做飞机模型"
+  ],
+  "make a snowman": [
+   "meɪk ə ˈsnəʊmən",
+   "堆雪人"
+  ],
+  "get up": [
+   "ɡet ʌp",
+   "起床"
+  ],
+  "eat breakfast": [
+   "iːt ˈbrekfəst",
+   "吃早饭"
+  ],
+  "go to school": [
+   "ɡəʊ tuː skuːl",
+   "上学"
+  ],
+  "eat lunch": [
+   "iːt lʌntʃ",
+   "吃午饭"
+  ],
+  "go home": [
+   "ɡəʊ həʊm",
+   "回家"
+  ],
+  "eat dinner": [
+   "iːt ˈdɪnə",
+   "吃晚饭"
+  ],
+  "go to bed": [
+   "ɡəʊ tuː bed",
+   "上床睡觉"
+  ],
+  "every day": [
+   "ˈevri deɪ",
+   "每天"
+  ],
+  "how old": [
+   "haʊ əʊld",
+   "多大"
+  ],
+  "the matter": [
+   "ðə ˈmætə",
+   "麻烦事"
+  ],
+  "shopping list": [
+   "ˈʃɒpɪŋ lɪst",
+   "购物单"
+  ],
+  "look for": [
+   "lʊk fɔː",
+   "寻找"
+  ],
+  "look forward to": [
+   "lʊk ˈfɔːwəd tuː",
+   "盼望"
+  ],
+  "computer class": [
+   "kəmˈpjuːtə klɑːs",
+   "计算机课"
+  ],
+  "after school": [
+   "ˈɑːftə skuːl",
+   "放学后"
+  ],
+  "play sports": [
+   "pleɪ spɔːts",
+   "做运动"
+  ],
+  "draw pictures": [
+   "drɔː ˈpɪktʃəz",
+   "画画"
+  ],
+  "play chess": [
+   "pleɪ tʃes",
+   "下棋"
+  ],
+  "sing songs": [
+   "sɪŋ sɒŋz",
+   "唱歌"
+  ],
+  "read books": [
+   "riːd bʊks",
+   "读书"
+  ],
+  "wake up": [
+   "weɪk ʌp",
+   "叫醒"
+  ],
+  "be back": [
+   "biː bæk",
+   "回来"
+  ],
+  "water bottle": [
+   "ˈwɔːtə ˈbɒtəl",
+   "水瓶"
+  ],
+  "cooking dinner": [
+   "ˈkʊkɪŋ ˈdɪnə",
+   "正在做饭"
+  ],
+  "walking the dog": [
+   "ˈwɔːkɪŋ ðə dɒɡ",
+   "正在遛狗"
+  ],
+  "watering the plants": [
+   "ˈwɔːtərɪŋ ðə plænts",
+   "正在给植物浇水"
+  ],
+  "cleaning the room": [
+   "ˈkliːnɪŋ ðə ruːm",
+   "正在打扫房间"
+  ],
+  "listening to music": [
+   "ˈlɪsənɪŋ tuː ˈmjuːzɪk",
+   "正在听音乐"
+  ],
+  "watching TV": [
+   "ˈwɒtʃɪŋ ˌtiː ˈviː",
+   "正在看电视"
+  ],
+  "feeding the fish": [
+   "ˈfiːdɪŋ ðə fɪʃ",
+   "正在喂鱼"
+  ],
+  "play with": [
+   "pleɪ wɪð",
+   "与……玩耍"
+  ],
+  "in one hour": [
+   "ɪn wʌn ˈaʊə",
+   "一小时之后"
+  ],
+  "living room": [
+   "ˈlɪvɪŋ ruːm",
+   "客厅"
+  ],
+  "dining room": [
+   "ˈdaɪnɪŋ ruːm",
+   "餐厅"
+  ],
+  "for rent": [
+   "fɔː rent",
+   "供出租"
+  ],
+  "roller skating": [
+   "ˈrəʊlə ˈskeɪtɪŋ",
+   "滑旱冰"
+  ],
+  "jumping rope": [
+   "ˈdʒʌmpɪŋ rəʊp",
+   "跳绳"
+  ],
+  "be good at": [
+   "biː ɡʊd æt",
+   "擅长"
+  ],
+  "visit one's grandparents": [
+   "ˈvɪzɪt wɒn ˈɡrændpeərənts",
+   "看望祖父母"
+  ],
+  "climb a hill": [
+   "klaɪm ə hɪl",
+   "爬山"
+  ],
+  "pick fruit": [
+   "pɪk fruːt",
+   "采摘水果"
+  ],
+  "play computer games": [
+   "pleɪ kəmˈpjuːtə ɡeɪmz",
+   "玩电脑游戏"
+  ],
+  "go fishing": [
+   "ɡəʊ ˈfɪʃɪŋ",
+   "钓鱼"
+  ],
+  "go to the cinema": [
+   "ɡəʊ tuː ðə ˈsɪnəmə",
+   "看电影"
+  ],
+  "on the weekend": [
+   "ɒn ðə wiːˈkend",
+   "在周末"
+  ],
+  "by bus": [
+   "baɪ bʌs",
+   "乘公交车"
+  ],
+  "by boat": [
+   "baɪ bəʊt",
+   "乘小船"
+  ],
+  "by ship": [
+   "baɪ ʃɪp",
+   "乘轮船"
+  ],
+  "by car": [
+   "baɪ kɑː",
+   "乘小汽车"
+  ],
+  "by taxi": [
+   "baɪ ˈtæksi",
+   "乘出租车"
+  ],
+  "by bike": [
+   "baɪ baɪk",
+   "骑自行车"
+  ],
+  "on foot": [
+   "ɒn fʊt",
+   "步行"
+  ],
+  "by school bus": [
+   "baɪ skuːl bʌs",
+   "乘校车"
+  ],
+  "by subway": [
+   "baɪ ˈsʌbweɪ",
+   "乘地铁"
+  ],
+  "by plane": [
+   "baɪ pleɪn",
+   "乘飞机"
+  ],
+  "by train": [
+   "baɪ treɪn",
+   "乘火车"
+  ],
+  "meeting place": [
+   "ˈmiːtɪŋ pleɪs",
+   "集合地点"
+  ],
+  "glue stick": [
+   "ɡluː stɪk",
+   "胶棒"
+  ],
+  "Excuse me": [
+   "ɪkˈskjuːz miː",
+   "对不起，打扰一下"
+  ],
+  "play with fire": [
+   "pleɪ wɪð faɪə",
+   "玩火"
+  ],
+  "Be careful": [
+   "biː ˈkeəfəl",
+   "当心"
+  ],
+  "run down the stairs": [
+   "rʌn daʊn ðə steəz",
+   "跑下楼梯"
+  ],
+  "wait for": [
+   "weɪt fɔː",
+   "等待"
+  ],
+  "safety rule": [
+   "ˈseɪfti ruːl",
+   "安全规则"
+  ],
+  "bus driver": [
+   "bʌs ˈdraɪvə",
+   "公交司机"
+  ],
+  "police officer": [
+   "pəˈliːs ˈɒfɪsə",
+   "警官"
+  ],
+  "taxi driver": [
+   "ˈtæksi ˈdraɪvə",
+   "出租司机"
+  ],
+  "in the future": [
+   "ɪn ðə ˈfjuːtʃə",
+   "将来"
+  ],
+  "across from": [
+   "əˈkrɒs frɒm",
+   "对面"
+  ],
+  "next to": [
+   "nekst tuː",
+   "紧邻"
+  ],
+  "post office": [
+   "pəʊst ˈɒfɪs",
+   "邮局"
+  ],
+  "turn left": [
+   "tɜːn left",
+   "向左转"
+  ],
+  "turn right": [
+   "tɜːn raɪt",
+   "向右转"
+  ],
+  "go straight": [
+   "ɡəʊ streɪt",
+   "直行"
+  ],
+  "get to": [
+   "ɡet tuː",
+   "到达"
+  ],
+  "sports centre": [
+   "spɔːts ˈsentə",
+   "体育中心"
+  ],
+  "buy toys": [
+   "baɪ tɔɪz",
+   "买玩具"
+  ],
+  "see a film": [
+   "siː ə fɪlm",
+   "看电影"
+  ],
+  "go boating": [
+   "ɡəʊ ˈbəʊtɪŋ",
+   "去划船"
+  ],
+  "take photos": [
+   "teɪk ˈfəʊtəʊz",
+   "照相"
+  ],
+  "eat seafood": [
+   "iːt ˈsiːfuːd",
+   "吃海鲜"
+  ],
+  "West Lake": [
+   "west leɪk",
+   "西湖"
+  ],
+  "row a boat": [
+   "rəʊ ə bəʊt",
+   "划船"
+  ],
+  "the Great Wall": [
+   "ðə ɡreɪt wɔːl",
+   "长城"
+  ],
+  "summer vacation": [
+   "ˈsʌmə veɪˈkeɪʃən",
+   "暑假"
+  ],
+  "doing jigsaw puzzles": [
+   "ˈduːɪŋ ˈdʒɪɡsɔː ˈpʌzəlz",
+   "拼拼图"
+  ],
+  "making models": [
+   "ˈmeɪkɪŋ ˈmɒdəlz",
+   "制作模型"
+  ],
+  "collecting erasers": [
+   "kəˈlektɪŋ ɪˈreɪzəz",
+   "收集橡皮"
+  ],
+  "go for a picnic": [
+   "ɡəʊ fɔː ə ˈpɪknɪk",
+   "去野餐"
+  ],
+  "play the violin": [
+   "pleɪ ðə vaɪəˈlɪn",
+   "拉小提琴"
+  ],
+  "go skating": [
+   "ɡəʊ ˈskeɪtɪŋ",
+   "去滑冰"
+  ],
+  "go camping": [
+   "ɡəʊ ˈkæmpɪŋ",
+   "去野营"
+  ],
+  "do the housework": [
+   "duː ðə ˈhaʊswɜːk",
+   "做家务"
+  ],
+  "once a week": [
+   "wɒns ə wiːk",
+   "一周一次"
+  ],
+  "twice a week": [
+   "twaɪs ə wiːk",
+   "一周两次"
+  ],
+  "three times a week": [
+   "θriː taɪmz ə wiːk",
+   "一周三次"
+  ],
+  "the UK": [
+   "ðə ˌjuːˈkeɪ",
+   "英国"
+  ],
+  "the USA": [
+   "ðə ˌjuː es ˈeɪ",
+   "美国"
+  ],
+  "maple leaves": [
+   "ˈmeɪpəl liːvz",
+   "枫叶"
+  ],
+  "Big Ben": [
+   "bɪɡ ben",
+   "大本钟"
+  ],
+  "wear glasses": [
+   "weə ˈɡlɑːsɪz",
+   "戴眼镜"
+  ],
+  "exercise book": [
+   "ˈeksəsaɪz bʊk",
+   "练习本"
+  ],
+  "pencil sharpener": [
+   "ˈpensl ˈʃɑːpənə",
+   "铅笔刀"
+  ],
+  "a pair of scissors": [
+   "ə peə əv ˈsɪsəz",
+   "一把剪刀"
+  ],
+  "pencil box": [
+   "ˈpensl bɒks",
+   "铅笔盒"
+  ],
+  "a box of crayons": [
+   "ə bɒks əv kreɪɒnz",
+   "一盒蜡笔"
+  ],
+  "how much": [
+   "haʊ mʌtʃ",
+   "多少钱"
+  ],
+  "a lot": [
+   "ə lɒt",
+   "很多"
+  ],
+  "news shows": [
+   "njuːz ʃəʊz",
+   "新闻节目"
+  ],
+  "nature shows": [
+   "ˈneɪtʃə ʃəʊz",
+   "自然节目"
+  ],
+  "clean the room": [
+   "kliːn ðə ruːm",
+   "打扫房间"
+  ],
+  "make the bed": [
+   "meɪk ðə bed",
+   "整理床铺"
+  ],
+  "take out the rubbish": [
+   "teɪk aʊt ðə ˈrʌbɪʃ",
+   "倒垃圾"
+  ],
+  "wash clothes": [
+   "wɒʃ kləʊðz",
+   "洗衣服"
+  ],
+  "tidy the desk": [
+   "ˈtaɪdi ðə desk",
+   "清理书桌"
+  ],
+  "sweep the floor": [
+   "swiːp ðə flɔː",
+   "扫地"
+  ],
+  "too much": [
+   "tuː mʌtʃ",
+   "太多"
+  ],
+  "a lot of": [
+   "ə lɒt əv",
+   "许多"
+  ],
+  "New Year's Day": [
+   "njuː jiə deɪ",
+   "新年"
+  ],
+  "Tree Planting Day": [
+   "triː ˈplæntɪŋ deɪ",
+   "植树节"
+  ],
+  "Mother's Day": [
+   "ˈmʌðəz deɪ",
+   "母亲节"
+  ],
+  "Children's Day": [
+   "ˈtʃɪldrən deɪ",
+   "儿童节"
+  ],
+  "Father's Day": [
+   "ˈfɑːðə deɪ",
+   "父亲节"
+  ],
+  "Teacher's Day": [
+   "ˈtiːtʃə deɪ",
+   "教师节"
+  ],
+  "National Day": [
+   "ˈnæʃənəl deɪ",
+   "国庆节"
+  ],
+  "Christmas Day": [
+   "ˈkrɪsməs deɪ",
+   "圣诞节"
+  ],
+  "make a poster": [
+   "meɪk ə ˈpəʊstə",
+   "制作海报"
+  ],
+  "have a picnic": [
+   "hæv ə ˈpɪknɪk",
+   "野餐"
+  ],
+  "send an email": [
+   "send ən ˈiːmeɪl",
+   "发电子邮件"
+  ],
+  "write a letter": [
+   "raɪt ə ˈletə",
+   "写信"
+  ],
+  "make a phone call": [
+   "meɪk ə fəʊn kɔːl",
+   "打电话"
+  ],
+  "send a short message": [
+   "send ə ʃɔːt ˈmesɪdʒ",
+   "发送短消息"
+  ],
+  "mail a present": [
+   "meɪl ə ˈpreznt",
+   "邮寄礼物"
+  ],
+  "make a video call": [
+   "meɪk ə ˈvɪdɪəʊ kɔːl",
+   "打视频电话"
+  ],
+  "make a card": [
+   "meɪk ə kɑːd",
+   "制作卡片"
+  ],
+  "flower show": [
+   "ˈflaʊə ʃəʊ",
+   "花展"
+  ],
+  "cleaned the window": [
+   "kliːnd ðə ˈwɪndəʊ",
+   "擦窗子（过去式）"
+  ],
+  "watched TV": [
+   "wɒtʃt ˌtiː ˈviː",
+   "看电视（过去式）"
+  ],
+  "climbed a hill": [
+   "klaɪmd ə hɪl",
+   "爬山（过去式）"
+  ],
+  "visited grandparents": [
+   "ˈvɪzɪtɪd ˈɡrændpeərənts",
+   "看望祖父母（过去式）"
+  ],
+  "jumped rope": [
+   "dʒʌmpt rəʊp",
+   "跳绳（过去式）"
+  ],
+  "listened to music": [
+   "ˈlɪsənd tuː ˈmjuːzɪk",
+   "听音乐（过去式）"
+  ],
+  "rowed a boat": [
+   "rəʊd ə bəʊt",
+   "划船（过去式）"
+  ],
+  "played computer games": [
+   "pleɪd kəmˈpjuːtə ɡeɪmz",
+   "玩电脑游戏（过去式）"
+  ],
+  "stayed at home": [
+   "steɪd æt həʊm",
+   "呆在家里（过去式）"
+  ],
+  "played the piano": [
+   "pleɪd ðə pɪˈænəʊ",
+   "弹钢琴（过去式）"
+  ],
+  "played chess": [
+   "pleɪd tʃes",
+   "下棋（过去式）"
+  ],
+  "washed clothes": [
+   "wɒʃt kləʊðz",
+   "洗衣服（过去式）"
+  ],
+  "went to the beach": [
+   "went tuː ðə biːtʃ",
+   "去海边（过去式）"
+  ],
+  "drank cold drinks": [
+   "dræŋk kəʊld drɪŋks",
+   "喝冷饮（过去式）"
+  ],
+  "ate ice-cream": [
+   "et ˌaɪs ˈkriːm",
+   "吃冰淇淋（过去式）"
+  ],
+  "the Stone Forest": [
+   "ðə stəʊn ˈfɒrɪst",
+   "石林"
+  ],
+  "bought some gifts": [
+   "bɔːt sʌm ɡɪfts",
+   "买礼物（过去式）"
+  ],
+  "took photos": [
+   "tʊk ˈfəʊtəʊz",
+   "拍照片（过去式）"
+  ],
+  "saw flowers": [
+   "sɔː ˈflaʊəz",
+   "赏花（过去式）"
+  ],
+  "felt happy": [
+   "felt ˈhæpi",
+   "觉得高兴（过去式）"
+  ],
+  "French fries": [
+   "frentʃ fraɪz",
+   "法式炸薯条"
+  ],
+  "was born": [
+   "wɒz bɔːn",
+   "出生"
+  ],
+  "started to speak": [
+   "ˈstɑːtɪd tuː spiːk",
+   "开始说话"
+  ],
+  "learned to walk": [
+   "lɜːn tuː wɔːk",
+   "学走路"
+  ],
+  "went to kindergarten": [
+   "went tuː ˈkɪndəɡɑːtən",
+   "上幼儿园"
+  ],
+  "went to school": [
+   "went tuː skuːl",
+   "上学"
+  ],
+  "learned to swim": [
+   "lɜːn tuː swɪm",
+   "学游泳"
+  ],
+  "started to buy things": [
+   "ˈstɑːtɪd tuː baɪ θɪŋz",
+   "开始学买东西"
+  ],
+  "started to study English": [
+   "ˈstɑːtɪd tuː ˈstʌdi ˈɪŋɡlɪʃ",
+   "开始学英语"
+  ],
+  "all over": [
+   "ɔːl ˈəʊvə",
+   "到处"
+  ],
+  "out of": [
+   "aʊt əv",
+   "离开"
+  ],
+  "morning tea": [
+   "ˈmɔːnɪŋ tiː",
+   "早茶"
+  ],
+  "the Potala Palace": [
+   "ðə pəˈtɑːlə ˈpælɪs",
+   "布达拉宫"
+  ],
+  "the Summer Palace": [
+   "ðə ˈsʌmə ˈpælɪs",
+   "颐和园"
+  ],
+  "The Terracotta Army": [
+   "ðə ˈterəkɒtə ˈɑːmi",
+   "兵马俑"
+  ],
+  "the Yangtze River": [
+   "ðə ˈjæŋtsi ˈrɪvə",
+   "长江"
+  ],
+  "the British Museum": [
+   "ðə ˈbrɪtɪʃ mjuˈziːəm",
+   "大英博物馆"
+  ],
+  "the CN Tower": [
+   "ðə ˌsiːˈen ˈtaʊə",
+   "加拿大国家电视塔"
+  ],
+  "the Opera House": [
+   "ðə ˈɒpərə haʊs",
+   "悉尼歌剧院"
+  ],
+  "the White House": [
+   "ðə waɪt haʊs",
+   "白宫"
+  ],
+  "Tower Bridge": [
+   "ˈtaʊə brɪdʒ",
+   "伦敦塔桥"
+  ],
+  "the London Eye": [
+   "ðə ˈlʌndən aɪ",
+   "伦敦眼"
+  ],
+  "ice lantern": [
+   "aɪs ˈlɑːntən",
+   "冰灯"
+  ],
+  "be afraid of": [
+   "biː əˈfreɪd əv",
+   "害怕"
+  ],
+  "pen pal": [
+   "pen pæl",
+   "笔友"
+  ],
+  "show around": [
+   "ʃəʊ əˈraʊnd",
+   "带领参观"
+  ],
+  "Queen's Park": [
+   "kwiːn pɑːk",
+   "女王公园"
+  ],
+  "art gallery": [
+   "ɑːt ˈɡæləri",
+   "艺术馆"
+  ],
+  "public library": [
+   "ˈpʌblɪk ˈlaɪbrəri",
+   "公共图书馆"
+  ],
+  "Lake Ontario": [
+   "leɪk ɒnˈteəriəʊ",
+   "安大略湖"
+  ],
+  "at least": [
+   "æt liːst",
+   "至少"
+  ],
+  "talk about": [
+   "tɔːk əˈbaʊt",
+   "谈论"
+  ],
+  "roast turkey": [
+   "rəʊst ˈtɜːki",
+   "烤火鸡"
+  ],
+  "wild goose": [
+   "waɪld ɡuːs",
+   "大雁"
+  ],
+  "English-Chinese dictionary": [
+   "ˈɪŋɡlɪʃ ˌtʃaɪˈniːz ˈdɪkʃənəri",
+   "英汉词典"
+  ],
+  "shopping centre": [
+   "ˈʃɒpɪŋ ˈsentə",
+   "购物中心"
+  ],
+  "shopping mall": [
+   "ˈʃɒpɪŋ mæl",
+   "大型综合商业中心"
+  ],
+  "hot pot": [
+   "hɒt pɒt",
+   "火锅"
+  ]
+ }
+}

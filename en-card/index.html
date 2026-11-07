@@ -1,0 +1,2491 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#f3f1ec">
+<meta name="description" content="英语卡片：把词库排成 A4 单词表、短语表，带音标与中文，可点读、可下载打印">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-title" content="英语卡片">
+<meta name="apple-mobile-web-app-status-bar-style" content="default">
+<link rel="manifest" href="manifest.webmanifest">
+<link rel="apple-touch-icon" href="assets/icon-180.png">
+<link rel="icon" href="assets/icon-192.png">
+<title>英语卡片 · A4 打印版</title>
+<style>
+:root{
+  --bg:#f3f1ec; --ink:#20242b; --sub:#7b7568; --line:#dcd5c6;
+  --accent:#1f6fb2; --accent-soft:#e8f1fa; --accent-line:#b7cfe4;
+  --card:#fffefb;
+  --shadow:0 10px 30px rgba(60,50,35,.14), 0 2px 6px rgba(60,50,35,.08);
+  --font-zh:"Microsoft YaHei","PingFang SC","Hiragino Sans GB","黑体",sans-serif;
+  --font-serif:Georgia,"Times New Roman","Songti SC",serif;
+  --font-sans:"Segoe UI","Helvetica Neue",Arial,"Microsoft YaHei",sans-serif;
+  --font-hand:"Comic Sans MS","Segoe Print","Bradley Hand","Chalkboard SE",cursive;
+}
+*{box-sizing:border-box}
+html,body{height:100%}
+body{
+  margin:0;background:var(--bg);color:var(--ink);
+  font-family:var(--font-zh);display:flex;flex-direction:column;
+  height:100vh;overflow:hidden;
+}
+
+/* ---------- 顶栏 ---------- */
+.toolbar{
+  flex:0 0 auto;display:flex;align-items:center;gap:12px;padding:11px 18px;
+  background:var(--card);border-bottom:1px solid var(--line);flex-wrap:wrap;z-index:20;
+  position:relative;
+}
+.brand{font-size:17px;font-weight:700;letter-spacing:.06em}
+.brand span{color:var(--accent)}
+.tabs{display:flex;background:#efece5;border-radius:10px;padding:3px;gap:2px}
+.tabs button{
+  border:0;background:transparent;padding:7px 16px;border-radius:8px;
+  font-size:14px;cursor:pointer;color:var(--sub);font-family:inherit;transition:.18s;
+}
+.tabs button.on{background:#fff;color:var(--ink);font-weight:700;box-shadow:0 1px 3px rgba(0,0,0,.12)}
+.spacer{flex:1}
+.actions{display:flex;gap:7px;flex-wrap:wrap;align-items:center}
+#pageActions{display:flex;gap:7px;flex-wrap:wrap;align-items:center}
+button.btn{
+  border:1px solid var(--line);background:#fff;color:var(--ink);
+  padding:8px 13px;border-radius:9px;font-size:13.5px;cursor:pointer;
+  font-family:inherit;transition:.16s;white-space:nowrap;
+}
+button.btn:hover{border-color:#b9ae99;background:#fbf9f4}
+button.btn:disabled{opacity:.42;cursor:default;transform:none}
+button.btn:disabled:hover{border-color:var(--line);background:#fff}
+button.btn:active{transform:translateY(1px)}
+button.btn.primary{background:var(--ink);color:#fff;border-color:var(--ink)}
+button.btn.primary:hover{background:#333a44}
+button.btn.ghost{background:transparent}
+button.btn.on{background:var(--accent-soft);border-color:var(--accent-line);color:var(--accent)}
+select.btn{padding:8px 10px}
+.count{font-size:12.5px;color:var(--sub);white-space:nowrap}
+
+/* ---------- 舞台 ---------- */
+.stage{
+  flex:1 1 auto;min-height:0;display:flex;flex-direction:column;
+  align-items:center;justify-content:center;gap:10px;padding:14px;
+}
+.viewport{
+  flex:1 1 auto;min-height:0;width:100%;
+  display:flex;align-items:center;justify-content:center;overflow:hidden;
+  touch-action:pan-y;              /* 横划交给我们翻页，纵向仍可滚动 */
+}
+.paper-wrap{position:relative;flex:0 0 auto;will-change:transform}
+#viewport{cursor:grab}
+body.dragging #viewport,body.dragging .cell{cursor:grabbing}
+body.dragging .paper-wrap{transition:none!important}
+.page{
+  position:absolute;top:0;left:0;width:210mm;height:297mm;background:#fff;
+  transform-origin:top left;box-shadow:var(--shadow);
+}
+.cell{
+  position:absolute;display:flex;align-items:center;justify-content:center;
+  font-family:var(--font-serif);line-height:1;color:#1a1a1a;
+  cursor:pointer;user-select:none;transition:background .15s;
+}
+.cell:hover{background:rgba(31,111,178,.05)}
+/* 正在读这一格：底色闪一下，孩子知道读的是哪个 */
+.cell.say{background:rgba(31,111,178,.13);border-radius:1.4mm}
+.cell.blank{cursor:default}
+.cell.blank:hover{background:transparent}
+.cell.hid .w,.cell.hid .zh{color:transparent}
+.cw{display:flex;flex-direction:column;align-items:center;justify-content:center;width:100%;height:100%}
+.lw{display:flex;align-items:flex-end;justify-content:center;flex:0 0 auto}
+.lz{display:flex;align-items:center;justify-content:center;flex:0 0 auto;width:100%}
+.wb{display:flex;flex-direction:column;align-items:center;justify-content:flex-end;flex:0 0 auto}
+.wb .ipa,.wb .w,.lz .zh{display:block;text-align:center;white-space:nowrap}
+.wb .w{font-weight:400;letter-spacing:.01em;color:inherit}
+.wb .ipa{
+  font-family:var(--font-sans);font-weight:400;letter-spacing:0;
+  color:inherit;opacity:.78;
+}
+.lz .zh{font-family:var(--font-zh);font-weight:400;color:inherit;opacity:.62;letter-spacing:.02em}
+/* 关掉音标 / 关掉中文：只把那一行藏起来，字号和位置都不动 */
+body.noipa .wb .ipa{visibility:hidden}
+body.nozh  .lz .zh{visibility:hidden}
+body.showgrid .cell{outline:.22mm dashed #cfd8e2;outline-offset:-.22mm}
+.empty-hint{
+  position:absolute;inset:0;display:flex;align-items:center;justify-content:center;
+  color:var(--sub);font-size:16px;font-family:var(--font-zh);text-align:center;line-height:2;
+}
+
+/* ---------- 翻页 ---------- */
+.pager{
+  flex:0 0 auto;display:flex;align-items:center;gap:14px;background:var(--card);
+  border:1px solid var(--line);border-radius:999px;padding:5px 8px;
+  box-shadow:0 2px 8px rgba(60,50,35,.06);
+}
+.pager button{
+  border:0;background:transparent;width:32px;height:32px;border-radius:50%;
+  font-size:18px;cursor:pointer;color:var(--ink);line-height:1;
+}
+.pager button:hover:not(:disabled){background:#f0ece2}
+.pager button:disabled{opacity:.28;cursor:default}
+.pager .info{font-size:13px;color:var(--sub);min-width:210px;text-align:center}
+
+/* ---------- 短语分段定位 ---------- */
+.pfilter{flex:0 0 auto;display:none;gap:6px;flex-wrap:wrap;justify-content:center}
+body.view-phrases .pfilter{display:flex}
+.pfilter button{
+  border:1px solid var(--line);background:#fff;color:var(--sub);
+  padding:6px 15px;border-radius:999px;font-size:13px;font-family:inherit;
+  cursor:pointer;transition:.16s;white-space:nowrap;
+}
+.pfilter button:hover:not(:disabled){border-color:#b9ae99;color:var(--ink)}
+.pfilter button.on,
+.pfilter button.on:hover,
+.pfilter button.on:not(:disabled){
+  background:var(--ink);color:#fff;border-color:var(--ink);font-weight:600;
+}
+.pfilter button.on .n{opacity:.78}
+.pfilter button:disabled{opacity:.32;cursor:default}
+.pfilter .n{font-size:11px;opacity:.7;margin-left:4px;font-weight:400}
+
+/* ---------- 抽屉 ---------- */
+.mask{position:fixed;inset:0;background:rgba(30,26,20,.32);opacity:0;pointer-events:none;transition:.2s;z-index:40}
+.mask.on{opacity:1;pointer-events:auto}
+.drawer{
+  position:fixed;top:0;right:0;height:100%;width:min(440px,92vw);background:var(--card);
+  border-left:1px solid var(--line);transform:translateX(102%);
+  transition:transform .26s cubic-bezier(.4,0,.2,1);z-index:50;display:flex;flex-direction:column;
+}
+.drawer.on{transform:none}
+.drawer header{
+  padding:16px 20px;border-bottom:1px solid var(--line);
+  display:flex;align-items:center;justify-content:space-between;
+}
+.drawer header h2{margin:0;font-size:15.5px;letter-spacing:.04em}
+.drawer .body{padding:16px 20px 40px;overflow-y:auto;flex:1}
+.field{margin-bottom:20px}
+.field label{display:block;font-size:12.5px;color:var(--sub);margin-bottom:7px;letter-spacing:.04em}
+.field textarea{
+  width:100%;border:1px solid var(--line);border-radius:9px;padding:10px 12px;
+  font-family:var(--font-sans);font-size:15px;line-height:1.8;resize:vertical;
+  background:#fff;color:var(--ink);outline:none;
+}
+.field textarea:focus{border-color:#b9ae99;box-shadow:0 0 0 3px rgba(31,111,178,.08)}
+.hint{font-size:11.5px;color:#a09786;margin-top:6px;line-height:1.6}
+.row{display:flex;gap:8px;flex-wrap:wrap;margin-top:9px}
+.chipbar{
+  display:flex;flex-wrap:wrap;gap:5px;max-height:150px;overflow-y:auto;
+  border:1px solid var(--line);border-radius:9px;padding:8px;background:#faf8f3;
+}
+.chip{
+  display:inline-flex;align-items:center;gap:3px;background:#fff;border:1px solid var(--line);
+  border-radius:7px;padding:3px 7px;font-family:var(--font-sans);font-size:14px;
+}
+.chip b{font-weight:400}
+.chip i{cursor:pointer;font-style:normal;color:#c9bfae;font-size:12px;line-height:1}
+.chip i:hover{color:var(--accent)}
+.settings{display:flex;flex-direction:column;gap:12px}
+.switch{display:flex;align-items:center;justify-content:space-between;font-size:13.5px;gap:10px}
+.switch input[type=checkbox]{width:17px;height:17px;accent-color:var(--accent)}
+
+/* ---------- 加词面板 ---------- */
+#addPanel{display:none;flex:1 1 auto;min-height:0;overflow-y:auto;padding:20px 18px 44px}
+body.mode-add #addPanel{display:flex;justify-content:center;align-items:safe center}
+body.mode-add .stage{display:none}
+body.mode-add #pageActions{display:none}
+.add-wrap{
+  max-width:880px;width:100%;flex:0 0 auto;
+  background:var(--card);border:1px solid var(--line);
+  border-radius:16px;box-shadow:var(--shadow);padding:24px 28px 26px;
+}
+.add-head h1{margin:0 0 7px;font-size:19px;letter-spacing:.04em}
+.add-head p{margin:0 0 18px;font-size:12.5px;color:var(--sub);line-height:1.75}
+#addInput{
+  width:100%;min-height:126px;border:1px solid var(--line);border-radius:12px;
+  padding:13px 15px;font-family:var(--font-sans);font-size:20px;line-height:1.8;
+  resize:vertical;outline:none;background:#fff;color:var(--ink);
+}
+#addInput:focus{border-color:#b9ae99;box-shadow:0 0 0 4px rgba(31,111,178,.08)}
+.add-live{display:flex;gap:18px;flex-wrap:wrap;margin-top:12px;font-size:13px;color:var(--sub)}
+.add-live b{font-size:16px;font-weight:700;margin:0 2px;color:var(--ink)}
+.add-live .nw b{color:#12694a}
+.add-live .dp b{color:#a09786}
+.add-chips{
+  display:flex;flex-wrap:wrap;gap:6px;margin-top:12px;min-height:36px;
+  padding:8px;background:#faf8f3;border:1px solid var(--line);border-radius:10px;
+}
+.add-chips .ph{font-size:12.5px;color:#b3a894;padding:6px 4px}
+.mini{
+  display:inline-flex;align-items:center;justify-content:center;min-width:36px;height:36px;
+  padding:0 9px;border-radius:8px;font-family:var(--font-sans);font-size:17px;
+  border:1px solid var(--line);background:#fff;line-height:1;
+}
+.mini.new{background:#eaf6ef;border-color:#b5dcc6;color:#12694a}
+.mini.dup{background:#f4f1ea;border-color:#e6e0d3;color:#bdb2a0}
+.mini.warn{background:#fdf1e8;border-color:#e8c9b0;color:#a2622f}
+.add-bar{display:flex;gap:9px;flex-wrap:wrap;align-items:center;margin-top:18px}
+.add-opt{display:flex;align-items:center;gap:7px;font-size:12.5px;color:var(--sub);margin-right:2px}
+.add-opt select{
+  border:1px solid var(--line);border-radius:8px;padding:6px 8px;font-size:12.5px;
+  font-family:inherit;background:#fff;color:var(--ink);cursor:pointer;
+}
+.add-sec{margin-top:22px;border-top:1px dashed var(--line);padding-top:16px}
+.add-sec h3{margin:0 0 8px;font-size:13px;letter-spacing:.04em;color:var(--sub);font-weight:600}
+.add-sec .tip{font-size:12px;color:#a09786;line-height:1.75;margin-bottom:9px}
+.sug{display:flex;flex-wrap:wrap;gap:6px}
+.sug button{
+  display:inline-flex;align-items:center;gap:6px;border:1px solid #e6dcc8;background:#fffdf7;
+  border-radius:8px;padding:5px 9px;cursor:pointer;font-family:inherit;transition:.15s;
+}
+.sug button:hover{border-color:#c9b48c;background:#fdf7e8}
+.sug button b{font-family:var(--font-sans);font-size:16px;font-weight:400;line-height:1}
+.sug button span{font-size:11px;color:#a8946c}
+.toast{
+  position:fixed;left:50%;bottom:32px;transform:translate(-50%,16px);
+  background:#20242b;color:#fff;padding:12px 22px;border-radius:11px;font-size:13.5px;
+  opacity:0;pointer-events:none;transition:.24s;z-index:80;
+  box-shadow:0 10px 28px rgba(0,0,0,.22);max-width:88vw;text-align:center;line-height:1.7;
+}
+.toast.on{opacity:1;transform:translate(-50%,0)}
+
+/* ---------- 分级挑词 ---------- */
+.level-sel{
+  flex:0 0 auto;height:32px;max-width:164px;padding:0 24px 0 11px;
+  border:1px solid var(--line);border-radius:999px;background:var(--card);
+  color:var(--ink);font-size:13px;font-family:var(--font-zh);cursor:pointer;
+  -webkit-appearance:none;appearance:none;
+  background-image:url("data:image/svg+xml;charset=utf8,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='6' viewBox='0 0 10 6'%3E%3Cpath d='M1 1l4 4 4-4' fill='none' stroke='%238a8172' stroke-width='1.5' stroke-linecap='round'/%3E%3C/svg%3E");
+  background-repeat:no-repeat;background-position:right 9px center;
+}
+.level-sel:hover{border-color:#b9ae99}
+.level-sel.on{background-color:var(--accent-soft);border-color:var(--accent-line);color:var(--accent)}
+
+#levelPanel{
+  display:none;flex:1 1 auto;min-height:0;flex-direction:column;gap:10px;
+  width:100%;max-width:1200px;margin:0 auto;padding:14px;
+}
+body.view-level #levelPanel{display:flex}
+body.view-level .stage{display:none}
+body.view-level #pageActions{display:none}
+
+.lp-head{display:flex;align-items:baseline;gap:10px;flex-wrap:wrap}
+.lp-head h2{margin:0;font-size:16.5px;font-weight:600;font-family:var(--font-zh)}
+.lp-count{font-size:12.5px;color:var(--sub)}
+.lp-bar{display:flex;align-items:center;gap:7px;flex-wrap:wrap}
+.lp-sel{margin-left:auto;font-size:12.5px;color:var(--sub);white-space:nowrap}
+.lp-grid{
+  flex:1 1 auto;min-height:0;overflow:auto;align-content:start;
+  display:grid;gap:8px;grid-template-columns:repeat(auto-fill,minmax(108px,1fr));
+  padding:2px 2px 18px;overscroll-behavior:contain;
+}
+.lp-card{
+  position:relative;display:flex;flex-direction:column;align-items:center;
+  justify-content:center;gap:4px;padding:10px 5px 8px;background:var(--card);
+  border:1px solid var(--line);border-radius:10px;cursor:pointer;
+  user-select:none;transition:border-color .15s,transform .15s,background .15s;
+}
+.lp-card:hover{border-color:#b9ae99;transform:translateY(-1px)}
+/* 音标在上、单词在下；音标行固定高度，卡片之间才对得齐 */
+.lp-card i{
+  font-family:var(--font-sans);font-style:normal;font-size:11px;line-height:14px;
+  min-height:14px;color:var(--sub);letter-spacing:0;text-align:center;
+  white-space:nowrap;overflow:hidden;max-width:100%;
+}
+.lp-card b{font-family:var(--font-serif);font-size:20px;line-height:1.05;font-weight:400;color:#1a1a1a;white-space:nowrap;text-align:center}
+.lp-card.on{background:var(--accent-soft);border-color:var(--accent-line);box-shadow:0 1px 6px rgba(31,111,178,.13)}
+.lp-card.on b{color:var(--accent)}
+.lp-card.on::after{
+  content:"✓";position:absolute;top:3px;right:5px;font-size:10px;
+  color:var(--accent);font-family:var(--font-zh);
+}
+.lp-card.have{opacity:.5}
+.lp-card.have.on{opacity:1}
+.lp-card.say{background:var(--accent-soft);border-color:var(--accent-line)}
+.lp-empty{grid-column:1/-1;color:var(--sub);font-size:13px;padding:20px 4px;line-height:1.9}
+
+/* ---------- 学拼读 ---------- */
+#phonicsPanel{
+  display:none;flex:1 1 auto;min-height:0;flex-direction:column;gap:10px;
+  width:100%;max-width:1200px;margin:0 auto;padding:14px;
+}
+body.view-phonics #phonicsPanel{display:flex}
+body.view-phonics .stage{display:none}
+body.view-phonics #pageActions{display:none}
+body.view-phonics #levelSel{display:none}
+body.view-phonics .count{display:none}
+/* 这两个页面没有分页工具栏，「更多」里全是分页相关按钮，一并收起 */
+body.view-phonics #btnMore,body.view-level #btnMore{display:none!important}
+.ph-head{display:flex;align-items:baseline;gap:10px;flex-wrap:wrap}
+.ph-head h2{margin:0;font-size:16.5px;font-weight:600;font-family:var(--font-zh)}
+.ph-tip{font-size:12.5px;color:var(--sub)}
+.ph-scroll{
+  flex:1 1 auto;min-height:0;overflow:auto;overscroll-behavior:contain;
+  display:flex;flex-direction:column;gap:16px;padding:2px 2px 22px;
+}
+.ph-sec h3{
+  margin:0 0 8px;font-size:13.5px;font-weight:600;font-family:var(--font-zh);
+  display:flex;align-items:baseline;gap:8px;
+}
+.ph-sec h3 small{font-weight:400;font-size:11.5px;color:var(--sub)}
+.ph-grid{display:grid;gap:8px;grid-template-columns:repeat(auto-fill,minmax(94px,1fr))}
+.ph-grid.wide{grid-template-columns:repeat(auto-fill,minmax(110px,1fr))}
+.ph-card{
+  position:relative;display:flex;flex-direction:column;align-items:center;gap:1px;
+  padding:9px 4px 8px;background:var(--card);border:1px solid var(--line);
+  border-radius:10px;cursor:pointer;user-select:none;
+  transition:border-color .15s,background .15s,transform .15s;
+}
+.ph-card:hover{border-color:#b9ae99;transform:translateY(-1px)}
+.ph-card.say{background:var(--accent-soft);border-color:var(--accent-line);transform:translateY(-1px)}
+.ph-card em{
+  font-style:normal;font-family:var(--font-serif);font-size:22px;font-weight:600;
+  line-height:1.1;color:#1a1a1a;letter-spacing:.01em;
+}
+.ph-card i{font-style:normal;font-family:var(--font-sans);font-size:11px;color:var(--sub);line-height:1.4}
+.ph-card b{
+  margin-top:4px;font-family:var(--font-sans);font-size:14px;font-weight:400;
+  color:#3a3a3a;line-height:1.3;word-break:break-word;text-align:center;
+}
+.ph-card u{
+  text-decoration:none;font-style:normal;font-family:var(--font-sans);
+  font-size:11.5px;color:#9a9384;line-height:1.3;
+}
+.ph-card.on{background:var(--accent-soft);border-color:var(--accent-line)}
+.ph-card.on em{color:var(--accent)}
+.ph-card.on::after{
+  content:"✓";position:absolute;top:3px;right:5px;font-size:10px;
+  color:var(--accent);font-family:var(--font-zh);
+}
+.ph-note{
+  background:var(--card);border:1px solid var(--line);border-radius:10px;
+  padding:12px 14px;font-size:13px;line-height:1.95;color:#333;
+}
+.ph-note p{margin:0}
+.ph-note b{color:var(--accent);font-weight:600}
+.ph-note code{font-family:var(--font-sans);background:#f0ece1;border-radius:4px;padding:0 4px;font-size:12.5px}
+
+/* ---------- 分级阅读 ---------- */
+#readingPanel{
+  display:none;flex:1 1 auto;min-height:0;flex-direction:column;gap:10px;
+  width:100%;max-width:1000px;margin:0 auto;padding:14px;
+}
+body.view-reading #readingPanel{display:flex}
+body.view-reading .stage{display:none}
+body.view-reading #pageActions{display:none}
+body.view-reading #levelSel{display:none}
+body.view-reading .count{display:none}
+body.view-reading .pfilter{display:none}
+body.view-reading #btnMore{display:none!important}
+.rd-head{display:flex;align-items:baseline;gap:10px;flex-wrap:wrap}
+.rd-head h2{margin:0;font-size:16.5px;font-weight:600;font-family:var(--font-zh)}
+.rd-tip{font-size:12.5px;color:var(--sub);flex:1 1 auto;min-width:180px}
+.rd-actions{display:flex;gap:6px;flex-wrap:wrap}
+.rd-grade{display:flex;gap:6px;flex-wrap:wrap}
+.rd-grade button,.rd-arts button{
+  font-family:var(--font-zh);cursor:pointer;background:var(--card);
+  border:1px solid var(--line);border-radius:9px;padding:7px 13px;font-size:13px;color:#4a4438;
+}
+.rd-grade button:hover,.rd-arts button:hover{border-color:#b9ae99}
+.rd-grade button.on,.rd-arts button.on{background:var(--accent-soft);border-color:var(--accent-line);color:var(--accent);font-weight:600}
+.rd-arts{display:flex;gap:6px;flex-wrap:wrap}
+.rd-arts button{font-size:12.5px;padding:6px 11px}
+.rd-scroll{flex:1 1 auto;min-height:0;overflow:auto;overscroll-behavior:contain;display:flex;flex-direction:column;gap:12px;padding:2px 2px 26px}
+.rd-sheet{
+  background:#fff;border:1px solid var(--line);border-radius:14px;box-shadow:var(--shadow);
+  padding:30px 38px 24px;max-width:820px;width:100%;
+}
+.rd-sheet-head{border-bottom:1px solid var(--line);padding-bottom:12px;margin-bottom:14px}
+.rd-sheet-head .rd-unit{font-size:11.5px;color:var(--sub);font-family:var(--font-zh)}
+.rd-sheet-head h3{margin:6px 0 2px;font-size:27px;font-weight:600;font-family:var(--font-serif);color:#1e1c18}
+.rd-sheet-head p{margin:0;font-size:13px;color:var(--sub);font-family:var(--font-zh)}
+.rd-lines{display:flex;flex-direction:column;gap:2px}
+.rd-line{
+  display:flex;flex-direction:column;gap:2px;padding:8px 10px;border-radius:9px;cursor:pointer;
+  transition:background .15s;
+}
+.rd-line:hover{background:#f7f4ec}
+.rd-line.say{background:var(--accent-soft)}
+.rd-line .en{font-family:var(--font-serif);font-size:19px;line-height:1.5;color:#22201c}
+.rd-line .zh{font-family:var(--font-zh);font-size:12.5px;color:#8a8272;line-height:1.6}
+body.rd-nozh .rd-line .zh{display:none}
+.rd-foot{margin-top:18px;padding-top:10px;border-top:1px dashed var(--line);font-size:11px;color:#a49c8b;font-family:var(--font-zh)}
+.rd-empty{padding:24px;color:var(--sub);font-size:13px;line-height:1.9}
+
+@media print{
+  body.view-reading #readingPanel{display:block!important;padding:0;max-width:none}
+  body.view-reading .rd-head,body.view-reading .rd-grade,body.view-reading .rd-arts{display:none!important}
+  body.view-reading .rd-scroll{display:block!important;overflow:visible!important}
+  body.view-reading .rd-sheet{border:0!important;box-shadow:none!important;border-radius:0!important;padding:12mm 14mm!important;max-width:none!important}
+  body.view-reading .rd-line:hover,body.view-reading .rd-line.say{background:transparent!important}
+  body.view-reading #phonicsPanel,body.view-reading #levelPanel,body.view-reading #addPanel{display:none!important}
+}
+
+/* ---------- 批量打印容器 ---------- */
+#printAll{display:none}
+#printAll .page{position:relative;transform:none;box-shadow:none;page-break-after:always;break-after:page}
+#printAll .page:last-child{page-break-after:auto;break-after:auto}
+
+@media print{
+  html,body{height:auto;overflow:visible;background:#fff;display:block}
+  .toolbar,.pager,.drawer,.mask,#addPanel,.toast,.pfilter,.boot-fail{display:none!important}
+  .stage{padding:0;display:block;height:auto}
+  .viewport{display:block;overflow:visible;height:auto}
+  .paper-wrap{width:210mm!important;height:297mm!important}
+  .page{transform:none!important;box-shadow:none!important;position:static}
+  body.print-all .stage{display:none!important}
+  body.print-all #printAll{display:block!important}
+}
+@page{size:A4;margin:0}
+
+/* ---------- 词库加载失败 ---------- */
+.boot-fail{
+  position:fixed;inset:0;z-index:90;display:none;align-items:center;justify-content:center;
+  background:rgba(243,241,236,.96);padding:24px;
+}
+.boot-fail.on{display:flex}
+.bf-card{
+  max-width:520px;background:var(--card);border:1px solid var(--line);border-radius:16px;
+  padding:26px 28px;box-shadow:var(--shadow);line-height:1.9;font-size:13.5px;
+}
+.bf-card h2{margin:0 0 10px;font-size:17px}
+.bf-card p{margin:0 0 10px;color:#5e5748}
+.bf-card code{background:#f0ece1;border-radius:5px;padding:1px 5px;font-size:12.5px}
+.bf-msg{color:#a4402f!important;font-size:12.5px;word-break:break-all}
+
+/* ---------- 窄屏「更多」面板 ---------- */
+#btnMore{display:none}
+.more-panel{
+  position:absolute;right:10px;top:calc(100% - 4px);z-index:60;display:none;
+  flex-direction:column;gap:7px;min-width:178px;padding:10px;
+  background:var(--card);border:1px solid var(--line);border-radius:13px;
+  box-shadow:0 12px 30px rgba(60,50,35,.18);
+}
+.more-panel.on{display:flex}
+.more-panel button,.more-panel select{width:100%;min-height:38px;text-align:left}
+body.mode-add .more-panel{display:none!important}
+
+/* ---------- 手机 / 平板 ---------- */
+@media (max-width: 860px){
+  html,body{height:100dvh}
+  body{-webkit-tap-highlight-color:transparent}
+  .toolbar{padding:8px 10px;gap:7px}
+  .brand{display:none}
+  .tabs{flex:0 0 auto}
+  .tabs button{padding:7px 12px;font-size:13.5px}
+  .spacer{flex:1 1 auto;min-width:0}
+  .actions{
+    flex:1 1 100%;flex-wrap:wrap;gap:6px;padding-bottom:0;
+  }
+  button.btn{min-height:38px;padding:8px 11px}
+  .stage{padding:8px 6px;gap:8px}
+  .viewport{min-height:0}
+  .pager{gap:8px;padding:4px 6px;max-width:100%}
+  .pager button{min-width:42px;min-height:38px}
+  .pager .info{font-size:12px;min-width:0;padding:0 2px}
+  .pfilter{gap:5px}
+  .pfilter button{padding:5px 10px;font-size:12px}
+  #addPanel{padding:14px 12px 28px}
+  .add-wrap{padding:16px 14px 18px;border-radius:12px}
+  .add-wrap h1{font-size:19px}
+  .toast{bottom:calc(16px + env(safe-area-inset-bottom));padding:10px 16px;font-size:13px}
+  .drawer{width:100%;max-width:100%}
+}
+@media (max-width: 520px){
+  .count{display:none}
+  .tabs button{padding:7px 10px;font-size:13px}
+  .pager .info{font-size:11.5px}
+  button.btn{padding:6px 9px;font-size:12.5px;min-height:34px;border-radius:8px}
+  .toolbar{padding:7px 8px;gap:6px}
+  .actions{gap:5px}
+  #btnManage{margin-left:0}
+  .level-sel{max-width:150px;font-size:12.5px;padding-left:9px}
+  .lp-bar{gap:6px}
+  .lp-sel{flex:1 1 100%;margin-left:0;text-align:right}
+  #lpAdd{flex:1 1 100%;justify-content:center;min-height:38px}
+  .lp-grid{grid-template-columns:repeat(auto-fill,minmax(96px,1fr));gap:6px}
+  .lp-card b{font-size:18px}
+  .ph-head h2{font-size:15px}
+  .ph-tip{font-size:11.5px}
+  .ph-grid{grid-template-columns:repeat(auto-fill,minmax(84px,1fr));gap:6px}
+  .ph-grid.wide{grid-template-columns:repeat(auto-fill,minmax(96px,1fr))}
+  .ph-card em{font-size:19px}
+  .ph-card b{font-size:12px}
+  .ph-note{font-size:12.5px;line-height:1.9;padding:11px 12px}
+  .rd-head{gap:6px}
+  .rd-tip{flex:1 1 100%;min-width:0;font-size:11px;line-height:1.5}
+  .rd-sheet{padding:20px 18px 16px}
+  .rd-sheet-head h3{font-size:22px}
+  .rd-line{padding:7px 6px}
+  .rd-line .en{font-size:17px}
+  .rd-line .zh{font-size:12px}
+}
+</style>
+</head>
+<body>
+
+<!-- 全程复用这一个播放器：iOS 上频繁 new Audio() 容易出现「点了没声音」 -->
+<audio id="voiceEl" preload="auto" playsinline
+       style="position:fixed;left:-9999px;top:0;width:1px;height:1px;opacity:0;pointer-events:none"></audio>
+
+<div class="toolbar">
+  <div class="brand">英语<span>卡片</span></div>
+  <div class="tabs">
+    <button id="tabPhonics">学拼读</button>
+    <button id="tabWords" class="on">单词表</button>
+    <button id="tabPhrases">短语表</button>
+    <button id="tabReading">阅读</button>
+    <button id="tabAdd">加词</button>
+  </div>
+  <select id="levelSel" class="level-sel" title="按年级挑课本里的词">
+    <option value="">按年级挑词</option>
+  </select>
+  <div class="spacer"></div>
+  <div class="actions">
+    <span class="count" id="countInfo">—</span>
+    <div id="pageActions">
+      <select class="btn" id="sortSel" title="排序方式">
+        <option value="default">默认排序</option>
+        <option value="random">随机排序</option>
+      </select>
+      <button class="btn" id="btnReseed" title="换一批随机顺序">↻</button>
+      <button class="btn" id="btnIpa" title="在单词上方显示 / 隐藏音标">音标开</button>
+      <button class="btn" id="btnZh" title="在单词下方显示 / 隐藏中文">中文开</button>
+      <button class="btn" id="btnHide">隐藏单词</button>
+      <select class="btn" id="fontSel" title="字体">
+        <option value="serif">衬线体</option>
+        <option value="sans">无衬线</option>
+        <option value="hand">手写体</option>
+      </select>
+      <button class="btn" id="btnPrint">打印本页</button>
+      <button class="btn" id="btnPrintAll">打印全部</button>
+      <button class="btn primary" id="btnDownload">下载本页</button>
+    </div>
+    <button class="btn" id="btnMore">更多</button>
+    <button class="btn" id="btnSound" title="点词 / 点短语时是否朗读">声音开</button>
+    <button class="btn ghost" id="btnManage">词库</button>
+  </div>
+  <div class="more-panel" id="morePanel"></div>
+</div>
+
+<div class="stage">
+  <div class="pfilter" id="phraseFilter">
+    <button data-f="all" class="on">全部</button>
+    <button data-f="2">2 个词</button>
+    <button data-f="3">3 个词</button>
+    <button data-f="4">4 个词</button>
+  </div>
+  <div class="viewport" id="viewport">
+    <div class="paper-wrap" id="paperWrap">
+      <div class="page" id="page"></div>
+    </div>
+  </div>
+  <div class="pager">
+    <button id="prevBtn" title="上一张（←）">‹</button>
+    <div class="info" id="pageInfo">—</div>
+    <button id="nextBtn" title="下一张（→）">›</button>
+  </div>
+</div>
+
+<section id="levelPanel">
+  <div class="lp-head">
+    <h2 id="lpTitle">按年级挑词</h2>
+    <span class="lp-count" id="lpCount"></span>
+  </div>
+  <div class="lp-bar">
+    <button class="btn" id="lpAll">全选</button>
+    <button class="btn" id="lpClear">清空选择</button>
+    <button class="btn" id="lpInvert">反选</button>
+    <span class="lp-sel" id="lpSelInfo">已选 0 词</span>
+    <button class="btn primary" id="lpAdd">加入单词表</button>
+  </div>
+  <div class="lp-grid" id="lpGrid"></div>
+</section>
+
+<section id="phonicsPanel">
+  <div class="ph-head">
+    <h2>学拼读</h2>
+    <span class="ph-tip">26 字母点字母读字母名、点例词读单词（字母名和单词里的音不是一回事）；拼读卡点一下听例词，重点听词里那个音 · 5 短元音 · 4 长元音 · 31 个字母组合</span>
+  </div>
+  <div class="ph-scroll" id="phScroll"></div>
+</section>
+
+<section id="readingPanel">
+  <div class="rd-head">
+    <h2>分级阅读</h2>
+    <span class="rd-tip">人教版《英语（新起点）》一年级起点配套 · 1~6 年级 · 点句子听读</span>
+    <div class="rd-actions">
+      <button class="btn" id="rdZh">中文开</button>
+      <button class="btn" id="rdPlay">整篇朗读</button>
+      <button class="btn" id="rdPrint">打印本页</button>
+    </div>
+  </div>
+  <div class="rd-grade" id="rdGrades"></div>
+  <div class="rd-scroll" id="rdScroll"></div>
+</section>
+
+<div id="printAll"></div>
+
+<div id="addPanel">
+  <div class="add-wrap">
+    <div class="add-head">
+      <h1>增加单词</h1>
+      <p>把要加的单词打进来，用空格、逗号或换行隔开都可以；也可以整段粘贴（句子里不认识的词会一个个拆出来）。重复的只算一次。</p>
+    </div>
+
+    <textarea id="addInput" spellcheck="false" placeholder="例：apple banana orange&#10;也可以整段粘贴：The little cat is sleeping on my bed"></textarea>
+
+    <div class="add-live" id="addLive"></div>
+    <div class="add-chips" id="addChips"><span class="ph">这里会列出准备加入的新词</span></div>
+
+    <div class="add-bar">
+      <label class="add-opt">加入位置
+        <select id="addPos">
+          <option value="end">排到最后</option>
+          <option value="start">排到最前</option>
+        </select>
+      </label>
+      <button class="btn primary" id="addSave">保存到单词表</button>
+      <button class="btn" id="addSaveGo">保存并看短语表</button>
+      <button class="btn ghost" id="addUndo" disabled>撤销上次添加</button>
+      <button class="btn ghost" id="addClear">清空输入</button>
+    </div>
+
+    <div class="add-sec">
+      <h3>音标和中文从哪来</h3>
+      <div class="tip" id="missTip">—</div>
+      <div class="sug" id="missBox"></div>
+    </div>
+  </div>
+</div>
+
+<div class="toast" id="toast"></div>
+
+<div class="mask" id="mask"></div>
+<aside class="drawer" id="drawer">
+  <header>
+    <h2>词库管理</h2>
+    <button class="btn ghost" id="closeDrawer">关闭</button>
+  </header>
+  <div class="body">
+    <div class="field">
+      <label>单词（可直接粘贴，自动拆词并去重）</label>
+      <textarea id="wordsInput" rows="6" spellcheck="false"></textarea>
+      <div class="hint" id="wordsStat">—</div>
+      <div class="row">
+        <button class="btn primary" id="saveWords">保存单词</button>
+        <button class="btn" id="resetWords">恢复默认词库</button>
+      </div>
+    </div>
+
+    <div class="field">
+      <label>当前词库（点 × 可删单词）</label>
+      <div class="chipbar" id="chipBar"></div>
+    </div>
+
+    <div class="field">
+      <label>自定义短语（换行分隔，一条一行）</label>
+      <textarea id="phrasesInput" rows="4" spellcheck="false" placeholder="例：good morning&#10;I love my family"></textarea>
+      <div class="hint">短语表里内置的短语是固定的；这里填的会额外加进去。没有音标的短语照样能点读，中文释义可以自己补。</div>
+      <div class="row">
+        <button class="btn primary" id="savePhrases">保存短语</button>
+      </div>
+    </div>
+
+    <div class="field">
+      <label>设置</label>
+      <div class="settings">
+        <div class="switch"><span>显示格子辅助线</span><input type="checkbox" id="gridChk"></div>
+      </div>
+    </div>
+
+    <div class="field">
+      <label>备份 / 迁移</label>
+      <div class="row">
+        <button class="btn" id="exportBtn">导出 JSON</button>
+        <button class="btn" id="importBtn">导入 JSON</button>
+        <input type="file" id="fileInput" accept="application/json" hidden>
+      </div>
+      <div class="hint">换电脑或换浏览器时，用导出 / 导入搬运词库。</div>
+    </div>
+  </div>
+</aside>
+
+<div class="boot-fail" id="bootFail">
+  <div class="bf-card">
+    <h2>词库没读到</h2>
+    <p>这个页面要和 <code>data</code> 文件夹一起使用，单独拷走 <code>index.html</code> 是打不开的。</p>
+    <p>本地双击打开：确认 <code>data/dict.json</code>、<code>data/dict.js</code> 都在。改了词库后需要运行 <code>node tools/build-data.js</code> 重新生成 <code>dict.js</code>。</p>
+    <p>部署到线上：确认 <code>data/dict.json</code> 已上传，并且目录名大小写一致。</p>
+    <p class="bf-msg" id="bootFailMsg"></p>
+  </div>
+</div>
+
+<script>
+/* ============================================================
+   数据层
+   ------------------------------------------------------------
+   data/dict.json    词库（单词顺序）+ 短语库（按词数分组）
+   data/phon.json    单词 / 短语的 音标 + 中文释义
+   data/levels.json  1~6 年级分级词表（人教版新起点）
+   data/reading.json 1~6 年级分级阅读短文
+   data/audio/       预生成的 mp3 + manifest（文字 → 文件 绑定表）
+
+   网页 / GitHub Pages / PWA：走 fetch 读 json，改完刷新即生效
+   直接双击打开本地 html（file://）：浏览器禁止 fetch 本地文件，
+   自动改用同名的 .js 兜底（由 tools/build-data.js 生成）
+   ============================================================ */
+let DATA = { phrases:{2:[],3:[],4:[]}, defaultWords:[] };
+let DEFAULT_WORDS = [];
+let DATA_SOURCE = "";
+let PHON = { words:{}, phrases:{} };     /* 词 -> [音标, 中文] */
+let PHON_SOURCE = "";
+let LEVELS = [];
+let LEVELS_SOURCE = "";
+let READING = {grades:[]};
+let READING_OK = false;
+let IPA_OK = false;
+let AUDIO_READINGS = {};
+
+function injectScript(src){
+  return new Promise((resolve, reject)=>{
+    const el = document.createElement("script");
+    el.src = src;
+    el.onload = resolve;
+    el.onerror = ()=> reject(new Error("加载失败：" + src));
+    document.head.appendChild(el);
+  });
+}
+
+function normalizeData(raw){
+  const src = (raw && raw.phrases) || {};
+  const phrases = {2:[], 3:[], 4:[]};
+  [2,3,4].forEach(n=>{
+    const arr = Array.isArray(src[n]) ? src[n]
+              : Array.isArray(src[String(n)]) ? src[String(n)] : [];
+    const seen = new Set();
+    arr.forEach(p=>{
+      if(typeof p !== "string") return;
+      const ws = p.trim().split(/\s+/);
+      if(ws.length !== n || seen.has(p)) return;
+      seen.add(p); phrases[n].push(ws.join(" "));
+    });
+  });
+  const dw = raw && raw.defaultWords;
+  const words = Array.isArray(dw) ? dw.slice() : [];
+  return {phrases, defaultWords:words};
+}
+
+async function loadData(){
+  try{
+    const res = await fetch("data/dict.json", {cache:"no-cache"});
+    if(res.ok){
+      DATA_SOURCE = "json";
+      return normalizeData(await res.json());
+    }
+  }catch(e){ /* file:// 下 fetch 会被安全策略拦掉，走下面的兜底 */ }
+
+  if(!window.__EN_DICT__){
+    try{ await injectScript("data/dict.js"); }catch(e){}
+  }
+  if(window.__EN_DICT__){
+    DATA_SOURCE = "script";
+    return normalizeData(window.__EN_DICT__);
+  }
+  throw new Error("没有读到 data/dict.json");
+}
+
+async function loadPhon(){
+  try{
+    const res = await fetch("data/phon.json", {cache:"no-cache"});
+    if(res.ok){
+      const j = await res.json();
+      if(j && j.words){ PHON_SOURCE = "json"; return j; }
+    }
+  }catch(e){}
+  if(!window.__EN_PHON__){
+    try{ await injectScript("data/phon.js"); }catch(e){}
+  }
+  if(window.__EN_PHON__ && window.__EN_PHON__.words){
+    PHON_SOURCE = "script";
+    return window.__EN_PHON__;
+  }
+  return null;
+}
+
+async function loadLevels(){
+  try{
+    const res = await fetch("data/levels.json", {cache:"no-cache"});
+    if(res.ok){
+      const j = await res.json();
+      if(Array.isArray(j.levels)){ LEVELS_SOURCE = "json"; return j.levels; }
+    }
+  }catch(e){}
+  if(!window.__EN_LEVELS__){
+    try{ await injectScript("data/levels.js"); }catch(e){}
+  }
+  if(window.__EN_LEVELS__ && Array.isArray(window.__EN_LEVELS__.levels)){
+    LEVELS_SOURCE = "script";
+    return window.__EN_LEVELS__.levels;
+  }
+  return [];
+}
+
+async function loadReading(){
+  try{
+    const res = await fetch("data/reading.json", {cache:"no-cache"});
+    if(res.ok){
+      const j = await res.json();
+      if(j && Array.isArray(j.grades)) return j;
+    }
+  }catch(e){}
+  if(!window.__EN_READING__){
+    try{ await injectScript("data/reading.js"); }catch(e){}
+  }
+  if(window.__EN_READING__ && Array.isArray(window.__EN_READING__.grades)){
+    return window.__EN_READING__;
+  }
+  return {grades:[]};
+}
+
+/* 单词的 [音标, 中文]；查不到就返回空串，不影响排版 */
+function infoOf(word){
+  const hit = PHON.words[word] || PHON.words[word.toLowerCase()];
+  return hit ? {ipa:hit[0] || "", zh:hit[1] || ""} : {ipa:"", zh:""};
+}
+
+/* 短语拆成一个个词，每个词带自己的音标（音标逐词压在词上面，和识字软件的注音一个道理） */
+function phraseTokens(p){
+  return p.split(/\s+/).filter(Boolean).map(w=>{
+    const hit = PHON.words[w] || PHON.words[w.toLowerCase()];
+    return {text:w, ipa: hit ? (hit[0] || "") : ""};
+  });
+}
+function phraseZh(p){
+  const hit = PHON.phrases[p];
+  return hit ? (hit[1] || "") : "";
+}
+
+/* ============================================================
+   状态
+   ============================================================ */
+const STORE_KEY = "english_cards_v1";
+const PAGE_W = 210, PAGE_H = 297, MARGIN = 12;
+const WORD_LAYOUT    = { cols:5, rows:8 };
+const PHRASE_LAYOUT  = { 2:{cols:4,rows:8}, 3:{cols:3,rows:7}, 4:{cols:3,rows:6} };
+
+let state = {
+  words:[], customPhrases:[], font:"serif", grid:false,
+  mode:"words", shuffled:false, seed:20261107,
+  hideAll:false, reveal:[], pageIndex:0,
+  phraseFilter:"all",         /* all | 2 | 3 | 4 —— 短语表按词数直接定位 */
+  showIpa:true,               /* 单词上面是否显示音标 */
+  showZh:true,                /* 单词下面是否显示中文 */
+  sound:true                  /* 点词 / 点短语时是否朗读 */
+};
+
+function loadState(){
+  try{
+    const raw = localStorage.getItem(STORE_KEY);
+    if(raw){
+      const s = JSON.parse(raw);
+      state.words = Array.isArray(s.words) && s.words.length ? s.words : [...DEFAULT_WORDS];
+      state.customPhrases = Array.isArray(s.customPhrases) ? s.customPhrases : [];
+      state.font = s.font || "serif";
+      state.grid = !!s.grid;
+      state.shuffled = s.sort === "random";
+      if(Number.isFinite(s.seed)) state.seed = s.seed;
+      if(["all","2","3","4"].includes(s.phraseFilter)) state.phraseFilter = s.phraseFilter;
+      if(typeof s.showIpa === "boolean") state.showIpa = s.showIpa;
+      if(typeof s.showZh === "boolean") state.showZh = s.showZh;
+      if(typeof s.sound === "boolean") state.sound = s.sound;
+    }else{ state.words = [...DEFAULT_WORDS]; }
+  }catch(e){ state.words = [...DEFAULT_WORDS]; }
+
+  /* 教材版迁移：老版本那套人工编排的默认词库（147 词）自动换成一年级教材词库。
+     自己加过词的列表跟这个特征对不上，原样保留。 */
+  if(state.words.length === 147 && state.words.slice(0,5).join(",") === "cat,dog,pig,duck,hen"){
+    state.words = [...DEFAULT_WORDS];
+  }
+}
+function saveState(){
+  try{
+    localStorage.setItem(STORE_KEY, JSON.stringify({
+      words:state.words, customPhrases:state.customPhrases, font:state.font, grid:state.grid,
+      sort: state.shuffled ? "random" : "default", seed: state.seed,
+      phraseFilter: state.phraseFilter, showIpa: state.showIpa, showZh: state.showZh,
+      sound: state.sound
+    }));
+  }catch(e){}
+}
+
+/* ============================================================
+   语音：单词、短语、字母都能点着听
+   ------------------------------------------------------------
+   优先播放 data/audio 里预生成的 mp3（同一个老师的声音、离线也能用），
+   清单里没有的就退回浏览器自带语音合成 —— 保证任何词都有声音。
+   ============================================================ */
+const AUDIO_DIR = "data/audio/";
+let AUDIO_WORDS = {};       /* 词 -> 相对路径 */
+let AUDIO_PHRASES = {};     /* 短语 -> 相对路径 */
+let AUDIO_LETTERS = {};     /* 字母 A-Z -> 相对路径（读字母名） */
+let AUDIO_OK = false;
+let AUDIO_SOURCE = "";
+let audioTask = null;
+let voiceEl = null;         /* 全程复用这一个 <audio> */
+let voiceSeq = 0;
+let soundWarned = false;
+let lastVoiceError = "";
+
+/* blob 预取：把当前这张纸上的音都先拿到本地。
+   iOS 上点下去时如果还要等网络，play() 容易失败；先备好就几乎必成。 */
+const BLOB_MAX = 300;
+const blobCache = new Map();
+const blobLoading = new Set();
+let prefetchToken = 0;
+
+const IS_IOS = /iPad|iPhone|iPod/.test(navigator.userAgent)
+            || (navigator.platform === "MacIntel" && navigator.maxTouchPoints > 1);
+
+async function loadAudio(){
+  if(AUDIO_OK) return true;
+  if(audioTask) return audioTask;
+  audioTask = (async ()=>{
+    try{
+      const res = await fetch(AUDIO_DIR+"manifest.json");
+      if(res.ok){
+        const j = await res.json();
+        if(j && j.words){
+          AUDIO_WORDS = j.words; AUDIO_PHRASES = j.phrases || {}; AUDIO_LETTERS = j.letters || {};
+          AUDIO_READINGS = j.readings || {};
+          AUDIO_OK = true; AUDIO_SOURCE = "json";
+          return true;
+        }
+      }
+    }catch(e){}
+    if(!window.__EN_AUDIO__){
+      try{ await injectScript(AUDIO_DIR+"manifest.js"); }catch(e){}
+    }
+    const j = window.__EN_AUDIO__;
+    if(j && j.words){
+      AUDIO_WORDS = j.words; AUDIO_PHRASES = j.phrases || {}; AUDIO_LETTERS = j.letters || {};
+      AUDIO_READINGS = j.readings || {};
+      AUDIO_OK = true; AUDIO_SOURCE = "script";
+      return true;
+    }
+    return false;
+  })();
+  return audioTask;
+}
+
+function stopVoice(){
+  if(voiceEl){
+    try{ voiceEl.pause(); }catch(e){}
+    try{ voiceEl.currentTime = 0; }catch(e){}
+  }
+  if(window.speechSynthesis){ try{ speechSynthesis.cancel(); }catch(e){} }
+  voiceSeq++;
+}
+
+function audioEl(){
+  if(voiceEl && voiceEl.isConnected) return voiceEl;
+  voiceEl = document.getElementById("voiceEl");
+  if(!voiceEl){
+    voiceEl = document.createElement("audio");
+    voiceEl.id = "voiceEl";
+    voiceEl.style.cssText =
+      "position:fixed;left:-9999px;top:0;width:1px;height:1px;opacity:0;pointer-events:none";
+    document.body.appendChild(voiceEl);
+  }
+  voiceEl.preload = "auto";
+  voiceEl.setAttribute("playsinline", "");
+  return voiceEl;
+}
+
+function speakTTS(text){
+  if(!("speechSynthesis" in window)) return false;
+  try{
+    const u = new SpeechSynthesisUtterance(text);
+    u.lang = "en-GB";
+    u.rate = 0.82;
+    u.pitch = 1.02;
+    u.volume = 1;
+    const all = speechSynthesis.getVoices() || [];
+    const en = all.filter(v=>/^en(-|_)?(GB|US)?/i.test(v.lang) || /English/i.test(v.name));
+    if(en.length){
+      /* 优先英音，其次任何英语语音 */
+      u.voice = en.find(v=>/en-GB/i.test(v.lang) && /female|Female|Serena|Kate|Sonia|Libby|Hazel/i.test(v.name))
+             || en.find(v=>/en-GB/i.test(v.lang))
+             || en[0];
+    }
+    try{ if(speechSynthesis.paused) speechSynthesis.resume(); }catch(e){}
+    speechSynthesis.speak(u);
+    return true;
+  }catch(e){ return false; }
+}
+
+function warnNoSound(){
+  if(soundWarned) return;
+  soundWarned = true;
+  toast(IS_IOS
+    ? "没有声音？看一下 iPad 侧边那颗静音键，再调一下音量；Safari 设置里「自动播放」选「允许」"
+    : "没有声音？检查一下系统音量，或换用 Chrome / Edge 打开");
+  setTimeout(()=>{ soundWarned = false; }, 20000);
+}
+
+function playAudioUrl(url, rel, text){
+  const el = audioEl();
+  const seq = ++voiceSeq;
+
+  try{ el.pause(); }catch(e){}
+
+  /* 只比我们自己写的那个值：换地址才重设 src。
+     设置 src 本身就会触发加载，不需要再叫 load()
+     —— 多调一次 load() 会把刚起来的 play() 打断成 AbortError。 */
+  if(el.dataset.src !== url){
+    el.dataset.src = url;
+    el.src = url;
+  }else{
+    try{ el.currentTime = 0; }catch(e){}
+  }
+
+  const p = el.play();
+  if(p && typeof p.then === "function"){
+    p.catch(err=>{
+      lastVoiceError = (err && err.name) || "Error";
+      if(seq !== voiceSeq) return;
+      if(err && err.name === "AbortError") return;
+      if(url.startsWith("blob:")){
+        playAudioUrl(AUDIO_DIR + rel, rel + "#net", text);
+        return;
+      }
+      if(!speakTTS(text)) warnNoSound();
+    });
+  }
+}
+
+/* 读一段文字（单词、短语、字母、阅读句子都行）。找不到音频就交给系统语音。
+   audioKey 是阅读句子在清单里的键，句子太长不适合当查表用的 key。 */
+function speak(text, audioKey){
+  const t = String(text == null ? "" : text).trim();
+  if(!t || !state.sound) return;
+  stopVoice();
+  const rel = (audioKey && AUDIO_READINGS[audioKey])
+           || AUDIO_LETTERS[t] || AUDIO_WORDS[t] || AUDIO_PHRASES[t]
+           || AUDIO_WORDS[t.toLowerCase()];
+  if(rel){
+    playAudioUrl(blobCache.get(rel) || (AUDIO_DIR + rel), rel, t);
+    return;
+  }
+  if(!speakTTS(t)) warnNoSound();
+}
+
+/* ---------- 预取当前页的音：点下去就响，不用等网络 ---------- */
+function putBlob(rel, url){
+  if(blobCache.has(rel)){ try{ URL.revokeObjectURL(url); }catch(e){} return; }
+  blobCache.set(rel, url);
+  while(blobCache.size > BLOB_MAX){
+    const first = blobCache.keys().next().value;
+    const old = blobCache.get(first);
+    blobCache.delete(first);
+    try{ URL.revokeObjectURL(old); }catch(e){}
+  }
+}
+
+function prefetchRels(rels){
+  const queue = rels.filter(rel => rel && !blobCache.has(rel) && !blobLoading.has(rel));
+  if(!queue.length) return;
+  const token = ++prefetchToken;
+  let i = 0, running = 0;
+  const CONCURRENCY = 4;
+
+  function next(){
+    if(token !== prefetchToken) return;
+    while(running < CONCURRENCY && i < queue.length){
+      const rel = queue[i++];
+      blobLoading.add(rel);
+      running++;
+      fetch(AUDIO_DIR + rel)
+        .then(r => r.ok ? r.blob() : null)
+        .then(b => { if(b) putBlob(rel, URL.createObjectURL(b)); })
+        .catch(()=>{})
+        .then(()=>{ blobLoading.delete(rel); running--; next(); });
+    }
+  }
+  next();
+}
+
+let prefetchTask = 0;
+function prefetchPageAudio(){
+  if(!AUDIO_OK || !state.sound) return;
+  clearTimeout(prefetchTask);
+  prefetchTask = setTimeout(()=>{
+    const p = pages[state.pageIndex];
+    if(!p || !p.items) return;
+    const rels = [];
+    p.items.forEach(it=>{
+      if(!it) return;
+      const rel = (p.kind === "words")
+        ? (AUDIO_WORDS[it] || AUDIO_PHRASES[it])
+        : (AUDIO_PHRASES[it] || AUDIO_WORDS[it]);
+      if(rel) rels.push(rel);
+    });
+    prefetchRels(rels);
+  }, 900);
+}
+
+function prefetchPhonicsAudio(){
+  if(!AUDIO_OK || !state.sound) return;
+  const rels = [];
+  document.querySelectorAll("#phonicsPanel .ph-card").forEach(el=>{
+    const w = el.dataset.say, l = el.dataset.letter;
+    const rel = (w && (AUDIO_WORDS[w] || AUDIO_PHRASES[w])) || (l && AUDIO_LETTERS[l]);
+    if(rel) rels.push(rel);
+  });
+  prefetchRels(rels);
+}
+
+function flashSay(el){
+  if(!el) return;
+  el.classList.add("say");
+  setTimeout(()=>el.classList.remove("say"), 680);
+}
+
+function syncSoundBtn(){
+  const b = document.getElementById("btnSound");
+  if(!b) return;
+  const narrow = window.innerWidth <= 520;
+  b.classList.toggle("on", state.sound);
+  b.textContent = state.sound ? (narrow ? "声音" : "声音开")
+                              : (narrow ? "静音" : "声音关");
+  b.title = state.sound
+    ? "点词 / 点短语会朗读，点这里关掉"
+    : "已静音，点这里打开朗读";
+}
+
+/* ============================================================
+   工具
+   ============================================================ */
+function mulberry32(a){
+  return function(){
+    a |= 0; a = a + 0x6D2B79F5 | 0;
+    let t = Math.imul(a ^ a >>> 15, 1 | a);
+    t = t + Math.imul(t ^ t >>> 7, 61 | t) ^ t;
+    return ((t ^ t >>> 14) >>> 0) / 4294967296;
+  };
+}
+function shuffleWith(arr, seed){
+  const a = arr.slice(), rnd = mulberry32(seed);
+  for(let i=a.length-1;i>0;i--){
+    const j = Math.floor(rnd()*(i+1));
+    [a[i],a[j]] = [a[j],a[i]];
+  }
+  return a;
+}
+/* 输入里抽单词：只认字母和词内连字符 / 撇号，其余（标点、数字、中文）当分隔符 */
+function parseWords(text){
+  const out = [], seen = new Set();
+  const raw = String(text).match(/[A-Za-z][A-Za-z'’\-]*/g) || [];
+  raw.forEach(w=>{
+    const t = w.replace(/^[-']+|[-']+$/g,"");
+    if(!t) return;
+    const key = t.toLowerCase();
+    if(seen.has(key)) return;
+    seen.add(key); out.push(t);
+  });
+  return out;
+}
+function parsePhrases(text){
+  return String(text).split(/[\n\r]+/).map(s=>s.trim().replace(/\s+/g," "))
+             .filter(s=>s && /[A-Za-z]/.test(s) && s.split(" ").length <= 4);
+}
+function fontStack(){
+  return state.font === "sans" ? '"Segoe UI","Helvetica Neue",Arial,"Microsoft YaHei",sans-serif'
+       : state.font === "hand" ? '"Comic Sans MS","Segoe Print","Bradley Hand","Chalkboard SE",cursive'
+       : 'Georgia,"Times New Roman","Songti SC",serif';
+}
+const CJK_STACK = '"Microsoft YaHei","PingFang SC","Hiragino Sans GB",sans-serif';
+function escapeHtml(s){
+  return String(s).replace(/[&<>"']/g, m=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[m]));
+}
+
+/* ---------- 量字宽：字号按真实文字宽度算，避免长单词挤破格子 ----------
+   用 canvas 量「100px 时这行字多宽」，再换算成「字号 1mm 时多宽」，
+   于是 fs = 可用宽度 / 每 mm 宽度，中文英文都准。 */
+const measureCanvas = document.createElement("canvas");
+const measureCtx = measureCanvas.getContext("2d");
+const widthCache = new Map();
+function widthPerMM(text, family, weight){
+  const key = family + "|" + weight + "|" + text;
+  let v = widthCache.get(key);
+  if(v === undefined){
+    try{
+      measureCtx.font = weight + " 100px " + family;
+      v = measureCtx.measureText(text).width / 100;
+    }catch(e){ v = text.length * 0.55; }
+    if(!v || !isFinite(v)) v = text.length * 0.55;
+    widthCache.set(key, v);
+  }
+  return v;
+}
+/* ============================================================
+   组页
+   ============================================================ */
+function ordered(list){ return state.shuffled ? shuffleWith(list, state.seed) : list.slice(); }
+
+/* 短语库：内置的全部都上（短语是整句记的，不需要「每个词都在词库里」才显示），
+   自定义短语接在后面 */
+function collectPhrases(){
+  const groups = {2:[],3:[],4:[]};
+  const seen = new Set();
+  const push = (p)=>{
+    const ws = String(p).trim().split(/\s+/).filter(Boolean);
+    if(!ws.length || seen.has(ws.join(" "))) return;
+    if(!(ws.length in groups)) return;
+    seen.add(ws.join(" ")); groups[ws.length].push(ws.join(" "));
+  };
+  state.customPhrases.forEach(push);
+  [2,3,4].forEach(n=> DATA.phrases[n].forEach(push));
+  return groups;
+}
+function phraseTotal(groups){ return groups[2].length + groups[3].length + groups[4].length; }
+
+function buildPages(){
+  const pages = [];
+  if(state.mode === "words"){
+    const list = ordered(state.words);
+    const per = WORD_LAYOUT.cols * WORD_LAYOUT.rows;
+    const n = Math.max(1, Math.ceil(list.length/per));
+    for(let i=0;i<n;i++){
+      pages.push({kind:"words", cols:WORD_LAYOUT.cols, rows:WORD_LAYOUT.rows,
+        items:list.slice(i*per,(i+1)*per),
+        label:`单词表 · 第 ${i+1} / ${n} 张`, fileTag:"单词表", pageNo:i+1});
+    }
+    return pages;
+  }
+
+  const groups = collectPhrases();
+  const only = state.phraseFilter === "all" ? 0 : +state.phraseFilter;
+
+  [2,3,4].forEach(len=>{
+    if(only && len !== only) return;
+    const list = ordered(groups[len]);
+    if(!list.length) return;
+    const L = PHRASE_LAYOUT[len], per = L.cols*L.rows;
+    const n = Math.ceil(list.length/per);
+    for(let i=0;i<n;i++){
+      pages.push({kind:"phrases", wordLen:len, cols:L.cols, rows:L.rows,
+        items:list.slice(i*per,(i+1)*per),
+        label:`${len} 个词的短语 · 第 ${i+1} / ${n} 张`, fileTag:`${len}词短语`, pageNo:i+1});
+    }
+  });
+
+  if(!pages.length){
+    pages.push({kind:"phrases", cols:4, rows:7, items:[], label:"短语表 · 暂无短语",
+      fileTag:"短语表", pageNo:1, empty:true});
+  }
+  return pages;
+}
+
+/* ============================================================
+   渲染
+   ============================================================ */
+const pageEl = document.getElementById("page");
+const wrapEl = document.getElementById("paperWrap");
+const viewEl = document.getElementById("viewport");
+let pages = [];
+
+/* 每格三段：音标 / 单词 / 中文。高度都按字号的比例算，
+   关掉音标或中文时那一段只是藏起来，单词大小和格子间距一个像素都不变。 */
+const BAND = { ipa:0.42, word:1.06, zh:0.50 };
+const SPACE_EM = 0.34;          /* 一格里多个词之间的间距（相对词字号） */
+const IPA_RATIO = 0.36;         /* 音标字号 = 词字号 × 0.33 */
+const ZH_RATIO  = 0.44;         /* 中文字号 = 词字号 × 0.40 */
+
+function cellMetrics(item, kind, cw, chh){
+  const fam = fontStack();
+  /* 词和词之间留点缝：长单词（elephant、watermelon）撑满格子会贴着隔壁，
+     所以只用到格宽的一小半余量都留给间距 */
+  const maxW = cw * (kind === "words" ? 0.86 : 0.90);
+  const maxH = chh * 0.94;
+
+  let tokens, zh;
+  if(kind === "words"){
+    const info = infoOf(item);
+    tokens = [{text:item, ipa:info.ipa}];
+    zh = info.zh;
+  }else{
+    tokens = phraseTokens(item);
+    zh = phraseZh(item);
+  }
+
+  /* 三段都按「有音标、有中文」预留，开关时才不跳 */
+  const hasIpa = IPA_OK;
+  const used = { ipa: hasIpa ? BAND.ipa : 0, word: BAND.word, zh: hasIpa ? BAND.zh : 0 };
+
+  /* 统一字号：所有词按同一字号排开，总宽不超过 maxW */
+  let per = 0;
+  tokens.forEach(t=>{ per += widthPerMM(t.text, fam, "400"); });
+  per += Math.max(0, tokens.length-1) * SPACE_EM;
+  let fs = per > 0 ? maxW / per : maxH / used.word;
+  fs = Math.min(fs, maxH / (used.ipa + used.word + used.zh), chh*0.40, 11);
+  fs = Math.max(fs, 1.2);
+
+  const gap = fs * SPACE_EM;
+  const blocks = tokens.map(t=>{
+    const bw = widthPerMM(t.text, fam, "400") * fs;
+    let ipaFs = 0;
+    if(hasIpa && t.ipa){
+      const w = widthPerMM(t.ipa, CJK_STACK, "400") || 1;
+      ipaFs = Math.max(Math.min(fs*IPA_RATIO, (bw*0.99)/w), fs*0.12);
+    }
+    return {text:t.text, ipa:hasIpa ? t.ipa : "", bw, ipaFs};
+  });
+
+  let zhFs = 0;
+  if(hasIpa && zh){
+    const w = widthPerMM(zh, CJK_STACK, "400") || 1;
+    zhFs = Math.max(Math.min(fs*ZH_RATIO, maxW/w), fs*0.13);
+  }
+
+  return {
+    blocks, zh: hasIpa ? zh : "", fs, gap,
+    ipaH: fs*used.ipa, wordH: fs*used.word, zhH: fs*used.zh, zhFs
+  };
+}
+
+function pageHTML(p){
+  const cw = (PAGE_W - 2*MARGIN)/p.cols;
+  const chh = (PAGE_H - 2*MARGIN)/p.rows;
+  const total = p.cols*p.rows;
+  let html = "";
+  for(let i=0;i<total;i++){
+    const r = Math.floor(i/p.cols), c = i%p.cols;
+    const item = p.items[i];
+    const base = `left:${(MARGIN+c*cw).toFixed(3)}mm;top:${(MARGIN+r*chh).toFixed(3)}mm;`
+               + `width:${cw.toFixed(3)}mm;height:${chh.toFixed(3)}mm;`;
+    if(item === undefined){ html += `<div class="cell blank" style="${base}"></div>`; continue; }
+    const key = keyOf(item);
+    const hidden = state.hideAll ? !state.reveal.includes(key) : state.reveal.includes(key);
+    const m = cellMetrics(item, p.kind, cw, chh);
+
+    let blocks = "";
+    m.blocks.forEach((b, k)=>{
+      const mr = (k < m.blocks.length-1) ? `margin-right:${m.gap.toFixed(2)}mm;` : "";
+      blocks += `<span class="wb" style="${mr}">`
+             + (m.ipaH ? `<b class="ipa" style="font-size:${b.ipaFs.toFixed(2)}mm;`
+                       + `height:${m.ipaH.toFixed(2)}mm;line-height:${m.ipaH.toFixed(2)}mm">`
+                       + `${escapeHtml(b.ipa)}</b>` : "")
+             + `<b class="w" style="font-size:${m.fs.toFixed(2)}mm;`
+             + `height:${m.wordH.toFixed(2)}mm;line-height:${m.wordH.toFixed(2)}mm">`
+             + `${escapeHtml(b.text)}</b></span>`;
+    });
+
+    html += `<div class="cell${hidden?' hid':''}" data-key="${escapeHtml(key)}" style="${base}">`
+          + `<div class="cw">`
+          +   `<div class="lw" style="height:${(m.ipaH+m.wordH).toFixed(2)}mm">${blocks}</div>`
+          +   (m.zhH ? `<div class="lz" style="height:${m.zhH.toFixed(2)}mm">`
+                    + `<b class="zh" style="font-size:${m.zhFs.toFixed(2)}mm;`
+                    + `line-height:${m.zhH.toFixed(2)}mm">${escapeHtml(m.zh)}</b></div>` : "")
+          + `</div></div>`;
+  }
+  return html;
+}
+function keyOf(item){ return state.mode + "::" + item; }
+
+function ipaBtnLabel(){ return state.showIpa ? "音标开" : "音标关"; }
+function zhBtnLabel(){ return state.showZh ? "中文开" : "中文关"; }
+
+function render(){
+  pages = buildPages();
+  if(state.pageIndex >= pages.length) state.pageIndex = pages.length-1;
+  if(state.pageIndex < 0) state.pageIndex = 0;
+
+  const p = pages[state.pageIndex];
+  pageEl.innerHTML = pageHTML(p);
+  if(p.empty){
+    pageEl.innerHTML += `<div class="empty-hint">词库还是空的<br><span style="font-size:13px">先到「词库」里加些单词，或下拉选「按级别挑词」</span></div>`;
+  }
+  pageEl.style.fontFamily = fontStack();
+
+  document.body.classList.toggle("showgrid", state.grid);
+  document.body.classList.toggle("noipa", !state.showIpa);
+  document.body.classList.toggle("nozh", !state.showZh);
+  document.getElementById("pageInfo").textContent = p.label;
+  document.getElementById("prevBtn").disabled = state.pageIndex === 0;
+  document.getElementById("nextBtn").disabled = state.pageIndex >= pages.length-1;
+
+  document.getElementById("countInfo").textContent = state.mode === "words"
+    ? `共 ${state.words.length} 词 · ${pages.length} 张`
+    : (()=>{
+        const g = collectPhrases();
+        const total = phraseTotal(g);
+        const shown = pages.reduce((a,x)=>a+x.items.length,0);
+        return state.phraseFilter === "all"
+          ? `共 ${total} 条短语 · ${pages.length} 张`
+          : `${state.phraseFilter} 个词的短语 ${shown} 条 / 共 ${total} · ${pages.length} 张`;
+      })();
+
+  const hb = document.getElementById("btnHide");
+  hb.classList.toggle("on", state.hideAll);
+  hb.textContent = state.hideAll ? "显示单词" : "隐藏单词";
+
+  const ib = document.getElementById("btnIpa");
+  if(ib){
+    ib.classList.toggle("on", state.showIpa);
+    ib.textContent = ipaBtnLabel();
+    ib.disabled = !IPA_OK;
+  }
+  const zb = document.getElementById("btnZh");
+  if(zb){
+    zb.classList.toggle("on", state.showZh);
+    zb.textContent = zhBtnLabel();
+    zb.disabled = !IPA_OK;
+  }
+
+  document.getElementById("sortSel").value = state.shuffled ? "random" : "default";
+  syncSoundBtn();
+  syncFilterBar();
+
+  fit();
+  prefetchPageAudio();
+}
+
+/* 短语分组按钮：显示该组条数，无短语的组置灰 */
+function syncFilterBar(){
+  const g = collectPhrases();
+  const count = {all:phraseTotal(g), "2":g[2].length, "3":g[3].length, "4":g[4].length};
+  document.querySelectorAll("#phraseFilter button").forEach(btn=>{
+    const f = btn.dataset.f;
+    btn.classList.toggle("on", f === state.phraseFilter);
+    btn.disabled = count[f] === 0;
+    const label = f === "all" ? "全部" : f + " 个词";
+    btn.innerHTML = `${label}<span class="n">${count[f]}</span>`;
+  });
+}
+
+pageEl.addEventListener("click", (e)=>{
+  if(Date.now() < suppressClickUntil) return;      /* 刚拖过页面，别误触格子 */
+  const cell = e.target.closest(".cell");
+  if(!cell || cell.classList.contains("blank")) return;
+  const key = cell.dataset.key || "";
+  const item = key.slice(key.indexOf("::") + 2);
+  speak(item);                                     /* 点一下就（整条）读 */
+  flashSay(cell);
+  /* 隐藏单词模式下，点一下顺便把这条露出来，正好当认读测验用 */
+  if(state.hideAll){
+    const i = state.reveal.indexOf(key);
+    if(i >= 0) state.reveal.splice(i,1); else state.reveal.push(key);
+    cell.classList.toggle("hid", !state.reveal.includes(key));
+  }
+});
+
+function fit(){
+  const availW = viewEl.clientWidth - 4;
+  const availH = viewEl.clientHeight - 4;
+  const pxW = PAGE_W*96/25.4, pxH = PAGE_H*96/25.4;
+  const s = Math.max(0.1, Math.min(availW/pxW, availH/pxH));
+  wrapEl.style.width  = (pxW*s)+"px";
+  wrapEl.style.height = (pxH*s)+"px";
+  pageEl.style.transform = `scale(${s})`;
+}
+window.addEventListener("resize", fit);
+
+/* ============================================================
+   交互
+   ============================================================ */
+let view = "words";          /* words | phrases | reading | add | level | phonics */
+const TAB_IDS = {phonics:"tabPhonics", words:"tabWords", phrases:"tabPhrases",
+                 reading:"tabReading", add:"tabAdd"};
+
+function setView(v){
+  if(view === "reading" && v !== "reading") stopReadingAll();
+  view = v;
+  if(v === "words" || v === "phrases") state.mode = v;
+  state.pageIndex = 0; state.reveal = [];
+  Object.keys(TAB_IDS).forEach(k=>
+    document.getElementById(TAB_IDS[k]).classList.toggle("on", k===v));
+  document.body.classList.toggle("mode-add", v==="add");
+  document.body.classList.toggle("view-phrases", v==="phrases");
+  document.body.classList.toggle("view-level", v==="level");
+  document.body.classList.toggle("view-phonics", v==="phonics");
+  document.body.classList.toggle("view-reading", v==="reading");
+  document.getElementById("levelSel").classList.toggle("on", v==="level");
+  /* 窄屏阅读页收起了「更多」，把「词库」留在动作区，否则没入口 */
+  if(window.innerWidth <= 520){
+    const manage = document.getElementById("btnManage");
+    if(manage){
+      (v === "reading" ? document.querySelector(".actions") : document.getElementById("morePanel"))
+        .appendChild(manage);
+    }
+  }
+  syncSoundBtn();
+  if(v === "reading"){
+    renderReading();
+    return;
+  }
+  if(v === "phonics"){
+    renderPhonicsPanel();
+    setTimeout(prefetchPhonicsAudio, 400);
+    return;
+  }
+  if(v === "level"){
+    renderLevel();
+    refreshLevelBar();
+    return;
+  }
+  if(v === "add"){
+    refreshAdd();
+    updateCounts();
+    fit();
+    setTimeout(()=>document.getElementById("addInput").focus(), 80);
+  }else{
+    render();
+  }
+}
+document.getElementById("tabPhonics").onclick = ()=>setView("phonics");
+document.getElementById("tabWords").onclick   = ()=>setView("words");
+document.getElementById("tabPhrases").onclick = ()=>setView("phrases");
+document.getElementById("tabReading").onclick = ()=>setView("reading");
+document.getElementById("tabAdd").onclick     = ()=>setView("add");
+
+/* ---------- 按级别挑词 ---------- */
+let levelNow = 0;
+const levelPick = new Set();
+
+function initLevelSelect(){
+  const sel = document.getElementById("levelSel");
+  if(!LEVELS.length){ sel.style.display = "none"; return; }
+  LEVELS.forEach(g=>{
+    const o = document.createElement("option");
+    o.value = String(g.level);
+    o.textContent = g.name + "（" + g.words.length + " 词）";
+    sel.appendChild(o);
+  });
+  sel.onchange = ()=>{
+    if(!sel.value){ setView(state.mode || "words"); return; }
+    levelNow = +sel.value;
+    levelPick.clear();
+    setView("level");
+  };
+}
+
+function currentLevel(){
+  return LEVELS.find(g=>g.level === levelNow) || null;
+}
+
+function renderLevel(){
+  const g = currentLevel();
+  const grid = document.getElementById("lpGrid");
+  if(!g){
+    grid.innerHTML = '<div class="lp-empty">没读到分级词表，检查 data/levels.json 是否在。</div>';
+    document.getElementById("lpTitle").textContent = "按年级挑词";
+    document.getElementById("lpCount").textContent = "";
+    refreshLevelBar();
+    return;
+  }
+  const pool = new Set(state.words);
+  document.getElementById("lpTitle").textContent = g.name;
+  document.getElementById("lpCount").textContent =
+    "共 " + g.words.length + " 词 · " + (g.note || "");
+
+  grid.innerHTML = g.words.map(w=>{
+    const info = infoOf(w);
+    const cls = "lp-card" + (levelPick.has(w) ? " on" : "") + (pool.has(w) ? " have" : "");
+    /* 长单词（Wednesday、watermelon）按长度缩字号，宁可小一点也别断成两行 */
+    const fs = w.length <= 7 ? 20 : Math.max(12, Math.round(20 * 7 / w.length));
+    return '<div class="' + cls + '" data-w="' + escapeHtml(w) + '"'
+         + ' title="' + escapeHtml(info.zh || "") + '">'
+         + "<i>" + escapeHtml(info.ipa) + "</i>"
+         + '<b style="font-size:' + fs + 'px">' + escapeHtml(w) + "</b></div>";
+  }).join("");
+
+  grid.querySelectorAll(".lp-card").forEach(el=>{
+    el.onclick = ()=>{
+      const w = el.dataset.w;
+      if(levelPick.has(w)) levelPick.delete(w); else levelPick.add(w);
+      el.classList.toggle("on", levelPick.has(w));
+      speak(w);
+      flashSay(el);
+      refreshLevelBar();
+    };
+  });
+  grid.scrollTop = 0;
+}
+
+function refreshLevelBar(){
+  const pool = new Set(state.words.map(w=>w.toLowerCase()));
+  let dup = 0;
+  levelPick.forEach(w=>{ if(pool.has(w.toLowerCase())) dup++; });
+  document.getElementById("lpSelInfo").textContent =
+    "已选 " + levelPick.size + " 词" + (dup ? "（" + dup + " 个已在词库）" : "");
+  document.getElementById("lpAdd").disabled = levelPick.size === 0;
+}
+
+function levelAddToLib(){
+  const pool = new Set(state.words.map(w=>w.toLowerCase()));
+  const fresh = [...levelPick].filter(w=>!pool.has(w.toLowerCase()));
+  if(!fresh.length){ toast("选中的词都已经在词库里了"); return; }
+  const before = state.words.length;
+  lastAdd = { words: state.words.slice() };
+
+  state.words = state.words.concat(fresh);
+  state.pageIndex = 0; state.reveal = [];
+  saveState();
+  levelPick.clear();
+
+  updateCounts();
+  toast(`已加入 ${fresh.length} 个词 · 词库 ${before}→${state.words.length} 词`);
+  setView("words");
+}
+
+document.getElementById("lpAll").onclick = ()=>{
+  const g = currentLevel(); if(!g) return;
+  g.words.forEach(w=>levelPick.add(w));
+  renderLevel(); refreshLevelBar();
+};
+document.getElementById("lpClear").onclick = ()=>{
+  levelPick.clear(); renderLevel(); refreshLevelBar();
+};
+document.getElementById("lpInvert").onclick = ()=>{
+  const g = currentLevel(); if(!g) return;
+  const next = new Set();
+  g.words.forEach(w=>{ if(!levelPick.has(w)) next.add(w); });
+  levelPick.clear();
+  next.forEach(w=>levelPick.add(w));
+  renderLevel(); refreshLevelBar();
+};
+document.getElementById("lpAdd").onclick = levelAddToLib;
+
+/* ---------- 学拼读 ---------- */
+/* 26 个字母：[大写, 字母名音标, 例词, 例词音标]
+   点字母读字母名（A 读 /eɪ/），点例词读那个词 —— 两处都能点，孩子分得清 */
+const PH_LETTERS = [
+  ["A","/eɪ/","apple","/ˈæpl/"],
+  ["B","/biː/","ball","/bɔːl/"],
+  ["C","/siː/","cat","/kæt/"],
+  ["D","/diː/","dog","/dɒɡ/"],
+  ["E","/iː/","egg","/eɡ/"],
+  ["F","/ef/","fish","/fɪʃ/"],
+  ["G","/dʒiː/","green","/ɡriːn/"],
+  ["H","/eɪtʃ/","hand","/hænd/"],
+  ["I","/aɪ/","ice","/aɪs/"],
+  ["J","/dʒeɪ/","jump","/dʒʌmp/"],
+  ["K","/keɪ/","kite","/kaɪt/"],
+  ["L","/el/","leg","/leɡ/"],
+  ["M","/em/","milk","/mɪlk/"],
+  ["N","/en/","nose","/nəʊz/"],
+  ["O","/əʊ/","orange","/ˈɒrɪndʒ/"],
+  ["P","/piː/","pig","/pɪɡ/"],
+  ["Q","/kjuː/","queen","/kwiːn/"],
+  ["R","/ɑː/","rain","/reɪn/"],
+  ["S","/es/","sun","/sʌn/"],
+  ["T","/tiː/","tree","/triː/"],
+  ["U","/juː/","up","/ʌp/"],
+  ["V","/viː/","van","/væn/"],
+  ["W","/ˈdʌbljuː/","water","/ˈwɔːtə/"],
+  ["X","/eks/","box","/bɒks/"],
+  ["Y","/waɪ/","yellow","/ˈjeləʊ/"],
+  ["Z","/zed/","zoo","/zuː/"]
+];
+
+/* 拼读卡片：[字母或字母组合, 读什么音, 例词, 例词音标] */
+const PH_SECTIONS = [
+  { title:"短元音", note:"一个元音字母被辅音关起来，就读短音", wide:false, items:[
+    ["a","/æ/","cat","/kæt/"],
+    ["e","/e/","hen","/hen/"],
+    ["i","/ɪ/","pig","/pɪɡ/"],
+    ["o","/ɒ/","dog","/dɒɡ/"],
+    ["u","/ʌ/","duck","/dʌk/"]
+  ]},
+  { title:"长元音（魔法 e）", note:"词尾加个 e，前面的元音就念它自己的字母音", wide:false, items:[
+    ["a-e","/eɪ/","cake","/keɪk/"],
+    ["i-e","/aɪ/","bike","/baɪk/"],
+    ["o-e","/əʊ/","nose","/nəʊz/"],
+    ["u-e","/juː/","cute","/kjuːt/"]
+  ]},
+  { title:"辅音组合", note:"两个字母凑在一起，发一个音", wide:true, items:[
+    ["sh","/ʃ/","ship","/ʃɪp/"],
+    ["ch","/tʃ/","chair","/tʃeə/"],
+    ["th","/θ/","thin","/θɪn/"],
+    ["th","/ð/","this","/ðɪs/"],
+    ["wh","/w/","what","/wɒt/"],
+    ["ph","/f/","phone","/fəʊn/"],
+    ["ck","/k/","duck","/dʌk/"],
+    ["ng","/ŋ/","sing","/sɪŋ/"],
+    ["qu","/kw/","queen","/kwiːn/"]
+  ]},
+  { title:"元音组合", note:"两个元音碰在一起读成一个长音或滑音；同一个组合常有两种读法，卡片都列出来", wide:true, items:[
+    ["ee","/iː/","tree","/triː/"],
+    ["ea","/iː/","tea","/tiː/"],
+    ["ea","/e/","head","/hed/"],
+    ["ai","/eɪ/","rain","/reɪn/"],
+    ["ay","/eɪ/","day","/deɪ/"],
+    ["oa","/əʊ/","boat","/bəʊt/"],
+    ["ow","/aʊ/","cow","/kaʊ/"],
+    ["ow","/əʊ/","snow","/snəʊ/"],
+    ["oo","/uː/","moon","/muːn/"],
+    ["oo","/ʊ/","book","/bʊk/"],
+    ["ou","/aʊ/","house","/haʊs/"],
+    ["oi","/ɔɪ/","coin","/kɔɪn/"],
+    ["oy","/ɔɪ/","boy","/bɔɪ/"],
+    ["ar","/ɑː/","car","/kɑː/"],
+    ["or","/ɔː/","fork","/fɔːk/"],
+    ["er","/ə/","teacher","/ˈtiːtʃə/"],
+    ["er","/ɜː/","her","/hɜː/"],
+    ["ir","/ɜː/","bird","/bɜːd/"],
+    ["ur","/ɜː/","nurse","/nɜːs/"],
+    ["ear","/ɪə/","ear","/ɪə/"],
+    ["air","/eə/","chair","/tʃeə/"],
+    ["igh","/aɪ/","night","/naɪt/"]
+  ]}
+];
+
+const PH_RULES = [
+  "<b>字母名 ≠ 字母音</b>：A 念 /eɪ/，在 apple 里念 /æ/；O 念 /əʊ/，在 orange 里念 /ɒ/；U 念 /juː/，在 up 里念 /ʌ/。点上面的字母卡对比着听，这是最容易误以为「发音错了」的地方。",
+  "<b>先拼辅音 + 元音</b>：c-a → ca，再加尾音 → cat。慢一点分开念，再连起来，比整词死记有效。",
+  "<b>魔法 e</b>：cap→cape、kit→kite、not→note。词尾的 e 不发音，只负责把前面的元音“拉长”。",
+  "<b>复数 -s 三种读法</b>：清音后读 <code>/s/</code>（books）；浊音和元音后读 <code>/z/</code>（dogs、trees）；s/x/ch/sh 之后加 -es 读 <code>/ɪz/</code>（boxes）。",
+  "<b>过去式 -ed 三种读法</b>：清音后 <code>/t/</code>（looked）；浊音和元音后 <code>/d/</code>（played）；t、d 之后 <code>/ɪd/</code>（wanted）。",
+  "<b>重音</b>：两个音节的名词多半重读第一个音节 —— ˈapple、ˈwater、ˈteacher。重音读错，比个别音读错更难听懂。",
+  "<b>连读</b>：an apple 连起来像 /əˈnæpl/；Good evening 的 d 会滑到 e 上。整句读顺了才像英语。"
+];
+
+const PH_TRAPS = [
+  "<b>b / d</b>：b 是“左边一根棍、右边一个肚”，d 反过来。写的时候先画棍再画肚。",
+  "<b>p / q</b>：p 的圆在右边，q 的圆在左边，尾巴都朝下。",
+  "<b>m / n</b>：m 要闭住嘴唇（嗯——），n 舌尖顶上牙床、嘴微张。",
+  "<b>th 两种</b>：/θ/ 清音 thin、three、mouth（不振动）；/ð/ 浊音 this、that、mother（手摸喉咙在振）。",
+  "<b>v / w</b>：v 用上牙轻咬下唇；w 圆唇、牙不碰唇。very 不是 “wery”。",
+  "<b>l / r</b>：l 舌尖顶住上牙龈；r 舌尖悬空往后卷，不碰上牙床。",
+  "<b>ship / sheep</b>：/ɪ/ 短而松，/iː/ 长而紧，长度差了将近一倍 —— 这两个音混了，意思就变了。",
+  "<b>词尾清浊</b>：bad /bæd/ 和 bat /bæt/、dog /dɒɡ/ 和 dock /dɒk/，只差结尾那一下振不振。"
+];
+
+function renderPhonicsPanel(){
+  const box = document.getElementById("phScroll");
+  if(box.dataset.done) return;
+
+  /* data-name="1" → 点字母读字母名；不带的（拼读区）一律读例词 */
+  const letters = '<div class="ph-grid">' + PH_LETTERS.map(([L,ln,w,wi])=>
+      `<div class="ph-card" data-letter="${L}" data-say="${w}" data-name="1">`
+    + `<em>${L}</em><i>${ln}</i><b>${w}</b><u>${wi}</u></div>`).join("") + "</div>";
+
+  let html = '<div class="ph-sec"><h3>26 个字母<small>点字母听字母名，点例词听单词；两者常常不一样，比如 A 念 /eɪ/、apple 里念 /æ/</small></h3>' + letters + "</div>";
+
+  PH_SECTIONS.forEach(sec=>{
+    html += '<div class="ph-sec"><h3>' + sec.title + '<small>' + sec.note + '</small></h3>'
+          + '<div class="ph-grid' + (sec.wide ? " wide" : "") + '">'
+          + sec.items.map(([s,ipa,w,wi])=>
+              `<div class="ph-card" data-letter="${s}" data-say="${w}">`
+            + `<em>${s}</em><i>${ipa}</i><b>${w}</b><u>${wi}</u></div>`).join("")
+          + "</div></div>";
+  });
+
+  html += '<div class="ph-sec"><h3>拼读规则</h3><div class="ph-note">'
+        + PH_RULES.map(s=>"<p>" + s + "</p>").join("") + "</div></div>";
+  html += '<div class="ph-sec"><h3>容易混的地方</h3><div class="ph-note">'
+        + PH_TRAPS.map(s=>"<p>" + s + "</p>").join("") + "</div></div>";
+
+  box.innerHTML = html;
+  box.querySelectorAll(".ph-card").forEach(el=>{
+    el.onclick = (e)=>{
+      const tag = e.target && e.target.tagName;
+      /* 26 字母区：点字母名行读字母名，点例词/例词音标读单词
+         拼读区：一律读例词 —— 单个音素没有现成录音，读字母名会读成 /eɪ/ 之类的字母音，
+         跟卡片上标的 /æ/ 对不上，宁可给一个真实的词 */
+      let say;
+      if(el.dataset.name === "1"){
+        say = (tag === "B" || tag === "U") ? el.dataset.say : el.dataset.letter;
+      }else{
+        say = el.dataset.say;
+      }
+      speak(say);
+      el.classList.toggle("on");
+      flashSay(el);
+    };
+  });
+  box.dataset.done = "1";
+}
+
+/* ---------- 分级阅读 ---------- */
+let readGrade = 1, readArt = 0, readShowZh = true, readQueue = [], readPlaying = false;
+
+function readGrades(){
+  return (READING && Array.isArray(READING.grades)) ? READING.grades : [];
+}
+function currentReadGrade(){ return readGrades().find(g=>+g.grade === readGrade) || null; }
+function currentArticle(){
+  const g = currentReadGrade();
+  return (g && g.articles && g.articles[readArt]) ? g.articles[readArt] : null;
+}
+
+function stopReadingAll(){
+  readQueue = []; readPlaying = false;
+  const el = document.getElementById("voiceEl");
+  if(el) el.onended = null;
+  stopVoice();
+  document.querySelectorAll(".rd-line.say").forEach(x=>x.classList.remove("say"));
+  const b = document.getElementById("rdPlay");
+  if(b) b.textContent = "整篇朗读";
+}
+
+function renderReading(){
+  stopReadingAll();
+  const gbox = document.getElementById("rdGrades");
+  const scroll = document.getElementById("rdScroll");
+  const gs = readGrades();
+  if(!gs.length){
+    gbox.innerHTML = "";
+    scroll.innerHTML = '<div class="rd-empty">没读到阅读短文，检查 data/reading.json（本地双击打开时还需要 data/reading.js）。</div>';
+    return;
+  }
+  if(!gs.some(g=>+g.grade === readGrade)) readGrade = +gs[0].grade;
+
+  gbox.innerHTML = gs.map(g=>
+    `<button data-g="${g.grade}" class="${+g.grade === readGrade ? 'on' : ''}">`
+    + escapeHtml(g.name || (g.grade + "年级")) + " · " + g.articles.length + " 篇</button>").join("");
+  gbox.querySelectorAll("button").forEach(b=>b.onclick=()=>{
+    readGrade = +b.dataset.g; readArt = 0; renderReading();
+  });
+
+  const g = currentReadGrade();
+  if(readArt >= g.articles.length) readArt = 0;
+  const art = currentArticle();
+  if(!art) return;
+
+  const tabs = g.articles.map((a,i)=>
+    `<button data-i="${i}" class="${i === readArt ? 'on' : ''}">` + escapeHtml(a.title) + "</button>").join("");
+  const lines = art.sentences.map(s=>
+      `<div class="rd-line" data-key="${escapeHtml(s.key)}">`
+    + '<span class="en">' + escapeHtml(s.en) + "</span>"
+    + '<span class="zh">' + escapeHtml(s.zh) + "</span></div>").join("");
+
+  scroll.innerHTML = '<div class="rd-arts" id="rdArts">' + tabs + "</div>"
+    + '<article class="rd-sheet">'
+    + '<div class="rd-sheet-head"><div class="rd-unit">' + escapeHtml(art.unit || g.name) + "</div>"
+    + "<h3>" + escapeHtml(art.title) + "</h3><p>" + escapeHtml(art.titleZh || "") + "</p></div>"
+    + '<div class="rd-lines">' + lines + "</div>"
+    + '<div class="rd-foot">人教版《英语（新起点）》一年级起点 · ' + escapeHtml(g.name)
+    + " · 配套分级阅读（原创，词量控制在本年级及以前）</div></article>";
+
+  scroll.querySelectorAll(".rd-arts button").forEach(b=>b.onclick=()=>{
+    readArt = +b.dataset.i; renderReading();
+  });
+  scroll.querySelectorAll(".rd-line").forEach(el=>{
+    el.onclick = ()=>{
+      stopReadingAll();
+      const s = art.sentences.find(x=>x.key === el.dataset.key);
+      if(!s) return;
+      speak(s.en, s.key);
+      el.classList.add("say");
+      setTimeout(()=>el.classList.remove("say"), 1000);
+    };
+  });
+  scroll.scrollTop = 0;
+}
+
+function stepReading(){
+  if(!readQueue.length){
+    readPlaying = false;
+    const b = document.getElementById("rdPlay");
+    if(b) b.textContent = "整篇朗读";
+    document.querySelectorAll(".rd-line.say").forEach(x=>x.classList.remove("say"));
+    return;
+  }
+  const s = readQueue.shift();
+  document.querySelectorAll(".rd-line.say").forEach(x=>x.classList.remove("say"));
+  const line = Array.from(document.querySelectorAll(".rd-line")).find(x=>x.dataset.key === s.key);
+  if(line) line.classList.add("say");
+
+  const rel = AUDIO_READINGS[s.key];
+  if(rel){
+    const el = audioEl();
+    el.onended = ()=>{ el.onended = null; setTimeout(stepReading, 260); };
+    playAudioUrl(blobCache.get(rel) || (AUDIO_DIR + rel), rel, s.en);
+  }else{
+    speakTTS(s.en);                       /* 没生成音频时退回系统语音 */
+    setTimeout(stepReading, 800 + s.en.length * 45);
+  }
+}
+
+document.getElementById("rdPlay").onclick = ()=>{
+  if(readPlaying){ stopReadingAll(); toast("已停止朗读"); return; }
+  const art = currentArticle();
+  if(!art) return;
+  if(!state.sound){ toast("声音是关着的，先点顶部「声音开」"); return; }
+  readQueue = art.sentences.slice();
+  readPlaying = true;
+  document.getElementById("rdPlay").textContent = "停止朗读";
+  stepReading();
+};
+document.getElementById("rdZh").onclick = ()=>{
+  readShowZh = !readShowZh;
+  document.body.classList.toggle("rd-nozh", !readShowZh);
+  document.getElementById("rdZh").textContent = readShowZh ? "中文开" : "中文关";
+};
+document.getElementById("rdPrint").onclick = ()=>window.print();
+
+/* ---------- 排序：默认 / 随机 ---------- */
+function changeSort(random){
+  state.shuffled = random;
+  if(random) state.seed = Math.floor(Math.random()*1e9);
+  state.pageIndex = 0; state.reveal = [];
+  saveState(); render();
+}
+document.getElementById("sortSel").onchange = (e)=>changeSort(e.target.value === "random");
+document.getElementById("btnReseed").onclick = ()=>changeSort(true);
+
+/* ---------- 短语按词数直接定位 ---------- */
+document.querySelectorAll("#phraseFilter button").forEach(btn=>{
+  btn.onclick = ()=>{
+    if(btn.disabled) return;
+    state.phraseFilter = btn.dataset.f;
+    state.pageIndex = 0; state.reveal = [];
+    saveState(); render();
+  };
+});
+
+document.getElementById("btnHide").onclick = ()=>{
+  state.hideAll = !state.hideAll; state.reveal = []; render();
+};
+document.getElementById("btnSound").onclick = ()=>{
+  state.sound = !state.sound;
+  if(!state.sound) stopVoice();
+  saveState(); syncSoundBtn();
+  if(state.sound){
+    const p = pages[state.pageIndex];
+    const demo = p && p.items && p.items[0];
+    if(demo) speak(demo);
+    toast("已打开声音 · 点词就能听");
+  }else{
+    toast("已静音");
+  }
+};
+document.getElementById("btnIpa").onclick = ()=>{
+  if(!IPA_OK){ toast("没读到音标数据（data/phon.json）"); return; }
+  state.showIpa = !state.showIpa;
+  saveState(); render();
+  toast(state.showIpa ? "已显示音标" : "已隐藏音标");
+};
+document.getElementById("btnZh").onclick = ()=>{
+  if(!IPA_OK){ toast("没读到释义数据（data/phon.json）"); return; }
+  state.showZh = !state.showZh;
+  saveState(); render();
+  toast(state.showZh ? "已显示中文" : "已隐藏中文");
+};
+document.getElementById("fontSel").onchange = (e)=>{
+  state.font = e.target.value; saveState(); render();
+};
+function goPage(delta){
+  const next = state.pageIndex + delta;
+  if(next < 0 || next >= pages.length) return false;
+  state.pageIndex = next;
+  state.reveal = [];
+  render();
+  return true;
+}
+
+document.getElementById("prevBtn").onclick = ()=>goPage(-1);
+document.getElementById("nextBtn").onclick = ()=>goPage(1);
+document.addEventListener("keydown", (e)=>{
+  if(e.target.tagName==="TEXTAREA" || e.target.tagName==="INPUT" || e.target.tagName==="SELECT") return;
+  if(view === "add" || view === "level" || view === "phonics" || view === "reading") return;
+  if(e.key==="ArrowLeft" && state.pageIndex>0){ state.pageIndex--; state.reveal=[]; render(); }
+  if(e.key==="ArrowRight" && state.pageIndex<pages.length-1){ state.pageIndex++; state.reveal=[]; render(); }
+});
+
+/* ---------- 滑动 / 拖动翻页 ----------
+   手机上手指左右划、电脑上按住鼠标左右拖，松手超过阈值就翻页；
+   拖动时纸跟着手走，到头了给点阻尼，松手回弹。拖过之后不触发格子点选。 */
+const DRAG_MIN = 46;
+let dragging = false, dragActive = false;
+let dragStartX = 0, dragStartY = 0, dragDX = 0;
+let suppressClickUntil = 0;
+
+function canDrag(){ return view === "words" || view === "phrases"; }
+
+function dragStart(e){
+  if(!canDrag()) return;
+  if(e.pointerType === "mouse" && e.button !== 0) return;
+  dragging = true; dragActive = false;
+  dragStartX = e.clientX; dragStartY = e.clientY; dragDX = 0;
+  wrapEl.style.transition = "none";
+}
+function dragMove(e){
+  if(!dragging) return;
+  const dx = e.clientX - dragStartX, dy = e.clientY - dragStartY;
+  if(!dragActive){
+    if(Math.abs(dx) < 8 || Math.abs(dx) <= Math.abs(dy)) return;
+    dragActive = true;
+    document.body.classList.add("dragging");
+    try{ viewEl.setPointerCapture(e.pointerId); }catch(_){}
+  }
+  const atEdge = (dx < 0 && state.pageIndex >= pages.length-1)
+              || (dx > 0 && state.pageIndex === 0);
+  dragDX = atEdge ? dx*0.28 : dx;
+  wrapEl.style.transform = `translateX(${dragDX.toFixed(1)}px)`;
+}
+function dragEnd(){
+  if(!dragging) return;
+  dragging = false;
+  document.body.classList.remove("dragging");
+  wrapEl.style.transition = "transform .18s cubic-bezier(.2,.7,.3,1)";
+  wrapEl.style.transform = "";
+  if(dragActive){
+    suppressClickUntil = Date.now() + 320;
+    if(dragDX <= -DRAG_MIN) goPage(1);
+    else if(dragDX >= DRAG_MIN) goPage(-1);
+  }
+  dragActive = false; dragDX = 0;
+  setTimeout(()=>{ wrapEl.style.transition = ""; }, 220);
+}
+viewEl.addEventListener("pointerdown", dragStart);
+viewEl.addEventListener("pointermove", dragMove);
+window.addEventListener("pointerup", dragEnd);
+window.addEventListener("pointercancel", dragEnd);
+/* ---------- 打印 ---------- */
+document.getElementById("btnPrint").onclick = ()=>window.print();
+
+document.getElementById("btnPrintAll").onclick = ()=>{
+  const cont = document.getElementById("printAll");
+  cont.innerHTML = pages.map(p=>
+    `<div class="page" style="font-family:${fontStack()}">${pageHTML(p)}</div>`
+  ).join("");
+  document.body.classList.add("print-all");
+  setTimeout(()=>window.print(), 80);
+};
+window.addEventListener("afterprint", ()=>{
+  document.body.classList.remove("print-all");
+  document.getElementById("printAll").innerHTML = "";
+});
+
+/* ---------- 下载本页：300dpi PNG ---------- */
+document.getElementById("btnDownload").onclick = ()=>{
+  const p = pages[state.pageIndex];
+  if(p.empty){ alert("当前页没有内容可导出"); return; }
+
+  const DPI = 300, K = DPI/25.4;
+  const cv = document.createElement("canvas");
+  cv.width  = Math.round(PAGE_W*K);
+  cv.height = Math.round(PAGE_H*K);
+  const ctx = cv.getContext("2d");
+  ctx.fillStyle = "#ffffff";
+  ctx.fillRect(0,0,cv.width,cv.height);
+
+  const cw = (PAGE_W-2*MARGIN)/p.cols;
+  const chh = (PAGE_H-2*MARGIN)/p.rows;
+  const total = p.cols*p.rows;
+
+  if(state.grid){
+    ctx.save();
+    ctx.strokeStyle = "#cfd8e2";
+    ctx.lineWidth = Math.max(1, 0.18*K);
+    ctx.setLineDash([0.9*K, 0.9*K]);
+    for(let i=0;i<total;i++){
+      const r = Math.floor(i/p.cols), c = i%p.cols;
+      ctx.strokeRect((MARGIN+c*cw)*K, (MARGIN+r*chh)*K, cw*K, chh*K);
+    }
+    ctx.restore();
+  }
+
+  ctx.textAlign = "center";
+  ctx.textBaseline = "middle";
+
+  p.items.forEach((item, i)=>{
+    const key = keyOf(item);
+    const hidden = state.hideAll ? !state.reveal.includes(key) : state.reveal.includes(key);
+    if(hidden) return;
+    const r = Math.floor(i/p.cols), c = i%p.cols;
+    const m = cellMetrics(item, p.kind, cw, chh);
+    const cx = (MARGIN+(c+0.5)*cw)*K;
+    const cy = (MARGIN+(r+0.5)*chh)*K;
+
+    const stackH = m.ipaH + m.wordH + m.zhH;
+    const topY = cy - stackH*K/2;
+
+    let totalW = 0;
+    m.blocks.forEach(b=>{ totalW += b.bw; });
+    totalW += Math.max(0, m.blocks.length-1) * m.gap;
+
+    let x = cx - totalW*K/2;
+    m.blocks.forEach(b=>{
+      const bcx = x + b.bw*K/2;
+      if(m.ipaH && state.showIpa && b.ipa){
+        ctx.fillStyle = "rgba(26,26,26,.62)";
+        ctx.font = `400 ${(b.ipaFs*K).toFixed(1)}px ${CJK_STACK}`;
+        ctx.fillText(b.ipa, bcx, topY + m.ipaH*K/2);
+      }
+      ctx.fillStyle = "#1a1a1a";
+      ctx.font = `400 ${(m.fs*K).toFixed(1)}px ${fontStack()}`;
+      ctx.fillText(b.text, bcx, topY + (m.ipaH + m.wordH/2)*K);
+      x += (b.bw + m.gap)*K;
+    });
+
+    if(m.zhH && state.showZh && m.zh){
+      ctx.fillStyle = "rgba(26,26,26,.66)";
+      ctx.font = `400 ${(m.zhFs*K).toFixed(1)}px ${CJK_STACK}`;
+      ctx.fillText(m.zh, cx, topY + (m.ipaH + m.wordH + m.zhH/2)*K);
+    }
+  });
+
+  cv.toBlob(blob=>{
+    const a = document.createElement("a");
+    a.download = `${p.fileTag}_第${p.pageNo}张.png`;
+    a.href = URL.createObjectURL(blob);
+    a.click();
+    setTimeout(()=>URL.revokeObjectURL(a.href), 3000);
+  }, "image/png");
+};
+
+/* ============================================================
+   加词面板
+   ============================================================ */
+const addInput = document.getElementById("addInput");
+const addPosSel = document.getElementById("addPos");
+const addSaveBtn = document.getElementById("addSave");
+const addUndoBtn = document.getElementById("addUndo");
+let lastAdd = null;
+
+let toastTimer = null;
+function toast(msg){
+  const t = document.getElementById("toast");
+  t.textContent = msg;
+  t.classList.add("on");
+  clearTimeout(toastTimer);
+  toastTimer = setTimeout(()=>t.classList.remove("on"), 3600);
+}
+
+function updateCounts(){
+  document.getElementById("countInfo").textContent =
+    `词库 ${state.words.length} 词 · 短语 ${phraseTotal(collectPhrases())} 条`;
+}
+function refreshCurrent(){
+  if(view === "add"){ refreshAdd(); updateCounts(); }
+  else render();
+}
+
+function analyzeAdd(){
+  const typed = parseWords(addInput.value);
+  const pool = new Set(state.words.map(w=>w.toLowerCase()));
+  return {
+    typed,
+    fresh: typed.filter(w=>!pool.has(w.toLowerCase())),
+    dup:   typed.filter(w=>pool.has(w.toLowerCase()))
+  };
+}
+
+function refreshAdd(){
+  const {typed, fresh, dup} = analyzeAdd();
+  const missing = fresh.filter(w=>!infoOf(w).ipa);       /* 词库里有、但音标表里没有 */
+
+  document.getElementById("addLive").innerHTML =
+      `输入 <b>${typed.length}</b> 词`
+    + ` · 新增 <span class="nw"><b>${fresh.length}</b></span>`
+    + ` · 已存在 <span class="dp"><b>${dup.length}</b></span>`
+    + ` &nbsp;|&nbsp; 保存后：词库 <b>${state.words.length}→${state.words.length+fresh.length}</b>`;
+
+  const box = document.getElementById("addChips");
+  if(!typed.length){
+    box.innerHTML = `<span class="ph">这里会列出准备加入的新词</span>`;
+  }else{
+    box.innerHTML = fresh.map(w=>{
+      const ok = !!infoOf(w).ipa;
+      return `<span class="mini ${ok?'new':'warn'}" title="${ok?'有音标和中文':'音标表里没有，会缺音标'}">${escapeHtml(w)}</span>`;
+    }).join("")
+    + dup.map(w=>`<span class="mini dup" title="词库里已有">${escapeHtml(w)}</span>`).join("");
+  }
+
+  addSaveBtn.disabled = fresh.length === 0;
+  addUndoBtn.disabled = !lastAdd;
+
+  const tip = document.getElementById("missTip");
+  const sug = document.getElementById("missBox");
+  if(!fresh.length){
+    tip.textContent = "音标和中文都来自 data/phon.json：表里有的词，卡片上自动带音标和释义；没有的也能加，只是那一格空着两行。";
+    sug.innerHTML = "";
+  }else if(!missing.length){
+    tip.textContent = `这 ${fresh.length} 个词音标表里都有，加进来就带音标和中文。`;
+    sug.innerHTML = "";
+  }else{
+    tip.textContent = `其中 ${missing.length} 个词音标表里还没有（${missing.slice(0,6).join("、")}${missing.length>6?"…":""}），`
+      + `卡片上会缺音标和释义。想补的话，把音标写进 data/phon.json 的 words 里，重开页面就生效。`;
+    sug.innerHTML = "";
+  }
+}
+
+addInput.addEventListener("input", refreshAdd);
+addInput.addEventListener("keydown", (e)=>{
+  if((e.ctrlKey || e.metaKey) && e.key === "Enter"){ e.preventDefault(); doAdd(false); }
+});
+
+function doAdd(go){
+  const {fresh} = analyzeAdd();
+  if(!fresh.length){
+    toast("没有可新增的词——这些词都已经在词库里了");
+    return;
+  }
+  const before = state.words.length;
+  lastAdd = { words: state.words.slice() };
+
+  state.words = addPosSel.value === "start" ? fresh.concat(state.words)
+                                            : state.words.concat(fresh);
+  state.pageIndex = 0; state.reveal = [];
+  saveState();
+
+  addInput.value = "";
+  refreshAdd();
+  updateCounts();
+  toast(`已加入 ${fresh.length} 个词 · 词库 ${before}→${state.words.length} 词`);
+
+  if(go){
+    state.phraseFilter = "all";
+    setView("phrases");
+  }
+}
+
+addSaveBtn.onclick = ()=>doAdd(false);
+document.getElementById("addSaveGo").onclick = ()=>doAdd(true);
+document.getElementById("addClear").onclick  = ()=>{ addInput.value = ""; refreshAdd(); addInput.focus(); };
+addUndoBtn.onclick = ()=>{
+  if(!lastAdd) return;
+  state.words = lastAdd.words;
+  lastAdd = null;
+  state.pageIndex = 0; state.reveal = [];
+  saveState();
+  refreshAdd(); updateCounts();
+  toast("已撤销上次添加");
+};
+
+/* ---------- 抽屉 ---------- */
+const drawer = document.getElementById("drawer");
+const mask   = document.getElementById("mask");
+function openDrawer(){ refreshDrawer(); drawer.classList.add("on"); mask.classList.add("on"); }
+function closeDrawer(){ drawer.classList.remove("on"); mask.classList.remove("on"); }
+document.getElementById("btnManage").onclick = openDrawer;
+document.getElementById("closeDrawer").onclick = closeDrawer;
+mask.onclick = closeDrawer;
+
+function refreshDrawer(){
+  document.getElementById("wordsInput").value = state.words.join(" ");
+  document.getElementById("phrasesInput").value = state.customPhrases.join("\n");
+  document.getElementById("gridChk").checked = state.grid;
+  document.getElementById("wordsStat").textContent = `当前 ${state.words.length} 个词`;
+  const bar = document.getElementById("chipBar");
+  bar.innerHTML = state.words.map((w,i)=>
+    `<span class="chip"><b>${escapeHtml(w)}</b><i data-i="${i}">×</i></span>`).join("");
+  bar.querySelectorAll("i").forEach(el=>{
+    el.onclick = ()=>{
+      state.words.splice(+el.dataset.i,1);
+      saveState(); refreshDrawer(); refreshCurrent();
+    };
+  });
+}
+
+document.getElementById("saveWords").onclick = ()=>{
+  const list = parseWords(document.getElementById("wordsInput").value);
+  if(!list.length){ alert("没有识别到单词"); return; }
+  state.words = list; state.pageIndex = 0; state.reveal = [];
+  saveState(); refreshDrawer(); refreshCurrent();
+};
+document.getElementById("resetWords").onclick = ()=>{
+  if(!confirm("恢复为默认的 " + DEFAULT_WORDS.length + " 个词？")) return;
+  state.words = [...DEFAULT_WORDS];
+  state.pageIndex = 0; state.reveal = [];
+  saveState(); refreshDrawer(); refreshCurrent();
+};
+document.getElementById("savePhrases").onclick = ()=>{
+  state.customPhrases = parsePhrases(document.getElementById("phrasesInput").value);
+  state.pageIndex = 0; state.reveal = [];
+  saveState(); refreshDrawer(); refreshCurrent();
+};
+document.getElementById("gridChk").onchange = (e)=>{
+  state.grid = e.target.checked; saveState(); refreshCurrent();
+};
+
+document.getElementById("exportBtn").onclick = ()=>{
+  const data = JSON.stringify({
+    words:state.words, customPhrases:state.customPhrases, font:state.font, grid:state.grid
+  }, null, 2);
+  const blob = new Blob([data], {type:"application/json"});
+  const a = document.createElement("a");
+  a.download = "英语卡片_词库备份.json";
+  a.href = URL.createObjectURL(blob);
+  a.click();
+  setTimeout(()=>URL.revokeObjectURL(a.href), 3000);
+};
+document.getElementById("importBtn").onclick = ()=>document.getElementById("fileInput").click();
+document.getElementById("fileInput").onchange = (e)=>{
+  const f = e.target.files[0];
+  if(!f) return;
+  const r = new FileReader();
+  r.onload = ()=>{
+    try{
+      const s = JSON.parse(r.result);
+      if(Array.isArray(s.words)) state.words = s.words;
+      if(Array.isArray(s.customPhrases)) state.customPhrases = s.customPhrases;
+      if(s.font) state.font = s.font;
+      if(typeof s.grid === "boolean") state.grid = s.grid;
+      state.pageIndex = 0; state.reveal = [];
+      saveState(); refreshDrawer(); refreshCurrent();
+      alert("导入成功");
+    }catch(err){ alert("文件格式不对"); }
+  };
+  r.readAsText(f, "utf-8");
+};
+
+/* ---------- 窄屏：次要按钮收进「更多」 ---------- */
+const MORE_IDS = ["btnReseed","btnHide","fontSel","btnPrint","btnPrintAll"];
+const ACTION_ORDER = ["sortSel","btnReseed","btnIpa","btnZh","btnHide","fontSel","btnPrint","btnPrintAll","btnDownload"];
+
+function layoutToolbar(){
+  const narrow = window.innerWidth <= 520;
+  /* 手机上五个页签会把顶栏撑出横向滚动条，换成两字短标签 */
+  const TAB_TEXT = {
+    tabPhonics:["学拼读","拼读"], tabWords:["单词表","单词"],
+    tabPhrases:["短语表","短语"], tabReading:["阅读","阅读"], tabAdd:["加词","加词"]
+  };
+  Object.keys(TAB_TEXT).forEach(id=>{
+    const el = document.getElementById(id);
+    if(el) el.textContent = TAB_TEXT[id][narrow ? 1 : 0];
+  });
+  const panel  = document.getElementById("morePanel");
+  const acts   = document.getElementById("pageActions");
+  MORE_IDS.forEach(id=>{
+    const el = document.getElementById(id);
+    if(el) (narrow ? panel : acts).appendChild(el);
+  });
+  if(!narrow){
+    ACTION_ORDER.forEach(id=>{
+      const el = document.getElementById(id);
+      if(el) acts.appendChild(el);
+    });
+    panel.classList.remove("on");
+  }
+  /* 「词库」在手机上排不下，收进「更多」；桌面端放回动作区末尾（原位置） */
+  const manage = document.getElementById("btnManage");
+  if(manage) (narrow ? panel : document.querySelector(".actions")).appendChild(manage);
+
+  document.getElementById("btnMore").style.display = narrow ? "inline-block" : "none";
+  const re = document.getElementById("btnReseed");
+  if(re) re.textContent = narrow ? "换一批顺序" : "↻";
+  const ib = document.getElementById("btnIpa");
+  if(ib) ib.textContent = ipaBtnLabel();
+  const zb = document.getElementById("btnZh");
+  if(zb) zb.textContent = zhBtnLabel();
+  const dl = document.getElementById("btnDownload");
+  if(dl) dl.textContent = narrow ? "下载" : "下载本页";
+  syncSoundBtn();
+}
+document.getElementById("btnMore").onclick = (e)=>{
+  e.stopPropagation();
+  document.getElementById("morePanel").classList.toggle("on");
+};
+document.addEventListener("click", (e)=>{
+  const panel = document.getElementById("morePanel");
+  if(!panel.classList.contains("on")) return;
+  if(!panel.contains(e.target) && e.target.id !== "btnMore") panel.classList.remove("on");
+});
+window.addEventListener("resize", layoutToolbar);
+
+/* ---------- 启动 ---------- */
+(async function boot(){
+  try{
+    DATA = await loadData();
+  }catch(err){
+    document.getElementById("bootFail").classList.add("on");
+    document.getElementById("bootFailMsg").textContent = String(err.message || err);
+    return;
+  }
+  DEFAULT_WORDS = DATA.defaultWords.slice();
+
+  /* 分级词表是可选的：读不到就只是不显示这个入口 */
+  try{ LEVELS = await loadLevels(); }catch(e){ LEVELS = []; }
+  initLevelSelect();
+
+  /* 阅读短文同样是可选的 */
+  try{ READING = await loadReading(); }catch(e){ READING = {grades:[]}; }
+  READING_OK = readGrades().length > 0;
+
+  /* 音标 + 释义同样是可选的：读不到就不显示那两行，排版退回单词单行 */
+  try{
+    const pj = await loadPhon();
+    if(pj){ PHON.words = pj.words || {}; PHON.phrases = pj.phrases || {}; }
+  }catch(e){ PHON = {words:{}, phrases:{}}; }
+  IPA_OK = Object.keys(PHON.words).length > 0;
+
+  loadState();
+  if(!state.words.length) state.words = [...DEFAULT_WORDS];
+
+  /* 语音清单：读不到只是变成「只有系统语音」，不影响点读 */
+  try{ await loadAudio(); }catch(e){ AUDIO_OK = false; }
+
+  document.getElementById("fontSel").value = state.font;
+  layoutToolbar();
+  syncSoundBtn();
+
+  /* 带参数直接打开某一页，方便做成多个桌面快捷方式：?view=phonics|phrases|add|level&level=3 */
+  const qs = new URLSearchParams(location.search);
+  const want = qs.get("view");
+  const wantLevel = parseInt(qs.get("level"), 10);
+
+  if(wantLevel && LEVELS.some(g=>g.level === wantLevel)){
+    levelNow = wantLevel;
+    document.getElementById("levelSel").value = String(wantLevel);
+    if(want === "reading") readGrade = wantLevel;
+  }
+  setView(["phonics","phrases","add","level","reading","words"].includes(want) ? want : "words");
+
+  if("serviceWorker" in navigator && /^https?:$/.test(location.protocol)){
+    navigator.serviceWorker.register("sw.js").catch(()=>{});
+  }
+
+  /* 排查用：地址后面加 ?diag=1，左下角显示声音状态（iPad 上没法开控制台） */
+  if(/[?&]diag=1/.test(location.search)) setTimeout(showSoundDiag, 600);
+})();
+
+
+function showSoundDiag(){
+  let en = 0;
+  try{ en = (speechSynthesis.getVoices()||[]).filter(v=>/^en/i.test(v.lang)).length; }catch(e){}
+  const rows = [
+    ["设备", IS_IOS ? "iOS / iPadOS" : "非 iOS"],
+    ["清单", AUDIO_OK
+      ? "已就绪 · " + AUDIO_SOURCE + " · " + Object.keys(AUDIO_WORDS).length + " 词 / "
+        + Object.keys(AUDIO_PHRASES).length + " 短语 / " + Object.keys(AUDIO_LETTERS).length + " 字母"
+      : "未加载（会退回系统语音）"],
+    ["音标表", IPA_OK ? "已就绪 · " + Object.keys(PHON.words).length + " 词 · " + PHON_SOURCE : "未加载"],
+    ["已预取", blobCache.size + " 条"],
+    ["系统英语语音", en + " 个"],
+    ["最近一次播放错误", lastVoiceError || "无"],
+    ["声音开关", state.sound ? "开" : "关"]
+  ];
+  const d = document.createElement("div");
+  d.style.cssText = "position:fixed;left:8px;bottom:8px;z-index:9999;max-width:calc(100% - 16px);"
+    + "background:#1a1a1a;color:#f2f2f2;font:12px/1.75 -apple-system,'PingFang SC',sans-serif;"
+    + "padding:10px 14px;border-radius:10px;box-shadow:0 8px 28px rgba(0,0,0,.35)";
+  d.innerHTML = "<div style='font-weight:600;margin-bottom:4px'>声音自检</div>"
+    + rows.map(([k,v])=>`<div><span style="opacity:.6">${k}：</span>${escapeHtml(String(v))}</div>`).join("");
+
+  const tryBtn = document.createElement("button");
+  tryBtn.textContent = "试听一下 apple";
+  tryBtn.style.cssText = "margin-top:8px;padding:7px 14px;border-radius:9px;border:0;"
+    + "background:#1f6fb2;color:#fff;font:13px/1 inherit;cursor:pointer";
+  tryBtn.onclick = (e)=>{
+    e.stopPropagation();
+    const was = state.sound;
+    state.sound = true;
+    speak("apple");
+    state.sound = was;
+  };
+  d.appendChild(tryBtn);
+
+  const tip = document.createElement("div");
+  tip.style.cssText = "margin-top:7px;opacity:.5;font-size:11px;line-height:1.6";
+  tip.textContent = "点了还是没声：先看 iPad 侧边那颗静音键，再调音量；"
+    + "Safari → 设置 → 网站设置 → 自动播放，选「允许」。点面板可以关掉。";
+  d.appendChild(tip);
+
+  d.onclick = ()=>d.remove();
+  document.body.appendChild(d);
+}
+</script>
+</body>
+</html>
