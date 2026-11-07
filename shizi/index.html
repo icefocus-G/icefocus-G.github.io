@@ -419,7 +419,7 @@ body.view-pinyin #btnMore,body.view-grade #btnMore{display:none!important}
   body.print-all .stage{display:none!important}
   body.print-all #printAll{display:block!important}
 }
-@page{size:A4;margin:0}
+@page{size:A4 portrait;margin:0}
 
 /* ---------- 词库加载失败 ---------- */
 .boot-fail{
@@ -447,6 +447,16 @@ body.view-pinyin #btnMore,body.view-grade #btnMore{display:none!important}
 .more-panel.on{display:flex}
 .more-panel button,.more-panel select{width:100%;min-height:38px;text-align:left}
 body.mode-add .more-panel{display:none!important}
+
+/* 中等宽度（iPad 横屏 1024 / 小平板）：顶栏按钮收一收，
+   别让「字库」一个按钮被挤到第三行 —— 横屏本来就矮，顶栏每多一行纸就小一圈 */
+@media (max-width: 1120px) and (min-width: 861px){
+  .toolbar{padding:9px 12px;gap:9px}
+  button.btn{padding:7px 9px;font-size:12.5px}
+  select.btn{padding:7px 8px;font-size:12.5px}
+  .count{font-size:12px}
+  .tabs button{padding:7px 13px;font-size:13.5px}
+}
 
 /* ---------- 手机 / 平板 ---------- */
 @media (max-width: 860px){
@@ -532,6 +542,11 @@ body.mode-add .more-panel{display:none!important}
         <option value="kai">楷体</option>
         <option value="song">宋体</option>
         <option value="hei">黑体</option>
+      </select>
+      <select class="btn" id="orientSel" title="屏幕上的纸张方向：自动＝横屏用横版、竖屏用竖版。打印固定 A4 竖版">
+        <option value="auto">纸张 自动</option>
+        <option value="portrait">纸张 竖版</option>
+        <option value="landscape">纸张 横版</option>
       </select>
       <button class="btn" id="btnPrint">打印本页</button>
       <button class="btn" id="btnPrintAll">打印全部</button>
@@ -878,9 +893,21 @@ function wordPinyin(word){
    状态
    ============================================================ */
 const STORE_KEY = "shizi_cards_v1";
-const PAGE_W = 210, PAGE_H = 297, MARGIN = 12;
-const CHARS_LAYOUT = { cols:8, rows:11 };
-const WORD_LAYOUT  = { 2:{cols:5,rows:8}, 3:{cols:4,rows:7}, 4:{cols:3,rows:6} };
+/* ---- 纸张方向 ----
+   屏幕可以横版：iPad 横着放 / 电脑宽窗口时，A4 横过来的纸能把屏幕填满，字能大一圈。
+   打印永远按 A4 竖版重排（打印机那边是普通竖版纸），跟屏幕方向无关。 */
+const PAPER = { portrait:{w:210,h:297}, landscape:{w:297,h:210} };
+const MARGIN = 12;
+/* 每种方向各有一套格子：竖版 8×11，横版 11×8 —— 一张纸能放的字数差不多，
+   但横版单格更宽更方，笔画多的字放得下 */
+const CHARS_LAYOUT = {
+  portrait:{cols:8, rows:11},
+  landscape:{cols:11, rows:8}
+};
+const WORD_LAYOUT = {
+  portrait:{ 2:{cols:5,rows:8}, 3:{cols:4,rows:7}, 4:{cols:3,rows:6} },
+  landscape:{ 2:{cols:7,rows:6}, 3:{cols:6,rows:5}, 4:{cols:4,rows:5} }
+};
 
 let state = {
   chars:[], customWords:[], font:"kai", grid:false,
@@ -888,7 +915,8 @@ let state = {
   hideAll:false, reveal:[], pageIndex:0,
   wordFilter:"all",           /* all | 2 | 3 | 4 —— 词组表按字数直接定位 */
   showPy:true,                /* 字上面是否显示拼音 */
-  sound:true                  /* 点字 / 点词时是否朗读 */
+  sound:true,                 /* 点字 / 点词时是否朗读 */
+  orient:"auto"               /* auto | portrait | landscape —— 屏幕上的纸张方向 */
 };
 
 function loadState(){
@@ -905,6 +933,7 @@ function loadState(){
       if(["all","2","3","4"].includes(s.wordFilter)) state.wordFilter = s.wordFilter;
       if(typeof s.showPy === "boolean") state.showPy = s.showPy;
       if(typeof s.sound === "boolean") state.sound = s.sound;
+      if(["auto","portrait","landscape"].includes(s.orient)) state.orient = s.orient;
     }else{ state.chars = [...DEFAULT_CHARS]; }
   }catch(e){ state.chars = [...DEFAULT_CHARS]; }
 }
@@ -913,7 +942,8 @@ function saveState(){
     localStorage.setItem(STORE_KEY, JSON.stringify({
       chars:state.chars, customWords:state.customWords, font:state.font, grid:state.grid,
       sort: state.shuffled ? "random" : "default", seed: state.seed,
-      wordFilter: state.wordFilter, showPy: state.showPy, sound: state.sound
+      wordFilter: state.wordFilter, showPy: state.showPy, sound: state.sound,
+      orient: state.orient
     }));
   }catch(e){}
 }
@@ -1274,14 +1304,26 @@ function blockedInfo(pool){
   return {blocked, rank};
 }
 
-function buildPages(){
+/* 屏幕上该用哪种纸张：
+   auto —— 窗口宽 > 高×1.15 就用横版（iPad 横放、电脑宽窗都是这种），否则竖版（手机竖屏） */
+function resolveOrient(){
+  if(state.orient === "portrait" || state.orient === "landscape") return state.orient;
+  const w = window.innerWidth || 0, h = window.innerHeight || 1;
+  return w > h * 1.15 ? "landscape" : "portrait";
+}
+
+function buildPages(orient){
+  const o = orient || resolveOrient();
+  const {w,h} = PAPER[o];
+  const L = (o === "portrait" ? CHARS_LAYOUT.portrait : CHARS_LAYOUT.landscape);
+  const WL = (o === "portrait" ? WORD_LAYOUT.portrait : WORD_LAYOUT.landscape);
   const pages = [];
   if(state.mode === "chars"){
     const list = ordered(state.chars);
-    const per = CHARS_LAYOUT.cols * CHARS_LAYOUT.rows;
+    const per = L.cols * L.rows;
     const n = Math.max(1, Math.ceil(list.length/per));
     for(let i=0;i<n;i++){
-      pages.push({kind:"chars", cols:CHARS_LAYOUT.cols, rows:CHARS_LAYOUT.rows,
+      pages.push({kind:"chars", w, h, cols:L.cols, rows:L.rows,
         items:list.slice(i*per,(i+1)*per),
         label:`识字表 · 第 ${i+1} / ${n} 张`, fileTag:"识字表", pageNo:i+1});
     }
@@ -1295,18 +1337,19 @@ function buildPages(){
     if(only && len !== only) return;
     const list = ordered(groups[len]);
     if(!list.length) return;
-    const L = WORD_LAYOUT[len], per = L.cols*L.rows;
+    const G = WL[len], per = G.cols*G.rows;
     const n = Math.ceil(list.length/per);
     for(let i=0;i<n;i++){
-      pages.push({kind:"words", wordLen:len, cols:L.cols, rows:L.rows,
+      pages.push({kind:"words", w, h, wordLen:len, cols:G.cols, rows:G.rows,
         items:list.slice(i*per,(i+1)*per),
         label:`${len} 字词 · 第 ${i+1} / ${n} 张`, fileTag:`${len}字词`, pageNo:i+1});
     }
   });
 
   if(!pages.length){
-    pages.push({kind:"words", cols:4, rows:7, items:[], label:"词组表 · 暂无可用词",
-      fileTag:"词组表", pageNo:1, empty:true});
+    const G = WL[2];
+    pages.push({kind:"words", w, h, cols:G.cols, rows:G.rows, items:[],
+      label:"词组表 · 暂无可用词", fileTag:"词组表", pageNo:1, empty:true});
   }
   return pages;
 }
@@ -1366,8 +1409,8 @@ function cellMetrics(item, kind, cw, chh){
 }
 
 function pageHTML(p){
-  const cw = (PAGE_W - 2*MARGIN)/p.cols;
-  const chh = (PAGE_H - 2*MARGIN)/p.rows;
+  const cw = (p.w - 2*MARGIN)/p.cols;
+  const chh = (p.h - 2*MARGIN)/p.rows;
   const total = p.cols*p.rows;
   let html = "";
   for(let i=0;i<total;i++){
@@ -1400,6 +1443,12 @@ function pyBtnLabel(){
   return state.showPy ? "拼音开" : "拼音关";
 }
 
+/* 一张纸的实际尺寸跟着方向走：竖版 210×297mm，横版 297×210mm */
+function sizeSheet(el, p){
+  el.style.width  = (p ? p.w : PAPER.portrait.w)+"mm";
+  el.style.height = (p ? p.h : PAPER.portrait.h)+"mm";
+}
+
 /* 一页的内容（含空页提示），当前张、左右两张都走这里，保证一模一样 */
 function pageInner(p){
   if(!p) return "";
@@ -1416,6 +1465,7 @@ function renderNeighbors(){
   const list = [[pagePrevEl, pages[state.pageIndex-1]], [pageNextEl, pages[state.pageIndex+1]]];
   list.forEach(([el, p])=>{
     if(!p){ el.innerHTML = ""; el.classList.remove("on"); return; }
+    sizeSheet(el, p);
     el.innerHTML = pageInner(p);
     el.style.fontFamily = fontStack();
     el.classList.add("on");
@@ -1423,10 +1473,13 @@ function renderNeighbors(){
 }
 
 function render(){
-  pages = buildPages();  if(state.pageIndex >= pages.length) state.pageIndex = pages.length-1;
+  renderedOrient = resolveOrient();
+  pages = buildPages(renderedOrient);
+  if(state.pageIndex >= pages.length) state.pageIndex = pages.length-1;
   if(state.pageIndex < 0) state.pageIndex = 0;
 
   const p = pages[state.pageIndex];
+  sizeSheet(pageEl, p);
   pageEl.innerHTML = pageInner(p);
   pageEl.style.fontFamily = fontStack();
   /* 变量挂在 body 上，而不是只挂在 .page 上：打印用的临时页、词组表、加字面板
@@ -1463,6 +1516,8 @@ function render(){
   }
 
   document.getElementById("sortSel").value = state.shuffled ? "random" : "default";
+  const os = document.getElementById("orientSel");
+  if(os) os.value = state.orient;
   syncSoundBtn();
   syncFilterBar();
 
@@ -1501,6 +1556,7 @@ pageEl.addEventListener("click", (e)=>{
 });
 
 let sheetW = 0, sheetH = 0, sheetScale = 0.4;
+let renderedOrient = "portrait";     /* 当前这一屏是按哪种纸张排的 */
 
 /* 三张纸按同一个缩放摆成一排：上一张在 -W、当前张在 0、下一张在 +W。
    顺序是 translateX 先于 scale —— W 用的是没缩放前的像素宽，正好等于纸带的宽 */
@@ -1512,9 +1568,14 @@ function placeSheets(){
 }
 
 function fit(){
+  /* 转屏 / 把窗口拉宽拉窄之后纸张方向变了，整页得按新方向重排一遍 */
+  if(resolveOrient() !== renderedOrient){ render(); return; }
+  const cur = pages[state.pageIndex];
+  const pw = cur ? cur.w : PAPER.portrait.w;
+  const ph = cur ? cur.h : PAPER.portrait.h;
   const availW = viewEl.clientWidth - 4;
   const availH = viewEl.clientHeight - 4;
-  const pxW = PAGE_W*96/25.4, pxH = PAGE_H*96/25.4;
+  const pxW = pw*96/25.4, pxH = ph*96/25.4;
   const s = Math.max(0.1, Math.min(availW/pxW, availH/pxH));
   sheetScale = s;
   sheetW = pxW*s;
@@ -1835,6 +1896,14 @@ document.getElementById("fontSel").onchange = (e)=>{
   document.body.style.setProperty("--font-card", fontStack());
   render();
 };
+/* 纸张方向：只影响屏幕；打印一律 A4 竖版（见 printPages） */
+document.getElementById("orientSel").onchange = (e)=>{
+  state.orient = e.target.value;
+  saveState(); render();
+  toast(state.orient === "auto" ? "纸张：自动（横屏用横版，竖屏用竖版）"
+      : state.orient === "portrait" ? "纸张：竖版 A4"
+      : "纸张：横版 A4 · 打印仍是竖版");
+};
 /* 翻页统一入口：数据变了要立刻换页（不带动画）都走这里 */
 function goPage(delta){
   const next = state.pageIndex + delta;
@@ -1987,17 +2056,46 @@ viewEl.addEventListener("pointermove", dragMove);
 window.addEventListener("pointerup", dragEnd);
 window.addEventListener("pointercancel", dragEnd);
 
-/* ---------- 打印 ---------- */
-document.getElementById("btnPrint").onclick = ()=>window.print();
-
-document.getElementById("btnPrintAll").onclick = ()=>{
+/* ---------- 打印 ----------
+   屏幕上可能是横版纸（iPad 横放），但打印机里装的是普通 A4 竖版 ——
+   所以打印一律按竖版重排一遍，不跟着屏幕方向走。
+   「打印本页」会找竖版排版里包含当前页第一个字/词的那张，内容对得上。 */
+function printPages(list){
   const cont = document.getElementById("printAll");
-  cont.innerHTML = pages.map(p=>
-    `<div class="page" style="font-family:${fontStack()}">${pageHTML(p)}</div>`
+  cont.innerHTML = list.map(p=>
+    `<div class="page" style="font-family:${fontStack()};width:${p.w}mm;height:${p.h}mm">${pageHTML(p)}</div>`
   ).join("");
   document.body.classList.add("print-all");
+}
+
+function portraitMatches(){
+  const cur = pages[state.pageIndex];
+  const list = buildPages("portrait");
+  if(!list.length) return [];
+  if(cur && cur.items && cur.items.length){
+    const first = cur.items[0];
+    const hit = list.find(p=> p.items.indexOf(first) >= 0);
+    if(hit) return [hit];
+  }
+  return [list[Math.min(state.pageIndex, list.length-1)]];
+}
+
+document.getElementById("btnPrint").onclick = ()=>{
+  printPages(portraitMatches());
   setTimeout(()=>window.print(), 80);
 };
+
+document.getElementById("btnPrintAll").onclick = ()=>{
+  printPages(buildPages("portrait"));
+  setTimeout(()=>window.print(), 80);
+};
+
+/* 直接用浏览器菜单 / Ctrl+P 打印时，也补一份竖版排版，别把屏幕上的横版纸打出去 */
+window.addEventListener("beforeprint", ()=>{
+  if(document.body.classList.contains("print-all")) return;
+  if(state.mode !== "chars" && state.mode !== "words") return;
+  printPages(portraitMatches());
+});
 window.addEventListener("afterprint", ()=>{
   document.body.classList.remove("print-all");
   document.getElementById("printAll").innerHTML = "";
@@ -2010,14 +2108,14 @@ document.getElementById("btnDownload").onclick = ()=>{
 
   const DPI = 300, K = DPI/25.4;
   const cv = document.createElement("canvas");
-  cv.width  = Math.round(PAGE_W*K);
-  cv.height = Math.round(PAGE_H*K);
+  cv.width  = Math.round(p.w*K);
+  cv.height = Math.round(p.h*K);
   const ctx = cv.getContext("2d");
   ctx.fillStyle = "#ffffff";
   ctx.fillRect(0,0,cv.width,cv.height);
 
-  const cw = (PAGE_W-2*MARGIN)/p.cols;
-  const chh = (PAGE_H-2*MARGIN)/p.rows;
+  const cw = (p.w-2*MARGIN)/p.cols;
+  const chh = (p.h-2*MARGIN)/p.rows;
   const total = p.cols*p.rows;
 
   if(state.grid){
@@ -2336,8 +2434,8 @@ document.getElementById("fileInput").onchange = (e)=>{
 
 /* ---------- 窄屏：次要按钮收进「更多」 ----------
    拼音开关留在外面（用得多），隐藏文字 / 换序 / 字体 / 打印收进面板 */
-const MORE_IDS = ["btnReseed","btnHide","fontSel","btnPrint","btnPrintAll"];
-const ACTION_ORDER = ["sortSel","btnReseed","btnPy","btnHide","fontSel","btnPrint","btnPrintAll","btnDownload"];
+const MORE_IDS = ["btnReseed","btnHide","fontSel","orientSel","btnPrint","btnPrintAll"];
+const ACTION_ORDER = ["sortSel","btnReseed","btnPy","btnHide","fontSel","orientSel","btnPrint","btnPrintAll","btnDownload"];
 
 function layoutToolbar(){
   const narrow = window.innerWidth <= 520;
