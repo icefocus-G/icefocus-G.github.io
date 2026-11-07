@@ -1,7 +1,7 @@
 /* 离线缓存：装到手机主屏后断网也能用
    - 页面和词库走「网络优先」，改完数据刷新就是新的
    - 图标等静态资源走「缓存优先」 */
-const CACHE = "shizi-cards-v14";
+const CACHE = "shizi-cards-v15";
 const CORE = [
   "./",
   "./index.html",

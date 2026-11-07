@@ -93,14 +93,10 @@ body.dragging .paper-wrap{transition:none!important}
   transform-origin:top left;
   backface-visibility:hidden;
 }
-/* 隔壁那两张：只画中间那条缝的投影（一张压在另一张上，边上会暗一下），
-   不然两张白纸挨在一起看不出边界，就没有「又在翻一页」的感觉。 */
-.page.neighbor{visibility:hidden;pointer-events:none}
-.page.neighbor.on{
-  visibility:visible;
-  box-shadow:-16px 0 22px -18px rgba(38,30,18,.5),
-              16px 0 22px -18px rgba(38,30,18,.5);
-}
+/* 隔壁那两张就老老实实是两张白纸，不额外加投影 —— 两张纸之间不要那道阴影缝，
+   滑动时看着是内容在窗口里连续推过去，干净。 */
+.page.neighbor{visibility:hidden;pointer-events:none;box-shadow:none}
+.page.neighbor.on{visibility:visible}
 .cell{
   position:absolute;display:flex;align-items:center;justify-content:center;
   /* 卡片字体由顶栏「字体」决定：render() 把选中的字体写进 --font-card。
