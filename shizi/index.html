@@ -76,13 +76,30 @@ select.btn{padding:8px 10px}
   display:flex;align-items:center;justify-content:center;overflow:hidden;
   touch-action:pan-y;              /* 横划交给我们翻页，纵向仍可滚动 */
 }
-.paper-wrap{position:relative;flex:0 0 auto;will-change:transform}
+/* 窗口：跟一张纸一样大，位置固定不动，负责裁掉纸带两端 + 投影。
+   纸带里并排三张纸（左＝上一张、中＝当前张、右＝下一张），只有纸带在动 ——
+   所以滑动时看到的是「纸从窗口一边被抽走，另一张从另一边补上来」，
+   而不是整张纸在原地晃、旁边露出背景。 */
+.paper-window{
+  position:relative;flex:0 0 auto;overflow:hidden;background:#fff;
+  box-shadow:var(--shadow);
+}
+.paper-wrap{position:absolute;inset:0;will-change:transform}
 #viewport{cursor:grab}
 body.dragging #viewport,body.dragging .cell{cursor:grabbing}
 body.dragging .paper-wrap{transition:none!important}
 .page{
   position:absolute;top:0;left:0;width:210mm;height:297mm;background:#fff;
-  transform-origin:top left;box-shadow:var(--shadow);
+  transform-origin:top left;
+  backface-visibility:hidden;
+}
+/* 隔壁那两张：只画中间那条缝的投影（一张压在另一张上，边上会暗一下），
+   不然两张白纸挨在一起看不出边界，就没有「又在翻一页」的感觉。 */
+.page.neighbor{visibility:hidden;pointer-events:none}
+.page.neighbor.on{
+  visibility:visible;
+  box-shadow:-16px 0 22px -18px rgba(38,30,18,.5),
+              16px 0 22px -18px rgba(38,30,18,.5);
 }
 .cell{
   position:absolute;display:flex;align-items:center;justify-content:center;
@@ -398,8 +415,11 @@ body.view-pinyin #btnMore,body.view-grade #btnMore{display:none!important}
   .toolbar,.pager,.drawer,.mask,#addPanel,.toast,.wfilter,.boot-fail{display:none!important}
   .stage{padding:0;display:block;height:auto}
   .viewport{display:block;overflow:visible;height:auto}
-  .paper-wrap{width:210mm!important;height:297mm!important}
+  .paper-window{width:210mm!important;height:297mm!important;overflow:visible!important;box-shadow:none!important}
+  .paper-wrap{position:static!important;transform:none!important}
   .page{transform:none!important;box-shadow:none!important;position:static}
+  /* 纸带两侧的上一张/下一张只服务滑动动画，打印时一张都不能带出来 */
+  .page.neighbor{display:none!important}
   body.print-all .stage{display:none!important}
   body.print-all #printAll{display:block!important}
 }
@@ -536,8 +556,12 @@ body.mode-add .more-panel{display:none!important}
     <button data-f="4">4 字词</button>
   </div>
   <div class="viewport" id="viewport">
-    <div class="paper-wrap" id="paperWrap">
-      <div class="page" id="page"></div>
+    <div class="paper-window" id="paperWindow">
+      <div class="paper-wrap" id="paperWrap">
+        <div class="page" id="page"></div>
+        <div class="page neighbor" id="pagePrev" aria-hidden="true"></div>
+        <div class="page neighbor" id="pageNext" aria-hidden="true"></div>
+      </div>
     </div>
   </div>
   <div class="pager">
@@ -1295,8 +1319,13 @@ function buildPages(){
    渲染
    ============================================================ */
 const pageEl = document.getElementById("page");
+const pagePrevEl = document.getElementById("pagePrev");
+const pageNextEl = document.getElementById("pageNext");
 const wrapEl = document.getElementById("paperWrap");
+const winEl = document.getElementById("paperWindow");
 const viewEl = document.getElementById("viewport");
+/* 三张纸的偏移：-1 左（上一张）、0 当前、+1 右（下一张） */
+const SHEETS = [[-1, pagePrevEl], [0, pageEl], [1, pageNextEl]];
 let pages = [];
 
 function cellFont(item, kind, cw, ch){
@@ -1375,15 +1404,34 @@ function pyBtnLabel(){
   return state.showPy ? "拼音开" : "拼音关";
 }
 
+/* 一页的内容（含空页提示），当前张、左右两张都走这里，保证一模一样 */
+function pageInner(p){
+  if(!p) return "";
+  let html = pageHTML(p);
+  if(p.empty){
+    html += `<div class="empty-hint">字库里还组不出词组<br><span style="font-size:13px">先到「字库」里多添加一些常用字</span></div>`;
+  }
+  return html;
+}
+
+/* 把上一张 / 下一张先画好放在纸带两侧。
+   不提前画的话，滑过去的地方是空白，就没有「翻走一张纸」的感觉了。 */
+function renderNeighbors(){
+  const list = [[pagePrevEl, pages[state.pageIndex-1]], [pageNextEl, pages[state.pageIndex+1]]];
+  list.forEach(([el, p])=>{
+    if(!p){ el.innerHTML = ""; el.classList.remove("on"); return; }
+    el.innerHTML = pageInner(p);
+    el.style.fontFamily = fontStack();
+    el.classList.add("on");
+  });
+}
+
 function render(){
   pages = buildPages();  if(state.pageIndex >= pages.length) state.pageIndex = pages.length-1;
   if(state.pageIndex < 0) state.pageIndex = 0;
 
   const p = pages[state.pageIndex];
-  pageEl.innerHTML = pageHTML(p);
-  if(p.empty){
-    pageEl.innerHTML += `<div class="empty-hint">字库里还组不出词组<br><span style="font-size:13px">先到「字库」里多添加一些常用字</span></div>`;
-  }
+  pageEl.innerHTML = pageInner(p);
   pageEl.style.fontFamily = fontStack();
   /* 变量挂在 body 上，而不是只挂在 .page 上：打印用的临时页、词组表、加字面板
      里显示的也是汉字，都得跟着一起变 */
@@ -1422,6 +1470,7 @@ function render(){
   syncSoundBtn();
   syncFilterBar();
 
+  renderNeighbors();         /* 纸带两侧先备好，手指一动就能滑进来 */
   fit();
   prefetchPageAudio();       /* 这一页的字先悄悄下好，点下去立刻出声 */
 }
@@ -1455,14 +1504,28 @@ pageEl.addEventListener("click", (e)=>{
   }
 });
 
+let sheetW = 0, sheetH = 0, sheetScale = 0.4;
+
+/* 三张纸按同一个缩放摆成一排：上一张在 -W、当前张在 0、下一张在 +W。
+   顺序是 translateX 先于 scale —— W 用的是没缩放前的像素宽，正好等于纸带的宽 */
+function placeSheets(){
+  const s = sheetScale, W = sheetW;
+  SHEETS.forEach(([off, el])=>{
+    el.style.transform = `translateX(${(off*W).toFixed(2)}px) scale(${s})`;
+  });
+}
+
 function fit(){
   const availW = viewEl.clientWidth - 4;
   const availH = viewEl.clientHeight - 4;
   const pxW = PAGE_W*96/25.4, pxH = PAGE_H*96/25.4;
   const s = Math.max(0.1, Math.min(availW/pxW, availH/pxH));
-  wrapEl.style.width  = (pxW*s)+"px";
-  wrapEl.style.height = (pxH*s)+"px";
-  pageEl.style.transform = `scale(${s})`;
+  sheetScale = s;
+  sheetW = pxW*s;
+  sheetH = pxH*s;
+  winEl.style.width  = sheetW+"px";
+  winEl.style.height = sheetH+"px";
+  placeSheets();
 }
 window.addEventListener("resize", fit);
 /* iOS 上收起/展开 Safari 工具栏时不一定触发 window.resize，
@@ -1776,7 +1839,7 @@ document.getElementById("fontSel").onchange = (e)=>{
   document.body.style.setProperty("--font-card", fontStack());
   render();
 };
-/* 翻页统一入口：按钮、键盘、手指滑动、鼠标拖动都走这里 */
+/* 翻页统一入口：数据变了要立刻换页（不带动画）都走这里 */
 function goPage(delta){
   const next = state.pageIndex + delta;
   if(next < 0 || next >= pages.length) return false;
@@ -1785,20 +1848,59 @@ function goPage(delta){
   render();
   return true;
 }
+function canGo(dir){ return state.pageIndex + dir >= 0 && state.pageIndex + dir < pages.length; }
 
-document.getElementById("prevBtn").onclick = ()=>goPage(-1);
-document.getElementById("nextBtn").onclick = ()=>goPage(1);
+/* 真的把这一张纸滑走：
+   纸带整页平移过去，落地的同一帧把内容换成新页、纸带复位到 0，
+   眼睛看到的就是「上面那张被抽走了，下面那张已经在那」。
+   已经跟着手走了一段（fromX）的话，剩下的路按比例缩短时间，不会显得粘手。 */
+let turning = false;
+function slideTo(dir, fromX){
+  if(turning || !canGo(dir)) return false;
+  turning = true;
+  renderNeighbors();                    /* 落点那张先备好 */
+  const target = -dir * sheetW;
+  const remain = Math.min(1, Math.abs(target - (fromX || 0)) / (sheetW || 1));
+  const dur = 0.22 + 0.24 * remain;
+
+  let settled = false, timer = 0;
+  const onEnd = (e)=>{ if(e.target === wrapEl) finish(); };
+  function finish(){
+    if(settled) return; settled = true;
+    turning = false;
+    wrapEl.removeEventListener("transitionend", onEnd);
+    clearTimeout(timer);
+    wrapEl.style.transition = "none";
+    wrapEl.style.transform = "translateX(0)";
+    goPage(dir);                        /* 换内容 + 重排纸带 */
+    void wrapEl.offsetWidth;            /* 复位和换页在同一帧落地，中间不闪 */
+    wrapEl.style.transition = "";
+  }
+  wrapEl.style.transition = `transform ${dur.toFixed(2)}s cubic-bezier(.25,.74,.22,1)`;
+  wrapEl.style.transform = `translateX(${target.toFixed(2)}px)`;
+  wrapEl.addEventListener("transitionend", onEnd);
+  timer = setTimeout(finish, Math.round(dur * 1000) + 90);
+  return true;
+}
+
+/* 按钮 / 键盘：也走滑走一张纸的动画，而不是瞬间换页 */
+function turnBy(dir){ return slideTo(dir); }
+
+document.getElementById("prevBtn").onclick = ()=>turnBy(-1);
+document.getElementById("nextBtn").onclick = ()=>turnBy(1);
 document.addEventListener("keydown", (e)=>{
   if(e.target.tagName==="TEXTAREA" || e.target.tagName==="INPUT" || e.target.tagName==="SELECT") return;
   if(view === "add" || view === "grade" || view === "pinyin") return;
-  if(e.key==="ArrowLeft" && state.pageIndex>0){ state.pageIndex--; state.reveal=[]; render(); }
-  if(e.key==="ArrowRight" && state.pageIndex<pages.length-1){ state.pageIndex++; state.reveal=[]; render(); }
+  if(e.key==="ArrowLeft") turnBy(-1);
+  if(e.key==="ArrowRight") turnBy(1);
 });
 
 /* ---------- 滑动 / 拖动翻页 ----------
-   手机上手指左右划、电脑上按住鼠标左右拖，松手超过阈值就翻页；
-   拖动时纸跟着手走，到头了给点阻尼，松手回弹。拖过之后不触发格子点选。 */
-const DRAG_MIN = 46;              /* 松手判定阈值（px） */
+   手机手指左右划、电脑按住鼠标左右拖：整条纸带跟着手走，隔壁那张纸同时从边上
+   滑进来；松手够远了就顺势把这张抽走（走完一整页），不够就弹回原位。
+   到第一张 / 最后一张时没有隔壁纸，只给橡皮筋的回弹，不硬顶。 */
+const DRAG_MIN_RATIO = 0.18;      /* 划过整页宽度的 18% 就翻 */
+const FLICK = 0.45;               /* 或者：甩够快（px/ms）也翻 */
 /* 到头了还能再拖多远：橡皮筋的上限，按视口宽度的 28% 算，最长 200px */
 const edgeLimit = ()=>Math.min(200, Math.max(90, viewEl.clientWidth * 0.28));
 /* iOS 那种橡皮筋：拖得越远，实际位移涨得越慢，永远拖不到极限之外，
@@ -1810,46 +1912,79 @@ function rubberBand(dx, limit){
 }
 let dragging = false, dragActive = false;
 let dragStartX = 0, dragStartY = 0, dragDX = 0;
+let dragLastX = 0, dragLastT = 0, dragV = 0;
 let suppressClickUntil = 0;
 
-function canDrag(){ return view === "chars" || view === "words"; }
+function canDrag(){ return (view === "chars" || view === "words") && !turning; }
 
 function dragStart(e){
   if(!canDrag()) return;
   if(e.pointerType === "mouse" && e.button !== 0) return;
   dragging = true; dragActive = false;
   dragStartX = e.clientX; dragStartY = e.clientY; dragDX = 0;
+  dragLastX = e.clientX; dragLastT = e.timeStamp || performance.now(); dragV = 0;
   wrapEl.style.transition = "none";
 }
 function dragMove(e){
   if(!dragging) return;
-  const dx = e.clientX - dragStartX, dy = e.clientY - dragStartY;
+  const dy = e.clientY - dragStartY;
   if(!dragActive){
     /* 先确认是横划，别把纵向滑动和点击抢掉 */
-    if(Math.abs(dx) < 8 || Math.abs(dx) <= Math.abs(dy)) return;
+    const dx0 = e.clientX - dragStartX;
+    if(Math.abs(dx0) < 8 || Math.abs(dx0) <= Math.abs(dy)) return;
     dragActive = true;
     document.body.classList.add("dragging");
     try{ viewEl.setPointerCapture(e.pointerId); }catch(_){}
   }
-  const atEdge = (dx < 0 && state.pageIndex >= pages.length-1)
-              || (dx > 0 && state.pageIndex === 0);
-  dragDX = atEdge ? rubberBand(dx, edgeLimit()) : dx;
+  /* 手指速度：甩一下（而不是慢慢拖）也能翻页，手机上这才是本能动作 */
+  const t = e.timeStamp || performance.now();
+  if(t > dragLastT){
+    const v = (e.clientX - dragLastX) / (t - dragLastT);
+    dragV = dragV * 0.6 + v * 0.4;
+    dragLastX = e.clientX; dragLastT = t;
+  }
+
+  let dx = e.clientX - dragStartX;
+  const atEdge = (dx < 0 && !canGo(1)) || (dx > 0 && !canGo(-1));
+  if(atEdge){
+    dragDX = rubberBand(dx, edgeLimit());
+  }else{
+    /* 拖过一整页之后就别再 1:1 跟手了，给点阻力，手上有到头的感觉 */
+    const over = Math.abs(dx) - sheetW;
+    if(over > 0) dx = Math.sign(dx) * (sheetW + rubberBand(over, sheetW * 0.5));
+    dragDX = dx;
+  }
   wrapEl.style.transform = `translateX(${dragDX.toFixed(1)}px)`;
 }
 function dragEnd(){
   if(!dragging) return;
   dragging = false;
   document.body.classList.remove("dragging");
-  /* 回弹：略带回冲的曲线，松手时先弹过一点再归位，手上有「拉回来」的感觉 */
-  wrapEl.style.transition = "transform .34s cubic-bezier(.16,1.28,.34,1)";
-  wrapEl.style.transform = "";
-  if(dragActive){
-    suppressClickUntil = Date.now() + 320;
-    if(dragDX <= -DRAG_MIN) goPage(1);
-    else if(dragDX >= DRAG_MIN) goPage(-1);
+  const wasDrag = dragActive;
+  dragActive = false;
+  if(!wasDrag) return;
+
+  suppressClickUntil = Date.now() + 420;
+  /* 松手前手指已经停住（超过 90ms 没动）就不算「甩」，慢拖到头就该弹回去 */
+  const idle = (performance.now() - dragLastT);
+  const v = idle > 90 ? 0 : dragV;
+  const ratio = dragDX / (sheetW || 1);
+  const far = Math.abs(ratio) >= DRAG_MIN_RATIO;
+  const flick = Math.abs(dragDX) > Math.max(26, sheetW * 0.045) && Math.abs(v) >= FLICK;
+  let dir = 0;
+  if(ratio < 0 && (far || (flick && v < 0))) dir = 1;    /* 往左划 → 下一张 */
+  else if(ratio > 0 && (far || (flick && v > 0))) dir = -1;
+
+  const from = dragDX;
+  dragDX = 0; dragV = 0;
+  if(dir && canGo(dir)){
+    slideTo(dir, from);          /* 从手指停的地方顺势滑完剩下的路 */
+  }else{
+    /* 没到翻页的距离：弹回原位，略带回冲 */
+    wrapEl.style.transition = "transform .38s cubic-bezier(.16,1.24,.34,1)";
+    wrapEl.style.transform = "translateX(0)";
+    setTimeout(()=>{ wrapEl.style.transition = ""; }, 400);
   }
-  dragActive = false; dragDX = 0;
-  setTimeout(()=>{ wrapEl.style.transition = ""; }, 360);
 }
 viewEl.addEventListener("pointerdown", dragStart);
 viewEl.addEventListener("pointermove", dragMove);
