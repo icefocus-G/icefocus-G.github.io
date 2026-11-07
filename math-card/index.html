@@ -254,6 +254,11 @@ body.view-add .stage{display:none}
 /* 加法表 / 减法表 / 口诀表：撑满卡片宽度，格大好点 */
 .mtable.fill{width:100%;max-width:720px;margin:0 auto;table-layout:fixed;font-size:14.5px}
 .mtable.fill td{padding:7px 0}
+/* 除法表：格子拆两行——上面被除数、下面「÷除数=商」，窄屏也塞得下 */
+.mtable.divfill td{padding:3px 0;line-height:1.2}
+.mtable.divfill .dq{display:block;font-size:15px;font-weight:600;line-height:1.15}
+.mtable.divfill .dop{display:block;font-size:10.5px;color:#8a8172;line-height:1.4;
+  font-family:var(--font-hei);font-variant-numeric:tabular-nums}
 /* 单位换算表：类别窄、进率中、说明宽 */
 .mtable.unit{width:100%;table-layout:fixed;font-size:13px}
 .mtable.unit td:nth-child(1){width:92px}
@@ -2068,6 +2073,27 @@ function subTableHTML(){
   return html;
 }
 
+/* 除法表：和乘法口诀一一对应（行＝除数，列＝商，格子上是被除数）。
+   窄格子里放「被除数 ÷ 除数 = 商」一行会挤，拆成上下两行：上面被除数、下面算式。 */
+function divTableHTML(){
+  let html = '<div style="overflow-x:auto"><table class="mtable fill divfill"><tr><td class="hd">÷</td>';
+  for(let j=1;j<=9;j++) html += '<td class="hd">' + j + "</td>";
+  html += "</tr>";
+  for(let i=1;i<=9;i++){
+    html += '<tr><td class="hd">' + i + "</td>";
+    for(let j=1;j<=9;j++){
+      if(j > i){ html += '<td class="off"></td>'; continue; }
+      const n = i * j;
+      html += '<td data-say="' + zhInt(n) + "除以" + zhInt(i) + "等于" + zhInt(j) + '">'
+        + '<span class="dq">' + n + '</span>'
+        + '<span class="dop">÷' + i + "=" + j + "</span></td>";
+    }
+    html += "</tr>";
+  }
+  html += "</table></div>";
+  return html;
+}
+
 function kouJue(i, j){
   const a = Math.min(i, j), b = Math.max(i, j), p = a * b;
   return zhInt(a) + zhInt(b) + (p < 10 ? "得" : "") + zhInt(p);
@@ -2082,6 +2108,14 @@ function renderCalc(){
   html += sec("20 以内加法表", "点一格听读法", addTableHTML());
   html += sec("20 以内减法表", "点一格听读法", subTableHTML());
   html += sec("乘法口诀表", "点一格读口诀（三角排列，左下角是全部 45 句）", mulTableHTML());
+  html += sec("除法表", "行＝除数、列＝商，格子上是被除数；点一格听算式", divTableHTML());
+
+  html += sec("四张表怎么用", "记住两句：减法看加法，除法看乘法", '<ul class="note-list">'
+    + "<li><b>加法表</b>背熟了，<b>减法</b>就是倒着想：8 + 5 = 13，那 13 − 5 = 8。</li>"
+    + "<li><b>乘法口诀</b>背熟了，<b>除法</b>就是倒着想：四五二十，那 20 ÷ 4 = 5。</li>"
+    + "<li>表里空着的格子不是漏印：减法不出现「小数减大数」，除法不出现「除不尽」，"
+    + "这些要到初中讲负数、分数才碰。</li>"
+    + "</ul>");
 
   html += sec("竖式的三条规矩", "为什么孩子竖式总算错", '<ul class="note-list">'
     + "<li><b>相同数位对齐</b>：个位对个位、十位对十位。小数是<b>小数点对齐</b>，不是末位对齐。</li>"
