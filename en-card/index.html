@@ -29,7 +29,7 @@ html,body{height:100%}
 body{
   margin:0;background:var(--bg);color:var(--ink);
   font-family:var(--font-zh);display:flex;flex-direction:column;
-  height:100vh;overflow:hidden;
+  height:100vh;height:100dvh;overflow:hidden;   /* iPad Safari 地址栏别吃掉底边 */
 }
 
 /* ---------- 顶栏 ---------- */
@@ -67,22 +67,40 @@ select.btn{padding:8px 10px}
 
 /* ---------- 舞台 ---------- */
 .stage{
-  flex:1 1 auto;min-height:0;display:flex;flex-direction:column;
+  position:relative;flex:1 1 auto;min-height:0;display:flex;flex-direction:column;
   align-items:center;justify-content:center;gap:10px;padding:14px;
+}
+/* 平板竖着拿时横版纸会很小，轻轻提醒一下，不挡内容 */
+.rotate-hint{
+  display:none;position:absolute;top:6px;left:50%;transform:translateX(-50%);z-index:5;
+  padding:5px 12px;border:1px solid var(--line);border-radius:999px;background:var(--card);
+  color:var(--sub);font-size:12px;white-space:nowrap
+}
+@media (min-width:768px) and (orientation:portrait){
+  body.paper-landscape .rotate-hint{display:block}
 }
 .viewport{
   flex:1 1 auto;min-height:0;width:100%;
   display:flex;align-items:center;justify-content:center;overflow:hidden;
-  touch-action:pan-y;              /* 横划交给我们翻页，纵向仍可滚动 */
+  touch-action:none;               /* 横竖都交给 JS，纸才能跟手 + 回弹 */
+  overscroll-behavior:contain;
 }
-.paper-wrap{position:relative;flex:0 0 auto;will-change:transform}
+.paper-wrap{
+  position:relative;flex:0 0 auto;will-change:transform;
+  transform:translate3d(0,0,0);
+}
 #viewport{cursor:grab}
 body.dragging #viewport,body.dragging .cell{cursor:grabbing}
 body.dragging .paper-wrap{transition:none!important}
+/* 真纸：不加投影，只留一条极细的纸边 */
 .page{
-  position:absolute;top:0;left:0;width:210mm;height:297mm;background:#fff;
-  transform-origin:top left;box-shadow:var(--shadow);
+  position:absolute;top:0;left:0;
+  width:var(--page-w,210mm);height:var(--page-h,297mm);
+  background:#fff;border:.2mm solid #e5e0d4;
+  transform-origin:top left;box-shadow:none;
 }
+body.paper-portrait {--page-w:210mm;--page-h:297mm}
+body.paper-landscape{--page-w:297mm;--page-h:210mm}
 .cell{
   position:absolute;display:flex;align-items:center;justify-content:center;
   font-family:var(--font-serif);line-height:1;color:#1a1a1a;
@@ -118,7 +136,7 @@ body.showgrid .cell{outline:.22mm dashed #cfd8e2;outline-offset:-.22mm}
 .pager{
   flex:0 0 auto;display:flex;align-items:center;gap:14px;background:var(--card);
   border:1px solid var(--line);border-radius:999px;padding:5px 8px;
-  box-shadow:0 2px 8px rgba(60,50,35,.06);
+  box-shadow:none;
 }
 .pager button{
   border:0;background:transparent;width:32px;height:32px;border-radius:50%;
@@ -325,29 +343,22 @@ body.view-phonics #btnMore,body.view-level #btnMore{display:none!important}
   display:flex;align-items:baseline;gap:8px;
 }
 .ph-sec h3 small{font-weight:400;font-size:11.5px;color:var(--sub)}
-.ph-grid{display:grid;gap:8px;grid-template-columns:repeat(auto-fill,minmax(94px,1fr))}
-.ph-grid.wide{grid-template-columns:repeat(auto-fill,minmax(110px,1fr))}
+/* 只留「字母 / 字母组合 + 发音」两行，例词不再印在卡上（点卡片才听示范词） */
+.ph-grid{display:grid;gap:8px;grid-template-columns:repeat(auto-fill,minmax(80px,1fr))}
+.ph-grid.wide{grid-template-columns:repeat(auto-fill,minmax(96px,1fr))}
 .ph-card{
-  position:relative;display:flex;flex-direction:column;align-items:center;gap:1px;
-  padding:9px 4px 8px;background:var(--card);border:1px solid var(--line);
+  position:relative;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:3px;
+  min-height:64px;padding:10px 4px;background:var(--card);border:1px solid var(--line);
   border-radius:10px;cursor:pointer;user-select:none;
   transition:border-color .15s,background .15s,transform .15s;
 }
 .ph-card:hover{border-color:#b9ae99;transform:translateY(-1px)}
 .ph-card.say{background:var(--accent-soft);border-color:var(--accent-line);transform:translateY(-1px)}
 .ph-card em{
-  font-style:normal;font-family:var(--font-serif);font-size:22px;font-weight:600;
-  line-height:1.1;color:#1a1a1a;letter-spacing:.01em;
+  font-style:normal;font-family:var(--font-serif);font-size:26px;font-weight:600;
+  line-height:1.06;color:#1a1a1a;letter-spacing:.01em;
 }
-.ph-card i{font-style:normal;font-family:var(--font-sans);font-size:11px;color:var(--sub);line-height:1.4}
-.ph-card b{
-  margin-top:4px;font-family:var(--font-sans);font-size:14px;font-weight:400;
-  color:#3a3a3a;line-height:1.3;word-break:break-word;text-align:center;
-}
-.ph-card u{
-  text-decoration:none;font-style:normal;font-family:var(--font-sans);
-  font-size:11.5px;color:#9a9384;line-height:1.3;
-}
+.ph-card i{font-style:normal;font-family:var(--font-sans);font-size:13px;color:var(--sub);line-height:1.35}
 .ph-card.on{background:var(--accent-soft);border-color:var(--accent-line)}
 .ph-card.on em{color:var(--accent)}
 .ph-card.on::after{
@@ -425,11 +436,20 @@ body.rd-nozh .rd-line .zh{display:none}
 
 @media print{
   html,body{height:auto;overflow:visible;background:#fff;display:block}
+  /* 单页打印严格锁在一张 A4 内：不加这道，297mm 纸高会被舍入成第 2 张空白页 */
+  body:not(.print-all){height:296mm!important;max-height:296mm!important;overflow:hidden!important}
+  body:not(.print-all) .stage,
+  body:not(.print-all) .viewport{height:296mm!important;max-height:296mm!important;overflow:hidden!important}
   .toolbar,.pager,.drawer,.mask,#addPanel,.toast,.pfilter,.boot-fail{display:none!important}
   .stage{padding:0;display:block;height:auto}
   .viewport{display:block;overflow:visible;height:auto}
-  .paper-wrap{width:210mm!important;height:297mm!important}
-  .page{transform:none!important;box-shadow:none!important;position:static}
+  .paper-wrap{width:210mm!important;height:auto!important}
+  /* 打印永远是 A4 竖版，跟屏幕上横屏版式无关。
+     高度留 1mm：正好 297mm 时浏览器舍入会多吐一张空白页。 */
+  body.paper-landscape{--page-w:210mm;--page-h:297mm}
+  .page{width:210mm!important;height:296mm!important;border:0!important;
+        transform:none!important;box-shadow:none!important;position:static}
+  .rotate-hint{display:none!important}
   body.print-all .stage{display:none!important}
   body.print-all #printAll{display:block!important}
 }
@@ -461,6 +481,19 @@ body.rd-nozh .rd-line .zh{display:none}
 .more-panel.on{display:flex}
 .more-panel button,.more-panel select{width:100%;min-height:38px;text-align:left}
 body.mode-add .more-panel{display:none!important}
+
+/* ---------- iPad 横屏：顶栏收紧凑一点，把高度让给纸 ---------- */
+@media (min-width:900px) and (max-width:1366px) and (orientation:landscape){
+  .toolbar{padding:8px 12px;gap:8px}
+  .brand{font-size:15px}
+  .tabs button{padding:6px 12px;font-size:13.5px}
+  button.btn{padding:7px 10px;font-size:12.5px}
+  .level-sel{max-width:158px}
+  .count{font-size:12px}
+  .stage{padding:8px 10px;gap:6px}
+  .pager{padding:3px 6px;gap:8px}
+  .pager .info{font-size:12px;min-width:180px}
+}
 
 /* ---------- 手机 / 平板 ---------- */
 @media (max-width: 860px){
@@ -504,10 +537,11 @@ body.mode-add .more-panel{display:none!important}
   .lp-card b{font-size:18px}
   .ph-head h2{font-size:15px}
   .ph-tip{font-size:11.5px}
-  .ph-grid{grid-template-columns:repeat(auto-fill,minmax(84px,1fr));gap:6px}
-  .ph-grid.wide{grid-template-columns:repeat(auto-fill,minmax(96px,1fr))}
-  .ph-card em{font-size:19px}
-  .ph-card b{font-size:12px}
+  .ph-grid{grid-template-columns:repeat(auto-fill,minmax(72px,1fr));gap:6px}
+  .ph-grid.wide{grid-template-columns:repeat(auto-fill,minmax(84px,1fr))}
+  .ph-card{min-height:58px;padding:8px 3px}
+  .ph-card em{font-size:22px}
+  .ph-card i{font-size:12px}
   .ph-note{font-size:12.5px;line-height:1.9;padding:11px 12px}
   .rd-head{gap:6px}
   .rd-tip{flex:1 1 100%;min-width:0;font-size:11px;line-height:1.5}
@@ -554,6 +588,7 @@ body.mode-add .more-panel{display:none!important}
         <option value="sans">无衬线</option>
         <option value="hand">手写体</option>
       </select>
+      <button class="btn" id="btnPaper" title="iPad 横屏版式 / A4 竖版打印模式 切换">打印模式</button>
       <button class="btn" id="btnPrint">打印本页</button>
       <button class="btn" id="btnPrintAll">打印全部</button>
       <button class="btn primary" id="btnDownload">下载本页</button>
@@ -566,6 +601,7 @@ body.mode-add .more-panel{display:none!important}
 </div>
 
 <div class="stage">
+  <div class="rotate-hint">↻ 把 iPad 横过来看，卡片会更大</div>
   <div class="pfilter" id="phraseFilter">
     <button data-f="all" class="on">全部</button>
     <button data-f="2">2 个词</button>
@@ -602,7 +638,7 @@ body.mode-add .more-panel{display:none!important}
 <section id="phonicsPanel">
   <div class="ph-head">
     <h2>学拼读</h2>
-    <span class="ph-tip">26 字母点字母读字母名、点例词读单词（字母名和单词里的音不是一回事）；拼读卡点一下听例词，重点听词里那个音 · 5 短元音 · 4 长元音 · 31 个字母组合</span>
+    <span class="ph-tip">卡片只留字母和发音 · 点一下听示范词（底部会提示是哪个词）· 26 字母 · 5 短元音 · 4 长元音 · 31 个字母组合</span>
   </div>
   <div class="ph-scroll" id="phScroll"></div>
 </section>
@@ -867,14 +903,43 @@ function phraseZh(p){
    状态
    ============================================================ */
 const STORE_KEY = "english_cards_v1";
-const PAGE_W = 210, PAGE_H = 297, MARGIN = 12;
-const WORD_LAYOUT    = { cols:5, rows:8 };
-const PHRASE_LAYOUT  = { 2:{cols:4,rows:8}, 3:{cols:3,rows:7}, 4:{cols:3,rows:6} };
+const MARGIN = 12;
+/* 两套纸张：竖版 = A4 打印；横版 = iPad 横屏，列多、行少、字更大。
+   打印 / 导出 PNG 一律用竖版，跟屏幕上当前是哪套无关。 */
+const PAPER = {
+  portrait: {                                   /* 210 × 297 mm */
+    w:210, h:297,
+    word:  {cols:5, rows:8},
+    phrase:{2:{cols:4,rows:8}, 3:{cols:3,rows:7}, 4:{cols:3,rows:6}}
+  },
+  landscape: {                                  /* 297 × 210 mm */
+    w:297, h:210,
+    word:  {cols:8, rows:5},
+    phrase:{2:{cols:6,rows:5}, 3:{cols:5,rows:4}, 4:{cols:4,rows:4}}
+  }
+};
+/* iPadOS 13 之后 iPad 会伪装成 Macintosh，只认 UA 会漏；用触控点数补一刀 */
+function isTablet(){
+  const ua = navigator.userAgent || "";
+  const iPadLike = /iPad|Tablet/.test(ua)
+                || (/Macintosh/.test(ua) && navigator.maxTouchPoints > 1);
+  const wideTouch = window.matchMedia("(pointer:coarse)").matches
+                 && Math.min(window.innerWidth, window.innerHeight) >= 600;
+  return iPadLike || wideTouch;
+}
+function defaultPaper(){ return isTablet() ? "landscape" : "portrait"; }
+function paperSpec(mode){ return PAPER[mode || state.paper] || PAPER.portrait; }
+function applyPaperClass(){
+  document.body.classList.toggle("paper-landscape", state.paper === "landscape");
+  document.body.classList.toggle("paper-portrait",  state.paper !== "landscape");
+  syncPaperBtn();
+}
 
 let state = {
   words:[], customPhrases:[], font:"serif", grid:false,
   mode:"words", shuffled:false, seed:20261107,
   hideAll:false, reveal:[], pageIndex:0,
+  paper:"",                   /* "" → 启动时按设备定：iPad 横屏 / 其它竖版 */
   phraseFilter:"all",         /* all | 2 | 3 | 4 —— 短语表按词数直接定位 */
   showIpa:true,               /* 单词上面是否显示音标 */
   showZh:true,                /* 单词下面是否显示中文 */
@@ -896,6 +961,7 @@ function loadState(){
       if(typeof s.showIpa === "boolean") state.showIpa = s.showIpa;
       if(typeof s.showZh === "boolean") state.showZh = s.showZh;
       if(typeof s.sound === "boolean") state.sound = s.sound;
+      if(s.paper === "landscape" || s.paper === "portrait") state.paper = s.paper;
     }else{ state.words = [...DEFAULT_WORDS]; }
   }catch(e){ state.words = [...DEFAULT_WORDS]; }
 
@@ -911,7 +977,7 @@ function saveState(){
       words:state.words, customPhrases:state.customPhrases, font:state.font, grid:state.grid,
       sort: state.shuffled ? "random" : "default", seed: state.seed,
       phraseFilter: state.phraseFilter, showIpa: state.showIpa, showZh: state.showZh,
-      sound: state.sound
+      sound: state.sound, paper: state.paper
     }));
   }catch(e){}
 }
@@ -1247,14 +1313,15 @@ function collectPhrases(){
 }
 function phraseTotal(groups){ return groups[2].length + groups[3].length + groups[4].length; }
 
-function buildPages(){
+function buildPages(spec){
+  spec = spec || paperSpec();
   const pages = [];
   if(state.mode === "words"){
     const list = ordered(state.words);
-    const per = WORD_LAYOUT.cols * WORD_LAYOUT.rows;
+    const per = spec.word.cols * spec.word.rows;
     const n = Math.max(1, Math.ceil(list.length/per));
     for(let i=0;i<n;i++){
-      pages.push({kind:"words", cols:WORD_LAYOUT.cols, rows:WORD_LAYOUT.rows,
+      pages.push({kind:"words", cols:spec.word.cols, rows:spec.word.rows,
         items:list.slice(i*per,(i+1)*per),
         label:`单词表 · 第 ${i+1} / ${n} 张`, fileTag:"单词表", pageNo:i+1});
     }
@@ -1268,7 +1335,7 @@ function buildPages(){
     if(only && len !== only) return;
     const list = ordered(groups[len]);
     if(!list.length) return;
-    const L = PHRASE_LAYOUT[len], per = L.cols*L.rows;
+    const L = spec.phrase[len], per = L.cols*L.rows;
     const n = Math.ceil(list.length/per);
     for(let i=0;i<n;i++){
       pages.push({kind:"phrases", wordLen:len, cols:L.cols, rows:L.rows,
@@ -1278,7 +1345,8 @@ function buildPages(){
   });
 
   if(!pages.length){
-    pages.push({kind:"phrases", cols:4, rows:7, items:[], label:"短语表 · 暂无短语",
+    const L = spec.phrase[2];
+    pages.push({kind:"phrases", cols:L.cols, rows:L.rows, items:[], label:"短语表 · 暂无短语",
       fileTag:"短语表", pageNo:1, empty:true});
   }
   return pages;
@@ -1351,9 +1419,10 @@ function cellMetrics(item, kind, cw, chh){
   };
 }
 
-function pageHTML(p){
-  const cw = (PAGE_W - 2*MARGIN)/p.cols;
-  const chh = (PAGE_H - 2*MARGIN)/p.rows;
+function pageHTML(p, spec){
+  spec = spec || paperSpec();
+  const cw = (spec.w - 2*MARGIN)/p.cols;
+  const chh = (spec.h - 2*MARGIN)/p.rows;
   const total = p.cols*p.rows;
   let html = "";
   for(let i=0;i<total;i++){
@@ -1478,9 +1547,10 @@ pageEl.addEventListener("click", (e)=>{
 });
 
 function fit(){
+  const spec = paperSpec();
   const availW = viewEl.clientWidth - 4;
   const availH = viewEl.clientHeight - 4;
-  const pxW = PAGE_W*96/25.4, pxH = PAGE_H*96/25.4;
+  const pxW = spec.w*96/25.4, pxH = spec.h*96/25.4;
   const s = Math.max(0.1, Math.min(availW/pxW, availH/pxH));
   wrapEl.style.width  = (pxW*s)+"px";
   wrapEl.style.height = (pxH*s)+"px";
@@ -1739,7 +1809,7 @@ const PH_SECTIONS = [
 ];
 
 const PH_RULES = [
-  "<b>字母名 ≠ 字母音</b>：A 念 /eɪ/，在 apple 里念 /æ/；O 念 /əʊ/，在 orange 里念 /ɒ/；U 念 /juː/，在 up 里念 /ʌ/。点上面的字母卡对比着听，这是最容易误以为「发音错了」的地方。",
+  "<b>字母名 ≠ 字母音</b>：A 念 /eɪ/，在 apple 里念 /æ/；O 念 /əʊ/，在 orange 里念 /ɒ/；U 念 /juː/，在 up 里念 /ʌ/。上面的字母卡读字母名，下面带 /æ/ /ɒ/ /ʌ/ 的拼读卡读的是示范词，这是最容易误以为「发音错了」的地方。",
   "<b>先拼辅音 + 元音</b>：c-a → ca，再加尾音 → cat。慢一点分开念，再连起来，比整词死记有效。",
   "<b>魔法 e</b>：cap→cape、kit→kite、not→note。词尾的 e 不发音，只负责把前面的元音“拉长”。",
   "<b>复数 -s 三种读法</b>：清音后读 <code>/s/</code>（books）；浊音和元音后读 <code>/z/</code>（dogs、trees）；s/x/ch/sh 之后加 -es 读 <code>/ɪz/</code>（boxes）。",
@@ -1763,19 +1833,21 @@ function renderPhonicsPanel(){
   const box = document.getElementById("phScroll");
   if(box.dataset.done) return;
 
-  /* data-name="1" → 点字母读字母名；不带的（拼读区）一律读例词 */
+  /* 卡片只印「字母 / 字母组合 + 发音」两行。
+     data-name="1" 的 26 字母卡点一下读字母名；拼读区点一下读示范词（纯音素没有录音）。
+     例词仍放在 data-say 里，只是不显示，孩子听得到、卡面更干净。 */
   const letters = '<div class="ph-grid">' + PH_LETTERS.map(([L,ln,w,wi])=>
-      `<div class="ph-card" data-letter="${L}" data-say="${w}" data-name="1">`
-    + `<em>${L}</em><i>${ln}</i><b>${w}</b><u>${wi}</u></div>`).join("") + "</div>";
+      `<div class="ph-card" data-letter="${L}" data-say="${w}" data-name="1" title="示范词 ${w}">`
+    + `<em>${L}</em><i>${ln}</i></div>`).join("") + "</div>";
 
-  let html = '<div class="ph-sec"><h3>26 个字母<small>点字母听字母名，点例词听单词；两者常常不一样，比如 A 念 /eɪ/、apple 里念 /æ/</small></h3>' + letters + "</div>";
+  let html = '<div class="ph-sec"><h3>26 个字母<small>点卡片听字母名 · 字母名和字母在单词里的发音不是一回事</small></h3>' + letters + "</div>";
 
   PH_SECTIONS.forEach(sec=>{
     html += '<div class="ph-sec"><h3>' + sec.title + '<small>' + sec.note + '</small></h3>'
           + '<div class="ph-grid' + (sec.wide ? " wide" : "") + '">'
           + sec.items.map(([s,ipa,w,wi])=>
-              `<div class="ph-card" data-letter="${s}" data-say="${w}">`
-            + `<em>${s}</em><i>${ipa}</i><b>${w}</b><u>${wi}</u></div>`).join("")
+              `<div class="ph-card" data-letter="${s}" data-say="${w}" title="示范词 ${w}">`
+            + `<em>${s}</em><i>${ipa}</i></div>`).join("")
           + "</div></div>";
   });
 
@@ -1786,18 +1858,12 @@ function renderPhonicsPanel(){
 
   box.innerHTML = html;
   box.querySelectorAll(".ph-card").forEach(el=>{
-    el.onclick = (e)=>{
-      const tag = e.target && e.target.tagName;
-      /* 26 字母区：点字母名行读字母名，点例词/例词音标读单词
-         拼读区：一律读例词 —— 单个音素没有现成录音，读字母名会读成 /eɪ/ 之类的字母音，
-         跟卡片上标的 /æ/ 对不上，宁可给一个真实的词 */
-      let say;
-      if(el.dataset.name === "1"){
-        say = (tag === "B" || tag === "U") ? el.dataset.say : el.dataset.letter;
-      }else{
-        say = el.dataset.say;
-      }
+    el.onclick = ()=>{
+      /* 卡面只有字母和发音。26 字母卡读字母名；拼读卡读示范词，
+         因为单个音素（/æ/、/ʃ/）没有可靠录音，读字母名反而会和卡面标的音对不上。 */
+      const say = el.dataset.name === "1" ? el.dataset.letter : el.dataset.say;
       speak(say);
+      toast("示范词 " + el.dataset.say);
       el.classList.toggle("on");
       flashSay(el);
     };
@@ -1974,104 +2040,177 @@ document.getElementById("btnZh").onclick = ()=>{
 document.getElementById("fontSel").onchange = (e)=>{
   state.font = e.target.value; saveState(); render();
 };
-function goPage(delta){
+/* ---------- 真纸滑动 ----------
+   纸跟着手指走，不加投影。横向划过阈值：整张纸推出画面，下一张从另一侧滑进来；
+   到第一页 / 最后一页继续拉，或上下拉到底，都用越拉越沉的橡皮筋阻尼，
+   松手用弹簧曲线弹回原位。 */
+const DRAG_MIN = 46;
+const BOUNCE_MAX = 92;              /* 橡皮筋最大拉开距离（px） */
+let dragging = false, dragActive = false, dragAxis = "";
+let dragStartX = 0, dragStartY = 0, dragDX = 0, dragDY = 0;
+let flipping = false;
+let suppressClickUntil = 0;
+
+function canDrag(){ return (view === "words" || view === "phrases") && !flipping; }
+
+/* 越往外拉越沉，像拽住一张真纸的边 */
+function rubber(v){
+  const a = Math.abs(v);
+  return Math.sign(v) * BOUNCE_MAX * (1 - 1/(a/150 + 1));
+}
+function paperTransform(x, y, tilt){
+  wrapEl.style.transform = `translate3d(${x.toFixed(1)}px,${y.toFixed(1)}px,0)`
+                         + ` rotate(${tilt.toFixed(2)}deg)`;
+}
+function springBack(){
+  wrapEl.style.transition = "transform .52s cubic-bezier(.18,1.28,.34,1)";
+  paperTransform(0, 0, 0);
+  setTimeout(()=>{ if(!dragging && !flipping) wrapEl.style.transition = ""; }, 540);
+}
+/* 推走当前纸 → 换内容 → 新纸从另一侧滑回来 */
+function flipPage(delta, fromX){
+  if(flipping) return false;
   const next = state.pageIndex + delta;
   if(next < 0 || next >= pages.length) return false;
-  state.pageIndex = next;
-  state.reveal = [];
-  render();
+  flipping = true;
+  const W = wrapEl.getBoundingClientRect().width || 600;
+  const out = (delta > 0 ? -1 : 1) * (W + 56);
+  wrapEl.style.transition = "transform .25s cubic-bezier(.42,0,.72,.35)";
+  paperTransform(out, 0, 0);
+  setTimeout(()=>{
+    state.pageIndex = next;
+    state.reveal = [];
+    render();                       /* fit() 会按当前纸张版式重算尺寸 */
+    wrapEl.style.transition = "none";
+    paperTransform(-out, 0, 0);
+    /* 强制回流让浏览器认下这个起点，再启动滑入动画。
+       不用 requestAnimationFrame：Safari 后台标签页 / 省电模式会挂起 rAF，纸会卡在屏外。 */
+    void wrapEl.offsetHeight;
+    wrapEl.style.transition = "transform .36s cubic-bezier(.16,.92,.28,1)";
+    paperTransform(0, 0, 0);
+    setTimeout(()=>{ flipping = false; wrapEl.style.transition = ""; }, 380);
+  }, 250);
   return true;
 }
+function goPage(delta){ return flipPage(delta, 0); }
 
 document.getElementById("prevBtn").onclick = ()=>goPage(-1);
 document.getElementById("nextBtn").onclick = ()=>goPage(1);
 document.addEventListener("keydown", (e)=>{
   if(e.target.tagName==="TEXTAREA" || e.target.tagName==="INPUT" || e.target.tagName==="SELECT") return;
   if(view === "add" || view === "level" || view === "phonics" || view === "reading") return;
-  if(e.key==="ArrowLeft" && state.pageIndex>0){ state.pageIndex--; state.reveal=[]; render(); }
-  if(e.key==="ArrowRight" && state.pageIndex<pages.length-1){ state.pageIndex++; state.reveal=[]; render(); }
+  if(e.key==="ArrowLeft") goPage(-1);
+  if(e.key==="ArrowRight") goPage(1);
 });
-
-/* ---------- 滑动 / 拖动翻页 ----------
-   手机上手指左右划、电脑上按住鼠标左右拖，松手超过阈值就翻页；
-   拖动时纸跟着手走，到头了给点阻尼，松手回弹。拖过之后不触发格子点选。 */
-const DRAG_MIN = 46;
-let dragging = false, dragActive = false;
-let dragStartX = 0, dragStartY = 0, dragDX = 0;
-let suppressClickUntil = 0;
-
-function canDrag(){ return view === "words" || view === "phrases"; }
 
 function dragStart(e){
   if(!canDrag()) return;
   if(e.pointerType === "mouse" && e.button !== 0) return;
-  dragging = true; dragActive = false;
-  dragStartX = e.clientX; dragStartY = e.clientY; dragDX = 0;
+  dragging = true; dragActive = false; dragAxis = "";
+  dragStartX = e.clientX; dragStartY = e.clientY; dragDX = 0; dragDY = 0;
   wrapEl.style.transition = "none";
 }
 function dragMove(e){
   if(!dragging) return;
   const dx = e.clientX - dragStartX, dy = e.clientY - dragStartY;
   if(!dragActive){
-    if(Math.abs(dx) < 8 || Math.abs(dx) <= Math.abs(dy)) return;
+    if(Math.max(Math.abs(dx), Math.abs(dy)) < 8) return;
     dragActive = true;
+    dragAxis = Math.abs(dx) >= Math.abs(dy) ? "x" : "y";
     document.body.classList.add("dragging");
     try{ viewEl.setPointerCapture(e.pointerId); }catch(_){}
   }
-  const atEdge = (dx < 0 && state.pageIndex >= pages.length-1)
-              || (dx > 0 && state.pageIndex === 0);
-  dragDX = atEdge ? dx*0.28 : dx;
-  wrapEl.style.transform = `translateX(${dragDX.toFixed(1)}px)`;
+  if(dragAxis === "x"){
+    const atEdge = (dx < 0 && state.pageIndex >= pages.length-1)
+                || (dx > 0 && state.pageIndex === 0);
+    dragDX = atEdge ? rubber(dx) : dx;
+    dragDY = 0;
+    /* 纸被拖动时极轻微地倾一下，像手指带起纸角 */
+    paperTransform(dragDX, 0, Math.max(-1.1, Math.min(1.1, -dragDX*0.0035)));
+  }else{
+    /* 上下滑动：不管有没有到底都一样能拉动，松手弹回 */
+    dragDY = rubber(dy);
+    dragDX = 0;
+    paperTransform(0, dragDY, 0);
+  }
 }
 function dragEnd(){
   if(!dragging) return;
   dragging = false;
   document.body.classList.remove("dragging");
-  wrapEl.style.transition = "transform .18s cubic-bezier(.2,.7,.3,1)";
-  wrapEl.style.transform = "";
-  if(dragActive){
-    suppressClickUntil = Date.now() + 320;
-    if(dragDX <= -DRAG_MIN) goPage(1);
-    else if(dragDX >= DRAG_MIN) goPage(-1);
-  }
-  dragActive = false; dragDX = 0;
-  setTimeout(()=>{ wrapEl.style.transition = ""; }, 220);
+  const dx = dragDX, dy = dragDY, active = dragActive, axis = dragAxis;
+  dragActive = false; dragAxis = ""; dragDX = 0; dragDY = 0;
+  if(!active) return;
+  suppressClickUntil = Date.now() + 360;
+  const delta = dx <= -DRAG_MIN ? 1 : (dx >= DRAG_MIN ? -1 : 0);
+  const ok = delta && state.pageIndex + delta >= 0 && state.pageIndex + delta < pages.length;
+  if(axis === "x" && ok) flipPage(delta, dx);
+  else springBack();
 }
 viewEl.addEventListener("pointerdown", dragStart);
 viewEl.addEventListener("pointermove", dragMove);
 window.addEventListener("pointerup", dragEnd);
 window.addEventListener("pointercancel", dragEnd);
-/* ---------- 打印 ---------- */
-document.getElementById("btnPrint").onclick = ()=>window.print();
+/* ---------- 打印：一律 A4 竖版 ---------- */
+document.getElementById("btnPrint").onclick = ()=>{
+  if(state.paper === "landscape"){
+    setPaper("portrait", true);                 /* 打印模式 = A4 竖版 */
+    toast("已切到 A4 竖版打印模式");
+  }
+  setTimeout(()=>window.print(), 90);
+};
 
 document.getElementById("btnPrintAll").onclick = ()=>{
   const cont = document.getElementById("printAll");
-  cont.innerHTML = pages.map(p=>
-    `<div class="page" style="font-family:${fontStack()}">${pageHTML(p)}</div>`
+  /* 按竖版重新分页，屏幕上是横屏版式也不会印歪 */
+  const ps = buildPages(PAPER.portrait);
+  cont.innerHTML = ps.map(p=>
+    `<div class="page" style="font-family:${fontStack()}">${pageHTML(p, PAPER.portrait)}</div>`
   ).join("");
   document.body.classList.add("print-all");
-  setTimeout(()=>window.print(), 80);
+  setTimeout(()=>window.print(), 90);
 };
+
+/* Ctrl+P / 分享菜单里直接打印时，临时把横屏版式换成竖版，印完还原 */
+let printRestore = null;
+window.addEventListener("beforeprint", ()=>{
+  if(state.paper === "landscape"){
+    printRestore = "landscape";
+    state.paper = "portrait";
+    applyPaperClass();
+    render();
+  }
+});
 window.addEventListener("afterprint", ()=>{
   document.body.classList.remove("print-all");
   document.getElementById("printAll").innerHTML = "";
+  if(printRestore){
+    state.paper = printRestore;
+    printRestore = null;
+    applyPaperClass();
+    render();
+  }
 });
 
 /* ---------- 下载本页：300dpi PNG ---------- */
 document.getElementById("btnDownload").onclick = ()=>{
-  const p = pages[state.pageIndex];
+  /* 导出的图片永远是 A4 竖版，方便直接拿去打印 */
+  const spec = PAPER.portrait;
+  const ps = buildPages(spec);
+  const p = ps[Math.min(state.pageIndex, ps.length-1)];
   if(p.empty){ alert("当前页没有内容可导出"); return; }
+  if(state.paper === "landscape") toast("已按 A4 竖版导出当前页");
 
   const DPI = 300, K = DPI/25.4;
   const cv = document.createElement("canvas");
-  cv.width  = Math.round(PAGE_W*K);
-  cv.height = Math.round(PAGE_H*K);
+  cv.width  = Math.round(spec.w*K);
+  cv.height = Math.round(spec.h*K);
   const ctx = cv.getContext("2d");
   ctx.fillStyle = "#ffffff";
   ctx.fillRect(0,0,cv.width,cv.height);
 
-  const cw = (PAGE_W-2*MARGIN)/p.cols;
-  const chh = (PAGE_H-2*MARGIN)/p.rows;
+  const cw = (spec.w-2*MARGIN)/p.cols;
+  const chh = (spec.h-2*MARGIN)/p.rows;
   const total = p.cols*p.rows;
 
   if(state.grid){
@@ -2332,8 +2471,32 @@ document.getElementById("fileInput").onchange = (e)=>{
 };
 
 /* ---------- 窄屏：次要按钮收进「更多」 ---------- */
-const MORE_IDS = ["btnReseed","btnHide","fontSel","btnPrint","btnPrintAll"];
-const ACTION_ORDER = ["sortSel","btnReseed","btnIpa","btnZh","btnHide","fontSel","btnPrint","btnPrintAll","btnDownload"];
+const MORE_IDS = ["btnReseed","btnHide","fontSel","btnPaper","btnPrint","btnPrintAll"];
+const ACTION_ORDER = ["sortSel","btnReseed","btnIpa","btnZh","btnHide","fontSel","btnPaper","btnPrint","btnPrintAll","btnDownload"];
+
+/* 纸张版式按钮：按钮文字表示「点一下会切到哪套」 */
+function syncPaperBtn(){
+  const b = document.getElementById("btnPaper");
+  if(!b) return;
+  const land = state.paper === "landscape";
+  b.textContent = land ? "打印模式" : "横屏模式";
+  b.classList.toggle("on", land);
+  b.title = land ? "切到 A4 竖版（打印 / 导出 PNG 都用这套）"
+                 : "切到 A4 横版（iPad 横屏看更清楚）";
+}
+function setPaper(mode, silent){
+  if(mode !== "landscape" && mode !== "portrait") return;
+  state.paper = mode;
+  saveState();
+  applyPaperClass();
+  /* 版式变了列数就变了，重新分页；页码超出会被 render 自动收回来 */
+  render();
+  if(!silent) toast(mode === "portrait"
+    ? "打印模式 · A4 竖版：打印和导出都用这个版式"
+    : "横屏模式 · A4 横版：适合 iPad 横着看");
+}
+document.getElementById("btnPaper").onclick = ()=>
+  setPaper(state.paper === "landscape" ? "portrait" : "landscape");
 
 function layoutToolbar(){
   const narrow = window.innerWidth <= 520;
@@ -2372,6 +2535,7 @@ function layoutToolbar(){
   if(zb) zb.textContent = zhBtnLabel();
   const dl = document.getElementById("btnDownload");
   if(dl) dl.textContent = narrow ? "下载" : "下载本页";
+  syncPaperBtn();
   syncSoundBtn();
 }
 document.getElementById("btnMore").onclick = (e)=>{
@@ -2413,6 +2577,12 @@ window.addEventListener("resize", layoutToolbar);
 
   loadState();
   if(!state.words.length) state.words = [...DEFAULT_WORDS];
+
+  /* iPad 上直接进横屏版式；?paper=portrait|landscape 可强制，方便固定成快捷方式 */
+  const forcePaper = new URLSearchParams(location.search).get("paper");
+  if(forcePaper === "landscape" || forcePaper === "portrait") state.paper = forcePaper;
+  if(!state.paper) state.paper = defaultPaper();
+  applyPaperClass();
 
   /* 语音清单：读不到只是变成「只有系统语音」，不影响点读 */
   try{ await loadAudio(); }catch(e){ AUDIO_OK = false; }
