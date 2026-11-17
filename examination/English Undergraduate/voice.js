@@ -113,10 +113,13 @@
     var fin = [];
     out.forEach(function (p) {
       if (p.length <= max) { fin.push(p); return; }
-      var segs = p.split(/(?<=,)\s+/), acc = '';
-      segs.forEach(function (s) {
-        if ((acc + s).length > max && acc) { fin.push(acc.trim()); acc = s + ' '; }
-        else acc += s + ' ';
+      // 按逗号再切（不用 lookbehind，兼容旧版 Safari）
+      var segs = p.split(/,\s+/).map(function (x, i, arr) {
+        return i < arr.length - 1 ? x + ',' : x;
+      }), acc = '';
+      segs.forEach(function (x) {
+        if ((acc + x).length > max && acc) { fin.push(acc.trim()); acc = x + ' '; }
+        else acc += x + ' ';
       });
       if (acc.trim()) fin.push(acc.trim());
     });
