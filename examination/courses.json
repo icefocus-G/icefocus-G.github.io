@@ -18,7 +18,6 @@
   "_reserved": "这些目录名不会被当成课程（通用壳 / 模板 / 工具等）。自己命名课程目录时避开它们即可。",
   "fallback": [
     "CSharp-Book",
-    "Thesis-Lab",
     "CSharp-Map",
     "Course-03",
     "Course-04",
@@ -28,7 +27,19 @@
     "Course-08",
     "Course-09",
     "Course-10",
-    "Course-11"
+    "Course-11",
+    "Course-12",
+    "Data-Structures-408",
+    "English Undergraduate",
+    "Financial Management",
+    "GameTech-Addon",
+    "International Finance",
+    "Linear-Algebra-Strang",
+    "Thesis-Lab",
+    "Unity",
+    "Unity-Book",
+    "Unity-Games",
+    "Western Economics"
   ],
   "_fallback": "离线 / 拉不到 API 时的课程目录清单。由 _tools/scan.py 自动生成，也可以手工维护。",
   "sort": "order",
