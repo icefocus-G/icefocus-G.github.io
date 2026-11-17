@@ -1,0 +1,2366 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>学位论文拆解与写作规范 · 四篇真实论文 + 电子科大格式标准</title>
+<style>
+:root{
+  --bg:#f5f8fb; --card:#fff; --ink:#15202b; --ink2:#48576b; --ink3:#7d8a9b;
+  --line:#e4eaf2; --line2:#eef2f7;
+  --t1:#0f766e; --t1b:#e6f4f1;
+  --t2:#4338ca; --t2b:#ecebfb;
+  --t3:#b45309; --t3b:#fdf1e0;
+  --t4:#7e22ce; --t4b:#f6e9ff;
+  --ok:#0d9488; --warn:#d97706; --bad:#dc2626;
+  --orig:#1e40af; --origb:#eff5ff;
+  --demo:#047857; --demob:#f0fdf6;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+body{
+  background:var(--bg); color:var(--ink);
+  font-family:-apple-system,BlinkMacSystemFont,"PingFang SC","Hiragino Sans GB","Microsoft YaHei",sans-serif;
+  font-size:14.5px; line-height:1.78; -webkit-font-smoothing:antialiased;
+  padding:0 20px 80px;
+}
+.wrap{max-width:1020px;margin:0 auto}
+
+header{padding:50px 0 26px}
+.kicker{
+  display:inline-block;font-size:11.5px;letter-spacing:.14em;font-weight:700;
+  color:var(--t1);background:var(--t1b);padding:5px 11px;border-radius:5px;margin-bottom:18px;
+}
+h1{font-size:30px;line-height:1.34;letter-spacing:-.4px;font-weight:800;margin-bottom:14px}
+h1 em{font-style:normal;color:var(--t1)}
+.lede{font-size:15.3px;color:var(--ink2);max-width:830px}
+.lede b{color:var(--ink);font-weight:700}
+
+nav{
+  position:sticky;top:0;z-index:50;background:rgba(245,248,251,.94);
+  backdrop-filter:blur(12px);border-bottom:1px solid var(--line);
+  margin:0 -20px 30px;padding:0 20px;
+}
+.navrow{max-width:1020px;margin:0 auto;display:flex;align-items:center;gap:12px}
+.navin{flex:1 1 auto;min-width:0;display:flex;gap:2px;overflow-x:auto;padding:9px 0;scrollbar-width:none}
+.navin::-webkit-scrollbar{display:none}
+.navin a{
+  flex:0 0 auto;font-size:12.4px;color:var(--ink2);text-decoration:none;
+  padding:6px 9px;border-radius:6px;white-space:nowrap;transition:.15s;
+}
+.navin a:hover{background:#fff;color:var(--ink)}
+.navin a.on{background:var(--ink);color:#fff}
+
+/* ── 注释总开关（导航栏内） ── */
+.aball{
+  flex:0 0 auto;display:inline-flex;align-items:center;gap:6px;
+  font-family:inherit;font-size:12.6px;font-weight:700;color:#fff;
+  background:linear-gradient(135deg,#1d4ed8,#2563eb);
+  border:1px solid #1d4ed8;border-radius:20px;
+  padding:6px 10px 6px 8px;cursor:pointer;transition:.18s;line-height:1.4;
+  box-shadow:0 2px 8px rgba(37,99,235,.28);white-space:nowrap;
+}
+.aball:hover{transform:translateY(-1px);box-shadow:0 5px 14px rgba(37,99,235,.36)}
+.aball .qm{
+  width:16px;height:16px;border-radius:50%;background:rgba(255,255,255,.24);color:#fff;
+  font-size:11px;font-weight:800;display:grid;place-items:center;flex:0 0 auto;
+}
+.aball .cnt{
+  font-size:10.5px;font-weight:800;font-variant-numeric:tabular-nums;
+  background:rgba(255,255,255,.22);padding:1px 6px;border-radius:9px;letter-spacing:.02em;
+}
+.aball.on{background:linear-gradient(135deg,#0f766e,#0d9488);border-color:#0f766e;
+  box-shadow:0 2px 8px rgba(13,148,136,.3)}
+.aball.on:hover{box-shadow:0 5px 14px rgba(13,148,136,.38)}
+
+/* ── 悬浮开关（右下角） ── */
+.fab{
+  position:fixed;right:22px;bottom:22px;z-index:80;
+  display:inline-flex;align-items:center;gap:8px;
+  font-family:inherit;font-size:13px;font-weight:700;color:#fff;
+  background:var(--ink);border:none;border-radius:28px;
+  padding:11px 18px 11px 15px;cursor:pointer;transition:.2s;
+  box-shadow:0 10px 26px rgba(21,32,43,.3);
+}
+.fab:hover{transform:translateY(-2px);box-shadow:0 14px 32px rgba(21,32,43,.38)}
+.fab .qm{
+  width:19px;height:19px;border-radius:50%;background:rgba(255,255,255,.2);color:#fff;
+  font-size:12px;font-weight:800;display:grid;place-items:center;flex:0 0 auto;
+}
+.fab .cnt{
+  font-size:11px;font-weight:800;font-variant-numeric:tabular-nums;
+  background:rgba(255,255,255,.18);padding:2px 7px;border-radius:10px;
+}
+.fab.on{background:linear-gradient(135deg,#0f766e,#0d9488);box-shadow:0 10px 26px rgba(13,148,136,.36)}
+.fab.on:hover{box-shadow:0 14px 32px rgba(13,148,136,.44)}
+
+@keyframes acIn{from{transform:translateY(-4px)}to{transform:none}}
+.anno.open .ac{animation:acIn .2s ease}
+
+@media(max-width:680px){
+  .aball .tx{display:none}
+  .aball{padding:6px 9px}
+  .fab{right:14px;bottom:14px;padding:10px 15px 10px 13px;font-size:12.4px}
+}
+
+section{margin-bottom:50px}
+h2{
+  font-size:20.5px;font-weight:800;letter-spacing:-.2px;margin-bottom:8px;
+  display:flex;align-items:center;gap:10px;
+}
+h2 .n{
+  flex:0 0 auto;width:26px;height:26px;border-radius:7px;background:var(--ink);color:#fff;
+  font-size:13px;display:grid;place-items:center;font-weight:700;
+}
+.sub{color:var(--ink3);font-size:13.4px;margin-bottom:20px;max-width:830px}
+
+.card{background:var(--card);border:1px solid var(--line);border-radius:13px;padding:24px 26px;margin-bottom:16px}
+.card.pad0{padding:0;overflow:hidden}
+
+table{width:100%;border-collapse:collapse;font-size:13.4px}
+th,td{padding:11px 13px;text-align:left;border-bottom:1px solid var(--line2);vertical-align:top}
+th{background:#f8fafd;font-weight:700;color:var(--ink2);font-size:12.3px;letter-spacing:.02em}
+tbody tr:last-child td{border-bottom:none}
+td b{font-weight:700}
+.tbl-wrap{overflow-x:auto}
+
+.case-head{border-radius:13px 13px 0 0;padding:22px 26px;color:#fff}
+.case-head.c1{background:linear-gradient(135deg,#0f766e,#0d9488)}
+.case-head.c2{background:linear-gradient(135deg,#4338ca,#5b52e0)}
+.case-head.c3{background:linear-gradient(135deg,#b45309,#d97706)}
+.case-head.c4{background:linear-gradient(135deg,#7e22ce,#9333ea)}
+.case-head .tag{
+  display:inline-block;font-size:11px;letter-spacing:.1em;font-weight:700;
+  background:rgba(255,255,255,.2);padding:3px 9px;border-radius:4px;margin-bottom:9px;
+}
+.case-head h3{font-size:19px;font-weight:800;line-height:1.42;margin-bottom:6px;letter-spacing:-.2px}
+.case-head .meta{font-size:12.6px;opacity:.92}
+.case-body{border:1px solid var(--line);border-top:none;border-radius:0 0 13px 13px;background:#fff;padding:24px 26px}
+
+.file{background:#fafcfe;border:1px solid var(--line2);border-radius:9px;padding:15px 17px;font-size:13px;margin-bottom:20px}
+.file dl{display:grid;grid-template-columns:84px 1fr;gap:6px 12px}
+.file dt{color:var(--ink3);font-weight:600}
+.file dd{color:var(--ink)}
+.file a{color:var(--t2);text-decoration:none;border-bottom:1px dotted #b9c4d4;word-break:break-all}
+.file a:hover{color:var(--t1)}
+
+h4{font-size:15px;font-weight:800;margin:24px 0 10px;display:flex;align-items:center;gap:8px;flex-wrap:wrap}
+h4:first-child{margin-top:0}
+h4 .dot{width:6px;height:6px;border-radius:50%;background:var(--ink3);flex:0 0 auto}
+.c1 h4 .dot{background:var(--t1)} .c2 h4 .dot{background:var(--t2)} .c3 h4 .dot{background:var(--t3)}
+.c4 h4 .dot{background:var(--t4)}
+
+.badge-o,.badge-r,.badge-d{
+  font-size:10.5px;font-weight:700;letter-spacing:.04em;padding:2px 7px;border-radius:4px;
+  flex:0 0 auto;white-space:nowrap;
+}
+.badge-o{background:var(--origb);color:var(--orig);border:1px solid #c7dbfa}
+.badge-r{background:#f4f5f8;color:#5b6675;border:1px solid #dde2ea}
+.badge-d{background:var(--demob);color:var(--demo);border:1px dashed #a7e3c4}
+
+.orig{
+  background:var(--origb);border-left:3px solid var(--orig);border-radius:0 8px 8px 0;
+  padding:15px 18px;font-size:13.3px;line-height:1.85;color:#1f2c3d;margin:12px 0;
+}
+.orig .src{display:block;margin-top:10px;font-size:11.8px;color:#5b7291}
+.orig p+p{margin-top:9px}
+
+.demo{
+  background:var(--demob);border:1px dashed #9ed9bb;border-radius:8px;
+  padding:15px 18px;font-size:13.3px;line-height:1.9;margin:12px 0;
+}
+.demo .lab{display:inline-block;font-size:10.8px;font-weight:800;color:var(--demo);letter-spacing:.06em;margin-bottom:8px}
+.demo p{text-indent:2em}
+.demo p+p{margin-top:6px}
+.demo .why{font-size:12.4px;color:#3f6b58;margin-top:10px;padding-top:9px;border-top:1px dashed #bfe6d2;text-indent:0}
+
+.anno{margin:10px 0 14px}
+.ab{
+  display:inline-flex;align-items:center;gap:7px;
+  font-family:inherit;font-size:12.6px;font-weight:600;color:var(--ink2);
+  background:#fff;border:1px dashed #c3cede;border-radius:20px;
+  padding:6px 14px 6px 11px;cursor:pointer;transition:.16s;text-align:left;line-height:1.5;
+}
+.ab:hover{border-color:#8fa3bd;color:var(--ink);background:#fbfdff}
+.ab .qm{
+  width:16px;height:16px;border-radius:50%;background:#e7edf6;color:#4a5b73;
+  font-size:11px;font-weight:800;display:grid;place-items:center;flex:0 0 auto;
+}
+.ab .arw{font-size:9px;color:#93a2b6;transition:transform .2s;display:inline-block}
+.anno.open .ab{border-style:solid;border-color:var(--ink);color:var(--ink);background:#f7fafd}
+.anno.open .ab .qm{background:var(--ink);color:#fff}
+.anno.open .ab .arw{transform:rotate(90deg)}
+.ac{display:none;margin-top:9px;border-left:3px solid #cfd9e6;padding:2px 0 2px 15px;font-size:13.2px;color:var(--ink2)}
+.anno.open .ac{display:block}
+.ac b{color:var(--ink)}
+.ac p+p{margin-top:8px}
+.ac .kv{display:flex;gap:8px;margin-top:6px;font-size:12.7px}
+.ac .kv i{font-style:normal;color:var(--ink3);flex:0 0 58px}
+
+.tree{font-size:13.2px;line-height:1.95;border-left:2px solid var(--line);padding-left:0}
+.tree .lv1{font-weight:700;color:var(--ink);margin-top:9px;padding-left:14px;padding-right:108px;position:relative}
+.tree .lv1:first-child{margin-top:0}
+.tree .lv2{color:var(--ink2);padding-left:34px;padding-right:108px;position:relative}
+.tree .lv3{color:var(--ink3);font-size:12.3px;padding-left:34px;padding-right:108px;line-height:1.8;position:relative}
+.tree .pg{
+  position:absolute;right:0;top:3px;display:inline-block;white-space:nowrap;
+  font-weight:600;font-size:11.4px;color:var(--ink3);
+  font-variant-numeric:tabular-nums;letter-spacing:.02em;
+  background:#f3f6fa;border:1px solid var(--line);border-radius:4px;padding:1px 7px;
+}
+.tree .note{color:var(--t3);font-size:12.3px;padding-left:14px;margin-top:6px}
+
+.chain{counter-reset:step;margin:6px 0 0}
+.chain .st{position:relative;padding:0 0 20px 40px;border-left:1.5px dashed var(--line);margin-left:12px}
+.chain .st:last-child{border-left-color:transparent;padding-bottom:0}
+.chain .st::before{
+  counter-increment:step;content:counter(step);
+  position:absolute;left:-12px;top:0;width:23px;height:23px;border-radius:50%;
+  background:#fff;border:1.5px solid var(--line);color:var(--ink3);
+  font-size:11.5px;font-weight:700;display:grid;place-items:center;
+}
+.chain .st b{display:block;font-size:13.9px;margin-bottom:3px}
+.chain .st p{font-size:13.2px;color:var(--ink2);margin-bottom:5px}
+.chain .st .q{font-size:12.7px;color:var(--t2);background:var(--t2b);display:inline-block;padding:3px 9px;border-radius:5px;margin-top:2px}
+.c1 .chain .st::before{border-color:var(--t1);color:var(--t1)}
+.c4 .chain .st::before{border-color:var(--t4);color:var(--t4)}
+
+.bars{margin:8px 0 4px}
+.bar{display:flex;align-items:center;gap:12px;margin-bottom:9px;font-size:12.8px}
+.bar .nm{flex:0 0 130px;color:var(--ink2);text-align:right;font-weight:600}
+.bar .tr{flex:1;background:var(--line2);border-radius:4px;height:22px;position:relative;overflow:hidden}
+.bar .fl{height:100%;border-radius:4px;display:flex;align-items:center;padding-left:9px;color:#fff;font-size:11.5px;font-weight:700}
+.bar .ct{flex:0 0 58px;color:var(--ink3);font-size:12px;font-variant-numeric:tabular-nums}
+.b1 .fl{background:linear-gradient(90deg,#0f766e,#14b8a6)}
+.b2 .fl{background:linear-gradient(90deg,#4338ca,#6366f1)}
+.b3 .fl{background:linear-gradient(90deg,#b45309,#f59e0b)}
+.b4 .fl{background:linear-gradient(90deg,#7e22ce,#a855f7)}
+
+.alert{border-radius:9px;padding:14px 17px;font-size:13.3px;margin:16px 0;line-height:1.78}
+.alert b{font-weight:800}
+.alert.info{background:#eef6ff;border-left:3px solid #3b82f6}
+.alert.warn{background:#fff8ec;border-left:3px solid var(--warn)}
+.alert.bad{background:#fef2f2;border-left:3px solid var(--bad)}
+.alert.ok{background:#effaf6;border-left:3px solid var(--ok)}
+
+.picker{background:#fff;border:1px solid var(--line);border-radius:13px;padding:22px 24px}
+.chips{display:flex;flex-wrap:wrap;gap:8px;margin:12px 0 18px}
+.chip{
+  font-size:12.8px;padding:7px 13px;border-radius:20px;border:1px solid var(--line);
+  background:#fff;color:var(--ink2);cursor:pointer;transition:.15s;user-select:none;font-family:inherit;
+}
+.chip:hover{border-color:#b8c4d6;color:var(--ink)}
+.chip.on{background:var(--ink);color:#fff;border-color:var(--ink)}
+.verdict{border-radius:10px;padding:16px 18px;font-size:13.4px;background:#fafcfe;border:1px solid var(--line2);line-height:1.8}
+.verdict .big{font-size:15.5px;font-weight:800;margin-bottom:6px;display:block}
+.verdict .lv{font-size:12.6px;color:var(--ink3);margin-top:8px}
+
+.fmt-h{font-size:14.6px;font-weight:800;margin:28px 0 10px;padding-left:11px;border-left:4px solid var(--t1)}
+.fmt-h:first-child{margin-top:0}
+.spec{background:#fbfdff;border:1px solid var(--line);border-radius:9px;padding:0;margin:10px 0;overflow-x:auto}
+.spec table{font-size:12.9px}
+.spec th{background:#f2f7fc}
+.spec td:first-child{font-weight:600}
+.mono{
+  font-family:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;
+  font-size:12.3px;background:#f3f6fa;border:1px solid var(--line);border-radius:4px;
+  padding:1px 6px;color:#33415a;
+}
+.ref-list{font-size:12.9px;line-height:1.95;margin:10px 0;list-style:none}
+.ref-list li{padding:9px 0;border-bottom:1px dashed var(--line2)}
+.ref-list li:last-child{border-bottom:none}
+.ref-list .t{display:inline-block;font-size:11.5px;font-weight:700;color:var(--t1);background:var(--t1b);padding:1px 7px;border-radius:4px;margin-right:8px}
+.ref-list .code{display:block;margin:5px 0 2px;font-family:ui-monospace,Menlo,monospace;font-size:12.2px;color:#1f3a5f;background:#f4f8fd;border-radius:5px;padding:6px 9px}
+.ref-list .note{display:block;font-size:12.2px;color:var(--ink3)}
+
+ol.steps li span b,ol.steps li p b{display:inline}
+.ref-list li{border-bottom:1px dashed #e1e9f3}
+.ref-list .note{color:#6f7d90}
+
+.check{list-style:none}
+.check li{position:relative;padding:0 0 10px 22px;font-size:13.3px;color:var(--ink2)}
+.check li::before{content:"✕";position:absolute;left:0;top:0;color:var(--bad);font-weight:800;font-size:11.5px}
+.check li.good::before{content:"✓";color:var(--ok)}
+
+ol.steps{list-style:none;counter-reset:s}
+ol.steps li{counter-increment:s;position:relative;padding:0 0 16px 38px;font-size:13.5px}
+ol.steps li::before{
+  content:counter(s);position:absolute;left:0;top:1px;width:23px;height:23px;
+  border-radius:6px;background:var(--t1b);color:var(--t1);font-weight:800;font-size:12px;
+  display:grid;place-items:center;
+}
+ol.steps li b{display:block;margin-bottom:2px}
+ol.steps li span{color:var(--ink2);font-size:13px}
+
+footer{border-top:1px solid var(--line);padding-top:22px;margin-top:56px;font-size:12.3px;color:var(--ink3);line-height:1.9}
+
+@media(max-width:680px){
+  body{padding:0 14px 60px}
+  h1{font-size:23px}
+  .card,.case-body{padding:18px 16px}
+  .case-head{padding:18px 16px}
+  .file dl{grid-template-columns:1fr;gap:2px}
+  .file dt{margin-top:7px}
+  .bar .nm{flex:0 0 78px;font-size:11.8px}
+  .bar .ct{flex:0 0 46px}
+  table{font-size:12.4px}
+  th,td{padding:9px 9px}
+  .cmp{min-width:820px}
+}
+
+/* 原文全文入口 */
+.btn-full{display:inline-flex;align-items:center;gap:6px;font-size:11.8px;font-weight:600;
+  color:#fff;background:linear-gradient(135deg,#2b6cf6,#12b6a8);border-radius:6px;
+  padding:4px 11px;text-decoration:none;vertical-align:middle;transition:.15s;
+  box-shadow:0 1px 3px rgba(43,108,246,.22)}
+.btn-full:hover{transform:translateY(-1px);box-shadow:0 4px 12px rgba(43,108,246,.3)}
+.btn-full.mute{background:#eef3fa;color:#8a99ad;box-shadow:none;font-weight:500}
+.btn-full.mute:hover{transform:none;box-shadow:none}
+
+/* 原文全文库 */
+.fullbox{margin-top:16px}
+.fgrid{display:grid;grid-template-columns:repeat(auto-fill,minmax(215px,1fr));gap:9px;margin:12px 0 4px}
+.fcard{display:block;text-decoration:none;color:inherit;border:1px solid var(--line);
+  border-radius:9px;padding:11px 13px;background:#fbfdff;transition:.15s;position:relative;overflow:hidden}
+.fcard:hover{border-color:#b9d2f7;background:#f4f9ff;transform:translateY(-2px);
+  box-shadow:0 6px 16px rgba(43,108,246,.1)}
+.fcard::before{content:"";position:absolute;left:0;top:0;bottom:0;width:2.5px;
+  background:linear-gradient(180deg,#2b6cf6,#12b6a8)}
+.fcard .fk{font-size:10px;font-weight:700;color:#2b6cf6;letter-spacing:.06em}
+.fcard .ft{font-size:12.4px;font-weight:600;color:var(--ink);line-height:1.5;margin:4px 0 3px}
+.fcard .fm{font-size:11px;color:var(--t3);line-height:1.6}
+.fcard.mute{opacity:.62}
+.fcard.mute::before{background:#cbd6e4}
+.fcard.mute:hover{transform:none;box-shadow:none;border-color:var(--line);background:#fbfdff}
+</style>
+</head>
+<body>
+<div class="wrap">
+
+<header>
+  <span class="kicker">学位论文拆解 + 写作规范 · 4 篇真实论文</span>
+  <h1>别人写论文时，<em>每一段到底在干什么</em></h1>
+  <p class="lede">
+    四篇可核验的硕士学位论文逐章拆开：<b>原文摘要照录</b>、<b>每章为什么放在这个位置</b>、
+    <b>第一段该怎么起笔</b>；再给一整章<b>电子科大的格式标准</b>，页边距、字体字号、参考文献精确到磅值；
+    最后一章是<b>数据源分级</b>——哪些是学术圈公认的、哪些免费、你为什么该选这一个。
+    页面上所有虚线按钮都能点开。
+  </p>
+</header>
+
+<nav>
+  <div class="navrow">
+    <div class="navin">
+      <a href="#s0" class="on">怎么读这一页</a>
+      <a href="#s1">案例一 · 汇率</a>
+      <a href="#s2">案例二 · 外汇暴露</a>
+      <a href="#s3">案例三 · 资本结构</a>
+      <a href="#s4">案例四 · 电子科大</a>
+      <a href="#s5">格式标准</a>
+      <a href="#s6">横向对比</a>
+      <a href="#s7">数据源</a>
+      <a href="#s8">全文获取</a>
+      <a href="#s9">动手顺序</a>
+    </div>
+    <button class="aball" id="aball" type="button" aria-pressed="false">
+      <span class="qm">?</span><span class="tx">显示注释</span><span class="cnt" id="cntA">0/0</span>
+    </button>
+  </div>
+</nav>
+
+<!-- ============ 0 ============ -->
+<section id="s0">
+  <h2><span class="n">0</span>先读这三句话，否则你会用错这一页</h2>
+  <p class="sub">这一页有三种性质完全不同的内容。分不清它们，就会把"我编的例子"当成"别人的原文"，那比不看还危险。</p>
+
+  <div class="card">
+    <div class="tbl-wrap">
+      <table>
+        <thead><tr><th style="width:15%">标记</th><th style="width:27%">是什么</th><th>怎么用</th></tr></thead>
+        <tbody>
+          <tr>
+            <td><span class="badge-o">原文</span></td>
+            <td>论文里可核验的逐字内容：摘要、关键词、目录</td>
+            <td>学它的<b>结构和用词</b>，但一个字都别抄进你的论文——那就是重复率</td>
+          </tr>
+          <tr>
+            <td><span class="badge-r">还原</span></td>
+            <td>根据目录和摘要推出的"这一章大概由哪几段构成"</td>
+            <td>当路线图用。它告诉你顺序，不保证与原文逐句一致</td>
+          </tr>
+          <tr>
+            <td><span class="badge-d">示范</span></td>
+            <td>我按这一章的写法要求，自己写的一段示例</td>
+            <td>看"第一句怎么起、数据怎么放、结论怎么收"，然后换成你的数字重写</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+    <div class="alert warn" style="margin-bottom:0">
+      <b>为什么分这么细：</b>网上那些"论文模板"最大的问题，是把范文原文和写作建议混在一起，你看完分不清哪句能抄。
+      这里把三类标开——<b>只抄骨架和句子的组织方式，不抄任何一句原话</b>。
+    </div>
+  </div>
+
+  <div class="card">
+    <h4 style="margin-top:0"><span class="dot"></span>四篇论文的底层结构其实完全一样</h4>
+    <p style="font-size:14.3px;margin-bottom:14px">章名各不相同，但每一章都在回答上一章留下的那个问题。缺一环，后面就塌。</p>
+    <div class="tbl-wrap">
+      <table>
+        <thead><tr><th style="width:12%">章</th><th style="width:29%">它在回答什么</th><th style="width:26%">缺了这一章会怎样</th><th>换成你 8000 字该写什么</th></tr></thead>
+        <tbody>
+          <tr><td><b>引言</b></td><td>我要解释的那个现象，为什么值得解释？</td><td>读者不知道为什么值得读，后面所有数据都失去方向，像一份没有问题的报告</td><td>一个具体数字的变化，加上"这件事为什么和这家企业的价值有关"</td></tr>
+          <tr><td><b>文献 / 概念</b></td><td>别人答到哪一步了，我接在哪儿？</td><td>同一指标不同算法混着用，评委一问"你这个怎么算的"就露；也说不清自己新在哪</td><td>把核心词<b>定义清楚 + 给出算法</b>，再列两三种已有观点</td></tr>
+          <tr><td><b>现状</b></td><td>事实长什么样？先看清，再解释。</td><td>没有事实基础，后面的"原因"全是推测；也没有任何自己做的表，专业能力分拿不到</td><td>一张自己抄出来的表 + 一张折线图。<b>这一章决定你论文像不像论文</b></td></tr>
+          <tr><td><b>分析</b></td><td>为什么会这样？我的解释站得住吗？</td><td>只剩现象描述，论文变成一份工作总结；建议也无从推导</td><td>把"变化"拆成两三个可命名的原因，每个配一个数据证据</td></tr>
+          <tr><td><b>结论</b></td><td>所以呢？谁该做什么？</td><td>前面全白做，评审直接判"未解决所提出的问题"，这是硬性失分项</td><td>建议一条对一条接住上一章的原因，不许凭空多出来</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <div class="picker">
+    <h4 style="margin-top:0"><span class="dot"></span>先判断：你的题目属于哪一类</h4>
+    <p style="font-size:13.2px;color:var(--ink3);margin-bottom:2px">点选题目里出现的关键词，下面会告诉你套哪个案例的骨架。</p>
+    <div class="chips" id="chips">
+      <button class="chip" data-k="成因">成因 / 影响因素</button>
+      <button class="chip" data-k="测度">测度 / 有多大</button>
+      <button class="chip" data-k="优化">优化 / 怎么改</button>
+      <button class="chip" data-k="某公司">某一家公司</button>
+      <button class="chip" data-k="并购">并购 / 交易</button>
+      <button class="chip" data-k="政策">一项政策之后</button>
+    </div>
+    <div class="verdict" id="vd">
+      <span class="big">还没选</span>
+      选一个关键词，我给你对应的骨架和难度提示。
+      <div class="lv">提示：题目里带"某家公司"，就必须有连续数据；写"整个行业"，可以用汇总数据，但很难写出深度。</div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ 1 ============ -->
+<section id="s1">
+  <h2><span class="n">1</span>案例一 · 文献综述必须"收口"成缺口</h2>
+  <p class="sub">教学价值：<b>它把"综述"写成了"立论"</b>。第 2 章三组并列的综述之后，用一个 200 字的「2.4 小结」把自己接进去——这一步，是全篇能不能成立的分水岭。</p>
+
+  <div class="card pad0 c1">
+    <div class="case-head c1">
+      <span class="tag">方向一 · 汇率与企业价值 · 对应 00076 国际金融</span>
+      <h3>汇率波动与企业价值相关性研究——基于沪市主板上市公司的实证研究</h3>
+      <div class="meta">陈丹丹 · 河北大学 · 硕士学位论文 · 六章</div>
+    </div>
+    <div class="case-body">
+
+      <div class="anno">
+        <button class="ab" type="button"><span class="qm">?</span>为什么第 2 章末尾要单独写一个「2.4 小结」<span class="arw">▶</span></button>
+        <div class="ac">
+          <p>因为<b>综述不是文献的堆叠，是论证"这个坑还没人填"</b>。看它的三节安排：2.1 综述"结论"（别人发现什么）、2.2 综述"方法"（别人怎么测）、2.3 综述"影响因素"（什么让结果不一样）。三条线各走各的，走到 2.4 必须拧成一句话。</p>
+          <p><b>这一句就是第 4 章"研究假设"的唯一来源。</b>没有 2.4，你的假设就是凭空掉下来的；评委只要问"你凭什么认为它们负相关"，就答不上来。</p>
+          <p><b>操作：</b>2.4 只写五句——结论上有什么分歧、方法上主流是什么、影响因素有哪些、<b>然而</b>还缺什么、所以本文做什么。超过 300 字就是没想清楚。</p>
+        </div>
+      </div>
+
+      <div class="file">
+        <dl>
+          <dt>论文类型</dt><dd>影响因素实证（整体回归 + 分组回归）</dd>
+          <dt>核心变量</dt><dd>企业价值（被解释）· 汇率波动（解释）· 企业特征（分组依据）</dd>
+          <dt>篇幅</dt><dd>六章；样本为沪市 358 家上市公司，2011—2015 年</dd>
+          <dt>为什么单列它</dt><dd>它是"综述—理论—假设—实证—建议"这条标准链最完整的示范，每一步都有对应的章</dd>
+          <dt>来源</dt><dd><a href="https://kns.cnki.net/kcms/detail/detail.aspx?dbcode=CMFD&dbname=CMFD201801&filename=1017970291.nh" target="_blank" rel="noopener">知网 CMFD201801 · 1017970291.nh</a>（稳定直链，需机构账号）· <a href="https://d.wanfangdata.com.cn/thesis/D01287954" target="_blank" rel="noopener">万方 D01287954</a></dd>
+          <dt>原文全文</dt><dd><a class="btn-full" href="p-chen.html">📖 打开原文全文 · 55 页逐字</a> <span style="color:var(--ink3);font-size:11.5px">PDF 文字层直出，未改写</span></dd>
+        </dl>
+      </div>
+
+      <h4><span class="dot"></span>原文摘录（摘要照录）<span class="badge-o">原文</span></h4>
+      <div class="orig">
+        <p>"2005年7月，人民币进行汇率制度改革，我国的汇率制度不再是紧盯美元，而是采取"一揽子"货币进行调节。2016年10月1日，人民币作为国际储备货币加入特别提款权（SDR）货币篮子。加之随着经济全球化的发展，我国同各国之间的贸易更加深入。所以说，不论是在商品市场上还是在金融市场上，汇率波动均对我国企业产生重要影响，因此，考察汇率变动对于企业价值的影响更具有重要的现实意义。"</p>
+        <p>"本文首先借助 Fama-French 三因素模型构造新的实证模型，对 2011 年-2015 年沪市 358 家上市公司的相关数据进行实证研究，发现各行业的企业价值均在一定程度上受到汇率波动的影响，且作用方向不同。同时，不同行业受到影响的程度不同，涉及进出口业务或外币债权债务的企业比具有垄断或国家保护类型的企业外汇风险暴露程度显著。因而，本文进一步从影响企业外汇风险暴露因素角度对样本公司进行分组回归分析，发现企业规模越大，海外销售比重越高，企业流动性越弱，外汇风险暴露越为显著。"</p>
+        <span class="src">——中文摘要，据万方数据题录页照录（该页摘要为完整版）。作者陈丹丹，河北大学，据知网学位论文库核实。</span>
+      </div>
+
+      <div class="anno">
+        <button class="ab" type="button"><span class="qm">?</span>开头的两个年份，为什么值钱<span class="arw">▶</span></button>
+        <div class="ac">
+          <p><b>2005 年 7 月汇改、2016 年 10 月入篮</b>——这两个日子不是背景知识，是<b>制度断点</b>。有了断点，后面"样本期为什么从 2011 年开始"就有了理由；没有断点，样本期就是随手挑的五年，评委一问就露。</p>
+          <p>更关键的是：<b>断点还能变成你的选题</b>。2015 年"8·11"汇改之后人民币才真正双向波动，而这个作者的样本止于 2015 年——<b>那个缺口正好留给你</b>。</p>
+          <p><b>记住这个套路：</b>找一件已经发生的制度变化，问"这件事之后，老结论还成立吗"。这是本科论文最省力、也最像论文的起手式。</p>
+        </div>
+      </div>
+
+      <h4><span class="dot"></span>原文的六章目录（逐字，右角为起止页码）<span class="badge-o">原文</span></h4>
+      <div class="tree">
+        <div class="lv1">第1章　绪论<span class="pg">9-18 · 10 页</span></div>
+        <div class="lv2">1.1 研究背景（9-10）　1.2 研究目的和研究意义（10-11）　1.3 研究现状及存在问题（11-12）　1.4 创新之处（12-13）　1.5 研究方法（13）　1.6 文章结构安排（13-18）</div>
+        <div class="lv3">1.2 下设 1.2.1 研究目的、1.2.2 研究意义；1.3 下设 1.3.1 本文的研究视角、1.3.2 本文的研究内容</div>
+
+        <div class="lv1">第2章　相关文献综述<span class="pg">19-21 · 3 页</span></div>
+        <div class="lv2">2.1 汇率波动对企业价值影响的相关研究述评（19-21）　2.2 企业价值影响因素研究的相关文献述评　2.3 外汇风险与公司价值关系的相关研究述评　<b>2.4 文献述评</b></div>
+        <div class="lv3">2.1 下设"两者关系研究"与"研究方法"两条述评；2.2 下设企业价值、资本结构、现金流量；2.3 下设外汇风险的概念、企业外汇风险暴露</div>
+
+        <div class="lv1">第3章　企业价值及外汇风险相关理论分析<span class="pg">21-28 · 8 页</span></div>
+        <div class="lv2">3.1 企业价值相关理论分析（21-23）　3.2 汇率决定理论（23-24）　3.3 外汇风险及企业价值的影响机制（24-28）</div>
+        <div class="lv3">3.1 下设概念、影响因素、衡量方法；3.2 下设汇率的决定、决定因素、主要学说；3.3 下设汇率变动对企业的经济影响、对外直接投资的影响、汇率波动的影响</div>
+
+        <div class="lv1">第4章　汇率波动对我国上市公司企业价值影响的实证设计<span class="pg">28-33 · 6 页</span></div>
+        <div class="lv2">4.1 研究假设（28-31）　4.2 样本选取与数据来源（33-34）</div>
+        <div class="lv3">4.1 下设提出假设、变量选取、模型构建——<b>假设、变量、模型被塞进同一节</b>，这是硕士论文的常见写法</div>
+
+        <div class="lv1">第5章　汇率波动对企业价值影响的实证分析<span class="pg">34-48 · 15 页</span></div>
+        <div class="lv2">5.1 描述性统计分析（35-38）　5.2 平稳性检验（38-39）　5.3 模型构建（39-41）　5.4 实证检验与结果分析（41-48）</div>
+
+        <div class="lv1">第6章　结论及政策建议<span class="pg">48-54 · 7 页</span></div>
+        <div class="lv2">6.1 研究结论（48-53）　6.2 建议（53-54）　6.3 本文研究的不足之处与展望（54-56）</div>
+        <div class="lv3">6.2 下设 6.2.1 相关政策及建议——<b>整章只有一条建议</b>，却写了 2 页</div>
+
+        <div class="lv2" style="margin-top:8px">参考文献（55-56）　致谢（56）　攻读学位期间取得的成果（56）</div>
+        <div class="note">注：目录与章级页码据知网「章节下载」页照录（中国优秀硕士学位论文全文数据库 CMFD201801，文件名 1017970291.nh）。该页个别小节页码存在错位，故小节页码仅取可交叉核对者，章级页数完整。</div>
+      </div>
+
+      <div class="alert info">
+        <b>这张目录最该抄的不是层级，是"厚度"。</b>把六章的页数排开看：
+        <b>绪论 10 页、综述 3 页、理论 8 页、设计 6 页、实证 15 页、结论 7 页</b>。
+        正文 49 页里，<b>实证（设计与分析合计 21 页）占 43%</b>，而综述只占 6%。
+        很多本科论文正好写反：综述写八页、实证写三页。<b>评委一眼就知道你没做研究，只是在做读书笔记。</b>
+      </div>
+
+      <div class="alert ok">
+        <b>看第 3 章和第 4 章的接缝：</b>3.3「外汇风险对企业价值的影响分析」讲的是<b>传导机制</b>（汇率怎么一步步落到利润和估值上），紧接着 4.1 就是「研究假设」。
+        <b>机制在前、假设在后，这是铁律</b>——假设不是猜的，是从机制里推出来的。你写的时候如果 3.3 写的是概念罗列，4.1 就一定写不下去。
+      </div>
+
+      <div class="anno">
+        <button class="ab" type="button"><span class="qm">?</span>5.4 凭什么比 5.3 值钱<span class="arw">▶</span></button>
+        <div class="ac">
+          <p>5.3 回答"<b>有没有</b>影响"，5.4 回答"<b>什么样的企业</b>影响更大"。前者是结论，后者才是<b>能落到建议上的东西</b>。</p>
+          <p>因为 5.4 给出了三个可操作的变量：企业规模、海外销售比重、流动性。<b>每一个都能直接翻成一条建议</b>："海外收入占比高的企业应对冲比例设为多少""流动性弱的企业应保留多少外汇头寸"。</p>
+          <p><b>本科可直接借用的动作：</b>先做全样本一个结论，再按一个特征（比如出口占比高/低）分成两组，比均值。<b>不回归也能做出 5.4 的效果</b>，而且评委看得出来你在想问题，不是在跑软件。</p>
+        </div>
+      </div>
+
+      <div class="anno">
+        <button class="ab" type="button"><span class="qm">?</span>6.2 的建议为什么分成"企业"和"政府"两段<span class="arw">▶</span></button>
+        <div class="ac">
+          <p>不是凑字数，是<b>两条不同来源的结论各自落地</b>：企业侧的建议来自 5.4（企业特征决定暴露程度）；政府侧的建议来自 5.3（行业间作用方向不同，说明存在结构性差异，需要政策层面引导）。</p>
+          <p><b>这是一个可以照抄的结构：</b>建议的第一层来自你的微观发现，第二层来自你的宏观发现。<b>如果两层建议讲的是同一件事，说明你只有一层发现。</b></p>
+        </div>
+      </div>
+
+      <h4><span class="dot"></span>作者的思考链<span class="badge-r">还原</span></h4>
+      <div class="chain">
+        <div class="st">
+          <b>先把"汇率波动"换成能测的东西</b>
+          <p>"汇率"不是一个变量，是一串数字。要用它，必须先决定：用中间价、用实际有效汇率、还是用波动率？这一步选了，后面才有模型。</p>
+          <span class="q">这就是 4.2「实证模型设计」存在的理由</span>
+        </div>
+        <div class="st">
+          <b>三类文献分开综述，不混着写</b>
+          <p>2.1 综述结论（有没有影响）、2.2 综述方法（怎么测）、2.3 综述调节因素（谁影响更大）。三条线各有各的用途，混在一起就写成了流水账。</p>
+          <span class="q">分法本身就是在为第 4 章的假设铺路</span>
+        </div>
+        <div class="st">
+          <b>2.4 小结只做一件事：指出缺口</b>
+          <p>前面三条线都指向同一件事——结论不一致、方法各异、调节因素没统一。所以"这件事值得再做一遍"。</p>
+          <span class="q">这句话不写，第 4 章的假设就是无源之水</span>
+        </div>
+        <div class="st">
+          <b>实证拆成"整体—分组"两步</b>
+          <p>5.3 先证明有关系，5.4 再解释关系强弱为什么不同。两步各有各的结论，各自喂给 6.2 的一段建议。</p>
+          <span class="q">一步到位的实证，通常只能给出一条空泛的建议</span>
+        </div>
+      </div>
+
+      <h4><span class="dot"></span>「2.4 小结」该怎么写<span class="badge-d">示范</span></h4>
+      <div class="demo">
+        <span class="lab">示范段落 · 文献综述的小结（请换成你读过的文献）</span>
+        <p>综上，关于汇率波动与企业价值关系的研究已相当丰富。在结论上，多数文献支持汇率波动对企业价值存在显著影响，但在影响方向与强度上并未取得一致；在方法上，资本市场法与 Fama-French 三因素模型使用最为广泛；在影响因素上，企业规模、海外收入占比与外汇衍生品使用被认为是最重要的三个调节变量。然而，已有研究多以全行业混合样本为主，对行业异质性的处理较为粗略，且样本期多止于 2015 年前后，尚未覆盖"8·11"汇改后人民币汇率双向波动的新阶段。本文即以这一缺口为切入点，选取 2019—2025 年制造业上市公司样本，重新检验汇率波动对企业价值的影响。</p>
+        <div class="why">
+          <b>为什么这么写：</b>前三句一句对应一个 2.x 小节，第四句用"然而"翻出缺口，第五句把自己接上去。
+          <b>五句话，200 字，但它同时干了三件事</b>——证明你读过、证明还有空白、证明你做的事有意义。
+          <b>注意第四句的分量</b>：缺口必须具体到"行业异质性处理粗略"和"样本期止于 2015"，不能写成"研究尚不充分"。<b>"尚不充分"是没读懂的信号。</b>
+        </div>
+      </div>
+
+      <h4><span class="dot"></span>这个题目对应写哪些内容（本科 8000 字版）</h4>
+      <div class="bars">
+        <div class="bar b1"><div class="nm">引言</div><div class="tr"><div class="fl" style="width:10%">800</div></div><div class="ct">800 字</div></div>
+        <div class="bar b1"><div class="nm">文献与理论</div><div class="tr"><div class="fl" style="width:18%">1400</div></div><div class="ct">1400 字</div></div>
+        <div class="bar b1"><div class="nm">研究设计</div><div class="tr"><div class="fl" style="width:15%">1200</div></div><div class="ct">1200 字</div></div>
+        <div class="bar b1"><div class="nm">实证</div><div class="tr"><div class="fl" style="width:37%">3000</div></div><div class="ct">3000 字</div></div>
+        <div class="bar b1"><div class="nm">结论与建议</div><div class="tr"><div class="fl" style="width:20%">1600</div></div><div class="ct">1600 字</div></div>
+      </div>
+
+      <div class="tbl-wrap" style="margin-top:16px">
+        <table>
+          <thead><tr><th style="width:19%">小节</th><th style="width:46%">你具体写什么</th><th>数字从哪来</th></tr></thead>
+          <tbody>
+            <tr><td><b>文献与理论</b></td><td>三组概念（汇率传递、外汇风险暴露、企业价值）+ 一段传导机制：汇率变→外币敞口重估→毛利与汇兑损益→现金流→估值</td><td>教材 + 3 至 5 篇中文核心；机制那一段自己画一张箭头图，比写五百字管用</td></tr>
+            <tr><td><b>研究设计</b></td><td>一个假设（汇率波动与企业价值负相关，且出口占比高的更强）+ 一张变量表（被解释 / 解释 / 控制）</td><td>假设必须来自文献综述的缺口；变量表照抄同类论文，改两列即可</td></tr>
+            <tr><td><b>实证</b></td><td>选一个行业或 30—50 家公司，2019—2025 年年度数据，做一次简单回归；再按"出口占比高/低"分两组比均值</td><td>CSMAR 或巨潮资讯网年报；人民币中间价用国家外汇管理局公布数据</td></tr>
+            <tr><td><b>结论与建议</b></td><td>结论两三条，一条对一条建议；建议分企业侧（对冲、结算币种、定价）与监管侧（衍生品市场、汇率避险服务）</td><td>不引入新数据，全部回指实证章的分组结果</td></tr>
+          </tbody>
+        </table>
+      </div>
+
+      <div class="alert bad">
+        <b>别照抄它 358 家 × Fama-French 三因素模型。</b><br>
+        那是硕士的工作量，而且 Fama-French 要算市值、账面市值比、规模因子——你手上一旦缺数据，整章就停摆。<b>三条降维路线，任选一条：</b><br>
+        ① <b>只做一个行业</b>（如纺织服装、家电、航空），样本从 358 家压到 30 家，工作量降到十分之一，结论反而更聚焦。<br>
+        ② <b>不回归，只做分组均值对比</b>——出口占比高的一组与低的一组，比 2019—2025 年的净资产收益率均值。有差异就有结论。<br>
+        ③ <b>做事件窗口</b>——挑"8·11"汇改或某次人民币"破 7"，比较窗口期内的股价异常收益。<b>这是三条里最容易讲清楚的。</b>
+      </div>
+
+      <div class="alert ok" style="margin-bottom:0">
+        <b>最该抄的三个动作：</b><br>
+        ① <b>综述分三组写</b>（结论 / 方法 / 影响因素），最后单独一节收口成缺口。<br>
+        ② <b>机制在前、假设在后</b>——理论章末尾必须落到"所以我认为 A 影响 B"。<br>
+        ③ <b>实证拆两步</b>：先证明有关系，再解释关系强弱为什么不同。第二步才是你建议的来源。
+      </div>
+
+    </div>
+  </div>
+</section>
+
+<!-- ============ 2 ============ -->
+<section id="s2">
+  <h2><span class="n">2</span>案例二 · 一个指标，三种测法：稳健性检验怎么挣分</h2>
+  <p class="sub">教学价值：<b>同一个东西测三遍，看结论会不会翻。</b>这一节告诉你怎么把"专业能力 35 分"里最硬的那 15 分（分析解决问题）拿到手，而不是靠模型复杂度吓人。</p>
+
+  <div class="card pad0 c2">
+    <div class="case-head c2">
+      <span class="tag">方向二 · 外汇风险暴露 · 对应 00076 国际金融</span>
+      <h3>中国制造业汇率风险暴露问题研究</h3>
+      <div class="meta">李梦 · 首都经济贸易大学 · 硕士学位论文 · 五章</div>
+    </div>
+    <div class="case-body">
+
+      <div class="anno">
+        <button class="ab" type="button"><span class="qm">?</span>为什么同一件事要测三遍（静态 / 半动态 / 动态）<span class="arw">▶</span></button>
+        <div class="ac">
+          <p>因为<b>每一种测法都带着一个假设</b>，而假设本身可能是错的。静态模型假设企业的外汇敞口不变；半动态允许它随时间缓慢变；动态允许它逐期变动。<b>三种都测，结论一致，才叫"不受测法影响"。</b></p>
+          <p>这就是<b>稳健性检验</b>的真实含义：不是"再算一遍确认没算错"，而是<b>"换一种方式算，看结论会不会翻"</b>。评委看这一节，判断的是你知不知道自己的结论有多脆。</p>
+          <p><b>本科只做一种，但必须写一句话说明为什么选它</b>——"考虑到样本期跨越汇改，敞口并非常数，本文采用半动态模型"。<b>这一句就是分。</b></p>
+        </div>
+      </div>
+
+      <div class="file">
+        <dl>
+          <dt>论文类型</dt><dd>测度类实证（先测程度，再找决定因素）</dd>
+          <dt>样本</dt><dd>215 家制造业上市公司，2006—2018 年季度数据</dd>
+          <dt>方法</dt><dd>资本市场法 + 现金流量法；固定效应 / 滚动窗口回归 / 状态空间模型</dd>
+          <dt>为什么单列它</dt><dd>它示范了"一个指标怎么测准"，而这恰是本科论文最容易糊过去的一段</dd>
+          <dt>来源</dt><dd><a href="https://kns.cnki.net/kns8s/defaultresult/index?kw=%E4%B8%AD%E5%9B%BD%E5%88%B6%E9%80%A0%E4%B8%9A%E6%B1%87%E7%8E%87%E9%A3%8E%E9%99%A9%E6%9A%B4%E9%9C%B2%E9%97%AE%E9%A2%98%E7%A0%94%E7%A9%B6&korder=TI" target="_blank" rel="noopener">知网 · 篇名精确检索</a>（该篇知网编号需登录后确认）· <a href="https://apps.wanfangdata.com.cn/thesis/article:Y3639285" target="_blank" rel="noopener">万方 Y3639285</a></dd>
+          <dt>原文全文</dt><dd><a class="btn-full" href="p-li.html">📖 打开原文全文 · 74 页逐字</a> <span style="color:var(--ink3);font-size:11.5px">PDF 文字层直出，未改写</span></dd>
+        </dl>
+      </div>
+
+      <h4><span class="dot"></span>原文摘录（摘要照录）<span class="badge-o">原文</span></h4>
+      <div class="orig">
+        <p>"伴随着人民币汇率市场化进程加速，外汇风险已成为中国企业发展过程中不能回避的问题。本文利用 215 家制造业上市公司 2006 年至 2018 年间的季度数据，在结合资本市场法与现金流量法的基础上，分别使用固定效应模型、滚动窗口回归模型和状态空间模型进行研究考察。文章首先考察上市公司的汇率风险暴露程度、衍生品使用情况与企业价值之间的关系，然后重点考察中国制造业上市公司的汇率风险暴露的宏观和微观层面的决定因素。"</p>
+        <p>"研究发现：外汇风险对我国制造业上市公司影响显著，汇率风险暴露系数为 -6.56%；……"</p>
+        <span class="src">——中文摘要，据万方数据题录页照录（摘要后半部分在检索页被折叠，此处只引可核验部分）。</span>
+      </div>
+
+      <div class="anno">
+        <button class="ab" type="button"><span class="qm">?</span>"-6.56%"这个数为什么必须写进摘要<span class="arw">▶</span></button>
+        <div class="ac">
+          <p>因为<b>摘要是唯一被完整阅读的部分</b>。评审看摘要，三十秒决定对你这篇论文的初判。写"影响显著"是态度，写"-6.56%"是证据。</p>
+          <p>更实用的一点：这个数<b>可以被你的论文引用</b>。你写"已有研究测算我国制造业上市公司汇率风险暴露系数约为 -6.56%（作者，年份）"，一句话就把自己的文献综述垫起来了。</p>
+          <p><b>反过来提醒：</b>你自己的摘要里也必须有一个数。<b>没有数字的摘要，读起来像开题报告。</b></p>
+        </div>
+      </div>
+
+      <h4><span class="dot"></span>原文的章节结构（逐字）<span class="badge-o">原文</span></h4>
+      <div class="tree">
+        <div class="lv1">第1章　引言</div>
+        <div class="lv2">1.1 研究背景和选题意义　1.2 选题方法与研究框架</div>
+        <div class="lv1">第2章　理论基础及文献综述</div>
+        <div class="lv2">2.2.1 汇率风险暴露显著性问题　2.2.2 汇率风险与企业特征　2.2.3 企业汇率风险管理措施的有效性　2.2.4 评述</div>
+        <div class="lv1">第3章　制造业上市公司的汇率风险暴露程度的实证考察</div>
+        <div class="lv2">3.1 模型选择与数据处理（3.1.1 静态 / 3.1.2 半动态 / 3.1.3 动态 / 3.1.4 数据处理）</div>
+        <div class="lv2">3.2 实证考察（3.2.1 整体影响　3.2.2 行业关系　3.2.3 汇改与暴露　3.2.4 出口收入与暴露　3.2.5 外汇衍生品与暴露）</div>
+        <div class="lv2">3.3 稳健性检验　3.4 小结</div>
+        <div class="lv1">第4章　汇率风险暴露系数的决定因素考察</div>
+        <div class="lv2">4.2 实证考察（4.2.1 总体决定因素　4.2.2 制造业子行业决定因素）　4.3 稳健性检验　4.4 小结</div>
+        <div class="lv1">第5章　结论与政策启示</div>
+        <div class="lv2">5.1 主要结论　5.2 政策启示（5.2.1 微观层面　5.2.2 宏观层面）</div>
+        <div class="note">注：据万方题录页所列目录照录。个别序号（如第 2 章 2.1、第 4 章 4.1）在检索页未完整显示，此处不补。</div>
+      </div>
+
+      <div class="alert ok">
+        <b>数一下 3.2 下面的五个子节：</b>整体影响、行业关系、汇改与暴露、出口收入与暴露、衍生品与暴露。
+        <b>这不是"多写点"，是五个各自能独立成立的小问题</b>——每一个都对应一个可以被验证的判断。
+        <b>你的实证章也该这么拆</b>：先回答"有没有"，再回答"哪些因素让它更强"。五个以内，超过五个就写不动了。
+      </div>
+
+      <div class="anno">
+        <button class="ab" type="button"><span class="qm">?</span>第 3 章和第 4 章的分工，是很多论文写乱的地方<span class="arw">▶</span></button>
+        <div class="ac">
+          <p>第 3 章问"<b>暴露有多大</b>"，第 4 章问"<b>什么决定了暴露的大小</b>"。<b>一个是测量，一个是解释。</b></p>
+          <p>写乱的表现是：第 3 章里就开始分析原因，第 4 章又重复一遍数据。<b>判断方法很简单——如果两章出现同一张表，就是没分开。</b></p>
+          <p><b>本科版：</b>第 3 章只放描述统计和一张对比表，第 4 章只放分组对比。<b>两章各一张表，绝不重复。</b></p>
+        </div>
+      </div>
+
+      <h4><span class="dot"></span>作者的思考链<span class="badge-r">还原</span></h4>
+      <div class="chain">
+        <div class="st">
+          <b>先给"汇率风险"一个可计算的替身</b>
+          <p>风险不可直接观测，所以换成"暴露系数"——用股价或现金流对汇率变动做回归，斜率就是暴露程度。</p>
+          <span class="q">这一步不做，后面所有章节都无处落脚</span>
+        </div>
+        <div class="st">
+          <b>测法有三种，都跑一遍</b>
+          <p>静态假设敞口不变，半动态允许缓变，动态允许逐期变。三种结果对照，才敢说"这个结论不是测法造出来的"。</p>
+          <span class="q">这就是 3.1 为什么要有三个小节</span>
+        </div>
+        <div class="st">
+          <b>测完不算完，还要问"谁更脆弱"</b>
+          <p>于是有了 3.2 的五个子问题：行业、汇改、出口收入、衍生品。</p>
+          <span class="q">每一个子问题都在为第 5 章的建议攒素材</span>
+        </div>
+        <div class="st">
+          <b>第 5 章的建议分微观、宏观两层</b>
+          <p>企业层面讲怎么对冲，宏观层面讲衍生品市场怎么放开。两层的来源不同：一层是 3.2 的结果，一层是制度约束。</p>
+          <span class="q">两层建议，正好对应评审表里"应用价值"那一栏</span>
+        </div>
+      </div>
+
+      <h4><span class="dot"></span>「稳健性检验」怎么写<span class="badge-d">示范</span></h4>
+      <div class="demo">
+        <span class="lab">示范段落 · 稳健性检验（请换成你自己的三项处理）</span>
+        <p>为检验上述结果的可靠性，本文做了三项处理。其一，替换被解释变量的度量方式，以现金流量法下的暴露系数重估模型，核心解释变量的系数方向与显著性未发生改变。其二，缩短样本区间，剔除 2020—2021 年疫情冲击期间的数据后重新回归，系数绝对值有所下降但仍在 5% 水平上显著。其三，更换模型设定，将年度固定效应替换为行业固定效应，结论保持一致。上述结果表明，本文关于出口收入占比与企业汇率风险暴露正相关的结论具有稳健性。</p>
+        <div class="why">
+          <b>为什么这么写：</b>三项处理各是一句话——<b>改什么、怎么改、结果怎样</b>。最后一句只下一句结论，不重复数字。
+          <b>关键在"系数绝对值有所下降但仍在 5% 水平上显著"这种诚实的表述</b>：它承认了变化，同时守住了结论。写成"结果完全一致"反而不可信——真实数据很少完全一致。
+        </div>
+      </div>
+
+      <h4><span class="dot"></span>这个题目对应写哪些内容（本科 8000 字版）</h4>
+      <div class="bars">
+        <div class="bar b2"><div class="nm">引言</div><div class="tr"><div class="fl" style="width:10%">800</div></div><div class="ct">800 字</div></div>
+        <div class="bar b2"><div class="nm">理论与综述</div><div class="tr"><div class="fl" style="width:15%">1200</div></div><div class="ct">1200 字</div></div>
+        <div class="bar b2"><div class="nm">测度与数据</div><div class="tr"><div class="fl" style="width:20%">1600</div></div><div class="ct">1600 字</div></div>
+        <div class="bar b2"><div class="nm">实证考察</div><div class="tr"><div class="fl" style="width:40%">3200</div></div><div class="ct">3200 字</div></div>
+        <div class="bar b2"><div class="nm">结论与启示</div><div class="tr"><div class="fl" style="width:15%">1200</div></div><div class="ct">1200 字</div></div>
+      </div>
+
+      <div class="tbl-wrap" style="margin-top:16px">
+        <table>
+          <thead><tr><th style="width:19%">小节</th><th style="width:46%">你具体写什么</th><th>数字从哪来</th></tr></thead>
+          <tbody>
+            <tr><td><b>测度与数据</b></td><td>把"汇率风险"换成暴露系数：说明用股价法还是现金流法、为什么、样本怎么筛</td><td>公司股价与财务数据用 CSMAR 或巨潮；汇率用外汇局人民币中间价</td></tr>
+            <tr><td><b>实证考察</b></td><td>两个子问题就够：①暴露系数是否显著异于零 ②出口占比高的组是否更显著</td><td>同上；分组依据用年报"营业收入构成"里的境外收入占比</td></tr>
+            <tr><td><b>稳健性</b></td><td>三项：换被解释变量、剔除特殊年份、换固定效应</td><td>不需要新数据，用已有数据重算</td></tr>
+            <tr><td><b>结论与启示</b></td><td>微观：对冲比例、结算币种、定价条款；宏观：避险工具可得性</td><td>回指实证结果，每条建议注明来自哪个子问题</td></tr>
+          </tbody>
+        </table>
+      </div>
+
+      <div class="alert bad">
+        <b>215 家 × 季度 × 三个模型，本科做不完。</b><br>
+        季度数据要先做季节调整，状态空间模型要用专门软件——这两件任何一件卡住，你的进度就停了。<b>降维到：30 家公司 × 年度 × 一个模型。</b>
+        样本一压，跑数据从两周变成两天，而结论的说服力几乎不变——<b>因为评委会看的不是样本量，是你会不会解释这张表。</b>
+      </div>
+
+      <div class="alert ok" style="margin-bottom:0">
+        <b>最该抄的三个动作：</b><br>
+        ① <b>给抽象概念找一个可算的替身</b>（汇率风险 → 暴露系数），并且说明为什么这么替。<br>
+        ② <b>写一节稳健性检验</b>，三项处理，每项一句"改什么、怎么改、结果怎样"。<b>这一节是白送的分。</b><br>
+        ③ <b>结论分微观、宏观两层</b>，让建议有出处，而不是另起一段喊口号。
+      </div>
+
+    </div>
+  </div>
+</section>
+
+<!-- ============ 3 ============ -->
+<section id="s3">
+  <h2><span class="n">3</span>案例三 · 一家公司、五段结构：最容易写完的那种</h2>
+  <p class="sub">教学价值：<b>它把"优化某公司的某项指标"拆成一条流水线</b>——现状 → 问题 → 优化设计 → 方案 → 保障。你只要找到一家能查到年报的公司，照着这条线走，8000 字是填得满的。</p>
+
+  <div class="card pad0 c3">
+    <div class="case-head c3">
+      <span class="tag">方向三 · 资本结构 · 对应 00067 财务管理学</span>
+      <h3>新能源补贴背景下比亚迪汽车资本结构优化途径研究</h3>
+      <div class="meta">张翠 · 西安石油大学 · 硕士学位论文 · 六章</div>
+    </div>
+    <div class="case-body">
+
+      <div class="anno">
+        <button class="ab" type="button"><span class="qm">?</span>为什么这类题最适合"没写过论文的人"<span class="arw">▶</span></button>
+        <div class="ac">
+          <p>因为<b>它不需要你发明问题，问题是被题目规定好的</b>。"资本结构优化"这五个字已经写清了要干什么：现状怎样、哪里不合理、应该调到多少、怎么调、怎么保证调得动。</p>
+          <p>更实际的一点：<b>数据全在年报里，一页都不用求人。</b>资产负债率、流动负债占比、长期借款占比、融资活动现金流——翻"合并资产负债表"和"现金流量表"就能抄。</p>
+          <p><b>它的风险也很清楚：</b>因为好写，写的人多，撞题概率高。解法是<b>换对象</b>——换行业（光伏、面板、面板设备、连锁餐饮）比换指标有效得多。</p>
+        </div>
+      </div>
+
+      <div class="file">
+        <dl>
+          <dt>论文类型</dt><dd>单案例诊断 + 优化设计</dd>
+          <dt>关键词</dt><dd>资本结构 · 政府补助 · 最优资本结构区间 · 融资渠道</dd>
+          <dt>结构</dt><dd>六章；现状与问题占两章，优化设计与方案占两章</dd>
+          <dt>为什么单列它</dt><dd>五段式流水线最完整；而且它示范了"最优区间"这个判断尺子怎么用</dd>
+          <dt>来源</dt><dd><a href="https://kns.cnki.net/kcms/detail/detail.aspx?dbcode=CMFD&dbname=CMFD201902&filename=1019119639.nh" target="_blank" rel="noopener">知网 CMFD201902 · 1019119639.nh</a>（稳定直链）· <a href="https://apps.wanfangdata.com.cn/thesis/article:Y3557081" target="_blank" rel="noopener">万方 Y3557081</a></dd>
+          <dt>原文全文</dt><dd><a class="btn-full" href="p-zhangcui.html">📖 打开原文全文 · 68 页逐字</a> <span style="color:var(--ink3);font-size:11.5px">PDF 实测为六章，可核对</span></dd>
+        </dl>
+      </div>
+
+      <h4><span class="dot"></span>原文的章节结构（逐字）<span class="badge-o">原文</span></h4>
+      <div class="tree">
+        <div class="lv1">第一章　绪论</div>
+        <div class="lv2">研究背景　研究目的　研究意义　国内外研究现状与述评　研究思路与方法　技术路线　可能创新点</div>
+        <div class="lv1">第二章　相关理论研究</div>
+        <div class="lv2">2.1.1 资本结构　2.1.2 政府补助　2.2 资本结构相关理论（古典 / 经典 / 新资本结构理论）</div>
+        <div class="lv2">2.3 最优资本结构评价模型（2.3.1 静态权衡模型　2.3.2 动态优化）</div>
+        <div class="lv1">第三章　比亚迪公司资本结构现状及问题</div>
+        <div class="lv2">3.1 公司简介与经营现状　3.2 资本结构现状（财务状况 / 融资状况 / 债务状况）</div>
+        <div class="lv2"><b>3.3 比亚迪与同行业资本结构比较</b></div>
+        <div class="lv2">3.4 存在问题：3.4.1 资产负债率偏高　3.4.2 负债结构不合理　3.4.3 融资渠道相对单一</div>
+        <div class="lv1">第四章　比亚迪公司资本结构优化设计</div>
+        <div class="lv2">4.1 优化的原则与目标　4.2 优化（静态优化 / 动态优化）　4.3 最优资本结构合理区间确定（4.3.2 区间的检验）</div>
+        <div class="lv1">第五章　比亚迪公司资本结构优化方案</div>
+        <div class="lv2">5.1 优化路线　5.2 具体方案（利用国家政策推动转型 / 增强偿债能力降低资产负债率 / 调整负债结构缓解偿债风险 / 利用股权融资改善融资体系）</div>
+        <div class="lv2">5.3 方案实施保障措施（完善激励制度 / 提高人员素质 / 保持资本弹性）</div>
+        <div class="lv1">第六章　结论与展望</div>
+        <div class="note">注：据万方题录页所列目录照录，二级标题按原文顺序保留。</div>
+      </div>
+
+      <div class="anno">
+        <button class="ab" type="button"><span class="qm">?</span>同一篇论文，知网给的目录和这份不一样<span class="arw">▶</span></button>
+        <div class="ac">
+          <p><b>这是一次真实现场。</b>我打开知网「章节下载」页，同一篇论文（张翠，西安石油大学，知网文件名 1019119639.nh）给出的却是<b>五章</b>结构，章名和页码都不一样：</p>
+          <p><b>第一章 绪论</b>（8-16，9 页）→ <b>第二章 相关概念及理论基础</b>（16-21，6 页）→ <b>第三章 比亚迪公司资本结构现状及问题分析</b>（21-31，11 页）→ <b>第四章 比亚迪公司资本结构优化方案设计</b>（31-48，17 页）→ <b>第五章 结论与展望</b>（48-52，5 页）。</p>
+          <p><b>差异在哪：</b>万方把这篇拆成「第四章 优化设计」+「第五章 优化方案」两章，知网把它们合成了一章「第四章 优化方案设计」，下面用 4.2（方案）和 4.3（保障措施）区分。<b>哪份对？</b>必须回论文原文封面核对——数据库的目录是机器解析出来的，会出错。</p>
+          <p><b>你要记住的动作：</b>定稿前拿你自己论文的 PDF，<b>逐条比对目录和正文标题</b>。页码错、标题少字、章节编号跳号，都是格式分的直接扣分项，而且评委翻两页就能发现。</p>
+        </div>
+      </div>
+
+      <div class="alert ok">
+        <b>注意第三章里那个毫不起眼的小节：3.3「与同行业资本结构比较」。</b>
+        没有它，3.4 说"资产负债率偏高"就是一句空话——<b>高是相对谁高？</b>有了 3.3，你才能说"高于行业均值 18 个百分点"。
+        <b>这一节就是全篇的尺子</b>，写起来也最省力：挑 5 家同行，把同一个比率列成一列，你的对象排在中间还是末尾，一眼就看出来。
+      </div>
+
+      <div class="anno">
+        <button class="ab" type="button"><span class="qm">?</span>为什么它写"最优区间"，而不是"最优值"<span class="arw">▶</span></button>
+        <div class="ac">
+          <p>因为<b>现实中不存在精确的最优点</b>。资本结构受股价、利率、行业景气影响，每天都在动，算出 43.7% 这种数只存在于模型里，一答辩就被问穿。</p>
+          <p>写"区间"（比如 45%—55%）有三个好处：<b>承认误差</b>、<b>可检验</b>（看实际值有没有落在区间内）、<b>可操作</b>（管理层按区间调，不按小数点调）。</p>
+          <p><b>这个思路能搬到任何"优化"类题目上：</b>不要说"应该提高到 X"，说"应该落在 X—Y 之间，理由是……"。<b>区间是判断，点是臆断。</b></p>
+        </div>
+      </div>
+
+      <div class="anno">
+        <button class="ab" type="button"><span class="qm">?</span>有个细节值得停一下：问题 3 条，方案 4 条<span class="arw">▶</span></button>
+        <div class="ac">
+          <p>3.4 列了三条问题（负债率偏高、负债结构不合理、融资渠道单一），5.2 却给了四条方案——多出来的是"利用国家政策推动转型"。</p>
+          <p><b>这不是对不上，是有意为之</b>：政策是外生的机会，不是公司的"问题"，但它能解决问题。所以方案可以多于问题，<b>前提是每条方案要么追到某条问题，要么追到某个外部条件</b>。</p>
+          <p><b>反过来是错的：</b>问题 5 条、方案 3 条，一定扣分——因为你提出了解决不了的问题。定稿前拿张纸，左右两列对齐一遍，缺哪边补哪边。</p>
+        </div>
+      </div>
+
+      <h4><span class="dot"></span>作者的思考链<span class="badge-r">还原</span></h4>
+      <div class="chain">
+        <div class="st">
+          <b>先选一个"最近有事发生"的对象</b>
+          <p>新能源补贴退坡是这家公司近五年最大的外部变化——补贴一退，融资结构和现金流立刻受影响。题目因此有了抓手。</p>
+          <span class="q">这就是题目前缀"新能源补贴背景下"的来历，不是装饰</span>
+        </div>
+        <div class="st">
+          <b>再立一把尺子：同行 + 最优模型</b>
+          <p>3.3 横向比同行，4.3 纵向算区间。两个方向各一把尺，判断才站得住。</p>
+          <span class="q">没有尺子的"偏高""不合理"，都是主观评价</span>
+        </div>
+        <div class="st">
+          <b>现状用四组数说话</b>
+          <p>财务状况、融资状况、债务状况——三组来自报表，一组来自同行比较。</p>
+          <span class="q">四组数一摆，第三章 2000 字就够了，不用凑</span>
+        </div>
+        <div class="st">
+          <b>问题 → 设计 → 方案 → 保障，四步不跳</b>
+          <p>问题指出方向，设计给出目标区间，方案落到具体动作，保障回答"凭什么能做成"。</p>
+          <span class="q">少了保障那一步，建议就停在"应该"层面，落不了地</span>
+        </div>
+      </div>
+
+      <h4><span class="dot"></span>「问题」章该怎么起笔<span class="badge-d">示范</span></h4>
+      <div class="demo">
+        <span class="lab">示范段落 · 负债结构问题（请换成你自己抄的数）</span>
+        <p>从负债结构看，公司负债以流动负债为主。2020—2024 年，流动负债占负债总额的比重由 68.4% 升至 76.1%，而长期借款占比始终不足两成。与之相对，同期公司固定资产与在建工程合计占总资产的比重超过 40%，资产端的长期性与负债端的短期性形成明显错配。这种"短债长投"的结构意味着公司每年需滚动续借大额短期借款，一旦再融资环境收紧或授信额度收缩，偿债压力将迅速显性化。</p>
+        <div class="why">
+          <b>为什么这么写：</b>第一句给判断，第二句给两组对照数字（负债端 vs 资产端），第三句命名这个现象（短债长投），第四句给出触发条件（再融资收紧）。
+          <b>四句话，一个完整的论证单元。</b>注意它没有一句"负债结构不合理"——<b>"不合理"是结论，不是论据。</b>你要做的是把"不合理"翻译成"哪一项对哪一项、错配多少、在什么条件下出事"。
+        </div>
+      </div>
+
+      <h4><span class="dot"></span>这个题目对应写哪些内容（本科 8000 字版）</h4>
+      <div class="bars">
+        <div class="bar b3"><div class="nm">引言</div><div class="tr"><div class="fl" style="width:10%">800</div></div><div class="ct">800 字</div></div>
+        <div class="bar b3"><div class="nm">理论与评价模型</div><div class="tr"><div class="fl" style="width:15%">1200</div></div><div class="ct">1200 字</div></div>
+        <div class="bar b3"><div class="nm">现状与问题</div><div class="tr"><div class="fl" style="width:30%">2400</div></div><div class="ct">2400 字</div></div>
+        <div class="bar b3"><div class="nm">优化设计与方案</div><div class="tr"><div class="fl" style="width:32%">2600</div></div><div class="ct">2600 字</div></div>
+        <div class="bar b3"><div class="nm">保障与结论</div><div class="tr"><div class="fl" style="width:13%">1000</div></div><div class="ct">1000 字</div></div>
+      </div>
+
+      <div class="tbl-wrap" style="margin-top:16px">
+        <table>
+          <thead><tr><th style="width:19%">小节</th><th style="width:46%">你具体写什么</th><th>数字从哪来</th></tr></thead>
+          <tbody>
+            <tr><td><b>理论与模型</b></td><td>MM 定理、权衡理论、优序融资各写一段；再介绍一个能算出区间的模型（静态权衡即可）</td><td>教材 + 财务管理学课本；不要引入三个以上理论，写不完</td></tr>
+            <tr><td><b>现状</b></td><td>四组：资产负债率、负债结构（流动/长期）、融资结构（内源/债务/股权）、与 5 家同行对比</td><td>巨潮资讯网年报「合并资产负债表」「现金流量表」；同行取同行业可比公司</td></tr>
+            <tr><td><b>问题</b></td><td>三条，每条都要有数据对数据的错配，不能只写"偏高""不合理""单一"</td><td>同上；错配要算出来（负债期限 vs 资产期限）</td></tr>
+            <tr><td><b>优化设计</b></td><td>算一个目标区间，说明算法（加权平均资本成本最低点附近）并做一次敏感性检验</td><td>用年报的利息支出、所得税率、β 估算；Excel 足够</td></tr>
+            <tr><td><b>方案与保障</b></td><td>方案 3—4 条，每条写"做什么、谁做、看什么指标"；保障 2—3 条（考核、人才、弹性）</td><td>不引入新数据，全部回指问题章</td></tr>
+          </tbody>
+        </table>
+      </div>
+
+      <div class="alert bad">
+        <b>这类题最大的风险不是写不出，是"太像"。</b><br>
+        每年都有人写"某公司资本结构优化"，对象集中在几家明星公司。你的解法有两步：<b>换对象</b>（选一家没那么热门但年报齐全的，比如细分行业里的第二三名）＋<b>换切口</b>（把"补贴退坡"换成"原材料价格暴涨""出海建厂""实控人变更"）。<b>切口一换，同样的骨架立刻就是另一篇论文。</b>
+      </div>
+
+      <div class="alert ok" style="margin-bottom:0">
+        <b>最该抄的三个动作：</b><br>
+        ① <b>先立尺子再下判断</b>——同行对比一节必须在"问题"章之前。<br>
+        ② <b>写区间，不写点</b>——"应落在 45%—55%"比"应提高到 48.3%"可信得多。<br>
+        ③ <b>末尾加一节"保障措施"</b>——它回答"凭什么做得成"，是这类流水线最容易漏掉、也最容易拿分的一节。
+      </div>
+
+    </div>
+  </div>
+</section>
+
+<!-- ============ 4 ============ -->
+<section id="s4">
+  <h2><span class="n">4</span>案例四（电子科大）· 先界定概念，再谈方法</h2>
+  <p class="sub">这一节放了<b>两篇同校论文</b>：2008 年赵继荣那篇教你"把概念钉死、把方法论证清楚"；2019 年张威加那篇教你<b>同一家公司用四种方法各算一遍再比较</b>——后者才是硕士真正拉开本科一个量级的地方。</p>
+
+  <div class="card pad0 c4">
+    <div class="case-head c4">
+      <span class="tag">方向四 · 并购与企业价值 · 本校 · 对应 00067 财务管理学</span>
+      <h3>基于 EVA 方法的并购与目标企业价值关系的实证研究</h3>
+      <div class="meta">赵继荣 · 电子科技大学 · 硕士 · 工商管理 · 导师赵洪江 · 2008</div>
+    </div>
+    <div class="case-body">
+
+      <div class="anno">
+        <button class="ab" type="button"><span class="qm">?</span>为什么"第三章"整章都在论证"为什么用这个方法"<span class="arw">▶</span></button>
+        <div class="ac">
+          <p>因为<b>方法不是捡来的</b>。同样是衡量并购有没有创造价值，可以用事件研究法（看股价）、会计研究法（看财务指标）、也可以用 EVA（看经济利润）。三种方法会得出不同答案，<b>所以选哪一种必须给理由。</b></p>
+          <p>这篇的第三章就干这件事：先讲估价理论各有哪些优缺点，再说明本文为什么落定 EVA。它摘要里也写了这一层——"事件研究法的局限性是中国资本市场的有效性存在争议；会计研究法多……"<b>先驳别人，再立自己</b>。</p>
+          <p><b>本科可以直接抄这个动作：</b>不管用什么方法，<b>写满一页说明"为什么不用另一种"</b>。这一页是"专业能力"分的直接来源，而且几乎没人写。</p>
+        </div>
+      </div>
+
+      <div class="file">
+        <dl>
+          <dt>论文类型</dt><dd>实证（EVA 测算并购前后目标企业价值变化）</dd>
+          <dt>核心工具</dt><dd>EVA（经济增加值）＝ 税后净营业利润 − 资本成本</dd>
+          <dt>结构</dt><dd>五章；理论一章、方法一章、实证一章</dd>
+          <dt>为什么单列它</dt><dd>你主考院校的论文；EVA 是<b>可以手工算出来</b>的尺子，不依赖任何统计软件</dd>
+          <dt>来源</dt><dd><a href="https://d.wanfangdata.com.cn/thesis/D310587" target="_blank" rel="noopener">万方 D310587</a>（题录、目录、摘要公开）· <a href="https://kns.cnki.net/kns8s/defaultresult/index?kw=%E5%9F%BA%E4%BA%8EEVA%E6%96%B9%E6%B3%95%E7%9A%84%E5%B9%B6%E8%B4%AD%E4%B8%8E%E7%9B%AE%E6%A0%87%E4%BC%81%E4%B8%9A%E4%BB%B7%E5%80%BC%E5%85%B3%E7%B3%BB%E7%9A%84%E5%AE%9E%E8%AF%81%E7%A0%94%E7%A9%B6&korder=TI" target="_blank" rel="noopener">知网篇名检索</a></dd>
+          <dt>原文全文</dt><dd><span class="btn-full mute">2008 年论文，全文暂未获取</span></dd>
+        </dl>
+      </div>
+
+      <h4><span class="dot"></span>原文摘录（摘要照录）<span class="badge-o">原文</span></h4>
+      <div class="orig">
+        <p>"我国资本市场的发展和完善，使得更多的企业走向了资本市场，对资源的有效配置起着日益重要的作用。……近年来，我国资本市场并购交易十分频繁，仅 2005 年中国资本上的并购金额就达到 827 亿元之多。那么大量而且频繁的并购带来的实际效果如何？是否真正提升企业价值？因此，研究并购对企业绩效的影响尤显必要。"</p>
+        <p>"本文通过对国内外研究现状进行分析发现，从实证角度来看，对企业并购绩效的研究方法主要有事件研究法和会计研究法。事件研究法的局限性是中国资本市场的有效性存在争议；会计研究法多……"</p>
+        <span class="src">——中文摘要，据万方数据题录页照录；末句在检索页被截断，此处照实标注，未作补全。</span>
+      </div>
+
+      <div class="anno">
+        <button class="ab" type="button"><span class="qm">?</span>"827 亿元"这个数字，是全篇的支点<span class="arw">▶</span></button>
+        <div class="ac">
+          <p>它做了一件很聪明的事：<b>用一个规模数字，把"研究意义"从形容词变成事实。</b>不是"并购很重要"，而是"一年 827 亿元，那么这些钱花得值不值"。</p>
+          <p>紧接着两个问句——"实际效果如何""是否真正提升企业价值"——<b>这就是研究问题</b>。一篇论文的引言，写到这个位置就够了：现象、规模、疑问、所以我要做。</p>
+          <p><b>你写引言时可以照这个模板：</b>①一个具体现象的规模数字 ②一个反常识的疑问 ③所以值得研究。<b>三段，400 字，不要再多。</b></p>
+        </div>
+      </div>
+
+      <h4><span class="dot"></span>原文的五章目录（逐字）<span class="badge-o">原文</span></h4>
+      <div class="tree">
+        <div class="lv1">第一章　绪论</div>
+        <div class="lv2">1.1 研究背景　1.2 研究目的及意义　1.3 国内外研究现状　1.4 主要研究内容和方法　1.5 本文可能的创新点</div>
+        <div class="lv1">第二章　公司并购理论评析</div>
+        <div class="lv2">2.1 并购的相关理论　<b>2.2 相关概念界定</b>　2.3 并购的动因理论　2.4 我国上市公司并购动因分析　2.5 我国上市公司并购发展历程</div>
+        <div class="lv1">第三章　经济增加值（EVA）方法的选择及应用</div>
+        <div class="lv2">3.1 估价理论概述以及优缺点　3.2 本文选择的价值评估方法</div>
+        <div class="lv1">第四章　并购与目标企业价值关系的实证研究</div>
+        <div class="lv2">4.1 样本的选取及数据来源　4.2 模型和统计方法的选择　4.3 并购对目标企业价值影响的实证结果及分析</div>
+        <div class="lv1">第五章　结论</div>
+        <div class="lv2">5.1 实证研究的结论　5.2 本文的不足</div>
+        <div class="note">注：以上为万方题录页所列目录，逐字引用。</div>
+      </div>
+
+      <div class="alert ok">
+        <b>看第二章的顺序：理论 → <b>概念界定</b> → 动因。</b>概念界定被放在理论之后、动因之前，位置很讲究——
+        <b>先知道有哪些理论，才知道要界定哪些词</b>；界定完，动因才谈得下去。
+        <b>你的论文里必须有一段概念界定</b>，否则同一个词在第三章和第五章会是两个意思，评委一问就乱。
+      </div>
+
+      <div class="anno">
+        <button class="ab" type="button"><span class="qm">?</span>EVA 为什么适合本科<span class="arw">▶</span></button>
+        <div class="ac">
+          <p>因为它<b>能算，而且只用报表里的数</b>。EVA = 税后净营业利润 − 资本总额 × 加权平均资本成本。三个数，年报里都有。</p>
+          <p>更重要的是它有一个<b>明确的判断标准</b>：EVA 大于零才是真正创造价值。<b>这就等于自带一把尺子</b>——净利润为正但 EVA 为负，说明公司在毁灭价值。这个结论一出来，你的论文立刻有了"观点"，而不是"描述"。</p>
+          <p><b>代价是要多做一步：</b>得算资本成本和调整项。本科可以做简化处理，但必须在文中说明"本文采用简化口径，未做研发费用资本化等调整"，<b>把局限写出来，比藏起来得分高</b>。</p>
+        </div>
+      </div>
+
+      <div class="anno">
+        <button class="ab" type="button"><span class="qm">?</span>4.1「样本的选取及数据来源」为什么要单独一节<span class="arw">▶</span></button>
+        <div class="ac">
+          <p>因为<b>样本怎么筛，决定了结论能推广到哪儿</b>。同一件事：剔除金融业、剔除 ST、剔除数据缺失——每一条都影响结果。</p>
+          <p>单独成节还有个实际好处：<b>答辩时评委最爱问"你这个样本是怎么来的"</b>。你有这一节，翻到那一页念就行；没有，就只能临场解释。</p>
+          <p><b>写法：</b>三句话——数据来自哪个库、按什么条件筛、最后剩多少家。<b>六十个字，省掉一场答辩危机。</b></p>
+        </div>
+      </div>
+
+      <h4><span class="dot"></span>作者的思考链<span class="badge-r">还原</span></h4>
+      <div class="chain">
+        <div class="st">
+          <b>从一个规模数字起手，把"意义"变成事实</b>
+          <p>不谈"并购是资源配置的重要方式"，直接说一年 827 亿元，然后问这钱花得值不值。</p>
+          <span class="q">研究问题就是这样被逼出来的，不是想出来的</span>
+        </div>
+        <div class="st">
+          <b>先驳两种主流方法，再立 EVA</b>
+          <p>事件研究法受制于市场有效性，会计研究法受制于指标可操纵。两条都说完，EVA 才有位置。</p>
+          <span class="q">第三章整章的存在理由，就在这一步</span>
+        </div>
+        <div class="st">
+          <b>概念界定放在理论之后</b>
+          <p>并购、目标企业、企业价值——三个词必须先钉死，否则后面每一章都在换定义。</p>
+          <span class="q">2.2 这一节只有几百字，但决定了全文的一致性</span>
+        </div>
+        <div class="st">
+          <b>结论章里专门留一节写"不足"</b>
+          <p>5.2 单独写本文的不足，不是谦虚，是主动划定结论的适用边界。</p>
+          <span class="q">敢写局限的人，通常是真的懂自己的数据</span>
+        </div>
+      </div>
+
+      <h4><span class="dot"></span>「概念界定」该怎么写<span class="badge-d">示范</span></h4>
+      <div class="demo">
+        <span class="lab">示范段落 · 概念界定（请按你的题目替换）</span>
+        <p>本文所称"并购"，指一家企业通过股权受让或吸收合并取得另一家企业控制权的行为，包含收购与兼并两种形式，不包括仅参股而不取得控制权的情形。本文所称"目标企业"，指被取得控制权的一方，即并购交易的标的公司。本文所称"企业价值"，采用经济增加值口径衡量，即以税后净营业利润扣除全部资本成本后的余额，而非会计利润或股票市值。作此限定的原因在于：会计利润未扣除股权资本成本，容易高估并购的创造价值能力；股票市值则受市场情绪影响，难以反映经营实质。</p>
+        <div class="why">
+          <b>为什么这么写：</b>每个概念三件事——<b>是什么、不含什么、为什么这么定</b>。
+          特别注意第三句里的"而非"：<b>界定一个概念，最有效的方式是排除它不是什么。</b>
+          最后一句解释理由，把"我为什么这么选"提前交代清楚，后面所有章节就都不必再解释一遍。
+        </div>
+      </div>
+
+      <h4><span class="dot"></span>这个题目对应写哪些内容（本科 8000 字版）</h4>
+      <div class="bars">
+        <div class="bar b4"><div class="nm">引言</div><div class="tr"><div class="fl" style="width:10%">800</div></div><div class="ct">800 字</div></div>
+        <div class="bar b4"><div class="nm">理论与概念</div><div class="tr"><div class="fl" style="width:15%">1200</div></div><div class="ct">1200 字</div></div>
+        <div class="bar b4"><div class="nm">案例背景</div><div class="tr"><div class="fl" style="width:18%">1400</div></div><div class="ct">1400 字</div></div>
+        <div class="bar b4"><div class="nm">EVA 测算</div><div class="tr"><div class="fl" style="width:40%">3200</div></div><div class="ct">3200 字</div></div>
+        <div class="bar b4"><div class="nm">结论与建议</div><div class="tr"><div class="fl" style="width:17%">1400</div></div><div class="ct">1400 字</div></div>
+      </div>
+
+      <div class="tbl-wrap" style="margin-top:16px">
+        <table>
+          <thead><tr><th style="width:19%">小节</th><th style="width:46%">你具体写什么</th><th>数字从哪来</th></tr></thead>
+          <tbody>
+            <tr><td><b>理论与概念</b></td><td>并购动因（协同、代理、过度自信）三选二；概念界定（并购、目标企业、企业价值）各一段</td><td>教材 + 2 篇综述；概念界定必须自己写，不要抄百科</td></tr>
+            <tr><td><b>案例背景</b></td><td>并购双方是谁、交易结构（股权比例、对价、支付方式）、并购前后主营业务变化</td><td>巨潮资讯网公告（收购报告书、权益变动报告书）；交易所问询函</td></tr>
+            <tr><td><b>EVA 测算</b></td><td>并购前 3 年 + 并购后 3 年，逐年算 EVA：税后净营业利润、资本总额、加权平均资本成本</td><td>年报「合并利润表」「合并资产负债表」；β 可用行业均值，无风险利率用十年期国债</td></tr>
+            <tr><td><b>结论与建议</b></td><td>EVA 由负转正还是持续为负？据此判断并购是否创造价值，并给出对同类交易的三条建议</td><td>不引入新数据；每条建议回指某一年的测算结果</td></tr>
+          </tbody>
+        </table>
+      </div>
+
+      <div class="alert warn">
+        <b>同校还有一篇更新的同方向论文，可以对照着看：</b>汪小涵《H公司并购TX公司的绩效研究》，电子科技大学，2023，工商管理硕士，导师陈朝龙。
+        它走的是<b>单案例并购绩效</b>路线——先讲并购前"业绩下滑、竞争力减弱"，再给三条并购动因，最后拆绩效影响机理。
+        <b>和赵继荣那篇比，它更接近本科可操作的体量</b>；区别在于它用财务指标而非 EVA，判断标准没那么锐利，但数据工作量小一半。
+      </div>
+
+      <div class="alert bad">
+        <b>这篇最大的坑：2008 年的数据口径，今天不能直接用。</b><br>
+        会计准则已多次修订（收入准则、租赁准则尤其影响 EVA 的税后净营业利润），照抄十多年前的调整项会算错。
+        <b>做法：</b>方法学它的思路，参数用现行准则重算，并在文中写一句"本文按现行企业会计准则调整了资本占用口径"。<b>这一句既解释了差异，也证明你读懂了原文。</b>
+      </div>
+
+      <div class="alert ok" style="margin-bottom:0">
+        <b>最该抄的三个动作：</b><br>
+        ① <b>概念界定单独成一节</b>，每个概念写"是什么、不含什么、为什么这么定"。<br>
+        ② <b>方法要论证</b>——先驳另一种方法，再说自己为什么选这个。<br>
+        ③ <b>样本来源单独一节</b>，三句话说清库、条件、剩余数量。
+      </div>
+
+    </div>
+  </div>
+
+  <div class="card pad0 c4" style="margin-top:20px">
+    <div class="case-head c4">
+      <span class="tag">方向四 · 加篇 · 同一所学校，隔十一年</span>
+      <h3>基于 EVA 对高新技术企业价值评估</h3>
+      <div class="meta">张威加 · 电子科技大学 · 工商管理硕士 · 导师尹宇明 · 2019 · 知网被引 6 / 下载 925</div>
+    </div>
+    <div class="case-body">
+
+      <p>上面那篇是 2008 年的，五章，一种方法，一篇做"并购有没有创造价值"的实证。这一篇是 2019 年的，<b>七章，同一家公司用四种方法各算一遍，再横向比较</b>。同校、同方向、同工具，为什么后者明显高一档？差别不在文笔，在<b>方法的组织方式</b>。这一节就是拆这个差别。</p>
+
+      <div class="file">
+        <dl>
+          <dt>论文类型</dt><dd>单案例估值（一家公司 × 四种方法互证）</dd>
+          <dt>核心工具</dt><dd>EVA、DCF、市盈率法、实物期权（B-S 模型）</dd>
+          <dt>结构</dt><dd>七章；理论三章 → 财务分析一章 → 估值一章 → 结论一章</dd>
+          <dt>篇幅</dt><dd>正文 10–76 页；参考文献 24 条</dd>
+          <dt>为什么加它</dt><dd>同一所学校、同一条 EVA 线，但<b>方法层面高一个量级</b>——它示范了"多方法互证"，而本科几乎清一色只算一种</dd>
+          <dt>来源</dt><dd><a href="https://kns.cnki.net/kcms/detail/detail.aspx?dbcode=CMFD&dbname=CMFD202001&filename=1019853923.nh" target="_blank" rel="noopener">知网 CMFD202001 · 1019853923.nh</a>（稳定直链）· 万方同篇 <a href="https://d.wanfangdata.com.cn/thesis/D01717010" target="_blank" rel="noopener">D01717010</a></dd>
+          <dt>原文全文</dt><dd><a class="btn-full" href="p-zhangwj.html">📖 打开原文全文 · 78 页逐字</a> <span style="color:var(--ink3);font-size:11.5px">PDF 文字层直出，未改写</span></dd>
+        </dl>
+      </div>
+
+      <h4><span class="dot"></span>真实七章目录（据知网「章节下载」页逐条录入）<span class="badge-o">原文</span></h4>
+      <div class="tree">
+        <div class="lv1">摘要 / abstract<span class="pg">5-6</span></div>
+
+        <div class="lv1">第一章　引言<span class="pg">10-17 · 8 页</span></div>
+        <div class="lv2">1.1 研究背景及意义（1.1.1 研究背景　1.1.2 研究意义）<span class="pg">10-11</span></div>
+        <div class="lv2">1.2 文献综述（1.2.1 国外研究现状　1.2.2 国内研究现状　<b>1.2.3 国内外研究现状评述</b>）<span class="pg">11-14</span></div>
+        <div class="lv2">1.3 研究方法（1.3.1 理论分析法　1.3.2 案例分析法　1.3.3 对比分析法）<span class="pg">14-15</span></div>
+        <div class="lv2">1.4 研究内容及框架　1.5 创新与不足<span class="pg">15-17</span></div>
+
+        <div class="lv1">第二章　高新技术企业的概述<span class="pg">17-20 · 4 页</span></div>
+        <div class="lv2">2.1 高新技术企业的概念<span class="pg">17</span></div>
+        <div class="lv2">2.2 高新技术企业的特征研究（进步快及收益大 / 投入成本大 / 无形资产占有比重高 / 创造力强 / 风险系数高）<span class="pg">17-19</span></div>
+        <div class="lv2"><b>2.3 高新技术企业价值评估的重难点分析</b><span class="pg">19-20</span></div>
+
+        <div class="lv1">第三章　企业价值评估方法概述<span class="pg">20-25 · 6 页</span></div>
+        <div class="lv2">3.1 现金流量折现法　3.2 相对价值法　3.3 实物期权法（3.3.1 二叉树模型　3.3.2 B-S 模型）<span class="pg">20-23</span></div>
+        <div class="lv2"><b>3.4 公司价值评价方法对比分析</b>　3.5 基于 EVA 的评估方法的提出<span class="pg">23-25</span></div>
+
+        <div class="lv1">第四章　EVA 模型评估方法及应用<span class="pg">25-29 · 5 页</span></div>
+        <div class="lv2">4.1 EVA 的概述　4.2 EVA 企业价值评估模型（基本模型 / 单阶段模型 / 两阶段模型）<span class="pg">25-27</span></div>
+        <div class="lv2">4.3 EVA 的价值模型对高新技术企业的适应性（特征相符 / 完全考虑资金成本 / 消除风险可比性 / 评估优势）<span class="pg">27-29</span></div>
+
+        <div class="lv1">第五章　高新技术企业评估案例<span class="pg">29-47 · 19 页</span></div>
+        <div class="lv2">5.1 四维图新公司介绍<span class="pg">29-30</span></div>
+        <div class="lv2">5.2 四维图新财务状况分析：盈利能力 30-35（5 页）／<b>偿债能力 35-43（8 页）</b>／营运能力 43（半页）／成长能力 43-47（4 页）</div>
+
+        <div class="lv1">第六章　四维图新企业价值评估<span class="pg">47-74 · 28 页</span></div>
+        <div class="lv2">6.1 EVA 模型评估（历史 EVA 计算 / 预测 EVA 值）<span class="pg">47-59</span></div>
+        <div class="lv2">6.2 DCF 模型评估（历史现金流 / 自由现金流量预测）<span class="pg">59-65</span></div>
+        <div class="lv2">6.3 市盈率法评估<span class="pg">65-67</span></div>
+        <div class="lv2">6.4 实物期权法评估（B-S 模型参数确定 / 期权价值计算）<span class="pg">67-68</span></div>
+        <div class="lv2"><b>6.5 估值方法结果比较</b>　<b>6.6 估值方法的特点分析</b>（EVA / DCF / 市盈率 / 实物期权各一）<span class="pg">68-71</span></div>
+        <div class="lv2">6.7 高新技术评估模型　6.8 价值评估模型提出建议<span class="pg">71-74</span></div>
+
+        <div class="lv1">第七章　结论与展望<span class="pg">74-76 · 3 页</span></div>
+        <div class="lv2">7.1 结论　7.2 展望</div>
+        <div class="lv1">致谢　参考文献<span class="pg">76-78</span></div>
+        <div class="note">注：以上标题与页码据知网「章节下载」页逐条录入（2026-11 检索）。页码由数据库自动解析，个别跨页可能有一页误差，定稿引用前以原文 PDF 为准。</div>
+      </div>
+
+      <div class="anno">
+        <button class="ab" type="button"><span class="qm">?</span>为什么第五、六章要占掉全文七成<span class="arw">▶</span></button>
+        <div class="ac">
+          <p>算一下：引言 8 页、概述 4 页、方法概述 6 页、EVA 模型 5 页——<b>前四章全是"铺垫"，一共 23 页</b>。而第五章案例财务 19 页、第六章估值计算 28 页，<b>两章 47 页，占正文 67 页的 70%</b>。</p>
+          <p><b>这就是硕士和本科最直观的差别所在。</b>本科论文常见的比例是：理论写 4000 字，案例写 2000 字——把论文写成了"读书笔记加一个例子"。而这本论文的态度是：<b>理论只是工具说明书，真正的工作量全部押在这一家公司上。</b></p>
+          <p><b>你按本科 8000 字写，可以直接套这个比例：</b>理论 1800 字、公司与财务分析 2200 字、计算与结果 3200 字、结论 800 字。<b>计算那块必须是最大的一块。</b></p>
+        </div>
+      </div>
+
+      <h4><span class="dot"></span>篇幅配比表（按页码反推）</h4>
+      <div class="tbl-wrap">
+        <table>
+          <thead><tr><th style="width:30%">部分</th><th style="width:20%">页码</th><th style="width:14%">页数</th><th>它承担什么</th></tr></thead>
+          <tbody>
+            <tr><td>第一章 引言</td><td>10-17</td><td>8</td><td>为什么研究、别人做到哪、我用什么方法</td></tr>
+            <tr><td>第二章 概述</td><td>17-20</td><td>4</td><td>对象是什么；<b>2.3 先说清"难在哪"</b></td></tr>
+            <tr><td>第三章 方法概述</td><td>20-25</td><td>6</td><td>四种方法摆开，<b>3.4 做一次对比</b>，3.5 落到 EVA</td></tr>
+            <tr><td>第四章 EVA 模型</td><td>25-29</td><td>5</td><td>公式、三档模型（基本/单阶段/两阶段）、适用性论证</td></tr>
+            <tr><td>第五章 案例与财务分析</td><td>29-47</td><td>19</td><td>公司介绍 + 四大能力，为第六章备料</td></tr>
+            <tr><td>第六章 估值计算</td><td>47-74</td><td>28</td><td>四种方法各算一遍 + 结果比较 + 特点分析</td></tr>
+            <tr><td>第七章 结论</td><td>74-76</td><td>3</td><td>结论、展望</td></tr>
+          </tbody>
+        </table>
+      </div>
+
+      <h4><span class="dot"></span>它的方法骨架：一家公司，四种尺子</h4>
+      <p>第六章程不是"用 EVA 算一遍就完"，而是<b>四条路各走一遍，再把四个数字并排放</b>。这张表值得整段抄下来当检查清单：</p>
+      <div class="tbl-wrap">
+        <table>
+          <thead><tr><th style="width:17%">方法</th><th style="width:10%">页码</th><th style="width:40%">它算的是什么</th><th>为什么必须放进来</th></tr></thead>
+          <tbody>
+            <tr><td><b>EVA 法</b></td><td>47-59</td><td>历史 EVA → 预测未来 EVA → 折现加总</td><td>扣掉全部资本成本，衡量"到底有没有创造价值"</td></tr>
+            <tr><td><b>DCF 法</b></td><td>59-65</td><td>历史自由现金流 → 预测 → 折现</td><td>最主流的估值口径，是"对照组"</td></tr>
+            <tr><td><b>市盈率法</b></td><td>65-67</td><td>可比公司市盈率 × 净利润</td><td>市场怎么看，代表"相对估值"这一派</td></tr>
+            <tr><td><b>实物期权法</b></td><td>67-68</td><td>B-S 模型，把未来投资机会当期权定价</td><td>高新技术企业的价值大头在"还没落地的可能性"</td></tr>
+            <tr><td><b>结果比较</b></td><td>68-70</td><td>四个估值结果摆在一起，解释差异从哪来</td><td><b>论文的价值在这一节，不在前面四节</b></td></tr>
+          </tbody>
+        </table>
+      </div>
+
+      <div class="anno">
+        <button class="ab" type="button"><span class="qm">?</span>四种方法算同一家公司，结论一定不一样——那到底该信哪个<span class="arw">▶</span></button>
+        <div class="ac">
+          <p><b>这正是 6.5 和 6.6 存在的理由。</b>四个数字不同，不是谁算错了，而是<b>每种方法对"价值"的定义不同</b>：EVA 认为价值来自超额收益，DCF 认为价值是未来现金流的折现，市盈率法认为价值由市场同类定价决定，实物期权认为价值还包括"还没决定要不要做的事"。</p>
+          <p>所以硕士级的写法是：<b>不追求唯一正确答案，而是说清"在什么前提下该信哪个"。</b>6.6 一节里，四种方法各写一段特点——优势是什么、前提是什么、什么时候会失真。</p>
+          <p><b>本科怎么用这一招：</b>不用四种，<b>用两种就够</b>（EVA + DCF 最省事）。但要补一节 300 字，写清"两个结果差多少、差在哪、我更信哪个、为什么"。<b>这一节就是评委眼里"你有没有分析能力"的分水岭。</b>很多人连一个方法都没算完，你算了两个还做了比较，档次立刻不一样。</p>
+        </div>
+      </div>
+
+      <div class="anno">
+        <button class="ab" type="button"><span class="qm">?</span>5.2 财务分析里，偿债能力给了 8 页，营运能力只给半页<span class="arw">▶</span></button>
+        <div class="ac">
+          <p>看页码：盈利能力 5 页、<b>偿债能力 8 页</b>、营运能力半页、成长能力 4 页。<b>不是平均分的，是有取舍的。</b></p>
+          <p>为什么偿债能拿到最多篇幅？因为<b>它直接决定后面 EVA 里的资本成本</b>——负债多少、利率多少、结构怎样，全都从这一节来。而营运能力对估值结论影响最小，所以半页带过。</p>
+          <p><b>这个动作对本科特别有用：</b>财务分析不要"四大能力各写八百字"这种平均值写法。先问自己一句——<b>我这篇论文后面要用到哪个指标，哪个就展开写；用不到的，一句话带过。</b>评委一眼就能看出谁是在凑字数。</p>
+        </div>
+      </div>
+
+      <h4><span class="dot"></span>如果按本科 8000 字降维，清单是这样</h4>
+      <div class="tbl-wrap">
+        <table>
+          <thead><tr><th style="width:20%">它的章</th><th style="width:22%">本科版怎么处理</th><th>具体写什么</th></tr></thead>
+          <tbody>
+            <tr><td>第 2–4 章（15 页）</td><td><b>压成 1500 字</b></td><td>只留：公司特征三条、EVA 公式与两个调整项、为什么选它（半页）</td></tr>
+            <tr><td>第 5 章（19 页）</td><td><b>压成 2000 字</b></td><td>公司一段、财务四大能力各一段；<b>只展开与你结论有关的那一项</b></td></tr>
+            <tr><td>第 6 章（28 页）</td><td><b>保留 3200 字，方法砍到两种</b></td><td>EVA 算三年 + DCF 算一次，再写 300 字比较。<b>这块不许缩</b></td></tr>
+            <tr><td>第 7 章（3 页）</td><td><b>压成 800 字</b></td><td>结论三条 + 不足一条</td></tr>
+          </tbody>
+        </table>
+      </div>
+
+      <div class="alert ok" style="margin-bottom:0">
+        <b>学这篇，只学四个动作，够用了：</b><br>
+        ① <b>先写"这类对象难在哪"（2.3），再选方法</b>——先立问题、再拿工具，而不是上来就套公式。<br>
+        ② <b>方法至少两种</b>，算完必须有一节做比较，说清"差多少、为什么差、信哪个"。<br>
+        ③ <b>财务分析的详略跟着结论走</b>，不要四大能力平均分配。<br>
+        ④ <b>案例与计算占七成篇幅</b>——理论是说明书，不是正文。
+      </div>
+
+    </div>
+  </div>
+</section>
+
+<!-- ============ 5 ============ -->
+<section id="s5">
+  <h2><span class="n">5</span>格式标准：一份能直接照着排的手册</h2>
+  <p class="sub">这一节的数据来自《电子科技大学成人教育、网络教育本科生毕业设计(论文)撰写规范（试行）》与研究生学位论文撰写规范，都是可查的官方文本。凡是磅值、厘米、字号，都不是我估的。</p>
+
+  <div class="card">
+
+    <div class="fmt-h">5.1　先搞清楚：有三套标准同时在管你</div>
+    <p style="font-size:13.6px;color:var(--ink2);margin-bottom:10px">
+      很多人被格式搞晕，是因为把这三套混成一件事。它们管的部分不同，冲突时以最新通知为准。
+    </p>
+    <div class="spec">
+      <table>
+        <thead><tr><th style="width:22%">标准</th><th style="width:34%">管什么</th><th>权威性</th></tr></thead>
+        <tbody>
+          <tr><td>学校《撰写规范》</td><td>排版：页面、字体、字号、行距、图表、参考文献著录</td><td><b>最高</b>，这是格式检测软件的依据</td></tr>
+          <tr><td>办学学院 / 助学点通知</td><td>字数、查重率、提交时间、答辩方式、模板下载</td><td>高，且每学期可能微调</td></tr>
+          <tr><td>省学位办《抽检评议要素》</td><td>评分：选题意义、写作安排、逻辑构建、专业能力、学术规范</td><td>决定你拿多少分，不管排版</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <div class="alert warn">
+      <b>最容易踩的坑：</b>网上下载的"论文模板"往往是别的学校、别的年份的。页边距差 0.5 厘米、字号差一号，格式检测就会报差错。
+      <b>只从办学学院的通知附件里下模板。</b>
+    </div>
+
+    <div class="fmt-h">5.2　页面设置（照填即可）</div>
+    <div class="spec">
+      <table>
+        <thead><tr><th style="width:26%">项目</th><th style="width:30%">数值</th><th>说明</th></tr></thead>
+        <tbody>
+          <tr><td>纸张</td><td>A4，双面打印</td><td>单面打印在部分学院也接受，但双面是规范原文要求</td></tr>
+          <tr><td>页边距</td><td>上、下、左、右均 <b>2.5 cm</b></td><td>四边对称，不要为了多塞字改成 2 cm</td></tr>
+          <tr><td>页眉</td><td><b>1.5 cm</b></td><td>页眉内容一般是论文题目或学校名称，五号字居中</td></tr>
+          <tr><td>页脚</td><td><b>1.75 cm</b></td><td>页码放在页脚，小五号、居中</td></tr>
+          <tr><td>正文行距</td><td><b>固定值 20 磅</b></td><td>不是 1.5 倍行距。这是最常被检测出错的一项</td></tr>
+          <tr><td>首行缩进</td><td>2 个字符</td><td>全文统一，标题不缩进</td></tr>
+          <tr><td>对齐</td><td>两端对齐</td><td>最后一行自然左对齐</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <div class="anno">
+      <button class="ab" type="button"><span class="qm">?</span>为什么行距偏偏是"固定值 20 磅"，不是 1.5 倍<span class="arw">▶</span></button>
+      <div class="ac">
+        <p>因为固定值可控。1.5 倍行距会随字号变化而浮动——你在表格里贴一段五号字，整页行距就乱了；固定值 20 磅则不受字号影响，全文始终一致。</p>
+        <p><b>操作：</b>Word 里选中全文 → 段落 → 行距选"固定值" → 设置值填 <span class="mono">20 磅</span>。注意"如果定义了文档网格，则对齐到网格"要<b>取消勾选</b>，否则 20 磅会被网格吃掉，变成 19.8 之类。</p>
+        <p>格式检测软件读的就是这个数值。你写 20 磅它才认 20 磅，"看起来差不多"在软件眼里差得远。</p>
+      </div>
+    </div>
+
+    <div class="fmt-h">5.3　字体字号总表（照着设一遍，全文统一）</div>
+    <div class="spec">
+      <table>
+        <thead><tr><th style="width:20%">位置</th><th style="width:20%">写法示例</th><th style="width:26%">字体 / 字号</th><th>对齐方式</th></tr></thead>
+        <tbody>
+          <tr><td>章标题（一级）</td><td>第一章　绪论</td><td>黑体　<b>三号</b></td><td>居中</td></tr>
+          <tr><td>节标题（二级）</td><td>第一节　研究背景</td><td>黑体　<b>四号</b></td><td>居中</td></tr>
+          <tr><td>三级标题</td><td>一、研究对象</td><td>黑体　<b>小四</b></td><td>靠左顶格</td></tr>
+          <tr><td>四级标题</td><td>（一）数据来源</td><td>宋体　<b>小四</b></td><td>靠左顶格</td></tr>
+          <tr><td>五级标题</td><td>1. 样本筛选</td><td>宋体　<b>小四</b></td><td>靠左顶格</td></tr>
+          <tr><td>正文</td><td>——</td><td>宋体　<b>小四</b></td><td>两端对齐，首行缩进 2 字符</td></tr>
+          <tr><td>摘要标题</td><td>摘要</td><td>黑体　<b>三号</b></td><td>居中</td></tr>
+          <tr><td>摘要正文</td><td>——</td><td>宋体　<b>小四</b></td><td>两端对齐</td></tr>
+          <tr><td>关键词</td><td>关键词：汇率波动；……</td><td>标签<b>黑体小四</b>，内容宋体小四</td><td>左对齐</td></tr>
+          <tr><td>目录 / 结束语 / 谢辞 / 参考文献 标题</td><td>参考文献</td><td>黑体　<b>三号</b></td><td>居中</td></tr>
+          <tr><td>图表名称</td><td>表 3-1　样本公司境外收入占比</td><td>黑体　<b>五号</b></td><td>居中（表题在上，图题在下）</td></tr>
+          <tr><td>图表内容</td><td>——</td><td>宋体　<b>五号</b></td><td>按列对齐</td></tr>
+          <tr><td>数字与英文</td><td>2025、ROA</td><td>Times New Roman</td><td>随所在段落</td></tr>
+          <tr><td>页码</td><td>1 2 3</td><td>Times New Roman　小五</td><td>居中</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <div class="alert info">
+      <b>字号对照，免得你换算错：</b>三号 = 16 磅，四号 = 14 磅，小四 = 12 磅，五号 = 10.5 磅，小五 = 9 磅。
+      格式检测报告里报的是磅值，不是"三号""小四"，对不上号的时候用这张表换算。
+    </div>
+
+    <div class="fmt-h">5.4　摘要页：300—500 字，五句话</div>
+    <p style="font-size:13.6px;color:var(--ink2);margin-bottom:8px">摘要独立成页，排在目录之前。它不是引言的压缩版，是<b>全文的浓缩结论</b>——读者只看这一页，就该知道你要说什么。</p>
+    <div class="spec">
+      <table>
+        <thead><tr><th style="width:20%">要素</th><th style="width:44%">写什么</th><th>字数</th></tr></thead>
+        <tbody>
+          <tr><td>① 定义</td><td>核心概念一句话说清（如"资产负债率 = 负债总额 ÷ 资产总额"）</td><td>30—50</td></tr>
+          <tr><td>② 背景</td><td>什么发生了变化，为什么值得研究</td><td>50—80</td></tr>
+          <tr><td>③ 做法</td><td>用了什么数据、什么方法、什么区间</td><td>60—90</td></tr>
+          <tr><td>④ 主结论</td><td>最重要的那一个发现，要有方向</td><td>60—90</td></tr>
+          <tr><td>⑤ 分项结论</td><td>拆到两三个具体变量，包括不显著的</td><td>60—100</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <div class="alert bad">
+      <b>摘要里绝对不能出现：</b>"本文认为""笔者认为""我觉得"（要用第三人称）；"具有重要的理论意义和现实意义"（空话）；
+      图表编号（摘要不放图表）；文献引用（[1] 这类）；"由于时间有限""笔者水平有限"（这种话留给致谢，别放摘要）。
+    </div>
+    <div class="alert ok">
+      <b>摘要与正文之间的空行规则（规范原文）：</b>摘要与正文之间空一行；摘要正文与关键词之间空两行。
+      "摘要"二字用三号黑体居中，正文小四宋体，"关键词"三个字用小四黑体。
+    </div>
+
+    <div class="fmt-h">5.5　关键词：3—5 个，分号隔开</div>
+    <div class="spec">
+      <table>
+        <thead><tr><th style="width:26%">规则</th><th>说明</th></tr></thead>
+        <tbody>
+          <tr><td>数量</td><td>3—5 个（学位申报要求；部分学院放宽到 6 个，以通知为准）</td></tr>
+          <tr><td>分隔</td><td>用中文分号"；"隔开，<b>最后一个不加标点</b></td></tr>
+          <tr><td>来源</td><td>从题目、摘要、正文里提取，能代表主题概念的实词</td></tr>
+          <tr><td>顺序</td><td>由大到小：研究对象 → 研究内容 → 研究方法</td></tr>
+          <tr><td>忌讳</td><td>不要用"研究""分析""问题"这类没有检索价值的词</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <p style="font-size:13.2px;color:var(--ink2);margin-top:8px">
+      <b>示例（可套用）：</b><span class="mono">制造业上市公司；汇率波动；企业价值；分组回归</span>　——
+      对象、内容、背景、方法，四类各一个。
+    </p>
+
+    <div class="fmt-h">5.6　目录：只列到二级，页码要对得上</div>
+    <ul class="check" style="margin-top:6px">
+      <li class="good">目录另起一页，标题"目录"三号黑体居中，与正文空一行</li>
+      <li class="good">只列到二级标题（章、节）。三级标题太多会让目录占两页，反而扣"写作安排"的分</li>
+      <li class="good">目录里的标题必须与正文<b>逐字一致</b>，包括空格和标点——格式检测会比对</li>
+      <li class="good">页码用阿拉伯数字，从正文第一页开始算 1；摘要、目录用罗马数字或单独编号</li>
+      <li class="good">定稿前用 Word 的"更新域"重刷一遍目录，别手打页码</li>
+    </ul>
+
+    <div class="fmt-h">5.7　标题编号：一套体系用到底，不许混</div>
+    <div class="spec">
+      <table>
+        <thead><tr><th style="width:22%">体系</th><th style="width:38%">层级写法</th><th>适用</th></tr></thead>
+        <tbody>
+          <tr><td><b>电子科大规范</b></td><td>第一章 → 第一节 → 一、→（一）→ 1. →（1）→ A. → a.</td><td>自考、成人教育、网络教育<b>用这一套</b></td></tr>
+          <tr><td>阿拉伯数字式</td><td>1 → 1.1 → 1.1.1 → 1.1.1.1</td><td>部分院校研究生论文用；<b>不要与上一套混用</b></td></tr>
+        </tbody>
+      </table>
+    </div>
+    <ul class="check" style="margin-top:6px">
+      <li class="good">标题末尾不加标点符号（句号、冒号都不要）</li>
+      <li class="good">标题不得排在页面最后一行——必须与下段同页（Word 里设"与下段同页"）</li>
+      <li class="good">标题与标题之间不空行；标题与上段正文之间空一行</li>
+      <li class="good">两个标题之间没有正文时，第二个标题的段前距设为 0</li>
+      <li class="good">只有一两行文字的内容，不要单独占一页</li>
+    </ul>
+
+    <div class="fmt-h">5.8　图表与公式：三线表 + 编号按章</div>
+    <div class="spec">
+      <table>
+        <thead><tr><th style="width:22%">项目</th><th>要求</th></tr></thead>
+        <tbody>
+          <tr><td>表题位置</td><td>在表格<b>上方</b>，五号黑体居中，格式：<span class="mono">表 3-1　样本公司境外收入占比对比</span></td></tr>
+          <tr><td>图题位置</td><td>在图<b>下方</b>，五号黑体居中，格式：<span class="mono">图 4-2　人民币中间价与汇兑损益</span></td></tr>
+          <tr><td>编号规则</td><td>按章编号，表 3-1 表示第三章第一张表。全文连续编号，不许跳号</td></tr>
+          <tr><td>表格样式</td><td>三线表（顶线、栏目线、底线），不要全框线，不要底纹</td></tr>
+          <tr><td>间距</td><td>图表与正文之间各空一行</td></tr>
+          <tr><td>数据来源</td><td>表格下方必须注明，格式：<span class="mono">数据来源：各银行年报，作者整理</span></td></tr>
+          <tr><td>跨页</td><td>表格尽量不跨页；必须跨页时，第二页重复表头并注明"续表"</td></tr>
+          <tr><td>公式</td><td>居中排版，编号右对齐，按章编号，如（3-1）；编号前不加引导线</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <div class="anno">
+      <button class="ab" type="button"><span class="qm">?</span>为什么表格下面那句"数据来源"不能省<span class="arw">▶</span></button>
+      <div class="ac">
+        <p>因为它同时干三件事：<b>证明数据不是你编的、告诉评委去哪复核、把"数据来源"这一评分点拿到手</b>。</p>
+        <p>评审表里"写作安排"占 15 分，其中文献调研 10 分、进度安排 5 分；而"学术规范"占 20 分，行文与引用各 10 分。<b>数据来源标注属于引用规范的一部分</b>，缺一个表就可能被记一次"引用不规范"。</p>
+        <p>写法要精确到"哪份文件"：<span class="mono">数据来源：成都银行 2021—2025 年年度报告，作者整理</span>。写"数据来源：网络"等于没写。</p>
+      </div>
+    </div>
+
+    <div class="fmt-h">5.9　参考文献：GB/T 7714-2015，顺序编码制</div>
+    <p style="font-size:13.6px;color:var(--ink2);margin-bottom:8px">
+      两条硬规则先记住：<b>数量不少于 10 条</b>（学位申报要求）；<b>按正文中出现的先后顺序编号</b>，
+      正文引用处用<b>右上角上标</b>标注，如"人民币汇率波动加剧<sup>[1]</sup>"。
+    </p>
+    <ul class="ref-list">
+      <li>
+        <span class="t">期刊 J</span>
+        <span class="code">[1] 张三, 李四. 人民币汇率波动对制造业企业价值的影响[J]. 金融研究, 2023, 44(5): 88-102.</span>
+        <span class="note">作者. 题名[J]. 刊名, 年, 卷(期): 起止页码. 作者超过 3 人写前 3 人加", 等".</span>
+      </li>
+      <li>
+        <span class="t">专著 M</span>
+        <span class="code">[2] 王五. 商业银行风险管理[M]. 3版. 北京: 中国金融出版社, 2021: 56-78.</span>
+        <span class="note">作者. 书名[M]. 版次. 出版地: 出版者, 出版年: 引用页码. 第 1 版不写版次.</span>
+      </li>
+      <li>
+        <span class="t">学位论文 D</span>
+        <span class="code">[3] 赵继荣. 基于EVA方法的并购与目标企业价值关系的实证研究[D]. 成都: 电子科技大学, 2008.</span>
+        <span class="note">作者. 题名[D]. 保存地: 保存单位, 年份. 保存地通常写学校所在城市.</span>
+      </li>
+      <li>
+        <span class="t">报告 R</span>
+        <span class="code">[4] 中国人民银行金融稳定分析小组. 中国金融稳定报告2025[R]. 北京: 中国金融出版社, 2025.</span>
+        <span class="note">机构名. 报告名[R]. 出版地: 出版者, 年. 官方报告优先引原文 PDF，不引新闻转述.</span>
+      </li>
+      <li>
+        <span class="t">电子资源 EB/OL</span>
+        <span class="code">[5] 中国银行保险监督管理委员会. 中华人民共和国外汇管理条例[EB/OL]. (2018-09-28)[2026-11-17]. https://www.gov.cn/....</span>
+        <span class="note">作者. 题名[EB/OL]. (发布日期)[引用日期]. 网址. 两个日期缺一不可.</span>
+      </li>
+      <li>
+        <span class="t">报纸 N</span>
+        <span class="code">[6] 赵六. 人民币汇率双向波动下制造业企业的应对路径[N]. 金融时报, 2025-06-12(03).</span>
+        <span class="note">作者. 题名[N]. 报纸名, 出版日期(版次). 版次写括号里的数字.</span>
+      </li>
+      <li>
+        <span class="t">标准 S</span>
+        <span class="code">[7] 国家质量监督检验检疫总局. 信息与文献 参考文献著录规则: GB/T 7714—2015[S]. 北京: 中国标准出版社, 2015.</span>
+        <span class="note">标准号必须写全，年份用破折号连接.</span>
+      </li>
+    </ul>
+    <div class="alert warn">
+      <b>三条最常见的参考文献错误：</b><br>
+      ① 文献类型标识漏写或写错（把期刊写成[M]、把学位论文写成[J]）；<br>
+      ② 正文没有引用，文末却列了 15 条——评委抽查两条问"这篇你在哪用的"，答不出就是凑数；<br>
+      ③ 全是 2010 年前的老文献。<b>近五年文献建议过半</b>，否则会被判"未掌握研究前沿"。
+    </div>
+
+    <div class="fmt-h">5.10　查重与格式检测：两条独立的线</div>
+    <div class="spec">
+      <table>
+        <thead><tr><th style="width:24%">项目</th><th style="width:26%">标准</th><th>说明</th></tr></thead>
+        <tbody>
+          <tr><td>总文字复制比</td><td><b>≤ 15%</b></td><td>知网查重，费用自付。申请学位通常要求全文与各章节均低于 15%</td></tr>
+          <tr><td>格式检测差错率</td><td><b>≤ 1‰</b></td><td>专门的格式检测系统，按页统计差错。排版不规范会在这里被抓</td></tr>
+          <tr><td>正文字数</td><td><b>≥ 8000 字</b></td><td>不含封面、摘要、目录、参考文献、致谢</td></tr>
+          <tr><td>参考文献</td><td><b>≥ 10 条</b></td><td>且必须在正文中有对应引用</td></tr>
+          <tr><td>关键词</td><td>3—5 个</td><td>分号隔开，末位不加标点</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <div class="alert bad">
+      <b>查重和格式是两套系统、两次机会、两笔钱。</b>有些人查重 8% 就放心了，结果格式检测差错率 3‰ 被判不合格。
+      <b>反过来也一样：格式完美但重复率 20%，照样退回。</b>定稿前两条线都要过一遍。
+    </div>
+    <div class="anno">
+      <button class="ab" type="button"><span class="qm">?</span>15% 到底怎么算，为什么引用也会被计入<span class="arw">▶</span></button>
+      <div class="ac">
+        <p>知网的复制比 = <b>被判定重复的字数 ÷ 总字数</b>。它不比"意思"，比的是连续字符片段——连续 13 个字左右与库中某文献重合，就可能被标红。</p>
+        <p>所以<b>规范引用照样计入重复率</b>，只是有些系统会单列"去除引用后的复制比"。别指望"我标了出处就不算重复"，那只是学术不端层面的免责，不是查重层面的豁免。</p>
+        <p><b>降重的有效做法：</b>把别人一句话里的数字和结论留下，句子结构全部重写；能用自己的话把机制讲一遍，就不要照搬术语堆叠。这也是为什么第 3 章（现状）要自己抄表——自己算出来的百分比，天然不重复。</p>
+      </div>
+    </div>
+
+    <div class="fmt-h">5.11　提交前，逐条打勾</div>
+    <p style="font-size:13px;color:var(--ink3);margin-bottom:8px">前九条<b style="color:var(--ok)">✓</b> 是必须做到的技术项，后四条 <b style="color:var(--bad)">✕</b> 是出现就扣分的内容问题。</p>
+    <ul class="check" style="margin-top:6px">
+      <li class="good">页面四边 2.5cm、页眉 1.5cm、页脚 1.75cm</li>
+      <li class="good">正文行距固定值 20 磅，首行缩进 2 字符，两端对齐</li>
+      <li class="good">章标题黑体三号居中，节标题黑体四号居中，三级以下顶格</li>
+      <li class="good">摘要 300—500 字，无"本文认为"、无图表、无引用</li>
+      <li class="good">关键词 3—5 个，分号隔开，末位无标点</li>
+      <li class="good">目录与正文标题逐字一致，页码已更新域</li>
+      <li class="good">所有图表有编号、有标题、有数据来源，三线表</li>
+      <li class="good">参考文献 ≥10 条，格式统一，正文有对应上标</li>
+      <li class="good">正文 ≥8000 字（不含摘要、目录、参考文献）</li>
+      <li>出现"近年来，随着我国经济的快速发展"这类句子</li>
+      <li>问题章和建议章条目数量对不上</li>
+      <li>表格里有的数据，正文里从没提到过</li>
+      <li>致谢里写"由于本人水平有限，论文存在诸多不足"</li>
+      <li>直接粘贴 AI 生成段落，未核对数据与文献</li>
+    </ul>
+
+  </div>
+</section>
+
+<!-- ============ 6 ============ -->
+<section id="s6">
+  <h2><span class="n">6</span>四篇摆在一起：你该选哪一种</h2>
+  <p class="sub">四条路线，工作量差三倍。选错了不是写得差，是根本写不完。</p>
+
+  <div class="card">
+    <div class="tbl-wrap">
+      <table class="cmp" style="font-size:12.9px">
+        <thead><tr><th>维度</th><th>一 · 汇率</th><th>二 · 外汇暴露</th><th>三 · 资本结构</th><th>四 · 电子科大</th></tr></thead>
+        <tbody>
+          <tr><td><b>研究范式</b></td><td>影响因素实证（整体 + 分组）</td><td>测度实证（一指标三种测法）</td><td>单案例诊断 + 优化设计</td><td>单案例 EVA 测算</td></tr>
+          <tr><td><b>需要统计软件</b></td><td>需要（回归，Excel 勉强可做）</td><td>需要（时间序列）</td><td><b style="color:var(--ok)">不需要，Excel 够</b></td><td><b style="color:var(--ok)">不需要，Excel 够</b></td></tr>
+          <tr><td><b>最少数据点</b></td><td>30 家 × 7 年 ≈ 210 个观测</td><td>30 家 × 7 年 × 2 口径 ≈ 420 个</td><td>1 家 × 5 年 × 6 指标 ≈ 30 个</td><td>1 家 × 6 年 × 5 参数 ≈ 30 个</td></tr>
+          <tr><td><b>数据获取难度</b></td><td>中（股价与财务要对齐）</td><td>偏高（还要汇率与境外收入）</td><td>低（年报里现成）</td><td>低（年报里现成，但要自己算）</td></tr>
+          <tr><td><b>能否公开拿到</b></td><td>能</td><td>能</td><td>能</td><td>能</td></tr>
+          <tr><td><b>查重风险</b></td><td>中（同题不少）</td><td>低（切入细，撞车少）</td><td><b style="color:var(--bad)">高（同题极多，须换对象）</b></td><td>低</td></tr>
+          <tr><td><b>答辩最可能被问</b></td><td>样本期为什么从这年开始？</td><td>三种测法结论不一致怎么办？</td><td>凭什么说"偏高"？跟谁比？</td><td>资本成本怎么估的？β 哪来的？</td></tr>
+          <tr><td><b>适合谁</b></td><td>会 Excel、肯做回归</td><td>有计量基础（本科不推荐）</td><td><b style="color:var(--t3)">没写过、想稳过</b></td><td>想写本校题型、不怕算</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <div class="alert ok" style="margin-bottom:0">
+      <b>给你的判断：</b>如果你此前没写过论文，<b>优先选案例三</b>（一家公司 + 现状问题 + 优化方案）。
+      它不用模型、不用软件、数据全在年报里，靠的是"数抄得准、尺子立得住、问题与建议对得上"——这三件事正好是评审表里占分最重的部分。<br><br>
+      <b>案例四要单独说一句：</b>它是你主考院校的论文，但它的价值不在"照着写一家公司"，而在两件更小的事——
+      <b>概念界定单独成一节</b>、<b>方法要论证为什么选它</b>。这两节各不到一千字，却是"专业能力"分最直接的来源，也是绝大多数本科论文空着的地方。<br><br>
+      <b>案例一、二更适合"想做点分析"的人：</b>案例一要跑回归，案例二要做时间序列。<b>如果你连 Excel 透视表都不熟，别从这两个开始</b>——它们会让你卡在第 4 章动不了。
+    </div>
+  </div>
+</section>
+
+<!-- ============ 7 ============ -->
+<section id="s7">
+  <h2><span class="n">7</span>数据源：为什么是这个，而不是随便一个网页</h2>
+  <p class="sub">这一节分两层：先讲<b>判断一个数据源能不能用的四条标准</b>，再按<b>四个梯队</b>列出学界和业界公认的地址，每条都写清"为什么选它"。</p>
+
+  <div class="card">
+    <h4 style="margin-top:0"><span class="dot"></span>先立标准：什么样的数据源才配写进论文</h4>
+    <div class="spec">
+      <table>
+        <thead><tr><th style="width:18%">标准</th><th style="width:38%">含义</th><th>怎么判断</th></tr></thead>
+        <tbody>
+          <tr><td><b>原始性</b></td><td>数据由谁第一次发布</td><td>能追到发布机构，而不是"某财经号整理"。转载常改口径、丢单位、错年份</td></tr>
+          <tr><td><b>可复现</b></td><td>别人照你写的路径能查到你用的数</td><td>写清"哪份文件、哪张表、哪一页"，别人十分钟内能找到</td></tr>
+          <tr><td><b>口径一致</b></td><td>同一指标全程同一来源同一算法</td><td>境外收入占比一半用年报"营业收入构成"、一半用券商研报估算；两个口径的统计范围不同</td></tr>
+          <tr><td><b>可引用</b></td><td>有发布机构、标题、日期，能写进参考文献</td><td>按 GB/T 7714 能写成一条完整文献，才叫可引用</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <div class="alert warn">
+      <b>最容易被忽略的是第一条。</b>同样一个"2025 年某制造业公司资产负债率 68%"，出自金融监管总局的统计口径、出自某银行年报口径、出自某券商研报口径，三个数字可能都不一样。
+      <b>你引哪个都行，但全文只能用一个，并在第一次出现时说明"据××口径"。</b>混用是答辩最容易翻车的地方。
+    </div>
+  </div>
+
+  <div class="card">
+    <h4 style="margin-top:0"><span class="dot"></span>第一梯队 · 学术数据库（论文里的"标准配置"）</h4>
+    <p style="font-size:13.4px;color:var(--ink2);margin-bottom:12px">
+      这几家是期刊论文和学位论文引用最多的数据平台。特点是：指标经过标准化处理、口径统一、可直接标注引用。
+      <b>代价是需要机构订阅</b>——高校校园网内可直接访问，校外一般不行。
+    </p>
+    <div class="tbl-wrap">
+      <table>
+        <thead><tr><th style="width:20%">数据库</th><th style="width:30%">强在哪</th><th style="width:26%">为什么选它</th><th>你的可行性</th></tr></thead>
+        <tbody>
+          <tr>
+            <td><b>CSMAR</b><br><span style="color:var(--ink3);font-size:12px">国泰安 · gtadata.com</span></td>
+            <td>上市公司财务、银行专项、治理结构，字段最全</td>
+            <td><b>国内实证论文引用率最高</b>，评委一看就认；数据字典清楚，变量定义不用自己解释</td>
+            <td>需机构账号。可问助学点或主考院校图书馆是否开放</td>
+          </tr>
+          <tr>
+            <td><b>Wind</b><br><span style="color:var(--ink3);font-size:12px">万得 · wind.com.cn</span></td>
+            <td>宏观、行业、债券、理财产品，更新最快</td>
+            <td>业界标准工具，宏观与市场数据几乎都有；导出即带时间戳，便于标注</td>
+            <td>终端收费高。图书馆常有少量机位</td>
+          </tr>
+          <tr>
+            <td><b>CNRDS</b><br><span style="color:var(--ink3);font-size:12px">中国研究数据服务平台</span></td>
+            <td>银行、绿色金融、数字金融等专题库</td>
+            <td>专题库细，适合写细分题目时省去手工整理</td>
+            <td>需机构订阅</td>
+          </tr>
+          <tr>
+            <td><b>RESSET</b><br><span style="color:var(--ink3);font-size:12px">锐思</span></td>
+            <td>金融研究数据、高频数据</td>
+            <td>高校采购面广，很多学校可用</td>
+            <td>需机构订阅</td>
+          </tr>
+          <tr>
+            <td><b>EPS DATA</b><br><span style="color:var(--ink3);font-size:12px">EPS 数据平台</span></td>
+            <td>宏观经济、区域、行业统计</td>
+            <td>把分散的官方统计整合成一张表，省去逐个网站抄</td>
+            <td>需机构订阅</td>
+          </tr>
+          <tr>
+            <td><b>CEIC</b><br><span style="color:var(--ink3);font-size:12px">宏观数据库</span></td>
+            <td>中国及全球宏观时间序列</td>
+            <td>做长周期趋势、国际对比时最省事</td>
+            <td>需机构订阅</td>
+          </tr>
+          <tr>
+            <td><b>中经网统计数据库</b><br><span style="color:var(--ink3);font-size:12px">cei.cn</span></td>
+            <td>国内宏观、行业、区域年度数据</td>
+            <td>国内高校采购普遍，界面简单，适合抄年度面板</td>
+            <td>需机构订阅，部分省市图书馆可远程访问</td>
+          </tr>
+          <tr>
+            <td><b>Choice</b><br><span style="color:var(--ink3);font-size:12px">东方财富</span></td>
+            <td>行情、公告、财务数据</td>
+            <td>有免费额度，可作 Wind 的替代</td>
+            <td><b>个人可注册</b>，适合自考生</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+    <div class="anno">
+      <button class="ab" type="button"><span class="qm">?</span>我没有校园网，是不是就写不了论文了<span class="arw">▶</span></button>
+      <div class="ac">
+        <p><b>不是。</b>本科 8000 字的论文，用第二梯队（官方免费源）+ 第三梯队（公司披露）完全够用，而且<b>这些源在权威性上并不输给商业数据库</b>——因为商业数据库的原始数据，本身也是从这些地方来的。</p>
+        <p>商业数据库省的是"整理时间"，不是"权威性"。你手工从年报抄 21 个数字花两小时，用 CSMAR 导出花两分钟，但两者写进论文的可信度是一样的，<b>前提是你标对了来源</b>。</p>
+        <p><b>所以策略是：</b>能不花钱就不花钱。只有当你要做多银行、多年份、多变量的面板回归时，手工抄才会变成不可承受的工作量——而那正是本科不必做的事。</p>
+      </div>
+    </div>
+  </div>
+
+  <div class="card">
+    <h4 style="margin-top:0"><span class="dot"></span>第二梯队 · 官方免费源（本科论文的主力）</h4>
+    <div class="tbl-wrap">
+      <table>
+        <thead><tr><th style="width:22%">来源</th><th style="width:34%">能拿到什么</th><th style="width:22%">为什么选它</th><th>案例</th></tr></thead>
+        <tbody>
+          <tr>
+            <td><b>中国人民银行</b><br><span style="color:var(--ink3);font-size:12px">pbc.gov.cn</span></td>
+            <td>LPR 历史报价、货币政策执行报告、社融与信贷收支表、房地产贷款集中度管理制度原文</td>
+            <td><b>利率类数据的唯一原始出处</b>。你引的任何 LPR 数字，追到底都是这里的公告</td>
+            <td>一、二</td>
+          </tr>
+          <tr>
+            <td><b>国家金融监督管理总局</b><br><span style="color:var(--ink3);font-size:12px">nfra.gov.cn</span></td>
+            <td>国际收支与人民币汇率数据、银行代客涉外收付款、行政处罚信息公开表</td>
+            <td><b>行业口径的官方基准</b>。写"人民币兑美元中间价全年走势"必须引它；处罚表是"问题"章的硬证据</td>
+            <td>一、二、四</td>
+          </tr>
+          <tr>
+            <td><b>国家统计局</b><br><span style="color:var(--ink3);font-size:12px">stats.gov.cn</span></td>
+            <td>房地产开发投资、商品房销售、70 城房价指数、居民收入</td>
+            <td>宏观背景数据的源头。写房贷必引</td>
+            <td>二</td>
+          </tr>
+          <tr>
+            <td><b>国家外汇管理局</b><br><span style="color:var(--ink3);font-size:12px">safe.gov.cn</span></td>
+            <td>国际收支平衡表、外汇储备、跨境资金流动</td>
+            <td>涉及国际金融、汇率、跨境业务的题目必用</td>
+            <td>—</td>
+          </tr>
+          <tr>
+            <td><b>中国理财网</b><br><span style="color:var(--ink3);font-size:12px">chinawealth.com.cn</span></td>
+            <td>《中国银行业理财市场年度报告》：规模、净值化率、产品结构、投资者数量、收益</td>
+            <td><b>理财类数据的唯一权威汇总</b>，由理财登记托管中心发布，行业内直接引用</td>
+            <td>三</td>
+          </tr>
+          <tr>
+            <td><b>中国货币网</b><br><span style="color:var(--ink3);font-size:12px">chinamoney.com.cn</span></td>
+            <td>Shibor、同业存单发行利率、银行间市场成交</td>
+            <td>做负债成本分析时，同业存单利率是唯一公开的日频数据</td>
+            <td>一</td>
+          </tr>
+          <tr>
+            <td><b>中国债券信息网</b><br><span style="color:var(--ink3);font-size:12px">chinabond.com.cn</span></td>
+            <td>债券收益率曲线、发行与托管数据</td>
+            <td>做资产端定价、债券投资分析时的标准来源</td>
+            <td>一、三</td>
+          </tr>
+          <tr>
+            <td><b>上交所 / 深交所</b><br><span style="color:var(--ink3);font-size:12px">sse.com.cn / szse.cn</span></td>
+            <td>上市公司公告、监管问询、年报披露时间表</td>
+            <td>巨潮之外的备用渠道，公告更原始</td>
+            <td>全部</td>
+          </tr>
+          <tr>
+            <td><b>中国证券投资基金业协会</b><br><span style="color:var(--ink3);font-size:12px">amac.org.cn</span></td>
+            <td>资管产品备案、公募基金与理财公司统计</td>
+            <td>写理财与资管的竞合关系时用得上</td>
+            <td>三</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <div class="card">
+    <h4 style="margin-top:0"><span class="dot"></span>第三梯队 · 公司披露（单案例论文的命脉）</h4>
+    <div class="tbl-wrap">
+      <table>
+        <thead><tr><th style="width:22%">来源</th><th style="width:36%">能拿到什么</th><th>为什么选它</th></tr></thead>
+        <tbody>
+          <tr>
+            <td><b>巨潮资讯网</b><br><span style="color:var(--ink3);font-size:12px">cninfo.com.cn</span></td>
+            <td>A 股全部上市公司的年报、半年报、季报 PDF，含营业收入构成、汇兑损益、资产负债结构</td>
+            <td><b>证监会指定的信息披露平台</b>，法律效力最高。你在年报里查到的数，答辩时可以直接翻到那一页</td>
+          </tr>
+          <tr>
+            <td><b>银行官网「投资者关系」</b></td>
+            <td>年报、业绩发布会材料、甚至部分分行经营数据</td>
+            <td>巨潮没收录的（如 H 股、非上市银行）从这里补</td>
+          </tr>
+          <tr>
+            <td><b>理财子公司官网</b></td>
+            <td>产品说明书、费率表、净值公告、存续产品清单</td>
+            <td>写理财产品的费率与结构，只有这里给到产品级明细</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+    <div class="alert info">
+      <b>年报里怎么找你要的那张表（省你半小时）：</b>打开 PDF 用目录跳转，直接找四个关键词——<span class="mono">境外收入</span>、<span class="mono">汇兑损益</span>、<span class="mono">资产负债率</span>、<span class="mono">利息净收入</span>。
+      境外收入在「管理层讨论与分析 — 营业收入构成」；汇兑损益在「财务费用」附注；资产负债率用「合并资产负债表」自己算。
+    </div>
+  </div>
+
+  <div class="card">
+    <h4 style="margin-top:0"><span class="dot"></span>第四梯队 · 补充与定性证据</h4>
+    <div class="tbl-wrap">
+      <table>
+        <thead><tr><th style="width:22%">来源</th><th style="width:36%">能拿到什么</th><th>为什么选它</th></tr></thead>
+        <tbody>
+          <tr>
+            <td><b>行政处罚信息公开表</b><br><span style="color:var(--ink3);font-size:12px">金融监管总局及各地派出机构</span></td>
+            <td>按机构名检索处罚记录：违法事实、依据条款、罚款金额、作出日期</td>
+            <td><b>唯一官方认定的"问题"证据</b>。写"贷前调查不尽职"这种判断，必须靠它撑着，否则就是主观臆断</td>
+          </tr>
+          <tr>
+            <td><b>中国裁判文书网</b><br><span style="color:var(--ink3);font-size:12px">wenshu.court.gov.cn</span></td>
+            <td>信贷纠纷判例：借款合同纠纷、担保纠纷的事实认定</td>
+            <td>能看到真实业务流程中出问题的环节，比任何二手描述都具体</td>
+          </tr>
+          <tr>
+            <td><b>国家企业信用信息公示系统</b><br><span style="color:var(--ink3);font-size:12px">gsxt.gov.cn</span></td>
+            <td>企业工商登记、股权结构、行政处罚、经营异常</td>
+            <td>核查借款企业背景、关联关系时用；写集中度风险的辅助材料</td>
+          </tr>
+          <tr>
+            <td><b>信用中国</b><br><span style="color:var(--ink3);font-size:12px">creditchina.gov.cn</span></td>
+            <td>行政许可与处罚、失信名单</td>
+            <td>与处罚表互为补充，覆盖部门更广</td>
+          </tr>
+          <tr>
+            <td><b>北大法宝</b><br><span style="color:var(--ink3);font-size:12px">pkulaw.com</span></td>
+            <td>法律法规、监管文件全文与历史版本</td>
+            <td>查制度原文时用它核对版本，避免引到已废止的条文</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <div class="card">
+    <h4 style="margin-top:0"><span class="dot"></span>论文里怎么写"数据来源"</h4>
+    <div class="spec">
+      <table>
+        <thead><tr><th style="width:26%">位置</th><th>写法</th></tr></thead>
+        <tbody>
+          <tr><td>正文首次使用</td><td>"本文所用汇率数据来源于国家外汇管理局公布的人民币兑美元中间价，财务数据来源于各公司 2019—2025 年年度报告。"</td></tr>
+          <tr><td>表格下方</td><td>"数据来源：成都银行 2021—2025 年年度报告，作者整理。"</td></tr>
+          <tr><td>用商业数据库</td><td>"……数据来源于 CSMAR 数据库（调取日期：2026 年 11 月）。"<b>必须写调取日期</b>，因为库会更新</td></tr>
+          <tr><td>用官方统计</td><td>"……据国家金融监督管理总局《2025 年银行业统计指标》季度数据。"写文件全名，不写"据监管部门数据"</td></tr>
+          <tr><td>参考文献条目</td><td>按第 5.9 节的 EB/OL 格式，带发布日期与引用日期</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <div class="alert bad" style="margin-bottom:0">
+      <b>四种会被判"来源不规范"的写法：</b>① "数据来源：网络"；② "数据来源：百度"；③ 只写网站名不写文件名（"数据来源：巨潮资讯网"）；
+      ④ 引了券商研报却当成官方数据（研报是二手整理，可用，但必须标明"据××证券研究所"）。
+    </div>
+  </div>
+</section>
+
+<!-- ============ 8 ============ -->
+<section id="s8">
+  <h2><span class="n">8</span>全文在哪：六条免费通道，加一条兜底</h2>
+  <p class="sub">
+    前面四篇给你的"原文"都是<b>摘要</b>——不是我删的，是知网和万方对学位论文<b>只免费开放题录和摘要</b>。
+    但全文确实能免费拿到，其中一条你今晚花五分钟就能开通。下面每一条都标了门槛、耗时和限额。
+  </p>
+
+  <div class="alert info">
+    <b>先把"免费"这件事说透</b><br>
+    知网、万方的题录与摘要永远免费，这也是我能在这里照录摘要的原因；<b>全文（PDF / CAJ）需要机构权限</b>。
+    所谓免费，本质是<b>借一个机构的权限</b>——公共图书馆、国家平台、高校机构库，这三种身份都能借到，而且都不花钱。
+    所以问题从来不是"有没有免费的地方"，而是<b>你还没有那张读者证</b>。
+  </div>
+
+  <div class="tbl-wrap">
+    <table style="font-size:12.7px">
+      <thead>
+        <tr>
+          <th style="width:17%">通道</th>
+          <th style="width:22%">入口</th>
+          <th style="width:20%">门槛 / 耗时</th>
+          <th style="width:25%">能拿到什么</th>
+          <th>限额</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td><b>四川省图书馆</b><br><span style="color:var(--ok);font-size:12px">你今晚就能办</span></td>
+          <td>官网 <span class="mono">sclib.cn</span> → 资源 → 数字资源；数字馆藏门户也在官网导航里</td>
+          <td>微信小程序"四川省图书馆读者注册"，上传身份证 + 人脸识别，<b>免押金、不限户籍</b>，约 5 分钟</td>
+          <td>知网、万方、维普、读秀、全国报刊索引——<b>学位论文全文可下</b></td>
+          <td>各库有单日下载上限</td>
+        </tr>
+        <tr>
+          <td><b>国家图书馆</b></td>
+          <td><span class="mono">nlc.cn</span>，用身份证网络实名注册，进"读者门户"</td>
+          <td>在线注册，即时可用，不必到馆</td>
+          <td>远程访问知网、万方等；馆藏缺的还能申请文献传递</td>
+          <td>每日限额，比省图紧</td>
+        </tr>
+        <tr>
+          <td><b>博硕学位论文库</b><br><span style="color:var(--t3);font-size:12px">财经类最对口</span></td>
+          <td><span class="mono">knowledgeatshare.cn</span>（中国财经教育资源共享平台）</td>
+          <td>邮箱注册，<b>人工审核，24 小时内通过</b></td>
+          <td>40 多所财经高校的学位论文 PDF：东北财经、西南财经、浙江财经、山西财经……<b>和你同专业</b></td>
+          <td>非学校邮箱 5 篇；学校邮箱 50 篇</td>
+        </tr>
+        <tr>
+          <td><b>PubScholar</b><br><span style="color:var(--ink3);font-size:12px">中科院主办</span></td>
+          <td><span class="mono">pubscholar.cn</span></td>
+          <td>微信或邮箱免费注册，即时</td>
+          <td>1.9 亿条元数据、<b>8600 万条可免费全文</b>；学位论文 107 万条，但以中科院系统为主</td>
+          <td>标 OA 的直下；不标的给原文链接或文献传递</td>
+        </tr>
+        <tr>
+          <td><b>CALIS 高校学位论文</b></td>
+          <td><span class="mono">etd.calis.edu.cn</span></td>
+          <td>检索免费；传递一般需图书馆账号</td>
+          <td>全国高校博硕论文题录，配合馆际互借、文献传递</td>
+          <td>传递按篇，费用视出借馆而定</td>
+        </tr>
+        <tr>
+          <td><b>高校机构知识库</b></td>
+          <td>如武大 <span class="mono">openir.whu.edu.cn</span>，川大、西财、东财各有</td>
+          <td>无需注册</td>
+          <td>题录全免费；<b>全文看作者是否授权公开</b>，公开的直接下</td>
+          <td>无</td>
+        </tr>
+        <tr style="background:#fffdf8">
+          <td><b>兜底：单篇付费</b></td>
+          <td>知网、万方</td>
+          <td>—</td>
+          <td>全文，即买即得</td>
+          <td>每篇约 5–15 元</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <div class="alert warn">
+    <b>顺序建议：先图省图，再博硕库，PubScholar 补期刊</b><br>
+    省图的库最全、开通最快，但它给的是"知网里有什么"，专业对口度一般；
+    博硕库专门收财经院校论文，<b>你能看到同专业学长学姐怎么写的</b>，这是知网也给不了的。
+    两个都用，一次办证一次注册，成本加起来不到半小时。
+  </div>
+
+  <h4><span class="dot"></span>今晚就能走通：四川省图书馆的五步</h4>
+  <ol class="steps">
+    <li>
+      <b>微信搜"四川省图书馆读者注册"小程序，办证</b>
+      <span>上传身份证正反面、人脸识别、设密码。<b>读者证号就是你的身份证号</b>，免押金，不要求四川户籍或社保。办完在微信卡包里能看到电子读者证。</span>
+    </li>
+    <li>
+      <b>回到电脑，从官网进，不要直接开知网</b>
+      <span>打开 <span class="mono">sclib.cn</span>，走"资源 → 数字资源"，进数字馆藏门户。
+      <b>这一步是关键</b>：知网认的是图书馆的机构入口，你在浏览器里直接敲 cnki.net，系统不知道你是谁，照样收费。</span>
+    </li>
+    <li>
+      <b>点右上角"馆外登录"，用身份证号 + 密码登录</b>
+      <span>登录成功后，页面上的"外购资源"才变成可用状态。没登录时它们只是图标。</span>
+    </li>
+    <li>
+      <b>在门户里点"中国知网"，跳到知网后按"学位论文"检索</b>
+      <span>此时知网页面顶部通常会出现你所在机构的名称。看到这个标识，才说明权限生效了。</span>
+    </li>
+    <li>
+      <b>下载后立刻改文件名，把来源一起记下来</b>
+      <span>命名成"作者_题名_学校_年份.pdf"。参考文献那一栏以后要按这个填，现在不记，两个月后就得回头再查一遍。</span>
+    </li>
+  </ol>
+
+  <div class="anno">
+    <button class="ab"><span class="qm">?</span>为什么从搜索引擎点进知网就下不了<span class="arw">▶</span></button>
+    <div class="ac">
+      <p>因为权限不是绑在你的人身上，是<b>绑在入口上</b>。图书馆买的是"机构访问权"，验证方式通常是 IP 段（馆内）或代理跳转（馆外）。</p>
+      <p>你从图书馆门户点"中国知网"，链接里带着机构标识，知网才知道该给你放行；直接敲网址，就等同一个陌生人上门，只能按零售价卖给你。</p>
+      <p><b>判断权限有没有生效，看一个地方就够</b>：知网页面上方有没有出现你所属机构的名字。没有，就说明白登了。</p>
+    </div>
+  </div>
+
+  <h4><span class="dot"></span>另一条：博硕学位论文库，专门收财经院校的</h4>
+  <p style="font-size:13.4px;color:var(--ink2);margin-bottom:10px">
+    这个库由"中国财经•政法教育资源共享联盟"建设，40 多家财经高校图书馆共建，北京百智享科技运维。
+    特点是<b>只收财经政法类</b>——所以你搜"汇率""资本结构""并购"，命中率和相关度都比知网高，
+    而且能看到<b>同专业、同题型</b>的完整论文，包括它的参考文献表。
+  </p>
+  <div class="alert ok">
+    <b>两个必须知道的细节</b><br>
+    ① <b>注册后要人工审核，24 小时内通过</b>（节假日顺延）。别等到要动笔那天才注册。<br>
+    ② <b>额度按邮箱分档</b>：非学校邮箱 5 篇，学校邮箱 50 篇。你只有 5 篇，所以要挑——
+    先定 3 篇同题型的精读，剩下 2 篇留给"参考文献滚雪球"时临时补。
+  </div>
+
+  <h4><span class="dot"></span>实测：这两篇的全文确实公开（连摘要一起给你）</h4>
+  <p style="font-size:13.4px;color:var(--ink2);margin-bottom:12px">
+    我在上面那个库里挑了两篇，访问权限标着"公开"，PDF 附件分别 1.41 MB 和 2.81 MB。
+    它们不是我要推荐给你照抄的范文，而是两个<b>可以直接验证"全文长什么样"的样本</b>。
+  </p>
+
+  <div class="orig">
+    <p><b>样本一：马闯《中国商业银行同业业务与其流动性风险关系研究》</b>，东北财经大学，金融学，硕士，导师王月溪，2015 年。</p>
+    <p>它摘要里有一句话，比任何写作教程都直白——作者自己把五章结构报了出来：</p>
+    <p>"论文的结构框架主要分为五部分：第一部分是绪论，主要对论文的研究背景与研究意义进行了介绍，并对国内外研究现状及论文的研究方法与框架结构进行了说明，并指出了论文的创新点与不足之处。第二部分是相关理论基础与分析……第三部分对同业业务发展与流动性风险的现状进行了分析……第四部分是实证分析部分，以16家上市银行的数据为基础，通过构建面板数据模型，对同业业务与流动性风险的关系进行验证……第五部分通过前文的理论与实证分析，得到了论文的研究结论，并针对结论，给出了具体的建议。"</p>
+    <span class="src">来源：中国财经教育资源共享平台·博硕学位论文库，记录 123456789/23138，摘要原文照录</span>
+  </div>
+
+  <div class="anno">
+    <button class="ab"><span class="qm">?</span>这段摘要为什么值得逐字读<span class="arw">▶</span></button>
+    <div class="ac">
+      <p>因为它把<b>"摘要"这个文体的真实写法</b>暴露了出来：不是"本文研究了……具有一定的理论意义和现实意义"这种空话，而是<b>把五章挨个报一遍</b>。</p>
+      <p>你在写自己的摘要时，最后一段就照这个路子写：第一部分做什么、第二部分做什么……评审看摘要就知道你结构完整不完整，这一步等于免费送分。</p>
+      <p>另外注意它的实证部分写了两个具体信息：<b>16 家上市银行</b>、<b>面板数据模型</b>。摘要里出现这类具体数字和方法名，可信度立刻不一样。</p>
+    </div>
+  </div>
+
+  <div class="orig">
+    <p><b>样本二：郜栋玺《市场约束、存款保险制度与银行风险承担——基于利率市场化视角的研究》</b>，浙江财经大学，数量经济学，硕士，导师项后军，2017 年 12 月。</p>
+    <p>这篇的摘要末尾列了七条编号结论，从"（1）大型银行与外资银行的价格约束……"一直排到"（7）……对地方性银行风险承担的提升作用更显著"。
+    它的参考文献共 <b>51 条</b>，中英混排。</p>
+    <span class="src">来源：同上，记录 123456789/51744，摘要与参考文献照录</span>
+  </div>
+
+  <h4><span class="dot"></span>一份真实的参考文献表，长这样</h4>
+  <p style="font-size:13.4px;color:var(--ink2);margin-bottom:10px">
+    下面是那 51 条里节选的 10 条，<b>一个字没改</b>。你以后要交的"不少于 10 条"，标准就是这个密度和这个格式。
+  </p>
+  <ul class="ref-list">
+    <li>
+      陈海强, 范云菲. 融资融券交易制度对中国股市波动率的影响——基于面板数据政策评估方法的分析[J]. 金融研究, 2015, (6): 159-172.
+      <span class="note">方法类文献。做双重差分，就得引方法本身，这是评审看你"懂不懂方法"的地方</span>
+    </li>
+    <li>
+      刘莉亚, 李明辉, 孙莎, 杨金强. 中国银行业净息差与非利息收入的关系研究[J]. 经济研究, 2014, (7): 110-124.
+      <span class="note">同主题文献。<b>经济研究</b>是中文经济学顶刊，引一条能立刻抬高文献综述的档次</span>
+    </li>
+    <li>
+      田国强, 赵禹朴, 宮汝凯. 利率市场化、存款保险制度与银行挤兑[J]. 经济研究, 2016, (3): 96-109.
+      <span class="note">理论依据。你写"为什么这件事重要"时，靠的就是这种文献</span>
+    </li>
+    <li>
+      王道平. 利率市场化、存款保险制度与系统性银行危机防范[J]. 金融研究, 2016, (1): 50-65.
+      <span class="note">政策类。</span>
+    </li>
+    <li>
+      张宗益, 吴恒宇, 吴俊. 商业银行价格竞争与风险行为关系——基于贷款利率市场化的经验研究[J]. 金融研究, 2012, (7): 1-14.
+      <span class="note">实证结论可直接对话的对象。</span>
+    </li>
+    <li>
+      张雪兰, 何德旭. 货币政策立场与银行风险承担——基于中国银行业的实证研究(2000-2010)[J]. 经济研究, 2012, (5): 31-44.
+      <span class="note">注意标题里括号中的样本区间——<b>好文献的标题会把区间写清楚</b>，你的题目也该这样</span>
+    </li>
+    <li>
+      Douglas W. Diamond, Philip H. Dybvig. Bank Runs, Deposit Insurance, and Liquidity[J]. The Journal of Political Economy, 1983, Vol. 91, No. 3: 401-419.
+      <span class="note">经典老文献。1983 年的文章仍然在列，说明<b>文献表不是越新越好，是该有的经典必须有</b></span>
+    </li>
+    <li>
+      Freixas, X., and Rochet, J. C. Microeconomics of Banking[M]. MIT Press, Cambridge, MA, 1997.
+      <span class="note">专著用 [M]，不是 [J]。<b>类型码错了，格式检测会挑出来</b></span>
+    </li>
+    <li>
+      Athey, S., and Imbens, G. Identification and Inference in Nonlinear Difference-In-Difference Models[J]. Econometrica, 2006, 74(2): 431-497.
+      <span class="note">英文顶刊。中英混排是常态，别只引中文</span>
+    </li>
+    <li>
+      Demirgüç-Kunt, A. and H. Huizinga. Market Discipline and Deposit Insurance[J]. Journal of Monetary Economics, 2004: 375-399.
+      <span class="note">看作者名的写法：<b>同一张表里前后必须统一</b>，姓氏全拼、名字缩写，选一种</span>
+    </li>
+  </ul>
+
+  <div class="anno">
+    <button class="ab"><span class="qm">?</span>为什么真实文献表里会混杂"看起来不相关"的条目<span class="arw">▶</span></button>
+    <div class="ac">
+      <p>那 51 条不是按"标题像不像"选的，是按<b>四种用途</b>配的：</p>
+      <p><b>① 理论依据</b>——证明这个问题在学理上成立（银行挤兑、存款保险的道德风险）。<br>
+         <b>② 同题实证</b>——别人已经做出什么结论，你要接在哪儿，或者要反驳谁。<br>
+         <b>③ 方法来源</b>——双重差分、合成控制法、GMM，方法不是你自己发明的，必须引出处。<br>
+         <b>④ 经典奠基</b>——几十年前那几篇，说明你知道这个领域从哪来。</p>
+      <p>所以你那 10 条也该这么配：<b>2 条理论 + 4 条同题 + 2 条方法 + 2 条经典</b>。全是同题的文献表，一看就是临时凑的。</p>
+    </div>
+  </div>
+
+  <div class="alert bad">
+    <b>五个会白跑一趟的坑</b><br>
+    ① <b>直接打开 cnki.net 下载</b>——不认权限，白付钱。必须从图书馆门户的"馆外登录"进。<br>
+    ② <b>川图部分库有并发上限</b>——晚上八九点挤不进去，换早上或工作日白天。<br>
+    ③ <b>知网下的是 CAJ</b>——要装 CAJViewer 才能看，手机打不开。能选 PDF 就选 PDF。<br>
+    ④ <b>博硕库要审核 24 小时</b>——别拖到动笔前一晚才注册。<br>
+    ⑤ <b>额度是有限的</b>（国图每日限额、博硕 5 篇）——先想清楚要哪几篇再下，别拿额度试手。
+  </div>
+
+    <h4><span class="dot"></span>现在下这九篇：按方向排好，标 ★ 的五篇先下</h4>
+  <p style="font-size:13.4px;color:var(--ink2);margin-bottom:12px">
+    题名、学校、年份、导师都对着来源页核过。拿题名去知网「学位论文」库或万方搜，能直接命中。
+    标 ★ 的五篇正好对应上面四个案例，是<b>非学校邮箱那 5 篇额度</b>该用的地方。
+  </p>
+
+  <div class="tbl-wrap">
+    <table style="font-size:12.6px">
+      <thead>
+        <tr>
+          <th style="width:11%">方向</th>
+          <th style="width:30%">论文（作者／学校／年份／导师）</th>
+          <th style="width:30%">为什么下它</th>
+          <th>下到之后抄什么</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td rowspan="3"><b>汇率</b><br><span style="color:var(--ink3);font-size:11.5px">对应 00076 国际金融</span></td>
+          <td><b>★</b>《汇率波动与企业价值相关性研究——基于沪市主板上市公司的实证研究》<br><span style="color:var(--ink3);font-size:11.5px">万方 D01287954 · 硕士 · 六章</span></td>
+          <td><b>案例一</b>。综述分三组写、末尾单独收口这一手，是"综述不写成流水账"的唯一解法</td>
+          <td>2.4 小结那 200 字怎么把三条线拧成缺口</td>
+        </tr>
+        <tr>
+          <td><b>★</b>《中国制造业汇率风险暴露问题研究》<br><span style="color:var(--ink3);font-size:11.5px">万方 Y3639285 · 硕士 · 五章</span></td>
+          <td><b>案例二</b>。一个指标三种测法 + 稳健性检验，是"专业能力"分最硬的来源</td>
+          <td>3.3 稳健性检验那一节的三句话结构</td>
+        </tr>
+        <tr>
+          <td>《人民币汇率波动对公司价值影响的实证研究——以广东省制造业上市公司为例》<br><span style="color:var(--ink3);font-size:11.5px">万方 Y3266519 · 硕士</span></td>
+          <td>把样本从全国缩到一个省，<b>是本科降维最自然的方式</b>，而且答辩时"为什么选广东"很好答</td>
+          <td>3.4「样本选取与数据来源」怎么交代口径</td>
+        </tr>
+
+        <tr>
+          <td rowspan="3"><b>资本结构</b><br><span style="color:var(--ink3);font-size:11.5px">对应 00067 财务管理学</span></td>
+          <td><b>★</b>《新能源补贴背景下比亚迪汽车资本结构优化途径研究》<br><span style="color:var(--ink3);font-size:11.5px">万方 Y3557081 · 硕士 · 六章</span></td>
+          <td><b>案例三</b>。五段式流水线最完整，数据全在年报里，<b>本科最容易写完的一篇</b></td>
+          <td>3.3 同行对比怎么立尺子；4.3 为什么写"区间"不写"点"</td>
+        </tr>
+        <tr>
+          <td>马文爽《制度的路径依赖性与上市公司资本结构的动态调整》<br>山东财经大学，2013，会计学硕士，导师胡元木、韩晓翠</td>
+          <td>从"制度"解释资本结构为什么调不动，<b>比"负债率偏高"深一层</b>；答辩时能显出你想过原因</td>
+          <td>它怎么把"制度"这个虚词拆成可测的变量</td>
+        </tr>
+        <tr>
+          <td>胡潇《我国上市公司资本结构优化研究》<br>湖南大学，2007，数量经济学硕士，导师胡宗义</td>
+          <td>多目标规划算最优结构，<b>方法比案例三更硬</b>，但工作量也更大</td>
+          <td>第 3 章怎么把"优化"变成一道可以解的题</td>
+        </tr>
+
+        <tr>
+          <td rowspan="4"><b>并购</b><br><span style="color:var(--ink3);font-size:11.5px">对应 00067 财务管理学</span></td>
+          <td><b>★</b>赵继荣《基于EVA方法的并购与目标企业价值关系的实证研究》<br><b>电子科技大学</b>，2008，工商管理硕士，导师赵洪江</td>
+          <td><b>案例四</b>。本校论文；EVA 可以手工算，等于自带一把尺子</td>
+          <td>2.2 概念界定、第三章"为什么选这个方法"</td>
+        </tr>
+        <tr>
+          <td><b>★</b>张威加《基于EVA对高新技术企业价值评估》<br><b>电子科技大学</b>，2019，工商管理硕士，导师尹宇明</td>
+          <td><b>案例四·B</b>。一家公司四种方法各算一遍再比较，<b>方法组织上比 2008 那篇高一档</b></td>
+          <td>2.3 先讲"这类企业难在哪"、3.4 方法对比、6.5–6.6 结果比较——这三节是分水岭</td>
+        </tr>
+        <tr>
+          <td><b>★</b>汪小涵《H公司并购TX公司的绩效研究》<br><b>电子科技大学</b>，2023，工商管理硕士，导师陈朝龙</td>
+          <td>同校、同方向、<b>更新的那一篇</b>，走单案例绩效路线，体量更接近本科</td>
+          <td>"动因—机理—绩效"三段怎么接，以及它怎么用财务指标代替 EVA</td>
+        </tr>
+        <tr>
+          <td>张宇《中国上市公司MBO的动因、绩效及应用研究》<br><b>电子科技大学</b>，2006，硕士，导师李仕明</td>
+          <td>同校更早的一篇，<b>三种本校题目摆在一起，能看出你们学校偏爱什么题型</b></td>
+          <td>只看目录和结论，判断本校口味即可</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <div class="anno">
+    <button class="ab"><span class="qm">?</span>为什么清单里没有银行类论文<span class="arw">▶</span></button>
+    <div class="ac">
+      <p>因为<b>你那 5 门省考课（金融市场学、风险管理、商业银行业务与经营、金融理财规划、证券投资理论与实务）已经把银行与理财这块占满了</b>。论文再写同一片区域，等于用考试内容重复一遍自己——评审看不到新东西，你自己也写不出兴趣。</p>
+      <p>更重要的是<b>这 5 门的分数你已经拿到了（85—95）</b>，它们不会再变。而论文是唯一还能拉开差距的地方，把它放在你<b>没考过、但学过</b>的区域（国际金融、财务管理），反而更像"独立完成的本科论文"。</p>
+      <p><b>一句话原则：</b>论文方向选<b>你学过但没考过的课</b>——知识有底子，内容又不重复。</p>
+    </div>
+  </div>
+
+  <div class="alert warn">
+    <b>额度别平均用力</b><br>
+    非学校邮箱只有 <b>5 篇</b>。九篇都想要，但真正该精读的是标 ★ 那五篇（正好一篇对上一个案例）。
+    剩下四篇等"写到一半发现缺什么"时再补——<b>真到差一篇而额度已满，比一开始少下两篇难受得多。</b>
+  </div>
+
+<h4><span class="dot"></span>下到 PDF 之后，只读三处</h4>
+  <p style="font-size:13.4px;color:var(--ink2);margin-bottom:10px">
+    全文二三十页起步，通读会把你读废。硕士论文的可复用部分高度集中，按这个顺序看，一篇两小时够了：
+  </p>
+  <div class="tbl-wrap">
+    <table>
+      <thead><tr><th style="width:16%">读哪儿</th><th style="width:34%">看什么</th><th>看完你要产出一句什么话</th></tr></thead>
+      <tbody>
+        <tr><td><b>目录</b></td><td>只数两件事：一共几章、哪一章最长</td><td>"它把最大的篇幅给了哪一章"——那一章就是这类题目的重心</td></tr>
+        <tr><td><b>所有图表</b></td><td>翻页只看表和图，不看字。记下每张表几个指标、数据哪来的</td><td>"我要做的表，就是它第 X 张表减去两列"</td></tr>
+        <tr><td><b>结论与建议</b></td><td>看建议条数是不是等于问题条数</td><td>"它的建议是不是一条对一条"——这个对应关系你要照搬</td></tr>
+      </tbody>
+    </table>
+  </div>
+  <div class="alert ok" style="margin-bottom:0">
+    <b>最后一招：滚雪球</b><br>
+    下到一篇对口论文后，<b>先别读正文，先抄它的参考文献表</b>。那 50 条是作者替你做的文献筛选，而且已经按主题聚好了。
+    你在里面挑 10 条最像你这个题目的，回知网搜标题——<b>十分钟，你的文献综述就有了骨架</b>，还都是真实存在、格式规范的条目。
+    这比让 AI 编文献可靠一万倍：AI 编的条目在知网上查不到，评委一搜就露。
+  </div>
+</section>
+
+<!-- ============ 9 ============ -->
+<section id="s9">
+  <h2><span class="n">9</span>动手顺序：先做能做完的那一步</h2>
+  <p class="sub">看教程不会让你写出论文，抄一张表才会。下面五步按顺序做，每步都有明确的"做完的标志"。</p>
+
+  <div class="card">
+    <ol class="steps">
+      <li>
+        <b>第一步：先选定一家公司，而不是先定题目</b>
+        <span>题目可以后面再调，能拿到的数据只有那几家。挑一家制造业或出口型公司（家电、纺织、光伏、面板都行），要求至少连续 7 年披露境外收入。
+        <b>做完的标志：</b>你能打开它最新一期年报，找到「营业收入构成」里境外收入那一行。</span>
+      </li>
+      <li>
+        <b>第二步：只抄 5 列，抄完就停</b>
+        <span>年份 / 营业收入 / 境外收入占比 / 汇兑损益 / 资产负债率。不要一开始抄 20 个指标，抄多了会卡在数据里出不来。
+        <b>做完的标志：</b>Excel 里有一张 7 行 5 列的表，每一格旁边记着页码。</span>
+      </li>
+      <li>
+        <b>第三步：把这张表画成折线图</b>
+        <span>图一出来，论点和章节顺序基本就定了。哪一年出现拐点，那一节就是你的重点章。
+        <b>做完的标志：</b>你能用一句话说出"哪一年开始变、变在哪一项"。</span>
+      </li>
+      <li>
+        <b>第四步：用三个抽屉给自己归一次类</b>
+        <span>把观察到的现象塞进"敞口（外币资产负债）/ 损益（汇兑损益）/ 结构（负债与融资）"三个抽屉。归不进任何一类的，就是你还缺证据的地方。
+        <b>做完的标志：</b>纸上画出三个抽屉，每个抽屉里至少两条现象。</span>
+      </li>
+      <li>
+        <b>第五步：按章节配比填表，不按顺序写</b>
+        <span>先写现状（有数据，最好写），再写成因（有表支撑），最后写引言与结论——引言留到最后写，你会写得准得多。
+        <b>做完的标志：</b>字数条上每一格都填满了，总字数过 8000。</span>
+      </li>
+    </ol>
+
+    <div class="alert info">
+      <b>还有一步，容易被拖到最后才做，结果返工：先套模板再写。</b>
+      去助学点要来当期模板（.doc 或 .docx），先把样式、页边距、标题级别、页码全部设好，再往里填字。
+      <b>如果写完再调格式，光"改标题样式"就能耗掉两天，还会把目录全部打乱。</b>
+    </div>
+
+    <div class="alert warn">
+      <b>关于用 AI 的边界，这四篇给了很清楚的提示：</b>
+      章节骨架、概念定义、政策梳理——可以让 AI 帮你搭、帮你核；
+      <b>但数据必须你自己抄，表格必须你自己做，结论必须从你自己的表里读出来。</b>
+      因为答辩现场，评委问的一定是"你这个数怎么来的"，而不是"你这个框架怎么来的"。
+    </div>
+
+    <div class="alert ok" style="margin-bottom:0">
+      <b>如果你只想先做一件事：</b>去巨潮资讯网下一家制造业公司的年报，把"境外收入占比、汇兑损益、资产负债率"这三个数抄七年。
+      抄完之后，你手上就有了一张别人没有的表——<b>那张表就是你论文的第 3 章，也是你唯一不能外包的部分。</b>
+    </div>
+
+    <div class="card fullbox">
+      <h4 style="margin-top:0"><span class="dot"></span>五篇原文全文，已经全部拿到本机<span class="badge-o">原文</span></h4>
+      <p class="sub" style="margin-top:-4px">前面每个案例里的「原文摘录」只是摘要与片段。<b>整篇的逐字全文</b>已经下载并按 PDF 页切好，点开就能读、能搜、能对着目录核对——文字从 PDF 文字层直出，一个字没有改。</p>
+      <div class="fgrid">
+        <a class="fcard" href="p-chen.html"><div class="fk">案例一</div><div class="ft">汇率波动与企业价值相关性研究</div><div class="fm">陈丹丹 · 河北大学 · 55 页 · 六章</div></a>
+        <a class="fcard" href="p-li.html"><div class="fk">案例二</div><div class="ft">中国制造业汇率风险暴露问题研究</div><div class="fm">李梦 · 首都经济贸易大学 · 74 页 · 五章</div></a>
+        <a class="fcard" href="p-zhangcui.html"><div class="fk">案例三</div><div class="ft">比亚迪汽车资本结构优化途径研究</div><div class="fm">张翠 · 西安石油大学 · 68 页 · 六章</div></a>
+        <a class="fcard" href="p-zhangwj.html"><div class="fk">案例四</div><div class="ft">基于 EVA 对高新技术企业价值评估</div><div class="fm">张威加 · 电子科技大学 · 78 页 · 七章</div></a>
+        <a class="fcard mute" href="#s4"><div class="fk">案例四</div><div class="ft">基于 EVA 方法的并购与目标企业价值</div><div class="fm">赵继荣 · 电子科技大学 · 2008 · 全文未获取</div></a>
+      </div>
+      <div class="alert info" style="margin:12px 0 0">
+        <b>另外三篇（AI 大模型 × 游戏方向）也做成了同样的阅读页：</b>
+        <a href="p-shuwang.html">Shu Wang · UCLA 2025 · LLM 推理与博弈</a>、
+        <a href="p-gillian.html">Gillian Smith · UCSC 2012 · 程序化内容生成与关卡工具</a>、
+        <a href="p-adamsmith.html">Adam Smith · UCSC 2012 · 游戏设计空间机械化</a>。
+        <br>入口在 <a href="papers.html"><b>论文原文库</b></a>——七篇全文，按篇切换、全文检索。
+      </div>
+    </div>
+  </div>
+</section>
+
+<footer>
+  <b>五篇论文的出处（均可核验）：</b><br>
+  ① 陈丹丹《汇率波动与企业价值相关性研究——基于沪市主板上市公司的实证研究》，河北大学，硕士学位论文，六章 · 万方 D01287954 / 知网 CMFD201801<br>
+  ② 李梦《中国制造业汇率风险暴露问题研究》，首都经济贸易大学，硕士学位论文，五章，导师陈奉先 · 万方 Y3639285<br>
+  ③ 张翠《新能源补贴背景下比亚迪汽车资本结构优化途径研究》，西安石油大学，硕士学位论文，六章（PDF 实测），导师李志学 · 万方 Y3557081 / 知网 CMFD201902（1019119639.nh）<br>
+  ④ 赵继荣《基于EVA方法的并购与目标企业价值关系的实证研究》，电子科技大学，2008，工商管理硕士，导师赵洪江 · 万方 D310587<br>
+  ⑤ 张威加《基于EVA对高新技术企业价值评估》，电子科技大学，2019，工商管理硕士，导师尹宇明 · 知网 CMFD202001（1019853923.nh）/ 万方 D01717010<br>
+  ⑥ Shu Wang, <i>Enhancing the Reasoning Capabilities of LLMs: From Game Playing to Embodied Planning</i>, Ph.D. dissertation, UCLA, 2025 · eScholarship qt0zs6r515<br>
+  ⑦ Gillian M. Smith, <i>Expressive Design Tools: Procedural Content Generation for Game Designers</i>, Ph.D. dissertation, UC Santa Cruz, 2012 · eScholarship qt0fn558gq<br>
+  ⑧ Adam M. Smith, <i>Mechanizing Exploratory Game Design</i>, Ph.D. dissertation, UC Santa Cruz, 2012 · eScholarship qt4600g227<br><br>
+  格式标准依据《电子科技大学成人教育、网络教育本科生毕业设计(论文)撰写规范（试行）》与《电子科技大学研究生学位论文撰写规范》，并结合自学考试学位申报的实际要求整理。
+  标注<span class="badge-o">原文</span>者为论文公开页面逐字引录；<span class="badge-r">还原</span>者为依据目录与摘要推得；<span class="badge-d">示范</span>者为本站自撰示例，非原文。
+  最终格式以你所在办学学院当期通知为准。
+</footer>
+
+</div>
+
+<button class="fab" id="fab" type="button" aria-pressed="false">
+  <span class="qm">?</span><span class="tx" id="fabTx">显示全部注释</span><span class="cnt" id="fabCnt">0/0</span>
+</button>
+
+<script>
+(function(){
+  var links = Array.prototype.slice.call(document.querySelectorAll('.navin a'));
+  var secs = links.map(function(a){ return document.querySelector(a.getAttribute('href')); });
+  function onScroll(){
+    var y = window.scrollY + 120, idx = 0;
+    for (var i = 0; i < secs.length; i++){
+      if (secs[i] && secs[i].offsetTop <= y) idx = i;
+    }
+    links.forEach(function(a, i){ a.classList.toggle('on', i === idx); });
+  }
+  window.addEventListener('scroll', onScroll, { passive: true });
+  onScroll();
+  links.forEach(function(a){
+    a.addEventListener('click', function(e){
+      e.preventDefault();
+      var t = document.querySelector(a.getAttribute('href'));
+      if (t) window.scrollTo({ top: t.offsetTop - 62, behavior: 'smooth' });
+    });
+  });
+
+  /* ───── 注释开关：单点开合 + 全局一键显示 ───── */
+  var annos = Array.prototype.slice.call(document.querySelectorAll('.anno'));
+  var TOTAL = annos.length;
+  var btnAll = document.getElementById('aball');
+  var fab = document.getElementById('fab');
+  var cntA = document.getElementById('cntA');
+  var fabCnt = document.getElementById('fabCnt');
+  var fabTx = document.getElementById('fabTx');
+  var txAll = btnAll.querySelector('.tx');
+
+  function openN(){
+    var n = 0;
+    for (var i = 0; i < annos.length; i++) if (annos[i].classList.contains('open')) n++;
+    return n;
+  }
+
+  function sync(){
+    var n = openN(), all = (TOTAL > 0 && n === TOTAL);
+    cntA.textContent = n + '/' + TOTAL;
+    fabCnt.textContent = n + '/' + TOTAL;
+    txAll.textContent = all ? '收起注释' : '显示注释';
+    fabTx.textContent = all ? '收起全部注释' : '显示全部注释';
+    btnAll.classList.toggle('on', all);
+    fab.classList.toggle('on', all);
+    btnAll.setAttribute('aria-pressed', all ? 'true' : 'false');
+    fab.setAttribute('aria-pressed', all ? 'true' : 'false');
+  }
+
+  /* 全部展开会让页面变高。先记住视口内第一个注释的位置，展开后补回，避免页面"跳走" */
+  function anchorTop(){
+    var vh = window.innerHeight;
+    for (var i = 0; i < annos.length; i++){
+      var r = annos[i].getBoundingClientRect();
+      if (r.bottom > 90 && r.top < vh) return { el: annos[i], top: r.top };
+    }
+    return null;
+  }
+
+  function setAll(open){
+    var a = anchorTop();
+    for (var i = 0; i < annos.length; i++) annos[i].classList.toggle('open', open);
+    sync();
+    if (a && a.el){
+      var el = a.el, t0 = a.top;
+      requestAnimationFrame(function(){
+        var d = el.getBoundingClientRect().top - t0;
+        if (d) window.scrollBy(0, d);
+      });
+    }
+  }
+
+  annos.forEach(function(a){
+    var btn = a.querySelector('.ab');
+    if (!btn) return;
+    btn.addEventListener('click', function(){
+      a.classList.toggle('open');
+      sync();
+    });
+  });
+
+  function toggleAll(){ setAll(openN() !== TOTAL); }
+  btnAll.addEventListener('click', toggleAll);
+  fab.addEventListener('click', toggleAll);
+
+  /* 快捷键：? 或 / 一键开关全部注释 */
+  document.addEventListener('keydown', function(e){
+    if (e.target && /^(INPUT|TEXTAREA|SELECT)$/.test(e.target.tagName)) return;
+    if (e.key === '?' || e.key === '/'){ e.preventDefault(); toggleAll(); }
+  });
+
+  sync();
+
+  var RULES = {
+    '成因': { t:'套案例一的骨架：现象 → 拆成三组文献 → 收口成缺口 → 一个假设 → 实证',
+      d:'这类题最容易犯的错，是把"上升/下降"当成结论。真正的结论是"哪一端变化更快"或"哪类主体受影响更大"。',
+      l:'难度：中 · 需要 30 家公司 × 7 年，或 1 个行业' },
+    '测度': { t:'套案例二的骨架：给概念找一个可算的替身 → 三种测法互相对照 → 稳健性检验',
+      d:'不要只说"影响显著"。要说清"用哪个指标测、为什么这么测、换个测法结论会不会翻"。',
+      l:'难度：中偏高 · 需要序列数据 + 一个测度模型' },
+    '优化': { t:'套案例三的骨架：现状四组数 → 问题三条 → 优化设计与区间 → 方案 → 保障',
+      d:'这是最稳的范式。不用模型，靠的是数抄得准、尺子立得住、问题与方案对得上。',
+      l:'难度：低 · 1 家公司年报就够，Excel 全程够用' },
+    '某公司': { t:'题目里带"某公司"，意味着必须有这家公司的连续数据',
+      d:'先去巨潮资讯网确认它近 5 年年报都披露你要的指标。披露断档的公司，题目再漂亮也得换。',
+      l:'警告：单案例最怕"数据断档"，定题前先查三年' },
+    '并购': { t:'套案例四的骨架：概念界定 → 动因 → 方法论证（为什么用 EVA）→ 测算 → 结论；<b>再加一层：第二种方法对照</b>',
+      d:'2008 那篇教你论证"为什么选这个方法"；2019 那篇教你用两种以上方法算同一家公司、再写一节比较谁更可信——后者才是拉开档次的地方。',
+      l:'难度：中 · 要算资本成本，Excel 够' },
+    '政策': { t:'套"政策前后对比"的结构：政策要点 → 实施前基线 → 实施后变化 → 差异归因',
+      d:'关键是找到一条清晰的时间分界线，并且前后用同一口径的数据。口径变了，对比就废了。',
+      l:'难度：中 · 需要政策原文 + 前后各 3 年数据' }
+  };
+  var chips = document.querySelectorAll('.chip');
+  var vd = document.getElementById('vd');
+  var picked = [];
+  chips.forEach(function(c){
+    c.addEventListener('click', function(){
+      var k = c.dataset.k, i = picked.indexOf(k);
+      if (i > -1){ picked.splice(i,1); c.classList.remove('on'); }
+      else { picked.push(k); c.classList.add('on'); }
+      if (!picked.length){
+        vd.innerHTML = '<span class="big">还没选</span>选一个关键词，我给你对应的骨架和难度提示。' +
+          '<div class="lv">提示：题目里带"某家公司"，就必须有连续数据；写"整个行业"，可以用汇总数据，但很难写出深度。</div>';
+        return;
+      }
+      var main = picked[picked.length-1], r = RULES[main];
+      var extra = picked.length > 1
+        ? '<div class="lv">你还选了：' + picked.filter(function(x){return x!==main;}).join('、') +
+          '。建议以「' + main + '」为主线，其余作为限定条件写进题目，别让题目同时承担两件事。</div>'
+        : '';
+      vd.innerHTML = '<span class="big">' + r.t + '</span>' + r.d + '<div class="lv">' + r.l + '</div>' + extra;
+    });
+  });
+})();
+</script>
+</body>
+</html>

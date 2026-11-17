@@ -1,0 +1,24 @@
+{
+  "cn": "论文实验室",
+  "en": "Thesis Lab",
+  "code": "",
+  "ico": "📄",
+  "order": 3,
+  "status": "live",
+  "theme": "#0f766e",
+  "desc": "金融学专升本学位论文案例拆解（四篇范文逐段剖析 + 格式标准 + 数据源）。附七篇论文逐字原文：5 篇金融/管理硕士论文 + 3 篇 AI×游戏方向博士论文，文字由 PDF 文字层直出，可全文检索、按页对照。",
+  "mods": [
+    "案例拆解",
+    "原文全文",
+    "格式标准",
+    "数据源"
+  ],
+  "entry": "index.html",
+  "pages": {
+    "papers": {
+      "file": "papers.html",
+      "label": "论文原文库"
+    }
+  },
+  "storage": "thesis_lab_"
+}
