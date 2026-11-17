@@ -108,6 +108,10 @@ kbd{background:var(--paper2); border:1px solid var(--line); border-radius:4px; p
   var status = document.getElementById('status');
 
   function show(i){
+    // 切页时让正在朗读的子页面停下来
+    frames.forEach(function(f,j){
+      if(i!==j){ try{ f.contentWindow.postMessage('tts:stop','*'); }catch(e){} }
+    });
     tabs.forEach(function(t,j){ t.classList.toggle('on', i===j); });
     frames.forEach(function(f,j){ f.classList.toggle('on', i===j); });
     try { location.replace('#' + i); } catch(e){}
