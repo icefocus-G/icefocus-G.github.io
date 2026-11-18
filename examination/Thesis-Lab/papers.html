@@ -71,6 +71,19 @@ body{margin:0;background:var(--bg);color:var(--ink);font-family:var(--sans);
 .note{font-size:11.6px;color:var(--t3);margin-left:auto;white-space:nowrap}
 @media(max-width:900px){.note{display:none}}
 
+/* ── 逐句中译 ── */
+.mini.on{background:var(--acc2);border-color:var(--acc2);color:#fff;font-weight:600}
+.mini.on:hover{background:#0da294;border-color:#0da294;color:#fff}
+.zhinfo{font-size:11.3px;color:var(--t3);white-space:nowrap;font-variant-numeric:tabular-nums}
+.zn{display:none}
+body.zh-on .zn{display:block;font-family:var(--sans);font-size:13.4px;line-height:1.82;
+  color:#0b5f57;background:linear-gradient(90deg,#effaf7,#f8fdfc);
+  border-left:2.5px solid #7fd8cc;border-radius:0 6px 6px 0;
+  padding:6px 11px;margin:5px 0 .8em;text-align:left;letter-spacing:.1px;
+  -webkit-text-size-adjust:100%}
+body.zh-on .zn::before{content:"译 ";font-size:9.5px;color:#5fbfb2;font-weight:700;
+  letter-spacing:.06em;margin-right:2px;vertical-align:2px}
+
 /* ── 主体 ── */
 .wrap{max-width:1440px;margin:0 auto;display:flex;gap:0;align-items:flex-start}
 .toc{flex:0 0 252px;position:sticky;top:96px;max-height:calc(100vh - 108px);

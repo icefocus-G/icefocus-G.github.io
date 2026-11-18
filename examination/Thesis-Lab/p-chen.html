@@ -73,6 +73,19 @@ body{margin:0;background:var(--bg);color:var(--ink);font-family:var(--sans);
 .note{font-size:11.6px;color:var(--t3);margin-left:auto;white-space:nowrap}
 @media(max-width:900px){.note{display:none}}
 
+/* ── 逐句中译 ── */
+.mini.on{background:var(--acc2);border-color:var(--acc2);color:#fff;font-weight:600}
+.mini.on:hover{background:#0da294;border-color:#0da294;color:#fff}
+.zhinfo{font-size:11.3px;color:var(--t3);white-space:nowrap;font-variant-numeric:tabular-nums}
+.zn{display:none}
+body.zh-on .zn{display:block;font-family:var(--sans);font-size:13.4px;line-height:1.82;
+  color:#0b5f57;background:linear-gradient(90deg,#effaf7,#f8fdfc);
+  border-left:2.5px solid #7fd8cc;border-radius:0 6px 6px 0;
+  padding:6px 11px;margin:5px 0 .8em;text-align:left;letter-spacing:.1px;
+  -webkit-text-size-adjust:100%}
+body.zh-on .zn::before{content:"译 ";font-size:9.5px;color:#5fbfb2;font-weight:700;
+  letter-spacing:.06em;margin-right:2px;vertical-align:2px}
+
 /* ── 主体 ── */
 .wrap{max-width:1440px;margin:0 auto;display:flex;gap:0;align-items:flex-start}
 .toc{flex:0 0 252px;position:sticky;top:96px;max-height:calc(100vh - 108px);
@@ -173,6 +186,8 @@ mark.cur{background:#ffc94d}
   </div>
   <button class="mini" id="fsDn">A−</button>
   <button class="mini" id="fsUp">A+</button>
+  <button class="mini" id="zhBtn" hidden>中译</button>
+  <span class="zhinfo" id="zhInfo"></span>
   <div class="search">
     <input id="q" type="search" placeholder="全文搜词，回车定位…">
     <span class="cnt" id="cnt"></span>
@@ -198,9 +213,11 @@ mark.cur{background:#ffc94d}
 <script>
 (function(){
   var D = JSON.parse(document.getElementById('D').textContent);
-  var state = {mode:'flow', q:'', fs:0};
+  var state = {mode:'flow', q:'', fs:0, zh:false};
 
   var END = "。！？…；：”」』）】》!?".split("");
+  var IS_EN = (document.documentElement.lang === 'en');
+  if(IS_EN && END.indexOf('.') < 0) END.push('.');   /* 英文按句成段，便于逐句对照 */
   var HEADRE = /^(第\s*[一二三四五六七八九十百\d]+\s*[章节]|\d+(\.\d+)+[\s\u3000]|[一二三四五六七八九十]+[、.]|Chapter\s+\d|表\s*\d|图\s*\d|附录|参考文献|致\s*谢|摘\s*要|Abstract|REFERENCES|Bibliography|ACKNOWLEDGMENTS?|APPENDIX)/;
   var PGRE = /^[ivxlcdm]{1,7}$|^\d{1,4}$/i;
 
@@ -226,6 +243,26 @@ mark.cur{background:#ffc94d}
     return (short/lines.length > 0.52) || wide >= 2 || boxy >= 4 || avg < 7;
   });
 
+  /* 英文：修 PDF 断词（Lan- guage -> Language）与标点前空格（, but -> , but） */
+  function cleanEn(s){
+    return s
+      .replace(/([A-Za-z])-[ ]+([a-z])/g, '$1$2')
+      .replace(/(\w)[ ]+([,.;:!?%])(?=[ ]|$)/g, '$1$2')
+      .replace(/[ ]{2,}/g, ' ');
+  }
+
+  /* 英文：一行里常挤着好几句，按句点切开，才能一段一句、逐句对照 */
+  function splitEn(s){
+    var out = [], re = /[.!?][\"”’\)]?\s+(?=[A-Z0-9“\"(])/g, last = 0, m;
+    while((m = re.exec(s))){
+      var cut = m.index + m[0].replace(/\s+$/, '').length;
+      out.push(s.slice(last, cut));
+      last = m.index + m[0].length;
+    }
+    out.push(s.slice(last));
+    return out.filter(function(x){ return x.trim().length; });
+  }
+
   /* 元素流 */
   function parse(){
     var out = [];
@@ -237,12 +274,26 @@ mark.cur{background:#ffc94d}
         if(PGRE.test(s) && s.length<=4){ out.push({k:'pg', v:s, page:page}); return; }
         if(li<=1 && D.hdr.indexOf(s)>=0){ out.push({k:'hdr', v:s, page:page}); return; }
         if(isHead(s)){ out.push({k:'h', v:s, page:page}); return; }
+        if(IS_EN){
+          splitEn(cleanEn(s)).forEach(function(part){ out.push({k:'t', v:part.trim(), page:page}); });
+          return;
+        }
         out.push({k:'t', v:s, page:page});
       });
     });
     return out;
   }
   var ELEMS = parse();
+
+  /* 英文：PDF 换行处的相邻字母要接上空格；连字符断词（exam- ple）接合 */
+  function joinT(a, b){
+    if(!a) return b;
+    if(!IS_EN) return a + b;
+    var last = a.slice(-1), first = b.slice(0, 1);
+    if(/\s/.test(last) || /\s/.test(first)) return a + b;
+    if(last === '-' && /[a-z,.;:)]/.test(first)) return a.slice(0, -1) + b;
+    return a + ' ' + b;
+  }
 
   function buildFlow(){
     var blocks = [], buf = '', bufPage = 0, lastPage = 0;
@@ -259,13 +310,90 @@ mark.cur{background:#ffc94d}
       if(e.k==='hdr'){ flush(); blocks.push({k:'hdr', v:e.v, page:e.page}); return; }
       if(e.k==='pg'){ return; }
       if(e.k==='h'){ flush(); blocks.push({k:'h', v:e.v, page:e.page}); return; }
-      if(!buf){ buf = e.v; bufPage = e.page; } else { buf += e.v; }
+      if(!buf){ buf = e.v; bufPage = e.page; } else { buf = joinT(buf, e.v); }
       if(END.indexOf(e.v.slice(-1))>=0){ flush(); }
     });
     flush();
     return blocks;
   }
   var FLOW = buildFlow();
+
+  /* ── 逐句中译：按「去空白小写」后的整句匹配，命中就把中文插在该句下面 ── */
+  /* 连字折叠表：必须在 normN 首次调用之前赋值 */
+  var LIG = {'\ufb00':'ff','\ufb01':'fi','\ufb02':'fl','\ufb03':'ffi','\ufb04':'ffl','\ufb05':'ft','\ufb06':'st'};
+  var ZH = D.zh || null, ZMAP = null;
+  if (ZH && ZH.length){
+    ZMAP = ZH.map(function(x){ return {n: normN(x.e), z: x.z}; });
+    ZMAP.sort(function(a,b){ return b.n.length - a.n.length; });
+  }
+  function normN(s){
+    return String(s).replace(/[\ufb00-\ufb06]/g, function(c){ return LIG[c]; })
+      .replace(/[\s\u00ad\u200b\-]+/g,'')
+      .replace(/[\u2019\u2018]/g, "'").replace(/[\u201c\u201d]/g, '"')
+      .toLowerCase();
+  }
+  function withZh(v){
+    if(!state.zh || !ZMAP) return null;
+    /* 与 normN 严格同规则：去空白/软连字符/连字符，折叠连字，统一引号 */
+    var n = '', map = [], i, q;
+    for(i=0;i<v.length;i++){
+      var ch = v.charAt(i);
+      if(/\s/.test(ch) || ch==='\u00ad' || ch==='\u200b' || ch==='-') continue;
+      var f = LIG[ch] || ch;
+      if(f.length > 1){
+        for(q=0;q<f.length;q++){ n += f.charAt(q).toLowerCase(); map.push(i); }
+        continue;
+      }
+      if(ch==='\u2019' || ch==='\u2018'){ n += "'"; map.push(i); continue; }
+      if(ch==='\u201c' || ch==='\u201d'){ n += '"'; map.push(i); continue; }
+      n += ch.toLowerCase();
+      map.push(i);
+    }
+    var used = new Array(n.length), hits = [];
+    /* all=true：同一句在文中多处出现都标；false：只标第一处（前缀退化时用，避免误插） */
+    function scan(key, all, z){
+      if(key.length < 8) return 0;
+      var from = 0, pos, cnt = 0;
+      while((pos = n.indexOf(key, from)) >= 0){
+        var ok = true, q;
+        for(q=pos; q<pos+key.length; q++){ if(used[q]){ ok = false; break; } }
+        if(ok){
+          for(q=pos; q<pos+key.length; q++) used[q] = true;
+          hits.push({s: map[pos], e: map[pos+key.length-1]+1, z: z});
+          cnt++;
+          if(!all) return cnt;
+        }
+        from = pos + key.length;
+      }
+      return cnt;
+    }
+    for(i=0;i<ZMAP.length;i++){
+      var ent = ZMAP[i], c;
+      if(ent.n.length < 8) continue;
+      c = scan(ent.n, true, ent.z);
+      /* 整句落在被截断的段落里时，退化为长前缀定位（译文仍插在该段末尾） */
+      if(!c && ent.n.length > 110) c = scan(ent.n.slice(0,110), false, ent.z);
+      if(!c && ent.n.length > 70)  c = scan(ent.n.slice(0,70),  false, ent.z);
+      /* 句子开头被切到上一块（如 "In" 落在被误判的标题行）时，用后半段定位 */
+      if(!c){
+        var off = Math.floor(ent.n.length * 0.28);
+        if(ent.n.length - off >= 70) c = scan(ent.n.slice(off), false, ent.z);
+      }
+      if(c) ent.hit = 1;
+    }
+    if(!hits.length) return null;
+    hits.sort(function(a,b){ return a.s - b.s; });
+    var out = '', cur = 0;
+    hits.forEach(function(h){
+      if(h.s < cur) return;
+      out += esc(v.slice(cur, h.s));
+      out += esc(v.slice(h.s, h.e));
+      out += '<em class="zn">' + esc(h.z) + '</em>';
+      cur = h.e;
+    });
+    if(cur < v.length) out += esc(v.slice(cur));
+    return out;
+  }
 
   function render(){
     var host = document.getElementById('doc');
@@ -288,9 +416,10 @@ mark.cur{background:#ffc94d}
         if(!bl.length) continue;
         html.push(bl.map(function(b){
           if(b.k==='pb') return '<div class="pb" data-p="'+b.page+'">P.'+b.page+'</div>';
-          if(b.k==='h') return '<p class="hh">'+esc(b.v)+'</p>';
+          if(b.k==='h'){ var hz = withZh(b.v); return '<p class="hh">'+(hz || esc(b.v))+'</p>'; }
           if(b.k==='hdr') return '<p class="hdr">'+esc(b.v)+'</p>';
-          return '<p>'+esc(b.v)+'</p>';
+          var z = withZh(b.v);
+          return '<p>'+(z || esc(b.v))+'</p>';
         }).join(''));
       }
     }
@@ -411,8 +540,31 @@ mark.cur{background:#ffc94d}
     if(e.key==='Enter'){ state.q = this.value.trim(); doSearch(state.q); }
   });
 
+  var zhBtn = document.getElementById('zhBtn');
+  if (ZMAP && zhBtn){
+    zhBtn.hidden = false;
+    var info = document.getElementById('zhInfo');
+    info.textContent = '已译 ' + ZH.length + ' 句';
+    info.title = '中文译文覆盖：摘要、引言、各章首段、结论。未覆盖的段落仍按原文显示。';
+    zhBtn.title = '逐句中文对照（译文在每句英文下方）';
+    zhBtn.addEventListener('click', function(){
+      state.zh = !state.zh;
+      document.body.classList.toggle('zh-on', state.zh);
+      zhBtn.classList.toggle('on', state.zh);
+      zhBtn.textContent = state.zh ? '中译 开' : '中译';
+      render();
+      if(state.zh && !window.__zhHinted){
+        window.__zhHinted = true;
+      }
+    });
+  }
+
   buildToc();
   render();
+
+  /* 深链：#p9 直接落到第 9 页（供教程页内嵌时定位到正文） */
+  var mh = /^#p(\d+)$/.exec(location.hash || '');
+  if (mh){ setTimeout(function(){ goPage(+mh[1]); }, 150); }
 })();
 </script>
 </body>
