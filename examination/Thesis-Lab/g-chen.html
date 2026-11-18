@@ -1,0 +1,882 @@
+<!DOCTYPE html>
+<html lang="zh-CN"><head><meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>汇率波动与企业价值相关性研究——基于沪市主板上市公司的实证研究 · 结构拆解 + 原文</title>
+<style>
+
+:root{
+  --bg:#f5f8fb; --card:#fff; --ink:#15202b; --ink2:#48576b; --ink3:#7d8a9b;
+  --line:#e4eaf2; --line2:#eef2f7;
+  --t1:#0f766e; --t1b:#e6f4f1;
+  --t2:#4338ca; --t2b:#ecebfb;
+  --t3:#b45309; --t3b:#fdf1e0;
+  --t4:#7e22ce; --t4b:#f6e9ff;
+  --ok:#0d9488; --warn:#d97706; --bad:#dc2626;
+  --orig:#1e40af; --origb:#eff5ff;
+  --demo:#047857; --demob:#f0fdf6;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+body{
+  background:var(--bg); color:var(--ink);
+  font-family:-apple-system,BlinkMacSystemFont,"PingFang SC","Hiragino Sans GB","Microsoft YaHei",sans-serif;
+  font-size:14.5px; line-height:1.78; -webkit-font-smoothing:antialiased;
+  padding:0 20px 80px;
+}
+.wrap{max-width:1020px;margin:0 auto}
+
+header{padding:50px 0 26px}
+.kicker{
+  display:inline-block;font-size:11.5px;letter-spacing:.14em;font-weight:700;
+  color:var(--t1);background:var(--t1b);padding:5px 11px;border-radius:5px;margin-bottom:18px;
+}
+h1{font-size:30px;line-height:1.34;letter-spacing:-.4px;font-weight:800;margin-bottom:14px}
+h1 em{font-style:normal;color:var(--t1)}
+.lede{font-size:15.3px;color:var(--ink2);max-width:830px}
+.lede b{color:var(--ink);font-weight:700}
+
+nav{
+  position:sticky;top:0;z-index:50;background:rgba(245,248,251,.94);
+  backdrop-filter:blur(12px);border-bottom:1px solid var(--line);
+  margin:0 -20px 30px;padding:0 20px;
+}
+.navrow{max-width:1020px;margin:0 auto;display:flex;align-items:center;gap:12px}
+.navin{flex:1 1 auto;min-width:0;display:flex;gap:2px;overflow-x:auto;padding:9px 0;scrollbar-width:none}
+.navin::-webkit-scrollbar{display:none}
+.navin a{
+  flex:0 0 auto;font-size:12.4px;color:var(--ink2);text-decoration:none;
+  padding:6px 9px;border-radius:6px;white-space:nowrap;transition:.15s;
+}
+.navin a:hover{background:#fff;color:var(--ink)}
+.navin a.on{background:var(--ink);color:#fff}
+
+/* ── 注释总开关（导航栏内） ── */
+.aball{
+  flex:0 0 auto;display:inline-flex;align-items:center;gap:6px;
+  font-family:inherit;font-size:12.6px;font-weight:700;color:#fff;
+  background:linear-gradient(135deg,#1d4ed8,#2563eb);
+  border:1px solid #1d4ed8;border-radius:20px;
+  padding:6px 10px 6px 8px;cursor:pointer;transition:.18s;line-height:1.4;
+  box-shadow:0 2px 8px rgba(37,99,235,.28);white-space:nowrap;
+}
+.aball:hover{transform:translateY(-1px);box-shadow:0 5px 14px rgba(37,99,235,.36)}
+.aball .qm{
+  width:16px;height:16px;border-radius:50%;background:rgba(255,255,255,.24);color:#fff;
+  font-size:11px;font-weight:800;display:grid;place-items:center;flex:0 0 auto;
+}
+.aball .cnt{
+  font-size:10.5px;font-weight:800;font-variant-numeric:tabular-nums;
+  background:rgba(255,255,255,.22);padding:1px 6px;border-radius:9px;letter-spacing:.02em;
+}
+.aball.on{background:linear-gradient(135deg,#0f766e,#0d9488);border-color:#0f766e;
+  box-shadow:0 2px 8px rgba(13,148,136,.3)}
+.aball.on:hover{box-shadow:0 5px 14px rgba(13,148,136,.38)}
+
+/* ── 悬浮开关（右下角） ── */
+.fab{
+  position:fixed;right:22px;bottom:22px;z-index:80;
+  display:inline-flex;align-items:center;gap:8px;
+  font-family:inherit;font-size:13px;font-weight:700;color:#fff;
+  background:var(--ink);border:none;border-radius:28px;
+  padding:11px 18px 11px 15px;cursor:pointer;transition:.2s;
+  box-shadow:0 10px 26px rgba(21,32,43,.3);
+}
+.fab:hover{transform:translateY(-2px);box-shadow:0 14px 32px rgba(21,32,43,.38)}
+.fab .qm{
+  width:19px;height:19px;border-radius:50%;background:rgba(255,255,255,.2);color:#fff;
+  font-size:12px;font-weight:800;display:grid;place-items:center;flex:0 0 auto;
+}
+.fab .cnt{
+  font-size:11px;font-weight:800;font-variant-numeric:tabular-nums;
+  background:rgba(255,255,255,.18);padding:2px 7px;border-radius:10px;
+}
+.fab.on{background:linear-gradient(135deg,#0f766e,#0d9488);box-shadow:0 10px 26px rgba(13,148,136,.36)}
+.fab.on:hover{box-shadow:0 14px 32px rgba(13,148,136,.44)}
+
+@keyframes acIn{from{transform:translateY(-4px)}to{transform:none}}
+.anno.open .ac{animation:acIn .2s ease}
+
+@media(max-width:680px){
+  .aball .tx{display:none}
+  .aball{padding:6px 9px}
+  .fab{right:14px;bottom:14px;padding:10px 15px 10px 13px;font-size:12.4px}
+}
+
+section{margin-bottom:50px}
+h2{
+  font-size:20.5px;font-weight:800;letter-spacing:-.2px;margin-bottom:8px;
+  display:flex;align-items:center;gap:10px;
+}
+h2 .n{
+  flex:0 0 auto;width:26px;height:26px;border-radius:7px;background:var(--ink);color:#fff;
+  font-size:13px;display:grid;place-items:center;font-weight:700;
+}
+.sub{color:var(--ink3);font-size:13.4px;margin-bottom:20px;max-width:830px}
+
+.card{background:var(--card);border:1px solid var(--line);border-radius:13px;padding:24px 26px;margin-bottom:16px}
+.card.pad0{padding:0;overflow:hidden}
+
+table{width:100%;border-collapse:collapse;font-size:13.4px}
+th,td{padding:11px 13px;text-align:left;border-bottom:1px solid var(--line2);vertical-align:top}
+th{background:#f8fafd;font-weight:700;color:var(--ink2);font-size:12.3px;letter-spacing:.02em}
+tbody tr:last-child td{border-bottom:none}
+td b{font-weight:700}
+.tbl-wrap{overflow-x:auto}
+
+.case-head{border-radius:13px 13px 0 0;padding:22px 26px;color:#fff}
+.case-head.c1{background:linear-gradient(135deg,#0f766e,#0d9488)}
+.case-head.c2{background:linear-gradient(135deg,#4338ca,#5b52e0)}
+.case-head.c3{background:linear-gradient(135deg,#b45309,#d97706)}
+.case-head.c4{background:linear-gradient(135deg,#7e22ce,#9333ea)}
+.case-head .tag{
+  display:inline-block;font-size:11px;letter-spacing:.1em;font-weight:700;
+  background:rgba(255,255,255,.2);padding:3px 9px;border-radius:4px;margin-bottom:9px;
+}
+.case-head h3{font-size:19px;font-weight:800;line-height:1.42;margin-bottom:6px;letter-spacing:-.2px}
+.case-head .meta{font-size:12.6px;opacity:.92}
+.case-body{border:1px solid var(--line);border-top:none;border-radius:0 0 13px 13px;background:#fff;padding:24px 26px}
+
+.file{background:#fafcfe;border:1px solid var(--line2);border-radius:9px;padding:15px 17px;font-size:13px;margin-bottom:20px}
+.file dl{display:grid;grid-template-columns:84px 1fr;gap:6px 12px}
+.file dt{color:var(--ink3);font-weight:600}
+.file dd{color:var(--ink)}
+.file a{color:var(--t2);text-decoration:none;border-bottom:1px dotted #b9c4d4;word-break:break-all}
+.file a:hover{color:var(--t1)}
+
+h4{font-size:15px;font-weight:800;margin:24px 0 10px;display:flex;align-items:center;gap:8px;flex-wrap:wrap}
+h4:first-child{margin-top:0}
+h4 .dot{width:6px;height:6px;border-radius:50%;background:var(--ink3);flex:0 0 auto}
+.c1 h4 .dot{background:var(--t1)} .c2 h4 .dot{background:var(--t2)} .c3 h4 .dot{background:var(--t3)}
+.c4 h4 .dot{background:var(--t4)}
+
+.badge-o,.badge-r,.badge-d{
+  font-size:10.5px;font-weight:700;letter-spacing:.04em;padding:2px 7px;border-radius:4px;
+  flex:0 0 auto;white-space:nowrap;
+}
+.badge-o{background:var(--origb);color:var(--orig);border:1px solid #c7dbfa}
+.badge-r{background:#f4f5f8;color:#5b6675;border:1px solid #dde2ea}
+.badge-d{background:var(--demob);color:var(--demo);border:1px dashed #a7e3c4}
+
+.orig{
+  background:var(--origb);border-left:3px solid var(--orig);border-radius:0 8px 8px 0;
+  padding:15px 18px;font-size:13.3px;line-height:1.85;color:#1f2c3d;margin:12px 0;
+}
+.orig .src{display:block;margin-top:10px;font-size:11.8px;color:#5b7291}
+.orig p+p{margin-top:9px}
+
+.demo{
+  background:var(--demob);border:1px dashed #9ed9bb;border-radius:8px;
+  padding:15px 18px;font-size:13.3px;line-height:1.9;margin:12px 0;
+}
+.demo .lab{display:inline-block;font-size:10.8px;font-weight:800;color:var(--demo);letter-spacing:.06em;margin-bottom:8px}
+.demo p{text-indent:2em}
+.demo p+p{margin-top:6px}
+.demo .why{font-size:12.4px;color:#3f6b58;margin-top:10px;padding-top:9px;border-top:1px dashed #bfe6d2;text-indent:0}
+
+.anno{margin:10px 0 14px}
+.ab{
+  display:inline-flex;align-items:center;gap:7px;
+  font-family:inherit;font-size:12.6px;font-weight:600;color:var(--ink2);
+  background:#fff;border:1px dashed #c3cede;border-radius:20px;
+  padding:6px 14px 6px 11px;cursor:pointer;transition:.16s;text-align:left;line-height:1.5;
+}
+.ab:hover{border-color:#8fa3bd;color:var(--ink);background:#fbfdff}
+.ab .qm{
+  width:16px;height:16px;border-radius:50%;background:#e7edf6;color:#4a5b73;
+  font-size:11px;font-weight:800;display:grid;place-items:center;flex:0 0 auto;
+}
+.ab .arw{font-size:9px;color:#93a2b6;transition:transform .2s;display:inline-block}
+.anno.open .ab{border-style:solid;border-color:var(--ink);color:var(--ink);background:#f7fafd}
+.anno.open .ab .qm{background:var(--ink);color:#fff}
+.anno.open .ab .arw{transform:rotate(90deg)}
+.ac{display:none;margin-top:9px;border-left:3px solid #cfd9e6;padding:2px 0 2px 15px;font-size:13.2px;color:var(--ink2)}
+.anno.open .ac{display:block}
+.ac b{color:var(--ink)}
+.ac p+p{margin-top:8px}
+.ac .kv{display:flex;gap:8px;margin-top:6px;font-size:12.7px}
+.ac .kv i{font-style:normal;color:var(--ink3);flex:0 0 58px}
+
+.tree{font-size:13.2px;line-height:1.95;border-left:2px solid var(--line);padding-left:0}
+.tree .lv1{font-weight:700;color:var(--ink);margin-top:9px;padding-left:14px;padding-right:108px;position:relative}
+.tree .lv1:first-child{margin-top:0}
+.tree .lv2{color:var(--ink2);padding-left:34px;padding-right:108px;position:relative}
+.tree .lv3{color:var(--ink3);font-size:12.3px;padding-left:34px;padding-right:108px;line-height:1.8;position:relative}
+.tree .pg{
+  position:absolute;right:0;top:3px;display:inline-block;white-space:nowrap;
+  font-weight:600;font-size:11.4px;color:var(--ink3);
+  font-variant-numeric:tabular-nums;letter-spacing:.02em;
+  background:#f3f6fa;border:1px solid var(--line);border-radius:4px;padding:1px 7px;
+}
+.tree .note{color:var(--t3);font-size:12.3px;padding-left:14px;margin-top:6px}
+
+.chain{counter-reset:step;margin:6px 0 0}
+.chain .st{position:relative;padding:0 0 20px 40px;border-left:1.5px dashed var(--line);margin-left:12px}
+.chain .st:last-child{border-left-color:transparent;padding-bottom:0}
+.chain .st::before{
+  counter-increment:step;content:counter(step);
+  position:absolute;left:-12px;top:0;width:23px;height:23px;border-radius:50%;
+  background:#fff;border:1.5px solid var(--line);color:var(--ink3);
+  font-size:11.5px;font-weight:700;display:grid;place-items:center;
+}
+.chain .st b{display:block;font-size:13.9px;margin-bottom:3px}
+.chain .st p{font-size:13.2px;color:var(--ink2);margin-bottom:5px}
+.chain .st .q{font-size:12.7px;color:var(--t2);background:var(--t2b);display:inline-block;padding:3px 9px;border-radius:5px;margin-top:2px}
+.c1 .chain .st::before{border-color:var(--t1);color:var(--t1)}
+.c4 .chain .st::before{border-color:var(--t4);color:var(--t4)}
+
+.bars{margin:8px 0 4px}
+.bar{display:flex;align-items:center;gap:12px;margin-bottom:9px;font-size:12.8px}
+.bar .nm{flex:0 0 130px;color:var(--ink2);text-align:right;font-weight:600}
+.bar .tr{flex:1;background:var(--line2);border-radius:4px;height:22px;position:relative;overflow:hidden}
+.bar .fl{height:100%;border-radius:4px;display:flex;align-items:center;padding-left:9px;color:#fff;font-size:11.5px;font-weight:700}
+.bar .ct{flex:0 0 58px;color:var(--ink3);font-size:12px;font-variant-numeric:tabular-nums}
+.b1 .fl{background:linear-gradient(90deg,#0f766e,#14b8a6)}
+.b2 .fl{background:linear-gradient(90deg,#4338ca,#6366f1)}
+.b3 .fl{background:linear-gradient(90deg,#b45309,#f59e0b)}
+.b4 .fl{background:linear-gradient(90deg,#7e22ce,#a855f7)}
+
+.alert{border-radius:9px;padding:14px 17px;font-size:13.3px;margin:16px 0;line-height:1.78}
+.alert b{font-weight:800}
+.alert.info{background:#eef6ff;border-left:3px solid #3b82f6}
+.alert.warn{background:#fff8ec;border-left:3px solid var(--warn)}
+.alert.bad{background:#fef2f2;border-left:3px solid var(--bad)}
+.alert.ok{background:#effaf6;border-left:3px solid var(--ok)}
+
+.picker{background:#fff;border:1px solid var(--line);border-radius:13px;padding:22px 24px}
+.chips{display:flex;flex-wrap:wrap;gap:8px;margin:12px 0 18px}
+.chip{
+  font-size:12.8px;padding:7px 13px;border-radius:20px;border:1px solid var(--line);
+  background:#fff;color:var(--ink2);cursor:pointer;transition:.15s;user-select:none;font-family:inherit;
+}
+.chip:hover{border-color:#b8c4d6;color:var(--ink)}
+.chip.on{background:var(--ink);color:#fff;border-color:var(--ink)}
+.verdict{border-radius:10px;padding:16px 18px;font-size:13.4px;background:#fafcfe;border:1px solid var(--line2);line-height:1.8}
+.verdict .big{font-size:15.5px;font-weight:800;margin-bottom:6px;display:block}
+.verdict .lv{font-size:12.6px;color:var(--ink3);margin-top:8px}
+
+.fmt-h{font-size:14.6px;font-weight:800;margin:28px 0 10px;padding-left:11px;border-left:4px solid var(--t1)}
+.fmt-h:first-child{margin-top:0}
+.spec{background:#fbfdff;border:1px solid var(--line);border-radius:9px;padding:0;margin:10px 0;overflow-x:auto}
+.spec table{font-size:12.9px}
+.spec th{background:#f2f7fc}
+.spec td:first-child{font-weight:600}
+.mono{
+  font-family:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;
+  font-size:12.3px;background:#f3f6fa;border:1px solid var(--line);border-radius:4px;
+  padding:1px 6px;color:#33415a;
+}
+.ref-list{font-size:12.9px;line-height:1.95;margin:10px 0;list-style:none}
+.ref-list li{padding:9px 0;border-bottom:1px dashed var(--line2)}
+.ref-list li:last-child{border-bottom:none}
+.ref-list .t{display:inline-block;font-size:11.5px;font-weight:700;color:var(--t1);background:var(--t1b);padding:1px 7px;border-radius:4px;margin-right:8px}
+.ref-list .code{display:block;margin:5px 0 2px;font-family:ui-monospace,Menlo,monospace;font-size:12.2px;color:#1f3a5f;background:#f4f8fd;border-radius:5px;padding:6px 9px}
+.ref-list .note{display:block;font-size:12.2px;color:var(--ink3)}
+
+ol.steps li span b,ol.steps li p b{display:inline}
+.ref-list li{border-bottom:1px dashed #e1e9f3}
+.ref-list .note{color:#6f7d90}
+
+.check{list-style:none}
+.check li{position:relative;padding:0 0 10px 22px;font-size:13.3px;color:var(--ink2)}
+.check li::before{content:"✕";position:absolute;left:0;top:0;color:var(--bad);font-weight:800;font-size:11.5px}
+.check li.good::before{content:"✓";color:var(--ok)}
+
+ol.steps{list-style:none;counter-reset:s}
+ol.steps li{counter-increment:s;position:relative;padding:0 0 16px 38px;font-size:13.5px}
+ol.steps li::before{
+  content:counter(s);position:absolute;left:0;top:1px;width:23px;height:23px;
+  border-radius:6px;background:var(--t1b);color:var(--t1);font-weight:800;font-size:12px;
+  display:grid;place-items:center;
+}
+ol.steps li b{display:block;margin-bottom:2px}
+ol.steps li span{color:var(--ink2);font-size:13px}
+
+footer{border-top:1px solid var(--line);padding-top:22px;margin-top:56px;font-size:12.3px;color:var(--ink3);line-height:1.9}
+
+@media(max-width:680px){
+  body{padding:0 14px 60px}
+  h1{font-size:23px}
+  .card,.case-body{padding:18px 16px}
+  .case-head{padding:18px 16px}
+  .file dl{grid-template-columns:1fr;gap:2px}
+  .file dt{margin-top:7px}
+  .bar .nm{flex:0 0 78px;font-size:11.8px}
+  .bar .ct{flex:0 0 46px}
+  table{font-size:12.4px}
+  th,td{padding:9px 9px}
+  .cmp{min-width:820px}
+}
+
+/* 原文全文入口 */
+.btn-full{display:inline-flex;align-items:center;gap:6px;font-size:11.8px;font-weight:600;
+  color:#fff;background:linear-gradient(135deg,#2b6cf6,#12b6a8);border-radius:6px;
+  padding:4px 11px;text-decoration:none;vertical-align:middle;transition:.15s;
+  box-shadow:0 1px 3px rgba(43,108,246,.22)}
+.btn-full:hover{transform:translateY(-1px);box-shadow:0 4px 12px rgba(43,108,246,.3)}
+.btn-full.mute{background:#eef3fa;color:#8a99ad;box-shadow:none;font-weight:500}
+.btn-full.mute:hover{transform:none;box-shadow:none}
+
+/* 原文全文库 */
+.fullbox{margin-top:16px}
+.fgrid{display:grid;grid-template-columns:repeat(auto-fill,minmax(215px,1fr));gap:9px;margin:12px 0 4px}
+.fcard{display:block;text-decoration:none;color:inherit;border:1px solid var(--line);
+  border-radius:9px;padding:11px 13px;background:#fbfdff;transition:.15s;position:relative;overflow:hidden}
+.fcard:hover{border-color:#b9d2f7;background:#f4f9ff;transform:translateY(-2px);
+  box-shadow:0 6px 16px rgba(43,108,246,.1)}
+.fcard::before{content:"";position:absolute;left:0;top:0;bottom:0;width:2.5px;
+  background:linear-gradient(180deg,#2b6cf6,#12b6a8)}
+.fcard .fk{font-size:10px;font-weight:700;color:#2b6cf6;letter-spacing:.06em}
+.fcard .ft{font-size:12.4px;font-weight:600;color:var(--ink);line-height:1.5;margin:4px 0 3px}
+.fcard .fm{font-size:11px;color:var(--t3);line-height:1.6}
+.fcard.mute{opacity:.62}
+.fcard.mute::before{background:#cbd6e4}
+.fcard.mute:hover{transform:none;box-shadow:none;border-color:var(--line);background:#fbfdff}
+
+/* ══════════ 案例三选卡：原版 / 案例解析 / 总结 ══════════ */
+.vtabs{--tc:#2b6cf6;--tcb:#eef3fb}
+.vbar{display:flex;gap:2px;border-bottom:1px solid var(--line);overflow-x:auto;
+  scrollbar-width:none;margin:0 0 2px}
+.vbar::-webkit-scrollbar{display:none}
+.vb{flex:0 0 auto;display:inline-flex;align-items:center;gap:7px;border:0;background:transparent;
+  font-family:inherit;font-size:13.1px;font-weight:600;color:var(--ink3);cursor:pointer;
+  padding:11px 14px 10px;border-bottom:2.5px solid transparent;transition:.15s;white-space:nowrap}
+.vb:hover{color:var(--ink);background:#f8fbff}
+.vb .n{font-size:10.2px;font-weight:800;color:#fff;background:#c3cfdf;border-radius:4px;
+  padding:1.5px 5px;line-height:1.3;transition:.15s}
+.vb.on{color:var(--tc);border-bottom-color:var(--tc)}
+.vb.on .n{background:var(--tc)}
+.vb .d{font-size:11px;font-weight:500;color:var(--ink3);opacity:.85}
+.vb.on .d{color:var(--tc);opacity:.7}
+.vp{display:none}
+.vp.on{display:block;animation:vpIn .2s ease}
+@keyframes vpIn{from{transform:translateY(5px)}to{transform:none}}
+@media(prefers-reduced-motion:reduce){.vp.on{animation:none}}
+
+/* 原版：出处条 + 内嵌全文 */
+.srcbar{display:flex;gap:7px;flex-wrap:wrap;align-items:center;padding:11px 13px;
+  background:linear-gradient(135deg,#f7fbff,#f2f8fd);border:1px solid #dbe8f7;
+  border-radius:9px;margin-bottom:12px}
+.srcbar .lab{font-size:11px;font-weight:700;letter-spacing:.08em;color:var(--ink3);margin-right:2px}
+.sbtn{display:inline-flex;align-items:center;gap:5px;text-decoration:none;font-size:12.2px;
+  font-weight:600;color:#1d4ed8;background:#fff;border:1px solid #c7daf7;border-radius:6px;
+  padding:5px 10px;transition:.15s;white-space:nowrap}
+.sbtn:hover{background:#eff5ff;border-color:#93b8f2;transform:translateY(-1px);
+  box-shadow:0 3px 9px rgba(37,99,235,.14)}
+.sbtn.warm{color:#b45309;border-color:#f1d3a8}
+.sbtn.warm:hover{background:#fdf5ea;border-color:#e8b978;box-shadow:0 3px 9px rgba(180,83,9,.13)}
+.sbtn.mute{color:#93a0b1;border-color:#e2e8f0;background:#f8fafc;pointer-events:none}
+.pv{border:1px solid var(--line);border-radius:10px;overflow:hidden;background:#fff}
+.pvh{display:flex;align-items:center;gap:8px;flex-wrap:wrap;padding:8px 12px;
+  background:#f8fbff;border-bottom:1px solid var(--line2);font-size:11.8px;color:var(--ink2)}
+.pvh b{color:var(--ink);font-weight:700}
+.pvh .r{margin-left:auto;font-size:11px;color:var(--ink3)}
+.pv iframe{width:100%;height:min(76vh,820px);border:0;display:block;background:#f6f9fd}
+.pvf{padding:8px 12px;background:#fbfdff;border-top:1px solid var(--line2);
+  font-size:11.4px;color:var(--ink3);line-height:1.75}
+.nofull{padding:16px 16px 4px;border:1px dashed #d7e3f2;border-radius:10px;background:#fbfdff}
+
+/* 解析：章节块 */
+.legend{display:flex;gap:7px;flex-wrap:wrap;margin:2px 0 13px;font-size:11.4px;color:var(--ink3)}
+.legend .lg{display:inline-flex;align-items:center;gap:5px;background:#fff;border:1px solid var(--line);
+  border-radius:99px;padding:3px 9px}
+.legend .sw{width:8px;height:8px;border-radius:2px;background:var(--tc)}
+.legend .sw.g{background:#cbd5e1}
+.chap{border:1px solid var(--line);border-radius:10px;background:#fff;margin-bottom:9px;
+  overflow:hidden;transition:.15s}
+.chap:hover{border-color:#cddcee;box-shadow:0 3px 12px rgba(24,58,120,.05)}
+.chap>.ch{display:flex;align-items:baseline;gap:9px;flex-wrap:wrap;padding:9px 13px;
+  background:linear-gradient(180deg,#f9fcff,#f4f9fd);border-bottom:1px solid var(--line2)}
+.chap>.ch .ci{font-size:10.4px;font-weight:800;letter-spacing:.05em;color:#fff;
+  background:var(--tc);border-radius:4px;padding:2px 6px;line-height:1.4}
+.chap>.ch b{font-size:13.5px;font-weight:700;color:var(--ink);line-height:1.5}
+.chap>.ch .cp{margin-left:auto;font-size:10.8px;color:var(--ink3);font-variant-numeric:tabular-nums;
+  white-space:nowrap}
+.chap>.cb{padding:11px 14px 12px}
+.chap>.cb>p{font-size:13.1px;color:var(--ink2);line-height:1.85;margin-bottom:8px}
+.chap>.cb>p:last-child{margin-bottom:0}
+.chap>.cb>p b{color:var(--ink)}
+.chap>.cb .mini-t{font-size:11.2px;font-weight:700;color:var(--ink3);letter-spacing:.05em;
+  margin:10px 0 5px}
+.chap .anno{margin:9px 0 0}
+.chap .demo,.chap .alert,.chap .tree,.chap .tbl-wrap,.chap .bars{margin:10px 0 0}
+.chap .alert:last-child,.chap .demo:last-child{margin-bottom:0}
+.tagx{display:inline-block;font-size:10.2px;font-weight:700;border-radius:4px;padding:1.5px 6px;
+  background:var(--tcb,#eef3fb);color:var(--tc);vertical-align:1.5px;margin-left:4px}
+
+/* 总结：三问 */
+.q3{display:grid;grid-template-columns:repeat(auto-fit,minmax(215px,1fr));gap:9px;margin-bottom:14px}
+.q3 .q{border:1px solid var(--line);border-radius:9px;padding:11px 13px;background:#fff;
+  position:relative;overflow:hidden}
+.q3 .q::before{content:"";position:absolute;left:0;top:0;bottom:0;width:2.5px;background:var(--tc);opacity:.55}
+.q3 .q .qh{font-size:11px;font-weight:800;letter-spacing:.05em;color:var(--tc);margin-bottom:4px}
+.q3 .q .qt{font-size:12.7px;color:var(--ink);line-height:1.7}
+.why3{counter-reset:w;margin:4px 0 14px}
+.why3 .w{counter-increment:w;position:relative;padding:0 0 13px 34px}
+.why3 .w::before{content:counter(w);position:absolute;left:0;top:1px;width:22px;height:22px;
+  border-radius:6px;background:var(--tcb,#eef3fb);color:var(--tc);font-size:11.5px;
+  font-weight:800;display:grid;place-items:center}
+.why3 .w b{display:block;font-size:13.4px;margin-bottom:2px}
+.why3 .w p{font-size:12.9px;color:var(--ink2);line-height:1.8}
+.why3 .w p b{display:inline;font-size:inherit}
+.why3 .w:last-child{padding-bottom:0}
+.mini-tbl th,.mini-tbl td{font-size:12.3px}
+.mini-tbl td code{font-family:ui-monospace,SFMono-Regular,Menlo,monospace;font-size:11.4px;
+  background:#f3f7fc;border:1px solid #e2ebf6;border-radius:4px;padding:1px 5px;color:#1d4ed8}
+
+@media(max-width:680px){
+  .vb{padding:10px 10px 9px;font-size:12.4px}
+  .vb .d{display:none}
+  .pv iframe{height:64vh}
+  .chap>.ch .cp{margin-left:0;width:100%}
+}
+
+
+/* ── 双选卡外壳 ── */
+:root{--mk:#2b6cf6}
+*{box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{margin:0;background:#f4f8fd;color:#182432;font-family:var(--sans);-webkit-font-smoothing:antialiased;line-height:1.65}
+.hd{background:linear-gradient(120deg,#16357f 0%,#2457d6 42%,#0e9f97 100%);color:#fff;padding:20px 0 18px}
+.hdin{max-width:1180px;margin:0 auto;padding:0 24px}
+.hd .nav{display:flex;align-items:center;gap:12px;margin-bottom:12px;flex-wrap:wrap}
+.hd .back{text-decoration:none;color:#fff;font-size:12.4px;background:rgba(255,255,255,.16);border:1px solid rgba(255,255,255,.32);border-radius:99px;padding:5px 13px;transition:.15s;white-space:nowrap}
+.hd .back:hover{background:rgba(255,255,255,.28)}
+.hd .no{font-size:11px;font-weight:700;letter-spacing:.06em;background:rgba(255,255,255,.2);border-radius:5px;padding:3px 9px}
+.hd h1{margin:0;font-size:20px;line-height:1.5;font-weight:700;letter-spacing:.2px}
+.hd .meta{margin-top:8px;font-size:12.6px;color:rgba(255,255,255,.92);line-height:1.7}
+.hd .desc{margin-top:8px;font-size:12.6px;color:rgba(255,255,255,.82);line-height:1.7;max-width:960px}
+
+/* 选卡 */
+.tabs{background:#fff;border-bottom:1px solid #e2eaf4;position:sticky;top:0;z-index:80;box-shadow:0 2px 10px rgba(20,40,70,.05)}
+.tabs-in{max-width:1180px;margin:0 auto;padding:0 24px;display:flex;gap:4px;overflow-x:auto;scrollbar-width:none}
+.tabs-in::-webkit-scrollbar{display:none}
+.tab{flex:0 0 auto;border:0;background:transparent;font-family:inherit;font-size:13.4px;color:#5a6b82;cursor:pointer;padding:14px 18px 13px;position:relative;display:flex;align-items:center;gap:8px;white-space:nowrap;transition:.15s;font-weight:600}
+.tab .ic{width:20px;height:20px;border-radius:6px;display:inline-flex;align-items:center;justify-content:center;font-size:11px;background:#eef3fb;color:#5a6b82;transition:.15s}
+.tab:hover{color:var(--mk)}
+.tab:hover .ic{background:#e2ecfd;color:var(--mk)}
+.tab.on{color:var(--tc,#2b6cf6)}
+.tab.on .ic{background:var(--tc,#2b6cf6);color:#fff}
+.tab::after{content:"";position:absolute;left:14px;right:14px;bottom:0;height:3px;border-radius:3px 3px 0 0;background:var(--tc,#2b6cf6);transform:scaleX(0);transition:transform .18s}
+.tab.on::after{transform:scaleX(1)}
+.tab .sub{font-size:11px;font-weight:500;color:#97a6ba}
+
+.wrap{max-width:1180px;margin:0 auto;padding:22px 24px 70px}
+.pane{display:none;animation:fade .22s ease}
+.pane.on{display:block}
+@keyframes fade{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:none}}
+@media(prefers-reduced-motion:reduce){.pane.on{animation:none}}
+
+/* 选卡一顶部提示 */
+.guide-top{background:linear-gradient(135deg,#f0f7ff,#f7fbff);border:1px solid #dce9fb;border-radius:12px;padding:15px 18px;margin-bottom:18px;display:flex;gap:14px;align-items:flex-start}
+.guide-top .qi{flex:0 0 auto;width:38px;height:38px;border-radius:10px;background:var(--tc,#2b6cf6);color:#fff;display:flex;align-items:center;justify-content:center;font-size:18px;font-weight:700}
+.guide-top b{color:#16233a}
+.guide-top p{margin:0;font-size:13.2px;color:#4b5d75;line-height:1.8}
+.guide-top .four{display:flex;gap:6px;flex-wrap:wrap;margin-top:9px}
+.guide-top .four span{font-size:11.4px;background:#fff;border:1px solid #dce9fb;border-radius:6px;padding:3px 9px;color:#3c5170;font-weight:600}
+
+/* 教程内容容器（复用教程页 class，这里给外层留白与卡片底） */
+.tutor{background:#fff;border:1px solid #e2eaf4;border-radius:12px;padding:22px 26px 30px;box-shadow:0 1px 3px rgba(24,58,120,.04)}
+.tutor .card{box-shadow:none}
+.tutor #annoAll{border:1px solid var(--tc,#2b6cf6);background:#fff;color:var(--tc,#2b6cf6);
+  font-family:inherit;font-size:12.4px;font-weight:600;border-radius:7px;padding:6px 14px;cursor:pointer;transition:.15s}
+.tutor #annoAll:hover{background:var(--tc2,#eef3fb)}
+.tutor #annoAll.on{background:var(--tc,#2b6cf6);color:#fff}
+
+/* 选卡二：原文影印 */
+.origin-bar{display:flex;align-items:center;gap:10px;flex-wrap:wrap;background:#fff;border:1px solid #e2eaf4;border-radius:10px;padding:10px 14px;margin-bottom:12px}
+.origin-bar .t{font-size:13px;font-weight:700;color:#16233a;display:flex;align-items:center;gap:7px}
+.origin-bar .t .ic{width:22px;height:22px;border-radius:6px;background:#e6f7f0;color:#059669;display:inline-flex;align-items:center;justify-content:center;font-size:12px}
+.origin-bar .hint{font-size:11.8px;color:#7d8da3;line-height:1.6}
+.origin-bar .spacer{flex:1}
+.origin-bar a.olink{text-decoration:none;font-size:12.2px;font-weight:600;color:#fff;background:var(--tc,#2b6cf6);border-radius:7px;padding:7px 13px;transition:.15s;white-space:nowrap}
+.origin-bar a.olink:hover{filter:brightness(1.08);transform:translateY(-1px)}
+.origin-bar a.olink.ghost{background:#fff;color:var(--tc,#2b6cf6);border:1px solid var(--tc,#2b6cf6)}
+.origin-frame{background:#fff;border:1px solid #e2eaf4;border-radius:10px;overflow:hidden;box-shadow:0 1px 3px rgba(24,58,120,.04)}
+.origin-frame iframe{display:block;width:100%;height:78vh;min-height:560px;border:0;background:#fff}
+.origin-tip{font-size:11.6px;color:#8a99ad;margin-top:9px;line-height:1.7}
+
+.foot{max-width:1180px;margin:0 auto;padding:0 24px 44px;font-size:11.6px;color:#93a1b4;line-height:1.8}
+@media(max-width:760px){
+  .hd h1{font-size:17px}
+  .tabs-in{padding:0 10px}
+  .tab{padding:12px 12px 11px;font-size:12.6px}
+  .tab .sub{display:none}
+  .wrap{padding:14px 12px 50px}
+  .tutor{padding:16px 13px 22px}
+  .guide-top{padding:13px;gap:10px}
+  .guide-top .qi{width:32px;height:32px;font-size:15px}
+  .origin-frame iframe{height:72vh;min-height:460px}
+}
+
+</style></head>
+<body>
+<div class="hd" style="--tc:#0d9488"><div class="hdin">
+  <div class="nav"><a class="back" href="papers.html">← 返回论文列表</a><span class="no">案例一</span><span class="no">方向一 · 汇率与企业价值 · 对应 00076 国际金融</span></div>
+  <h1>汇率波动与企业价值相关性研究——基于沪市主板上市公司的实证研究</h1>
+  <div class="meta">陈丹丹 · 河北大学 · 硕士学位论文 · 六章 · 55 页 · 2017</div>
+  <div class="desc">同一个题目，两件事分开做：<b>先看别人怎么搭结构</b>（选卡一），<b>再逐字读原文验证</b>（选卡二）。原文与 PDF 完全一致。</div>
+</div></div>
+
+<div class="tabs" style="--tc:#0d9488"><div class="tabs-in">
+  <button class="tab on" type="button" data-p="guide"><span class="ic">拆</span>结构拆解教程<span class="sub">为什么 · 数据 · 思路 · 借鉴</span></button>
+  <button class="tab" type="button" data-p="origin"><span class="ic">▤</span>论文原文<span class="sub">逐字影印 · 55 页</span></button>
+</div></div>
+
+<div class="wrap">
+  <div class="pane on" data-p="guide">
+    <div class="guide-top" style="--tc:#0d9488">
+      <div class="qi">拆</div>
+      <div>
+        <p><b>这一选卡做什么：</b>把这篇论文按结构逐段拆开——每一章<b>为什么写这些内容</b>、<b>数据从哪里来</b>、<b>作者是怎么考虑的</b>，以及<b>你作为写手该怎么借鉴</b>。虚线问号按钮都能点开。</p>
+        <div class="four"><span>① 为什么写这些</span><span>② 数据从哪来</span><span>③ 作者怎么考虑</span><span>④ 写手怎么借鉴</span></div>
+      </div>
+    </div>
+    <div class="tutor" style="--tc:#0d9488">
+      
+      <button id="annoAll" class="mini" type="button" style="margin-bottom:12px">展开全部注释</button>
+      
+          <p style="font-size:13.4px;color:var(--ink2);margin-bottom:12px">
+            <b>一句话骨架：</b>制度断点立题 → 三组文献述评 → 收口成缺口 → 机制推假设 → 整体回归 + 分组回归 → 两层建议。
+            下面按原文的六章逐节过，每一块都标了页码，<b>可以对着上一栏的原文核对</b>。
+          </p>
+
+          <div class="legend">
+            <span class="lg"><span class="sw"></span>章名与页码取自知网「章节下载」页</span>
+            <span class="lg"><span class="sw g"></span>百分比 = 该章页数 ÷ 正文 49 页</span>
+          </div>
+
+          <h4 style="margin-top:0"><span class="dot"></span>篇幅配比：实证占 43%，综述只占 6%</h4>
+          <div class="bars" style="margin-bottom:16px">
+            <div class="bar b1"><div class="nm">绪论</div><div class="tr"><div class="fl" style="width:20%">10</div></div><div class="ct">10 页</div></div>
+            <div class="bar b1"><div class="nm">综述</div><div class="tr"><div class="fl" style="width:6%">3</div></div><div class="ct">3 页</div></div>
+            <div class="bar b1"><div class="nm">理论</div><div class="tr"><div class="fl" style="width:16%">8</div></div><div class="ct">8 页</div></div>
+            <div class="bar b1"><div class="nm">设计</div><div class="tr"><div class="fl" style="width:12%">6</div></div><div class="ct">6 页</div></div>
+            <div class="bar b1"><div class="nm">实证</div><div class="tr"><div class="fl" style="width:31%">15</div></div><div class="ct">15 页</div></div>
+            <div class="bar b1"><div class="nm">结论</div><div class="tr"><div class="fl" style="width:14%">7</div></div><div class="ct">7 页</div></div>
+          </div>
+          <div class="alert info">
+            <b>把六章页数排开看，最该抄的不是层级，是"厚度"。</b>
+            正文 49 页里，<b>实证（设计 6 + 分析 15 = 21 页）占 43%</b>，综述只占 6%。
+            很多本科论文正好写反：综述八页、实证三页。<b>评委翻两页就知道你没做研究，只是在做读书笔记。</b>
+          </div>
+
+          <h4><span class="dot"></span>摘要 · 六章逐节<span class="badge-o">原文页码</span></h4>
+
+          <div class="chap">
+            <div class="ch"><span class="ci">摘要</span><b>全文最贵的三百字</b><span class="cp">P.4-8 · 含 Abstract</span></div>
+            <div class="cb">
+              <p><b>它在干什么：</b>第一段用两次制度变化起手，第二段用"方法 + 样本 + 发现 + 分组"四件事把全文压缩成五句话。<b>没有一句"近年来随着……"</b>。</p>
+              <div class="orig">
+                <p>"2005年7月，人民币进行汇率制度改革……2016年10月1日，人民币作为国际储备货币加入特别提款权（SDR）货币篮子。……因此，考察汇率变动对于企业价值的影响更具有重要的现实意义。"</p>
+                <p>"本文首先借助 Fama-French 三因素模型构造新的实证模型，对 2011 年-2015 年沪市 358 家上市公司的相关数据进行实证研究，发现各行业的企业价值均在一定程度上受到汇率波动的影响，且作用方向不同。……因而，本文进一步从影响企业外汇风险暴露因素角度对样本公司进行分组回归分析，发现企业规模越大，海外销售比重越高，企业流动性越弱，外汇风险暴露越为显著。"</p>
+                <span class="src">——中文摘要，据万方题录页照录；与知网 CMFD 页一致。</span>
+              </div>
+              <div class="mini-t">第二段可以拆成一个万能句式</div>
+              <p style="background:#f6faf9;border:1px solid #d7ebe7;border-radius:7px;padding:9px 11px;font-size:12.9px">
+                <b>「本文借助 ___，对 ___ 年 ___ 家 ___ 的数据进行实证研究，发现 ___；因而进一步从 ___ 角度分组回归，发现 ___。」</b><br>
+                <span style="color:var(--ink3)">两个分号切出三层：方法、主结论、延伸结论。<b>你写摘要时把这句填满，就已经比八成同学强。</b></span>
+              </p>
+            </div>
+          </div>
+
+          <div class="chap">
+            <div class="ch"><span class="ci">第1章</span><b>绪论</b><span class="cp">P.9-18 · 10 页 · 20%</span></div>
+            <div class="cb">
+              <p><b>它在干什么：</b>六节，把"为什么研究、研究到什么程度、我还差什么、我怎么做"四件事在进正文前交代完。</p>
+              <div class="tree">
+                <div class="lv1">1.1 研究背景<span class="pg">9-10</span></div>
+                <div class="lv1">1.2 研究目的和研究意义<span class="pg">10-11</span></div>
+                <div class="lv3">下设 1.2.1 研究目的、1.2.2 研究意义</div>
+                <div class="lv1">1.3 研究现状及存在问题<span class="pg">11-12</span></div>
+                <div class="lv3">下设 1.3.1 本文的研究视角、1.3.2 本文的研究内容</div>
+                <div class="lv1">1.4 创新之处<span class="pg">12-13</span></div>
+                <div class="lv1">1.5 研究方法<span class="pg">13</span></div>
+                <div class="lv1">1.6 文章结构安排<span class="pg">13-18</span></div>
+              </div>
+              <div class="anno">
+                <button class="ab" type="button"><span class="qm">?</span>为什么"存在问题"要写进绪论，而不是留给综述章<span class="arw">▶</span></button>
+                <div class="ac">
+                  <p>因为<b>绪论决定评委的预期，综述只负责提供证据</b>。1.3 先把"已有研究在哪些地方不一致、还缺什么"点名，第 2 章才有理由只做述评、不做长篇复述。</p>
+                  <p>你按这个顺序写，会顺很多：<b>绪论点问题 → 综述给证据 → 2.4 收口 → 第 4 章提假设</b>。<b>如果绪论只写了背景，综述章就会失控</b>——因为没有目标，只能把读过的都写一遍。</p>
+                </div>
+              </div>
+              <div class="anno">
+                <button class="ab" type="button"><span class="qm">?</span>1.6 结构安排占了 5 页，不是凑字数<span class="arw">▶</span></button>
+                <div class="ac">
+                  <p>这 5 页里有一张<b>技术路线图</b>：框箭头把"提出问题—理论分析—实证设计—实证检验—结论建议"串成一条线。评委看这一张图，就知道你有没有想清楚整篇的逻辑。</p>
+                  <p><b>本科版：</b>画一张 5 个框的流程图，配 300 字说明每章干什么，一页够了。<b>但必须有这张图</b>——它是开题和答辩最常被翻到的一页。</p>
+                </div>
+              </div>
+              <div class="anno">
+                <button class="ab" type="button"><span class="qm">?</span>开头的两个年份，为什么值钱<span class="arw">▶</span></button>
+                <div class="ac">
+                  <p><b>2005 年 7 月汇改、2016 年 10 月入篮</b>——这两个日子不是背景知识，是<b>制度断点</b>。有了断点，后面"样本期为什么从 2011 年开始"就有了理由；没有断点，样本期就是随手挑的五年，评委一问就露。</p>
+                  <p>更关键的是：<b>断点还能变成你的选题</b>。2015 年"8·11"汇改之后人民币才真正双向波动，而这个作者的样本止于 2015 年——<b>那个缺口正好留给你</b>。</p>
+                  <p><b>记住这个套路：</b>找一件已经发生的制度变化，问"这件事之后，老结论还成立吗"。这是本科论文最省力、也最像论文的起手式。</p>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="chap">
+            <div class="ch"><span class="ci">第2章</span><b>相关文献综述</b><span class="cp">P.19-21 · 3 页 · 6%</span></div>
+            <div class="cb">
+              <p><b>它在干什么：</b>三组并列述评，最后用一节收口。<b>只有 3 页，却是全篇最该学的一章</b>——因为它证明了综述不需要长，需要准。</p>
+              <div class="tree">
+                <div class="lv1">2.1 汇率波动对企业价值影响的相关研究述评<span class="pg">19-21</span></div>
+                <div class="lv3">下设"两者关系研究"与"研究方法"两条述评</div>
+                <div class="lv1">2.2 企业价值影响因素研究的相关文献述评</div>
+                <div class="lv3">下设企业价值、资本结构、现金流量</div>
+                <div class="lv1">2.3 外汇风险与公司价值关系的相关研究述评</div>
+                <div class="lv3">下设外汇风险的概念、企业外汇风险暴露</div>
+                <div class="lv1">2.4 文献述评</div>
+              </div>
+              <div class="anno">
+                <button class="ab" type="button"><span class="qm">?</span>为什么第 2 章末尾要单独写一个「2.4 文献述评」<span class="arw">▶</span></button>
+                <div class="ac">
+                  <p>因为<b>综述不是文献的堆叠，是论证"这个坑还没人填"</b>。看它的三节安排：2.1 综述"结论"（别人发现什么）、2.2 综述"方法"（别人怎么测）、2.3 综述"影响因素"（什么让结果不一样）。三条线各走各的，走到 2.4 必须拧成一句话。</p>
+                  <p><b>这一句就是第 4 章"研究假设"的唯一来源。</b>没有 2.4，你的假设就是凭空掉下来的；评委只要问"你凭什么认为它们负相关"，就答不上来。</p>
+                  <p><b>操作：</b>2.4 只写五句——结论上有什么分歧、方法上主流是什么、影响因素有哪些、<b>然而</b>还缺什么、所以本文做什么。超过 300 字就是没想清楚。</p>
+                </div>
+              </div>
+              <div class="demo">
+                <span class="lab">示范段落 · 文献综述的小结（请换成你读过的文献）</span>
+                <p>综上，关于汇率波动与企业价值关系的研究已相当丰富。在结论上，多数文献支持汇率波动对企业价值存在显著影响，但在影响方向与强度上并未取得一致；在方法上，资本市场法与 Fama-French 三因素模型使用最为广泛；在影响因素上，企业规模、海外收入占比与外汇衍生品使用被认为是最重要的三个调节变量。然而，已有研究多以全行业混合样本为主，对行业异质性的处理较为粗略，且样本期多止于 2015 年前后，尚未覆盖"8·11"汇改后人民币汇率双向波动的新阶段。本文即以这一缺口为切入点，选取 2019—2025 年制造业上市公司样本，重新检验汇率波动对企业价值的影响。</p>
+                <div class="why">
+                  <b>为什么这么写：</b>前三句一句对应一个 2.x 小节，第四句用"然而"翻出缺口，第五句把自己接上去。
+                  <b>五句话，200 字，但它同时干了三件事</b>——证明你读过、证明还有空白、证明你做的事有意义。
+                  <b>注意第四句的分量</b>：缺口必须具体到"行业异质性处理粗略"和"样本期止于 2015"，不能写成"研究尚不充分"。<b>"尚不充分"是没读懂的信号。</b>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="chap">
+            <div class="ch"><span class="ci">第3章</span><b>企业价值及外汇风险相关理论分析</b><span class="cp">P.21-28 · 8 页 · 16%</span></div>
+            <div class="cb">
+              <p><b>它在干什么：</b>三节各管一件事——3.1 说清"企业价值怎么衡量"，3.2 说清"汇率由什么决定"，3.3 说清"汇率怎么一步步落到企业价值上"。<b>3.3 是全章的出口。</b></p>
+              <div class="tree">
+                <div class="lv1">3.1 企业价值相关理论分析<span class="pg">21-23</span></div>
+                <div class="lv3">下设概念、影响因素、衡量方法</div>
+                <div class="lv1">3.2 汇率决定理论<span class="pg">23-24</span></div>
+                <div class="lv3">下设汇率的决定、决定因素、主要学说</div>
+                <div class="lv1">3.3 外汇风险及企业价值的影响机制<span class="pg">24-28</span></div>
+                <div class="lv3">下设汇率变动对企业的经济影响、对外直接投资的影响、汇率波动的影响</div>
+              </div>
+              <div class="alert ok">
+                <b>看第 3 章和第 4 章的接缝：</b>3.3「外汇风险对企业价值的影响机制」讲的是<b>传导机制</b>（汇率变 → 外币敞口重估 → 汇兑损益 → 现金流 → 估值），紧接着 4.1 就是「研究假设」。
+                <b>机制在前、假设在后，这是铁律</b>——假设不是猜的，是从机制里推出来的。你写的时候如果 3.3 写的是概念罗列，4.1 就一定写不下去。
+              </div>
+              <p style="margin-top:9px"><b>本科可以照搬的三步：</b>① 画一张四个箭头的传导图（不用文字描述，图比五百字管用）；② 每个箭头配一句话，说清"经过哪个报表科目"；③ 把最后一个箭头写成一句可检验的话，那就是你的假设。</p>
+            </div>
+          </div>
+
+          <div class="chap">
+            <div class="ch"><span class="ci">第4章</span><b>实证设计</b><span class="cp">P.28-33 · 6 页 · 12%</span></div>
+            <div class="cb">
+              <p><b>它在干什么：</b>只两节，却把实证章需要的全部前提交代完——假设怎么来、变量怎么定义、模型怎么设、样本怎么筛。</p>
+              <div class="tree">
+                <div class="lv1">4.1 研究假设<span class="pg">28-31</span></div>
+                <div class="lv3">下设提出假设、变量选取、模型构建——<b>假设、变量、模型被塞进同一节</b>，这是硕士论文的常见写法</div>
+                <div class="lv1">4.2 样本选取与数据来源<span class="pg">33-34</span></div>
+              </div>
+              <div class="alert warn">
+                <b>硕士可以合并，本科建议拆开。</b>假设、变量、模型塞在一节里，评委会找不到他要看的那一页。
+                你的版本拆成四节更稳：<b>4.1 研究假设 · 4.2 变量定义与说明 · 4.3 模型设定 · 4.4 样本选取与数据来源</b>，每节半页到一页。<b>页数不变，可读性翻倍。</b>
+              </div>
+              <p style="margin-top:9px"><b>4.2 三句话就够：</b>数据来自哪个库 → 按什么条件剔除（金融业、ST、数据缺失）→ 最后剩多少家多少年。<b>六十个字，省掉一场答辩危机</b>——因为"你这样本怎么来的"是最高频的提问。</p>
+            </div>
+          </div>
+
+          <div class="chap">
+            <div class="ch"><span class="ci">第5章</span><b>汇率波动对企业价值影响的实证分析</b><span class="cp">P.34-48 · 15 页 · 31%</span></div>
+            <div class="cb">
+              <p><b>它在干什么：</b>四节按"先看数、再验平稳、再建模型、最后出结论"的顺序推进。<b>前两节是体检，后两节才是答案。</b></p>
+              <div class="tree">
+                <div class="lv1">5.1 描述性统计分析<span class="pg">35-38</span></div>
+                <div class="lv1">5.2 平稳性检验<span class="pg">38-39</span></div>
+                <div class="lv1">5.3 模型构建<span class="pg">39-41</span></div>
+                <div class="lv1">5.4 实证检验与结果分析<span class="pg">41-48</span></div>
+              </div>
+              <div class="anno">
+                <button class="ab" type="button"><span class="qm">?</span>5.4 凭什么比 5.3 值钱<span class="arw">▶</span></button>
+                <div class="ac">
+                  <p>5.3 回答"<b>有没有</b>影响"，5.4 回答"<b>什么样的企业</b>影响更大"。前者是结论，后者才是<b>能落到建议上的东西</b>。</p>
+                  <p>因为 5.4 给出了三个可操作的变量：企业规模、海外销售比重、流动性。<b>每一个都能直接翻成一条建议</b>："海外收入占比高的企业应对冲比例设为多少""流动性弱的企业应保留多少外汇头寸"。</p>
+                  <p><b>本科可直接借用的动作：</b>先做全样本一个结论，再按一个特征（比如出口占比高/低）分成两组，比均值。<b>不回归也能做出 5.4 的效果</b>，而且评委看得出来你在想问题，不是在跑软件。</p>
+                </div>
+              </div>
+              <p><b>5.1 的写法提醒：</b>描述统计不是把八张表全贴上去。挑<b>三张</b>：被解释变量的分布、解释变量的分布、以及一个"明显异常"的年份或公司。<b>第三张是在给后面的分组埋伏笔。</b></p>
+            </div>
+          </div>
+
+          <div class="chap">
+            <div class="ch"><span class="ci">第6章</span><b>结论及政策建议</b><span class="cp">P.48-54 · 7 页 · 14%</span></div>
+            <div class="cb">
+              <p><b>它在干什么：</b>结论、建议、不足三段。<b>建议只分两段，却写了 2 页</b>——因为它每一句都能追回前面的某一节。</p>
+              <div class="tree">
+                <div class="lv1">6.1 研究结论<span class="pg">48-53</span></div>
+                <div class="lv1">6.2 建议<span class="pg">53-54</span></div>
+                <div class="lv3">下设 6.2.1 相关政策及建议——<b>整章只有一条建议大类，却写了 2 页</b></div>
+                <div class="lv1">6.3 本文研究的不足之处与展望<span class="pg">54-56</span></div>
+                <div class="lv2" style="margin-top:6px">参考文献（55-56）　致谢（56）　攻读学位期间取得的成果（56）</div>
+              </div>
+              <div class="anno">
+                <button class="ab" type="button"><span class="qm">?</span>6.2 的建议为什么分成"企业"和"政府"两段<span class="arw">▶</span></button>
+                <div class="ac">
+                  <p>不是凑字数，是<b>两条不同来源的结论各自落地</b>：企业侧的建议来自 5.4（企业特征决定暴露程度）；政府侧的建议来自 5.3（行业间作用方向不同，说明存在结构性差异，需要政策层面引导）。</p>
+                  <p><b>这是一个可以照抄的结构：</b>建议的第一层来自你的微观发现，第二层来自你的宏观发现。<b>如果两层建议讲的是同一件事，说明你只有一层发现。</b></p>
+                </div>
+              </div>
+              <div class="alert bad">
+                <b>别照抄它 358 家 × Fama-French 三因素模型。</b>那是硕士的工作量，而且 Fama-French 要算市值、账面市值比、规模因子——你手上一旦缺数据，整章就停摆。
+                <b>三条降维路线，任选一条：</b><br>
+                ① <b>只做一个行业</b>（纺织服装、家电、航空），358 家压到 30 家，工作量降到十分之一，结论反而更聚焦。<br>
+                ② <b>不回归，只做分组均值对比</b>——出口占比高/低两组，比 2019—2025 年 ROA 均值。有差异就有结论。<br>
+                ③ <b>做事件窗口</b>——挑"8·11"汇改或某次人民币"破 7"，比较窗口内股价异常收益。<b>这条最容易讲清楚。</b>
+              </div>
+            </div>
+          </div>
+
+          <h4><span class="dot"></span>作者的思考链<span class="badge-r">还原</span></h4>
+          <div class="chain">
+            <div class="st">
+              <b>先把"汇率波动"换成能测的东西</b>
+              <p>"汇率"不是一个变量，是一串数字。要用它，必须先决定：用中间价、用实际有效汇率、还是用波动率？这一步选了，后面才有模型。</p>
+              <span class="q">这就是 4.1「模型构建」存在的理由</span>
+            </div>
+            <div class="st">
+              <b>三类文献分开综述，不混着写</b>
+              <p>2.1 综述结论（有没有影响）、2.2 综述方法（怎么测）、2.3 综述调节因素（谁影响更大）。三条线各有各的用途，混在一起就写成了流水账。</p>
+              <span class="q">分法本身就是在为第 4 章的假设铺路</span>
+            </div>
+            <div class="st">
+              <b>2.4 只做一件事：指出缺口</b>
+              <p>前面三条线都指向同一件事——结论不一致、方法各异、调节因素没统一。所以"这件事值得再做一遍"。</p>
+              <span class="q">这句话不写，第 4 章的假设就是无源之水</span>
+            </div>
+            <div class="st">
+              <b>实证拆成"整体—分组"两步</b>
+              <p>5.3 先证明有关系，5.4 再解释关系强弱为什么不同。两步各有各的结论，各自喂给 6.2 的一段建议。</p>
+              <span class="q">一步到位的实证，通常只能给出一条空泛的建议</span>
+            </div>
+          </div>
+        
+      
+          <div class="q3">
+            <div class="q"><div class="qh">为什么这么写</div><div class="qt">综述不是复述，是<b>把三组文献拧成一句缺口</b>；机制章是假设的产房；实证两步走，建议才有出处。</div></div>
+            <div class="q"><div class="qh">去哪找参考</div><div class="qt">知网高级检索三组关键词 + 一篇综述型文献顺藤摸瓜 + 外文经典三篇，<b>够 15 条参考文献</b>。</div></div>
+            <div class="q"><div class="qh">哪拿数据</div><div class="qt">CSMAR 或巨潮年报拿财务、外汇局拿中间价、年报「营业收入构成」拿境外收入占比。<b>全免费</b>。</div></div>
+          </div>
+
+          <h4 style="margin-top:0"><span class="dot"></span>为什么这么写：四个决定<span class="badge-r">还原</span></h4>
+          <div class="why3">
+            <div class="w"><b>把"意义"换成规模数字</b>
+              <p>开头不谈"汇率很重要"，而是先给制度断点（2005 汇改、2016 入篮），再给现实后果。<b>断点 + 后果 = 研究必要性</b>，两句话省掉一整页抒情。</p></div>
+            <div class="w"><b>综述只做三组，不做全景</b>
+              <p>3 页写完。因为综述的任务不是"证明我读得多"，而是"证明这个坑没人填"。<b>三组各指向一个变量：结论、方法、调节因素</b>——正好是第 4 章需要的三样东西。</p></div>
+            <div class="w"><b>理论章结尾必须落到机制</b>
+              <p>3.3 的三节全部围绕"汇率怎么传导到企业价值"。<b>机制写完，假设是自然长出来的</b>，不需要另起一段硬讲"我认为负相关"。</p></div>
+            <div class="w"><b>篇幅押在实证，不押在理论</b>
+              <p>实证 21 页 / 49 页 = 43%，理论 + 综述 11 页 = 22%。<b>这个比例本身就是学术态度</b>：理论是工具说明书，实证才是工作。</p></div>
+          </div>
+
+          <div class="alert warn">
+            <b>有一处它做得不够好，你别学：</b>2.1 和 2.3 有内容重叠（都在讲"汇率与公司价值的关系"），
+            读起来像同一批文献讲了两遍。<b>你的版本按"结论 / 方法 / 调节因素"三刀切干净</b>，一篇文献只在一个地方出现，需要重复时写"如前所述"。
+          </div>
+
+          <h4><span class="dot"></span>去哪里找参考：照这张表点，一小时能凑够 15 条</h4>
+          <div class="tbl-wrap">
+            <table class="mini-tbl">
+              <thead><tr><th style="width:16%">要找什么</th><th style="width:26%">具体入口</th><th>怎么点 / 填什么</th></tr></thead>
+              <tbody>
+                <tr><td><b>同题中文核心</b></td><td>知网 kns.cnki.net → 高级检索</td><td>主题 <code>汇率波动</code> AND <code>企业价值</code>；来源类别勾「北大核心」「CSSCI」；时间 2016—2026。<b>只读「研究设计」和「结论」两节</b>，别通读。</td></tr>
+                <tr><td><b>同题学位论文</b></td><td>知网 → 学位论文 → 优秀硕士</td><td>篇名 <code>汇率</code> + 学科 <code>金融</code>；按<b>被引</b>排序取前 5 篇。重点看它们的 2.x 怎么分组、4.x 怎么设变量。</td></tr>
+                <tr><td><b>综述起点</b></td><td>上面任意一篇的参考文献</td><td>找标题带「述评 / 综述 / 文献回顾」的那篇，<b>它的参考文献表就是你的文献池</b>——一篇能带出 30 条，省掉一半检索时间。</td></tr>
+                <tr><td><b>外文经典</b></td><td>Google Scholar / SSRN</td><td><code>"exchange rate exposure" "firm value"</code>；被引 200 以上的取 3 篇，<b>只看摘要与模型设定</b>，用来支撑"国际上也这么做"。</td></tr>
+                <tr><td><b>最新进展</b></td><td>知网文章页下方</td><td>每篇论文页有「参考文献 / 引证文献 / 共引文献」三个按钮，<b>点「引证文献」</b>就能找到引用它的最新研究，这是找"缺口还开着"最快的路。</td></tr>
+                <tr><td><b>制度原文</b></td><td>中国人民银行官网、国家外汇管理局</td><td>搜「人民币汇率形成机制改革」公告，<b>日期精确到年月日</b>写进 1.1。<b>引公告原文，不引新闻转述。</b></td></tr>
+              </tbody>
+            </table>
+          </div>
+
+          <h4><span class="dot"></span>哪里获取数据：每个变量都有明确的家</h4>
+          <div class="tbl-wrap">
+            <table class="mini-tbl">
+              <thead><tr><th style="width:22%">你要的变量</th><th style="width:28%">去哪拿</th><th>取哪一栏 / 怎么算</th></tr></thead>
+              <tbody>
+                <tr><td><b>股票收益率</b></td><td>CSMAR「股票市场交易 → 个股回报率」；或巨潮资讯网个股行情导出</td><td>用<b>考虑现金红利再投资</b>的回报率，<b>不要</b>自己拿收盘价相减——除权日会算错。</td></tr>
+                <tr><td><b>企业价值</b></td><td>CSMAR「财务指标分析」；或年报「合并利润表」</td><td>本科建议直接用 <code>ROA = 净利润 ÷ 总资产</code>。托宾 Q 要市值与重置成本，两个口径都容易扯皮。</td></tr>
+                <tr><td><b>汇率与波动率</b></td><td>国家外汇管理局「统计数据 → 人民币汇率中间价」；BIS 实际有效汇率</td><td>中间价取<b>月均值</b>；波动率用<b>月度对数收益率的标准差</b>（12 个月滚动窗口）。两个数都能免费下载。</td></tr>
+                <tr><td><b>境外收入占比</b></td><td>年报「营业收入构成」表；或 CSMAR「分行业分地区收入」</td><td>只取「境外 / 国外」那一行的营业收入，除以营业收入合计。<b>这是分组回归的关键变量，抄错一半结论就翻。</b></td></tr>
+                <tr><td><b>规模 / 杠杆</b></td><td>年报「合并资产负债表」</td><td><code>规模 = ln(总资产)</code>；<code>杠杆 = 总负债 ÷ 总资产</code>。<b>ln 别忘了</b>，忘了系数会小到没法看。</td></tr>
+                <tr><td><b>无风险利率</b></td><td>中国债券信息网「国债收益率曲线」</td><td>取 10 年期到期收益率，按年取平均。只在算超额收益或资本成本时才需要。</td></tr>
+              </tbody>
+            </table>
+          </div>
+
+          <div class="alert ok">
+            <b>只抄三个动作，够用了：</b><br>
+            ① <b>综述分三组写</b>（结论 / 方法 / 影响因素），最后单独一节收口成缺口。<br>
+            ② <b>机制在前、假设在后</b>——理论章末尾必须落到"所以我认为 A 影响 B"。<br>
+            ③ <b>实证拆两步</b>：先证明有关系，再解释关系强弱为什么不同。<b>第二步才是你建议的来源。</b>
+          </div>
+
+          <div class="alert bad" style="margin-bottom:0">
+            <b>两个必踩的坑：</b><br>
+            ① <b>综述写成本科读书笔记</b>——按作者顺序一段段介绍"某某（2018）认为……"，写了八页，读者仍不知道缺口在哪。<b>改法：按主题分组，每组结尾一句"这些研究的共同局限是"。</b><br>
+            ② <b>假设凭空出现</b>——第 4 章突然写"假设 H1：汇率波动与企业价值负相关"，前文一个字没铺垫。<b>改法：假设的每一个方向，都要能在 3.3 找到对应的那一句机制。</b>
+          </div>
+        
+    </div></div>
+  <div class="pane" data-p="origin">
+    <div class="origin-bar" style="--tc:#0d9488">
+      <span class="t"><span class="ic">▤</span>原文影印 · 全文 55 页</span>
+      <span class="hint">与 PDF 逐字对位：字距、字号、字体、图片、公式、图层全部保持原样，一个字未改</span>
+      <span class="spacer"></span>
+      <a class="olink" href="p-chen.html" target="_blank" rel="noopener">全屏打开原文 ↗</a>
+    </div>
+    <div class="origin-frame">
+      <iframe src="p-chen.html?embed=1" title="汇率波动与企业价值相关性研究——基于沪市主板上市 原文影印" loading="lazy"></iframe>
+    </div>
+    <div class="origin-tip">影印页支持全文检索、按 PDF 页码跳转、缩放与逐句中译；上方可「全屏打开」获得完整工具栏。</div></div>
+</div>
+
+<div class="foot">结构拆解为写作教学分析，原文影印为论文逐字照录；两者分栏呈现，避免把范文原话当成范文范文照抄。<b>只学结构与思路，不抄句子。</b></div>
+
+<script>
+(function(){
+  var tabs=Array.prototype.slice.call(document.querySelectorAll('.tab'));
+  var panes=Array.prototype.slice.call(document.querySelectorAll('.pane'));
+  tabs.forEach(function(t){ t.addEventListener('click',function(){
+    tabs.forEach(function(x){x.classList.remove('on')});
+    panes.forEach(function(x){x.classList.remove('on')});
+    t.classList.add('on');
+    var target=document.querySelector('.pane[data-p="'+t.getAttribute('data-p')+'"]');
+    if(target) target.classList.add('on');
+    if(t.getAttribute('data-p')==='origin'){
+      var f=target&&target.querySelector('iframe');
+      if(f&&!f.src) f.src=f.getAttribute('data-src');
+    }
+    window.scrollTo({top:0,behavior:'smooth'});
+  }); });
+  var h=location.hash;
+  if(h==='#origin'&&tabs[1]) tabs[1].click();
+})();
+
+(function(){
+  var annos = Array.prototype.slice.call(document.querySelectorAll('.anno'));
+  annos.forEach(function(a){
+    var b=a.querySelector('.ab'); if(!b) return;
+    b.addEventListener('click',function(){ a.classList.toggle('open'); });
+  });
+  var btn=document.getElementById('annoAll');
+  if(btn){ btn.addEventListener('click',function(){
+    var anyOpen=annos.some(function(a){return a.classList.contains('open')});
+    annos.forEach(function(a){ a.classList.toggle('open',!anyOpen); });
+    btn.textContent=anyOpen?'展开全部注释':'收起全部注释';
+  }); }
+})();
+
+</script>
+</body></html>

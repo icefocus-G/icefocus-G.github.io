@@ -1,0 +1,822 @@
+<!DOCTYPE html>
+<html lang="zh-CN"><head><meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>新能源补贴背景下比亚迪汽车资本结构优化途径研究 · 结构拆解 + 原文</title>
+<style>
+
+:root{
+  --bg:#f5f8fb; --card:#fff; --ink:#15202b; --ink2:#48576b; --ink3:#7d8a9b;
+  --line:#e4eaf2; --line2:#eef2f7;
+  --t1:#0f766e; --t1b:#e6f4f1;
+  --t2:#4338ca; --t2b:#ecebfb;
+  --t3:#b45309; --t3b:#fdf1e0;
+  --t4:#7e22ce; --t4b:#f6e9ff;
+  --ok:#0d9488; --warn:#d97706; --bad:#dc2626;
+  --orig:#1e40af; --origb:#eff5ff;
+  --demo:#047857; --demob:#f0fdf6;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+body{
+  background:var(--bg); color:var(--ink);
+  font-family:-apple-system,BlinkMacSystemFont,"PingFang SC","Hiragino Sans GB","Microsoft YaHei",sans-serif;
+  font-size:14.5px; line-height:1.78; -webkit-font-smoothing:antialiased;
+  padding:0 20px 80px;
+}
+.wrap{max-width:1020px;margin:0 auto}
+
+header{padding:50px 0 26px}
+.kicker{
+  display:inline-block;font-size:11.5px;letter-spacing:.14em;font-weight:700;
+  color:var(--t1);background:var(--t1b);padding:5px 11px;border-radius:5px;margin-bottom:18px;
+}
+h1{font-size:30px;line-height:1.34;letter-spacing:-.4px;font-weight:800;margin-bottom:14px}
+h1 em{font-style:normal;color:var(--t1)}
+.lede{font-size:15.3px;color:var(--ink2);max-width:830px}
+.lede b{color:var(--ink);font-weight:700}
+
+nav{
+  position:sticky;top:0;z-index:50;background:rgba(245,248,251,.94);
+  backdrop-filter:blur(12px);border-bottom:1px solid var(--line);
+  margin:0 -20px 30px;padding:0 20px;
+}
+.navrow{max-width:1020px;margin:0 auto;display:flex;align-items:center;gap:12px}
+.navin{flex:1 1 auto;min-width:0;display:flex;gap:2px;overflow-x:auto;padding:9px 0;scrollbar-width:none}
+.navin::-webkit-scrollbar{display:none}
+.navin a{
+  flex:0 0 auto;font-size:12.4px;color:var(--ink2);text-decoration:none;
+  padding:6px 9px;border-radius:6px;white-space:nowrap;transition:.15s;
+}
+.navin a:hover{background:#fff;color:var(--ink)}
+.navin a.on{background:var(--ink);color:#fff}
+
+/* ── 注释总开关（导航栏内） ── */
+.aball{
+  flex:0 0 auto;display:inline-flex;align-items:center;gap:6px;
+  font-family:inherit;font-size:12.6px;font-weight:700;color:#fff;
+  background:linear-gradient(135deg,#1d4ed8,#2563eb);
+  border:1px solid #1d4ed8;border-radius:20px;
+  padding:6px 10px 6px 8px;cursor:pointer;transition:.18s;line-height:1.4;
+  box-shadow:0 2px 8px rgba(37,99,235,.28);white-space:nowrap;
+}
+.aball:hover{transform:translateY(-1px);box-shadow:0 5px 14px rgba(37,99,235,.36)}
+.aball .qm{
+  width:16px;height:16px;border-radius:50%;background:rgba(255,255,255,.24);color:#fff;
+  font-size:11px;font-weight:800;display:grid;place-items:center;flex:0 0 auto;
+}
+.aball .cnt{
+  font-size:10.5px;font-weight:800;font-variant-numeric:tabular-nums;
+  background:rgba(255,255,255,.22);padding:1px 6px;border-radius:9px;letter-spacing:.02em;
+}
+.aball.on{background:linear-gradient(135deg,#0f766e,#0d9488);border-color:#0f766e;
+  box-shadow:0 2px 8px rgba(13,148,136,.3)}
+.aball.on:hover{box-shadow:0 5px 14px rgba(13,148,136,.38)}
+
+/* ── 悬浮开关（右下角） ── */
+.fab{
+  position:fixed;right:22px;bottom:22px;z-index:80;
+  display:inline-flex;align-items:center;gap:8px;
+  font-family:inherit;font-size:13px;font-weight:700;color:#fff;
+  background:var(--ink);border:none;border-radius:28px;
+  padding:11px 18px 11px 15px;cursor:pointer;transition:.2s;
+  box-shadow:0 10px 26px rgba(21,32,43,.3);
+}
+.fab:hover{transform:translateY(-2px);box-shadow:0 14px 32px rgba(21,32,43,.38)}
+.fab .qm{
+  width:19px;height:19px;border-radius:50%;background:rgba(255,255,255,.2);color:#fff;
+  font-size:12px;font-weight:800;display:grid;place-items:center;flex:0 0 auto;
+}
+.fab .cnt{
+  font-size:11px;font-weight:800;font-variant-numeric:tabular-nums;
+  background:rgba(255,255,255,.18);padding:2px 7px;border-radius:10px;
+}
+.fab.on{background:linear-gradient(135deg,#0f766e,#0d9488);box-shadow:0 10px 26px rgba(13,148,136,.36)}
+.fab.on:hover{box-shadow:0 14px 32px rgba(13,148,136,.44)}
+
+@keyframes acIn{from{transform:translateY(-4px)}to{transform:none}}
+.anno.open .ac{animation:acIn .2s ease}
+
+@media(max-width:680px){
+  .aball .tx{display:none}
+  .aball{padding:6px 9px}
+  .fab{right:14px;bottom:14px;padding:10px 15px 10px 13px;font-size:12.4px}
+}
+
+section{margin-bottom:50px}
+h2{
+  font-size:20.5px;font-weight:800;letter-spacing:-.2px;margin-bottom:8px;
+  display:flex;align-items:center;gap:10px;
+}
+h2 .n{
+  flex:0 0 auto;width:26px;height:26px;border-radius:7px;background:var(--ink);color:#fff;
+  font-size:13px;display:grid;place-items:center;font-weight:700;
+}
+.sub{color:var(--ink3);font-size:13.4px;margin-bottom:20px;max-width:830px}
+
+.card{background:var(--card);border:1px solid var(--line);border-radius:13px;padding:24px 26px;margin-bottom:16px}
+.card.pad0{padding:0;overflow:hidden}
+
+table{width:100%;border-collapse:collapse;font-size:13.4px}
+th,td{padding:11px 13px;text-align:left;border-bottom:1px solid var(--line2);vertical-align:top}
+th{background:#f8fafd;font-weight:700;color:var(--ink2);font-size:12.3px;letter-spacing:.02em}
+tbody tr:last-child td{border-bottom:none}
+td b{font-weight:700}
+.tbl-wrap{overflow-x:auto}
+
+.case-head{border-radius:13px 13px 0 0;padding:22px 26px;color:#fff}
+.case-head.c1{background:linear-gradient(135deg,#0f766e,#0d9488)}
+.case-head.c2{background:linear-gradient(135deg,#4338ca,#5b52e0)}
+.case-head.c3{background:linear-gradient(135deg,#b45309,#d97706)}
+.case-head.c4{background:linear-gradient(135deg,#7e22ce,#9333ea)}
+.case-head .tag{
+  display:inline-block;font-size:11px;letter-spacing:.1em;font-weight:700;
+  background:rgba(255,255,255,.2);padding:3px 9px;border-radius:4px;margin-bottom:9px;
+}
+.case-head h3{font-size:19px;font-weight:800;line-height:1.42;margin-bottom:6px;letter-spacing:-.2px}
+.case-head .meta{font-size:12.6px;opacity:.92}
+.case-body{border:1px solid var(--line);border-top:none;border-radius:0 0 13px 13px;background:#fff;padding:24px 26px}
+
+.file{background:#fafcfe;border:1px solid var(--line2);border-radius:9px;padding:15px 17px;font-size:13px;margin-bottom:20px}
+.file dl{display:grid;grid-template-columns:84px 1fr;gap:6px 12px}
+.file dt{color:var(--ink3);font-weight:600}
+.file dd{color:var(--ink)}
+.file a{color:var(--t2);text-decoration:none;border-bottom:1px dotted #b9c4d4;word-break:break-all}
+.file a:hover{color:var(--t1)}
+
+h4{font-size:15px;font-weight:800;margin:24px 0 10px;display:flex;align-items:center;gap:8px;flex-wrap:wrap}
+h4:first-child{margin-top:0}
+h4 .dot{width:6px;height:6px;border-radius:50%;background:var(--ink3);flex:0 0 auto}
+.c1 h4 .dot{background:var(--t1)} .c2 h4 .dot{background:var(--t2)} .c3 h4 .dot{background:var(--t3)}
+.c4 h4 .dot{background:var(--t4)}
+
+.badge-o,.badge-r,.badge-d{
+  font-size:10.5px;font-weight:700;letter-spacing:.04em;padding:2px 7px;border-radius:4px;
+  flex:0 0 auto;white-space:nowrap;
+}
+.badge-o{background:var(--origb);color:var(--orig);border:1px solid #c7dbfa}
+.badge-r{background:#f4f5f8;color:#5b6675;border:1px solid #dde2ea}
+.badge-d{background:var(--demob);color:var(--demo);border:1px dashed #a7e3c4}
+
+.orig{
+  background:var(--origb);border-left:3px solid var(--orig);border-radius:0 8px 8px 0;
+  padding:15px 18px;font-size:13.3px;line-height:1.85;color:#1f2c3d;margin:12px 0;
+}
+.orig .src{display:block;margin-top:10px;font-size:11.8px;color:#5b7291}
+.orig p+p{margin-top:9px}
+
+.demo{
+  background:var(--demob);border:1px dashed #9ed9bb;border-radius:8px;
+  padding:15px 18px;font-size:13.3px;line-height:1.9;margin:12px 0;
+}
+.demo .lab{display:inline-block;font-size:10.8px;font-weight:800;color:var(--demo);letter-spacing:.06em;margin-bottom:8px}
+.demo p{text-indent:2em}
+.demo p+p{margin-top:6px}
+.demo .why{font-size:12.4px;color:#3f6b58;margin-top:10px;padding-top:9px;border-top:1px dashed #bfe6d2;text-indent:0}
+
+.anno{margin:10px 0 14px}
+.ab{
+  display:inline-flex;align-items:center;gap:7px;
+  font-family:inherit;font-size:12.6px;font-weight:600;color:var(--ink2);
+  background:#fff;border:1px dashed #c3cede;border-radius:20px;
+  padding:6px 14px 6px 11px;cursor:pointer;transition:.16s;text-align:left;line-height:1.5;
+}
+.ab:hover{border-color:#8fa3bd;color:var(--ink);background:#fbfdff}
+.ab .qm{
+  width:16px;height:16px;border-radius:50%;background:#e7edf6;color:#4a5b73;
+  font-size:11px;font-weight:800;display:grid;place-items:center;flex:0 0 auto;
+}
+.ab .arw{font-size:9px;color:#93a2b6;transition:transform .2s;display:inline-block}
+.anno.open .ab{border-style:solid;border-color:var(--ink);color:var(--ink);background:#f7fafd}
+.anno.open .ab .qm{background:var(--ink);color:#fff}
+.anno.open .ab .arw{transform:rotate(90deg)}
+.ac{display:none;margin-top:9px;border-left:3px solid #cfd9e6;padding:2px 0 2px 15px;font-size:13.2px;color:var(--ink2)}
+.anno.open .ac{display:block}
+.ac b{color:var(--ink)}
+.ac p+p{margin-top:8px}
+.ac .kv{display:flex;gap:8px;margin-top:6px;font-size:12.7px}
+.ac .kv i{font-style:normal;color:var(--ink3);flex:0 0 58px}
+
+.tree{font-size:13.2px;line-height:1.95;border-left:2px solid var(--line);padding-left:0}
+.tree .lv1{font-weight:700;color:var(--ink);margin-top:9px;padding-left:14px;padding-right:108px;position:relative}
+.tree .lv1:first-child{margin-top:0}
+.tree .lv2{color:var(--ink2);padding-left:34px;padding-right:108px;position:relative}
+.tree .lv3{color:var(--ink3);font-size:12.3px;padding-left:34px;padding-right:108px;line-height:1.8;position:relative}
+.tree .pg{
+  position:absolute;right:0;top:3px;display:inline-block;white-space:nowrap;
+  font-weight:600;font-size:11.4px;color:var(--ink3);
+  font-variant-numeric:tabular-nums;letter-spacing:.02em;
+  background:#f3f6fa;border:1px solid var(--line);border-radius:4px;padding:1px 7px;
+}
+.tree .note{color:var(--t3);font-size:12.3px;padding-left:14px;margin-top:6px}
+
+.chain{counter-reset:step;margin:6px 0 0}
+.chain .st{position:relative;padding:0 0 20px 40px;border-left:1.5px dashed var(--line);margin-left:12px}
+.chain .st:last-child{border-left-color:transparent;padding-bottom:0}
+.chain .st::before{
+  counter-increment:step;content:counter(step);
+  position:absolute;left:-12px;top:0;width:23px;height:23px;border-radius:50%;
+  background:#fff;border:1.5px solid var(--line);color:var(--ink3);
+  font-size:11.5px;font-weight:700;display:grid;place-items:center;
+}
+.chain .st b{display:block;font-size:13.9px;margin-bottom:3px}
+.chain .st p{font-size:13.2px;color:var(--ink2);margin-bottom:5px}
+.chain .st .q{font-size:12.7px;color:var(--t2);background:var(--t2b);display:inline-block;padding:3px 9px;border-radius:5px;margin-top:2px}
+.c1 .chain .st::before{border-color:var(--t1);color:var(--t1)}
+.c4 .chain .st::before{border-color:var(--t4);color:var(--t4)}
+
+.bars{margin:8px 0 4px}
+.bar{display:flex;align-items:center;gap:12px;margin-bottom:9px;font-size:12.8px}
+.bar .nm{flex:0 0 130px;color:var(--ink2);text-align:right;font-weight:600}
+.bar .tr{flex:1;background:var(--line2);border-radius:4px;height:22px;position:relative;overflow:hidden}
+.bar .fl{height:100%;border-radius:4px;display:flex;align-items:center;padding-left:9px;color:#fff;font-size:11.5px;font-weight:700}
+.bar .ct{flex:0 0 58px;color:var(--ink3);font-size:12px;font-variant-numeric:tabular-nums}
+.b1 .fl{background:linear-gradient(90deg,#0f766e,#14b8a6)}
+.b2 .fl{background:linear-gradient(90deg,#4338ca,#6366f1)}
+.b3 .fl{background:linear-gradient(90deg,#b45309,#f59e0b)}
+.b4 .fl{background:linear-gradient(90deg,#7e22ce,#a855f7)}
+
+.alert{border-radius:9px;padding:14px 17px;font-size:13.3px;margin:16px 0;line-height:1.78}
+.alert b{font-weight:800}
+.alert.info{background:#eef6ff;border-left:3px solid #3b82f6}
+.alert.warn{background:#fff8ec;border-left:3px solid var(--warn)}
+.alert.bad{background:#fef2f2;border-left:3px solid var(--bad)}
+.alert.ok{background:#effaf6;border-left:3px solid var(--ok)}
+
+.picker{background:#fff;border:1px solid var(--line);border-radius:13px;padding:22px 24px}
+.chips{display:flex;flex-wrap:wrap;gap:8px;margin:12px 0 18px}
+.chip{
+  font-size:12.8px;padding:7px 13px;border-radius:20px;border:1px solid var(--line);
+  background:#fff;color:var(--ink2);cursor:pointer;transition:.15s;user-select:none;font-family:inherit;
+}
+.chip:hover{border-color:#b8c4d6;color:var(--ink)}
+.chip.on{background:var(--ink);color:#fff;border-color:var(--ink)}
+.verdict{border-radius:10px;padding:16px 18px;font-size:13.4px;background:#fafcfe;border:1px solid var(--line2);line-height:1.8}
+.verdict .big{font-size:15.5px;font-weight:800;margin-bottom:6px;display:block}
+.verdict .lv{font-size:12.6px;color:var(--ink3);margin-top:8px}
+
+.fmt-h{font-size:14.6px;font-weight:800;margin:28px 0 10px;padding-left:11px;border-left:4px solid var(--t1)}
+.fmt-h:first-child{margin-top:0}
+.spec{background:#fbfdff;border:1px solid var(--line);border-radius:9px;padding:0;margin:10px 0;overflow-x:auto}
+.spec table{font-size:12.9px}
+.spec th{background:#f2f7fc}
+.spec td:first-child{font-weight:600}
+.mono{
+  font-family:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;
+  font-size:12.3px;background:#f3f6fa;border:1px solid var(--line);border-radius:4px;
+  padding:1px 6px;color:#33415a;
+}
+.ref-list{font-size:12.9px;line-height:1.95;margin:10px 0;list-style:none}
+.ref-list li{padding:9px 0;border-bottom:1px dashed var(--line2)}
+.ref-list li:last-child{border-bottom:none}
+.ref-list .t{display:inline-block;font-size:11.5px;font-weight:700;color:var(--t1);background:var(--t1b);padding:1px 7px;border-radius:4px;margin-right:8px}
+.ref-list .code{display:block;margin:5px 0 2px;font-family:ui-monospace,Menlo,monospace;font-size:12.2px;color:#1f3a5f;background:#f4f8fd;border-radius:5px;padding:6px 9px}
+.ref-list .note{display:block;font-size:12.2px;color:var(--ink3)}
+
+ol.steps li span b,ol.steps li p b{display:inline}
+.ref-list li{border-bottom:1px dashed #e1e9f3}
+.ref-list .note{color:#6f7d90}
+
+.check{list-style:none}
+.check li{position:relative;padding:0 0 10px 22px;font-size:13.3px;color:var(--ink2)}
+.check li::before{content:"✕";position:absolute;left:0;top:0;color:var(--bad);font-weight:800;font-size:11.5px}
+.check li.good::before{content:"✓";color:var(--ok)}
+
+ol.steps{list-style:none;counter-reset:s}
+ol.steps li{counter-increment:s;position:relative;padding:0 0 16px 38px;font-size:13.5px}
+ol.steps li::before{
+  content:counter(s);position:absolute;left:0;top:1px;width:23px;height:23px;
+  border-radius:6px;background:var(--t1b);color:var(--t1);font-weight:800;font-size:12px;
+  display:grid;place-items:center;
+}
+ol.steps li b{display:block;margin-bottom:2px}
+ol.steps li span{color:var(--ink2);font-size:13px}
+
+footer{border-top:1px solid var(--line);padding-top:22px;margin-top:56px;font-size:12.3px;color:var(--ink3);line-height:1.9}
+
+@media(max-width:680px){
+  body{padding:0 14px 60px}
+  h1{font-size:23px}
+  .card,.case-body{padding:18px 16px}
+  .case-head{padding:18px 16px}
+  .file dl{grid-template-columns:1fr;gap:2px}
+  .file dt{margin-top:7px}
+  .bar .nm{flex:0 0 78px;font-size:11.8px}
+  .bar .ct{flex:0 0 46px}
+  table{font-size:12.4px}
+  th,td{padding:9px 9px}
+  .cmp{min-width:820px}
+}
+
+/* 原文全文入口 */
+.btn-full{display:inline-flex;align-items:center;gap:6px;font-size:11.8px;font-weight:600;
+  color:#fff;background:linear-gradient(135deg,#2b6cf6,#12b6a8);border-radius:6px;
+  padding:4px 11px;text-decoration:none;vertical-align:middle;transition:.15s;
+  box-shadow:0 1px 3px rgba(43,108,246,.22)}
+.btn-full:hover{transform:translateY(-1px);box-shadow:0 4px 12px rgba(43,108,246,.3)}
+.btn-full.mute{background:#eef3fa;color:#8a99ad;box-shadow:none;font-weight:500}
+.btn-full.mute:hover{transform:none;box-shadow:none}
+
+/* 原文全文库 */
+.fullbox{margin-top:16px}
+.fgrid{display:grid;grid-template-columns:repeat(auto-fill,minmax(215px,1fr));gap:9px;margin:12px 0 4px}
+.fcard{display:block;text-decoration:none;color:inherit;border:1px solid var(--line);
+  border-radius:9px;padding:11px 13px;background:#fbfdff;transition:.15s;position:relative;overflow:hidden}
+.fcard:hover{border-color:#b9d2f7;background:#f4f9ff;transform:translateY(-2px);
+  box-shadow:0 6px 16px rgba(43,108,246,.1)}
+.fcard::before{content:"";position:absolute;left:0;top:0;bottom:0;width:2.5px;
+  background:linear-gradient(180deg,#2b6cf6,#12b6a8)}
+.fcard .fk{font-size:10px;font-weight:700;color:#2b6cf6;letter-spacing:.06em}
+.fcard .ft{font-size:12.4px;font-weight:600;color:var(--ink);line-height:1.5;margin:4px 0 3px}
+.fcard .fm{font-size:11px;color:var(--t3);line-height:1.6}
+.fcard.mute{opacity:.62}
+.fcard.mute::before{background:#cbd6e4}
+.fcard.mute:hover{transform:none;box-shadow:none;border-color:var(--line);background:#fbfdff}
+
+/* ══════════ 案例三选卡：原版 / 案例解析 / 总结 ══════════ */
+.vtabs{--tc:#2b6cf6;--tcb:#eef3fb}
+.vbar{display:flex;gap:2px;border-bottom:1px solid var(--line);overflow-x:auto;
+  scrollbar-width:none;margin:0 0 2px}
+.vbar::-webkit-scrollbar{display:none}
+.vb{flex:0 0 auto;display:inline-flex;align-items:center;gap:7px;border:0;background:transparent;
+  font-family:inherit;font-size:13.1px;font-weight:600;color:var(--ink3);cursor:pointer;
+  padding:11px 14px 10px;border-bottom:2.5px solid transparent;transition:.15s;white-space:nowrap}
+.vb:hover{color:var(--ink);background:#f8fbff}
+.vb .n{font-size:10.2px;font-weight:800;color:#fff;background:#c3cfdf;border-radius:4px;
+  padding:1.5px 5px;line-height:1.3;transition:.15s}
+.vb.on{color:var(--tc);border-bottom-color:var(--tc)}
+.vb.on .n{background:var(--tc)}
+.vb .d{font-size:11px;font-weight:500;color:var(--ink3);opacity:.85}
+.vb.on .d{color:var(--tc);opacity:.7}
+.vp{display:none}
+.vp.on{display:block;animation:vpIn .2s ease}
+@keyframes vpIn{from{transform:translateY(5px)}to{transform:none}}
+@media(prefers-reduced-motion:reduce){.vp.on{animation:none}}
+
+/* 原版：出处条 + 内嵌全文 */
+.srcbar{display:flex;gap:7px;flex-wrap:wrap;align-items:center;padding:11px 13px;
+  background:linear-gradient(135deg,#f7fbff,#f2f8fd);border:1px solid #dbe8f7;
+  border-radius:9px;margin-bottom:12px}
+.srcbar .lab{font-size:11px;font-weight:700;letter-spacing:.08em;color:var(--ink3);margin-right:2px}
+.sbtn{display:inline-flex;align-items:center;gap:5px;text-decoration:none;font-size:12.2px;
+  font-weight:600;color:#1d4ed8;background:#fff;border:1px solid #c7daf7;border-radius:6px;
+  padding:5px 10px;transition:.15s;white-space:nowrap}
+.sbtn:hover{background:#eff5ff;border-color:#93b8f2;transform:translateY(-1px);
+  box-shadow:0 3px 9px rgba(37,99,235,.14)}
+.sbtn.warm{color:#b45309;border-color:#f1d3a8}
+.sbtn.warm:hover{background:#fdf5ea;border-color:#e8b978;box-shadow:0 3px 9px rgba(180,83,9,.13)}
+.sbtn.mute{color:#93a0b1;border-color:#e2e8f0;background:#f8fafc;pointer-events:none}
+.pv{border:1px solid var(--line);border-radius:10px;overflow:hidden;background:#fff}
+.pvh{display:flex;align-items:center;gap:8px;flex-wrap:wrap;padding:8px 12px;
+  background:#f8fbff;border-bottom:1px solid var(--line2);font-size:11.8px;color:var(--ink2)}
+.pvh b{color:var(--ink);font-weight:700}
+.pvh .r{margin-left:auto;font-size:11px;color:var(--ink3)}
+.pv iframe{width:100%;height:min(76vh,820px);border:0;display:block;background:#f6f9fd}
+.pvf{padding:8px 12px;background:#fbfdff;border-top:1px solid var(--line2);
+  font-size:11.4px;color:var(--ink3);line-height:1.75}
+.nofull{padding:16px 16px 4px;border:1px dashed #d7e3f2;border-radius:10px;background:#fbfdff}
+
+/* 解析：章节块 */
+.legend{display:flex;gap:7px;flex-wrap:wrap;margin:2px 0 13px;font-size:11.4px;color:var(--ink3)}
+.legend .lg{display:inline-flex;align-items:center;gap:5px;background:#fff;border:1px solid var(--line);
+  border-radius:99px;padding:3px 9px}
+.legend .sw{width:8px;height:8px;border-radius:2px;background:var(--tc)}
+.legend .sw.g{background:#cbd5e1}
+.chap{border:1px solid var(--line);border-radius:10px;background:#fff;margin-bottom:9px;
+  overflow:hidden;transition:.15s}
+.chap:hover{border-color:#cddcee;box-shadow:0 3px 12px rgba(24,58,120,.05)}
+.chap>.ch{display:flex;align-items:baseline;gap:9px;flex-wrap:wrap;padding:9px 13px;
+  background:linear-gradient(180deg,#f9fcff,#f4f9fd);border-bottom:1px solid var(--line2)}
+.chap>.ch .ci{font-size:10.4px;font-weight:800;letter-spacing:.05em;color:#fff;
+  background:var(--tc);border-radius:4px;padding:2px 6px;line-height:1.4}
+.chap>.ch b{font-size:13.5px;font-weight:700;color:var(--ink);line-height:1.5}
+.chap>.ch .cp{margin-left:auto;font-size:10.8px;color:var(--ink3);font-variant-numeric:tabular-nums;
+  white-space:nowrap}
+.chap>.cb{padding:11px 14px 12px}
+.chap>.cb>p{font-size:13.1px;color:var(--ink2);line-height:1.85;margin-bottom:8px}
+.chap>.cb>p:last-child{margin-bottom:0}
+.chap>.cb>p b{color:var(--ink)}
+.chap>.cb .mini-t{font-size:11.2px;font-weight:700;color:var(--ink3);letter-spacing:.05em;
+  margin:10px 0 5px}
+.chap .anno{margin:9px 0 0}
+.chap .demo,.chap .alert,.chap .tree,.chap .tbl-wrap,.chap .bars{margin:10px 0 0}
+.chap .alert:last-child,.chap .demo:last-child{margin-bottom:0}
+.tagx{display:inline-block;font-size:10.2px;font-weight:700;border-radius:4px;padding:1.5px 6px;
+  background:var(--tcb,#eef3fb);color:var(--tc);vertical-align:1.5px;margin-left:4px}
+
+/* 总结：三问 */
+.q3{display:grid;grid-template-columns:repeat(auto-fit,minmax(215px,1fr));gap:9px;margin-bottom:14px}
+.q3 .q{border:1px solid var(--line);border-radius:9px;padding:11px 13px;background:#fff;
+  position:relative;overflow:hidden}
+.q3 .q::before{content:"";position:absolute;left:0;top:0;bottom:0;width:2.5px;background:var(--tc);opacity:.55}
+.q3 .q .qh{font-size:11px;font-weight:800;letter-spacing:.05em;color:var(--tc);margin-bottom:4px}
+.q3 .q .qt{font-size:12.7px;color:var(--ink);line-height:1.7}
+.why3{counter-reset:w;margin:4px 0 14px}
+.why3 .w{counter-increment:w;position:relative;padding:0 0 13px 34px}
+.why3 .w::before{content:counter(w);position:absolute;left:0;top:1px;width:22px;height:22px;
+  border-radius:6px;background:var(--tcb,#eef3fb);color:var(--tc);font-size:11.5px;
+  font-weight:800;display:grid;place-items:center}
+.why3 .w b{display:block;font-size:13.4px;margin-bottom:2px}
+.why3 .w p{font-size:12.9px;color:var(--ink2);line-height:1.8}
+.why3 .w p b{display:inline;font-size:inherit}
+.why3 .w:last-child{padding-bottom:0}
+.mini-tbl th,.mini-tbl td{font-size:12.3px}
+.mini-tbl td code{font-family:ui-monospace,SFMono-Regular,Menlo,monospace;font-size:11.4px;
+  background:#f3f7fc;border:1px solid #e2ebf6;border-radius:4px;padding:1px 5px;color:#1d4ed8}
+
+@media(max-width:680px){
+  .vb{padding:10px 10px 9px;font-size:12.4px}
+  .vb .d{display:none}
+  .pv iframe{height:64vh}
+  .chap>.ch .cp{margin-left:0;width:100%}
+}
+
+
+/* ── 双选卡外壳 ── */
+:root{--mk:#2b6cf6}
+*{box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{margin:0;background:#f4f8fd;color:#182432;font-family:var(--sans);-webkit-font-smoothing:antialiased;line-height:1.65}
+.hd{background:linear-gradient(120deg,#16357f 0%,#2457d6 42%,#0e9f97 100%);color:#fff;padding:20px 0 18px}
+.hdin{max-width:1180px;margin:0 auto;padding:0 24px}
+.hd .nav{display:flex;align-items:center;gap:12px;margin-bottom:12px;flex-wrap:wrap}
+.hd .back{text-decoration:none;color:#fff;font-size:12.4px;background:rgba(255,255,255,.16);border:1px solid rgba(255,255,255,.32);border-radius:99px;padding:5px 13px;transition:.15s;white-space:nowrap}
+.hd .back:hover{background:rgba(255,255,255,.28)}
+.hd .no{font-size:11px;font-weight:700;letter-spacing:.06em;background:rgba(255,255,255,.2);border-radius:5px;padding:3px 9px}
+.hd h1{margin:0;font-size:20px;line-height:1.5;font-weight:700;letter-spacing:.2px}
+.hd .meta{margin-top:8px;font-size:12.6px;color:rgba(255,255,255,.92);line-height:1.7}
+.hd .desc{margin-top:8px;font-size:12.6px;color:rgba(255,255,255,.82);line-height:1.7;max-width:960px}
+
+/* 选卡 */
+.tabs{background:#fff;border-bottom:1px solid #e2eaf4;position:sticky;top:0;z-index:80;box-shadow:0 2px 10px rgba(20,40,70,.05)}
+.tabs-in{max-width:1180px;margin:0 auto;padding:0 24px;display:flex;gap:4px;overflow-x:auto;scrollbar-width:none}
+.tabs-in::-webkit-scrollbar{display:none}
+.tab{flex:0 0 auto;border:0;background:transparent;font-family:inherit;font-size:13.4px;color:#5a6b82;cursor:pointer;padding:14px 18px 13px;position:relative;display:flex;align-items:center;gap:8px;white-space:nowrap;transition:.15s;font-weight:600}
+.tab .ic{width:20px;height:20px;border-radius:6px;display:inline-flex;align-items:center;justify-content:center;font-size:11px;background:#eef3fb;color:#5a6b82;transition:.15s}
+.tab:hover{color:var(--mk)}
+.tab:hover .ic{background:#e2ecfd;color:var(--mk)}
+.tab.on{color:var(--tc,#2b6cf6)}
+.tab.on .ic{background:var(--tc,#2b6cf6);color:#fff}
+.tab::after{content:"";position:absolute;left:14px;right:14px;bottom:0;height:3px;border-radius:3px 3px 0 0;background:var(--tc,#2b6cf6);transform:scaleX(0);transition:transform .18s}
+.tab.on::after{transform:scaleX(1)}
+.tab .sub{font-size:11px;font-weight:500;color:#97a6ba}
+
+.wrap{max-width:1180px;margin:0 auto;padding:22px 24px 70px}
+.pane{display:none;animation:fade .22s ease}
+.pane.on{display:block}
+@keyframes fade{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:none}}
+@media(prefers-reduced-motion:reduce){.pane.on{animation:none}}
+
+/* 选卡一顶部提示 */
+.guide-top{background:linear-gradient(135deg,#f0f7ff,#f7fbff);border:1px solid #dce9fb;border-radius:12px;padding:15px 18px;margin-bottom:18px;display:flex;gap:14px;align-items:flex-start}
+.guide-top .qi{flex:0 0 auto;width:38px;height:38px;border-radius:10px;background:var(--tc,#2b6cf6);color:#fff;display:flex;align-items:center;justify-content:center;font-size:18px;font-weight:700}
+.guide-top b{color:#16233a}
+.guide-top p{margin:0;font-size:13.2px;color:#4b5d75;line-height:1.8}
+.guide-top .four{display:flex;gap:6px;flex-wrap:wrap;margin-top:9px}
+.guide-top .four span{font-size:11.4px;background:#fff;border:1px solid #dce9fb;border-radius:6px;padding:3px 9px;color:#3c5170;font-weight:600}
+
+/* 教程内容容器（复用教程页 class，这里给外层留白与卡片底） */
+.tutor{background:#fff;border:1px solid #e2eaf4;border-radius:12px;padding:22px 26px 30px;box-shadow:0 1px 3px rgba(24,58,120,.04)}
+.tutor .card{box-shadow:none}
+.tutor #annoAll{border:1px solid var(--tc,#2b6cf6);background:#fff;color:var(--tc,#2b6cf6);
+  font-family:inherit;font-size:12.4px;font-weight:600;border-radius:7px;padding:6px 14px;cursor:pointer;transition:.15s}
+.tutor #annoAll:hover{background:var(--tc2,#eef3fb)}
+.tutor #annoAll.on{background:var(--tc,#2b6cf6);color:#fff}
+
+/* 选卡二：原文影印 */
+.origin-bar{display:flex;align-items:center;gap:10px;flex-wrap:wrap;background:#fff;border:1px solid #e2eaf4;border-radius:10px;padding:10px 14px;margin-bottom:12px}
+.origin-bar .t{font-size:13px;font-weight:700;color:#16233a;display:flex;align-items:center;gap:7px}
+.origin-bar .t .ic{width:22px;height:22px;border-radius:6px;background:#e6f7f0;color:#059669;display:inline-flex;align-items:center;justify-content:center;font-size:12px}
+.origin-bar .hint{font-size:11.8px;color:#7d8da3;line-height:1.6}
+.origin-bar .spacer{flex:1}
+.origin-bar a.olink{text-decoration:none;font-size:12.2px;font-weight:600;color:#fff;background:var(--tc,#2b6cf6);border-radius:7px;padding:7px 13px;transition:.15s;white-space:nowrap}
+.origin-bar a.olink:hover{filter:brightness(1.08);transform:translateY(-1px)}
+.origin-bar a.olink.ghost{background:#fff;color:var(--tc,#2b6cf6);border:1px solid var(--tc,#2b6cf6)}
+.origin-frame{background:#fff;border:1px solid #e2eaf4;border-radius:10px;overflow:hidden;box-shadow:0 1px 3px rgba(24,58,120,.04)}
+.origin-frame iframe{display:block;width:100%;height:78vh;min-height:560px;border:0;background:#fff}
+.origin-tip{font-size:11.6px;color:#8a99ad;margin-top:9px;line-height:1.7}
+
+.foot{max-width:1180px;margin:0 auto;padding:0 24px 44px;font-size:11.6px;color:#93a1b4;line-height:1.8}
+@media(max-width:760px){
+  .hd h1{font-size:17px}
+  .tabs-in{padding:0 10px}
+  .tab{padding:12px 12px 11px;font-size:12.6px}
+  .tab .sub{display:none}
+  .wrap{padding:14px 12px 50px}
+  .tutor{padding:16px 13px 22px}
+  .guide-top{padding:13px;gap:10px}
+  .guide-top .qi{width:32px;height:32px;font-size:15px}
+  .origin-frame iframe{height:72vh;min-height:460px}
+}
+
+</style></head>
+<body>
+<div class="hd" style="--tc:#7c3aed"><div class="hdin">
+  <div class="nav"><a class="back" href="papers.html">← 返回论文列表</a><span class="no">案例三</span><span class="no">方向三 · 资本结构 · 优化型 · 单案例</span></div>
+  <h1>新能源补贴背景下比亚迪汽车资本结构优化途径研究</h1>
+  <div class="meta">张翠 · 西安石油大学 · 会计硕士（MPAcc）· 六章 · 68 页 · 约 2018–2019</div>
+  <div class="desc">同一个题目，两件事分开做：<b>先看别人怎么搭结构</b>（选卡一），<b>再逐字读原文验证</b>（选卡二）。原文与 PDF 完全一致。</div>
+</div></div>
+
+<div class="tabs" style="--tc:#7c3aed"><div class="tabs-in">
+  <button class="tab on" type="button" data-p="guide"><span class="ic">拆</span>结构拆解教程<span class="sub">为什么 · 数据 · 思路 · 借鉴</span></button>
+  <button class="tab" type="button" data-p="origin"><span class="ic">▤</span>论文原文<span class="sub">逐字影印 · 68 页</span></button>
+</div></div>
+
+<div class="wrap">
+  <div class="pane on" data-p="guide">
+    <div class="guide-top" style="--tc:#7c3aed">
+      <div class="qi">拆</div>
+      <div>
+        <p><b>这一选卡做什么：</b>把这篇论文按结构逐段拆开——每一章<b>为什么写这些内容</b>、<b>数据从哪里来</b>、<b>作者是怎么考虑的</b>，以及<b>你作为写手该怎么借鉴</b>。虚线问号按钮都能点开。</p>
+        <div class="four"><span>① 为什么写这些</span><span>② 数据从哪来</span><span>③ 作者怎么考虑</span><span>④ 写手怎么借鉴</span></div>
+      </div>
+    </div>
+    <div class="tutor" style="--tc:#7c3aed">
+      
+      <button id="annoAll" class="mini" type="button" style="margin-bottom:12px">展开全部注释</button>
+      
+          <p style="font-size:13.4px;color:var(--ink2);margin-bottom:12px">
+            <b>一句话骨架：</b>选一个有外部变化的公司 → 立两把尺子（同行 + 最优模型）→ 用四组数说现状 → 三条问题 → 目标区间 → 四条方案 → 三条保障。
+            <b>这条线几乎可以套到任何"某公司某项指标优化"的题目上。</b>
+          </p>
+
+          <div class="legend">
+            <span class="lg"><span class="sw"></span>章名依据 PDF 封面与正文，六章</span>
+            <span class="lg"><span class="sw g"></span>知网「章节下载」页给的是五章，见下方对照</span>
+          </div>
+
+          <h4 style="margin-top:0"><span class="dot"></span>摘要 · 六章逐节<span class="badge-o">原文页码</span></h4>
+
+          <div class="chap">
+            <div class="ch"><span class="ci">摘要</span><b>把"现状—问题—设计—方案"压成四句</b><span class="cp">含 Abstract</span></div>
+            <div class="cb">
+              <div class="anno">
+                <button class="ab" type="button"><span class="qm">?</span>为什么这类题最适合"没写过论文的人"<span class="arw">▶</span></button>
+                <div class="ac">
+                  <p>因为<b>它不需要你发明问题，问题是被题目规定好的</b>。"资本结构优化"这五个字已经写清了要干什么：现状怎样、哪里不合理、应该调到多少、怎么调、怎么保证调得动。</p>
+                  <p>更实际的一点：<b>数据全在年报里，一页都不用求人。</b>资产负债率、流动负债占比、长期借款占比、融资活动现金流——翻「合并资产负债表」和「现金流量表」就能抄。</p>
+                  <p><b>它的风险也很清楚：</b>因为好写，写的人多，撞题概率高。解法是<b>换对象 + 换切口</b>——换行业比换指标有效得多。</p>
+                </div>
+              </div>
+              <p style="margin-top:9px"><b>摘要的写法（可套）：</b>第一句给外部变化（补贴退坡），第二句给对象与年限，第三句给三条问题，第四句给目标区间与四条方案。<b>四句话，250 字，看完就知道全文干什么。</b></p>
+            </div>
+          </div>
+
+          <div class="chap">
+            <div class="ch"><span class="ci">第1章</span><b>绪论</b><span class="cp">七个小节并列</span></div>
+            <div class="cb">
+              <div class="tree">
+                <div class="lv2">研究背景　研究目的　研究意义</div>
+                <div class="lv2">国内外研究现状与述评　研究思路与方法</div>
+                <div class="lv2">技术路线　可能创新点</div>
+              </div>
+              <p><b>它在干什么：</b>注意它把"国内外研究现状与述评"放在绪论里，<b>没有单独设综述章</b>。这类应用型论文常这么处理：综述只占一页半，够证明"我知道别人做过什么"就行，篇幅全部让给第 3、4 章。</p>
+              <p><b>本科可以照这个安排：</b>不设独立综述章，绪论里留一节「国内外研究现状」写 1200 字，正文直接从"现状"开打。<b>但那一节必须有一句述评</b>——否则就是罗列。</p>
+            </div>
+          </div>
+
+          <div class="chap">
+            <div class="ch"><span class="ci">第2章</span><b>相关理论研究</b><span class="cp">概念 + 理论 + 模型，三层</span></div>
+            <div class="cb">
+              <div class="tree">
+                <div class="lv1">2.1 相关概念</div>
+                <div class="lv3">2.1.1 资本结构　2.1.2 政府补助</div>
+                <div class="lv1">2.2 资本结构相关理论</div>
+                <div class="lv3">古典资本结构理论　经典资本结构理论　新资本结构理论</div>
+                <div class="lv1">2.3 最优资本结构评价模型</div>
+                <div class="lv3">2.3.1 静态权衡模型　2.3.2 动态优化</div>
+              </div>
+              <p><b>它在干什么：</b>2.1 定义两个词，2.2 摆理论谱系，2.3 给出<b>能算出区间的工具</b>。<b>三层各司其职，一层都不能少</b>——没有 2.3，你的第 4 章就没有算法。</p>
+              <p><b>别把 2.2 写成理论史。</b>三个理论各写 250 字，末句必须落到"所以本文用哪一个"。<b>写了不用，等于自曝凑字数。</b></p>
+            </div>
+          </div>
+
+          <div class="chap">
+            <div class="ch"><span class="ci">第3章</span><b>比亚迪公司资本结构现状及问题</b><span class="cp">全篇的尺子在这一章</span></div>
+            <div class="cb">
+              <div class="tree">
+                <div class="lv1">3.1 公司简介与经营现状</div>
+                <div class="lv1">3.2 资本结构现状</div>
+                <div class="lv3">财务状况　融资状况　债务状况</div>
+                <div class="lv1"><b>3.3 比亚迪与同行业资本结构比较</b></div>
+                <div class="lv1">3.4 存在问题</div>
+                <div class="lv3">3.4.1 资产负债率偏高　3.4.2 负债结构不合理　3.4.3 融资渠道相对单一</div>
+              </div>
+              <div class="alert ok">
+                <b>注意那个毫不起眼的小节：3.3「与同行业资本结构比较」。</b>
+                没有它，3.4 说"资产负债率偏高"就是一句空话——<b>高是相对谁高？</b>有了 3.3，你才能说"高于行业均值 18 个百分点"。
+                <b>这一节就是全篇的尺子</b>，写起来也最省力：挑 5 家同行，把同一个比率列成一列，你的对象排在中间还是末尾，一眼就看出来。
+              </div>
+              <div class="anno">
+                <button class="ab" type="button"><span class="qm">?</span>有个细节值得停一下：问题 3 条，方案 4 条<span class="arw">▶</span></button>
+                <div class="ac">
+                  <p>3.4 列了三条问题（负债率偏高、负债结构不合理、融资渠道单一），5.2 却给了四条方案——多出来的是"利用国家政策推动转型"。</p>
+                  <p><b>这不是对不上，是有意为之</b>：政策是外生的机会，不是公司的"问题"，但它能解决问题。所以方案可以多于问题，<b>前提是每条方案要么追到某条问题，要么追到某个外部条件</b>。</p>
+                  <p><b>反过来是错的：</b>问题 5 条、方案 3 条，一定扣分——因为你提出了解决不了的问题。定稿前拿张纸，左右两列对齐一遍，缺哪边补哪边。</p>
+                </div>
+              </div>
+              <div class="demo">
+                <span class="lab">示范段落 · 负债结构问题（请换成你自己抄的数）</span>
+                <p>从负债结构看，公司负债以流动负债为主。2020—2024 年，流动负债占负债总额的比重由 68.4% 升至 76.1%，而长期借款占比始终不足两成。与之相对，同期公司固定资产与在建工程合计占总资产的比重超过 40%，资产端的长期性与负债端的短期性形成明显错配。这种"短债长投"的结构意味着公司每年需滚动续借大额短期借款，一旦再融资环境收紧或授信额度收缩，偿债压力将迅速显性化。</p>
+                <div class="why">
+                  <b>为什么这么写：</b>第一句给判断，第二句给两组对照数字（负债端 vs 资产端），第三句命名这个现象（短债长投），第四句给出触发条件（再融资收紧）。
+                  <b>四句话，一个完整的论证单元。</b>注意它没有一句"负债结构不合理"——<b>"不合理"是结论，不是论据。</b>你要做的是把"不合理"翻译成"哪一项对哪一项、错配多少、在什么条件下出事"。
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="chap">
+            <div class="ch"><span class="ci">第4章</span><b>比亚迪公司资本结构优化设计</b><span class="cp">从"应更好"到"应是多少"</span></div>
+            <div class="cb">
+              <div class="tree">
+                <div class="lv1">4.1 优化的原则与目标</div>
+                <div class="lv1">4.2 优化：静态优化　动态优化</div>
+                <div class="lv1">4.3 最优资本结构合理区间确定</div>
+                <div class="lv3">4.3.2 区间的检验</div>
+              </div>
+              <div class="anno">
+                <button class="ab" type="button"><span class="qm">?</span>为什么它写"最优区间"，而不是"最优值"<span class="arw">▶</span></button>
+                <div class="ac">
+                  <p>因为<b>现实中不存在精确的最优点</b>。资本结构受股价、利率、行业景气影响，每天都在动，算出 43.7% 这种数只存在于模型里，一答辩就被问穿。</p>
+                  <p>写"区间"（比如 45%—55%）有三个好处：<b>承认误差</b>、<b>可检验</b>（看实际值有没有落在区间内）、<b>可操作</b>（管理层按区间调，不按小数点调）。</p>
+                  <p><b>这个思路能搬到任何"优化"类题目上：</b>不要说"应该提高到 X"，说"应该落在 X—Y 之间，理由是……"。<b>区间是判断，点是臆断。</b></p>
+                </div>
+              </div>
+              <p style="margin-top:9px"><b>4.3.2「区间的检验」这一小节最容易被漏掉，但它是加分项：</b>把公司过去五年的实际资产负债率画在区间图上，看有没有落在里面。<b>一张图，一句结论，就把"我算的区间靠不靠谱"回答了。</b></p>
+            </div>
+          </div>
+
+          <div class="chap">
+            <div class="ch"><span class="ci">第5章</span><b>比亚迪公司资本结构优化方案</b><span class="cp">方案 + 保障，两步都不能少</span></div>
+            <div class="cb">
+              <div class="tree">
+                <div class="lv1">5.1 优化路线</div>
+                <div class="lv1">5.2 具体方案</div>
+                <div class="lv3">利用国家政策推动转型　增强偿债能力降低资产负债率　调整负债结构缓解偿债风险　利用股权融资改善融资体系</div>
+                <div class="lv1">5.3 方案实施保障措施</div>
+                <div class="lv3">完善激励制度　提高人员素质　保持资本弹性</div>
+              </div>
+              <p><b>方案的写法：</b>每条三句话——<b>做什么、谁来做、看哪个指标</b>。缺了第三句，方案就停在"建议加强"的层面，落不了地。</p>
+              <p><b>保障措施是全篇最容易漏、也最容易拿分的一节。</b>它回答的是"凭什么做得成"：制度（考核挂钩）、人（谁负责）、弹性（市场变了怎么调）。<b>三条，各 150 字，稳稳的。</b></p>
+            </div>
+          </div>
+
+          <div class="chap">
+            <div class="ch"><span class="ci">第6章</span><b>结论与展望</b><span class="cp">短，但要收得住</span></div>
+            <div class="cb">
+              <p><b>它在干什么：</b>结论三条对应第 3 章的三条问题，展望一条指出样本期与行业的局限。<b>不再引入新数据，不再提新观点。</b></p>
+              <div class="anno">
+                <button class="ab" type="button"><span class="qm">?</span>同一篇论文，知网给的目录和这份不一样<span class="arw">▶</span></button>
+                <div class="ac">
+                  <p><b>这是一次真实现场。</b>打开知网「章节下载」页，同一篇论文（文件名 1019119639.nh）给出的却是<b>五章</b>结构：</p>
+                  <p><b>第一章 绪论</b>（8-16）→ <b>第二章 相关概念及理论基础</b>（16-21）→ <b>第三章 现状及问题分析</b>（21-31）→ <b>第四章 优化方案设计</b>（31-48）→ <b>第五章 结论与展望</b>（48-52）。</p>
+                  <p><b>差异在哪：</b>万方与 PDF 把这篇拆成「第四章 优化设计」+「第五章 优化方案」，知网把它们合成了一章。<b>哪份对？</b>以 PDF 封面为准——数据库目录是机器解析的。</p>
+                  <p><b>你要记住的动作：</b>定稿前拿自己的 PDF，<b>逐条比对目录与正文标题</b>。页码错、标题少字、编号跳号，都是格式分的直接扣分项，评委翻两页就能发现。</p>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <h4><span class="dot"></span>作者的思考链<span class="badge-r">还原</span></h4>
+          <div class="chain">
+            <div class="st">
+              <b>先选一个"最近有事发生"的对象</b>
+              <p>新能源补贴退坡是这家公司近五年最大的外部变化——补贴一退，融资结构和现金流立刻受影响。题目因此有了抓手。</p>
+              <span class="q">这就是题目前缀"新能源补贴背景下"的来历，不是装饰</span>
+            </div>
+            <div class="st">
+              <b>再立一把尺子：同行 + 最优模型</b>
+              <p>3.3 横向比同行，4.3 纵向算区间。两个方向各一把尺，判断才站得住。</p>
+              <span class="q">没有尺子的"偏高""不合理"，都是主观评价</span>
+            </div>
+            <div class="st">
+              <b>现状用四组数说话</b>
+              <p>财务状况、融资状况、债务状况——三组来自报表，一组来自同行比较。</p>
+              <span class="q">四组数一摆，第三章 2000 字就够了，不用凑</span>
+            </div>
+            <div class="st">
+              <b>问题 → 设计 → 方案 → 保障，四步不跳</b>
+              <p>问题指出方向，设计给出目标区间，方案落到具体动作，保障回答"凭什么能做成"。</p>
+              <span class="q">少了保障那一步，建议就停在"应该"层面，落不了地</span>
+            </div>
+          </div>
+        
+      
+          <div class="q3">
+            <div class="q"><div class="qh">为什么这么写</div><div class="qt">五段流水线的每一步都在回答上一段留下的问题；<b>尺子必须先于判断</b>；写区间不写点。</div></div>
+            <div class="q"><div class="qh">去哪找参考</div><div class="qt">同指标优化类学位论文按行业找 3 篇 + 教材里的三个理论 + 政策原文。<b>不引外文也能过</b>。</div></div>
+            <div class="q"><div class="qh">哪拿数据</div><div class="qt">巨潮年报三张表 + 5 家同行同口径数据。<b>Excel 全程够用，不用任何统计软件</b>。</div></div>
+          </div>
+
+          <h4 style="margin-top:0"><span class="dot"></span>为什么这么写：四个决定<span class="badge-r">还原</span></h4>
+          <div class="why3">
+            <div class="w"><b>题目自带问题，省掉"发现问题"这一步</b>
+              <p>本科最怕卡在"我该研究什么"。这类题不用：指标已给定（资本结构），对象只需挑一家年报齐全的公司，问题会自己浮出来（偏高、错配、单一）。<b>省下的力气全部投到"论证"上。</b></p></div>
+            <div class="w"><b>先立尺子，再下判断</b>
+              <p>3.3 同行比较排在 3.4 问题之前，不是顺序随便。<b>"高"必须有参照物</b>；没有参照物的判断，答辩时一句"跟谁比"就崩。<b>你的版本也要让"比较"这一节出现在"问题"之前。</b></p></div>
+            <div class="w"><b>给一个区间，而不是一个数</b>
+              <p>区间承认了估计误差，也留出了执行空间。<b>更重要的是它可以被检验</b>——过去五年实际值在不在区间里，一句话就能自证方法有效。</p></div>
+            <div class="w"><b>方案后面必须跟保障</b>
+              <p>方案回答"做什么"，保障回答"凭什么做得到"。<b>这一节的存在感最低，但它把论文从"学生作业"拉到"可执行报告"。</b>评审表里"应用价值"那一栏，通常就靠它。</p></div>
+          </div>
+
+          <div class="alert bad">
+            <b>这类题最大的风险不是写不出，是"太像"。</b>
+            每年都有人写"某公司资本结构优化"，对象集中在几家明星公司。解法两步：<b>换对象</b>（选一家没那么热门但年报齐全的，比如细分行业第二三名）＋<b>换切口</b>（把"补贴退坡"换成"原材料价格暴涨""出海建厂""实控人变更"）。<b>切口一换，同样的骨架立刻就是另一篇论文。</b>
+          </div>
+
+          <h4><span class="dot"></span>去哪里找参考：三条线就够</h4>
+          <div class="tbl-wrap">
+            <table class="mini-tbl">
+              <thead><tr><th style="width:16%">要找什么</th><th style="width:26%">具体入口</th><th>怎么点 / 填什么</th></tr></thead>
+              <tbody>
+                <tr><td><b>同骨架论文</b></td><td>知网 → 学位论文</td><td>篇名 <code>资本结构 优化</code>，再加一个行业词（<code>汽车</code> / <code>光伏</code> / <code>家电</code>）。<b>取近三年 3 篇</b>，只看它们的第 3、4 章目录——骨架直接照搬，内容全换。</td></tr>
+                <tr><td><b>理论出处</b></td><td>教材 + 知网</td><td>MM 定理、权衡理论、优序融资，<b>用你主考院校指定的《财务管理学》教材页码</b>，比引论文更稳、更省事。</td></tr>
+                <tr><td><b>最优区间算法</b></td><td>知网</td><td>篇名 <code>最优资本结构 区间</code> 或 <code>资本结构 静态权衡</code>。<b>找那种给了完整算式的</b>，把公式抄下来，参数换成你的数。</td></tr>
+                <tr><td><b>政策原文</b></td><td>财政部 / 工信部 / 发改委官网</td><td>搜「新能源汽车推广应用财政补贴政策」通知原文，<b>把退坡比例和时点抄成一张表</b>——这就是"补贴背景"那一节的全部素材。</td></tr>
+                <tr><td><b>同行名单</b></td><td>证监会行业分类 + 巨潮资讯网</td><td>先查对象的行业代码（如 C36 汽车制造业），再在同代码公司里挑 5 家规模相近、年报齐全的。<b>名单要写进论文，注明选取依据。</b></td></tr>
+                <tr><td><b>风险对照</b></td><td>知网「引证文献」</td><td>点开你参考的那篇，看谁引用了它。<b>如果近三年有一堆同题，说明撞题严重</b>，赶紧换对象。</td></tr>
+              </tbody>
+            </table>
+          </div>
+
+          <h4><span class="dot"></span>哪里获取数据：一张年报就够，但要抄对表</h4>
+          <div class="tbl-wrap">
+            <table class="mini-tbl">
+              <thead><tr><th style="width:22%">你要的数</th><th style="width:28%">去哪拿</th><th>取哪一栏 / 怎么算</th></tr></thead>
+              <tbody>
+                <tr><td><b>资产负债率</b></td><td>年报「合并资产负债表」；或巨潮「财务指标」</td><td><code>总负债 ÷ 总资产</code>。<b>连抄 5 年</b>，逐年列，别只给一个最新值。</td></tr>
+                <tr><td><b>负债结构</b></td><td>同上，「流动负债合计」「长期借款」「应付债券」</td><td>算两个比：<b>流动负债 ÷ 总负债</b>、<b>长期借款 ÷ 总负债</b>。<b>这两个比一升一降，就是"结构不合理"的证据。</b></td></tr>
+                <tr><td><b>融资结构</b></td><td>「现金流量表」筹资活动 + 「所有者权益变动表」</td><td>内源（经营现金流净额）、债务（取得借款收到的现金）、股权（吸收投资收到的现金）三者占比。</td></tr>
+                <tr><td><b>资产期限</b></td><td>「合并资产负债表」固定资产、在建工程</td><td>算 <code>(固定资产 + 在建工程) ÷ 总资产</code>。<b>和负债期限放一起，才能证明"短债长投"。</b></td></tr>
+                <tr><td><b>同行 5 家</b></td><td>巨潮资讯网逐家年报</td><td>只抄同一个比率（资产负债率），做成一行 6 个数的表。<b>口径必须一致</b>：都用合并报表、都用年末数。</td></tr>
+                <tr><td><b>算区间要的参数</b></td><td>年报附注 + 中国债券信息网</td><td>利息支出（财务费用附注）、所得税率（25% 或实际税率）、β（CSMAR 个股 β）、无风险利率（10 年期国债）。<b>WACC 就是这几个数凑出来的。</b></td></tr>
+              </tbody>
+            </table>
+          </div>
+
+          <div class="alert ok">
+            <b>只抄三个动作，够用了：</b><br>
+            ① <b>先立尺子再下判断</b>——同行对比一节必须在"问题"章之前。<br>
+            ② <b>写区间，不写点</b>——"应落在 45%—55%"比"应提高到 48.3%"可信得多。<br>
+            ③ <b>末尾加一节"保障措施"</b>——它回答"凭什么做得成"，是这类流水线最容易漏、也最容易拿分的一节。
+          </div>
+
+          <div class="alert bad" style="margin-bottom:0">
+            <b>两个必踩的坑：</b><br>
+            ① <b>只写"偏高"不给参照</b>——"比亚迪资产负债率偏高"这句话本身没有信息。<b>必须写成"高于行业均值 X 个百分点"或"高出自身最优区间上限 X 个点"。</b><br>
+            ② <b>问题与方案数量对不上、内容也对不上</b>——三条问题、四条方案，其中两条方案跟问题无关。<b>定稿前做一次对齐：每列一条方案，右边写它解决第几条问题。</b>
+          </div>
+        
+    </div></div>
+  <div class="pane" data-p="origin">
+    <div class="origin-bar" style="--tc:#7c3aed">
+      <span class="t"><span class="ic">▤</span>原文影印 · 全文 68 页</span>
+      <span class="hint">与 PDF 逐字对位：字距、字号、字体、图片、公式、图层全部保持原样，一个字未改</span>
+      <span class="spacer"></span>
+      <a class="olink" href="p-zhangcui.html" target="_blank" rel="noopener">全屏打开原文 ↗</a>
+    </div>
+    <div class="origin-frame">
+      <iframe src="p-zhangcui.html?embed=1" title="新能源补贴背景下比亚迪汽车资本结构优化途径研究 原文影印" loading="lazy"></iframe>
+    </div>
+    <div class="origin-tip">影印页支持全文检索、按 PDF 页码跳转、缩放与逐句中译；上方可「全屏打开」获得完整工具栏。</div></div>
+</div>
+
+<div class="foot">结构拆解为写作教学分析，原文影印为论文逐字照录；两者分栏呈现，避免把范文原话当成范文范文照抄。<b>只学结构与思路，不抄句子。</b></div>
+
+<script>
+(function(){
+  var tabs=Array.prototype.slice.call(document.querySelectorAll('.tab'));
+  var panes=Array.prototype.slice.call(document.querySelectorAll('.pane'));
+  tabs.forEach(function(t){ t.addEventListener('click',function(){
+    tabs.forEach(function(x){x.classList.remove('on')});
+    panes.forEach(function(x){x.classList.remove('on')});
+    t.classList.add('on');
+    var target=document.querySelector('.pane[data-p="'+t.getAttribute('data-p')+'"]');
+    if(target) target.classList.add('on');
+    if(t.getAttribute('data-p')==='origin'){
+      var f=target&&target.querySelector('iframe');
+      if(f&&!f.src) f.src=f.getAttribute('data-src');
+    }
+    window.scrollTo({top:0,behavior:'smooth'});
+  }); });
+  var h=location.hash;
+  if(h==='#origin'&&tabs[1]) tabs[1].click();
+})();
+
+(function(){
+  var annos = Array.prototype.slice.call(document.querySelectorAll('.anno'));
+  annos.forEach(function(a){
+    var b=a.querySelector('.ab'); if(!b) return;
+    b.addEventListener('click',function(){ a.classList.toggle('open'); });
+  });
+  var btn=document.getElementById('annoAll');
+  if(btn){ btn.addEventListener('click',function(){
+    var anyOpen=annos.some(function(a){return a.classList.contains('open')});
+    annos.forEach(function(a){ a.classList.toggle('open',!anyOpen); });
+    btn.textContent=anyOpen?'展开全部注释':'收起全部注释';
+  }); }
+})();
+
+</script>
+</body></html>
