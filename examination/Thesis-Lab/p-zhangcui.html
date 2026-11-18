@@ -246,6 +246,9 @@ mark.cur{background:#ffc94d}
   /* 英文：修 PDF 断词（Lan- guage -> Language）与标点前空格（, but -> , but） */
   function cleanEn(s){
     return s
+      .replace(/[\ufb00-\ufb06]/g, function(c){
+        return {'\ufb00':'ff','\ufb01':'fi','\ufb02':'fl','\ufb03':'ffi','\ufb04':'ffl','\ufb05':'ft','\ufb06':'st'}[c];
+      })
       .replace(/([A-Za-z])-[ ]+([a-z])/g, '$1$2')
       .replace(/(\w)[ ]+([,.;:!?%])(?=[ ]|$)/g, '$1$2')
       .replace(/[ ]{2,}/g, ' ');
@@ -273,7 +276,7 @@ mark.cur{background:#ffc94d}
         if(!s){ out.push({k:'blank', v:'', page:page}); return; }
         if(PGRE.test(s) && s.length<=4){ out.push({k:'pg', v:s, page:page}); return; }
         if(li<=1 && D.hdr.indexOf(s)>=0){ out.push({k:'hdr', v:s, page:page}); return; }
-        if(isHead(s)){ out.push({k:'h', v:s, page:page}); return; }
+        if(isHead(s)){ out.push({k:'h', v:IS_EN ? cleanEn(s) : s, page:page}); return; }
         if(IS_EN){
           splitEn(cleanEn(s)).forEach(function(part){ out.push({k:'t', v:part.trim(), page:page}); });
           return;
@@ -332,8 +335,21 @@ mark.cur{background:#ffc94d}
       .replace(/[\u2019\u2018]/g, "'").replace(/[\u201c\u201d]/g, '"')
       .toLowerCase();
   }
+  /* 四千多条译文逐条 indexOf 会把首屏拖死，先用 16 字符前缀建哈希桶，
+     每个段落只做 O(段长) 次查表，命中候选才验证整句。 */
+  var ZHIDX = null, ZHKEY = 16;
+  function buildZhIndex(){
+    ZHIDX = {};
+    for(var i=0;i<ZMAP.length;i++){
+      var ent = ZMAP[i];
+      if(ent.n.length < ZHKEY) continue;
+      var k = ent.n.slice(0, ZHKEY);
+      (ZHIDX[k] = ZHIDX[k] || []).push(ent);
+    }
+  }
   function withZh(v){
     if(!state.zh || !ZMAP) return null;
+    if(!ZHIDX) buildZhIndex();
     /* 与 normN 严格同规则：去空白/软连字符/连字符，折叠连字，统一引号 */
     var n = '', map = [], i, q;
     for(i=0;i<v.length;i++){
@@ -349,37 +365,36 @@ mark.cur{background:#ffc94d}
       n += ch.toLowerCase();
       map.push(i);
     }
-    var used = new Array(n.length), hits = [];
-    /* all=true：同一句在文中多处出现都标；false：只标第一处（前缀退化时用，避免误插） */
-    function scan(key, all, z){
-      if(key.length < 8) return 0;
-      var from = 0, pos, cnt = 0;
-      while((pos = n.indexOf(key, from)) >= 0){
-        var ok = true, q;
-        for(q=pos; q<pos+key.length; q++){ if(used[q]){ ok = false; break; } }
-        if(ok){
-          for(q=pos; q<pos+key.length; q++) used[q] = true;
-          hits.push({s: map[pos], e: map[pos+key.length-1]+1, z: z});
-          cnt++;
-          if(!all) return cnt;
-        }
-        from = pos + key.length;
-      }
-      return cnt;
+    if(n.length < ZHKEY) return null;
+
+    var used = [], hits = [], done = {};
+    function take(pos, len, z, ent){
+      var q;
+      for(q=pos; q<pos+len; q++){ if(used[q]) return false; }
+      for(q=pos; q<pos+len; q++) used[q] = 1;
+      hits.push({s: map[pos], e: map[pos+len-1]+1, z: z});
+      ent.hit = 1;
+      return true;
     }
-    for(i=0;i<ZMAP.length;i++){
-      var ent = ZMAP[i], c;
-      if(ent.n.length < 8) continue;
-      c = scan(ent.n, true, ent.z);
-      /* 整句落在被截断的段落里时，退化为长前缀定位（译文仍插在该段末尾） */
-      if(!c && ent.n.length > 110) c = scan(ent.n.slice(0,110), false, ent.z);
-      if(!c && ent.n.length > 70)  c = scan(ent.n.slice(0,70),  false, ent.z);
-      /* 句子开头被切到上一块（如 "In" 落在被误判的标题行）时，用后半段定位 */
-      if(!c){
-        var off = Math.floor(ent.n.length * 0.28);
-        if(ent.n.length - off >= 70) c = scan(ent.n.slice(off), false, ent.z);
+    /* 候选在 pos 处能匹配多长：整句优先，其次 110 / 70 字符前缀 */
+    function fit(ent, pos){
+      if(pos + ent.n.length <= n.length && n.substr(pos, ent.n.length) === ent.n) return ent.n.length;
+      if(ent.n.length > 110 && pos + 110 <= n.length && n.substr(pos, 110) === ent.n.slice(0, 110)) return 110;
+      if(ent.n.length > 70  && pos + 70  <= n.length && n.substr(pos, 70)  === ent.n.slice(0, 70))  return 70;
+      return 0;
+    }
+
+    for(i=0; i<=n.length-ZHKEY; i++){
+      var cands = ZHIDX[n.substr(i, ZHKEY)];
+      if(!cands) continue;
+      for(var c=0;c<cands.length;c++){
+        var ent = cands[c];
+        if(done[ent.n]) continue;
+        var ln = fit(ent, i);
+        if(!ln) continue;
+        if(take(i, ln, ent.z, ent)) done[ent.n] = 1;
+        break;
       }
-      if(c) ent.hit = 1;
     }
     if(!hits.length) return null;
     hits.sort(function(a,b){ return a.s - b.s; });
