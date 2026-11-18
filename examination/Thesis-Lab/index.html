@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>学位论文拆解与写作规范 · 四篇真实论文 + 电子科大格式标准</title>
+<title>学位论文拆解与写作规范 · 7 篇真实论文 + 电子科大格式标准</title>
 <style>
 :root{
   --bg:#f5f8fb; --card:#fff; --ink:#15202b; --ink2:#48576b; --ink3:#7d8a9b;
@@ -128,6 +128,9 @@ td b{font-weight:700}
 .case-head.c2{background:linear-gradient(135deg,#4338ca,#5b52e0)}
 .case-head.c3{background:linear-gradient(135deg,#b45309,#d97706)}
 .case-head.c4{background:linear-gradient(135deg,#7e22ce,#9333ea)}
+.case-head.c5{background:linear-gradient(135deg,#0369a1,#0284c7)}
+.case-head.c6{background:linear-gradient(135deg,#be185d,#db2777)}
+.case-head.c7{background:linear-gradient(135deg,#7e22ce,#a855f7)}
 .case-head .tag{
   display:inline-block;font-size:11px;letter-spacing:.1em;font-weight:700;
   background:rgba(255,255,255,.2);padding:3px 9px;border-radius:4px;margin-bottom:9px;
@@ -148,6 +151,7 @@ h4:first-child{margin-top:0}
 h4 .dot{width:6px;height:6px;border-radius:50%;background:var(--ink3);flex:0 0 auto}
 .c1 h4 .dot{background:var(--t1)} .c2 h4 .dot{background:var(--t2)} .c3 h4 .dot{background:var(--t3)}
 .c4 h4 .dot{background:var(--t4)}
+.c5 h4 .dot{background:#0369a1} .c6 h4 .dot{background:#be185d} .c7 h4 .dot{background:#7e22ce}
 
 .badge-o,.badge-r,.badge-d{
   font-size:10.5px;font-weight:700;letter-spacing:.04em;padding:2px 7px;border-radius:4px;
@@ -435,12 +439,12 @@ footer{border-top:1px solid var(--line);padding-top:22px;margin-top:56px;font-si
 <div class="wrap">
 
 <header>
-  <span class="kicker">学位论文拆解 + 写作规范 · 4 篇真实论文</span>
+  <span class="kicker">学位论文拆解 + 写作规范 · 7 篇真实论文</span>
   <h1>别人写论文时，<em>每一段到底在干什么</em></h1>
   <p class="lede">
-    四篇可核验的硕士学位论文逐章拆开：<b>原文摘要照录</b>、<b>每章为什么放在这个位置</b>、
+    四篇可核验的硕士学位论文 + 三篇博士论文逐章拆开：<b>原文摘要照录</b>、<b>每章为什么放在这个位置</b>、
     <b>第一段该怎么起笔</b>；再给一整章<b>电子科大的格式标准</b>，页边距、字体字号、参考文献精确到磅值；
-    最后一章是<b>数据源分级</b>——哪些是学术圈公认的、哪些免费、你为什么该选这一个。
+    后面三篇博士论文（LLM 推理、程序化内容生成、游戏设计机械化）作为<b>方法对照</b>，看顶级研究怎么搭骨架。最后一章是<b>数据源分级</b>——哪些是学术圈公认的、哪些免费、你为什么该选这一个。
     页面上所有虚线按钮都能点开。
   </p>
 </header>
@@ -453,6 +457,9 @@ footer{border-top:1px solid var(--line);padding-top:22px;margin-top:56px;font-si
       <a href="#s2">案例二 · 外汇暴露</a>
       <a href="#s3">案例三 · 资本结构</a>
       <a href="#s4">案例四 · 电子科大</a>
+      <a href="#s4b">案例五 · LLM 推理</a>
+      <a href="#s4c">案例六 · PCG 工具</a>
+      <a href="#s4d">案例七 · 游戏设计</a>
       <a href="#s5">格式标准</a>
       <a href="#s6">横向对比</a>
       <a href="#s7">数据源</a>
@@ -2000,6 +2007,430 @@ footer{border-top:1px solid var(--line);padding-top:22px;margin-top:56px;font-si
   </div>
 </section>
 
+<!-- ============ s4b ============ -->
+<section id="s4b">
+  <div class="card pad0 c5">
+    <div class="case-head c5">
+      <span class="tag">方向五 · AI 大模型 · 对照方法</span>
+      <h3>Enhancing the Reasoning Capabilities of LLMs: From Game Playing to Embodied Planning</h3>
+      <div class="meta">Shu Wang · UCLA · 博士学位论文 · 2025 · 六章 · eScholarship qt0zs6r515</div>
+    </div>
+    <div class="case-body">
+
+      <div class="vtabs" style="--tc:#0369a1;--tcb:#e2f1fa">
+        <div class="vbar" role="tablist">
+          <button class="vb on" type="button" role="tab" aria-selected="true" data-p="orig"><span class="n">1</span>原版<span class="d">逐字全文</span></button>
+          <button class="vb" type="button" role="tab" aria-selected="false" data-p="parse"><span class="n">2</span>案例解析<span class="d">逐章拆解</span></button>
+          <button class="vb" type="button" role="tab" aria-selected="false" data-p="sum"><span class="n">3</span>总结<span class="d">为什么 · 找参考 · 找数据</span></button>
+        </div>
+
+        <!-- ① 原版 -->
+        <div class="vp on" data-v="orig">
+          <div class="srcbar">
+            <span class="lab">原文出处</span>
+            <a class="sbtn" href="https://escholarship.org/uc/item/qt0zs6r515" target="_blank" rel="noopener">eScholarship ↗ qt0zs6r515</a>
+            <a class="sbtn" href="p-shuwang.html" target="_blank" rel="noopener">独立页打开 ↗</a>
+            <span style="font-size:11.4px;color:var(--ink3);margin-left:auto">博士学位论文 · 153 页 · 正文 P17–P143</span>
+          </div>
+          <div class="pv">
+            <div class="pvh"><b>原封不动 · 逐字全文</b><span>PDF 文字层直出，未删改一字</span><span class="r">可切「可读版 / 原样照录」· 可全文搜词</span></div>
+            <iframe src="p-shuwang.html?embed=1#p17" title="英文论文原文全文" loading="lazy"></iframe>
+            <div class="pvf"><b>已定位到第 1 章（P.17）</b>。想看数据怎么来，搜「MATE」，落在第 3 章 3.2；想看局限怎么写，搜「Limitations」，落在第 6 章。这一篇正文页数与目录页码能一一对上，<b>适合练习「按 PDF 页码估篇幅」</b>。</div>
+          </div>
+          <div class="alert info" style="margin-top:12px">
+            <b>怎么用这一栏：</b>先按目录跳到你最想学的那一章，<b>逐字读完，再切到「案例解析」</b>看那一章为什么这么摆。<b>顺序别反</b>——先看解析再看原文，你会只记住我的话，记不住作者怎么写的。
+          </div>
+        </div>
+
+        <!-- ② 案例解析 -->
+        <div class="vp" data-v="parse">
+
+<p style="font-size:13.4px;color:var(--ink2);margin-bottom:12px">
+  <b>一句话骨架：</b>这篇博士论文只主张一件事——<b>让大模型把「怎么想」说出来，再配上领域工具，推理能力就能显著提升</b>。
+  为了证明这句话不是巧合，作者把它放进三个难度递增的场地：完全可知的棋盘（第3章）、已知地图的机器人规划（第4章）、部分可知、要边走边看的家庭场景（第5章）。
+  每章都走同一套固定动作，<b>你可以把这套动作直接抄成自己的论文章法</b>。
+</p>
+<div class="legend">
+  <span class="lg"><span class="sw"></span>章节与页码据 PDF 书签逐条录入</span>
+  <span class="lg"><span class="sw g"></span>正文 P17–P141，共约 125 页</span>
+</div>
+
+<h4 style="margin-top:0"><span class="dot"></span>为什么说清「难度递增」是全篇的关键 <span class="badge-o">原文 P17–21</span></h4>
+<div class="chap">
+  <div class="ch"><span class="ci">第1章</span><b>引言：给「推理」下一个可操作的定义</b><span class="cp">P17–23</span></div>
+  <div class="cb">
+    <p><b>它在干什么：</b>先用一句名言把「推理」抬到人类智能核心的位置，再承认大模型在多步长程任务上仍然不行——<b>一句肯定 + 一句转折，研究缺口就出来了</b>。接着给出三条贡献、论文结构、已发表论文清单。</p>
+    <div class="anno"><button class="ab" type="button"><span class="qm">?</span>为什么开头要引用 Garnham & Oakhill 1994 这句老话<span class="arw">▶</span></button><div class="ac">
+      <p>这不是凑文献。作者要证明「推理」是一个<b>有半个世纪积累的严肃概念</b>，不是跟着大模型热点造的词。博士论文最怕评委问「你研究的东西是不是个伪命题」——引一句经典定义，就把合法性先立住了。<b>你写中文论文时，绪论开头也该给核心概念找一个权威出处，而不是自己造一个。</b></p>
+    </div></div>
+    <div class="mini-t">引言的可抄句式</div>
+    <p style="background:#f6faf9;border:1px solid #d7ebe7;border-radius:7px;padding:9px 11px;font-size:12.9px">
+      <b>「___ 是 ___ 的核心能力。近年 ___ 在 ___ 上表现突出，然而在 ___ 场景下仍然 ___。本论文系统地在 ___ 个递进的领域中研究并增强 ___：先是 ___，继而 ___，最后 ___。」</b><br>
+      <span style="color:var(--ink3)">「递进」两个字是这句的命门——它提前告诉评委：后面三章不是三篇拼盘，是一条线。</span>
+    </p>
+  </div>
+</div>
+
+<div class="chap">
+  <div class="ch"><span class="ci">第2章</span><b>背景：把四条文献线收拢成「研究缺口」</b><span class="cp">P24–31</span></div>
+  <div class="cb">
+    <p><b>它在干什么：</b>四条线并行铺开——大模型、经典规划、不确定环境下的规划、具身智能机器人，最后单独一节写「国际象棋为何是理想的试验台」，再用 2.6「Summary and Research Gaps」收口。<b>这一节是全文的转轴</b>：前面所有「别人做了什么」，到这里被压成一句「但没人把这些串起来」。</p>
+    <div class="anno"><button class="ab" type="button"><span class="qm">?</span>为什么综述要分四条线，而不是按时间顺序<span class="arw">▶</span></button><div class="ac">
+      <p>因为作者的贡献本身就是<b>跨四条线的缝合</b>：语言模型（线1）+ 符号规划（线2）+ 不确定环境（线3）+ 机器人（线4）。综述的切法要和贡献的切法对齐，评委才会觉得「缺口」是真的。<b>你的综述也该按「你打算缝合的几股力量」来分节，而不是按年份流水账。</b></p>
+    </div></div>
+    <div class="anno"><button class="ab" type="button"><span class="qm">?</span>「Chess as a Reasoning Testbed」为什么单独成节<span class="arw">▶</span></button><div class="ac">
+      <p>因为第3章要用棋盘做第一个实验，必须提前说明<b>为什么选棋盘而不是别的游戏</b>：规则完全可知、走法有客观优劣（引擎评分）、有大量标注数据。这就是在给后面的数据和方法做铺垫——<b>先论证「场地选得对」，实验结果才有说服力</b>。</p>
+    </div></div>
+  </div>
+</div>
+
+<h4><span class="dot"></span>三个实战章：完全相同的五步结构 <span class="badge-r">还原</span></h4>
+<div class="alert info">
+  <b>把第3、4、5章摆在一起看，你会发现它们是同一个模板印出来的：</b>
+  ① Introduction（动机 + 关键洞见 + 贡献）→ ② 问题/数据表示 → ③ 方法框架 → ④ Experiments（设置 + 基线 + 主结果 + 消融/案例）→ ⑤ Discussion + Conclusion。
+  <b>这是全文最值得你抄的东西</b>：拿它当骨架，每一章填自己的内容，结构绝不会散。
+</div>
+
+<div class="chap">
+  <div class="ch"><span class="ci">第3章</span><b>棋盘：先证明「语言解释」本身有用</b><span class="cp">P32–47</span></div>
+  <div class="cb">
+    <p><b>它在干什么：</b>提出 MATE 数据集（约 100 万个棋局局面，含世界冠军级选手标注的战略与战术标签），微调 LLaMA-3-8B，对比商用大模型。<b>数据从哪来</b>：专家棋手标注 + 国际象棋引擎评分（客观区分两步棋的优劣）。<b>结论</b>：加了战略+战术解释的模型，比当时最强的商用大模型高 24.2%。</p>
+    <div class="orig">
+      <p>"MATE consists of approximately 1 million chess positions, each with candidate moves that have been carefully annotated by expert chess players including world champion-level annotators… each position contains exactly two candidate moves with significantly different evaluation scores from chess engines, making the better move objectively identifiable."</p>
+      <span class="src">——第3章 3.2.1 Dataset Overview，原文照录（PDF P36）</span>
+    </div>
+    <div class="anno"><button class="ab" type="button"><span class="qm">?</span>为什么每个局面只放「两步棋」<span class="arw">▶</span></button><div class="ac">
+      <p>因为要让「哪个走法更好」<b>客观可判</b>——用引擎评分拉开差距。这样评测才不需要人工判断，结果可复现。<b>你做实证时同理：先把「对错」定义成一个能被机器算出来的量，再谈方法优劣。</b>这是把模糊问题变成可研究问题的关键一步。</p>
+    </div></div>
+    <div class="anno"><button class="ab" type="button"><span class="qm">?</span>训练为什么用 LLaMA-3-8B 而不是最大的模型<span class="arw">▶</span></button><div class="ac">
+      <p>原文给的理由是「学术硬件上可微调、推理任务表现强」。这是<b>把资源约束写进方法选择</b>的示范——不装作自己有无限算力。<b>你写论文时，方法选型也要写清「为什么是这个规模」，这比一味堆大模型更可信。</b></p>
+    </div></div>
+  </div>
+</div>
+
+<div class="chap">
+  <div class="ch"><span class="ci">第4章</span><b>机器人规划：让大模型当「领域无关接口」</b><span class="cp">P64–79</span></div>
+  <div class="cb">
+    <p><b>它在干什么：</b>把「语言解释有用」从棋盘搬到机器人。提出 LLM3 框架：把运动规划的失败分成「碰撞」和「不可达」两类，反馈给大模型，迭代修正动作序列。<b>数据/场景从哪来</b>：真实机器人场景 + 仿真基准。<b>结论</b>：成功率 91.3%，行程比基线缩短 36.1%。</p>
+    <div class="anno"><button class="ab" type="button"><span class="qm">?</span>为什么把失败「分类」而不是笼统报错<span class="arw">▶</span></button><div class="ac">
+      <p>分类之后，反馈才能<b>具体可操作</b>——「碰撞」和「不可达」对应不同的修正策略。这是全文反复出现的手法：<b>把连续、模糊的现实，切成几个离散、可命名的类别，再逐个处理</b>。你写「问题→对策」类章节时，这个手法同样适用：先把问题分型，对策才不会空泛。</p>
+    </div></div>
+  </div>
+</div>
+
+<div class="chap">
+  <div class="ch"><span class="ci">第5章</span><b>探索+操作：把「边走边看」也纳入规划</b><span class="cp">P80–116</span></div>
+  <div class="cb">
+    <p><b>它在干什么：</b>场景变成「部分可知」——机器人不知道东西在哪，得先探索。提出 EPoG 框架：用图结构表示场景与信念，大模型既决定「先去哪儿看」，又负责局部重规划。<b>数据/场景从哪来</b>：46 个家庭场景 × 5 个长程任务。<b>结论</b>：探索开销降 40%，行程降 36.2%。</p>
+    <div class="anno"><button class="ab" type="button"><span class="qm">?</span>三章的「数据规模」为什么要写得很具体<span class="arw">▶</span></button><div class="ac">
+      <p>100万个局面、91.3%成功率、46个场景×5任务——<b>具体数字本身就是可信度</b>。评委不问你「结果好不好」，他问「你拿什么证明」。三章都把数据量和指标写进摘要，是刻意让读者不用翻正文就知道工作量。你的摘要也该有两个硬数字。</p>
+    </div></div>
+  </div>
+</div>
+
+<div class="chap">
+  <div class="ch"><span class="ci">第6章</span><b>结论：总结贡献，也老实交代局限</b><span class="cp">P139–143</span></div>
+  <div class="cb">
+    <p><b>它在干什么：</b>先收三条贡献，再用一整节写 Limitations——上下文窗口有限、语言模型难以验证几何可行性、长程序列的连贯性会衰减。<b>这一节不是自曝其短，是博士论文的规定动作</b>：把边界划清楚，反而显得你懂这个领域。</p>
+    <div class="orig">
+      <p>"All current language models have finite context windows that limit the amount of information they can consider simultaneously… Future work might address this through hierarchical memory systems…"</p>
+      <span class="src">——第6章 6.4 Limitations，原文照录（PDF P140）</span>
+    </div>
+    <div class="mini-t">局限的写法公式</div>
+    <p style="background:#f6faf9;border:1px solid #d7ebe7;border-radius:7px;padding:9px 11px;font-size:12.9px">
+      <b>「一个局限来自 ___（客观约束）。它导致 ___（具体后果）。未来工作可通过 ___ 解决。」</b><br>
+      <span style="color:var(--ink3)">每一条局限都配一个未来方向——<b>局限就变成了你的后续研究预告</b>。</span>
+    </p>
+  </div>
+</div>
+
+        </div>
+
+        <!-- ③ 总结 -->
+        <div class="vp" data-v="sum">
+
+<div class="q3">
+  <div class="q"><div class="qh">为什么这么写</div><div class="qt">用一个主张贯穿三个难度递增的场景，每章同模板——<b>重复结构本身就是论证</b>：说明结论不是某一个场景的偶然。</div></div>
+  <div class="q"><div class="qh">数据从哪来</div><div class="qt">MATE 棋局库靠专家标注 + 引擎评分；机器人章靠仿真基准与真实机器人实验。<b>每一章都在摘要里给出硬数字</b>。</div></div>
+  <div class="q"><div class="qh">作者怎么考虑</div><div class="qt">把模糊的「推理能力」拆成可测的任务，把连续现实切成可命名的类别，再逐个设计反馈机制。</div></div>
+  <div class="q"><div class="qh">写手怎么借鉴</div><div class="qt">抄它的「递进场景 + 统一模板」骨架：先在一个干净场地证明主张，再逐步加难度，每章都走「问题→方法→实验→讨论」。</div></div>
+</div>
+<h4 style="margin-top:14px"><span class="dot"></span>换成你的题目：三条可直接落地的建议 <span class="badge-r">还原</span></h4>
+<div class="why3">
+  <div class="w"><b>先找你的「棋盘」</b><p>一个规则清晰、结果可客观判定的小场景。别一上来就啃最复杂的现实问题——先把主张在最干净的场地证一遍。</p></div>
+  <div class="w"><b>每章用同一个模板</b><p>引言—表示—方法—实验—讨论，五步固定。<b>别每章自创结构</b>，评委读起来累，会觉得论文是拼的。</p></div>
+  <div class="w"><b>摘要里放两个硬数字</b><p>数据规模 + 关键指标提升。「100万局面、高24.2%」这种写法，比十句「效果显著」都管用。</p></div>
+</div>
+
+        </div>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+<!-- ============ s4c ============ -->
+<section id="s4c">
+  <div class="card pad0 c6">
+    <div class="case-head c6">
+      <span class="tag">方向六 · 游戏设计 · 对照方法</span>
+      <h3>Expressive Design Tools: Procedural Content Generation for Game Designers</h3>
+      <div class="meta">Gillian M. Smith · UC Santa Cruz · 博士学位论文 · 2012 · 八章 · eScholarship qt0fn558gq</div>
+    </div>
+    <div class="case-body">
+
+      <div class="vtabs" style="--tc:#be185d;--tcb:#fce7f2">
+        <div class="vbar" role="tablist">
+          <button class="vb on" type="button" role="tab" aria-selected="true" data-p="orig"><span class="n">1</span>原版<span class="d">逐字全文</span></button>
+          <button class="vb" type="button" role="tab" aria-selected="false" data-p="parse"><span class="n">2</span>案例解析<span class="d">逐章拆解</span></button>
+          <button class="vb" type="button" role="tab" aria-selected="false" data-p="sum"><span class="n">3</span>总结<span class="d">为什么 · 找参考 · 找数据</span></button>
+        </div>
+
+        <!-- ① 原版 -->
+        <div class="vp on" data-v="orig">
+          <div class="srcbar">
+            <span class="lab">原文出处</span>
+            <a class="sbtn" href="https://escholarship.org/uc/item/qt0fn558gq" target="_blank" rel="noopener">eScholarship ↗ qt0fn558gq</a>
+            <a class="sbtn" href="p-gillian.html" target="_blank" rel="noopener">独立页打开 ↗</a>
+            <span style="font-size:11.4px;color:var(--ink3);margin-left:auto">博士学位论文 · 约 240 页 · 正文 P19–P225</span>
+          </div>
+          <div class="pv">
+            <div class="pvh"><b>原封不动 · 逐字全文</b><span>PDF 文字层直出，未删改一字</span><span class="r">可切「可读版 / 原样照录」· 可全文搜词</span></div>
+            <iframe src="p-gillian.html?embed=1#p30" title="英文论文原文全文" loading="lazy"></iframe>
+            <div class="pvf"><b>已定位到引言（P.30 附近）</b>。想看「怎么把主张拆成贡献」，搜「contributions」，落在第 3 章；想看两张经典对比图，搜「Wizardry」，落在引言。<b>设计类论文靠「造物」证明主张，这一篇是范本</b>。</div>
+          </div>
+          <div class="alert info" style="margin-top:12px">
+            <b>怎么用这一栏：</b>先按目录跳到你最想学的那一章，<b>逐字读完，再切到「案例解析」</b>看那一章为什么这么摆。<b>顺序别反</b>——先看解析再看原文，你会只记住我的话，记不住作者怎么写的。
+          </div>
+        </div>
+
+        <!-- ② 案例解析 -->
+        <div class="vp" data-v="parse">
+
+<p style="font-size:13.4px;color:var(--ink2);margin-bottom:12px">
+  <b>一句话骨架：</b>作者主张——<b>我们用什么工具，就决定了能设计出什么游戏</b>。为了证明「表现力设计工具」可行，她亲手造了两个系统：<b>Tanagra</b>（保证关卡可玩、设计师能直接控制节奏的 AI 辅助关卡设计工具）和 <b>Launchpad</b>（能控制关卡组件与节奏的生成器，配套游戏 Endless Web）。最后给出一套<b>度量和比较生成器「表现力范围」的新方法</b>。
+</p>
+<div class="legend">
+  <span class="lg"><span class="sw"></span>章节与页码据 PDF 书签逐条录入</span>
+  <span class="lg"><span class="sw g"></span>正文约 P23–P224</span>
+</div>
+
+<h4 style="margin-top:0"><span class="dot"></span>引言：用一个「对比」把问题摆出来 <span class="badge-o">原文 P19–30</span></h4>
+<div class="chap">
+  <div class="ch"><span class="ci">摘要+第1章</span><b>先问「下一个是什么」，再立主张</b><span class="cp">P19–30</span></div>
+  <div class="cb">
+    <p><b>它在干什么：</b>摘要开头用一句反问——过去四十年图形技术让游戏世界越来越精美，但这些游戏「本质上是关于移动、碰撞和物理」。<b>技术已到顶，问题在设计工具</b>：今天的工具太复杂，新手用不了，而且几乎不帮设计师思考「玩家体验」。于是提出用程序化内容生成（PCG）造「表现力设计工具」。</p>
+    <div class="orig">
+      <p>"Games are shaped by the tools we use to make them and our ability to model the concepts they address… The tools that game designers use today are highly complex—too complex for a growing population of novice designers, and offering little support for reasoning about gameplay—and there are entire genres of games that cannot be made using the tools available to us now."</p>
+      <span class="src">——摘要，原文照录（PDF P19）</span>
+    </div>
+    <div class="anno"><button class="ab" type="button"><span class="qm">?</span>为什么用「Wizardry 与 Dragon Age」的截图对比开篇<span class="arw">▶</span></button><div class="ac">
+      <p>图1把两款相隔二十年的游戏并排：画面天差地别，<b>核心玩法几乎一样</b>。一张图就证明「技术进步没带来玩法进步」——比一千字论证有力。<b>你写论文时也该找一张这样的「一图顶千言」的对比图，放在引言开头。</b></p>
+    </div></div>
+    <div class="mini-t">可抄的立题句式</div>
+    <p style="background:#f6faf9;border:1px solid #d7ebe7;border-radius:7px;padding:9px 11px;font-size:12.9px">
+      <b>「过去 ___ 年的 ___ 进步解决了 ___，却几乎没有改变 ___。原因不在 ___，而在我们用来做 ___ 的工具——它们 ___。本文提出用 ___ 来 ___。」</b>
+    </p>
+  </div>
+</div>
+
+<div class="chap">
+  <div class="ch"><span class="ci">第3章</span><b>研究贡献：把主张拆成四个可验证的点</b><span class="cp">P36–44</span></div>
+  <div class="cb">
+    <p><b>它在干什么：</b>把「表现力设计工具」拆成四个维度——设计理解（Design Understanding）、控制（Control）、与设计过程交叉、表现力（Expressivity），每个维度对应后文一个具体工具或方法。<b>这是全文最重要的一章</b>：它把一句抽象主张，翻译成后面每一章要交的作业。</p>
+    <div class="anno"><button class="ab" type="button"><span class="qm">?</span>为什么贡献要在第3章就列清，而不是留到结论<span class="arw">▶</span></button><div class="ac">
+      <p>因为这篇论文是「造工具」型研究，<b>没有假设可以验证，靠的就是「我交付了什么」</b>。提前列清四个贡献，等于给自己立了四张欠条——后面每章都在还一张。<b>如果你是设计类、系统类论文，这一章的写法比「假设+检验」更适合你。</b></p>
+    </div></div>
+  </div>
+</div>
+
+<h4><span class="dot"></span>两个工具章：先造物，再证明它做到了承诺 <span class="badge-r">还原</span></h4>
+<div class="chap">
+  <div class="ch"><span class="ci">第5章</span><b>Tanagra：第一个保证「可玩」的 AI 关卡设计工具</b><span class="cp">P91–116+</span></div>
+  <div class="cb">
+    <p><b>它在干什么：</b>为 2D 平台游戏造关卡设计工具。核心手法是<b>把关卡拆成「节奏组」（rhythm groups）和「节拍」（beats）</b>，用约束求解器（Choco）保证生成的关卡一定可玩，设计师还能直接拖动节拍来控制节奏。<b>数据从哪来</b>：以《刺猬索尼克》等真实游戏关卡做结构分析（第4章），再抽象出节奏模型。</p>
+    <div class="anno"><button class="ab" type="button"><span class="qm">?</span>为什么先花一整章分析《索尼克》<span class="arw">▶</span></button><div class="ac">
+      <p>因为要造生成器，先得知道「好关卡的结构是什么」。作者把真实游戏关卡拆成节奏组、单元、连线，<b>从实例里归纳出模型，再用模型去生成</b>。这是设计研究的经典路径：<b>分析 → 抽象 → 造物 → 验证</b>。你做设计类论文，也该有这一步「从真实案例里提炼模型」。</p>
+    </div></div>
+  </div>
+</div>
+
+<div class="chap">
+  <div class="ch"><span class="ci">第7章</span><b>表现力分析：给「生成器好不好」立一把尺子</b><span class="cp">P187–216</span></div>
+  <div class="cb">
+    <p><b>它在干什么：</b>提出「表现力范围」（expressive range）方法：用一组关卡度量（level metrics）把生成器产出的所有可能关卡画成图，让设计师看清「我调这个参数，输出会怎么变」。<b>这正是摘要里承诺的第三个贡献</b>——前文造工具，这里给评价工具的工具。</p>
+    <div class="anno"><button class="ab" type="button"><span class="qm">?</span>为什么「度量方法」也能算一项独立贡献<span class="arw">▶</span></button><div class="ac">
+      <p>因为没有度量，就没法客观说「我的工具比别人的好」。作者造了工具，还得造一把尺子来证明工具的价值。<b>你如果做的是「方法/系统」类论文，记得给自己配一个评价方法</b>——否则贡献只能靠主观感觉，评委不认。</p>
+    </div></div>
+  </div>
+</div>
+
+<div class="chap">
+  <div class="ch"><span class="ci">第8章</span><b>结论：总结 + 大胆设想未来</b><span class="cp">P217–225</span></div>
+  <div class="cb">
+    <p><b>它在干什么：</b>先收四条贡献，再用三节写未来工作——「让计算机成为创意平等伙伴」「创造全新游戏类型」「把工具用到新领域」。<b>未来工作不是客套，是把自己开的新方向接着往下讲</b>。</p>
+  </div>
+</div>
+
+        </div>
+
+        <!-- ③ 总结 -->
+        <div class="vp" data-v="sum">
+
+<div class="q3">
+  <div class="q"><div class="qh">为什么这么写</div><div class="qt">「工具塑造设计」这个主张，靠造两个真工具来证明——<b>设计类论文用「造物」代替「假设检验」</b>。</div></div>
+  <div class="q"><div class="qh">数据从哪来</div><div class="qt">真实商业游戏关卡（《索尼克》等）做结构分析，再用约束求解器和生成器产出实验关卡。</div></div>
+  <div class="q"><div class="qh">作者怎么考虑</div><div class="qt">先把抽象主张拆成四个可交付维度，每个维度对应一个工具或方法；再造工具、再造评价工具的尺子。</div></div>
+  <div class="q"><div class="qh">写手怎么借鉴</div><div class="qt">抄「分析真实案例→抽象模型→造物→度量验证」四步；贡献要提前列成欠条，一章还一张。</div></div>
+</div>
+<h4 style="margin-top:14px"><span class="dot"></span>换成你的题目：三条可直接落地的建议 <span class="badge-r">还原</span></h4>
+<div class="why3">
+  <div class="w"><b>贡献提前列，当欠条用</b><p>第3章就把贡献拆成三四点，后面每章还一张。读者不会迷路，你也逼自己不跑题。</p></div>
+  <div class="w"><b>造物之前先分析实例</b><p>拿真实案例拆出结构模型，再拿模型去设计。别凭空造工具——那是工程，不是研究。</p></div>
+  <div class="w"><b>给成果配一把尺子</b><p>系统类论文一定要有评价方法。没有度量，贡献就只能靠形容词，评委不买账。</p></div>
+</div>
+
+        </div>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+<!-- ============ s4d ============ -->
+<section id="s4d">
+  <div class="card pad0 c7">
+    <div class="case-head c7">
+      <span class="tag">方向七 · 游戏设计 · 对照方法</span>
+      <h3>Mechanizing Exploratory Game Design</h3>
+      <div class="meta">Adam M. Smith · UC Santa Cruz · 博士学位论文 · 2012 · 十八章 · eScholarship qt4600g227</div>
+    </div>
+    <div class="case-body">
+
+      <div class="vtabs" style="--tc:#7e22ce;--tcb:#f3e8ff">
+        <div class="vbar" role="tablist">
+          <button class="vb on" type="button" role="tab" aria-selected="true" data-p="orig"><span class="n">1</span>原版<span class="d">逐字全文</span></button>
+          <button class="vb" type="button" role="tab" aria-selected="false" data-p="parse"><span class="n">2</span>案例解析<span class="d">逐章拆解</span></button>
+          <button class="vb" type="button" role="tab" aria-selected="false" data-p="sum"><span class="n">3</span>总结<span class="d">为什么 · 找参考 · 找数据</span></button>
+        </div>
+
+        <!-- ① 原版 -->
+        <div class="vp on" data-v="orig">
+          <div class="srcbar">
+            <span class="lab">原文出处</span>
+            <a class="sbtn" href="https://escholarship.org/uc/item/qt4600g227" target="_blank" rel="noopener">eScholarship ↗ qt4600g227</a>
+            <a class="sbtn" href="p-adamsmith.html" target="_blank" rel="noopener">独立页打开 ↗</a>
+            <span style="font-size:11.4px;color:var(--ink3);margin-left:auto">博士学位论文 · 约 320 页 · 正文 P17 起</span>
+          </div>
+          <div class="pv">
+            <div class="pvh"><b>原封不动 · 逐字全文</b><span>PDF 文字层直出，未删改一字</span><span class="r">可切「可读版 / 原样照录」· 可全文搜词</span></div>
+            <iframe src="p-adamsmith.html?embed=1#p18" title="英文论文原文全文" loading="lazy"></iframe>
+            <div class="pvf"><b>已定位到第 1 章（P.18 附近）</b>。想看「跨学科文献怎么写」，搜「Vocabulary」，落在第 5 章；想看方法落地，搜「Ludocore」，落在第 12 章。<b>十八章看着吓人，骨架其实就是「铺垫—综合—实现—系统」四段</b>。</div>
+          </div>
+          <div class="alert info" style="margin-top:12px">
+            <b>怎么用这一栏：</b>先按目录跳到你最想学的那一章，<b>逐字读完，再切到「案例解析」</b>看那一章为什么这么摆。<b>顺序别反</b>——先看解析再看原文，你会只记住我的话，记不住作者怎么写的。
+          </div>
+        </div>
+
+        <!-- ② 案例解析 -->
+        <div class="vp" data-v="parse">
+
+<p style="font-size:13.4px;color:var(--ink2);margin-bottom:12px">
+  <b>一句话骨架：</b>作者要证明——<b>游戏设计里那些「只可意会」的符号推理，可以用人工智能机械化</b>，从而放大设计师的创造力、并在游戏运行时实现深度自动设计。
+  全文先铺三条理论线（游戏设计、设计研究、计算创造力，外加符号 AI），第7章把它们综合成目标，第8–10章给出三条技术路径，第11–14章落到两个能跑的系统（Ludocore 等）。
+</p>
+<div class="legend">
+  <span class="lg"><span class="sw"></span>章节与页码据 PDF 书签逐条录入</span>
+  <span class="lg"><span class="sw g"></span>正文约 P17–P300+</span>
+</div>
+
+<h4 style="margin-top:0"><span class="dot"></span>引言：把「机械化」说清，避免被误解成「取代设计师」 <span class="badge-o">原文 P17–27</span></h4>
+<div class="chap">
+  <div class="ch"><span class="ci">第1章</span><b>三个目标 + 一条免责声明</b><span class="cp">P17–27</span></div>
+  <div class="cb">
+    <p><b>它在干什么：</b>引言直接列出三个目标——放大人类设计师的创造力、支持游戏运行时的深度设计自动化、做出尊重设计问题本身的工具。然后专门写一段<b>免责式声明</b>：我不打算把游戏设计简化成机械流程。</p>
+    <div class="orig">
+      <p>"I do not intend to reduce game design to machinic procedures; instead I hope to demonstrate automated processes that reflect the previously unarticulated essence of several of the core elements of creativity in game design."</p>
+      <span class="src">——第1章引言，原文照录（PDF P18）</span>
+    </div>
+    <div class="anno"><button class="ab" type="button"><span class="qm">?</span>为什么要专门写「我不是要取代设计师」<span class="arw">▶</span></button><div class="ac">
+      <p>因为「用 AI 做设计」天然会招来「你要抢设计师饭碗」的误解。<b>先把边界划清，评委才不会用伦理大帽子压你的技术贡献</b>。这是所有跨学科研究都该学的：<b>主动回应最可能被误读的那一点</b>。</p>
+    </div></div>
+  </div>
+</div>
+
+<div class="chap">
+  <div class="ch"><span class="ci">第3–6章</span><b>四条理论线：跨学科论文的「文献综述」长这样</b><span class="cp">P29–81</span></div>
+  <div class="cb">
+    <p><b>它在干什么：</b>用四章分别铺开「游戏设计」「设计研究」「计算创造力」「符号 AI」。每一章都做同一件事：<b>先给这个领域一套词汇表（vocabulary），再说它和「机械化设计」的关系</b>。比如第5章专门有 5.1「Vocabulary of Creativity」，细分创造力、新颖/价值/惊喜、过程/产品/生产者。</p>
+    <div class="anno"><button class="ab" type="button"><span class="qm">?</span>为什么每章都要先列「词汇表」<span class="arw">▶</span></button><div class="ac">
+      <p>因为跨学科研究的更大风险是<b>各说各话</b>——「设计」「创造力」「推理」在不同学科含义不同。先统一定义，后面的综合才有共同语言。<b>你写跨学科题目时，也该为核心术语专门立节，别默认读者和你理解一致。</b></p>
+    </div></div>
+  </div>
+</div>
+
+<div class="chap">
+  <div class="ch"><span class="ci">第7章</span><b>综合：把四条线拧成一个研究目标</b><span class="cp">P83–86</span></div>
+  <div class="cb">
+    <p><b>它在干什么：</b>只有四页，却是全文转轴——前面四条线在这里被拧成「机械化探索性游戏设计」这一件事。<b>它的作用相当于金融论文里的「文献述评收口成缺口」</b>：证明前面铺的都不是闲笔。</p>
+  </div>
+</div>
+
+<h4><span class="dot"></span>技术路径章与系统章：从「能不能做」到「做出来长什么样」 <span class="badge-r">还原</span></h4>
+<div class="chap">
+  <div class="ch"><span class="ci">第8–10章</span><b>三条技术路径 + 教程式验证</b><span class="cp">P87–172</span></div>
+  <div class="cb">
+    <p><b>它在干什么：</b>第8章「机械化并置推理」讲知识表示要以构造性、约束、演化、分析为要求；第9章「计算漫画」用类比解释方法；第10章把设计空间用 ASP（答案集编程）表示，并用一串「Programming Tutorials / Modeling Tutorials」示范。<b>数据/材料从哪来</b>：用国际象棋迷宫、策略游戏地图、平台游戏关卡等具体建模案例当实验材料。</p>
+    <div class="anno"><button class="ab" type="button"><span class="qm">?</span>为什么用「教程」当验证手段<span class="arw">▶</span></button><div class="ac">
+      <p>因为你没法用「准确率」衡量一个设计工具好不好。<b>作者改用「我能不能一步步教读者用它做出东西」来证明方法可用</b>——教程跑通，就是可行性的证据。这是理论型、方法型论文常用的验证策略。</p>
+    </div></div>
+  </div>
+</div>
+
+<div class="chap">
+  <div class="ch"><span class="ci">第11–14章</span><b>应用系统：把方法做成一个能跑的东西</b><span class="cp">P173+</span></div>
+  <div class="cb">
+    <p><b>它在干什么：</b>先用一章总览应用系统，再逐章展开 Ludocore（基于事件演算的逻辑游戏引擎）等系统，讲它们的架构、状态/事件/后果建模、以及「玩痕迹推断」「修改规则与配置」等实际能力。<b>这是把前面抽象方法的最终落地</b>。</p>
+  </div>
+</div>
+
+<div class="chap">
+  <div class="ch"><span class="ci">结论章</span><b>回到主张：机械化到底证明了什么</b><span class="cp">末章</span></div>
+  <div class="cb">
+    <p><b>它在干什么：</b>回收开头三个目标，逐条说明做到哪一步，并指出现实局限。<b>首尾呼应</b>：引言立的三个目标，结论一条条对照——这是最稳的收尾法。</p>
+    <div class="mini-t">首尾呼应的写法</div>
+    <p style="background:#f6faf9;border:1px solid #d7ebe7;border-radius:7px;padding:9px 11px;font-size:12.9px">
+      <b>「引言立了 N 个目标 → 正文各用一章完成 → 结论按原顺序列出 N 条，逐条说达成度。」</b><br>
+      <span style="color:var(--ink3)">评委翻到结论，能一眼对上引言——<b>整篇论文就「闭合」了</b>。</span>
+    </p>
+  </div>
+</div>
+
+        </div>
+
+        <!-- ③ 总结 -->
+        <div class="vp" data-v="sum">
+
+<div class="q3">
+  <div class="q"><div class="qh">为什么这么写</div><div class="qt">跨学科题目用「多条理论线 → 一章综合 → 多条技术路径 → 系统落地」的结构，把复杂研究拆成可管理的层。</div></div>
+  <div class="q"><div class="qh">数据从哪来</div><div class="qt">用国际象棋迷宫、策略地图、平台关卡等具体建模案例当实验材料，用「教程能否跑通」验证方法可行。</div></div>
+  <div class="q"><div class="qh">作者怎么考虑</div><div class="qt">每章先立词汇表统一定义，再谈关系；主动回应最可能被误读的点（「我不是要取代设计师」）。</div></div>
+  <div class="q"><div class="qh">写手怎么借鉴</div><div class="qt">抄「词汇表立节 + 综合章 + 首尾呼应」三招；方法类论文可用教程/案例验证代替准确率。</div></div>
+</div>
+<h4 style="margin-top:14px"><span class="dot"></span>换成你的题目：三条可直接落地的建议 <span class="badge-r">还原</span></h4>
+<div class="why3">
+  <div class="w"><b>跨学科先统一词汇</b><p>核心术语专门立节定义，别假设读者和你理解一致——否则后面全是对牛弹琴。</p></div>
+  <div class="w"><b>主动回应最大误解</b><p>引言里就把最可能被误读的点讲清（「我不是要……而是……」），省得评委拿它质疑你。</p></div>
+  <div class="w"><b>结论按引言顺序回收</b><p>立了几个目标就列几条，逐条说达成度。首尾闭合，是最稳的收尾。</p></div>
+</div>
+
+        </div>
+      </div>
+
+    </div>
+  </div>
+</section>
+
 <!-- ============ 5 ============ -->
 <section id="s5">
   <h2><span class="n">5</span>格式标准：一份能直接照着排的手册</h2>
@@ -2952,11 +3383,11 @@ footer{border-top:1px solid var(--line);padding-top:22px;margin-top:56px;font-si
         <a class="fcard mute" href="#s4"><div class="fk">案例四</div><div class="ft">基于 EVA 方法的并购与目标企业价值</div><div class="fm">赵继荣 · 电子科技大学 · 2008 · 全文未获取</div></a>
       </div>
       <div class="alert info" style="margin:12px 0 0">
-        <b>另外三篇（AI 大模型 × 游戏方向）也做成了同样的阅读页：</b>
-        <a href="p-shuwang.html">Shu Wang · UCLA 2025 · LLM 推理与博弈</a>、
-        <a href="p-gillian.html">Gillian Smith · UCSC 2012 · 程序化内容生成与关卡工具</a>、
-        <a href="p-adamsmith.html">Adam Smith · UCSC 2012 · 游戏设计空间机械化</a>。
-        <br>入口在 <a href="papers.html"><b>论文原文库</b></a>——七篇全文，按篇切换、全文检索。
+        <b>另外三篇博士论文（AI 大模型 × 游戏方向）也补齐了同样的三选卡案例：</b>
+        <a href="#s4b">Shu Wang · UCLA 2025 · LLM 推理与博弈</a>、
+        <a href="#s4c">Gillian Smith · UCSC 2012 · 程序化内容生成与关卡工具</a>、
+        <a href="#s4d">Adam Smith · UCSC 2012 · 游戏设计空间机械化</a>。
+        <br>七篇逐字全文的独立入口在 <a href="papers.html"><b>论文原文库</b></a>——按篇切换、全文检索。
       </div>
     </div>
   </div>
