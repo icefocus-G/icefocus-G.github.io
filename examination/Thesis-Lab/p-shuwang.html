@@ -131,6 +131,49 @@ body.zh-on .zn::before{content:"译 ";font-size:9.5px;color:#5fbfb2;font-weight:
 .pg p.pgf{color:#c3cedd;font-size:11.5px;text-align:center;font-family:var(--sans);margin:.5em 0}
 .pg.raw pre{white-space:pre-wrap;word-break:break-word;font-family:var(--serif);
   font-size:14.6px;line-height:1.9;margin:0;color:#1c2735;text-align:justify}
+.pg.raw pre .empty{color:#a9b7c9;font-family:var(--sans);font-size:13px;font-style:normal}
+
+/* 碎片页：PDF 文字层按字切断的页面，拼回段落后按正文排 */
+.pg.frayed{background:#fbfdff;border:1px dashed #dfe8f4;border-radius:8px;padding:18px 22px 20px;margin:6px 0 18px}
+.pg.frayed::before{content:"P." attr(data-p) " · 页面文字已拼接";position:absolute;
+  right:12px;top:-9px;font-size:10px;color:#9fb0c6;background:#fff;padding:1px 7px;
+  border:1px solid #e2eaf4;border-radius:99px;font-variant-numeric:tabular-nums}
+.pg p.fml{font-family:ui-monospace,SFMono-Regular,Menlo,monospace;font-size:12.8px;
+  line-height:1.9;color:#4a5b73;background:#f7fafd;border-left:2px solid #e3ecf7;
+  padding:4px 10px;margin:0 0 .72em;text-indent:0;text-align:left;word-break:break-all}
+.pg.figj{background:#fbfdff;border:1px dashed #e4ecf6;border-radius:8px;padding:16px 22px 18px;margin:6px 0 18px}
+.pg.figj::before{content:"P." attr(data-p) " · 图内文字";position:absolute;right:12px;top:-9px;
+  font-size:10px;color:#a3b2c6;background:#fff;padding:1px 7px;border:1px solid #e6eef7;border-radius:99px}
+.pg.figj p.figtxt{margin:0;font-family:var(--sans);font-size:12.2px;line-height:1.85;color:#94a3b8;
+  word-break:break-word;text-indent:0;text-align:left}
+.pg.frayed p.fznote{margin:0 0 1.1em;font-family:var(--sans);font-size:11.6px;line-height:1.7;
+  color:#8ea0b7;background:#f3f8fd;border-left:2px solid #dbe7f5;
+  padding:6px 10px;border-radius:0 4px 4px 0;text-indent:0;text-align:left}
+.pg.frayed p.fz{margin:0 0 .7em;font-family:var(--serif);font-size:15.2px;line-height:1.95;
+  color:#1c2735;text-align:justify;text-justify:inter-ideograph;text-indent:2em;word-break:break-word}
+.pg.frayed p.hh{text-align:center;margin:0 0 1.1em;font-size:15px}
+
+/* 目录 / 图表清单：标题 + 点线 + 右对齐页码，长标题折行也不会把页码挤走 */
+.tocpage{font-family:var(--serif);font-size:14.2px;line-height:1.55;color:#1c2735}
+.tocpage p{margin:0 0 .1em}
+.tocpage .tl{display:flex;align-items:baseline;gap:.4em}
+.tocpage .tl .a{flex:0 1 auto;min-width:0;word-break:break-word}
+.tocpage .tl .d{flex:1 1 auto;min-width:1.2em;align-self:center;height:1em;
+  background-image:radial-gradient(circle at 1px 50%,#c3cedd 1px,transparent 1.3px);
+  background-size:5px 100%;background-repeat:repeat-x}
+.tocpage .tl .b{flex:0 0 auto;color:#4a5b73;font-variant-numeric:tabular-nums;font-size:.94em}
+.tocpage .tl.lv1{font-weight:600;margin-top:.6em}
+.tocpage .tl.lv1 .a{color:#16202e}
+.tocpage .tl.lv1 .b{color:#33445c}
+.tocpage p.tt{color:#8e9db2;font-size:.86em;letter-spacing:.16em;text-align:center;margin:.1em 0 .7em}
+.tocpage p.tpn{color:#b6c2d2;font-size:.8em;text-align:right;margin:0 0 .6em}
+/* 窄屏：长标题会折行，点线会被挤成一小截，干脆收起点线，页码推到右侧 */
+@media (max-width:640px){
+  .tocpage .tl{display:block;position:relative;padding-right:2.6em}
+  .tocpage .tl .d{display:none}
+  .tocpage .tl .b{position:absolute;right:0;bottom:0}
+  .tocpage{font-size:13.6px}
+}
 mark{background:#ffe9a8;color:inherit;padding:0 1px;border-radius:2px}
 mark.cur{background:#ffc94d}
 
@@ -254,6 +297,7 @@ mark.cur{background:#ffc94d}
     return bad/t.length > 0.5;
   }
   function esc(t){
+    t = dePvt(t);
     return t.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
   }
 
@@ -261,6 +305,9 @@ mark.cur{background:#ffc94d}
   var LAYOUT = D.pages.map(function(txt){
     var lines = txt.split('\n').filter(function(l){ return l.trim().length; });
     if(!lines.length) return true;
+    /* 一页里已经有几个完整长句，它就是正文页（公式碎片再多也不能当版面照录）。
+       只对中文论文生效：英文页的「版面页」判定与切句侧一致，改了会打乱译文锚点。 */
+    if(!IS_EN && lines.filter(function(l){ return l.trim().length >= 28; }).length >= 3) return false;
     var short = lines.filter(function(l){ return l.trim().length <= 18; }).length;
     var wide = (txt.match(/[ \u3000]{8,}/g) || []).length;
     var boxy = (txt.match(/[□√■○●]/g) || []).length;
@@ -268,18 +315,49 @@ mark.cur{background:#ffc94d}
     return (short/lines.length > 0.52) || wide >= 2 || boxy >= 4 || avg < 7;
   });
 
+  /* 点线：中文目录用「·」而不是「.」，两种都要认，否则中文论文的目录页会被当正文合并成一坨 */
+  var DOTRE = /(?:[.·・․．]\s*){5,}/;
+  /* 全角拉丁字母：封面/封底常被 PDF 拆成「Ｃ ａ ｐ ｉ ｔ ａ ｌ」，这类页一定是碎片 */
+  var FULL_L = /[\uff21-\uff3a\uff41-\uff5a\uff10-\uff19]/;
+
   /* 目录页 / 图表清单页：整页都是「编号 + 标题 + 点线 + 页码」或「Figure 3.3 … 46」，
-     按段落合并只会得到一大片点线，逐句翻译更是把页码当句子。整页照录最忠实。 */
+     按段落合并只会得到一大片点线，逐句翻译更是把页码当句子。整页单独排版。 */
   var INDEXP = D.pages.map(function(txt){
     var lines = txt.split('\n').filter(function(l){ return l.trim().length; });
     if(lines.length < 3) return false;
     var dots = 0, figs = 0;
     for(var i=0;i<lines.length;i++){
       var s = lines[i].trim();
-      if(/(?:\.\s*){5,}/.test(s)) dots++;
+      if(DOTRE.test(s)) dots++;
       if(/^(Figure|Table|Fig\.)\s+\d/i.test(s)) figs++;
     }
     return dots >= 4 || figs >= 4;
+  });
+
+  /* 图内文字页：整页都是示意图上的标签（Src / S2 / Tgt / x x x），没有正文。
+     这类页拼成段落也是噪声，单独折叠成灰字。 */
+  var FIGJ = D.pages.map(function(txt){
+    /* 中文正文页的 token 只有几个数字/缩写，也会「短 token 占比高」，先按汉字比例排掉 */
+    var cjk = (txt.match(/[\u4e00-\u9fa5]/g) || []).length;
+    if(cjk / Math.max(1, txt.length) > 0.2) return false;
+    var toks = txt.match(/[A-Za-z0-9\/]+/g) || [];
+    if(toks.length < 40) return false;
+    var lines = txt.split('\n').filter(function(l){ return l.trim().length; });
+    if(lines.filter(function(l){ return l.trim().length > 40; }).length >= 2) return false;
+    var short = toks.filter(function(t){ return t.length <= 3; }).length;
+    return short / toks.length > 0.62;
+  });
+
+  /* 碎片页：PDF 文字层被按字切断（声明页每行 1–5 个字，「保/护/知/识/产/权」竖着排）。
+     这类页既不是版面（没有靠空格对齐），也不是正文（无法按行读），必须先把碎行拼回去。 */
+  var FRAYED = D.pages.map(function(txt){
+    var lines = txt.split('\n').filter(function(l){ return l.trim().length; });
+    if((txt.match(/[\uff21-\uff3a\uff41-\uff5a]/g) || []).length >= 10) return true;
+    if(lines.length < 20) return false;
+    if(/[ \u3000]{8,}/.test(txt)) return false;            /* 靠空格排版的才是真版面 */
+    if((txt.match(/[□√■○●]/g) || []).length >= 4) return false;
+    var short = lines.filter(function(l){ return l.trim().length <= 6; }).length;
+    return short / lines.length > 0.8;
   });
 
   /* 英文：修 PDF 断词（Lan- guage -> Language）与标点前空格（, but -> , but） */
@@ -301,6 +379,225 @@ mark.cur{background:#ffc94d}
       })
       .replace(/([A-Za-z])-[ ]+([a-z])/g, '$1-$2');
   }
+
+  /* 字体私有区：\ue5d2 \ue5cf 是 PDF 的行尾标记（声明页每行都以它结束），\ue5e5 \ue5ce 是分隔空白。
+     早先当成「□」方框，会让「声明」「题目为」后面平白多出两个方块。 */
+  var PVT = {'\ue5e5':' ', '\ue5ce':' ', '\ue5d2':'', '\ue5cf':''};
+  /* Symbol / 数学字体也落在私有区（\uf0e5 = ∑、\uf03d = =、\uf02b = +），
+     不映射出来，公式页就是一片豆腐块 */
+  var SYMB = {
+    0x2b:'+',0x2d:'−',0x3c:'<',0x3d:'=',0x3e:'>',0x28:'(',0x29:')',0x5b:'[',0x5d:']',
+    0x7b:'{',0x7d:'}',0x7c:'|',0x2f:'/',0x2c:',',0x2e:'.',0x3a:':',0x3b:';',0x21:'!',
+    0x41:'Α',0x42:'Β',0x43:'Χ',0x44:'Δ',0x45:'Ε',0x46:'Φ',0x47:'Γ',0x48:'Η',0x49:'Ι',0x4a:'ϑ',
+    0x4b:'Κ',0x4c:'Λ',0x4d:'Μ',0x4e:'Ν',0x4f:'Ο',0x50:'Π',0x51:'Θ',0x52:'Ρ',0x53:'Σ',0x54:'Τ',
+    0x55:'Υ',0x56:'ς',0x57:'Ω',0x58:'Ξ',0x59:'Ψ',0x5a:'Ζ',
+    0x61:'α',0x62:'β',0x63:'χ',0x64:'δ',0x65:'ε',0x66:'φ',0x67:'γ',0x68:'η',0x69:'ι',0x6a:'ϕ',
+    0x6b:'κ',0x6c:'λ',0x6d:'μ',0x6e:'ν',0x6f:'ο',0x70:'π',0x71:'θ',0x72:'ρ',0x73:'σ',0x74:'τ',
+    0x75:'υ',0x76:'ϖ',0x77:'ω',0x78:'ξ',0x79:'ψ',0x7a:'ζ',
+    0xa3:'≤',0xa5:'∞',0xab:'↔',0xac:'←',0xad:'↑',0xae:'→',0xaf:'↓',0xb0:'°',0xb1:'±',
+    0xb3:'≥',0xb4:'×',0xb5:'∝',0xb6:'∂',0xb7:'·',0xb8:'÷',0xb9:'≠',0xba:'≡',0xbb:'≈',0xbc:'…',
+    0xc6:'∅',0xc7:'∩',0xc8:'∪',0xca:'⊇',0xcc:'⊂',0xcd:'⊆',0xce:'∈',0xcf:'∉',
+    0xd0:'∠',0xd1:'∇',0xd5:'∏',0xd6:'√',0xd7:'⋅',0xd8:'¬',0xd9:'∧',0xda:'∨',
+    0xdb:'⇔',0xdc:'⇐',0xdd:'⇑',0xde:'⇒',0xdf:'⇓',0xe5:'∑',0xf2:'∫'
+  };
+  /* PDF 用错字体时，下标会被映射到泰米尔/泰文/藏文区，控制字符也会漏进来；
+     这些码位在中文、英文论文里不可能正常出现，显示出来就是 ✿ 和空心方块。 */
+  function cleanJunk(s){
+    if(!s) return s;
+    return s
+      .replace(/[\u0000-\u0008\u000b\u000c\u000e-\u001f\u007f-\u009f]/g, '')
+      .replace(/[\u0b00-\u0bff\u0c00-\u0cff\u0d00-\u0dff\u0e00-\u0e7f\u0f00-\u0fff]/g, '')
+      .replace(/[\u200b-\u200f\ufeff]/g, '');
+  }
+  function dePvt(s){
+    s = cleanJunk(s);
+    if(!/[\ue000-\uf8ff]/.test(s)) return s;
+    return s.replace(/[\ue000-\uf8ff]/g, function(c){
+      var code = c.charCodeAt(0);
+      if(code >= 0xf000 && code <= 0xf0ff && (code - 0xf000) in SYMB) return SYMB[code - 0xf000];
+      if(c in PVT) return PVT[c];
+      return '□';
+    });
+  }
+
+  /* 全角拉丁封面：「Ｃ ａ ｐ ｉ ｔ ａ ｌ」是 PDF 把每个字母当独立字符排出来的，
+     字母之间的空格是字距、不是词边界；真正的词边界是 \ue5e5。
+     先把 \ue5e5 换成占位符保护起来，删掉字母间空格。转到半角（NFKC）一定要等到整页拼完再做，
+     否则跨行拼接时「Ｕ|ｎ」会变成「U n」——多出一个空格。 */
+  function kernMerge(s){
+    if(!FULL_L.test(s)) return s;
+    s = s.replace(/[\ue5e5\ue5ce]/g, '\u0001');
+    return s.replace(/([\uff21-\uff3a\uff41-\uff5a\uff10-\uff19])[ \t]+(?=[\uff21-\uff3a\uff41-\uff5a\uff10-\uff19])/g, '$1');
+  }
+  function nfkc(s){
+    var t = s;
+    try { t = s.normalize('NFKC'); } catch(e){}
+    return t.replace(/\u0001/g, ' ');
+  }
+  /* 只有「含全角拉丁字母」的页才做 NFKC —— 否则会顺手把中文全角标点（，；（））转成半角 */
+  function isWide(txt){
+    return (txt.match(/[\uff21-\uff3a\uff41-\uff5a]/g) || []).length >= 6;
+  }
+  /* 版面页照录用：逐行并字距、去私用字符，整页转半角，但保留换行 */
+  function rawPrep(txt){
+    var wide = isWide(txt);
+    var t = txt.split('\n').map(function(l){ return dePvt(wide ? kernMerge(l) : l); }).join('\n');
+    return wide ? nfkc(t) : t;
+  }
+
+  /* 碎片页：把被 PDF 按字切断的行拼回段落。
+     「保/护/知/识/产/权/声/明」拼成「保护知识产权声明」；英文碎片之间补空格。
+     全角字母（Ｃａｐｉｔａｌ）先做 NFKC 归一，否则拼起来是「Ｕｎｉｖｅｒｓｉｔｙｏｆ」。 */
+  /* 学位论文封面的字段名是固定的（且常被拆成「作 者 姓 名」），按白名单匹配，
+     才能把「培养单位:金融学院专业名称」切成「培养单位:金融学院」+「专业名称」 */
+  var LABELS = ['作者姓名','指导教师','导师姓名','培养单位','专业名称','研究方向','提交日期','论文日期',
+                '答辩日期','学位类别','论文题目','培养办','招生办','学位办','学校代码','学校网址',
+                '分类号','学号','密级','姓名','职称','题目','专业','学科','单位','网址','电话','邮编','地址'];
+  function labelPat(w, tail){
+    return w.split('').join('\\s*') + (tail ? '$' : '\\s*[：:]');
+  }
+  /* 末尾字段名：返回它在 txt 里的起始位置，找不到返回 -1 */
+  function tailCut(txt){
+    for(var i=0;i<LABELS.length;i++){
+      var m = txt.match(new RegExp(labelPat(LABELS[i], true)));
+      if(m) return txt.length - m[0].length;
+    }
+    return -1;
+  }
+  /* 行首字段名：这一行是不是以「字段名：」开头 */
+  function headLabel(s){
+    for(var i=0;i<LABELS.length;i++){
+      if(new RegExp('^' + labelPat(LABELS[i], false)).test(s)) return LABELS[i];
+    }
+    return '';
+  }
+
+  /* 封面有些字段之间既没有冒号也没有标点（「分类号F234.3学号162060574密级…」），
+     整段拼完再按字段名断开，总比糊成一串强。只在长段上做，避免误伤正文。 */
+  function splitLabels(v){
+    if(v.length < 40) return [v];
+    var marks = [], taken = [];
+    /* 长字段名优先：「作者姓名」占住的区间里不再切出「姓名」 */
+    LABELS.slice().sort(function(a, b){ return b.length - a.length; }).forEach(function(lab){
+      var re = new RegExp(lab.split('').join('\\s*'), 'g'), m;
+      while((m = re.exec(v))){
+        var st = m.index, en = st + m[0].length;
+        if(st < 2) continue;
+        if(taken.some(function(t){ return st < t[1] && en > t[0]; })) continue;
+        taken.push([st, en]); marks.push(st);
+      }
+    });
+    marks = marks.filter(function(x, i, a){ return a.indexOf(x) === i; }).sort(function(a, b){ return a - b; });
+    if(!marks.length) return [v];
+    var out = [], last = 0;
+    marks.forEach(function(i){
+      if(i - last < 3) return;                 /* 相邻太近（「作者姓名」里又命中「姓名」）就跳过 */
+      out.push(v.slice(last, i).trim());
+      last = i;
+    });
+    out.push(v.slice(last).trim());
+    return out.filter(function(x){ return x; });
+  }
+
+  function unfray(txt){
+    var out = [], cur = '', wide = isWide(txt);
+    function norm(s){
+      s = s.replace(/[ \t]+/g, ' ').trim();
+      return wide ? nfkc(s) : s;
+    }
+    function flush(){
+      if(!cur) return;
+      var v = norm(cur);
+      cur = '';
+      if(!v) return;
+      (wide ? splitLabels(v) : [v]).forEach(function(x){ out.push({k:'p', v:x}); });
+    }
+    txt.split('\n').forEach(function(raw){
+      var s = dePvt(wide ? kernMerge(raw) : raw).replace(/\u3000/g, ' ').replace(/[ \t]+/g, ' ').trim();
+      if(!s) return;
+      /* 「保护知识产权声明」「摘 要」这类抬头单独成段：抬头常常自己也被切成「保护知/识/产/权/声明」，
+         所以要拿「已拼好的 cur + 本行」合起来判，而不是只看本行。 */
+      if((cur + s).length <= 24 && /(?:声明|摘要|Abstract|ABSTRACT|致谢|参考文献)$/.test(cur + s)){
+        out.push({k:'h', v:norm(cur + s)});
+        cur = '';
+        return;
+      }
+      /* 冒号常被单独抽成一行（「培养单位」/「：」/「金融学院」）。
+         这时把冒号前面的词当字段名剥出来单独成段，四个字段才不会糊成一句。 */
+      if(/[：:]$/.test(s)){
+        var joined = cur + s;
+        var body = joined.replace(/[：:]\s*$/, '');
+        var at = tailCut(body);
+        if(at >= 0){
+          cur = body.slice(0, at);
+          flush();
+          cur = joined.slice(at);          /* 字段名 + 冒号，成为新一段的开头 */
+        } else {
+          cur = joined;
+        }
+        return;
+      }
+      /* 行首就是「招 生 办：」这类字段，说明上一条已经结束 */
+      if(cur && headLabel(s)) flush();
+      var sp = (/[A-Za-z0-9.,;:)\]]$/.test(cur) && /^[A-Za-z0-9([]/.test(s)) ? ' ' : '';
+      cur += sp + s;
+      if(/[.。！？；]$/.test(s) && cur.length > 8 && !/\b(?:e\.g|i\.e|etc|Fig|No)\.$/i.test(s)) flush();
+      else if(cur.length > 460) flush();
+    });
+    flush();
+    return out;
+  }
+  function renderFrayed(txt){
+    var rows = unfray(txt);
+    if(!rows.length) return '';
+    return '<p class="fznote">PDF 文字层被按字拆散，以下已拼回段落；个别字符因字体内码损坏无法还原。</p>' +
+      rows.map(function(b){
+        return b.k === 'h' ? '<p class="hh">' + esc(b.v) + '</p>'
+                           : '<p class="fz">' + esc(b.v) + '</p>';
+      }).join('');
+  }
+
+  /* 目录行：拆成「标题 / 点线 / 页码」，页码右对齐 —— 长点线不会再把页码挤到下一行 */
+  function tocRows(txt){
+    var rows = [];
+    txt.split('\n').forEach(function(raw){
+      var s = dePvt(raw).replace(/\u00a0/g, ' ').replace(/\s+/g, ' ').trim();
+      if(!s) return;
+      var m = s.match(/^(.*?)[\s.·・․．]{3,}\s*([0-9ivxlcdmIVXLCDM]{1,7})$/);
+      if(m){
+        var a = m[1].replace(/[\s.·・․．]+$/, '').trim();
+        if(a) rows.push({a:a, b:m[2]});
+        return;
+      }
+      if(/^[0-9ivxlcdmIVXLCDM]{1,7}$/.test(s)){ rows.push({a:'', b:s, kind:'pn'}); return; }
+      rows.push({a:s, b:'', kind:'tt'});
+    });
+    return rows;
+  }
+  function renderToc(txt){
+    var html = [], last = '';
+    tocRows(txt).forEach(function(r){
+      if(r.kind==='pn'){ html.push('<p class="tpn">' + esc(r.b) + '</p>'); return; }
+      if(r.kind==='tt'){
+        if(r.a === last) return;                  /* 页眉「目 录」出现两次，去重 */
+        last = r.a;
+        html.push('<p class="tt">' + esc(r.a) + '</p>');
+        return;
+      }
+      if(r.a === last) return;
+      last = r.a;
+      var lv1 = /^(?:第\s*\d+\s*章|Chapter\s+\d+|\d+\s+[A-Z])/.test(r.a);
+      html.push('<p class="tl' + (lv1 ? ' lv1' : '') + '"><span class="a">' + esc(r.a) + '</span>' +
+                '<span class="d"></span><span class="b">' + esc(r.b) + '</span></p>');
+    });
+    return html.join('');
+  }
+  /* 点线行占比够高才按目录排版；页码表式的目录（没有点线）仍按原样照录更准 */
+  var TOCROW = D.pages.map(function(txt){
+    var lines = txt.split('\n').filter(function(l){ return l.trim().length; });
+    if(!lines.length) return 0;
+    return lines.filter(function(l){ return DOTRE.test(l.trim()); }).length / lines.length;
+  });
 
   /* 英文：一行里常挤着好几句，按句点切开，才能一段一句、逐句对照 */
   /* 缩写后面不是句末：chap. 7 / Fig. 3 / et al. 2012 / e.g. / vs. / pp. 12 */
@@ -389,7 +686,13 @@ mark.cur{background:#ffc94d}
       if(e.k==='h'){
         if(REFHEAD.test(e.v)) inRef = true;
         else if(APPHEAD.test(e.v)) inRef = false;
-        flush(); blocks.push({k:'h', v:e.v, page:e.page}); return;
+        flush();
+        /* 同一页的标题常被抽两次（页眉「摘  要」+ 正文标题「摘  要」），只留一个 */
+        var nv = e.v.replace(/\s+/g, '');
+        var prev = blocks.length ? blocks[blocks.length-1] : null;
+        if(prev && prev.k === 'h' && prev.v.replace(/\s+/g, '') === nv) return;
+        blocks.push({k:'h', v:e.v, page:e.page});
+        return;
       }
       if(e.k==='code'){ flush(); blocks.push({k:'code', v:e.v, page:e.page}); return; }
       /* 参考文献区：一条文献常常跨两三行，按句切开会把一条拆成三段。
@@ -412,7 +715,41 @@ mark.cur{background:#ffc94d}
       if(END.indexOf(e.v.slice(-1))>=0){ flush(); }
     });
     flush();
-    return blocks;
+    /* PDF 把公式拆成一个个独立字符块（∑ / n / t / EVA / 1 )1( 各占一段），
+       连续的「短、无汉字」块合并成一行公式，免得一个字母占一整段。 */
+    if(IS_EN) return blocks;                   /* 英文页的短行多为目录/题注，不动 */
+    /* blocks 里存的还是 PDF 原文（\uf0e5 这种私有码），要先按渲染规则归一，
+       否则「∑」匹配不上，公式永远判不出来 */
+    var isFrag = function(x){
+      if(x.k !== 'p' && x.k !== 'h' && x.k !== 'code') return false;
+      var v = dePvt(x.v);
+      var cjk = (v.match(/[\u4e00-\u9fa5]/g) || []).length;
+      /* 整段没有汉字、又很短：公式碎片或纯符号行 */
+      if(cjk === 0 && v.length <= 26) return true;
+      /* 汉字很少、数学符号成堆：「∑= +nttWACCEVA1 )1(= 预期EVA现值」 */
+      if(cjk / Math.max(1, v.length) < 0.35 && (v.match(/[=∑×÷±≤≥√−]/g) || []).length >= 2) return true;
+      /* 回归方程被拆成「,, 1 , , , ,y+it i m mt i t r p ...」：逗号极密，也不是正文 */
+      return cjk === 0 && v.length <= 400 && (v.match(/,/g) || []).length / v.length > 0.12;
+    };
+    var out = [], i = 0;
+    while(i < blocks.length){
+      var b = blocks[i];
+      if(isFrag(b)){
+        var j = i, buf = [];
+        while(j < blocks.length && isFrag(blocks[j])){ buf.push(blocks[j].v); j++; }
+        if(buf.length >= 2 || /[=∑+×÷]/.test(dePvt(b.v))){ out.push({k:'fml', v:buf.join(' '), page:b.page}); i = j; continue; }
+      }
+      out.push(b); i++;
+    }
+    /* 页眉与紧随其后的章标题文本完全相同（「第3章 …」出现两次），页眉那行删掉 */
+    var nrm = function(x){ return (x || '').replace(/\s+/g, ''); };
+    out = out.filter(function(b, k){
+      if(b.k !== 'hdr') return true;
+      var n1 = out[k+1], n2 = out[k+2];
+      var same = function(x){ return x && x.k === 'h' && nrm(x.v) === nrm(b.v); };
+      return !(same(n1) || (n1 && n1.k === 'pb' && same(n2)));
+    });
+    return out;
   }
   var FLOW = buildFlow();
 
@@ -546,16 +883,38 @@ mark.cur{background:#ffc94d}
 
     if(state.mode==='raw'){
       D.pages.forEach(function(txt, idx){
-        html.push('<section class="pg raw" data-p="'+(idx+1)+'"><pre>'+esc(cleanRaw(txt))+'</pre></section>');
+        html.push('<section class="pg raw" data-p="'+(idx+1)+'"><pre>'+esc(cleanRaw(rawPrep(txt)))+'</pre></section>');
       });
     } else {
       /* 可读版：正文连续，版面页 / 目录页逐页原样 */
       var byPage = {}, inRef = false;
       FLOW.forEach(function(b){ (byPage[b.page] = byPage[b.page] || []).push(b); });
       for(var pg=1; pg<=D.pages.length; pg++){
-        if(LAYOUT[pg-1] || INDEXP[pg-1]){
-          var kd = LAYOUT[pg-1] ? '' : ' data-k="idx"';
-          html.push('<section class="pg raw" data-p="'+pg+'"'+kd+'><pre>'+esc(cleanRaw(D.pages[pg-1]))+'</pre></section>');
+        var ptxt = D.pages[pg-1];
+        /* 目录 / 图表清单：有足够点线时按「标题……页码」排，页码右对齐 */
+        if(INDEXP[pg-1]){
+          if(TOCROW[pg-1] >= 0.35){
+            html.push('<section class="pg raw" data-p="'+pg+'" data-k="idx"><div class="tocpage">'+renderToc(ptxt)+'</div></section>');
+          } else {
+            html.push('<section class="pg raw" data-p="'+pg+'" data-k="idx"><pre>'+esc(cleanRaw(ptxt))+'</pre></section>');
+          }
+          continue;
+        }
+        /* 图内文字页：只放灰字标注，不假装它是正文 */
+        if(FIGJ[pg-1]){
+          html.push('<section class="pg figj" data-p="'+pg+'">' +
+            '<p class="fznote">本页原为示意图，PDF 文字层里只有图上的标注与少量题注，没有正文。</p>' +
+            '<p class="figtxt">'+esc(rawPrep(ptxt).replace(/\n+/g, ' '))+'</p></section>');
+          continue;
+        }
+        /* 碎片页：先拼回段落再排，否则一字一行竖着排 */
+        if(FRAYED[pg-1]){
+          html.push('<section class="pg frayed" data-p="'+pg+'">'+renderFrayed(ptxt)+'</section>');
+          continue;
+        }
+        if(LAYOUT[pg-1]){
+          var body = ptxt.trim() ? esc(rawPrep(ptxt)) : '<span class="empty">本页在 PDF 文字层没有内容（图片页或空白页）</span>';
+          html.push('<section class="pg raw" data-p="'+pg+'"><pre>'+body+'</pre></section>');
           continue;
         }
         var bl = byPage[pg] || [];
@@ -571,6 +930,7 @@ mark.cur{background:#ffc94d}
           if(b.k==='hdr') return '<p class="hdr">'+esc(b.v)+'</p>';
           if(b.k==='gam') return '<p class="gam">'+esc(b.v)+'</p>';
           if(b.k==='code') return inRef ? '<p>'+esc(b.v)+'</p>' : '<p class="cd">'+esc(b.v)+'</p>';
+          if(b.k==='fml') return '<p class="fml">'+esc(b.v)+'</p>';
           var z = inRef ? null : withZh(b.v);
           return '<p>'+(z || esc(b.v))+'</p>';
         }).join(''));

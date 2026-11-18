@@ -129,6 +129,49 @@ body.zh-on .zn::before{content:"译 ";font-size:9.5px;color:#5fbfb2;font-weight:
 .pg p.pgf{color:#c3cedd;font-size:11.5px;text-align:center;font-family:var(--sans);margin:.5em 0}
 .pg.raw pre{white-space:pre-wrap;word-break:break-word;font-family:var(--serif);
   font-size:14.6px;line-height:1.9;margin:0;color:#1c2735;text-align:justify}
+.pg.raw pre .empty{color:#a9b7c9;font-family:var(--sans);font-size:13px;font-style:normal}
+
+/* 碎片页：PDF 文字层按字切断的页面，拼回段落后按正文排 */
+.pg.frayed{background:#fbfdff;border:1px dashed #dfe8f4;border-radius:8px;padding:18px 22px 20px;margin:6px 0 18px}
+.pg.frayed::before{content:"P." attr(data-p) " · 页面文字已拼接";position:absolute;
+  right:12px;top:-9px;font-size:10px;color:#9fb0c6;background:#fff;padding:1px 7px;
+  border:1px solid #e2eaf4;border-radius:99px;font-variant-numeric:tabular-nums}
+.pg p.fml{font-family:ui-monospace,SFMono-Regular,Menlo,monospace;font-size:12.8px;
+  line-height:1.9;color:#4a5b73;background:#f7fafd;border-left:2px solid #e3ecf7;
+  padding:4px 10px;margin:0 0 .72em;text-indent:0;text-align:left;word-break:break-all}
+.pg.figj{background:#fbfdff;border:1px dashed #e4ecf6;border-radius:8px;padding:16px 22px 18px;margin:6px 0 18px}
+.pg.figj::before{content:"P." attr(data-p) " · 图内文字";position:absolute;right:12px;top:-9px;
+  font-size:10px;color:#a3b2c6;background:#fff;padding:1px 7px;border:1px solid #e6eef7;border-radius:99px}
+.pg.figj p.figtxt{margin:0;font-family:var(--sans);font-size:12.2px;line-height:1.85;color:#94a3b8;
+  word-break:break-word;text-indent:0;text-align:left}
+.pg.frayed p.fznote{margin:0 0 1.1em;font-family:var(--sans);font-size:11.6px;line-height:1.7;
+  color:#8ea0b7;background:#f3f8fd;border-left:2px solid #dbe7f5;
+  padding:6px 10px;border-radius:0 4px 4px 0;text-indent:0;text-align:left}
+.pg.frayed p.fz{margin:0 0 .7em;font-family:var(--serif);font-size:15.2px;line-height:1.95;
+  color:#1c2735;text-align:justify;text-justify:inter-ideograph;text-indent:2em;word-break:break-word}
+.pg.frayed p.hh{text-align:center;margin:0 0 1.1em;font-size:15px}
+
+/* 目录 / 图表清单：标题 + 点线 + 右对齐页码，长标题折行也不会把页码挤走 */
+.tocpage{font-family:var(--serif);font-size:14.2px;line-height:1.55;color:#1c2735}
+.tocpage p{margin:0 0 .1em}
+.tocpage .tl{display:flex;align-items:baseline;gap:.4em}
+.tocpage .tl .a{flex:0 1 auto;min-width:0;word-break:break-word}
+.tocpage .tl .d{flex:1 1 auto;min-width:1.2em;align-self:center;height:1em;
+  background-image:radial-gradient(circle at 1px 50%,#c3cedd 1px,transparent 1.3px);
+  background-size:5px 100%;background-repeat:repeat-x}
+.tocpage .tl .b{flex:0 0 auto;color:#4a5b73;font-variant-numeric:tabular-nums;font-size:.94em}
+.tocpage .tl.lv1{font-weight:600;margin-top:.6em}
+.tocpage .tl.lv1 .a{color:#16202e}
+.tocpage .tl.lv1 .b{color:#33445c}
+.tocpage p.tt{color:#8e9db2;font-size:.86em;letter-spacing:.16em;text-align:center;margin:.1em 0 .7em}
+.tocpage p.tpn{color:#b6c2d2;font-size:.8em;text-align:right;margin:0 0 .6em}
+/* 窄屏：长标题会折行，点线会被挤成一小截，干脆收起点线，页码推到右侧 */
+@media (max-width:640px){
+  .tocpage .tl{display:block;position:relative;padding-right:2.6em}
+  .tocpage .tl .d{display:none}
+  .tocpage .tl .b{position:absolute;right:0;bottom:0}
+  .tocpage{font-size:13.6px}
+}
 mark{background:#ffe9a8;color:inherit;padding:0 1px;border-radius:2px}
 mark.cur{background:#ffc94d}
 
