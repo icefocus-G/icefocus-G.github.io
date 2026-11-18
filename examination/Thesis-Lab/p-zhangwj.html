@@ -85,6 +85,8 @@ body.zh-on .zn{display:block;font-family:var(--sans);font-size:13.4px;line-heigh
   -webkit-text-size-adjust:100%}
 body.zh-on .zn::before{content:"译 ";font-size:9.5px;color:#5fbfb2;font-weight:700;
   letter-spacing:.06em;margin-right:2px;vertical-align:2px}
+.gam{font-family:var(--sans);font-size:12.4px;color:#8a94a6;background:#f7f9fc;
+  border:1px dashed #dfe6f0;border-radius:7px;padding:8px 12px;margin:10px 0;line-height:1.7}
 
 /* ── 主体 ── */
 .wrap{max-width:1440px;margin:0 auto;display:flex;gap:0;align-items:flex-start}
@@ -249,17 +251,31 @@ mark.cur{background:#ffc94d}
       .replace(/[\ufb00-\ufb06]/g, function(c){
         return {'\ufb00':'ff','\ufb01':'fi','\ufb02':'fl','\ufb03':'ffi','\ufb04':'ffl','\ufb05':'ft','\ufb06':'st'}[c];
       })
-      .replace(/([A-Za-z])-[ ]+([a-z])/g, '$1$2')
+      .replace(/([A-Za-z])-[ ]+([a-z])/g, '$1-$2')
       .replace(/(\w)[ ]+([,.;:!?%])(?=[ ]|$)/g, '$1$2')
       .replace(/[ ]{2,}/g, ' ');
   }
 
+  /* 版面页（原样照录）只修字形，不动排版空白 */
+  function cleanRaw(s){
+    if(!IS_EN) return s;
+    return s.replace(/[\ufb00-\ufb06]/g, function(c){
+        return {'\ufb00':'ff','\ufb01':'fi','\ufb02':'fl','\ufb03':'ffi','\ufb04':'ffl','\ufb05':'ft','\ufb06':'st'}[c];
+      })
+      .replace(/([A-Za-z])-[ ]+([a-z])/g, '$1-$2');
+  }
+
   /* 英文：一行里常挤着好几句，按句点切开，才能一段一句、逐句对照 */
+  /* 缩写后面不是句末：chap. 7 / Fig. 3 / et al. 2012 / e.g. / vs. / pp. 12 */
+  var ABBR = /(?:^|[\s(\[])(?:chap|chaps|fig|figs|no|nos|vol|vols|p|pp|sec|secs|eq|eqs|ref|refs|cf|vs|al|ed|eds|approx|ca|etc|Dr|Mr|Mrs|Ms|Prof|St|Inc|Ltd|Co|Jr|Sr|resp)\.[\"”’\)]?$/i;
+  var INITIAL = /(?:^|[\s(\[])[A-Z]\.[\"”’\)]?$/;
   function splitEn(s){
     var out = [], re = /[.!?][\"”’\)]?\s+(?=[A-Z0-9“\"(])/g, last = 0, m;
     while((m = re.exec(s))){
       var cut = m.index + m[0].replace(/\s+$/, '').length;
-      out.push(s.slice(last, cut));
+      var head = s.slice(last, cut);
+      if(ABBR.test(head) || INITIAL.test(head)) continue;   /* 缩写不是句末，继续累积 */
+      out.push(head);
       last = m.index + m[0].length;
     }
     out.push(s.slice(last));
@@ -267,6 +283,7 @@ mark.cur{background:#ffc94d}
   }
 
   /* 元素流 */
+  var GAMSEEN = {};
   function parse(){
     var out = [];
     D.pages.forEach(function(txt, idx){
@@ -274,6 +291,23 @@ mark.cur{background:#ffc94d}
       lines.forEach(function(raw, li){
         var s = raw.trim();
         if(!s){ out.push({k:'blank', v:'', page:page}); return; }
+        /* 图内文字：PDF 没有 ToUnicode 映射，pypdf/pdfminer 都只能给出 /gid00017 这类字形号。
+           直接显示是满屏乱码，改成一条说明，读者可对照原 PDF 那一页看图。 */
+        if(/\/gid\d{2,}/.test(s)){
+          var gidN = (s.match(/\/gid\d+/g) || []).length;
+          var rest = s.replace(/\/gid\d+/g, ' ').replace(/\s{2,}/g, ' ').trim();
+          if(gidN >= 6){
+            /* 同一页只提示一次，否则一张图会铺出几十条说明 */
+            if(!GAMSEEN[page]){
+              GAMSEEN[page] = 1;
+              out.push({k:'gam', v:'本页图内文字（含标注与示意图）未能转写：PDF 未提供字符映射。图表内容请对照原 PDF 第 '+page+' 页。', page:page});
+            }
+            if(rest.length < 12) return;
+            s = rest;
+          }else{
+            s = rest;
+          }
+        }
         if(PGRE.test(s) && s.length<=4){ out.push({k:'pg', v:s, page:page}); return; }
         if(li<=1 && D.hdr.indexOf(s)>=0){ out.push({k:'hdr', v:s, page:page}); return; }
         if(isHead(s)){ out.push({k:'h', v:IS_EN ? cleanEn(s) : s, page:page}); return; }
@@ -311,6 +345,7 @@ mark.cur{background:#ffc94d}
       }
       if(e.k==='blank'){ flush(); return; }
       if(e.k==='hdr'){ flush(); blocks.push({k:'hdr', v:e.v, page:e.page}); return; }
+      if(e.k==='gam'){ flush(); blocks.push({k:'gam', v:e.v, page:e.page}); return; }
       if(e.k==='pg'){ return; }
       if(e.k==='h'){ flush(); blocks.push({k:'h', v:e.v, page:e.page}); return; }
       if(!buf){ buf = e.v; bufPage = e.page; } else { buf = joinT(buf, e.v); }
@@ -347,9 +382,27 @@ mark.cur{background:#ffc94d}
       (ZHIDX[k] = ZHIDX[k] || []).push(ent);
     }
   }
+  /* 目录行 / 页码行：不插中文。否则章节标题的译文会被抢到目录里，正文标题反而没有。 */
+  function isTocLine(s){
+    if(/(?:\.\s*){5,}/.test(s)) return true;          /* . . . . . */
+    if(/[.·…]{5,}/.test(s)) return true;
+    if(/^\s*\d{1,3}\s*$/.test(s)) return true;
+    /* 合并成一行的目录：「1 Introduction 1 2 Interdisciplinary Context 13」这种「编号+标题」连排 */
+    var ent = (s.match(/\b\d{1,3}\s+[A-Za-z]/g) || []).length;
+    if(ent >= 5 && s.length > 90 && !/[.!?]\s*$/.test(s)) return true;
+    return false;
+  }
+  /* 译文几乎仍是原文（代码、URL、人名串）时不插，避免出现「base_covers(C) :- base_at(B,C)。」 */
+  function okZh(z){
+    if(!z) return false;
+    var c = (z.match(/[\u4e00-\u9fa5]/g) || []).length;
+    if(c < 3 && /[A-Za-z]/.test(z)) return false;
+    return true;
+  }
   function withZh(v){
     if(!state.zh || !ZMAP) return null;
     if(!ZHIDX) buildZhIndex();
+    if(isTocLine(v)) return null;
     /* 与 normN 严格同规则：去空白/软连字符/连字符，折叠连字，统一引号 */
     var n = '', map = [], i, q;
     for(i=0;i<v.length;i++){
@@ -367,7 +420,7 @@ mark.cur{background:#ffc94d}
     }
     if(n.length < ZHKEY) return null;
 
-    var used = [], hits = [], done = {};
+    var used = [], hits = [], tail = [], done = {};
     function take(pos, len, z, ent){
       var q;
       for(q=pos; q<pos+len; q++){ if(used[q]) return false; }
@@ -392,11 +445,20 @@ mark.cur{background:#ffc94d}
         if(done[ent.n]) continue;
         var ln = fit(ent, i);
         if(!ln) continue;
-        if(take(i, ln, ent.z, ent)) done[ent.n] = 1;
+        if(!okZh(ent.z)){ done[ent.n] = 1; break; }
+        if(ln === ent.n.length){
+          if(take(i, ln, ent.z, ent)) done[ent.n] = 1;
+        }else{
+          /* 只匹配到前缀：整句被分块截断，译文放段末，绝不劈开原句 */
+          tail.push(ent.z);
+          ent.hit = 1;
+          done[ent.n] = 1;
+          for(var t=i; t<i+ln; t++) used[t] = 1;
+        }
         break;
       }
     }
-    if(!hits.length) return null;
+    if(!hits.length && !tail.length) return null;
     hits.sort(function(a,b){ return a.s - b.s; });
     var out = '', cur = 0;
     hits.forEach(function(h){
@@ -407,6 +469,9 @@ mark.cur{background:#ffc94d}
       cur = h.e;
     });
     if(cur < v.length) out += esc(v.slice(cur));
+    if(tail.length){
+      out += tail.map(function(z){ return '<em class="zn tail">' + esc(z) + '</em>'; }).join('');
+    }
     return out;
   }
 
@@ -416,7 +481,7 @@ mark.cur{background:#ffc94d}
 
     if(state.mode==='raw'){
       D.pages.forEach(function(txt, idx){
-        html.push('<section class="pg raw" data-p="'+(idx+1)+'"><pre>'+esc(txt)+'</pre></section>');
+        html.push('<section class="pg raw" data-p="'+(idx+1)+'"><pre>'+esc(cleanRaw(txt))+'</pre></section>');
       });
     } else {
       /* 可读版：正文连续，版面页逐页原样 */
@@ -424,7 +489,7 @@ mark.cur{background:#ffc94d}
       FLOW.forEach(function(b){ (byPage[b.page] = byPage[b.page] || []).push(b); });
       for(var pg=1; pg<=D.pages.length; pg++){
         if(LAYOUT[pg-1]){
-          html.push('<section class="pg raw" data-p="'+pg+'"><pre>'+esc(D.pages[pg-1])+'</pre></section>');
+          html.push('<section class="pg raw" data-p="'+pg+'"><pre>'+esc(cleanRaw(D.pages[pg-1]))+'</pre></section>');
           continue;
         }
         var bl = byPage[pg] || [];
@@ -433,6 +498,7 @@ mark.cur{background:#ffc94d}
           if(b.k==='pb') return '<div class="pb" data-p="'+b.page+'">P.'+b.page+'</div>';
           if(b.k==='h'){ var hz = withZh(b.v); return '<p class="hh">'+(hz || esc(b.v))+'</p>'; }
           if(b.k==='hdr') return '<p class="hdr">'+esc(b.v)+'</p>';
+          if(b.k==='gam') return '<p class="gam">'+esc(b.v)+'</p>';
           var z = withZh(b.v);
           return '<p>'+(z || esc(b.v))+'</p>';
         }).join(''));
