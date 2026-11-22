@@ -978,6 +978,7 @@ body.view-study #btnMore{display:none!important}
           <button data-s="all">全部</button>
         </div>
         <button class="btn ghost" id="stMarkPage" title="把这一页的字都记成「熟」">本页标熟</button>
+        <button class="btn ghost" id="stAdopt" title="识字表里还没学的字，都记成「看过、明天复习」">没学的当看过</button>
         <span class="st-listtip" id="stListTip">点一个字 → 不认识 / 认识</span>
       </div>
       <div class="st-sheetwrap" id="stSheetWrap">
@@ -2919,12 +2920,14 @@ const stEl = id => document.getElementById(id);
 
 let ST = {
   perDay:8,
-  rec:{},                                  /* 字 → {s, d, n, ok, ng, t, k, q} */
+  rec:{},                                  /* 字 → {s, d, n, ok, ng, t, k, q, b} */
   today:{d:0, n:0, r:0, ok:0, ng:0, w:[]}, /* 今日：新学 / 复习 / 记得 / 忘记 / 错的字 */
-  streak:0, lastDay:0
+  streak:0, lastDay:0,
+  seeded:false       /* 识字表这批字是不是已经当过「起点」了（只做一次） */
 };
 let ST_LEGACY_EXTRA = null;     /* 旧版按字书分开存的「录入字」，第一次跑新版时并进识字表 */
 let ST_BOOTED = false;
+let ST_BASE_N = 0;              /* 这次开工新记了多少个「看过」的起点字，用来提示一句 */
 
 /* 本地日序号：按日历天算，不看几点 —— 早上七点和晚上九点都算同一天 */
 function stDay(ts){
@@ -2940,6 +2943,7 @@ function stLoad(){
       ST_LEGACY_EXTRA = (j.extra && typeof j.extra === "object") ? j.extra : null;
       ST.streak = j.streak || 0;
       ST.lastDay = j.lastDay || 0;
+      ST.seeded = !!j.seeded;
       if(j.today) ST.today = Object.assign({d:0,n:0,r:0,ok:0,ng:0,w:[]}, j.today);
       if(!Array.isArray(ST.today.w)) ST.today.w = [];
     }
@@ -2950,7 +2954,8 @@ function stSave(){
   try{
     localStorage.setItem(ST_KEY, JSON.stringify({
       v:2, perDay:ST.perDay, rec:ST.rec,
-      today:ST.today, streak:ST.streak, lastDay:ST.lastDay
+      today:ST.today, streak:ST.streak, lastDay:ST.lastDay,
+      seeded:ST.seeded
     }));
   }catch(e){}
 }
@@ -2982,11 +2987,55 @@ function stMigrateExtra(){
   stSave();
 }
 
-/* 一个字算不算「学过」：真判过（n>0）、或者亲手标过熟。
-   只有一条空记录（n=0 且没标熟）不算 —— 不然统计里全是「已学」，一个没熟，对不上。 */
+/* 一个字算不算「学过」：真判过（n>0）、亲手标过熟、或者本来就是识字表里的「看过」字。
+   只有一条空记录（n=0、没标熟、也不是起点字）不算 —— 不然统计里全是「已学」，一个没熟，对不上。 */
 function stHasRec(c){
   const r = ST.rec[c];
-  return !!(r && (r.k || r.n > 0));
+  return !!(r && (r.k || r.b || r.n > 0));
+}
+
+/* ---------- 起点：识字表里现有的字，都当「已经看过一遍」 ----------
+   用户的原话：这些字「已经看过了，但还没完全熟悉」，所以不进「新字」队列一个个教，
+   直接记成「第 1 档、明天到期」——今天先不动，第 2 天开始复习；
+   复习时判「认识」就按艾宾浩斯往上爬（2 → 4 → 7 天 …），判「不认识」就打回今天重看。
+   之后再加进识字表的字，才算真正的新字，按每天的新字额度学。
+   只做一次：ST.seeded 记着，之后不再动已有的进度。 */
+function stBaselineRec(c, day){
+  return {s:1, d:day, n:0, ok:0, ng:0, t:0, b:1, q:0};
+}
+function stSeedBase(){
+  if(ST.seeded) return 0;
+  const today = stDay(), tomorrow = today + 1;
+  let n = 0;
+  (state.chars || []).forEach(c=>{
+    const r = ST.rec[c];
+    if(!r){
+      ST.rec[c] = stBaselineRec(c, tomorrow);
+      n++;
+      return;
+    }
+    if(r.k) return;                            /* 已经标熟的，别动 */
+    if(r.t && stDay(r.t) === today) return;    /* 今天刚判过的，别动 */
+    /* 以前判过但还停在起点档（s<=1）：一并挪到明天，别今天就压一堆上来 */
+    if((r.s || 0) <= 1){
+      r.s = 1;
+      r.d = tomorrow;
+      r.b = 1;
+      if(!r.n) n++;
+    }
+  });
+  ST.seeded = true;
+  stSave();
+  return n;
+}
+
+/* 之后又往识字表里加了字：可以一键把这些「还没学」的字也记成「看过，明天复习」 */
+function stAdoptUnlearned(){
+  const tomorrow = stDay() + 1;
+  const todo = (state.chars || []).filter(c=>!stHasRec(c));
+  todo.forEach(c=>{ ST.rec[c] = stBaselineRec(c, tomorrow); });
+  if(todo.length) stSave();
+  return todo.length;
 }
 
 function stStats(book){
@@ -3238,6 +3287,14 @@ function stMarkKnown(c){
   stSave();
 }
 
+/* 取消标熟：退回「看过、待复习」，不是退回「没学过」——
+   不然一个字会突然掉进新字队列，还得从头教一遍 */
+function stUnmarkKnown(c){
+  const today = stDay();
+  ST.rec[c] = {s:1, d:today, n:0, ok:0, ng:0, t:0, b:1, q:0};
+  stSave();
+}
+
 /* kind：1 不认识 · 2 有点模糊 · 3 认识 */
 function stRate(kind){
   if(ST_S.lock) return;
@@ -3303,6 +3360,7 @@ function stShowDone(){
     if(owe) lines.push(`到明天还欠 <b>${owe}</b> 个复习`);
     else lines.push("今天该复习的都清完了，明天再来");
     if(s.fresh) lines.push(`识字表里还有 <b>${s.fresh}</b> 个字没学，可以「再学几个新字」`);
+    else if(owe) lines.push("想今天就先过一遍：点「看看字表」，翻到「全部」随时抽查");
   }else{
     stEl("stDoneTitle").textContent = "这一轮练完了";
     lines.push(`正确率 <b>${acc == null ? "—" : acc + "%"}</b>（记得 ${ST_S.ok} · 忘记 ${ST_S.ng}）`);
@@ -3427,11 +3485,19 @@ function stRenderPaper(opt){
   page.style.fontFamily = fontStack();
   page.innerHTML = "";
   if(items.length) page.innerHTML = stSheetHTML({kind:"chars", w:g.w, h:g.h, cols:g.cols, rows:g.rows, items});
-  else page.innerHTML = `<div class="empty-hint">${
-    stScope === "today"
-      ? "今天还没有排到字<br><span style=\"font-size:13px\">先用右上角「录入」加字，或调高「每日新字」</span>"
-      : "识字表里还没有字"
-  }</div>`;
+  else page.innerHTML = `<div class="empty-hint"><div>${
+    stScope !== "today" ? "识字表里还没有字"
+      : (function(){
+          const t = stDay();
+          const tm = (stBook().chars || []).filter(c=>{
+            const r = ST.rec[c];
+            return stHasRec(c) && r.d === t + 1;
+          }).length;
+          return tm
+            ? `今天没有到期的字<br><span style="font-size:13px">明天要复习 ${tm} 个字，先歇一天</span>`
+            : `今天还没有排到字<br><span style="font-size:13px">点「全部」翻整张识字表，随时可以抽查</span>`;
+        })()
+  }</div></div>`;
 
   stPaintPaper(items);
   stEl("stPrev").disabled = ST_P.page <= 0;
@@ -3570,6 +3636,8 @@ function stSaveAdd(){
 function stInit(){
   stLoad();
   stMigrateExtra();
+  const baseN = stSeedBase();          /* 识字表 → 「看过、明天复习」的起点 */
+  ST_BASE_N = baseN;
   stEl("stPerDay").value = String(ST.perDay);
   ST_WORDS = new Map();
   ST_BOOTED = true;
@@ -3579,6 +3647,10 @@ function stInit(){
 function stEnter(){
   if(!ST_BOOTED) stInit();
   else stSyncHead();
+  if(ST_BASE_N){
+    toast(`识字表 ${ST_BASE_N} 个字按「看过了」算 · 明天开始复习`);
+    ST_BASE_N = 0;
+  }
   /* 同一天里离开又回来：接着刚才那一轮；换了一天就重新排 */
   if(ST_S.day === stDay() && ST_S.i < ST_S.queue.length){
     stShowView("card");
@@ -3646,7 +3718,7 @@ function stJudgeOne(kind){
   if(kind === 4){                       /* 标熟 / 取消标熟 */
     const r = ST.rec[c];
     const wasKnown = !!(r && r.k);
-    if(wasKnown) delete ST.rec[c];
+    if(wasKnown) stUnmarkKnown(c);
     else stMarkKnown(c);
     stSave();
     stSyncHead();
@@ -3677,6 +3749,18 @@ stEl("stMarkPage").onclick = ()=>{
   stSyncHead();
   stRenderPaper({fit:false, keepList:true});
   toast(n ? `本页 ${n} 个字记为熟` : "本页的字都已经标过熟了");
+};
+
+/* 之后又往识字表加了一批字（按年级挑字 / 加字页），想让它们也从「看过」开始：
+   一键记成「第 1 档、明天复习」，不用一个个教 */
+stEl("stAdopt").onclick = ()=>{
+  const todo = (state.chars || []).filter(c=>!stHasRec(c));
+  if(!todo.length){ toast("识字表里的字都已经算看过了"); return; }
+  if(!confirm(`把识字表里还没学的 ${todo.length} 个字都记成「看过」？\n它们会从明天开始按遗忘曲线复习。`)) return;
+  stAdoptUnlearned();
+  stSyncHead();
+  stRenderPaper({fit:false, keepList:true});
+  toast(`${todo.length} 个字记为「看过」 · 明天开始复习`);
 };
 
 /* 手指横划翻页 */
