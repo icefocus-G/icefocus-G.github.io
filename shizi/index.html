@@ -471,14 +471,15 @@ body.view-study #pageActions,body.view-study .count,body.view-study #gradeSel{di
 body.view-study #btnMore{display:none!important}
 
 .st-head{display:flex;align-items:center;gap:10px;flex-wrap:wrap}
-.st-book{
-  height:34px;padding:0 30px 0 13px;border:1px solid var(--line);border-radius:999px;
-  background-color:var(--card);color:var(--ink);font-size:13.5px;font-family:var(--font-hei);
-  cursor:pointer;-webkit-appearance:none;appearance:none;
-  background-image:url("data:image/svg+xml;charset=utf8,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='6' viewBox='0 0 10 6'%3E%3Cpath d='M1 1l4 4 4-4' fill='none' stroke='%238a8172' stroke-width='1.5' stroke-linecap='round'/%3E%3C/svg%3E");
-  background-repeat:no-repeat;background-position:right 10px center;
+/* 背字只认识字表这一份字，这里只是个名牌，不是下拉 */
+.st-book-name{
+  flex:0 0 auto;height:32px;display:inline-flex;align-items:center;gap:6px;
+  padding:0 14px;border-radius:999px;background:#f6f2e9;border:1px solid #e8e1d2;
+  color:#6b6355;font-size:13px;letter-spacing:.02em;white-space:nowrap;
 }
-.st-book:hover{border-color:#b9ae99}
+.st-book-name::before{
+  content:"";width:6px;height:6px;border-radius:50%;background:var(--accent);opacity:.7;
+}
 .st-meta{font-size:12.5px;color:var(--sub);line-height:1.6}
 .st-right{margin-left:auto;display:flex;align-items:center;gap:8px}
 .st-opt{display:flex;align-items:center;gap:6px;font-size:12px;color:var(--sub);white-space:nowrap}
@@ -576,6 +577,12 @@ body.view-study #btnMore{display:none!important}
 .st-forgot{background:#fdecea!important;border-color:#e6b3ac!important;color:#b03a2e!important}
 .st-fuzzy{background:#fdf7e6!important;border-color:#e6d5ac!important;color:#8a6a1f!important}
 .st-know{background:#eaf6ef!important;border-color:#b5dcc6!important;color:#12694a!important}
+/* 快判模式（今日列表点进来）：只留认识 / 不认识，不用先点「显示答案」 */
+.st-acts.quick .st-reveal,.st-acts.quick .st-fuzzy{display:none!important}
+.st-acts.quick .st-forgot,.st-acts.quick .st-know{
+  display:flex!important;align-items:center;justify-content:center;
+  min-height:58px;font-size:17px;
+}
 .st-kbd{font-size:11px;color:#b3a894;letter-spacing:.03em;text-align:center}
 @media (hover:none),(pointer:coarse){ .st-kbd{display:none} }
 
@@ -596,6 +603,10 @@ body.view-study #btnMore{display:none!important}
 .st-done-acts{display:flex;gap:9px;justify-content:center;flex-wrap:wrap;margin-top:18px}
 
 /* 字表：把这本字书里每个字的状态铺开，点谁练谁 */
+.st-listbar{width:100%;display:flex;align-items:center;gap:10px;flex-wrap:wrap}
+.st-seg.st-seg-sm{padding:3px;border-radius:9px;flex:0 0 auto}
+.st-seg.st-seg-sm button{flex:0 0 auto;padding:6px 13px;font-size:12.5px;white-space:nowrap}
+.st-listtip{font-size:11.5px;color:#b3a894}
 .st-grid{
   flex:1 1 auto;min-height:0;width:100%;display:grid;align-content:start;gap:8px;
   grid-template-columns:repeat(auto-fill,minmax(64px,1fr));
@@ -618,6 +629,13 @@ body.view-study #btnMore{display:none!important}
 .st-cell.learn{border-color:#e6d5ac;background:#fdfaf0}
 .st-cell.learn b{color:#8a6a1f}
 .st-cell.due{border-color:#e6b3ac;background:#fdf6f4}
+/* 今日列表里「今天答过的」按最后那一下上色：红=不认识、黄=模糊、绿=认识 */
+.st-cell.hit{border-color:#bfe0cd;background:#f5fbf7}
+.st-cell.hit b{color:#12694a}
+.st-cell.miss{border-color:#e6b3ac;background:#fdf3f1}
+.st-cell.miss b{color:#b03a2e}
+.st-cell.soft{border-color:#e6d5ac;background:#fdfaf0}
+.st-cell.soft b{color:#8a6a1f}
 .st-cell .dot{position:absolute;top:5px;right:5px;width:5px;height:5px;border-radius:50%;background:var(--accent)}
 .st-cell .kn{position:absolute;top:3px;right:5px;font-size:11px;line-height:1;color:#2f7d5b}
 .st-cell .sdot{position:absolute;top:5px;left:6px;font-size:9px;color:#9a9080;font-family:var(--font-hei)}
@@ -653,10 +671,9 @@ body.view-study #btnMore{display:none!important}
   border:1px solid var(--line);border-radius:10px;background:#faf8f3;
 }
 .st-chips .ph{font-size:12px;color:#b3a894;padding:6px 4px}
-.st-sheet-row{display:flex;align-items:center;gap:9px;font-size:12.5px;color:var(--sub)}
-.st-sheet-row select{
-  flex:1 1 auto;height:34px;padding:0 8px;border:1px solid var(--line);border-radius:9px;
-  background:#fff;color:var(--ink);font-family:inherit;font-size:13px;cursor:pointer;
+.st-sheet-note{
+  font-size:11.5px;line-height:1.7;color:#8d8168;
+  background:#faf7ef;border-radius:8px;padding:7px 11px;
 }
 .st-seg{display:flex;gap:6px;padding:4px;background:#efece5;border-radius:11px}
 .st-seg button{
@@ -730,7 +747,7 @@ body.view-study #btnMore{display:none!important}
   .py-tone{grid-template-columns:1fr 1fr}
   .py-note{font-size:12.5px;line-height:1.9;padding:11px 12px}
   /* 背字 */
-  .st-book{height:31px;font-size:12.5px;padding-left:11px}
+  .st-book-name{height:29px;font-size:12px;padding:0 11px}
   .st-meta{font-size:11.5px}
   .st-right{gap:6px}
   .st-opt{font-size:11px}
@@ -845,7 +862,7 @@ body.view-study #btnMore{display:none!important}
 <!-- 背字：按年级分字书，学新字 + 按艾宾浩斯曲线复习 -->
 <section id="studyPanel">
   <div class="st-head">
-    <select id="bookSel" class="st-book" title="选一本字书"></select>
+    <span class="st-book-name" id="stBookName" title="背字用的就是识字表里的字">识字表</span>
     <span class="st-meta" id="stMeta">—</span>
     <div class="st-right">
       <label class="st-opt" title="每天最多学几个新字">每日新字
@@ -891,7 +908,7 @@ body.view-study #btnMore{display:none!important}
         <button class="st-fuzzy" id="stFuzzy">有点模糊</button>
         <button class="st-know" id="stKnow">认识</button>
       </div>
-      <div class="st-kbd">空格 = 看答案 · 1 不认识 · 2 模糊 · 3 认识</div>
+      <div class="st-kbd" id="stKbd">空格 = 看答案 · 1 不认识 · 2 模糊 · 3 认识</div>
     </div>
 
     <!-- ② 今日完成 -->
@@ -915,6 +932,13 @@ body.view-study #btnMore{display:none!important}
 
     <!-- ③ 字表 -->
     <div class="st-view" id="stListView">
+      <div class="st-listbar">
+        <div class="st-seg st-seg-sm" id="stScope">
+          <button data-s="today" class="on">今日</button>
+          <button data-s="all">全部</button>
+        </div>
+        <span class="st-listtip" id="stListTip">点一个字，直接从它开始 认识 / 不认识</span>
+      </div>
       <div class="st-grid" id="stGrid"></div>
     </div>
   </div>
@@ -930,10 +954,7 @@ body.view-study #btnMore{display:none!important}
     <p class="st-sheet-tip">直接打，或者整段粘贴。标点、空格、换行都会忽略，重复的只算一次。</p>
     <textarea id="stAddInput" spellcheck="false" placeholder="例：毯 陈 裳 虹 蹄 腐&#10;也可以整段粘贴课文里的生字"></textarea>
     <div class="st-chips" id="stAddChips"><span class="ph">这里会列出准备录入的字</span></div>
-    <div class="st-sheet-row">
-      <span>加到</span>
-      <select id="stAddBook"></select>
-    </div>
+    <div class="st-sheet-note">录进来就是识字表里的字，识字表、词组表都会跟着多出来。</div>
     <div class="st-seg" id="stSeg">
       <button data-m="new" class="on">还没背过 · 排进新字</button>
       <button data-m="known">已经背过了 · 直接算会</button>
@@ -2562,8 +2583,7 @@ function updateCounts(){
 function refreshCurrent(){
   if(view === "add"){ refreshAdd(); updateCounts(); }
   else if(view === "study"){
-    /* 字库变了，「我的字库」这本字书跟着变 */
-    ST_BOOK_CACHE = null;
+    /* 识字表变了，背字跟着变 */
     stSyncHead();
     if(ST_S.mode === "list") stRenderGrid();
   }
@@ -2842,12 +2862,12 @@ const ST_SOLID = 4;                                   /* 到第 4 档（7 天）
 const stEl = id => document.getElementById(id);
 
 let ST = {
-  book:"g6", perDay:8,
-  rec:{},                                  /* 字 → {s, d, n, ok, ng, t, k} */
-  extra:{},                                /* 字书 id → 自己录进去的字（年级表是只读的） */
+  perDay:8,
+  rec:{},                                  /* 字 → {s, d, n, ok, ng, t, k, q} */
   today:{d:0, n:0, r:0, ok:0, ng:0, w:[]}, /* 今日：新学 / 复习 / 记得 / 忘记 / 错的字 */
   streak:0, lastDay:0
 };
+let ST_LEGACY_EXTRA = null;     /* 旧版按字书分开存的「录入字」，第一次跑新版时并进识字表 */
 let ST_BOOTED = false;
 
 /* 本地日序号：按日历天算，不看几点 —— 早上七点和晚上九点都算同一天 */
@@ -2859,10 +2879,9 @@ function stLoad(){
   try{
     const j = JSON.parse(localStorage.getItem(ST_KEY) || "null");
     if(j && j.rec){
-      if(j.book) ST.book = j.book;
       if(+j.perDay > 0) ST.perDay = +j.perDay;
       ST.rec = j.rec || {};
-      ST.extra = (j.extra && typeof j.extra === "object") ? j.extra : {};
+      ST_LEGACY_EXTRA = (j.extra && typeof j.extra === "object") ? j.extra : null;
       ST.streak = j.streak || 0;
       ST.lastDay = j.lastDay || 0;
       if(j.today) ST.today = Object.assign({d:0,n:0,r:0,ok:0,ng:0,w:[]}, j.today);
@@ -2874,41 +2893,37 @@ function stLoad(){
 function stSave(){
   try{
     localStorage.setItem(ST_KEY, JSON.stringify({
-      v:1, book:ST.book, perDay:ST.perDay, rec:ST.rec, extra:ST.extra,
+      v:2, perDay:ST.perDay, rec:ST.rec,
       today:ST.today, streak:ST.streak, lastDay:ST.lastDay
     }));
   }catch(e){}
 }
 
-/* ---------- 字书：1~6 年级各一本 + 我的字库 + 全部年级 ----------
-   年级字表是数据文件里的、只读，所以「自己录进去的字」单独记在 ST.extra[书号] 里，
-   两边合起来才是这本书真正的字表。 */
-let ST_BOOK_CACHE = null;
-function stExtraKey(){
-  return Object.keys(ST.extra).map(k=>k + ":" + (ST.extra[k] || []).length).join(",");
-}
-function stBooks(){
-  const key = state.chars.length + "|" + (state.chars[0]||"") + "|" +
-              (state.chars[state.chars.length-1]||"") + "|" + GRADES.length + "|" + stExtraKey();
-  if(ST_BOOK_CACHE && ST_BOOK_CACHE.key === key) return ST_BOOK_CACHE.list;
-  const merge = (id, base)=>{
-    const out = base.slice();
-    (ST.extra[id] || []).forEach(c=>{ if(out.indexOf(c) < 0) out.push(c); });
-    return out;
-  };
-  const list = [{id:"lib", name:"我的字库", chars: merge("lib", state.chars)}];
-  GRADES.forEach(g=> list.push({id:"g"+g.grade, name:g.name, chars: merge("g"+g.grade, g.chars.map(x=>x[0]))}));
-  if(GRADES.length > 1){
-    const seen = new Set(), all = [];
-    list.forEach(b=>b.chars.forEach(c=>{ if(!seen.has(c)){ seen.add(c); all.push(c); } }));
-    list.push({id:"all", name:"全部年级", chars: all});
-  }
-  ST_BOOK_CACHE = {key, list};
-  return list;
-}
+/* ---------- 字书就是识字表 ----------
+   背字不另存一份字：学什么、复习什么，全部取自「识字表」。
+   想加字就加进识字表（加字页 / 按年级挑字 / 这里的录入，写到同一处）。 */
 function stBook(){
-  const list = stBooks();
-  return list.find(b=>b.id === ST.book) || list[1] || list[0];
+  return {id:"lib", name:"识字表", chars: state.chars};
+}
+
+/* 旧版把录入的字按字书单独存着，新版统一并进识字表，不然那些字会凭空消失 */
+function stMigrateExtra(){
+  if(!ST_LEGACY_EXTRA) return;
+  const add = [];
+  Object.keys(ST_LEGACY_EXTRA).forEach(k=>{
+    (ST_LEGACY_EXTRA[k] || []).forEach(c=>{
+      const one = [...String(c)];
+      if(one.length !== 1) return;
+      if(state.chars.indexOf(c) < 0 && add.indexOf(c) < 0) add.push(c);
+    });
+  });
+  ST_LEGACY_EXTRA = null;
+  if(add.length){
+    state.chars = state.chars.concat(add);
+    saveState();
+    updateCounts();
+  }
+  stSave();
 }
 
 function stStats(book){
@@ -2925,17 +2940,10 @@ function stStats(book){
 
 /* 顶栏 + 掌握度条 */
 function stSyncHead(){
-  const sel = stEl("bookSel");
-  const list = stBooks();
-  const sig = list.map(b=>b.id + ":" + b.chars.length).join(",");
-  if(sel.dataset.sig !== sig){
-    sel.innerHTML = list.map(b=>
-      `<option value="${b.id}">${escapeHtml(b.name)} · ${b.chars.length} 字</option>`).join("");
-    sel.dataset.sig = sig;
-  }
-  if(sel.value !== ST.book) sel.value = ST.book;
+  const book = stBook();
+  stEl("stBookName").textContent = `识字表 · ${book.chars.length} 字`;
 
-  const s = stStats(stBook());
+  const s = stStats(book);
   stEl("stMeta").textContent =
     `已学 ${s.total - s.fresh}/${s.total} 字 · 今天该复习 ${s.due} · 连续 ${ST.streak} 天`;
   const pc = n => (s.total ? (n / s.total * 100).toFixed(1) : 0) + "%";
@@ -2949,7 +2957,8 @@ function stSyncHead(){
 /* ---------- 一次学习 ---------- */
 const ST_S = {
   queue:[], i:0, revealed:false, lock:false, day:-1,
-  repeat:{}, seen:new Set(),
+  repeat:{}, seen:new Set(), dayList:[],
+  quick:false,                 /* 今日列表点进来：不挡「先看答案」，两个按钮直接判 */
   newN:0, revN:0, ok:0, ng:0,
   mode:"card"
 };
@@ -2993,22 +3002,48 @@ function stStart(){
   ST_S.repeat = {};
   ST_S.seen = new Set();
   ST_S.lock = false;
+  ST_S.quick = false;
   ST_S.newN = ST_S.revN = ST_S.ok = ST_S.ng = 0;
   ST_S.day = stDay();
+  ST_S.dayList = stDedupe(ST_S.queue);
   stSyncHead();
   if(!ST_S.queue.length){ stShowDone(); return; }
   stShowView("card");
   stRenderCard();
 }
 
-/* 单独练某几个字（字表里点某个字 / 再练一遍错的） */
-function stPractice(chars){
+function stDedupe(list){
+  const seen = new Set(), out = [];
+  list.forEach(c=>{ if(!seen.has(c)){ seen.add(c); out.push(c); } });
+  return out;
+}
+
+/* 单独练某几个字（再练一遍错的字 / 全部年级抽查） */
+function stPractice(chars, quick){
   if(!chars.length) return;
   ST_S.queue = chars.slice();
   ST_S.i = 0; ST_S.revealed = false; ST_S.lock = false;
   ST_S.repeat = {}; ST_S.seen = new Set();
+  ST_S.quick = !!quick;
   ST_S.newN = ST_S.revN = ST_S.ok = ST_S.ng = 0;
   ST_S.day = stDay();
+  ST_S.dayList = stDedupe(ST_S.queue);
+  stShowView("card");
+  stRenderCard();
+  stSyncHead();
+}
+
+/* 今日列表里点某个字：从它开始，一路用「认识 / 不认识」快速过 */
+function stQuickFrom(list, idx){
+  if(!list.length) return;
+  ST_S.queue = list.slice();
+  ST_S.i = Math.max(0, Math.min(idx || 0, list.length - 1));
+  ST_S.revealed = false; ST_S.lock = false;
+  ST_S.repeat = {}; ST_S.seen = new Set();
+  ST_S.quick = true;
+  ST_S.newN = ST_S.revN = ST_S.ok = ST_S.ng = 0;
+  ST_S.day = stDay();
+  ST_S.dayList = stDedupe(ST_S.queue);
   stShowView("card");
   stRenderCard();
   stSyncHead();
@@ -3040,7 +3075,16 @@ function stRenderCard(){
   if(!c){ stShowDone(); return; }
   const card = stEl("stCard");
   card.classList.remove("reveal", "fly-l", "fly-r", "say");
-  stEl("stActs").classList.remove("rv");
+  card.classList.toggle("quick", ST_S.quick);
+  const acts = stEl("stActs");
+  acts.classList.remove("rv");
+  acts.classList.toggle("quick", ST_S.quick);
+  stEl("stHint").textContent = ST_S.quick
+    ? "会就说「认识」，不会点「不认识」"
+    : "点一下，看拼音和组词";
+  stEl("stKbd").textContent = ST_S.quick
+    ? "1 不认识 · 空格 / 3 认识"
+    : "空格 = 看答案 · 1 不认识 · 2 模糊 · 3 认识";
   ST_S.revealed = false;
 
   const r = ST.rec[c];
@@ -3090,7 +3134,9 @@ function stReveal(){
 
 /* kind：1 不认识 · 2 有点模糊 · 3 认识 */
 function stRate(kind){
-  if(ST_S.lock || !ST_S.revealed) return;
+  if(ST_S.lock) return;
+  /* 列表点进来的快判模式不用先看答案，两个按钮直接判 */
+  if(!ST_S.revealed && !ST_S.quick) return;
   const c = ST_S.queue[ST_S.i];
   if(!c) return;
   ST_S.lock = true;
@@ -3117,6 +3163,7 @@ function stRate(kind){
   }
   r.n = (r.n || 0) + 1;
   r.t = Date.now();
+  r.q = kind;                 /* 今天这一个字最后一次判的是哪档，列表里按它上色 */
   ST.rec[c] = r;
 
   /* 同一个字在一轮里只记一次「新学 / 复习」，回头再问不算第二次 */
@@ -3130,23 +3177,34 @@ function stRate(kind){
   }
   stSave();
 
-  /* 记不住 / 模糊：隔几张再问一遍（同一个字一轮最多补两次，不会死循环） */
-  const back = kind === 1 ? 4 : (kind === 2 ? 6 : 0);
+  /* 记不住 / 模糊：隔几张再问一遍（同一个字一轮最多补两次，不会死循环）。
+     快判模式是一个字过一遍，不往回塞。 */
+  const back = ST_S.quick ? 0 : (kind === 1 ? 4 : (kind === 2 ? 6 : 0));
   if(back && (ST_S.repeat[c] || 0) < 2){
     ST_S.repeat[c] = (ST_S.repeat[c] || 0) + 1;
     ST_S.queue.splice(Math.min(ST_S.queue.length, ST_S.i + 1 + back), 0, c);
   }
 
   const card = stEl("stCard");
-  stEl("stActs").classList.remove("rv");
-  card.classList.add(kind === 3 ? "fly-r" : "fly-l");
+  if(!ST_S.quick) stEl("stActs").classList.remove("rv");
+
+  /* 快判里答了「不认识」：先把拼音和组词亮出来、读一遍，看一眼再翻走 */
+  const showAnswer = ST_S.quick && kind !== 3;
+  const pause = showAnswer ? 1000 : 200;
+  if(showAnswer){
+    card.classList.add("reveal");
+    speak(c);
+  }else{
+    card.classList.add(kind === 3 ? "fly-r" : "fly-l");
+  }
+
   setTimeout(()=>{
     card.classList.remove("fly-l", "fly-r");
     ST_S.i++;
     ST_S.lock = false;
     stRenderCard();
     stSyncHead();
-  }, 200);
+  }, pause);
 }
 
 function stShowDone(){
@@ -3162,13 +3220,23 @@ function stShowDone(){
     ? Math.round(ST_S.ok / (ST_S.ok + ST_S.ng) * 100) : null;
 
   const nothing = !ST_S.queue.length;
-  stEl("stDoneTitle").textContent = nothing ? "今天这本没有要练的字" : "这一轮练完了";
   const lines = [];
-  if(!nothing){
+
+  if(!s.total){
+    stEl("stDoneTitle").textContent = "识字表里还没有字";
+    lines.push("用右上角「录入」加几个字，或者到顶栏「按年级挑字」");
+    lines.push("把课本生字加进识字表，这里就有得练了");
+  }else if(nothing){
+    stEl("stDoneTitle").textContent = "今天没有要练的字了";
+    if(owe) lines.push(`到明天还欠 <b>${owe}</b> 个复习`);
+    else lines.push("今天该复习的都清完了，明天再来");
+    if(s.fresh) lines.push(`识字表里还有 <b>${s.fresh}</b> 个字没学，可以「再学几个新字」`);
+  }else{
+    stEl("stDoneTitle").textContent = "这一轮练完了";
     lines.push(`正确率 <b>${acc == null ? "—" : acc + "%"}</b>（记得 ${ST_S.ok} · 忘记 ${ST_S.ng}）`);
+    lines.push(`到明天还欠 <b>${owe}</b> 个复习 · 还有 <b>${s.fresh}</b> 个字没学`);
   }
-  lines.push(`到明天还欠 <b>${owe}</b> 个复习 · 这本还有 <b>${s.fresh}</b> 个字没学`);
-  if(ST.streak > 1) lines.push(`已经连着练了 <b>${ST.streak}</b> 天`);
+  if(s.total && ST.streak > 1) lines.push(`已经连着练了 <b>${ST.streak}</b> 天`);
   stEl("stDoneDesc").innerHTML = lines.join("<br>");
 
   stEl("stDoneNew").textContent = ST_S.newN;
@@ -3177,29 +3245,94 @@ function stShowDone(){
   stEl("stDoneNg").textContent = ST_S.ng;
 
   stEl("stAgain").style.display = ST.today.w.length ? "" : "none";
-  const rest = stStats(book).fresh;
-  stEl("stMoreNew").style.display = rest ? "" : "none";
+  stEl("stMoreNew").style.display = s.fresh ? "" : "none";
   stSyncHead();
 }
 
+/* 今日的字：会话里排过的顺序最准，再把「今天练过的」「到期没练的」补齐。
+   这样就算一轮已经过完，回头点「字表 → 今日」还是能看到今天都碰过哪些字、哪些答错了。 */
+function stTodayList(){
+  const today = stDay();
+  const out = [], seen = new Set();
+  const add = c=>{ if(c && !seen.has(c)){ seen.add(c); out.push(c); } };
+
+  (ST_S.dayList || []).forEach(add);
+
+  const book = stBook();
+  const due = [], done = [];
+  book.chars.forEach(c=>{
+    const r = ST.rec[c];
+    if(!r || r.k) return;
+    if(r.d <= today) due.push(c);
+    else if(r.t && stDay(r.t) === today) done.push(c);
+  });
+  due.sort((a,b)=> ST.rec[a].d - ST.rec[b].d);
+  done.sort((a,b)=> ST.rec[a].t - ST.rec[b].t);
+  due.forEach(add);
+  done.forEach(add);
+  return out;
+}
+
+let stScope = "today";        /* today 今日的字 · all 整张识字表 */
+
 function stRenderGrid(){
   const book = stBook(), today = stDay();
+  const isToday = stScope === "today";
+  const todayList = isToday ? [] : stTodayList();
+  const list = isToday ? stTodayList() : book.chars;
   const grid = stEl("stGrid");
-  grid.innerHTML = book.chars.map(c=>{
+
+  stEl("stScope").querySelectorAll("button").forEach(b=>
+    b.classList.toggle("on", b.dataset.s === stScope));
+  stEl("stScope").querySelector('[data-s="today"]').textContent =
+    "今日 " + (isToday ? list.length : todayList.length);
+  stEl("stScope").querySelector('[data-s="all"]').textContent =
+    "全部 " + book.chars.length;
+  stEl("stListTip").textContent = isToday
+    ? "点一个字，直接从它开始 认识 / 不认识"
+    : "点一个字，单独过一遍";
+
+  if(!list.length){
+    grid.innerHTML = `<div class="gp-empty">${
+      isToday
+        ? "今天还没有排到字。<br>先用右上角「录入」加字，或调高「每日新字」。"
+        : "识字表里还没有字。"
+    }</div>`;
+    return;
+  }
+
+  grid.innerHTML = list.map((c, idx)=>{
     const r = ST.rec[c];
     const known = !!(r && r.k);
-    const cls = !r ? "" : ((r.s >= ST_SOLID || known) ? "solid" : "learn");
-    const due = !!(r && !known && r.d <= today);
-    const tip = known ? "录入时标了「已经会了」"
-              : !r ? "还没学"
-              : (due ? "今天该复习" : `${r.d - today} 天后再来 · 第 ${r.s} 档`);
-    return `<div class="st-cell ${cls}${due ? " due" : ""}" data-c="${escapeHtml(c)}" title="${escapeHtml(tip)}">`
-      + `<b>${escapeHtml(c)}</b><i>${escapeHtml(pyOf(c))}</i>`
-      + (known ? '<span class="kn">✓</span>' : (due ? '<span class="dot"></span>' : ""))
-      + `</div>`;
+    let cls = "", tip = "", mark = "";
+
+    if(isToday){
+      const ratedToday = !!(r && r.t && stDay(r.t) === today);
+      if(ratedToday && r.q === 1) cls = "miss";
+      else if(ratedToday && r.q === 2) cls = "soft";
+      else if(ratedToday) cls = "hit";
+      else if(r && r.d <= today) cls = "due";
+      tip = ratedToday
+        ? (r.q === 1 ? "今天答过：不认识" : r.q === 2 ? "今天答过：有点模糊" : "今天答过：认识")
+        : (r ? "今天该复习" : "今天的新字");
+    }else{
+      cls = !r ? "" : ((r.s >= ST_SOLID || known) ? "solid" : "learn");
+      if(r && !known && r.d <= today) cls += " due";
+      tip = known ? "录入时标了「已经会了」"
+          : !r ? "还没学"
+          : (r.d <= today ? "今天该复习" : `${r.d - today} 天后再来 · 第 ${r.s} 档`);
+      if(known) mark = '<span class="kn">✓</span>';
+    }
+
+    return `<div class="st-cell ${cls}" data-c="${escapeHtml(c)}" data-i="${idx}" title="${escapeHtml(tip)}">`
+      + `<b>${escapeHtml(c)}</b><i>${escapeHtml(pyOf(c))}</i>${mark}</div>`;
   }).join("");
+
   grid.querySelectorAll(".st-cell").forEach(el=>{
-    el.onclick = ()=>stPractice([el.dataset.c]);
+    el.onclick = ()=>{
+      if(isToday) stQuickFrom(list, +el.dataset.i);
+      else stPractice([el.dataset.c]);
+    };
   });
 }
 
@@ -3207,11 +3340,6 @@ function stRenderGrid(){
 let stAddMode = "new";        /* new 排进新字 · known 直接算会 */
 
 function stOpenAdd(){
-  const sel = stEl("stAddBook");
-  const list = stBooks().filter(b=>b.id !== "all");
-  sel.innerHTML = list.map(b=>
-    `<option value="${b.id}">${escapeHtml(b.name)}（${b.chars.length} 字）</option>`).join("");
-  sel.value = list.some(b=>b.id === ST.book) ? ST.book : (list[0] ? list[0].id : "");
   stEl("stAddInput").value = "";
   stSetAddMode("new");
   stPreviewAdd();
@@ -3226,44 +3354,41 @@ function stSetAddMode(m){
   stPreviewAdd();
 }
 
-/* 预览：哪些是新的、哪些书里已经有了、哪些本来就记成会了 */
+/* 预览：哪些是识字表里还没有的、哪些已经有了、哪些本来就记成会了 */
 function stPreviewAdd(){
   const list = parseChars(stEl("stAddInput").value);
   const box = stEl("stAddChips");
-  const bid = stEl("stAddBook").value;
-  const book = stBooks().find(b=>b.id === bid);
-  const has = new Set(book ? book.chars : []);
+  const has = new Set(state.chars);
   if(!list.length){
     box.innerHTML = '<span class="ph">这里会列出准备录入的字</span>';
   }else{
     box.innerHTML = list.map(c=>{
       const r = ST.rec[c];
       const cls = (r && r.k) ? "mini dup" : (has.has(c) ? "mini dup" : "mini new");
-      return `<span class="${cls}" title="${has.has(c) ? "书里已有" : "新字"}">${escapeHtml(c)}</span>`;
+      const tip = (r && r.k) ? "已经记成会了" : (has.has(c) ? "识字表里已有" : "新字");
+      return `<span class="${cls}" title="${tip}">${escapeHtml(c)}</span>`;
     }).join("");
   }
   stEl("stAddSave").disabled = !list.length;
   stEl("stAddSave").textContent = list.length ? `录入 ${list.length} 字` : "录入";
 }
 
-/* 把录进来的字写进去：新字进书（排到后面），已经会了的直接记成最高档 */
+/* 录进来的字直接进识字表；「已经背过了」顺手记成最高档，不从零开始磨 */
 function stSaveAdd(){
   const list = parseChars(stEl("stAddInput").value);
   if(!list.length) return;
-  const bid = stEl("stAddBook").value;
-  const book = stBooks().find(b=>b.id === bid);
-  if(!book) return;
 
   const today = stDay();
-  const arr = ST.extra[bid] || (ST.extra[bid] = []);
-  const inBook = new Set(book.chars);
-  let added = 0, marked = 0;
+  const pool = new Set(state.chars);
+  const addChars = [];
+  let marked = 0;
 
   list.forEach(c=>{
-    if(!inBook.has(c) && arr.indexOf(c) < 0){ arr.push(c); inBook.add(c); added++; }
+    if(!pool.has(c)){ pool.add(c); addChars.push(c); }
     if(stAddMode === "known"){
       if(!ST.rec[c] || !ST.rec[c].k){
-        ST.rec[c] = {s: ST_STEPS.length - 1, d: today + 60, n: 1, ok: 0, ng: 0, t: Date.now(), k: 1};
+        ST.rec[c] = {s: ST_STEPS.length - 1, d: today + 60, n: 1, ok: 0, ng: 0,
+                     t: Date.now(), k: 1, q: 3};
         marked++;
       }
     }else if(ST.rec[c] && ST.rec[c].k){
@@ -3271,29 +3396,28 @@ function stSaveAdd(){
     }
   });
 
-  ST.book = bid;                 /* 录到哪本，就翻到哪本，马上能看见 */
+  if(addChars.length){
+    state.chars = state.chars.concat(addChars);   /* 写进识字表，识字表 / 词组表一起变 */
+    saveState();
+    updateCounts();
+  }
+
   ST_S.day = -1;
   stSave();
   stCloseAdd();
-  ST_BOOK_CACHE = null;
   stStart();
 
   const bits = [];
-  if(added) bits.push(`新增 ${added} 字`);
+  if(addChars.length) bits.push(`识字表 +${addChars.length} 字`);
   if(marked) bits.push(`${marked} 字记为已会`);
-  const skip = list.length - added;
-  if(skip > 0 && stAddMode === "new") bits.push(`${skip} 字书里已有`);
-  toast(`已录入《${book.name}》` + (bits.length ? " · " + bits.join(" · ") : ""));
+  if(!bits.length) bits.push("这些字识字表里已经有了");
+  toast("已录入 · " + bits.join(" · "));
 }
 
 /* ---------- 顶层入口 ---------- */
 function stInit(){
   stLoad();
-  const list = stBooks();
-  if(!list.some(b=>b.id === ST.book)){
-    const g6 = GRADES.find(g=>g.grade === 6);
-    ST.book = g6 ? "g6" : (list[1] ? list[1].id : "lib");
-  }
+  stMigrateExtra();
   stEl("stPerDay").value = String(ST.perDay);
   ST_WORDS = new Map();
   ST_BOOTED = true;
@@ -3302,7 +3426,7 @@ function stInit(){
 
 function stEnter(){
   if(!ST_BOOTED) stInit();
-  else { ST_BOOK_CACHE = null; stSyncHead(); }
+  else stSyncHead();
   /* 同一天里离开又回来：接着刚才那一轮；换了一天就重新排 */
   if(ST_S.day === stDay() && ST_S.i < ST_S.queue.length){
     stShowView("card");
@@ -3329,12 +3453,6 @@ stEl("stForgot").onclick = ()=>stRate(1);
 stEl("stFuzzy").onclick  = ()=>stRate(2);
 stEl("stKnow").onclick   = ()=>stRate(3);
 
-stEl("bookSel").onchange = (e)=>{
-  ST.book = e.target.value;
-  ST_S.day = -1;
-  stSave();
-  stStart();
-};
 stEl("stPerDay").onchange = (e)=>{
   ST.perDay = +e.target.value;
   ST_S.day = -1;
@@ -3350,6 +3468,12 @@ stEl("stListBtn").onclick = ()=>{
     stShowView("list");
   }
 };
+stEl("stScope").querySelectorAll("button").forEach(b=>{
+  b.onclick = ()=>{
+    stScope = b.dataset.s;
+    stRenderGrid();
+  };
+});
 stEl("stAgain").onclick = ()=>{
   const list = ST.today.w.filter(c=>stBook().chars.indexOf(c) >= 0);
   if(!list.length){ toast("今天没有记不住的字了"); return; }
@@ -3369,7 +3493,6 @@ stEl("stModalClose").onclick = stCloseAdd;
 stEl("stAddCancel").onclick = stCloseAdd;
 stEl("stAddSave").onclick = stSaveAdd;
 stEl("stAddInput").oninput = stPreviewAdd;
-stEl("stAddBook").onchange = stPreviewAdd;
 stEl("stSeg").querySelectorAll("button").forEach(b=>{
   b.onclick = ()=>stSetAddMode(b.dataset.m);
 });
@@ -3386,10 +3509,12 @@ document.addEventListener("keydown", (e)=>{
   if(tag === "INPUT" || tag === "TEXTAREA" || tag === "SELECT") return;
   if(e.key === " " || e.key === "Enter"){
     e.preventDefault();
-    if(!ST_S.revealed) stReveal(); else stRate(3);
+    if(ST_S.quick) stRate(3);                    /* 快判：空格就是「认识」 */
+    else if(!ST_S.revealed) stReveal();
+    else stRate(3);
     return;
   }
-  if(!ST_S.revealed) return;
+  if(!ST_S.revealed && !ST_S.quick) return;
   if(e.key === "1") stRate(1);
   if(e.key === "2") stRate(2);
   if(e.key === "3") stRate(3);
