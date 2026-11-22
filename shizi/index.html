@@ -417,6 +417,9 @@ body.view-pinyin #btnMore,body.view-grade #btnMore{display:none!important}
   .page{transform:none!important;box-shadow:none!important;position:static}
   /* 纸带两侧的上一张/下一张只服务滑动动画，打印时一张都不能带出来 */
   .page.neighbor{display:none!important}
+  /* 在背字里按了 Ctrl+P：印的是识字表那张纸，不是背字界面 */
+  #studyPanel{display:none!important}
+  body.view-study .stage{display:block!important}
   body.print-all .stage{display:none!important}
   body.print-all #printAll{display:block!important}
 }
@@ -602,43 +605,77 @@ body.view-study #btnMore{display:none!important}
 .st-nums .ng b{color:#c0392b}
 .st-done-acts{display:flex;gap:9px;justify-content:center;flex-wrap:wrap;margin-top:18px}
 
-/* 字表：把这本字书里每个字的状态铺开，点谁练谁 */
+/* 字表：照识字表的样子印一张 A4 —— 同样的格子、同样的字号，一张一张翻。
+   点纸上的字选中它，底下三个按钮直接判「不认识 / 认识 / 标熟」。 */
 .st-listbar{width:100%;display:flex;align-items:center;gap:10px;flex-wrap:wrap}
 .st-seg.st-seg-sm{padding:3px;border-radius:9px;flex:0 0 auto}
 .st-seg.st-seg-sm button{flex:0 0 auto;padding:6px 13px;font-size:12.5px;white-space:nowrap}
-.st-listtip{font-size:11.5px;color:#b3a894}
-.st-grid{
-  flex:1 1 auto;min-height:0;width:100%;display:grid;align-content:start;gap:8px;
-  grid-template-columns:repeat(auto-fill,minmax(64px,1fr));
-  overflow:auto;padding:2px 2px 16px;
-  overscroll-behavior:auto;-webkit-overflow-scrolling:touch;
+.st-listtip{font-size:11.5px;color:#b3a894;margin-left:auto}
+.st-listbar .btn{min-height:30px;padding:4px 11px;font-size:12px}
+
+.st-view.st-listview{align-items:stretch;justify-content:flex-start;gap:8px}
+.st-sheetwrap{
+  flex:1 1 auto;min-height:0;width:100%;display:flex;
+  align-items:center;justify-content:center;overflow:hidden;
 }
-.st-cell{
-  position:relative;display:flex;flex-direction:column;align-items:center;justify-content:center;
-  gap:2px;padding:9px 3px 7px;background:var(--card);border:1px solid var(--line);
-  border-radius:10px;cursor:pointer;transition:transform .15s,border-color .15s;
+.st-paper{position:relative;flex:0 0 auto;background:#fff;overflow:hidden;box-shadow:var(--shadow)}
+/* 纸上的字按背字记录上一点淡底色 + 角上一个小点：绿=熟、黄=学习中、红=该复习 */
+#stPage .cell.solid{background:rgba(47,125,91,.09)}
+#stPage .cell.learn{background:rgba(217,164,65,.10)}
+#stPage .cell.due{background:rgba(192,57,43,.08)}
+#stPage .cell.sel{outline:.55mm solid #c0392b;outline-offset:-.55mm;border-radius:1.2mm;z-index:3}
+#stPage .cell .st-dot{
+  position:absolute;top:1.2mm;right:1.2mm;width:3mm;height:3mm;border-radius:50%;
+  box-shadow:0 0 0 .45mm rgba(255,255,255,.8);pointer-events:none;
 }
-.st-cell:hover{transform:translateY(-1px);border-color:#b9ae99}
-.st-cell b{font-family:var(--font-card,var(--font-kai));font-size:25px;font-weight:400;line-height:1;color:#1a1a1a}
-.st-cell i{
-  font-style:normal;font-family:var(--font-hei);font-size:10px;line-height:12px;height:12px;
-  color:var(--sub);white-space:nowrap;overflow:hidden;max-width:100%;
+#stPage .cell.solid .st-dot{background:#2f7d5b}
+#stPage .cell.learn .st-dot{background:#d9a441}
+#stPage .cell.due .st-dot{background:#c0392b}
+
+/* 判字条：选中一个字之后才出来 */
+.st-judge{
+  flex:0 0 auto;width:100%;display:flex;align-items:center;gap:10px;
+  padding:7px 9px;background:#fff;border:1px solid var(--line);border-radius:14px;
+  box-shadow:0 6px 18px rgba(60,50,35,.07);
 }
-.st-cell.solid{border-color:#bfe0cd;background:#f5fbf7}
-.st-cell.solid b{color:#12694a}
-.st-cell.learn{border-color:#e6d5ac;background:#fdfaf0}
-.st-cell.learn b{color:#8a6a1f}
-.st-cell.due{border-color:#e6b3ac;background:#fdf6f4}
-/* 今日列表里「今天答过的」按最后那一下上色：红=不认识、黄=模糊、绿=认识 */
-.st-cell.hit{border-color:#bfe0cd;background:#f5fbf7}
-.st-cell.hit b{color:#12694a}
-.st-cell.miss{border-color:#e6b3ac;background:#fdf3f1}
-.st-cell.miss b{color:#b03a2e}
-.st-cell.soft{border-color:#e6d5ac;background:#fdfaf0}
-.st-cell.soft b{color:#8a6a1f}
-.st-cell .dot{position:absolute;top:5px;right:5px;width:5px;height:5px;border-radius:50%;background:var(--accent)}
-.st-cell .kn{position:absolute;top:3px;right:5px;font-size:11px;line-height:1;color:#2f7d5b}
-.st-cell .sdot{position:absolute;top:5px;left:6px;font-size:9px;color:#9a9080;font-family:var(--font-hei)}
+.st-judge .now{
+  display:flex;flex-direction:column;align-items:center;justify-content:center;
+  min-width:56px;line-height:1.05;
+}
+.st-judge .now b{font-family:var(--font-card,var(--font-kai));font-size:27px;font-weight:400;color:#1a1a1a}
+.st-judge .now i{
+  font-style:normal;font-family:var(--font-hei);font-size:10.5px;color:var(--sub);
+  white-space:nowrap;max-width:78px;overflow:hidden;
+}
+.st-judge .acts{flex:1 1 auto;display:flex;gap:8px}
+.st-judge .acts button{
+  flex:1 1 0;min-height:46px;border-radius:11px;border:1px solid var(--line);
+  background:#fff;font-family:inherit;font-size:14.5px;font-weight:600;
+  color:var(--ink);cursor:pointer;transition:.15s;
+}
+.st-judge .acts button:active{transform:translateY(1px)}
+.st-judge .acts .st-solid-btn{
+  flex:0 0 32%;background:#f5f8fb!important;border-color:#c9d8e4!important;color:#2c5673!important;
+}
+.st-judge .acts .st-solid-btn.cancel{color:#8a6a1f!important;background:#fdf8ee!important;border-color:#e6d5ac!important}
+.st-judge .idle{flex:1 1 auto;font-size:12px;color:#b3a894;text-align:center}
+.st-judge:not(.on) .now,.st-judge:not(.on) .acts{display:none}
+.st-judge.on .idle{display:none}
+
+/* 翻页：两张小箭头浮在纸的两侧（正好压在 A4 的页边留白上），不占纸的高度 */
+.st-sheetwrap{position:relative}
+.st-arrow{
+  position:absolute;top:50%;transform:translateY(-50%);z-index:5;
+  width:38px;height:70px;display:flex;align-items:center;justify-content:center;
+  border:1px solid var(--line);border-radius:11px;
+  background:rgba(255,255,255,.9);color:var(--ink);
+  font-family:inherit;font-size:21px;line-height:1;cursor:pointer;
+  box-shadow:0 3px 10px rgba(60,50,35,.1);
+}
+.st-arrow.prev{left:4px}
+.st-arrow.next{right:4px}
+.st-arrow:hover:not(:disabled){background:#fff;border-color:#b9ae99}
+.st-arrow:disabled{opacity:.2;cursor:default;box-shadow:none}
 
 /* 录入字：一小张纸浮在上面，手机上从底部顶上来 */
 .st-modal{
@@ -757,7 +794,10 @@ body.view-study #btnMore{display:none!important}
   .st-word b{font-size:20px}
   .st-cell{min-height:0;padding:7px 2px 6px}
   .st-cell b{font-size:22px}
-  .st-grid{grid-template-columns:repeat(auto-fill,minmax(58px,1fr));gap:6px}
+  .st-judge{padding:6px 7px;gap:7px}
+  .st-judge .acts button{min-height:44px;font-size:13.5px}
+  .st-judge .acts .st-solid-btn{flex:0 0 30%}
+  .st-arrow{width:32px;height:60px;font-size:18px}
   .st-nums{gap:16px}
   .st-nums b{font-size:20px}
 }
@@ -930,16 +970,32 @@ body.view-study #btnMore{display:none!important}
       </div>
     </div>
 
-    <!-- ③ 字表 -->
-    <div class="st-view" id="stListView">
+    <!-- ③ 字表：和识字表一样的一张 A4，点字直接判 -->
+    <div class="st-view st-listview" id="stListView">
       <div class="st-listbar">
         <div class="st-seg st-seg-sm" id="stScope">
           <button data-s="today" class="on">今日</button>
           <button data-s="all">全部</button>
         </div>
-        <span class="st-listtip" id="stListTip">点一个字，直接从它开始 认识 / 不认识</span>
+        <button class="btn ghost" id="stMarkPage" title="把这一页的字都记成「熟」">本页标熟</button>
+        <span class="st-listtip" id="stListTip">点一个字 → 不认识 / 认识</span>
       </div>
-      <div class="st-grid" id="stGrid"></div>
+      <div class="st-sheetwrap" id="stSheetWrap">
+        <div class="paper-window st-paper" id="stPaperWin">
+          <div class="page" id="stPage"></div>
+        </div>
+        <button class="st-arrow prev" id="stPrev" title="上一张（←）">‹</button>
+        <button class="st-arrow next" id="stNext" title="下一张（→）">›</button>
+      </div>
+      <div class="st-judge" id="stJudge">
+        <div class="now"><b id="stJudgeHz">字</b><i id="stJudgePy"></i></div>
+        <div class="acts">
+          <button class="st-forgot" id="stJudgeNo">不认识</button>
+          <button class="st-know" id="stJudgeYes">认识</button>
+          <button class="st-solid-btn" id="stJudgeSolid">标熟</button>
+        </div>
+        <div class="idle">先点纸上的一个字，再判「不认识 / 认识」</div>
+      </div>
     </div>
   </div>
 </section>
@@ -2585,7 +2641,7 @@ function refreshCurrent(){
   else if(view === "study"){
     /* 识字表变了，背字跟着变 */
     stSyncHead();
-    if(ST_S.mode === "list") stRenderGrid();
+    if(ST_S.mode === "list") stRenderPaper();
   }
   else render();
 }
@@ -2926,13 +2982,20 @@ function stMigrateExtra(){
   stSave();
 }
 
+/* 一个字算不算「学过」：真判过（n>0）、或者亲手标过熟。
+   只有一条空记录（n=0 且没标熟）不算 —— 不然统计里全是「已学」，一个没熟，对不上。 */
+function stHasRec(c){
+  const r = ST.rec[c];
+  return !!(r && (r.k || r.n > 0));
+}
+
 function stStats(book){
   const today = stDay();
   let solid = 0, learn = 0, fresh = 0, due = 0;
   for(const c of book.chars){
     const r = ST.rec[c];
-    if(!r){ fresh++; continue; }
-    if(r.s >= ST_SOLID) solid++; else learn++;
+    if(!stHasRec(c)){ fresh++; continue; }
+    if(r.s >= ST_SOLID || r.k) solid++; else learn++;
     if(r.d <= today) due++;
   }
   return {solid, learn, fresh, due, total: book.chars.length};
@@ -2972,7 +3035,7 @@ function stBuildQueue(){
   const due = [], fresh = [];
   for(const c of book.chars){
     const r = rec[c];
-    if(!r) fresh.push(c);
+    if(!stHasRec(c)) fresh.push(c);
     else if(r.d <= today) due.push(c);
   }
   due.sort((a,b)=> (rec[a].d - rec[b].d) || (rec[a].s - rec[b].s));
@@ -2994,6 +3057,7 @@ function stShowView(v){
   stEl("stDoneView").classList.toggle("on", v === "done");
   stEl("stListView").classList.toggle("on", v === "list");
   stEl("stListBtn").textContent = v === "list" ? "回到学习" : "字表";
+  if(v === "list") stRenderPaper();     /* 显示出来之后再量尺寸，纸才缩得对 */
 }
 
 function stStart(){
@@ -3025,22 +3089,6 @@ function stPractice(chars, quick){
   ST_S.i = 0; ST_S.revealed = false; ST_S.lock = false;
   ST_S.repeat = {}; ST_S.seen = new Set();
   ST_S.quick = !!quick;
-  ST_S.newN = ST_S.revN = ST_S.ok = ST_S.ng = 0;
-  ST_S.day = stDay();
-  ST_S.dayList = stDedupe(ST_S.queue);
-  stShowView("card");
-  stRenderCard();
-  stSyncHead();
-}
-
-/* 今日列表里点某个字：从它开始，一路用「认识 / 不认识」快速过 */
-function stQuickFrom(list, idx){
-  if(!list.length) return;
-  ST_S.queue = list.slice();
-  ST_S.i = Math.max(0, Math.min(idx || 0, list.length - 1));
-  ST_S.revealed = false; ST_S.lock = false;
-  ST_S.repeat = {}; ST_S.seen = new Set();
-  ST_S.quick = true;
   ST_S.newN = ST_S.revN = ST_S.ok = ST_S.ng = 0;
   ST_S.day = stDay();
   ST_S.dayList = stDedupe(ST_S.queue);
@@ -3088,9 +3136,11 @@ function stRenderCard(){
   ST_S.revealed = false;
 
   const r = ST.rec[c];
+  const has = stHasRec(c);
   const tag = stEl("stTag");
-  tag.textContent = r ? (r.d <= stDay() ? "复习" : "再巩固") : "新字";
-  tag.className = "st-tag " + (r ? "rev" : "new");
+  tag.textContent = !has ? "新字"
+    : (r.k ? "已会" : (r.d <= stDay() ? "复习" : "再巩固"));
+  tag.className = "st-tag " + (!has ? "new" : "rev");
 
   stEl("stHz").textContent = c;
   stEl("stPy").textContent = pyOf(c) || "";
@@ -3132,6 +3182,62 @@ function stReveal(){
   speak(c);
 }
 
+/* ---------- 记一次评价 ----------
+   kind：1 不认识 · 2 有点模糊 · 3 认识
+   卡片和字表共用这一处：谁判的只是一个字，改的是「这个字下次什么时候再见」。
+   solo=true 表示是字表里单独判的，不进这一轮卡片的计数。 */
+function stRecord(c, kind, solo){
+  const today = stDay();
+  const isNew = !stHasRec(c);
+  const r = ST.rec[c] || {s:0, d:today, n:0, ok:0, ng:0, t:0};
+
+  if(kind === 3){
+    r.s = Math.min(ST_STEPS.length - 1, (r.s || 0) + 1);
+    r.d = today + Math.max(1, ST_STEPS[r.s]);
+    r.ok = (r.ok || 0) + 1;
+    ST.today.ok++;
+    if(!solo) ST_S.ok++;
+  }else if(kind === 2){
+    r.s = Math.max(1, r.s || 0);
+    const base = ST_STEPS[Math.min(r.s, ST_STEPS.length - 1)] || 2;
+    r.d = today + Math.max(1, Math.round(base / 2));   /* 间隔对折，明天早点见 */
+  }else{
+    r.s = Math.max(0, (r.s || 0) - 2);
+    r.d = today;                                       /* 今天内还要再见一面 */
+    r.ng = (r.ng || 0) + 1;
+    ST.today.ng++;
+    if(!solo) ST_S.ng++;
+    if(ST.today.w.indexOf(c) < 0) ST.today.w.push(c);
+  }
+  r.n = (r.n || 0) + 1;
+  r.t = Date.now();
+  r.q = kind;                 /* 今天这一个字最后一次判的是哪档，字表里按它上色 */
+  if(r.k) delete r.k;         /* 亲手判过一次，就不再靠「直接算会」的标记了 */
+  ST.rec[c] = r;
+
+  /* 同一个字在一轮里只记一次「新学 / 复习」，回头再问不算第二次 */
+  if(!solo && !ST_S.seen.has(c)){
+    ST_S.seen.add(c);
+    if(isNew){ ST_S.newN++; ST.today.n++; } else { ST_S.revN++; ST.today.r++; }
+  }else if(solo && isNew){
+    ST.today.n++;                        /* 字表里也是正儿八经学了一个新字 */
+  }
+  if(ST.lastDay !== today){
+    ST.streak = (ST.lastDay === today - 1) ? ST.streak + 1 : 1;
+    ST.lastDay = today;
+  }
+  stSave();
+  return {isNew, r};
+}
+
+/* 直接标熟：就当这个字背过了，两个月后再抽查 */
+function stMarkKnown(c){
+  const today = stDay();
+  ST.rec[c] = {s: ST_STEPS.length - 1, d: today + 60, n: 1, ok: 0, ng: 0,
+               t: Date.now(), k: 1, q: 3};
+  stSave();
+}
+
 /* kind：1 不认识 · 2 有点模糊 · 3 认识 */
 function stRate(kind){
   if(ST_S.lock) return;
@@ -3141,41 +3247,7 @@ function stRate(kind){
   if(!c) return;
   ST_S.lock = true;
 
-  const today = stDay();
-  const isNew = !ST.rec[c];
-  const r = ST.rec[c] || {s:0, d:today, n:0, ok:0, ng:0, t:0};
-
-  if(kind === 3){
-    r.s = Math.min(ST_STEPS.length - 1, (r.s || 0) + 1);
-    r.d = today + Math.max(1, ST_STEPS[r.s]);
-    r.ok = (r.ok || 0) + 1;
-    ST_S.ok++; ST.today.ok++;
-  }else if(kind === 2){
-    r.s = Math.max(1, r.s || 0);
-    const base = ST_STEPS[Math.min(r.s, ST_STEPS.length - 1)] || 2;
-    r.d = today + Math.max(1, Math.round(base / 2));   /* 间隔对折，明天早点见 */
-  }else{
-    r.s = Math.max(0, (r.s || 0) - 2);
-    r.d = today;                                       /* 今天内还要再见一面 */
-    r.ng = (r.ng || 0) + 1;
-    ST_S.ng++; ST.today.ng++;
-    if(ST.today.w.indexOf(c) < 0) ST.today.w.push(c);
-  }
-  r.n = (r.n || 0) + 1;
-  r.t = Date.now();
-  r.q = kind;                 /* 今天这一个字最后一次判的是哪档，列表里按它上色 */
-  ST.rec[c] = r;
-
-  /* 同一个字在一轮里只记一次「新学 / 复习」，回头再问不算第二次 */
-  if(!ST_S.seen.has(c)){
-    ST_S.seen.add(c);
-    if(isNew){ ST_S.newN++; ST.today.n++; } else { ST_S.revN++; ST.today.r++; }
-  }
-  if(ST.lastDay !== today){
-    ST.streak = (ST.lastDay === today - 1) ? ST.streak + 1 : 1;
-    ST.lastDay = today;
-  }
-  stSave();
+  stRecord(c, kind, false);
 
   /* 记不住 / 模糊：隔几张再问一遍（同一个字一轮最多补两次，不会死循环）。
      快判模式是一个字过一遍，不往回塞。 */
@@ -3262,7 +3334,7 @@ function stTodayList(){
   const due = [], done = [];
   book.chars.forEach(c=>{
     const r = ST.rec[c];
-    if(!r || r.k) return;
+    if(!stHasRec(c)) return;
     if(r.d <= today) due.push(c);
     else if(r.t && stDay(r.t) === today) done.push(c);
   });
@@ -3274,66 +3346,146 @@ function stTodayList(){
 }
 
 let stScope = "today";        /* today 今日的字 · all 整张识字表 */
+/* 字表这张纸的翻页状态：当前这一页、当前选中的那个字 */
+const ST_P = {list:[], page:0, cur:""};
 
-function stRenderGrid(){
-  const book = stBook(), today = stDay();
-  const isToday = stScope === "today";
-  const todayList = isToday ? [] : stTodayList();
-  const list = isToday ? stTodayList() : book.chars;
-  const grid = stEl("stGrid");
+function stPaperList(){
+  return stScope === "today" ? stTodayList() : stBook().chars;
+}
+/* 和识字表用同一套纸张/格子：竖版 8×11、横版 11×8，字号也完全一样 */
+function stPaperGrid(){
+  const o = resolveOrient();
+  const L = CHARS_LAYOUT[o];
+  return {orient:o, w:PAPER[o].w, h:PAPER[o].h, cols:L.cols, rows:L.rows, per:L.cols*L.rows};
+}
+
+/* 直接借识字表的 pageHTML 排版，只是别把「隐藏文字」带进来 */
+function stSheetHTML(p){
+  const hideAll = state.hideAll, reveal = state.reveal;
+  state.hideAll = false; state.reveal = [];
+  const html = pageHTML(p);
+  state.hideAll = hideAll; state.reveal = reveal;
+  return html;
+}
+
+/* 纸上的每个字的底色/小点：绿=熟、黄=学习中、红=该复习（今日答错的也标红） */
+function stPaintPaper(items){
+  const today = stDay();
+  const cells = stEl("stPage").querySelectorAll(".cell");
+  cells.forEach((cell, i)=>{
+    const c = items[i];
+    if(!c) return;
+    cell.dataset.c = c;
+    cell.querySelectorAll(".st-dot").forEach(d=>d.remove());
+    const r = ST.rec[c];
+    const has = stHasRec(c);
+    const solid = has && (r.k || r.s >= ST_SOLID);
+    let cls = "cell";
+    if(solid) cls += " solid";
+    else if(has) cls += " learn";
+    const dueNow = has && (r.d <= today) && !(r.t && stDay(r.t) === today && r.q === 3);
+    if(dueNow) cls += " due";
+    cell.className = cls;
+    if(has && (solid || dueNow)){
+      const dot = document.createElement("i");
+      dot.className = "st-dot";
+      cell.appendChild(dot);
+    }
+  });
+}
+
+function stFitPaper(){
+  const wrap = stEl("stSheetWrap"), win = stEl("stPaperWin"), page = stEl("stPage");
+  if(!wrap || !win || !page || !wrap.clientWidth) return;
+  const g = stPaperGrid();
+  const pxW = g.w*96/25.4, pxH = g.h*96/25.4;
+  const s = Math.max(0.08, Math.min((wrap.clientWidth - 2)/pxW, (wrap.clientHeight - 2)/pxH));
+  win.style.width  = (pxW*s).toFixed(2)+"px";
+  win.style.height = (pxH*s).toFixed(2)+"px";
+  page.style.transform = `scale(${s})`;
+}
+
+function stRenderPaper(opt){
+  opt = opt || {};
+  const g = stPaperGrid();
+  /* 判字的过程中沿用同一份名单：不然「今日」这张纸会按最后碰过的时间重新排序，
+     刚判完的字一下子跳到别处，手指就不知道往哪儿点了 */
+  if(!opt.keepList) ST_P.list = stPaperList();
+  const pages = Math.max(1, Math.ceil(ST_P.list.length / g.per));
+  ST_P.page = Math.min(Math.max(0, ST_P.page), pages-1);
+  if(ST_P.cur && ST_P.list.indexOf(ST_P.cur) < 0) ST_P.cur = "";
 
   stEl("stScope").querySelectorAll("button").forEach(b=>
     b.classList.toggle("on", b.dataset.s === stScope));
-  stEl("stScope").querySelector('[data-s="today"]').textContent =
-    "今日 " + (isToday ? list.length : todayList.length);
-  stEl("stScope").querySelector('[data-s="all"]').textContent =
-    "全部 " + book.chars.length;
-  stEl("stListTip").textContent = isToday
-    ? "点一个字，直接从它开始 认识 / 不认识"
-    : "点一个字，单独过一遍";
+  stEl("stScope").querySelector('[data-s="today"]').textContent = "今日 " + stTodayList().length;
+  stEl("stScope").querySelector('[data-s="all"]').textContent = "全部 " + stBook().chars.length;
 
-  if(!list.length){
-    grid.innerHTML = `<div class="gp-empty">${
-      isToday
-        ? "今天还没有排到字。<br>先用右上角「录入」加字，或调高「每日新字」。"
-        : "识字表里还没有字。"
-    }</div>`;
-    return;
-  }
+  const items = ST_P.list.slice(ST_P.page*g.per, (ST_P.page+1)*g.per);
+  const page = stEl("stPage");
+  page.style.width  = g.w+"mm";
+  page.style.height = g.h+"mm";
+  page.style.fontFamily = fontStack();
+  page.innerHTML = "";
+  if(items.length) page.innerHTML = stSheetHTML({kind:"chars", w:g.w, h:g.h, cols:g.cols, rows:g.rows, items});
+  else page.innerHTML = `<div class="empty-hint">${
+    stScope === "today"
+      ? "今天还没有排到字<br><span style=\"font-size:13px\">先用右上角「录入」加字，或调高「每日新字」</span>"
+      : "识字表里还没有字"
+  }</div>`;
 
-  grid.innerHTML = list.map((c, idx)=>{
-    const r = ST.rec[c];
-    const known = !!(r && r.k);
-    let cls = "", tip = "", mark = "";
+  stPaintPaper(items);
+  stEl("stPrev").disabled = ST_P.page <= 0;
+  stEl("stNext").disabled = ST_P.page >= pages-1;
+  stEl("stListTip").textContent = ST_P.list.length
+    ? `第 ${ST_P.page+1}/${pages} 张 · ${stScope === "today" ? "今天碰过" : "识字表共"} ${ST_P.list.length} 字 · 点字直接判`
+    : "这一页还没有字";
+  stPaintSel();
+  if(!opt || opt.fit !== false) stFitPaper();
+}
 
-    if(isToday){
-      const ratedToday = !!(r && r.t && stDay(r.t) === today);
-      if(ratedToday && r.q === 1) cls = "miss";
-      else if(ratedToday && r.q === 2) cls = "soft";
-      else if(ratedToday) cls = "hit";
-      else if(r && r.d <= today) cls = "due";
-      tip = ratedToday
-        ? (r.q === 1 ? "今天答过：不认识" : r.q === 2 ? "今天答过：有点模糊" : "今天答过：认识")
-        : (r ? "今天该复习" : "今天的新字");
-    }else{
-      cls = !r ? "" : ((r.s >= ST_SOLID || known) ? "solid" : "learn");
-      if(r && !known && r.d <= today) cls += " due";
-      tip = known ? "录入时标了「已经会了」"
-          : !r ? "还没学"
-          : (r.d <= today ? "今天该复习" : `${r.d - today} 天后再来 · 第 ${r.s} 档`);
-      if(known) mark = '<span class="kn">✓</span>';
-    }
-
-    return `<div class="st-cell ${cls}" data-c="${escapeHtml(c)}" data-i="${idx}" title="${escapeHtml(tip)}">`
-      + `<b>${escapeHtml(c)}</b><i>${escapeHtml(pyOf(c))}</i>${mark}</div>`;
-  }).join("");
-
-  grid.querySelectorAll(".st-cell").forEach(el=>{
-    el.onclick = ()=>{
-      if(isToday) stQuickFrom(list, +el.dataset.i);
-      else stPractice([el.dataset.c]);
-    };
+/* 只动选中框和底下那条判字条，不重画整张纸 */
+function stPaintSel(){
+  const g = stPaperGrid();
+  const start = ST_P.page*g.per;
+  stEl("stPage").querySelectorAll(".cell").forEach((el, i)=>{
+    el.classList.toggle("sel", !!ST_P.cur && ST_P.list[start+i] === ST_P.cur);
   });
+  const on = !!ST_P.cur;
+  stEl("stJudge").classList.toggle("on", on);
+  if(!on) return;
+  const r = ST.rec[ST_P.cur];
+  stEl("stJudgeHz").textContent = ST_P.cur;
+  stEl("stJudgePy").textContent = pyOf(ST_P.cur) || "";
+  const isKnown = !!(r && r.k);
+  const btn = stEl("stJudgeSolid");
+  btn.textContent = isKnown ? "取消标熟" : "标熟";
+  btn.classList.toggle("cancel", isKnown);
+}
+
+/* 选中一个字：跨页就翻过去 */
+function stSelect(c, silent){
+  const i = ST_P.list.indexOf(c);
+  if(i < 0) return;
+  const g = stPaperGrid();
+  const page = Math.floor(i/g.per);
+  ST_P.cur = c;
+  if(page !== ST_P.page){
+    ST_P.page = page;
+    stRenderPaper({fit:false, keepList:true});
+  }else{
+    stPaintSel();
+  }
+  if(!silent) speak(c);
+}
+
+function stPageTurn(dir){
+  const g = stPaperGrid();
+  const pages = Math.max(1, Math.ceil(ST_P.list.length / g.per));
+  const page = Math.min(Math.max(0, ST_P.page + dir), pages-1);
+  if(page === ST_P.page) return;
+  ST_P.page = page;
+  ST_P.cur = "";
+  stRenderPaper({fit:false, keepList:true});
 }
 
 /* ---------- 录入：自己加字 / 把已经会了的字记成会 ---------- */
@@ -3464,15 +3616,87 @@ stEl("stListBtn").onclick = ()=>{
     if(ST_S.i < ST_S.queue.length){ stShowView("card"); stRenderCard(); }
     else stShowDone();
   }else{
-    stRenderGrid();
     stShowView("list");
   }
 };
 stEl("stScope").querySelectorAll("button").forEach(b=>{
   b.onclick = ()=>{
     stScope = b.dataset.s;
-    stRenderGrid();
+    ST_P.page = 0; ST_P.cur = "";
+    stRenderPaper();
   };
+});
+/* 纸上的字：点一下选中它，底下就是 不认识 / 认识 / 标熟 */
+stEl("stPage").addEventListener("click", (e)=>{
+  const cell = e.target.closest(".cell");
+  if(!cell || !cell.dataset.c) return;
+  stSelect(cell.dataset.c);
+});
+stEl("stPrev").onclick = ()=>stPageTurn(-1);
+stEl("stNext").onclick = ()=>stPageTurn(1);
+
+/* 字表里判一个字：判完自动跳到下一个，一页一页往下过 */
+function stJudgeOne(kind){
+  const c = ST_P.cur;
+  if(!c) return;
+  const old = ST_P.list.slice();
+  const i = old.indexOf(c);
+  const next = i >= 0 ? (old[i+1] || "") : "";
+
+  if(kind === 4){                       /* 标熟 / 取消标熟 */
+    const r = ST.rec[c];
+    const wasKnown = !!(r && r.k);
+    if(wasKnown) delete ST.rec[c];
+    else stMarkKnown(c);
+    stSave();
+    stSyncHead();
+    stRenderPaper({fit:false, keepList:true});
+    toast(wasKnown ? "已取消标熟" : "标熟了，两个月后抽查");
+    return;
+  }
+
+  stRecord(c, kind, true);
+  stSyncHead();
+  stRenderPaper({fit:false, keepList:true});
+  if(next && ST_P.list.indexOf(next) >= 0) stSelect(next, true);
+  else if(kind === 1) speak(c);          /* 过完了也把最后这个字读一遍 */
+}
+stEl("stJudgeNo").onclick  = ()=>stJudgeOne(1);
+stEl("stJudgeYes").onclick = ()=>stJudgeOne(3);
+stEl("stJudgeSolid").onclick = ()=>stJudgeOne(4);
+
+/* 本页标熟：一页 88 个字，一下全记成「熟」，省得一个个点 */
+stEl("stMarkPage").onclick = ()=>{
+  const g = stPaperGrid();
+  const items = ST_P.list.slice(ST_P.page*g.per, (ST_P.page+1)*g.per);
+  if(!items.length){ toast("这一页还没有字"); return; }
+  let n = 0;
+  items.forEach(c=>{
+    if(!(ST.rec[c] && ST.rec[c].k)){ stMarkKnown(c); n++; }
+  });
+  stSyncHead();
+  stRenderPaper({fit:false, keepList:true});
+  toast(n ? `本页 ${n} 个字记为熟` : "本页的字都已经标过熟了");
+};
+
+/* 手指横划翻页 */
+let stSwipe = null;
+stEl("stSheetWrap").addEventListener("touchstart", (e)=>{
+  if(e.touches.length !== 1) return;
+  stSwipe = {x:e.touches[0].clientX, y:e.touches[0].clientY};
+}, {passive:true});
+stEl("stSheetWrap").addEventListener("touchend", (e)=>{
+  if(!stSwipe) return;
+  const t = e.changedTouches[0];
+  const dx = t.clientX - stSwipe.x, dy = t.clientY - stSwipe.y;
+  stSwipe = null;
+  if(Math.abs(dx) < 46 || Math.abs(dx) < Math.abs(dy)*1.4) return;
+  stPageTurn(dx < 0 ? 1 : -1);
+}, {passive:true});
+
+/* 转屏 / 改窗口：字表这张纸按新方向重排重缩（竖版 8×11、横版 11×8 字数一样） */
+window.addEventListener("resize", ()=>{
+  if(view === "study" && ST_S.mode === "list") stRenderPaper();
 });
 stEl("stAgain").onclick = ()=>{
   const list = ST.today.w.filter(c=>stBook().chars.indexOf(c) >= 0);
@@ -3481,11 +3705,11 @@ stEl("stAgain").onclick = ()=>{
 };
 stEl("stMoreNew").onclick = ()=>{
   const book = stBook();
-  const fresh = book.chars.filter(c=>!ST.rec[c]).slice(0, 5);
-  if(!fresh.length){ toast("这本字书的新字都学完了"); return; }
+  const fresh = book.chars.filter(c=>!stHasRec(c)).slice(0, 5);
+  if(!fresh.length){ toast("识字表里的新字都学完了"); return; }
   stPractice(fresh);
 };
-stEl("stToGrid").onclick = ()=>{ stRenderGrid(); stShowView("list"); };
+stEl("stToGrid").onclick = ()=>{ stShowView("list"); };
 
 /* 录入面板 */
 stEl("stAddBtn").onclick = stOpenAdd;
@@ -3507,6 +3731,17 @@ document.addEventListener("keydown", (e)=>{
   if(stEl("stModal").classList.contains("on")) return;   /* 录字面板开着时别抢键 */
   const tag = (e.target && e.target.tagName) || "";
   if(tag === "INPUT" || tag === "TEXTAREA" || tag === "SELECT") return;
+
+  /* 字表这张纸上：空格 / 3 = 认识，1 = 不认识，← → 翻页 */
+  if(ST_S.mode === "list"){
+    if(e.key === "ArrowLeft"){ e.preventDefault(); stPageTurn(-1); return; }
+    if(e.key === "ArrowRight"){ e.preventDefault(); stPageTurn(1); return; }
+    if(!ST_P.cur) return;
+    if(e.key === "1"){ e.preventDefault(); stJudgeOne(1); }
+    else if(e.key === "3" || e.key === " " || e.key === "Enter"){ e.preventDefault(); stJudgeOne(3); }
+    return;
+  }
+
   if(e.key === " " || e.key === "Enter"){
     e.preventDefault();
     if(ST_S.quick) stRate(3);                    /* 快判：空格就是「认识」 */
