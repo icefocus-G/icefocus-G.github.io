@@ -1,0 +1,1369 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>吴恩达两门课 · 文字精华</title>
+<style>
+  *{margin:0;padding:0;box-sizing:border-box}
+  :root{
+    --bg:#f6f9fb;
+    --surface:#ffffff;
+    --ink:#0f172a;
+    --ink2:#475569;
+    --ink3:#94a3b8;
+    --line:#e4ebf2;
+    --line2:#eef3f8;
+    --teal:#0d9488;
+    --teal-bg:#f0fdfa;
+    --teal-line:#99f6e4;
+    --violet:#7c3aed;
+    --violet-bg:#faf5ff;
+    --violet-line:#ddd6fe;
+    --amber:#d97706;
+    --amber-bg:#fffbeb;
+    --amber-line:#fde68a;
+    --coral:#e11d48;
+    --coral-bg:#fff1f2;
+    --coral-line:#fecdd3;
+    --sky:#0284c7;
+    --sky-bg:#f0f9ff;
+    --radius:14px;
+  }
+  html{scroll-behavior:smooth}
+  body{
+    font-family:-apple-system,BlinkMacSystemFont,"PingFang SC","Hiragino Sans GB","Microsoft YaHei",sans-serif;
+    background:var(--bg);
+    color:var(--ink);
+    line-height:1.75;
+    font-size:15px;
+    -webkit-font-smoothing:antialiased;
+  }
+
+  /* ===== 顶栏 ===== */
+  .topbar{
+    position:fixed;top:0;left:0;right:0;height:58px;z-index:100;
+    background:rgba(255,255,255,.86);
+    backdrop-filter:saturate(180%) blur(14px);
+    -webkit-backdrop-filter:saturate(180%) blur(14px);
+    border-bottom:1px solid var(--line);
+    display:flex;align-items:center;
+    padding:0 22px;gap:16px;
+  }
+  .brand{display:flex;align-items:center;gap:9px;font-weight:700;font-size:15px;letter-spacing:-.2px}
+  .brand-dot{width:9px;height:9px;border-radius:50%;background:linear-gradient(135deg,var(--teal),var(--violet));flex:none}
+  .topnav{display:flex;gap:6px;margin-left:auto}
+  .topnav a{
+    font-size:13px;color:var(--ink2);text-decoration:none;
+    padding:6px 12px;border-radius:8px;font-weight:500;
+    transition:.18s;
+  }
+  .topnav a:hover{background:var(--bg);color:var(--ink)}
+  .topnav a.t1{color:var(--teal);background:var(--teal-bg)}
+  .topnav a.t2{color:var(--violet);background:var(--violet-bg)}
+
+  .progress{position:fixed;top:58px;left:0;height:2px;background:linear-gradient(90deg,var(--teal),var(--violet));z-index:101;width:0;transition:width .1s}
+
+  /* ===== 布局 ===== */
+  .wrap{display:flex;max-width:1240px;margin:0 auto;padding-top:58px}
+
+  .sidebar{
+    width:252px;flex:none;
+    position:sticky;top:58px;height:calc(100vh - 58px);
+    overflow-y:auto;
+    padding:26px 14px 60px 22px;
+    border-right:1px solid var(--line);
+  }
+  .sidebar::-webkit-scrollbar{width:5px}
+  .sidebar::-webkit-scrollbar-thumb{background:#d8e3ec;border-radius:3px}
+
+  .navgroup{margin-bottom:26px}
+  .navgroup-title{
+    font-size:11px;font-weight:700;letter-spacing:.9px;text-transform:uppercase;
+    color:var(--ink3);margin-bottom:9px;display:flex;align-items:center;gap:7px;
+    padding-left:9px;
+  }
+  .navgroup-title span{
+    font-size:10px;padding:1px 6px;border-radius:5px;letter-spacing:0;
+    text-transform:none;font-weight:600;
+  }
+  .g1 .navgroup-title span{background:var(--teal-bg);color:var(--teal);border:1px solid var(--teal-line)}
+  .g2 .navgroup-title span{background:var(--violet-bg);color:var(--violet);border:1px solid var(--violet-line)}
+
+  .sidebar a{
+    display:block;font-size:13.5px;color:var(--ink2);text-decoration:none;
+    padding:5px 10px;border-radius:7px;margin-bottom:1px;
+    border-left:2px solid transparent;transition:.15s;
+  }
+  .sidebar a:hover{background:#fff;color:var(--ink)}
+  .g1 a.active{color:var(--teal);background:var(--teal-bg);border-left-color:var(--teal);font-weight:600}
+  .g2 a.active{color:var(--violet);background:var(--violet-bg);border-left-color:var(--violet);font-weight:600}
+
+  main{flex:1;min-width:0;padding:0 42px 120px;max-width:820px}
+
+  /* ===== 通用排版 ===== */
+  .hero{
+    padding:52px 0 34px;border-bottom:1px solid var(--line);margin-bottom:14px;
+  }
+  .hero h1{
+    font-size:31px;line-height:1.32;letter-spacing:-.6px;font-weight:750;margin-bottom:14px;
+  }
+  .hero p{color:var(--ink2);font-size:15px;max-width:600px}
+  .hero .meta{
+    margin-top:18px;display:flex;gap:8px;flex-wrap:wrap;
+  }
+  .pill{
+    font-size:11.5px;padding:3px 10px;border-radius:20px;font-weight:600;
+    background:#fff;border:1px solid var(--line);color:var(--ink2);
+  }
+
+  h2.course{
+    font-size:13px;font-weight:700;letter-spacing:1.4px;text-transform:uppercase;
+    padding:56px 0 0;margin-bottom:6px;
+  }
+  h2.course.c1{color:var(--teal)}
+  h2.course.c2{color:var(--violet)}
+  .course-sub{
+    font-size:26px;font-weight:730;letter-spacing:-.5px;margin:10px 0 8px;
+  }
+  .course-desc{color:var(--ink2);font-size:14.5px;margin-bottom:26px;padding-bottom:24px;border-bottom:1px solid var(--line)}
+
+  h3{
+    font-size:19px;font-weight:680;letter-spacing:-.3px;
+    margin:44px 0 14px;scroll-margin-top:80px;
+    display:flex;align-items:center;gap:10px;
+  }
+  h3::before{
+    content:'';width:3px;height:17px;border-radius:2px;background:var(--line);
+    flex:none;
+  }
+  #c1 h3::before{background:var(--teal-line)}
+  #c2 h3::before{background:var(--violet-line)}
+  h4{font-size:15.5px;font-weight:660;margin:24px 0 8px;color:var(--ink)}
+  h5{font-size:14px;font-weight:650;margin:18px 0 6px;color:var(--ink2)}
+
+  p{margin-bottom:12px;color:var(--ink2)}
+  p strong,li strong,td strong{color:var(--ink);font-weight:660}
+  em{font-style:normal;background:linear-gradient(transparent 62%,#fde68a 62%);padding:0 1px}
+  ul,ol{margin:0 0 14px 20px;color:var(--ink2)}
+  li{margin-bottom:6px}
+  code{
+    font-family:"SF Mono",ui-monospace,Menlo,Consolas,monospace;
+    font-size:12.8px;background:#f1f5f9;color:#0f766e;
+    padding:1.5px 5px;border-radius:5px;border:1px solid #e6edf4;
+  }
+  a{color:var(--sky)}
+
+  /* ===== 卡片 ===== */
+  .card{
+    background:var(--surface);border:1px solid var(--line);border-radius:var(--radius);
+    padding:20px 22px;margin:16px 0;
+    box-shadow:0 1px 2px rgba(15,23,42,.03);
+  }
+  .card.tip{background:var(--teal-bg);border-color:var(--teal-line)}
+  .card.warn{background:var(--amber-bg);border-color:var(--amber-line)}
+  .card.danger{background:var(--coral-bg);border-color:var(--coral-line)}
+  .card.key{background:var(--violet-bg);border-color:var(--violet-line)}
+  .card-title{
+    font-size:12px;font-weight:700;letter-spacing:.6px;text-transform:uppercase;
+    margin-bottom:8px;display:flex;align-items:center;gap:7px;
+  }
+  .card.tip .card-title{color:var(--teal)}
+  .card.warn .card-title{color:var(--amber)}
+  .card.danger .card-title{color:var(--coral)}
+  .card.key .card-title{color:var(--violet)}
+  .card p:last-child,.card ul:last-child,.card ol:last-child{margin-bottom:0}
+
+  /* ===== 引文 ===== */
+  blockquote{
+    border-left:3px solid var(--line);
+    padding:2px 0 2px 18px;margin:18px 0;
+    color:var(--ink2);font-size:15.5px;line-height:1.7;
+  }
+  blockquote strong{color:var(--ink)}
+
+  /* ===== 表格 ===== */
+  .tbl{overflow-x:auto;margin:16px 0;border:1px solid var(--line);border-radius:11px;background:#fff}
+  table{width:100%;border-collapse:collapse;font-size:13.5px}
+  th{
+    text-align:left;padding:11px 14px;background:#fafcfe;
+    font-weight:650;color:var(--ink);font-size:12.5px;
+    border-bottom:1px solid var(--line);white-space:nowrap;
+  }
+  td{padding:11px 14px;border-bottom:1px solid var(--line2);color:var(--ink2);vertical-align:top}
+  tr:last-child td{border-bottom:none}
+  tbody tr:hover{background:#fbfdff}
+
+  /* ===== 代码 ===== */
+  .codebox{
+    background:#0f172a;border-radius:11px;overflow:hidden;margin:16px 0;
+    border:1px solid #1e293b;
+  }
+  .codehead{
+    display:flex;align-items:center;justify-content:space-between;
+    padding:9px 14px;background:#1a2436;border-bottom:1px solid #263349;
+    font-size:11.5px;color:#8fa6c4;font-family:"SF Mono",ui-monospace,monospace;
+  }
+  .codebox pre{
+    padding:16px 18px;overflow-x:auto;
+    font-family:"SF Mono",ui-monospace,Menlo,Consolas,monospace;
+    font-size:12.6px;line-height:1.72;color:#d6e4f5;
+  }
+  .codebox pre::-webkit-scrollbar{height:6px}
+  .codebox pre::-webkit-scrollbar-thumb{background:#334155;border-radius:3px}
+  .c-kw{color:#c084fc}
+  .c-str{color:#7dd3a0}
+  .c-cm{color:#5c7089;font-style:italic}
+  .c-fn{color:#7dd3fc}
+  .c-ty{color:#fcd34d}
+
+  /* ===== 模板卡（可复制） ===== */
+  .tpl{
+    background:#fff;border:1px solid var(--line);border-radius:12px;
+    margin:14px 0;overflow:hidden;
+  }
+  .tpl-head{
+    display:flex;align-items:center;justify-content:space-between;
+    padding:9px 14px;background:#fafcfe;border-bottom:1px solid var(--line2);
+    font-size:12.5px;font-weight:650;color:var(--ink2);
+  }
+  .copybtn{
+    font-size:11.5px;padding:3px 10px;border-radius:6px;cursor:pointer;
+    border:1px solid var(--line);background:#fff;color:var(--ink2);
+    font-family:inherit;transition:.15s;font-weight:550;
+  }
+  .copybtn:hover{background:var(--teal-bg);border-color:var(--teal-line);color:var(--teal)}
+  .copybtn.done{background:#ecfdf5;border-color:#a7f3d0;color:#059669}
+  .tpl-body{padding:14px 16px;font-size:13.3px;color:var(--ink2);line-height:1.8;white-space:pre-wrap}
+
+  /* ===== 折叠 ===== */
+  details{
+    background:#fff;border:1px solid var(--line);border-radius:11px;
+    margin:12px 0;overflow:hidden;
+  }
+  details summary{
+    padding:13px 18px;cursor:pointer;font-weight:620;font-size:14px;
+    color:var(--ink);list-style:none;display:flex;align-items:center;gap:9px;
+    transition:.15s;
+  }
+  details summary::-webkit-details-marker{display:none}
+  details summary::before{
+    content:'+';font-family:monospace;font-size:15px;color:var(--ink3);
+    width:14px;text-align:center;flex:none;transition:.2s;
+  }
+  details[open] summary::before{content:'–'}
+  details summary:hover{background:#fbfdff}
+  details .inner{padding:0 18px 16px;border-top:1px solid var(--line2);padding-top:14px}
+  details .inner p:last-child{margin-bottom:0}
+
+  /* ===== 步骤条 ===== */
+  .steps{list-style:none;margin:18px 0 18px 0;counter-reset:s}
+  .steps li{
+    position:relative;padding-left:38px;padding-bottom:18px;margin:0;
+    border-left:2px solid var(--line2);margin-left:11px;
+  }
+  .steps li:last-child{border-left-color:transparent;padding-bottom:0}
+  .steps li::before{
+    counter-increment:s;content:counter(s);
+    position:absolute;left:-11px;top:0;
+    width:22px;height:22px;border-radius:50%;
+    background:#fff;border:2px solid var(--line);
+    font-size:11.5px;font-weight:700;color:var(--ink3);
+    display:flex;align-items:center;justify-content:center;
+  }
+  #c1 .steps li::before{border-color:var(--teal-line);color:var(--teal);background:var(--teal-bg)}
+  #c2 .steps li::before{border-color:var(--violet-line);color:var(--violet);background:var(--violet-bg)}
+  .steps li strong{display:block;margin-bottom:2px;color:var(--ink)}
+
+  /* ===== 清单 ===== */
+  .checklist{list-style:none;margin:14px 0}
+  .checklist li{
+    display:flex;gap:10px;align-items:flex-start;
+    padding:8px 12px;border-radius:8px;font-size:13.8px;
+    margin-bottom:3px;transition:.15s;
+  }
+  .checklist li:hover{background:#fafcfe}
+  .checklist li::before{
+    content:'';width:15px;height:15px;border-radius:4px;
+    border:1.5px solid var(--line);flex:none;margin-top:4px;
+  }
+  #c2 .checklist li::before{border-color:#d5c9f5}
+
+  /* ===== 缺口诊断 ===== */
+  .diag{
+    display:grid;grid-template-columns:1fr;gap:12px;margin:18px 0;
+  }
+  .diag-item{
+    border:1px solid var(--line);border-radius:12px;padding:16px 18px;background:#fff;
+    border-left:3px solid var(--line);
+  }
+  .diag-item.hi{border-left-color:var(--coral);background:var(--coral-bg)}
+  .diag-item.mid{border-left-color:var(--amber);background:var(--amber-bg)}
+  .diag-item.ok{border-left-color:var(--teal);background:var(--teal-bg)}
+  .diag-tag{
+    font-size:10.5px;font-weight:700;letter-spacing:.5px;text-transform:uppercase;
+    display:inline-block;padding:1px 7px;border-radius:4px;margin-bottom:7px;
+  }
+  .diag-item.hi .diag-tag{background:#ffe4e6;color:var(--coral)}
+  .diag-item.mid .diag-tag{background:#fef3c7;color:var(--amber)}
+  .diag-item.ok .diag-tag{background:#ccfbf1;color:var(--teal)}
+  .diag-item h5{margin:0 0 5px;font-size:14.5px;color:var(--ink);font-weight:660}
+  .diag-item p{font-size:13.5px;margin-bottom:0}
+
+  /* ===== 谱系图 ===== */
+  .spectrum{
+    display:flex;align-items:stretch;gap:0;margin:20px 0;border:1px solid var(--line);
+    border-radius:12px;overflow:hidden;background:#fff;
+  }
+  .sp-item{
+    flex:1;padding:14px 12px;text-align:center;font-size:12.5px;
+    border-right:1px solid var(--line2);position:relative;
+  }
+  .sp-item:last-child{border-right:none}
+  .sp-item .lvl{font-size:10px;color:var(--ink3);font-weight:700;letter-spacing:.5px;margin-bottom:5px}
+  .sp-item .nm{font-weight:650;color:var(--ink);font-size:13px;margin-bottom:4px}
+  .sp-item .ds{color:var(--ink3);font-size:11.5px;line-height:1.5}
+  .sp-item.a1{background:#fbfdfe}
+  .sp-item.a2{background:#f5fbfb}
+  .sp-item.a3{background:#eefaf9}
+  .sp-item.a4{background:#e2f7f5}
+
+  /* ===== 关系条 ===== */
+  .relbar{
+    display:flex;align-items:center;gap:14px;margin:20px 0;flex-wrap:wrap;
+  }
+  .relnode{
+    flex:1;min-width:150px;padding:16px;border-radius:12px;text-align:center;
+    border:1px solid var(--line);background:#fff;
+  }
+  .relnode .n{font-weight:680;font-size:14.5px;margin-bottom:3px}
+  .relnode .d{font-size:12px;color:var(--ink3)}
+  .relnode.n1{border-color:var(--teal-line);background:var(--teal-bg)}
+  .relnode.n1 .n{color:var(--teal)}
+  .relnode.n2{border-color:var(--violet-line);background:var(--violet-bg)}
+  .relnode.n2 .n{color:var(--violet)}
+  .relarrow{flex:none;color:var(--ink3);font-size:20px;font-weight:300}
+
+  footer{
+    border-top:1px solid var(--line);margin-top:70px;padding-top:24px;
+    font-size:12px;color:var(--ink3);line-height:2;
+  }
+  footer a{color:var(--ink3);text-decoration:none;border-bottom:1px dotted var(--line)}
+  footer a:hover{color:var(--sky)}
+
+  /* ===== 移动端 ===== */
+  @media(max-width:900px){
+    .sidebar{display:none}
+    main{padding:0 20px 80px}
+    .hero{padding:34px 0 26px}
+    .hero h1{font-size:24px}
+    .course-sub{font-size:21px}
+    h3{font-size:17px}
+    .topnav a{font-size:12px;padding:5px 9px}
+    .spectrum{flex-wrap:wrap}
+    .sp-item{flex:1 1 48%;border-bottom:1px solid var(--line2)}
+  }
+  @media(max-width:520px){
+    .topnav{display:none}
+    body{font-size:14.5px}
+  }
+</style>
+</head>
+<body>
+
+<div class="progress" id="prog"></div>
+
+<div class="topbar">
+  <div class="brand"><span class="brand-dot"></span>吴恩达两门课 · 文字精华</div>
+  <nav class="topnav">
+    <a href="#c1" class="t1">Prompting</a>
+    <a href="#c2" class="t2">Agentic AI</a>
+    <a href="#compare">怎么选</a>
+  </nav>
+</div>
+
+<div class="wrap">
+
+  <!-- ================= 侧栏 ================= -->
+  <aside class="sidebar">
+    <div class="navgroup g1">
+      <div class="navgroup-title">第一门 <span>Prompting</span></div>
+      <a href="#p0">核心：从「怎么问」到「怎么合作」</a>
+      <a href="#p1">1 · 查找信息</a>
+      <a href="#p2">2 · 思维伙伴</a>
+      <a href="#p2-1">2.1 Context 上下文</a>
+      <a href="#p2-2">2.2 Sycophancy 讨好</a>
+      <a href="#p2-3">2.3 头脑风暴三步</a>
+      <a href="#p2-4">2.4 写作与去 AI 味</a>
+      <a href="#p2-5">2.5 Reasoning 思考档位</a>
+      <a href="#p2-6">2.6 AI desktop apps</a>
+      <a href="#p2-7">2.7 AI critique 审稿</a>
+      <a href="#p3">3 · 多模态与代码</a>
+      <a href="#p4">4 · 五条原则</a>
+      <a href="#p5">5 · 自检清单</a>
+      <a href="#p6">6 · 你的缺口诊断</a>
+      <a href="#p7">7 · 模板集</a>
+    </div>
+    <div class="navgroup g2">
+      <div class="navgroup-title">第二门 <span>Agentic AI</span></div>
+      <a href="#a0">核心：agentic 是程度，不是开关</a>
+      <a href="#a1">1 · 自主程度谱系</a>
+      <a href="#a1-3">1.3 任务分解</a>
+      <a href="#a2">2 · 四种设计模式</a>
+      <a href="#a3">3 · 反射 Reflection</a>
+      <a href="#a4">4 · 工具使用 Tool Use</a>
+      <a href="#a5">5 · 评估与误差分析</a>
+      <a href="#a5-5">5.5 改什么，按什么顺序</a>
+      <a href="#a5-6">5.6 完整开发流程</a>
+      <a href="#a6">6 · 规划与多智能体</a>
+      <a href="#a7">7 · 换算成 C#</a>
+      <a href="#a8">8 · 学习节奏</a>
+      <a href="#a9">9 · 自检清单</a>
+    </div>
+    <div class="navgroup">
+      <div class="navgroup-title">收尾</div>
+      <a href="#compare">两门课什么关系</a>
+      <a href="#src">出处与链接</a>
+    </div>
+  </aside>
+
+  <!-- ================= 正文 ================= -->
+  <main>
+
+    <div class="hero">
+      <h1>两门课，一条线：<br>从「把话说清楚」到「让它自己跑完」</h1>
+      <p>吴恩达 2026 年的两门课，一门教你怎么和 AI 协作，一门教你怎么把协作变成系统。这里是全部内容的文字版，不用看视频。</p>
+      <div class="meta">
+        <span class="pill">3 模块 · 7h04m</span>
+        <span class="pill">5 模块 · 31 节</span>
+        <span class="pill">整理于 2026-11-24</span>
+      </div>
+    </div>
+
+    <!-- ============================================================ -->
+    <!-- 课程一                                                        -->
+    <!-- ============================================================ -->
+    <div id="c1">
+      <h2 class="course c1">Course 01</h2>
+      <div class="course-sub">AI Prompting for Everyone</div>
+      <div class="course-desc">
+        面向所有人的提示词课。三个模块：查找信息、思维伙伴、多模态与代码。它真正教的不是模板，是判断力——判断这件事该用哪种方式、该给多少信息、该不该让它自己去找。
+      </div>
+
+      <h3 id="p0">核心：从「怎么问」到「怎么合作」</h3>
+
+      <blockquote>
+        2026 年我们用 AI 的方式，跟 2022 年 ChatGPT 刚出来时已经完全不一样了。
+      </blockquote>
+
+      <p>2022 年的玩法是「怎么问」——角色扮演、思维链、魔法咒语。2026 年的玩法是「怎么合作」。</p>
+
+      <p>吴恩达给了一个贯穿全课的心智模型：<strong>AI 是一个极其聪明、积极性很高、但完全不了解你情况的应届毕业生。</strong> 你带这样的新人会怎么做？给清楚的任务、给足背景、给判断标准、允许他反问、事后检查。这套做法就是现在所谓的提示词工程。</p>
+
+      <div class="card tip">
+        <div class="card-title">这一门如果只记一句</div>
+        <p>你给的方向越清楚，它干得越好；你让它挑毛病，它就挑；你让它去查，它就查。<strong>问题是你有没有明确要求。</strong></p>
+      </div>
+
+      <h3 id="p1">1 · 查找信息</h3>
+
+      <h4>1.1 先判断：它脑子里有没有</h4>
+      <p>这一步最多人跳过，但它决定后面所有操作。AI 的知识有两个来源：</p>
+      <ul>
+        <li><strong>预训练知识</strong> —— 训练时「背下来」的，不联网也在，但有截止日期</li>
+        <li><strong>实时信息</strong> —— 必须联网才拿得到</li>
+      </ul>
+      <p>判断方法只有一句：<em>这件事有没有「随时间变化」的属性？</em></p>
+
+      <div class="tbl"><table>
+        <thead><tr><th>问题</th><th>判断</th><th>做法</th></tr></thead>
+        <tbody>
+          <tr><td>光合作用的原理是什么</td><td>不会变</td><td>直接问，别联网</td></tr>
+          <tr><td>昨天的发布会说了什么</td><td>天天变</td><td>必须联网</td></tr>
+          <tr><td>C# 的 async/await 怎么用</td><td>基本不变</td><td>直接问</td></tr>
+          <tr><td>某个库最新版本 API 变了没</td><td>会变</td><td>联网，且指定查官方文档</td></tr>
+        </tbody>
+      </table></div>
+
+      <p><strong>新手和高手的分界线就在这。</strong>新手把所有问题都丢给联网搜索，结果慢、还容易抓到垃圾信息；高手先用一秒判断，该直答就直答。</p>
+
+      <h4>1.2 三种方式的取舍</h4>
+      <div class="tbl"><table>
+        <thead><tr><th>方式</th><th>适用</th><th>速度</th><th>准确度</th></tr></thead>
+        <tbody>
+          <tr><td>模型自带知识</td><td>常识、原理、历史</td><td>最快</td><td>高（有截止日期）</td></tr>
+          <tr><td>Web search</td><td>最新事实、简单核查</td><td>快</td><td>较高</td></tr>
+          <tr><td>Deep research</td><td>复杂问题、需多源交叉验证</td><td>慢</td><td>最高</td></tr>
+        </tbody>
+      </table></div>
+
+      <h4>1.3 Web search 的关键：不是「搜了没」，是「搜了哪」</h4>
+      <p>光打开联网开关不够。不限定来源，AI 会从博客、论坛、内容农场抓东西——看起来有出处，其实是二手转述。</p>
+      <p>三个可操作动作：</p>
+      <ol>
+        <li><strong>指定来源层级</strong>：优先官方文档、政府官网、行业报告，明确排除什么</li>
+        <li><strong>要求附链接</strong>：把结论和出处绑在一起，你才能自己核</li>
+        <li><strong>要求交叉</strong>：让它在立场不同的来源之间对比，而不是自行调和</li>
+      </ol>
+
+      <div class="tpl">
+        <div class="tpl-head">模板 · 带来源的调研<button class="copybtn" data-copy>复制</button></div>
+        <div class="tpl-body">请联网搜索【主题】，优先采用官方文档与权威机构来源，避免博客和论坛。每一条结论后附上具体来源链接。如果不同来源说法冲突，请分别列出，不要自行调和。</div>
+      </div>
+
+      <h4>1.4 Deep research 什么时候用</h4>
+      <p>它不是「更强的搜索」，是<strong>会自己追问自己的搜索</strong>：拿到初步结果后，根据缺口自动发起下一轮查询，多轮之后汇总成报告。</p>
+      <div class="tbl"><table>
+        <thead><tr><th>该用</th><th>不该用</th></tr></thead>
+        <tbody>
+          <tr><td>需要多角度论证的话题</td><td>简单事实核查（浪费额度和时间）</td></tr>
+          <tr><td>信息零散且专业的领域</td><td>你自己都不确定问题边界时</td></tr>
+          <tr><td>你要一份能拿出去的报告</td><td>一句话能答完的问题</td></tr>
+        </tbody>
+      </table></div>
+      <p><strong>判断标准：</strong>答案能写成一页纸以上的结构化内容，用 deep research；一句话能回答，别用。</p>
+
+      <div class="card tip">
+        <div class="card-title">配套练习：同一个 prompt 跑不同模型</div>
+        <p>模块 1 有个练习，做的事很简单：<strong>把同一段 prompt 丢给几个不同模型，对比输出。</strong>这个练习看着朴素，价值在于它让你发现两件事——</p>
+        <p>一是<strong>换模型能带来多大差异</strong>。很多「prompt 没调好」的问题，其实是模型选错了；反过来，有些你以为必须换模型的问题，改 prompt 就能解决。</p>
+        <p>二是<strong>每个模型有不同偏好</strong>。有的偏爱结构化输出，有的偏爱长段落，有的对否定指令（「不要做 X」）服从度差。知道这些偏好，你写 prompt 时会自然适配。<strong>别把那句「用最强的模型」当成解决方案，那是最后手段，不是第一手段。</strong></p>
+      </div>
+
+      <h3 id="p2">2 · 思维伙伴</h3>
+      <p>全课最值钱的部分。前面教你怎么拿到信息，这里教你怎么用它思考。</p>
+
+      <h4 id="p2-1">2.1 Context：它不是肚子里的蛔虫</h4>
+      <p>大多数人给指令像跟老朋友说话——省略大量背景，指望对方能猜。AI 猜不出来，它只会用最通用的方式回答你。</p>
+
+      <p><strong>上下文三要素：</strong></p>
+      <ol>
+        <li><strong>角色</strong> —— 它是谁（资深架构师 / 编辑 / 挑剔的投资人）</li>
+        <li><strong>任务</strong> —— 做什么，产出什么形态</li>
+        <li><strong>约束</strong> —— 字数、格式、受众、风格、不能做什么</li>
+      </ol>
+
+      <div class="card key">
+        <div class="card-title">比任何模板都好用的自检法</div>
+        <p style="font-size:16px;color:var(--ink);font-weight:600;line-height:1.7">「如果我是一个完全不了解背景的陌生人，仅凭我这句话，能把这件事做对吗？」</p>
+        <p style="margin-top:10px">做不对，就说明你缺背景。这一秒就能用，不需要记模板。</p>
+      </div>
+
+      <h4 id="p2-2">2.2 Sycophancy：最大的问题不是出错，是讨好你</h4>
+      <p>Sycophancy（迎合讨好）指模型天生倾向于同意你、肯定你、顺着你的方向说，<strong>即使你的前提是错的</strong>。</p>
+      <p>你问「这个方案好不好」，它大概率说「很好」——不是它判断过，是它在配合你。这对你毫无价值。</p>
+
+      <h5>四种破解方式，强度递增</h5>
+      <ol>
+        <li><strong>明确要求批评</strong>：「请指出至少三个问题，不要客气。」</li>
+        <li><strong>切断礼貌压力</strong>：「不要为了让我舒服而妥协，我需要真实的判断。」</li>
+        <li><strong>设定对立角色</strong>：「你现在是一个极其挑剔的投资人，请从成本角度最严厉地批判这个方案。」</li>
+        <li><strong>改造提问方式</strong> —— 最根本的一条：<em>不要让问题里带答案</em></li>
+      </ol>
+
+      <div class="tbl"><table>
+        <thead><tr><th>引导性提问（只会得到附和）</th><th>中立提问（能得到信息）</th></tr></thead>
+        <tbody>
+          <tr><td>这个方案是不是有问题？</td><td>这个方案最大的风险在哪？</td></tr>
+          <tr><td>我觉得 A 更好，你觉得呢？</td><td>客观对比 A 和 B，指出各自致命缺陷</td></tr>
+          <tr><td>这个模型是不是被阉割了？</td><td>有哪些可验证的指标能区分完整版和降级版？</td></tr>
+          <tr><td>我这个想法能成吗？</td><td>这个想法在什么条件下会失败？</td></tr>
+        </tbody>
+      </table></div>
+
+      <div class="card danger">
+        <div class="card-title">最后一行是真会发生的事</div>
+        <p>你带着结论去问，它就会把结论还给你。问「是不是被阉割了」，它会顺着说「是的，确实有阉割」。要拿到真实答案，得把问题改成中立的、可验证的形式。</p>
+      </div>
+
+      <h4 id="p2-3">2.3 头脑风暴：第三步才是重点</h4>
+      <p>大多数人用 AI 想点子是这样的：给主题 → 让它吐 10 个 → 挑一个。这是最低效的用法。</p>
+
+      <ol class="steps">
+        <li><strong>先发散，而且要显式要求「半疯狂的选项」</strong>「其中 5 个常规，另外 5 个必须大胆甚至有点疯，不用考虑可行性。」—— 这一句会明显拉开差距，因为模型默认倾向于给「安全」的答案。</li>
+        <li><strong>选方向深入</strong>「我对第 3 个方向感兴趣，沿这个方向再给 3 个具体方案。」</li>
+        <li><strong>让它挑刺</strong>「这几个方案最大的风险是什么？有没有我没考虑到的问题？」</li>
+      </ol>
+
+      <p><strong>第三步最容易被跳过，也最值钱。</strong>前两步给你素材，第三步才帮你筛掉错误。</p>
+
+      <h4 id="p2-4">2.4 写作：先搭骨架，再填血肉</h4>
+      <p><strong>为什么必须先出大纲</strong>：直接让 AI 写整篇，你之后改一个地方，其他地方不会联动。先生成大纲，你调的是结构——改一处，整个框架跟着动。</p>
+
+      <div class="codebox">
+        <div class="codehead"><span>工作流</span><span>writing flow</span></div>
+        <pre><span class="c-cm">// 顺序不能乱，第二步必须你自己做</span>
+给上下文（角色 / 受众 / 论点）
+  → 让它出大纲
+  → <span class="c-fn">你调结构</span>        <span class="c-cm">// 这一步 AI 替不了</span>
+  → 按大纲逐段展开
+  → 让它扮苛刻编辑提反馈
+  → 去 AI 味润色</pre>
+      </div>
+
+      <h5>AI 文本的四个明显特征</h5>
+      <ul>
+        <li>爱用大词：<code>delve</code>、<code>nuanced</code>、<code>robust</code>、<code>comprehensive</code> 出现频率异常高</li>
+        <li>排比三连：「A、B 和 C」这种三件套句式</li>
+        <li>形容词堆叠：<code>highly insightful</code>、<code>robustly structured</code></li>
+        <li>固定句式：「不是 X，而是 Y」</li>
+      </ul>
+
+      <h5>去 AI 味的四个方法</h5>
+      <ul>
+        <li>给它一个「声音」：给几段你自己写的样本，让它学你的句式</li>
+        <li>先让它写，你改语气，再让它润色（不要直接用第一版）</li>
+        <li>加主观视角：用「我最近发现……」这种口吻</li>
+        <li><strong>反过来用</strong>：让它识别自己写的文本里有哪些 AI 特征，然后针对性删</li>
+      </ul>
+
+      <blockquote>AI 是草稿助手，不是最终输出。</blockquote>
+
+      <h4 id="p2-5">2.5 Reasoning：什么时候该让它想久一点</h4>
+      <p>现在的模型普遍有「思考档位」——低、中、高，有些还有更高的一档。这个开关不该一直开着，也不该一直关着。</p>
+
+      <p><strong>核心判断只有一句：这题换成人来做，需不需要坐下来想十分钟？</strong></p>
+
+      <div class="tbl"><table>
+        <thead><tr><th>该让它多想</th><th>别让它多想</th></tr></thead>
+        <tbody>
+          <tr><td>多约束权衡（预算、时间、偏好互相冲突）</td><td>格式转换、翻译、改写</td></tr>
+          <tr><td>重要且不可逆的决定</td><td>简单事实查询</td></tr>
+          <tr><td>题目里埋了陷阱，需要先识破</td><td>批量处理同一类任务</td></tr>
+          <tr><td>需要先算再答，算错代价高</td><td>创意发散（想太久反而收敛）</td></tr>
+        </tbody>
+      </table></div>
+
+      <div class="card warn">
+        <div class="card-title">两个反直觉的点</div>
+        <p><strong>思考不是越久越好。</strong>在创意发散和格式规整这两类任务上，高思考档位反而容易绕远——它会给你一个更「周全」但更平庸的结果。</p>
+        <p><strong>思考也计费。</strong>思考用的 token 通常按输出计，所以高档位的成本可能是低档位的好几倍，延迟也明显更长。这不是免费的推理能力。</p>
+      </div>
+
+      <h4 id="p2-6">2.6 AI desktop apps：让它直接读你的文件</h4>
+      <p>桌面端的 AI 应用和网页版最大的区别，不是界面，是<strong>它能碰到你本地的文件</strong>。你不需要把代码复制粘贴进去，直接把目录指给它。</p>
+
+      <p>这个能力对你特别直接：<strong>让 AI 桌面端读你的 Unity 工程目录</strong>，它能同时看到 <code>Assets/Scripts</code> 的脚本、<code>ProjectSettings</code> 的配置、<code>Packages/manifest.json</code> 的依赖，然后回答「这个项目用了什么渲染管线」「这个报错可能跟哪个设置有关」这类问题。这些答案靠粘贴代码是拿不到的，因为它需要跨文件看关系。</p>
+
+      <div class="card tip">
+        <div class="card-title">一个额外的好处</div>
+        <p>给了目录之后，AI 生成的代码会自然地贴合你项目的命名习惯和现有结构，而不是给你一套「教科书式」的写法。<strong>上下文不只是数量问题，也是「贴着你的实际情况」的问题。</strong></p>
+      </div>
+
+      <p style="color:var(--ink3);font-size:13.5px">注意权限：桌面端读本地文件意味着它能读到你不希望它读的东西。只授权具体目录，不要授权整个用户目录。</p>
+
+      <h4 id="p2-7">2.7 AI critique：让它当审稿人</h4>
+      <p>这是一节独立的内容，因为它和 2.2 的 Sycophancy 是同一件事的两面：<strong>2.2 讲它为什么不说真话，这里讲怎么让它说真话并有用。</strong></p>
+
+      <p>多数人让它「看看这段写得怎么样」，拿回的是「结构清晰、表达流畅、可以考虑补充一些例子」——这不是批评，这是礼貌。</p>
+
+      <h5>让它审得有用的四个条件</h5>
+      <ol>
+        <li><strong>先给标准，再让它审</strong>。不给标准，它按通用标准评，结论必然是空话。标准可以是：这段要说服谁、最重要的三个信息是什么、字数限制多少。</li>
+        <li><strong>要求分级</strong>。「按致命 / 重要 / 可选三档列出问题」，这样你才知道哪些必须改。</li>
+        <li><strong>要求给修改方案，而不只是指出问题</strong>。「每条问题后面附一个具体的改法」，否则你还是不知道该怎么做。</li>
+        <li><strong>改完再审一轮</strong>。第一次批评往往只抓到表层，改完再让它看，能挖出更深的问题。</li>
+      </ol>
+
+      <div class="card key">
+        <div class="card-title">为什么这一节对你最重要</div>
+        <p>这个能力可以直接迁移到<strong>审查代码</strong>。它比「让 AI 写代码」更有价值——写出来的东西你得看得出来对不对，而「看得出来」正是最缺、也最难补的一环。审稿的能力，和审代码的能力，是同一套东西：<strong>给定标准、分级、要改法、多轮。</strong></p>
+      </div>
+
+      <div class="tpl">
+        <div class="tpl-head">模板 · 结构化审稿<button class="copybtn" data-copy>复制</button></div>
+        <div class="tpl-body">请按以下标准审查下面的内容：
+1) 目标读者是【谁】；
+2) 必须传达的三个信息是【什么】；
+3) 篇幅限制【多少】。
+
+按「致命 / 重要 / 可选」三档列出问题，每档标出具体位置。每条问题后面附一个具体的修改方案，不要只指出问题。如果某处其实没问题，也请说明为什么，不要为了凑数而挑毛病。
+
+【内容】</div>
+      </div>
+
+      <h3 id="p3">3 · 多模态与代码</h3>
+
+      <h4>3.0 「多媒体」到底包括什么</h4>
+      <p>课程这里的范围比很多人想的宽：<strong>图片、PDF、截图、表格、文档、音频</strong>，都能作为输入的一部分。关键不在于它能读什么，而在于<strong>这些都占上下文额度</strong>。</p>
+
+      <div class="card warn">
+        <div class="card-title">最容易被忽略的约束</div>
+        <p>一张高分辨率图片消耗的额度，可能相当于几千个字。所以「一次塞十张图」往往不是模型读不懂，是<strong>额度被图吃光了，它没空间思考</strong>。表现出来就是：回答很浅、漏掉你明确说过的要求、或者干脆忘了前面聊的内容。</p>
+        <p>遇到这种情况，先减图或降分辨率，而不是怀疑模型能力。</p>
+      </div>
+
+      <h4>3.1 看图：三个层次</h4>
+      <div class="tbl"><table>
+        <thead><tr><th>层次</th><th>做法</th></tr></thead>
+        <tbody>
+          <tr><td>基础</td><td>读图里的文字（截图转表格、笔记转 Markdown）</td></tr>
+          <tr><td>进阶</td><td>基于图给建议（这张装修图怎么提升空间利用率）</td></tr>
+          <tr><td>高手</td><td>图 + 文字一起给，拼出完整上下文（这是报错截图，结合我刚才的操作步骤判断原因）</td></tr>
+        </tbody>
+      </table></div>
+
+      <div class="card warn">
+        <div class="card-title">两个容易忽略的限制</div>
+        <p><strong>细节会被漏掉。</strong>图越复杂，AI 越可能忽略角落里的东西。重要细节要在文字里点出来。</p>
+        <p><strong>多图比单图准。</strong>给正面、侧面、细节三张，比给一张全景效果好得多。</p>
+      </div>
+
+      <h4>3.2 生图：描述越具体越接近</h4>
+      <div class="codebox">
+        <div class="codehead"><span>三层递进</span></div>
+        <pre><span class="c-cm">L1</span> 画一只猫                          <span class="c-cm">→ 普通</span>
+<span class="c-cm">L2</span> 橘猫坐在窗台，侧光，水彩，暖色调      <span class="c-cm">→ 有氛围</span>
+<span class="c-cm">L3</span> ……画面要让人联想到周日下午的慵懒感   <span class="c-cm">→ 有情绪</span></pre>
+      </div>
+      <p>核心只有一条：<strong>具体到「光线、材质、风格、情绪」，而不是只描述物体。</strong></p>
+
+      <h4>3.3 数据分析：不用写 Python，但要说清业务问题</h4>
+      <p>把 CSV 丢进去，让它理解字段、做探索、出图、给推断。门槛不在代码，在于你<strong>能不能把业务问题描述清楚</strong>。</p>
+      <div class="card tip">
+        <div class="card-title">必须养成的习惯</div>
+        <p>让它把计算用的代码展示出来并解释。理由有两条：你能验证它算得对不对，也能跟着看懂处理逻辑。<strong>不展示代码的分析结果，不要直接拿去用。</strong></p>
+      </div>
+
+      <h4>3.4 零代码建东西：说清三件事</h4>
+      <p>不用会编程也能做出网页、小游戏、小工具。关键在于把需求拆成三句：</p>
+      <div class="spectrum">
+        <div class="sp-item a1"><div class="lvl">WHAT</div><div class="nm">有什么</div><div class="ds">元素清单</div></div>
+        <div class="sp-item a2"><div class="lvl">LOOK</div><div class="nm">长什么样</div><div class="ds">视觉与布局</div></div>
+        <div class="sp-item a3"><div class="lvl">ACT</div><div class="nm">点完发生什么</div><div class="ds">行为与反馈</div></div>
+      </div>
+
+      <div class="tpl">
+        <div class="tpl-head">模板 · 零代码建原型<button class="copybtn" data-copy>复制</button></div>
+        <div class="tpl-body">做一个网页版番茄钟：25 分钟倒计时，界面简洁深色主题。开始/暂停按钮在下方，结束后有声音提醒，另加一个设置按钮可以自定义时长。请给完整的 HTML/CSS/JS，并说明每一部分在做什么。</div>
+      </div>
+
+      <p>然后就是迭代：改颜色 → 加功能 → 调布局。<strong>你的角色是产品经理，不是程序员。</strong></p>
+      <p style="color:var(--ink3);font-size:13.5px">→ 这一节你会 C#，价值有限。但「三句话描述清楚需求」这个框架，在让 AI 写 Unity 脚本时照样适用。</p>
+
+      <div class="card">
+        <div class="card-title" style="color:var(--ink2)">三个模块各配一个动手练习</div>
+        <p>这门课的作业不多，但每一个都指向一个具体能力。想省时间的话，只看这三件事要你做什么：</p>
+        <div class="tbl" style="margin:10px 0 0"><table>
+          <thead><tr><th>模块</th><th>练习内容</th><th>它想让你获得什么</th></tr></thead>
+          <tbody>
+            <tr>
+              <td>1</td>
+              <td>把同一段 prompt 丢给几个不同模型，对比输出差异</td>
+              <td>知道「换模型」能改变多少，以及各家的偏好</td>
+            </tr>
+            <tr>
+              <td>2</td>
+              <td>用 AI 做一轮头脑风暴，再让它以审稿人身份批评结果，然后改一版</td>
+              <td>体会「发散 → 挑刺 → 修订」这个循环，而不是只做第一步</td>
+            </tr>
+            <tr>
+              <td>3</td>
+              <td>用纯文字描述做出一个小应用，并迭代几轮</td>
+              <td>知道「描述需求」和「改需求」是两件不同的事</td>
+            </tr>
+          </tbody>
+        </table></div>
+      </div>
+
+      <h3 id="p4">4 · 五条原则：2022 vs 2026</h3>
+      <div class="tbl"><table>
+        <thead><tr><th>#</th><th>原则</th><th>2022 的做法</th><th>2026 的做法</th></tr></thead>
+        <tbody>
+          <tr><td>1</td><td>知道它知道什么</td><td>所有信息都塞进去</td><td>先判断它是否已有，再决定搜不搜</td></tr>
+          <tr><td>2</td><td>给足上下文</td><td>一句话指令</td><td>角色 + 任务 + 约束 + 示例</td></tr>
+          <tr><td>3</td><td>迭代</td><td>问一次就结束</td><td>问 → 看 → 追问 → 改 → 再问</td></tr>
+          <tr><td>4</td><td>让它说真话</td><td>它说什么信什么</td><td>明确要求反对意见和批评</td></tr>
+          <tr><td>5</td><td>它是助手</td><td>全权交给它</td><td>它出初稿，你把关</td></tr>
+        </tbody>
+      </table></div>
+
+      <h3 id="p5">5 · 自检清单</h3>
+      <p>每次用 AI 前过一遍，九条，三十秒。</p>
+      <ul class="checklist">
+        <li>我要的东西说清楚了吗？产出形态是什么？</li>
+        <li>这件事它脑子里有吗？还是必须联网？</li>
+        <li>要联网的话，我说了优先查哪些来源、要附链接吗？</li>
+        <li>背景给够了吗？（用「陌生人测试」验一遍）</li>
+        <li>输出格式说了吗？（字数、结构、风格、受众）</li>
+        <li>我有没有让它提反对意见？</li>
+        <li>我的提问里是不是已经暗示了答案？</li>
+        <li>结果我自己核过了吗？（尤其是数字和引用）</li>
+        <li>这是草稿还是终稿？我改过吗？</li>
+      </ul>
+
+      <h3 id="p6">6 · 你的缺口诊断</h3>
+      <p style="color:var(--ink3);font-size:13.5px">这段不是课程内容，是按你在对话里的实际提问方式推的。不准就忽略。</p>
+
+      <div class="diag">
+        <div class="diag-item hi">
+          <span class="diag-tag">最大缺口</span>
+          <h5>Context —— 给的信息太短</h5>
+          <p>「地址」「哪些是适合我的」「这 2 门有什么区别」——这种问法在人跟人之间没问题，因为对方会追问；但 AI 不会追问，它按最通用的假设补空，于是给你「正确但不对味」的答案。<br><strong>补法：</strong>用陌生人测试。问之前想一秒——完全不了解我的人，看到这句话能答对吗？</p>
+        </div>
+
+        <div class="diag-item hi">
+          <span class="diag-tag">最大缺口</span>
+          <h5>Sycophancy —— 问题里带了结论</h5>
+          <p>问「V4.1-Flash 是不是阉割版」，问题里已经写了「阉割」这个结论。这种问法下任何模型都会顺着说「是的」。<br><strong>补法：</strong>改成验证型——「有哪些可测量的差异能区分完整版和降级版？」</p>
+        </div>
+
+        <div class="diag-item mid">
+          <span class="diag-tag">中等缺口 · 约 20 分钟</span>
+          <h5>搜索纪律 + 让 AI 挑刺</h5>
+          <p>你大概有联网搜索的习惯，但未必有「指定权威来源、要求可核」的纪律；头脑风暴的第三步（让它挑刺）大概率跳过了。这两个加起来二十分钟能改过来。</p>
+        </div>
+
+        <div class="diag-item ok">
+          <span class="diag-tag">可以完全跳过</span>
+          <h5>模块 3 的零代码建站 / 模块 1 的基础概念</h5>
+          <p>你会 C#，不需要「用嘴说话做网站」；预训练知识和联网的区别你显然清楚。</p>
+        </div>
+
+        <div class="diag-item mid">
+          <span class="diag-tag">对你有额外价值</span>
+          <h5>2.4 的 AI critique —— 让它当代码审稿人</h5>
+          <p>这个能力可以直接迁移到审查你写的 Unity C# 代码。比让它写代码更有价值——它写的东西你得看得出来对不对，而「看得出来」正是你现在最缺的一环。</p>
+        </div>
+      </div>
+
+      <h3 id="p7">7 · 模板集</h3>
+
+      <div class="tpl">
+        <div class="tpl-head">带来源的调研<button class="copybtn" data-copy>复制</button></div>
+        <div class="tpl-body">请联网搜索【主题】，优先官方文档和权威机构，排除博客论坛。每条结论附来源链接，来源冲突时分别列出，不要自行调和。</div>
+      </div>
+
+      <div class="tpl">
+        <div class="tpl-head">深度需求描述<button class="copybtn" data-copy>复制</button></div>
+        <div class="tpl-body">我是【角色/处境】，要做【具体任务】，产出给【受众】看。要求：【格式/字数/风格】。不要做【明确排除的事】。</div>
+      </div>
+
+      <div class="tpl">
+        <div class="tpl-head">反向批判<button class="copybtn" data-copy>复制</button></div>
+        <div class="tpl-body">请扮演【苛刻的对立角色】，针对下面这份内容给出最严厉的批评，至少三点，不要顾及我的感受。【内容】</div>
+      </div>
+
+      <div class="tpl">
+        <div class="tpl-head">中立化改写（问之前先做这一步）<button class="copybtn" data-copy>复制</button></div>
+        <div class="tpl-body">我这个提问里有没有暗示某个答案？如果有，请帮我改写成中立、可验证的形式，然后回答改写后的问题。</div>
+      </div>
+
+      <div class="tpl">
+        <div class="tpl-head">代码审查（Unity C#）<button class="copybtn" data-copy>复制</button></div>
+        <div class="tpl-body">下面这段 C# 代码要【实现什么目的】。请找出：1) 逻辑错误 2) 未处理的边界情况 3) 性能问题 4) 与 Unity 生命周期相关的隐患。按严重程度排序，每条给出具体行号和修改建议。【代码】</div>
+      </div>
+    </div>
+
+    <!-- ============================================================ -->
+    <!-- 课程二                                                        -->
+    <!-- ============================================================ -->
+    <div id="c2">
+      <h2 class="course c2">Course 02</h2>
+      <div class="course-sub">Agentic AI</div>
+      <div class="course-desc">
+        从「一次问答」走向「多步执行」。五个模块、31 节：先讲清楚什么叫 agentic，再拆四种设计模式，最后用大段时间讲评估——这部分是大多数教程根本不提的。
+      </div>
+
+      <h3 id="a0">核心：agentic 是程度，不是开关</h3>
+
+      <p>这门课开场就纠正了一个常见的错误争论：<strong>「这是不是一个真正的 Agent？」这个问题本身问错了。</strong></p>
+
+      <p>吴恩达的观点是：应该看的是系统在多大程度上是 agentic 的——AI 能自主规划、使用工具、迭代改进到什么程度。这个视角一转，讨论就从「是不是」变成了「有多少」，也就能比较了。</p>
+
+      <div class="card key">
+        <div class="card-title">为什么这个区分重要</div>
+        <p>如果你以为 agent 是个二元状态，就会陷入「我的项目算不算 agent 项目」这种没有产出的纠结。如果你把它看成一条谱系，问题就变成「我这一步该交给它多少自主权」——这是可以设计、可以调的。</p>
+      </div>
+
+      <h3 id="a1">1 · 自主程度谱系</h3>
+
+      <div class="spectrum">
+        <div class="sp-item a1"><div class="lvl">L0</div><div class="nm">单次生成</div><div class="ds">一问一答，不给修改机会</div></div>
+        <div class="sp-item a2"><div class="lvl">L1</div><div class="nm">固定流程</div><div class="ds">步骤写死，模型只填空</div></div>
+        <div class="sp-item a3"><div class="lvl">L2</div><div class="nm">自评循环</div><div class="ds">生成后自己检查再改</div></div>
+        <div class="sp-item a4"><div class="lvl">L3</div><div class="nm">自主编排</div><div class="ds">自己决定用什么工具、走几步</div></div>
+      </div>
+
+      <p>课程里用写作来对比这件事，非常直观：</p>
+
+      <div class="codebox">
+        <div class="codehead"><span>同一个任务，两种做法</span></div>
+        <pre><span class="c-cm">// 非 agentic：一次成型，不许回头</span>
+"写一篇关于 X 的文章，从头到尾一次写完，不许用退格键。"
+        <span class="c-cm">↓ 结果：结构经常崩，越写越偏</span>
+
+<span class="c-cm">// agentic：允许中间停下来判断</span>
+写大纲 → <span class="c-fn">我需不需要查资料？</span> → 写初稿
+     → <span class="c-fn">哪几段要改？</span> → 修订
+     → <span class="c-fn">够了吗？</span> → 交付</pre>
+      </div>
+
+      <p><strong>差别的本质不是模型更强，是允许它中途做判断。</strong>这也是为什么 agentic 系统在长任务上明显占优——长任务必然出错，区别在于出错了有没有机会改。</p>
+
+      <h4>1.1 它擅长什么，不擅长什么</h4>
+
+      <div class="tbl"><table>
+        <thead><tr><th>优势</th><th>原因</th></tr></thead>
+        <tbody>
+          <tr><td>长任务质量更高</td><td>中间可以停下来检查，错误不会一路累积</td></tr>
+          <tr><td>能处理「步骤数事先不确定」的任务</td><td>可以根据中间结果决定要不要多走一步</td></tr>
+          <tr><td>错误可以局部修复</td><td>知道哪一步坏了，只重跑那一步，不用整体重来</td></tr>
+          <tr><td>能接外部系统</td><td>通过工具拿到模型权重里没有的信息</td></tr>
+        </tbody>
+      </table></div>
+
+      <div class="card warn">
+        <div class="card-title">代价是真实的，不是理论上的</div>
+        <p><strong>延迟成倍增加</strong>——每一步都要等一次模型响应。<strong>成本成倍增加</strong>——步数乘 token。最麻烦的是<strong>调试变难</strong>：单次问答错了你能看输入输出，多步系统错了你要先定位是哪一步。</p>
+        <p>所以判断标准不是「agentic 更先进」，而是<strong>这个任务的复杂度是否真的需要它</strong>。一个问题一句话能答的事，套上 agent 只会更慢更贵，还更不稳。</p>
+      </div>
+
+      <h4>1.2 典型应用场景</h4>
+      <p>课程列举的场景有个共同特征：<strong>答案不在模型权重里，且需要多步才能拿到。</strong></p>
+      <ul>
+        <li><strong>客户支持</strong>：查订单 → 判断政策 → 决定是否退款 → 回复。每步依赖上一步结果</li>
+        <li><strong>编码</strong>：读代码 → 定位问题 → 改 → 跑测试 → 根据失败信息再改</li>
+        <li><strong>深度研究</strong>：初步检索 → 发现缺口 → 补检索 → 交叉验证 → 成稿</li>
+        <li><strong>数据分析</strong>：理解字段 → 探索 → 发现异常 → 追查原因 → 出图</li>
+      </ul>
+      <p>反过来说，<strong>单步、答案明确、不需要外部信息的任务，不该做成 agent</strong>。这是最常被违背的一条。</p>
+
+      <h4 id="a1-3">1.3 任务分解：设计的起手式</h4>
+      <p>课程里有一节专门讲这个，位置在四种模式之前——因为它确实是设计的第一步：<strong>你还没有模式可选的时候，先得知道任务由哪几步组成。</strong></p>
+
+      <ol class="steps">
+        <li><strong>写成一个步骤序列</strong>按「一个熟练的人会怎么做」写下来，别按「模型应该怎么做」写。人对流程的理解通常比模型可靠。</li>
+        <li><strong>标出最容易出错的那一步</strong>不用平均用力。一个五步流程里，通常只有一两步是真难点，其余是搬运。</li>
+        <li><strong>对那一步加防护</strong>这一步才轮到用模式：需要重看 → 反射；需要外部信息 → 工具；步骤不确定 → 规划。</li>
+        <li><strong>其余步骤尽量写死</strong>能固定流程的不要交给模型判断，固定流程更便宜也更稳。</li>
+      </ol>
+
+      <div class="card key">
+        <div class="card-title">分解粒度：太粗没用，太细会炸</div>
+        <p><strong>太粗</strong>——「分析这份数据然后给建议」，模型不知道从哪下手，每步都可能跑偏。<br>
+        <strong>太细</strong>——把「读文件」拆成「打开句柄 / 逐行读 / 关闭句柄」，token 成本翻十倍，收益为零。<br>
+        <strong>合适的粒度</strong>：每一步都是一个「可以独立判断对错」的单元。如果某一步你没法说它做对了还是做错了，说明拆得不够；如果某一步你要写三段话才能描述清楚，说明该合并。</p>
+      </div>
+
+      <h3 id="a2">2 · 四种设计模式</h3>
+      <p>整门课的骨架就是这四个。它们不是四个技术，是四种<strong>组织循环的方式</strong>。</p>
+
+      <div class="tbl"><table>
+        <thead><tr><th>模式</th><th>解决什么问题</th><th>什么时候用</th><th>代价</th></tr></thead>
+        <tbody>
+          <tr>
+            <td><strong>Reflection</strong><br>反射</td>
+            <td>一次生成的输出质量不够</td>
+            <td>有明确质量标准、能判断好坏的任务</td>
+            <td>token 翻倍，延迟翻倍</td>
+          </tr>
+          <tr>
+            <td><strong>Tool Use</strong><br>工具使用</td>
+            <td>模型需要读数据、执行动作</td>
+            <td>答案不在权重里，在外部系统里</td>
+            <td>要处理工具报错、参数幻觉</td>
+          </tr>
+          <tr>
+            <td><strong>Planning</strong><br>规划</td>
+            <td>任务太长，一步做不完</td>
+            <td>步骤数量事先不确定</td>
+            <td>计划本身可能错，要能推翻重来</td>
+          </tr>
+          <tr>
+            <td><strong>Multi-Agent</strong><br>多智能体</td>
+            <td>单上下文装不下，或需要不同角色</td>
+            <td>子任务之间可以并行或分工</td>
+            <td>通信开销大，调试困难</td>
+          </tr>
+        </tbody>
+      </table></div>
+
+      <div class="card warn">
+        <div class="card-title">一个常见误用</div>
+        <p>这四个模式是「当问题出现时才用」，不是「架构上先铺好」。很多项目一上手就搭多智能体，结果发现单 agent 加个好工具就够了。<strong>复杂度是最后才加的东西，不是起点。</strong></p>
+      </div>
+
+      <h3 id="a3">3 · 反射 Reflection</h3>
+
+      <h4>3.1 它为什么有效</h4>
+      <p>一次生成时，模型没有机会看到自己的输出。它写的时候不知道后面会写成什么样，所以结构性问题会一路累积。</p>
+      <p>反射把这个过程拆成两段：<strong>先产出，再以「读者」身份重看一遍</strong>。模型在第二次看的时候，能发现第一次写的时候发现不了的问题——这不是玄学，是因为上下文变了。</p>
+
+      <h4>3.2 关键是「反馈从哪来」</h4>
+      <p>这一点课程里讲得很实在，也是最多人做错的地方。反馈有三种来源，可靠性完全不同：</p>
+
+      <div class="tbl"><table>
+        <thead><tr><th>反馈来源</th><th>可靠性</th><th>说明</th></tr></thead>
+        <tbody>
+          <tr><td>模型自评</td><td>低</td><td>同一个模型审自己，容易自我肯定</td></tr>
+          <tr><td>另一个模型 / 角色审</td><td>中</td><td>换了视角，但仍可能迎合</td></tr>
+          <tr><td><strong>外部确定性信号</strong></td><td><strong>高</strong></td><td>编译器报错、单元测试结果、代码执行输出、schema 校验</td></tr>
+        </tbody>
+      </table></div>
+
+      <div class="card key">
+        <div class="card-title">这一节最该记住的一句话</div>
+        <p>能拿到确定性反馈时，<strong>永远优先用确定性反馈</strong>。代码能编译就是能编译，测试过了就是过了，这些不需要模型判断。反射模式真正的威力在于「把确定性信号接进循环」，而不是「让模型自己反省」。</p>
+      </div>
+
+      <h4>3.3 怎么验证反射有用</h4>
+      <p>课程在这里做了一个很关键的示范：<strong>不能凭感觉说「加了反射之后变好了」</strong>。要用同一组测试输入，跑两种配置，对比分数。</p>
+      <p>这一点跟模块 4 的评估是连着的——如果没有评估能力，你根本不知道反射是在提升质量，还是只是在增加 token 消耗。</p>
+
+      <h4>3.4 示意图：图表生成工作流</h4>
+      <p>课程用一个「生成图表代码」的例子演示：模型生成绘图代码 → 执行 → 拿到报错或图形 → 根据结果修正。这是反射 + 工具执行的组合，也是最能说明「确定性反馈」价值的例子——代码跑不跑得起来，是机器判断的，不是模型说的。</p>
+
+      <h3 id="a4">4 · 工具使用 Tool Use</h3>
+
+      <h4>4.1 工具是什么</h4>
+      <p>一个工具 = 一个函数 + 一段描述。<strong>描述的质量直接决定调用准确率</strong>，这一点被严重低估。</p>
+      <p>模型看不到你的代码实现，它只能看描述来决定「该不该调、传什么参数」。描述写得含糊，它就会乱调或者不调。</p>
+
+      <div class="card tip">
+        <div class="card-title">写好工具描述的三条</div>
+        <p><strong>1. 说清「什么时候用」</strong>，不只是「这个函数做什么」。<br>
+        <strong>2. 参数要写边界</strong>：格式、取值范围、必填还是有默认值。<br>
+        <strong>3. 明确失败行为</strong>：出错返回什么，让模型知道该怎么处理。</p>
+      </div>
+
+      <h4>4.2 工具语法：参数怎么定义</h4>
+      <p>工具定义里有两套信息，分工不同，混在一起就会出问题：</p>
+      <ul>
+        <li><strong>描述（description）</strong> —— 给模型看的，决定「该不该调这个工具」</li>
+        <li><strong>参数结构（schema）</strong> —— 给模型看的，决定「怎么传参」，同时也是运行时校验依据</li>
+      </ul>
+
+      <div class="tbl"><table>
+        <thead><tr><th>要素</th><th>该写清什么</th><th>不写的后果</th></tr></thead>
+        <tbody>
+          <tr><td>类型</td><td>string / number / bool / 数组 / 对象</td><td>传成字符串 <code>"10"</code> 而不是数字 <code>10</code>，直接报错</td></tr>
+          <tr><td>必填与否</td><td>哪些必须给，哪些有默认值</td><td>漏传必填项，或该用默认值时乱填</td></tr>
+          <tr><td>取值范围</td><td>枚举值、上下限、格式（如日期、路径）</td><td>传了非法值，工具端才炸</td></tr>
+          <tr><td>嵌套结构</td><td>对象里有哪些字段</td><td>层级搞错，参数结构对不上</td></tr>
+        </tbody>
+      </table></div>
+
+      <div class="card tip">
+        <div class="card-title">一个实用原则</div>
+        <p><strong>能让 schema 约束的，别靠描述去说。</strong>「参数必须是 low/medium/high 之一」这句话写在描述里，模型可能记不住；写成枚举，它就只有三个选项。schema 是硬约束，描述是软提醒——能用硬的别用软的。</p>
+      </div>
+
+      <h5>参数名怎么起</h5>
+      <p>这条看起来是小事，实际影响很大：<strong>参数名本身就是提示信息</strong>。<code>path</code> 不如 <code>script_relative_path</code> 明确；<code>n</code> 不如 <code>max_results</code> 明确。模型靠名字猜语义，模糊的名字会导致填错。</p>
+
+      <h4>4.3 代码执行</h4>
+      <p>让模型写代码然后执行，是工具使用里最强也最危险的一种。它把「模型猜测结果」变成「机器给出结果」。</p>
+      <p>课程里强调了沙箱：执行环境要隔离，文件系统、网络访问都要限制。这不是谨慎过度——模型生成的代码你事先并不知道它会做什么。</p>
+
+      <h4>4.4 MCP</h4>
+      <p>MCP（Model Context Protocol）解决的是「工具接入的标准化」：以前每接一个系统都要写一套适配，现在把工具暴露成统一的协议，任何支持 MCP 的客户端都能用。</p>
+      <p><strong>它的价值在于复用</strong>：你写一次工具服务，Claude、IDE、你自己的 agent 都能接。对本地工具链（读文件、查数据库、调内部 API）尤其合适。</p>
+
+      <h3 id="a5">5 · 评估与误差分析</h3>
+
+      <div class="card key">
+        <div class="card-title">这是全课最值钱的部分</div>
+        <p>如果这门课只允许留一个模块，就是这一块。前面讲的是「怎么搭」，这里讲的是<strong>「怎么知道搭得对不对」</strong>。而绝大多数教程在讲完怎么搭之后就结束了。</p>
+      </div>
+
+      <h4>5.1 为什么 agentic 系统更难评估</h4>
+      <p>单次问答对错分明，多步系统不行：每一步都可能出错，而且错会传递。最后结果不对，你无法从结果倒推出是哪一步坏掉的。</p>
+      <p>所以 agentic 的评估必须是<strong>分层的</strong>：整体评估告诉你「有没有问题」，组件级评估告诉你「问题在哪」。</p>
+
+      <h4>5.2 误差分析：不要凭感觉改 prompt</h4>
+      <p>这是整个模块最有操作性的方法。流程如下：</p>
+
+      <ol class="steps">
+        <li><strong>攒失败样本</strong>一批真实输入跑一遍，把输出不理想的都挑出来。不用多，二十条就够看出模式。</li>
+        <li><strong>给每个失败打标签</strong>按失败类型分类：是没查到信息？查到了但没用对？格式不对？还是逻辑跳跃？</li>
+        <li><strong>数频次，排序</strong>哪一类出现最多，就先修哪一类。这一步是重点——大部分人凭印象改，改的是自己印象最深的那一条，而不是出现最多的那一类。</li>
+        <li><strong>只改一个变量，重跑同一批样本</strong>改完立刻用同一批输入验证，看这一类失败是不是真的减少了。</li>
+        <li><strong>确认没有引入新问题</strong>修 A 类的时候经常把 B 类弄坏。所以每次都要跑全量，不是只跑修的那几条。</li>
+      </ol>
+
+      <div class="card danger">
+        <div class="card-title">最常见的错误做法</div>
+        <p>看到一个失败案例 → 立刻改 prompt → 感觉好多了 → 结束。<br>
+        问题在于：你不知道这次改动是<strong>只修好了这一条</strong>，还是<strong>把所有类似情况都修好了</strong>，还是<strong>顺带弄坏了别的</strong>。没有测试集，这三种情况看起来一模一样。</p>
+      </div>
+
+      <h4>5.3 组件级评估</h4>
+      <p>把系统拆成几个可独立评判的环节，分别评估。比如一个 RAG 系统：检索质量、答案忠实度、格式合规，三件事要分开测。</p>
+      <p>理由很实际：整体分数掉了 10 分，可能是因为检索退化了，也可能是生成变差了。<strong>不拆开，你改不对地方。</strong></p>
+
+      <h4>5.4 延迟与成本优化</h4>
+      <p>agentic 系统的成本是乘法关系：步数 × 每步 token × 单价。所以要优化的地方有三处：</p>
+      <div class="tbl"><table>
+        <thead><tr><th>维度</th><th>手段</th></tr></thead>
+        <tbody>
+          <tr><td>步数</td><td>能不能合并步骤；能不能在简单输入上走短路</td></tr>
+          <tr><td>每步 token</td><td>上下文裁剪；缓存重复部分；不要把整个文档history每次重发</td></tr>
+          <tr><td>单价</td><td>分级用模型：难判断的用强的，格式化这类机械活用小的</td></tr>
+        </tbody>
+      </table></div>
+      <p><strong>顺序很重要</strong>：先评估质量，再优化成本。反过来做，你会为了省钱把质量削掉，而且不知道削掉了多少。</p>
+
+      <h4 id="a5-5">5.5 发现问题之后：四种手段的优先级</h4>
+      <p>误差分析告诉你「哪一类错最多」，接下来是选手段。这里有明确的成本顺序，很多人一开始就用最贵的那一种。</p>
+
+      <div class="tbl"><table>
+        <thead><tr><th>顺序</th><th>手段</th><th>适用症状</th><th>成本</th></tr></thead>
+        <tbody>
+          <tr><td>1</td><td><strong>改指令</strong>：补约束、加示例、拆开要求</td><td>输出格式不对、漏掉要求、理解偏了</td><td>最低</td></tr>
+          <tr><td>2</td><td><strong>补工具</strong>：加检索、加校验、加计算</td><td>信息不足、算错、凭猜</td><td>中</td></tr>
+          <tr><td>3</td><td><strong>拆步骤</strong>：一步拆两步，加中间检查</td><td>任务一长就崩、后半段跑偏</td><td>中高</td></tr>
+          <tr><td>4</td><td><strong>换模型</strong>：用到更强的</td><td>前三招都试过仍然不行</td><td>最高</td></tr>
+        </tbody>
+      </table></div>
+
+      <div class="card danger">
+        <div class="card-title">最常见的错误：直接跳到第 4 步</div>
+        <p>结果不对就换更强的模型——这是最省事也最贵的做法。问题在于它<strong>掩盖了真实原因</strong>：如果是提示不清导致的，换模型只是碰巧让它猜对了，下次还会错；如果是信息不足导致的，换模型<strong>根本解决不了</strong>，因为答案不在权重里。</p>
+        <p>判断方法很简单：<strong>这个错，是不是「给它更清楚的说明」就能改？</strong>能，就是第 1 步。不能，再看它是不是缺信息。</p>
+      </div>
+
+      <h4 id="a5-6">5.6 完整开发流程</h4>
+      <p>课程最后把整个方法收成一个循环。这个循环的价值在于：它让「改进」变成可验证的动作，而不是玄学调参。</p>
+
+      <div class="codebox">
+        <div class="codehead"><span>agent 开发循环</span></div>
+        <pre><span class="c-cm">// 注意第 2 步的位置——它在写代码之前</span>
+<span class="c-kw">1.</span> 定义任务：说清成功长什么样
+<span class="c-kw">2.</span> <span class="c-fn">建测试集</span>：20 条真实输入 + 人给的正确答案
+<span class="c-kw">3.</span> 搭最小可行版：能用就行，先不优化
+<span class="c-kw">4.</span> 跑一遍，记录每条的结果
+<span class="c-kw">5.</span> 误差分析：打标签、数频次、排序
+<span class="c-kw">6.</span> 只改最频繁的那一类（且只改一处）
+<span class="c-kw">7.</span> <span class="c-fn">全量重跑</span>：确认修好了，且没弄坏别的
+<span class="c-kw">8.</span> 回到第 5 步，直到分数够用</pre>
+      </div>
+
+      <div class="card key">
+        <div class="card-title">第 2 步为什么必须靠前</div>
+        <p>因为<strong>没有测试集，你就只能用「感觉」当标准</strong>，而感觉是不可靠的——METR 的实验里，开发者用 AI 之后普遍觉得自己快了 20%，实测是慢了 19%。</p>
+        <p>测试集不需要大。<strong>二十条真实的输入加人工答案，就够你判断每次改动是变好还是变坏。</strong>这件事花两小时，能省掉后面几十次盲改。</p>
+      </div>
+
+      <h3 id="a6">6 · 规划与多智能体</h3>
+
+      <h4>6.1 规划：让模型先出计划再执行</h4>
+      <p>规划模式的核心动作很简单：<strong>先让它把步骤列出来，再按步骤执行</strong>。收益有两个——</p>
+      <ul>
+        <li>计划可以被人（或另一个模型）先审一遍，错了在执行前就能发现</li>
+        <li>执行过程中可以对照计划检查进度，不至于跑偏了还不知道</li>
+      </ul>
+      <p>课程里还演示了<strong>结合代码执行的规划</strong>：计划不是纯文字，而是可以执行的步骤，每一步的中间结果都可以被验证。</p>
+
+      <h4>6.2 多智能体：真正解决的是上下文问题</h4>
+      <p>很多人以为多智能体是为了「让不同角色协作」，但更根本的原因通常是<strong>单个上下文装不下</strong>：一个 agent 既要读大量资料又要做判断，很快就满了。</p>
+      <p>拆成多个 agent，等于把上下文分片。但代价是通信——agent 之间的信息传递是有损的，传过去的东西对方不一定理解得和你一样。</p>
+
+      <h4>6.3 通信模式</h4>
+      <div class="tbl"><table>
+        <thead><tr><th>模式</th><th>形态</th><th>适合</th></tr></thead>
+        <tbody>
+          <tr><td>顺序 sequential</td><td>A 的输出给 B</td><td>流水线，步骤明确</td></tr>
+          <tr><td>并行 concurrent</td><td>A、B 同时跑，结果合并</td><td>子任务独立，要速度</td></tr>
+          <tr><td>移交 handoff</td><td>A 判断该由 B 处理，直接转交</td><td>分诊、路由</td></tr>
+          <tr><td>群聊 group chat</td><td>多个 agent 在同一对话里讨论</td><td>需要多方论证</td></tr>
+        </tbody>
+      </table></div>
+
+      <div class="card warn">
+        <div class="card-title">多智能体最容易失败的地方</div>
+        <p>不是模型不够聪明，是<strong>信息在传递中丢失</strong>。A 觉得已经说清楚了，B 收到的信息不足以做判断，于是 B 开始猜。表现出来就是「每个 agent 单独看都对，串起来就跑偏」。</p>
+        <p>所以多智能体的关键工程问题是<strong>接口设计</strong>——传什么、用什么格式传、传不过去的时候怎么报错。这和微服务之间的问题一模一样。</p>
+      </div>
+
+      <h3 id="a7">7 · 换算成 C#</h3>
+      <p>课程用原生 Python 从零实现，不绑框架。好处是你学的是模式本身，坏处是要自己换算。下面是四个模式的落点。</p>
+
+      <div class="card warn">
+        <div class="card-title">先确认一件事</div>
+        <p>Semantic Kernel 已进入维护模式（只修 bug，不加新功能）。新项目用 <strong>Microsoft Agent Framework</strong>（NuGet 包 <code>Microsoft.Agents.AI</code>），底层用 <code>Microsoft.Extensions.AI</code> 的 <code>IChatClient</code> 做 provider 抽象。网上大量 SK 教程在这个时间点已经过时。</p>
+      </div>
+
+      <div class="tbl"><table>
+        <thead><tr><th>课程模式</th><th>它在解决什么</th><th>.NET 侧对应</th></tr></thead>
+        <tbody>
+          <tr>
+            <td><strong>Reflection</strong></td>
+            <td>输出质量不够，靠重看来提升</td>
+            <td>没有现成 API。你自己搭循环：writer → critic → writer</td>
+          </tr>
+          <tr>
+            <td><strong>Tool Use</strong></td>
+            <td>需要读数据、执行动作</td>
+            <td><code>AIFunction</code> / Function Calling</td>
+          </tr>
+          <tr>
+            <td><strong>Planning</strong></td>
+            <td>任务太长，一步做不完</td>
+            <td>结构化输出（先吐计划）+ agent 编排</td>
+          </tr>
+          <tr>
+            <td><strong>Multi-Agent</strong></td>
+            <td>上下文装不下，或需分工</td>
+            <td>Agent Framework 的编排模式：sequential / concurrent / handoff / group chat</td>
+          </tr>
+        </tbody>
+      </table></div>
+
+      <p style="color:var(--ink3);font-size:13.5px">上表是<strong>概念对应</strong>，不是官方命名。具体 API 形态要按当前版本文档确认。</p>
+
+      <h4>反射循环示意</h4>
+      <div class="codebox">
+        <div class="codehead"><span>Reflection.cs</span><span>示意，非可直接运行</span></div>
+        <pre><span class="c-cm">// 关键不是怎么写，是 checker 从哪来</span>
+<span class="c-kw">var</span> draft    = <span class="c-kw">await</span> writer.<span class="c-fn">RunAsync</span>(task);
+<span class="c-kw">var</span> critique = <span class="c-kw">await</span> critic.<span class="c-fn">RunAsync</span>($<span class="c-str">"审查以下产出，指出具体问题：\n{draft}"</span>);
+<span class="c-kw">var</span> revised  = <span class="c-kw">await</span> writer.<span class="c-fn">RunAsync</span>($<span class="c-str">"按反馈修改：\n{draft}\n\n反馈：\n{critique}"</span>);
+
+<span class="c-cm">// 但如果是代码，别问模型对不对——编译一下</span>
+<span class="c-kw">var</span> build = <span class="c-fn">Compile</span>(revised);
+<span class="c-kw">if</span> (!build.Success)
+    revised = <span class="c-kw">await</span> writer.<span class="c-fn">RunAsync</span>($<span class="c-str">"编译报错如下，请修复：\n{build.Errors}"</span>);</pre>
+      </div>
+      <p><strong>第二段才是重点。</strong>模型的批评可能不准，编译器的错误不会。这就是课程里反复强调「确定性反馈」的意思——能交给机器判断的，别交给模型判断。</p>
+
+      <h4>工具定义示意</h4>
+      <div class="codebox">
+        <div class="codehead"><span>Tools.cs</span><span>示意，非可直接运行</span></div>
+        <pre><span class="c-cm">// 描述的质量决定调用准确率，不是实现</span>
+[<span class="c-ty">Description</span>(<span class="c-str">"读取 Unity 工程中某个 C# 脚本的完整内容。用于分析现有代码结构。"</span>
+           + <span class="c-str">"路径相对于 Assets/ 目录，必须带 .cs 后缀。文件不存在时返回错误信息。"</span>)]
+<span class="c-kw">static string</span> <span class="c-fn">ReadScript</span>(
+    [<span class="c-ty">Description</span>(<span class="c-str">"如 Scripts/PlayerController.cs"</span>)] <span class="c-kw">string</span> path)
+{
+    <span class="c-kw">if</span> (!path.<span class="c-fn">EndsWith</span>(<span class="c-str">".cs"</span>))
+        <span class="c-kw">return</span> <span class="c-str">"错误：只接受 .cs 文件路径"</span>;
+    <span class="c-kw">var</span> full = <span class="c-ty">Path</span>.<span class="c-fn">Combine</span>(root, <span class="c-str">"Assets"</span>, path);
+    <span class="c-kw">return</span> <span class="c-ty">File</span>.<span class="c-fn">Exists</span>(full) ? <span class="c-ty">File</span>.<span class="c-fn">ReadAllText</span>(full) : <span class="c-str">"错误：文件不存在"</span>;
+}
+
+<span class="c-cm">// 注意描述里写了「什么时候用」「边界」「失败行为」三件事</span></pre>
+      </div>
+
+      <h3 id="a8">8 · 学习节奏</h3>
+      <p><strong>不要顺着刷完。</strong>每看完一个模式，停下来用 C# 实现一遍，再往下看。看吴恩达用 Python 写会产生「我懂了」的错觉，换成 C# 才会暴露真正没懂的地方。</p>
+
+      <ol class="steps">
+        <li><strong>模块 1（约 30 分钟）</strong>只看不写代码。目的是拿到「自主性程度」这个判断标准。</li>
+        <li><strong>模块 2 结束后</strong>用 C# 实现一个最小的反射循环——让模型写代码 → 另一个角色审 → 改。</li>
+        <li><strong>模块 3 结束后</strong>给上一步的 agent 接一个真实工具（读本地文件 / 调一个 API）。</li>
+        <li><strong>模块 4 结束后</strong>给这个 agent 加评估：准备 20 个测试输入，打分，看改动前后的差异。</li>
+        <li><strong>模块 5 结束后</strong>拆成两个 agent 协作，跑一个真实任务。</li>
+      </ol>
+
+      <div class="card key">
+        <div class="card-title">第 4 步是关键，也最容易被跳过</div>
+        <p>大多数人卡在第 3 步就停了——能跑起来就觉得成了。但「能跑」和「跑对」是两件事。<strong>第 4 步才是把你从「调 prompt 的人」变成「能交付系统的人」的分界线。</strong></p>
+      </div>
+
+      <h3 id="a9">9 · 自检清单</h3>
+      <ul class="checklist">
+        <li>我这一步真的需要自主决策吗？还是固定流程就够？</li>
+        <li>我的反射循环里，反馈来自模型还是来自机器？</li>
+        <li>工具描述里写了「什么时候用」「参数边界」「失败返回什么」吗？</li>
+        <li>我有一批固定的测试输入吗？（没有的话，所有改动都无法验证）</li>
+        <li>我知道最近一次变差是哪个环节造成的吗？</li>
+        <li>我是按失败频次排优先级，还是按印象？</li>
+        <li>这次改动有没有把别的功能弄坏？跑全量了吗？</li>
+        <li>多智能体之间的接口，信息会不会在传递中丢掉？</li>
+      </ul>
+    </div>
+
+    <!-- ============================================================ -->
+    <!-- 关系 -->
+    <!-- ============================================================ -->
+    <h2 class="course" style="color:var(--ink3)">Summary</h2>
+    <div class="course-sub" id="compare">两门课什么关系</div>
+
+    <p>它们不是两个选项，是一条线的两段。</p>
+
+    <div class="relbar">
+      <div class="relnode n1">
+        <div class="n">Prompting</div>
+        <div class="d">把一次对话说清楚</div>
+      </div>
+      <div class="relarrow">→</div>
+      <div class="relnode n2">
+        <div class="n">Agentic AI</div>
+        <div class="d">把多次对话组织成系统</div>
+      </div>
+    </div>
+
+    <p>Prompting 教你「怎么让这一句话得到好结果」。Agentic AI 教你「怎么让一百句话自动串起来还能保证质量」。后者以前者为砖，但多了一件前者没有的东西：<strong>评估</strong>。</p>
+
+    <p>这也解释了为什么 Agentic AI 有一整个模块在讲评估，而 Prompting 里几乎没有——单次对话你自己看一眼就知道好不好，多步系统你做不到。</p>
+
+    <div class="card tip">
+      <div class="card-title">你的情况：直接上第二门</div>
+      <p>你已经在用 AI 干活了，Prompting 里大部分内容是「知道但不熟练」。真正要补的只有三处：Context（给足背景）、Sycophancy（问题别带结论）、AI critique（让它审代码）。这三块在 Agentic AI 里会以别的形式再出现一次——模块 4 讲评估时，你必须先知道评审模型会讨好被评的东西。</p>
+      <p style="margin-top:8px">所以跳过不算漏，只是换个地方补。</p>
+    </div>
+
+    <footer id="src">
+      <strong style="color:var(--ink2)">出处</strong><br>
+      Prompting · 官方 <a href="https://www.deeplearning.ai/courses/ai-prompting-for-everyone" target="_blank">deeplearning.ai/courses/ai-prompting-for-everyone</a> ｜ 中英字幕 <a href="https://www.bilibili.com/video/BV1UT9qBDET7" target="_blank">BV1UT9qBDET7</a><br>
+      Agentic AI · 官方 <a href="https://learn.deeplearning.ai/courses/agentic-ai/" target="_blank">learn.deeplearning.ai/courses/agentic-ai</a> ｜ 中英字幕 <a href="https://www.bilibili.com/video/BV1vNrhB1ETv" target="_blank">BV1vNrhB1ETv</a> ｜ 代码 <a href="https://github.com/https-deeplearning-ai/agentic-ai-public" target="_blank">agentic-ai-public</a><br>
+      中文整理 · Datawhale <a href="https://datawhalechina.github.io/ai-prompting-for-everyone/" target="_blank">ai-prompting-for-everyone</a> ｜ <a href="https://github.com/datawhalechina/agentic-ai" target="_blank">agentic-ai</a><br><br>
+      本文是非官方中文整理，用于替代看视频。内容依课程公开大纲与讲义归纳，不含官方原文翻译。<br>
+      整理时间 2026-11-24
+    </footer>
+
+  </main>
+</div>
+
+<script>
+// 复制模板
+document.querySelectorAll('[data-copy]').forEach(function(btn){
+  btn.addEventListener('click', function(){
+    var body = btn.closest('.tpl').querySelector('.tpl-body');
+    var text = body.innerText.trim();
+    var done = function(){
+      btn.textContent = '已复制';
+      btn.classList.add('done');
+      setTimeout(function(){ btn.textContent = '复制'; btn.classList.remove('done'); }, 1500);
+    };
+    if (navigator.clipboard && navigator.clipboard.writeText) {
+      navigator.clipboard.writeText(text).then(done).catch(fallback);
+    } else { fallback(); }
+    function fallback(){
+      var ta = document.createElement('textarea');
+      ta.value = text; ta.style.position = 'fixed'; ta.style.opacity = '0';
+      document.body.appendChild(ta); ta.select();
+      try { document.execCommand('copy'); done(); } catch(e){}
+      document.body.removeChild(ta);
+    }
+  });
+});
+
+// 滚动进度
+var prog = document.getElementById('prog');
+window.addEventListener('scroll', function(){
+  var h = document.documentElement.scrollHeight - window.innerHeight;
+  prog.style.width = (h > 0 ? (window.scrollY / h * 100) : 0) + '%';
+}, {passive:true});
+
+// 侧栏高亮
+var links = Array.prototype.slice.call(document.querySelectorAll('.sidebar a'));
+var targets = links.map(function(a){ return document.getElementById(a.getAttribute('href').slice(1)); }).filter(Boolean);
+
+if ('IntersectionObserver' in window) {
+  var current = null;
+  var io = new IntersectionObserver(function(entries){
+    entries.forEach(function(e){
+      if (e.isIntersecting) {
+        if (current) current.classList.remove('active');
+        current = links[targets.indexOf(e.target)];
+        if (current) current.classList.add('active');
+      }
+    });
+  }, {rootMargin:'-70px 0px -75% 0px', threshold:0});
+  targets.forEach(function(t){ io.observe(t); });
+}
+</script>
+</body>
+</html>

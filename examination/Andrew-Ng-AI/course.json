@@ -1,0 +1,23 @@
+{
+  "cn": "吴恩达 AI 两门课",
+  "en": "Andrew Ng · Two AI Courses",
+  "code": "ANAI",
+  "ico": "🧠",
+  "order": 9,
+  "status": "live",
+  "theme": "#0d9488",
+  "desc": "Prompting for Everyone 与 Agentic AI 两门课的文字精华合订：8 个模块 52 节全量覆盖，含 8 个可复制模板、四个设计模式的 C# 落点、五步误差分析法。不用看视频。",
+  "mods": [
+    "8 模块 · 52 节",
+    "8 个可复制模板",
+    "C# 落点"
+  ],
+  "entry": "index.html",
+  "note": "阅读型 · 两门课文字精华合订",
+  "_说明": [
+    "index.html 为单文件，样式与脚本全部内联，无外链资源、无 CDN 依赖，可直接双击打开或走 Pages。",
+    "左侧导航按两门课分组，用 IntersectionObserver 做滚动高亮；顶部有阅读进度条。",
+    "模板卡右上角「复制」按钮走 navigator.clipboard，失败时降级 execCommand，本地 file:// 打开也能用。",
+    "内容依两门课的公开大纲与讲义归纳，非官方原文翻译；版权归 DeepLearning.AI。出处链接列在页面底部。"
+  ]
+}
