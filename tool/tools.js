@@ -79,6 +79,15 @@ window.WB_TOOLS = [
     icon: '文',
     open: true,
   },
+  {
+    id: 'dev-notes',
+    name: '开发经验',
+    desc: '复盘与踩坑记录。第一篇：0 代码基础用 AI 做独立游戏的全流程万字复盘。',
+    href: 'dev-notes/',
+    tag: '站内',
+    icon: '✎',
+    open: true,
+  },
   { id: 'slot-09', name: '', desc: '', href: '', tag: '', icon: '' },
   { id: 'slot-10', name: '', desc: '', href: '', tag: '', icon: '' },
   { id: 'slot-11', name: '', desc: '', href: '', tag: '', icon: '' },
@@ -90,4 +99,5 @@ window.WB_TOOLS = [
   { id: 'slot-17', name: '', desc: '', href: '', tag: '', icon: '' },
   { id: 'slot-18', name: '', desc: '', href: '', tag: '', icon: '' },
   { id: 'slot-19', name: '', desc: '', href: '', tag: '', icon: '' },
+  { id: 'slot-20', name: '', desc: '', href: '', tag: '', icon: '' },
 ];
