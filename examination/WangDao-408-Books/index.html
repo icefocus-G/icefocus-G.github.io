@@ -319,7 +319,8 @@ function renderTree(){
 const pageURL = (b, n) => `pages/${b.k}/${String(n).padStart(4, '0')}.webp`;
 const bp = (b, p) => (p - b.off > 0 ? p - b.off : '—');   // PDF 页序 → 书内页码
 // 卷首 12 页没有印刷页码，显示成「卷首」而不是「—」
-const pgTxt = (b, p) => { const v = bp(b, p); return v === '—' ? '卷首 p' + p : '第 ' + v + ' 页'; };
+const pgTxt = (b, p) => { const v = bp(b, p); return v === '—' ? '卷首 · PDF 第 ' + p + ' 页' : '第 ' + v + ' 页'; };
+const pgAlt = (b, p) => { const v = bp(b, p); return v === '—' ? '卷首（PDF 第 ' + p + ' 页）' : '第 ' + v + ' 页'; };
 const jumpVal = (b, p) => { const v = bp(b, p); return v === '—' ? '' : String(v); };
 const rngTxt = (b, n) => {
   const a = bp(b, n.p), z = bp(b, n.e);
@@ -332,8 +333,8 @@ function renderPages(b, n, atPage){
   let h = '<div class="pgwrap">';
   for (let p = n.p; p <= n.e; p++){
     h += `<figure class="pg" id="pg${p}" data-p="${p}">
-        <img src="${pageURL(b, p)}" alt="${b.name} 第 ${p - b.off} 页" loading="lazy" decoding="async"
-             width="1082" height="1508" style="aspect-ratio:1082/1508">
+        <img src="${pageURL(b, p)}" alt="${b.name} ${pgAlt(b, p)}" loading="lazy" decoding="async"
+             width="992" height="1383" style="aspect-ratio:992/1383">
         <span class="pn">${pgTxt(b, p)}</span></figure>`;
   }
   h += '</div><div class="pend"><button id="pPrev">← 上一节</button><button id="pNext">下一节 →</button></div>';
@@ -563,7 +564,7 @@ async function searchFull(v){
       if (!raw) continue;
       if (raw.toLowerCase().replace(/\s+/g, '').indexOf(low) < 0) continue;
       total++;
-      if (hits.length < 60) hits.push({ p: i + 1, raw, idx: raw.toLowerCase().indexOf(v.toLowerCase()) });
+      if (hits.length < 60) hits.push({ p: i + 1, raw, idx: normIdx(raw, v) });
     }
     if (hits.length) groups.push({ b, hits });
   }
@@ -597,10 +598,40 @@ async function searchFull(v){
     jumpTo(p - BOOKS[bi].off);
   });
 }
+/* 忽略空白的定位：检索用去空白文本匹配，摘要定位也必须用同一套规则，
+   否则 OCR 把词拆开（如「二叉 树」）时摘要会截到页首 */
+function normIdx(s, v){
+  const lv = v.toLowerCase().replace(/\s+/g, '');
+  if (!lv) return -1;
+  let i = 0;
+  while (i < s.length){
+    if (/\s/.test(s[i])){ i++; continue; }
+    let j = i, m = 0;
+    while (j < s.length && m < lv.length){
+      const ch = s[j];
+      if (/\s/.test(ch)){ j++; continue; }
+      if (ch.toLowerCase() !== lv[m]) break;
+      j++; m++;
+    }
+    if (m === lv.length) return i;
+    i++;
+  }
+  return -1;
+}
+function normEnd(s, i, v){
+  const lv = v.toLowerCase().replace(/\s+/g, '');
+  let j = i, m = 0;
+  while (j < s.length && m < lv.length){
+    if (/\s/.test(s[j])){ j++; continue; }
+    j++; m++;
+  }
+  return j;
+}
 function hl(s, v){
-  const i = s.toLowerCase().indexOf(v.toLowerCase());
+  const i = normIdx(s, v);
   if (i < 0) return esc(s);
-  return esc(s.slice(0, i)) + '<mark>' + esc(s.slice(i, i + v.length)) + '</mark>' + esc(s.slice(i + v.length));
+  const j = normEnd(s, i, v);
+  return esc(s.slice(0, i)) + '<mark>' + esc(s.slice(i, j)) + '</mark>' + esc(s.slice(j));
 }
 
 /* ---------------- 事件 ---------------- */
@@ -699,10 +730,11 @@ function applyHash(all){
     renderTabs(); renderTree();
   }
   if (h.abs){
-    openPdf(h.p);
+    openPdf(Math.max(1, Math.min(BOOKS[st.b].pages, h.p)));
   } else {
     const b = BOOKS[st.b];
-    const pdf = h.p + b.off;
+    // 书内页码夹取到有效范围：越界时落到首/末页，而不是静默弹回卷首
+    const pdf = Math.max(1, Math.min(b.pages, h.p + b.off));
     let top = b.tops[0];
     for (const t of b.tops) if (t.p <= pdf && pdf <= t.e) { top = t; break; }
     open(top._i, pdf);
